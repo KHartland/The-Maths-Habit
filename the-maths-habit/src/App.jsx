@@ -386,7 +386,7 @@ function HoverTooltip({ open, x, y, objective, progress }) {
           {level >= 5 ? '✓ Mastered!' : level >= 4 ? '📝 Take the exam!' : levelLabels[level]}
         </span>
       </div>
-      </div>
+      
       <div className="mt-1.5 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
         <div
           className="h-full rounded-full transition-all"
@@ -6315,7 +6315,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      </div>
+    
 
       {/* Hover Tooltip */}
       <HoverTooltip
