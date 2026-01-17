@@ -391,7 +391,7 @@ function HoverTooltip({ open, x, y, objective, progress }) {
         <div
           className="h-full rounded-full transition-all"
           style={{
-            width: `${Math.min(streak / 5 * 100, 100)}%`,
+            width: `${Math.min(quickCorrect / 4 * 100, 100)}%`,
             backgroundColor: TOPIC_HEX[objective.topic],
           }}
         />
