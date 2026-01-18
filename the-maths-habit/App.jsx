@@ -36,30 +36,18 @@ const Rec = ({ children, dots = 'ends' }) => {
     <span style={{ whiteSpace: 'nowrap' }}>
       {beforeDecimal}
       {afterDecimal.split('').map((digit, i) => (
-        <span
-          key={i}
-          style={{
-            position: 'relative',
-            display: 'inline-block',
-          }}
-        >
-          {digit}
-          {dotPositions.includes(i) && (
-            <span
-              style={{
-                position: 'absolute',
-                top: '-0.15em',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                fontSize: '0.9em',
-                fontWeight: 'bold',
-                lineHeight: 1,
-              }}
-            >
-              •
-            </span>
-          )}
-        </span>
+        dotPositions.includes(i) ? (
+          <span
+            key={i}
+            className="inline-flex flex-col items-center"
+            style={{ verticalAlign: 'baseline' }}
+          >
+            <span style={{ fontSize: '0.5em', lineHeight: '0.8', fontWeight: 'bold' }}>●</span>
+            <span style={{ marginTop: '-0.2em' }}>{digit}</span>
+          </span>
+        ) : (
+          <span key={i}>{digit}</span>
+        )
       ))}
     </span>
   );
@@ -84,17 +72,9 @@ const renderRecurring = (text) => {
         const beforeLast = currentText.slice(0, -1);
         if (beforeLast) parts.push(beforeLast);
         parts.push(
-          <span key={i} style={{ position: 'relative', display: 'inline-block' }}>
-            {lastChar}
-            <span style={{
-              position: 'absolute',
-              top: '-0.15em',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              fontSize: '0.9em',
-              fontWeight: 'bold',
-              lineHeight: 1,
-            }}>•</span>
+          <span key={i} className="inline-flex flex-col items-center" style={{ verticalAlign: 'baseline' }}>
+            <span style={{ fontSize: '0.5em', lineHeight: '0.8', fontWeight: 'bold' }}>●</span>
+            <span style={{ marginTop: '-0.2em' }}>{lastChar}</span>
           </span>
         );
         currentText = '';
