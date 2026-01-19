@@ -2896,15 +2896,16 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
   const challenge = queue.filter(q => q.sessionPhase === 'challenge');
   const coolDown = queue.filter(q => q.sessionPhase === 'cooldown');
 
-  // Return objectives for compatibility with existing code
+  // Return queue items with objective and question data
   const orderedQueue = [...warmUp, ...challenge, ...coolDown];
   return orderedQueue.map(q => ({
-    ...q.objective,
-    _fsrsQuestionId: q.questionId,
-    _fsrsQuestionIndex: q.questionIndex,
-    _sessionPhase: q.sessionPhase,
-    _dueScore: q.dueScore,
-    _retrievability: q.retrievability,
+    objective: q.objective,
+    question: q.question,
+    questionId: q.questionId,
+    questionIndex: q.questionIndex,
+    sessionPhase: q.sessionPhase,
+    dueScore: q.dueScore,
+    retrievability: q.retrievability,
   }));
 };
 
@@ -3244,7 +3245,7 @@ What is the student's answer?`
         mode = 'standard';
         const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount);
         questionsWithData = queue.map(item => ({
-          ...item.question,
+          ...(item.question || {}),
           objective: item.objective,
           questionType: 'quick',
           _fsrsQuestionId: item.questionId
@@ -3256,13 +3257,13 @@ What is the student's answer?`
         // Get only MCQ questions (Quick Fire always uses quick questions, not exam)
         questionsWithData = queue.map(item => {
           // If the selected question is MCQ, use it; otherwise pick an MCQ from the objective
-          if (item.question.type === 'mcq') {
+          if (item.question?.type === 'mcq') {
             return { ...item.question, objective: item.objective, questionType: 'quick', _fsrsQuestionId: item.questionId };
           }
           // Fallback: pick a random MCQ from the objective
-          const mcqQuestions = questionBank[item.objective.code]?.filter(q => q.type === 'mcq') || [];
+          const mcqQuestions = questionBank[item.objective?.code]?.filter(q => q.type === 'mcq') || [];
           const mcq = mcqQuestions[Math.floor(Math.random() * mcqQuestions.length)];
-          return { ...mcq, objective: item.objective, questionType: 'quick' };
+          return { ...(mcq || {}), objective: item.objective, questionType: 'quick' };
         });
       }
     } else {
@@ -3270,7 +3271,7 @@ What is the student's answer?`
       const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount);
       questionsWithData = queue.map(item => {
         // Use the specific question selected by buildSessionQueue
-        const objProg = progress[item.objective.code];
+        const objProg = progress[item.objective?.code];
         const quickCorrect = objProg?.quickCorrect ?? 0;
         const examPassed = objProg?.examPassed ?? false;
 
@@ -3280,7 +3281,7 @@ What is the student's answer?`
           questionType = 'review';
         } else if (quickCorrect >= 4) {
           // Check if there's an exam question available
-          const exams = examQuestions[item.objective.code];
+          const exams = examQuestions[item.objective?.code];
           if (exams && exams.length > 0) {
             const examQ = exams[Math.floor(Math.random() * exams.length)];
             return { ...examQ, objective: item.objective, questionType: 'exam', isExamQuestion: true, _fsrsQuestionId: item.questionId };
@@ -3289,7 +3290,7 @@ What is the student's answer?`
         }
 
         return {
-          ...item.question,
+          ...(item.question || {}),
           objective: item.objective,
           questionType,
           _fsrsQuestionId: item.questionId
