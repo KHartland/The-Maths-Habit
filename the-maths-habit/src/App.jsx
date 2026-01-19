@@ -1,9 +1,64 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, Trophy, Flame, Home, Dumbbell, Settings, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, BookOpen, Info, TrendingUp, Target, Award, Zap, Calendar, BarChart3, User, LogOut } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, BookOpen, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
+
+// ==================== CUSTOM ICONS ====================
+// Custom maths-themed icons to replace generic Lucide icons
+
+const HomeIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
+    <path d="M2 17L12 22L22 17"/>
+    <path d="M2 7V17"/>
+    <path d="M22 7V17"/>
+    <path d="M12 12V22"/>
+  </svg>
+);
+
+const PracticeIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 12H8L10 20L14 4H20"/>
+    <circle cx="17" cy="16" r="3"/>
+  </svg>
+);
+
+const SettingsIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="5" r="3"/>
+    <path d="M7 21L10 9"/>
+    <path d="M17 21L14 9"/>
+    <path d="M9 16H15"/>
+    <path d="M7 21H6"/>
+    <path d="M17 21H18"/>
+  </svg>
+);
+
+const StreakIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18.1781 8C19.8349 8 21.1781 9.34315 21.1781 11C21.1781 12.6569 19.8349 14 18.1781 14C16.5212 14 15.1781 12.6569 15.1781 11L8.82193 11C8.82193 9.34315 7.47878 8 5.82193 8C4.16507 8 2.82193 9.34315 2.82193 11C2.82193 12.6569 4.16507 14 5.82193 14H8.99998L15 11"/>
+  </svg>
+);
+
+const StatsIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="6" cy="6" r="3"/>
+    <circle cx="18" cy="6" r="3"/>
+    <circle cx="12" cy="18" r="3"/>
+    <path d="M8.5 7.5L15.5 7.5"/>
+    <path d="M7.5 8.5L10.5 15.5"/>
+    <path d="M16.5 8.5L13.5 15.5"/>
+  </svg>
+);
+
+const TrophyIcon = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
 
 // ==================== RECURRING DECIMAL COMPONENT ====================
 // Renders recurring decimals with clear dots above digits (UK GCSE standard)
@@ -2790,15 +2845,28 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
 
   // Build session with structure
   const queue = [];
-  const usedObjectives = new Set();
+  const objectiveCount = {}; // Track how many times each objective appears
   const usedQuestionIds = new Set();
+  const MAX_PER_OBJECTIVE = 1; // Maximum times same objective can appear in one session
 
   const addToQueue = (questionData, phase) => {
+    if (!questionData?.objective?.code) return false;
     if (usedQuestionIds.has(questionData.questionId)) return false;
+
+    // Limit same objective appearing multiple times
+    const objCode = questionData.objective.code;
+    const currentCount = objectiveCount[objCode] || 0;
+    if (currentCount >= MAX_PER_OBJECTIVE) return false;
+
     usedQuestionIds.add(questionData.questionId);
-    usedObjectives.add(questionData.objective.code);
+    objectiveCount[objCode] = currentCount + 1;
     queue.push({ ...questionData, sessionPhase: phase });
     return true;
+  };
+
+  // Helper to check if objective can be added
+  const canAddObjective = (objCode) => {
+    return (objectiveCount[objCode] || 0) < MAX_PER_OBJECTIVE;
   };
 
   // Helper to apply discriminative interleaving
@@ -2807,38 +2875,53 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     const candidatesCopy = [...candidates];
 
     while (added < maxCount && candidatesCopy.length > 0) {
-      // Pick next candidate
-      const next = candidatesCopy.shift();
-      if (usedQuestionIds.has(next.questionId)) continue;
+      // Pick next candidate that hasn't exceeded objective limit
+      const nextIdx = candidatesCopy.findIndex(c =>
+        c?.objective?.code &&
+        !usedQuestionIds.has(c.questionId) &&
+        canAddObjective(c.objective.code)
+      );
 
-      addToQueue(next, phase);
-      added++;
+      if (nextIdx === -1) break; // No more valid candidates
 
-      // Try to add a confusable pair immediately after (interleaving)
-      if (added < maxCount && confusablePairs[next.objective.code]) {
-        const confusableCodes = confusablePairs[next.objective.code];
-        const confusable = candidatesCopy.find(c =>
-          confusableCodes.includes(c.objective.code) &&
-          !usedQuestionIds.has(c.questionId)
-        );
-        if (confusable) {
-          candidatesCopy.splice(candidatesCopy.indexOf(confusable), 1);
-          addToQueue(confusable, phase);
-          added++;
+      const next = candidatesCopy.splice(nextIdx, 1)[0];
+
+      if (addToQueue(next, phase)) {
+        added++;
+
+        // Try to add a confusable pair immediately after (interleaving)
+        if (added < maxCount && next.objective?.code && confusablePairs[next.objective.code]) {
+          const confusableCodes = confusablePairs[next.objective.code];
+          const confusableIdx = candidatesCopy.findIndex(c =>
+            c?.objective?.code &&
+            confusableCodes.includes(c.objective.code) &&
+            !usedQuestionIds.has(c.questionId) &&
+            canAddObjective(c.objective.code)
+          );
+          if (confusableIdx !== -1) {
+            const confusable = candidatesCopy.splice(confusableIdx, 1)[0];
+            if (addToQueue(confusable, phase)) {
+              added++;
+            }
+          }
         }
       }
     }
     return added;
   };
 
-  // Phase 1: Warm-up (easy questions)
+  // Phase 1: Warm-up (easy questions from different objectives)
   const warmUpCandidates = easyCards.length > 0
     ? easyCards
     : allQuestions.filter(q => q.difficulty < 0.5).sort((a, b) => a.difficulty - b.difficulty);
 
-  for (let i = 0; i < Math.min(SESSION_STRUCTURE.warmUp, warmUpCandidates.length); i++) {
-    if (warmUpCandidates[i] && !usedQuestionIds.has(warmUpCandidates[i].questionId)) {
-      addToQueue(warmUpCandidates[i], 'warmup');
+  let warmUpAdded = 0;
+  for (let i = 0; i < warmUpCandidates.length && warmUpAdded < SESSION_STRUCTURE.warmUp; i++) {
+    const candidate = warmUpCandidates[i];
+    if (candidate?.objective?.code && canAddObjective(candidate.objective.code)) {
+      if (addToQueue(candidate, 'warmup')) {
+        warmUpAdded++;
+      }
     }
   }
 
@@ -2868,24 +2951,39 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     newTarget
   );
 
-  // Phase 3: Cool-down (end on an easy success)
+  // Phase 3: Cool-down (end on an easy success from a different objective)
   const coolDownCandidates = allQuestions
-    .filter(q => !usedQuestionIds.has(q.questionId) && q.difficulty < 0.4)
+    .filter(q =>
+      !usedQuestionIds.has(q.questionId) &&
+      q.difficulty < 0.4 &&
+      q?.objective?.code &&
+      canAddObjective(q.objective.code)
+    )
     .sort((a, b) => a.difficulty - b.difficulty);
 
   if (coolDownCandidates.length > 0) {
     addToQueue(coolDownCandidates[0], 'cooldown');
   } else {
-    // Fall back to any unused easy-ish question
-    const fallback = allQuestions.find(q => !usedQuestionIds.has(q.questionId));
+    // Fall back to any unused question from a different objective
+    const fallback = allQuestions.find(q =>
+      !usedQuestionIds.has(q.questionId) &&
+      q?.objective?.code &&
+      canAddObjective(q.objective.code)
+    );
     if (fallback) addToQueue(fallback, 'cooldown');
   }
 
-  // Fill any remaining slots
+  // Fill any remaining slots with questions from different objectives
   const remainingSlots = count - queue.length;
   if (remainingSlots > 0) {
-    const unused = allQuestions.filter(q => !usedQuestionIds.has(q.questionId));
-    unused.sort((a, b) => a.dueScore - b.dueScore);
+    const unused = allQuestions
+      .filter(q =>
+        !usedQuestionIds.has(q.questionId) &&
+        q?.objective?.code &&
+        canAddObjective(q.objective.code)
+      )
+      .sort((a, b) => a.dueScore - b.dueScore);
+
     for (let i = 0; i < Math.min(remainingSlots, unused.length); i++) {
       addToQueue(unused[i], 'challenge');
     }
@@ -3689,7 +3787,7 @@ What is the student's answer?`
       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-24 px-4 text-center">
-          <Dumbbell className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+          <PracticeIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-slate-900">No questions available</h2>
           <p className="text-slate-500 mt-2">Go to Home to set up your objectives first.</p>
         </div>
@@ -3755,7 +3853,7 @@ What is the student's answer?`
                   accuracy >= 60 ? 'bg-gradient-to-br from-blue-400 to-blue-500' :
                   'bg-gradient-to-br from-slate-400 to-slate-500'
                 }`}>
-                  {accuracy === 100 ? <Trophy className="w-10 h-10 text-white" /> :
+                  {accuracy === 100 ? <TrophyIcon className="w-10 h-10 text-white" /> :
                    accuracy >= 80 ? <Sparkles className="w-10 h-10 text-white" /> :
                    <Target className="w-10 h-10 text-white" />}
                 </div>
@@ -3873,7 +3971,7 @@ What is the student's answer?`
             <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <Dumbbell className="w-8 h-8 text-white" />
+                  <PracticeIcon className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-slate-900">Practice Session</h2>
                 <p className="text-slate-500 mt-1">Build lasting maths skills</p>
@@ -5423,7 +5521,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                  <Flame className="w-5 h-5 text-orange-600" />
+                  <StreakIcon className="w-5 h-5 text-orange-600" />
                 </div>
                 <div>
                   <h2 className="font-semibold text-slate-900">{dayStreak} Day Streak</h2>
@@ -6219,7 +6317,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 function StreakDisplay({ streak }) {
   return (
     <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-50 rounded-xl border border-orange-200">
-      <Flame className="w-5 h-5 text-orange-500" />
+      <StreakIcon className="w-5 h-5 text-orange-500" />
       <span className="font-bold text-orange-600">{streak}</span>
       <span className="text-sm text-orange-500 hidden sm:inline">day streak</span>
     </div>
@@ -6228,10 +6326,10 @@ function StreakDisplay({ streak }) {
 
 function NavBar({ currentPage, setCurrentPage, streak }) {
   const navItems = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'practice', label: 'Practice', icon: Dumbbell },
-    { id: 'stats', label: 'Stats', icon: BarChart3 },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'home', label: 'Home', icon: HomeIcon },
+    { id: 'practice', label: 'Practice', icon: PracticeIcon },
+    { id: 'stats', label: 'Stats', icon: StatsIcon },
+    { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
 
   return (
@@ -6673,7 +6771,7 @@ function AppContent() {
 
               {/* Mastery badge */}
               <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 px-4 py-2 rounded-xl">
-                <Trophy className="w-5 h-5 text-amber-500" />
+                <TrophyIcon className="w-5 h-5 text-amber-500" />
                 <span className="font-bold text-amber-700">{totalMastered}</span>
                 <span className="text-amber-600 text-sm">/ {allObjectives.length}</span>
               </div>
@@ -6850,7 +6948,7 @@ function AppContent() {
                 </span>
                 <span className="text-slate-300">·</span>
                 <span className={`text-sm flex items-center gap-1 ${needsRepair ? 'text-amber-600' : 'text-slate-500'}`}>
-                  <Flame className={`w-4 h-4 ${needsRepair ? 'text-amber-500' : 'text-orange-500'}`} />
+                  <StreakIcon className={`w-4 h-4 ${needsRepair ? 'text-amber-500' : 'text-orange-500'}`} />
                   {needsRepair ? `${potentialStreak} day streak (needs repair)` : `${dayStreak} day streak`}
                 </span>
                 <span className="text-slate-300">·</span>
@@ -6886,7 +6984,7 @@ function AppContent() {
                   : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-indigo-500/25'
               }`}
             >
-              <Dumbbell className="w-4 h-4" />
+              <PracticeIcon className="w-4 h-4" />
               {needsRepair ? 'Repair Streak' : 'Practice'}
             </button>
           </div>
