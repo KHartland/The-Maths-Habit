@@ -1678,7 +1678,7 @@ const questionBank = {
     { q: "A straight line has gradient 3 and passes through (0, 2). Find its equation.", a: "y = 3x + 2", type: "text", calculator: false },
     { q: "What is the gradient of y = 5x - 3?", type: "mcq", options: ["5", "-3", "3", "-5"], a: "5", calculator: false },
   ],
-  A18: [
+  A26: [
     { q: "A circle has centre O at the origin. Point (0, 6) lies on the circle. What is the equation of the circle?", a: "x² + y² = 36", type: "text", diagram: "circle-equation", calculator: false },
     { q: "The point (3, 4) lies on a circle centred at the origin. Find the radius.", a: "5", type: "number", calculator: false, hint: "Use r² = x² + y²" },
     { q: "Which point lies on the circle x² + y² = 25?", type: "mcq", options: ["(3, 3)", "(4, 3)", "(3, 4)", "(4, 4)"], a: "(3, 4)", calculator: false },
