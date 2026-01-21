@@ -1,3 +1,204 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Deep Space Glassmorphism Base Styles */
+:root {
+  --void: #0E0307;
+  --violet: #6E33B1;
+  --violet-light: #8B4CD4;
+  --violet-dark: #5A2A91;
+  --mint: #38E6A2;
+  --primary-text: #EEEBF3;
+  --secondary-text: #C0B4E3;
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  background-color: var(--void);
+  color: var(--primary-text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Glass Panel Utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-panel-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Glowing Orb Effect */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+    rgba(139, 76, 212, 0.8) 0%, 
+    rgba(110, 51, 177, 0.6) 30%, 
+    rgba(90, 42, 145, 0.4) 60%, 
+    transparent 80%);
+  filter: blur(1px);
+  animation: float 6s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+}
+
+.orb::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    rgba(110, 51, 177, 0.3) 0%, 
+    transparent 70%);
+  filter: blur(40px);
+}
+
+/* Ambient Glow Background */
+.ambient-glow {
+  position: fixed;
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 60%;
+  background: radial-gradient(ellipse at center, 
+    rgba(110, 51, 177, 0.4) 0%, 
+    rgba(110, 51, 177, 0.1) 40%, 
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-text) 0%, var(--violet-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-mint {
+  background: linear-gradient(135deg, var(--mint) 0%, #2BC88A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button Gradients */
+.btn-gradient-violet {
+  background: linear-gradient(135deg, #6E33B1 0%, #8B4CD4 50%, #5A2A91 100%);
+  box-shadow: 0 4px 20px rgba(110, 51, 177, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-violet:hover {
+  box-shadow: 0 6px 30px rgba(110, 51, 177, 0.6);
+  transform: translateY(-2px);
+}
+
+.btn-gradient-mint {
+  background: linear-gradient(135deg, #38E6A2 0%, #2BC88A 100%);
+  box-shadow: 0 4px 20px rgba(56, 230, 162, 0.3);
+  color: #0E0307;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient-mint:hover {
+  box-shadow: 0 6px 30px rgba(56, 230, 162, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: scale(1.02);
+  border-color: rgba(110, 51, 177, 0.3);
+  box-shadow: 0 8px 40px rgba(110, 51, 177, 0.2);
+}
+
+/* Focus Styles */
+.focus-mint:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: var(--mint);
+  box-shadow: 0 0 0 3px rgba(56, 230, 162, 0.3);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(110, 51, 177, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(110, 51, 177, 0.7);
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(0.95); opacity: 0.5; }
+}
+
+/* Topic Colors - Updated for dark theme */
+.topic-number { color: #FF6B6B; }
+.topic-algebra { color: #A78BFA; }
+.topic-ratio { color: #FBBF24; }
+.topic-geometry { color: #34D399; }
+.topic-probability { color: #60A5FA; }
+.topic-statistics { color: #F472B6; }
+
+/* Badge styles */
+.badge-solved {
+  color: var(--mint);
+  background: rgba(56, 230, 162, 0.1);
+  border: 1px solid rgba(56, 230, 162, 0.3);
+}
+
+.badge-streak {
+  color: #FBBF24;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}

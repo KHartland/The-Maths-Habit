@@ -3814,12 +3814,13 @@ What is the student's answer?`
   // Handle empty objectives
   if (!allObjectives || allObjectives.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <div className="min-h-screen bg-void relative overflow-hidden">
+        <div className="ambient-glow" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4 text-center">
-          <PracticeIcon className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-slate-900">No questions available</h2>
-          <p className="text-slate-500 mt-2">Go to Home to set up your objectives first.</p>
+        <div className="pt-24 pb-24 px-4 text-center relative z-10">
+          <PracticeIcon className="w-16 h-16 text-secondary-text/40 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-primary-text">No questions available</h2>
+          <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
         </div>
       </div>
     );
@@ -3831,9 +3832,11 @@ What is the student's answer?`
     const accuracy = Math.round((correctCount / sessionResults.length) * 100);
     const topicsSet = new Set(sessionResults.map(r => r.topic));
     const streakGained = sessionResults.reduce((sum, r) => sum + (r.correct ? 1 : 0), 0);
-    
+
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white relative overflow-hidden">
+      <div className="min-h-screen bg-void relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb w-64 h-64 -top-32 -right-32 opacity-30 fixed" />
         {/* Confetti Animation */}
         {showConfetti && (
           <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
@@ -3872,23 +3875,23 @@ What is the student's answer?`
         )}
 
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4">
+        <div className="pt-24 pb-28 px-4 relative z-10">
           <div className="max-w-md mx-auto">
-            <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+            <div className="glass-panel rounded-3xl p-8 shadow-glass">
               {/* Header */}
               <div className="text-center mb-6">
                 <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
-                  accuracy === 100 ? 'bg-gradient-to-br from-amber-400 to-orange-500' :
-                  accuracy >= 80 ? 'bg-gradient-to-br from-emerald-400 to-emerald-500' :
-                  accuracy >= 60 ? 'bg-gradient-to-br from-blue-400 to-blue-500' :
-                  'bg-gradient-to-br from-slate-400 to-slate-500'
+                  accuracy === 100 ? 'bg-gradient-to-br from-[#FBBF24] to-orange-500 shadow-[0_0_30px_rgba(251,191,36,0.4)]' :
+                  accuracy >= 80 ? 'bg-gradient-to-br from-mint to-emerald-500 shadow-glow-mint' :
+                  accuracy >= 60 ? 'bg-gradient-violet shadow-glow-violet' :
+                  'bg-gradient-to-br from-secondary-text/40 to-secondary-text/60'
                 }`}>
                   {accuracy === 100 ? <TrophyIcon className="w-10 h-10 text-white" /> :
                    accuracy >= 80 ? <Sparkles className="w-10 h-10 text-white" /> :
                    <Target className="w-10 h-10 text-white" />}
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900">
-                  {accuracy === 100 ? 'Perfect! 🎉' : 
+                <h2 className="text-2xl font-bold text-primary-text">
+                  {accuracy === 100 ? 'Perfect! 🎉' :
                    accuracy >= 80 ? 'Great Work!' :
                    accuracy >= 60 ? 'Good Effort!' : 'Keep Practicing!'}
                 </h2>
@@ -3896,47 +3899,47 @@ What is the student's answer?`
 
               {/* Score */}
               <div className="text-center mb-6">
-                <div className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
+                <div className="text-5xl font-bold gradient-text">
                   {correctCount}/{sessionResults.length}
                 </div>
-                <p className="text-slate-500 mt-1">{accuracy}% accuracy</p>
+                <p className="text-secondary-text mt-1">{accuracy}% accuracy</p>
               </div>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-3 mb-6">
-                <div className="bg-slate-50 rounded-xl p-3 text-center">
-                  <div className="text-xl font-bold text-slate-900">{topicsSet.size}</div>
-                  <div className="text-xs text-slate-500">Topics</div>
+                <div className="glass-panel rounded-xl p-3 text-center">
+                  <div className="text-xl font-bold text-primary-text">{topicsSet.size}</div>
+                  <div className="text-xs text-secondary-text">Topics</div>
                 </div>
-                <div className="bg-emerald-50 rounded-xl p-3 text-center">
-                  <div className="text-xl font-bold text-emerald-600">+{streakGained}</div>
-                  <div className="text-xs text-emerald-600">Streak pts</div>
+                <div className="glass-panel rounded-xl p-3 text-center border-mint/30">
+                  <div className="text-xl font-bold text-mint">+{streakGained}</div>
+                  <div className="text-xs text-mint/80">Streak pts</div>
                 </div>
-                <div className="bg-violet-50 rounded-xl p-3 text-center">
-                  <div className="text-xl font-bold text-violet-600">{masteryGained}</div>
-                  <div className="text-xs text-violet-600">Mastered</div>
+                <div className="glass-panel rounded-xl p-3 text-center border-violet/30">
+                  <div className="text-xl font-bold text-violet-light">{masteryGained}</div>
+                  <div className="text-xs text-violet-light/80">Mastered</div>
                 </div>
               </div>
 
               {/* Question Results - prioritize showing mastery gains */}
-              <div className="space-y-2 text-left mb-6 max-h-60 overflow-y-auto">
+              <div className="space-y-2 text-left mb-6 max-h-60 overflow-y-auto hide-scrollbar">
                 {sessionResults.map((r, i) => (
-                  <div key={i} className={`p-3 rounded-lg ${r.correct ? 'bg-slate-50' : 'bg-red-50'}`}>
+                  <div key={i} className={`p-3 rounded-lg ${r.correct ? 'glass-panel' : 'bg-red-500/10 border border-red-500/30'}`}>
                     <div className="flex items-center gap-3 text-sm">
                       <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        r.correct ? 'bg-emerald-100 text-emerald-600' : 'bg-red-100 text-red-600'
+                        r.correct ? 'bg-mint/20 text-mint' : 'bg-red-500/20 text-red-400'
                       }`}>
                         {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
                       </div>
-                      <span className="font-medium text-slate-700">{r.code}</span>
+                      <span className="font-medium text-primary-text">{r.code}</span>
                       {r.newMastery && (
-                        <span className="ml-auto text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full font-semibold">
+                        <span className="ml-auto text-xs bg-violet/20 text-violet-light px-2 py-0.5 rounded-full font-semibold border border-violet/30">
                           ✓ Mastered!
                         </span>
                       )}
                     </div>
                     {!r.correct && revisionHints[r.code] && (
-                      <p className="text-xs text-red-700 mt-2 ml-9">
+                      <p className="text-xs text-red-400 mt-2 ml-9">
                         📚 {revisionHints[r.code]}
                       </p>
                     )}
@@ -6346,10 +6349,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
 function StreakDisplay({ streak }) {
   return (
-    <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-50 rounded-xl border border-orange-200">
-      <StreakIcon className="w-5 h-5 text-orange-500" />
-      <span className="font-bold text-orange-600">{streak}</span>
-      <span className="text-sm text-orange-500 hidden sm:inline">day streak</span>
+    <div className="flex items-center gap-2 px-3 py-1.5 glass-panel rounded-xl">
+      <StreakIcon className="w-5 h-5 text-[#FBBF24]" />
+      <span className="font-bold text-[#FBBF24]">{streak}</span>
+      <span className="text-sm text-secondary-text hidden sm:inline">day streak</span>
     </div>
   );
 }
@@ -6365,19 +6368,19 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-slate-200">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center p-1.5">
+            <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 group">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet to-violet-dark rounded-xl flex items-center justify-center p-1.5 shadow-glow-violet group-hover:scale-105 transition-transform">
                 <div className="grid grid-cols-3 gap-0.5 w-full h-full">
                   {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
                     <div key={i} className="rounded-sm" style={{ backgroundColor: `rgba(255,255,255,${opacity})` }} />
                   ))}
                 </div>
               </div>
-              <span className="font-bold text-xl text-slate-900 hidden sm:block">The Maths Habit</span>
+              <span className="font-bold text-xl text-primary-text hidden sm:block">The Maths Habit</span>
             </button>
 
             {/* Nav links - desktop */}
@@ -6390,8 +6393,8 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                     onClick={() => setCurrentPage(item.id)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       currentPage === item.id
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                        ? "bg-gradient-violet text-white shadow-glow-violet"
+                        : "text-secondary-text hover:text-primary-text hover:bg-white/5"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -6407,26 +6410,29 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
         </div>
       </nav>
 
-      {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-t border-slate-200 md:hidden">
-        <div className="flex items-center justify-around h-16">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setCurrentPage(item.id)}
-                className={`flex flex-col items-center gap-1 px-4 py-2 rounded-lg transition-all ${
-                  currentPage === item.id
-                    ? "text-violet-600"
-                    : "text-slate-400"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </button>
-            );
-          })}
+      {/* Mobile Bottom Nav - Floating Glass Pill */}
+      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
+        <div className="glass-panel-strong rounded-2xl shadow-glass mx-auto max-w-sm">
+          <div className="flex items-center justify-around h-16 px-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentPage === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentPage(item.id)}
+                  className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${
+                    isActive
+                      ? "text-mint"
+                      : "text-secondary-text hover:text-primary-text"
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : ''}`} />
+                  <span className="text-xs font-medium">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </nav>
     </>
@@ -6502,48 +6508,55 @@ function AppContent() {
     setCurrentPage('practice'); // Go straight to practice
   };
   
-  // Simple onboarding screen
+  // Simple onboarding screen - Deep Space Glassmorphism
   if (showOnboarding) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-violet-600 via-purple-600 to-indigo-700 flex items-center justify-center p-6">
-        <div className="max-w-md w-full text-center">
-          {/* Heatmap Icon */}
-          <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl p-2">
-            <div className="grid grid-cols-3 gap-1 w-full h-full">
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Ambient glow background */}
+        <div className="ambient-glow" />
+
+        {/* Floating orb decoration */}
+        <div className="orb w-64 h-64 -top-20 -right-20 opacity-60" />
+        <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
+
+        <div className="max-w-md w-full text-center relative z-10">
+          {/* Heatmap Icon with glow */}
+          <div className="w-24 h-24 glass-panel-strong rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow-violet p-3 animate-float">
+            <div className="grid grid-cols-3 gap-1.5 w-full h-full">
               {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
-                <div 
-                  key={i} 
-                  className="rounded-sm" 
-                  style={{ backgroundColor: `rgba(255,255,255,${opacity})` }}
+                <div
+                  key={i}
+                  className="rounded-sm"
+                  style={{ backgroundColor: `rgba(110, 51, 177,${opacity})` }}
                 />
               ))}
             </div>
           </div>
-          
-          <h1 className="text-3xl font-bold text-white mb-3">The Maths Habit</h1>
-          <p className="text-lg text-violet-100 mb-8">
-            Master every GCSE objective,<br />
-            one square at a time.
+
+          <h1 className="text-4xl font-bold text-primary-text mb-3 tracking-tight">The Maths Habit</h1>
+          <p className="text-xl text-secondary-text mb-10">
+            Elevate your thinking.<br />
+            <span className="text-violet-light">Master every GCSE objective.</span>
           </p>
-          
+
           {/* Trust indicators */}
-          <div className="flex justify-center gap-6 mb-10 text-violet-200 text-sm">
+          <div className="flex justify-center gap-6 mb-10 text-secondary-text text-sm">
             <div className="flex items-center gap-1.5">
-              <span>✓</span> 90+ objectives
+              <span className="text-mint">✓</span> 90+ objectives
             </div>
             <div className="flex items-center gap-1.5">
-              <span>✓</span> Spaced practice
+              <span className="text-mint">✓</span> AI-powered learning
             </div>
           </div>
-          
+
           <button
             onClick={completeOnboarding}
-            className="w-full py-5 bg-white text-violet-700 font-bold text-xl rounded-2xl shadow-xl hover:bg-violet-50 transition-all active:scale-[0.98]"
+            className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
           >
             Start Practicing →
           </button>
-          
-          <p className="text-violet-300 text-xs mt-6">
+
+          <p className="text-secondary-text/60 text-xs mt-6">
             No account needed · Progress saves locally
           </p>
         </div>
@@ -6755,65 +6768,72 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-void relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="ambient-glow" />
+
+      {/* Decorative orbs */}
+      <div className="orb w-96 h-96 -top-48 -right-48 opacity-30 fixed" />
+      <div className="orb w-64 h-64 top-1/2 -left-32 opacity-20 fixed" />
+
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
       {/* Main Content */}
-      <div className="pt-20 pb-24 md:pb-10">
-        
-      {/* Hero Heatmap Card */}
+      <div className="pt-20 pb-28 md:pb-10 relative z-10">
+
+      {/* Hero Heatmap Card - Glassmorphism */}
       <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 md:p-10 shadow-[0_25px_80px_rgba(15,23,42,0.12)]">
-          
+        <div className="glass-panel rounded-3xl p-6 md:p-10 shadow-glass card-hover">
+
           {/* Header with stats */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">Your Maths Journey</h1>
-              <p className="text-slate-500 mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
+              <h1 className="text-3xl font-bold text-primary-text tracking-tight">Your Maths Journey</h1>
+              <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-200">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-mint/10 text-mint text-xs font-medium rounded-full border border-mint/30">
                   <span>✨</span> Smart Learning Active
                 </span>
-                <span className="text-xs text-slate-400">Powered by spaced repetition</span>
+                <span className="text-xs text-secondary-text/60">Powered by spaced repetition</span>
               </div>
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-3">
               {/* Tier toggle */}
-              <div className="flex bg-slate-100 rounded-lg p-1">
+              <div className="flex glass-panel rounded-lg p-1">
                 {['foundation', 'higher'].map(t => (
                   <button key={t} onClick={() => setTier(t)}
                     className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                      tier === t ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-primary-text'
                     }`}>{t}</button>
                 ))}
               </div>
 
               {/* Due for review badge */}
               {dueForReview > 0 && (
-                <div className="flex items-center gap-2 bg-gradient-to-r from-violet-50 to-indigo-50 border border-violet-200 px-3 py-2 rounded-xl">
+                <div className="flex items-center gap-2 glass-panel px-3 py-2 rounded-xl border-violet/30">
                   <span className="text-lg">🧠</span>
-                  <span className="font-bold text-violet-700">{dueForReview}</span>
-                  <span className="text-violet-600 text-sm">due</span>
+                  <span className="font-bold text-violet-light">{dueForReview}</span>
+                  <span className="text-secondary-text text-sm">due</span>
                 </div>
               )}
 
               {/* Mastery badge */}
-              <div className="flex items-center gap-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 px-4 py-2 rounded-xl">
-                <TrophyIcon className="w-5 h-5 text-amber-500" />
-                <span className="font-bold text-amber-700">{totalMastered}</span>
-                <span className="text-amber-600 text-sm">/ {allObjectives.length}</span>
+              <div className="flex items-center gap-2 glass-panel px-4 py-2 rounded-xl">
+                <TrophyIcon className="w-5 h-5 text-[#FBBF24]" />
+                <span className="font-bold text-[#FBBF24]">{totalMastered}</span>
+                <span className="text-secondary-text text-sm">/ {allObjectives.length}</span>
               </div>
             </div>
           </div>
 
           {/* Topic Legend - Top */}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-6 pb-6 border-b border-slate-100">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-6 pb-6 border-b border-white/10">
             {Object.entries(TOPIC_HEX).map(([name, color]) => (
               <div key={name} className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }} />
-                <span className="text-sm text-slate-600">{name}</span>
+                <span className="text-sm text-secondary-text">{name}</span>
               </div>
             ))}
           </div>
@@ -6872,15 +6892,15 @@ function AppContent() {
           </div>
 
           {/* Legend - Readiness & Recency */}
-          <div className="mt-6 pt-6 border-t border-slate-100">
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-500">
+          <div className="mt-6 pt-6 border-t border-white/10">
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
               {/* Readiness indicators */}
               <div className="flex items-center gap-2">
                 <div
                   style={{
                     width: 18, height: 18, borderRadius: 4,
                     background: '#8B5CF6', border: '2px solid rgba(255,255,255,0.8)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                    boxShadow: '0 2px 8px rgba(139,92,246,0.4)',
                   }}
                   className="flex items-center justify-center"
                 >
@@ -6903,16 +6923,16 @@ function AppContent() {
                   style={{
                     width: 18, height: 18, borderRadius: 4,
                     background: mixWithWhite('#8B5CF6', 0.4),
-                    border: '2px dashed rgba(0,0,0,0.2)',
+                    border: '2px dashed rgba(255,255,255,0.2)',
                   }}
                   className="flex items-center justify-center opacity-60"
                 >
-                  <span className="text-[8px]">↻</span>
+                  <span className="text-[8px] text-white">↻</span>
                 </div>
                 <span>Needs revisit</span>
               </div>
             </div>
-            <p className="text-center text-[10px] text-slate-400 mt-2">
+            <p className="text-center text-[10px] text-secondary-text/60 mt-2">
               Tiles fade when topics haven't been practiced recently · Questions are scheduled using cognitive science
             </p>
           </div>
@@ -6924,25 +6944,25 @@ function AppContent() {
       <div className="max-w-4xl mx-auto px-4 mt-6">
         {/* Streak Repair Banner */}
         {needsRepair && (
-          <div className="mb-4 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-4 text-white shadow-lg">
+          <div className="mb-4 bg-gradient-to-r from-amber-500/20 to-orange-500/20 glass-panel rounded-2xl p-4 border-amber-500/30 shadow-lg">
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <div className="text-4xl">🔧</div>
               <div className="flex-1 text-center sm:text-left">
-                <h3 className="font-bold text-lg">Repair Your Streak!</h3>
-                <p className="text-amber-100 text-sm">
+                <h3 className="font-bold text-lg text-[#FBBF24]">Repair Your Streak!</h3>
+                <p className="text-secondary-text text-sm">
                   Complete 10 questions today to restore your {potentialStreak} day streak
                 </p>
-                <div className="mt-2 bg-white/20 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className="h-full bg-white rounded-full transition-all duration-500"
+                <div className="mt-2 bg-white/10 rounded-full h-3 overflow-hidden">
+                  <div
+                    className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
                     style={{ width: `${repairProgress}%` }}
                   />
                 </div>
-                <p className="text-xs text-amber-100 mt-1">{todayQuestions}/10 questions · {Math.round(repairProgress)}% complete</p>
+                <p className="text-xs text-secondary-text/80 mt-1">{todayQuestions}/10 questions · {Math.round(repairProgress)}% complete</p>
               </div>
               <button
                 onClick={() => setCurrentPage('practice')}
-                className="px-6 py-3 bg-white text-orange-600 font-bold rounded-xl hover:bg-orange-50 transition-colors shadow-lg"
+                className="px-6 py-3 btn-gradient-mint font-bold rounded-xl transition-colors"
               >
                 Repair Now →
               </button>
@@ -6951,67 +6971,68 @@ function AppContent() {
         )}
 
         {/* Regular Progress Bar */}
-        <div className={`bg-white rounded-2xl border p-4 shadow-[0_4px_20px_rgba(15,23,42,0.05)] ${needsRepair ? 'border-amber-200' : 'border-slate-200'}`}>
+        <div className={`glass-panel rounded-2xl p-4 ${needsRepair ? 'border-amber-500/30' : ''}`}>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             {/* Mini Progress Ring */}
             <div className="relative flex-shrink-0">
               <svg className="w-14 h-14 transform -rotate-90">
-                <circle cx="28" cy="28" r="22" fill="none" stroke="#e2e8f0" strokeWidth="5" />
+                <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="5" />
                 <circle
                   cx="28" cy="28" r="22" fill="none"
-                  stroke={dailyProgress >= 100 ? '#10b981' : '#8b5cf6'}
+                  stroke={dailyProgress >= 100 ? '#38E6A2' : '#6E33B1'}
                   strokeWidth="5" strokeLinecap="round"
                   strokeDasharray={`${dailyProgress * 1.38} 138`}
                   className="transition-all duration-500"
+                  style={{ filter: 'drop-shadow(0 0 6px currentColor)' }}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-slate-700">{todayQuestions}</span>
+                <span className="text-sm font-bold text-primary-text">{todayQuestions}</span>
               </div>
             </div>
-            
+
             {/* Status */}
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                <span className={`text-sm font-semibold ${dailyProgress >= 100 ? 'text-emerald-600' : 'text-slate-700'}`}>
+                <span className={`text-sm font-semibold ${dailyProgress >= 100 ? 'text-mint' : 'text-primary-text'}`}>
                   {dailyProgress >= 100 ? '🎉 Goal complete!' : `${todayQuestions}/${dailyGoal} today`}
                 </span>
-                <span className="text-slate-300">·</span>
-                <span className={`text-sm flex items-center gap-1 ${needsRepair ? 'text-amber-600' : 'text-slate-500'}`}>
-                  <StreakIcon className={`w-4 h-4 ${needsRepair ? 'text-amber-500' : 'text-orange-500'}`} />
+                <span className="text-secondary-text/40">·</span>
+                <span className={`text-sm flex items-center gap-1 ${needsRepair ? 'text-[#FBBF24]' : 'text-secondary-text'}`}>
+                  <StreakIcon className={`w-4 h-4 ${needsRepair ? 'text-[#FBBF24]' : 'text-[#FBBF24]'}`} />
                   {needsRepair ? `${potentialStreak} day streak (needs repair)` : `${dayStreak} day streak`}
                 </span>
-                <span className="text-slate-300">·</span>
-                <span className="text-sm text-slate-500">
+                <span className="text-secondary-text/40">·</span>
+                <span className="text-sm text-secondary-text">
                   ⭐ {weeklyMastery}/{weeklyGoal} weekly
                 </span>
               </div>
-              
+
               {/* Streak Freezes & Identity Message */}
               <div className="flex flex-wrap items-center gap-3 mt-2 justify-center sm:justify-start">
-                <span className="text-xs px-2 py-1 bg-blue-50 text-blue-600 rounded-full flex items-center gap-1">
+                <span className="text-xs px-2 py-1 glass-panel text-violet-light rounded-full flex items-center gap-1">
                   🛡️ {freezesAvailable} streak {freezesAvailable === 1 ? 'freeze' : 'freezes'}
                 </span>
                 {longestStreak > 0 && (
-                  <span className="text-xs px-2 py-1 bg-amber-50 text-amber-600 rounded-full">
+                  <span className="text-xs px-2 py-1 glass-panel text-[#FBBF24] rounded-full">
                     🏆 Best: {longestStreak} days
                   </span>
                 )}
                 {dayStreak >= 3 && !needsRepair && (
-                  <span className="text-xs text-slate-400 italic">
+                  <span className="text-xs text-secondary-text/60 italic">
                     You're a person who does maths every day 💪
                   </span>
                 )}
               </div>
             </div>
-            
+
             {/* Start Practice Button */}
             <button
               onClick={() => setCurrentPage('practice')}
-              className={`px-6 py-2.5 font-semibold rounded-xl transition-all shadow-lg flex items-center gap-2 ${
-                needsRepair 
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-amber-500/25'
-                  : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-indigo-500/25'
+              className={`px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                needsRepair
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-[0_4px_20px_rgba(251,191,36,0.3)]'
+                  : 'btn-gradient-violet'
               }`}
             >
               <PracticeIcon className="w-4 h-4" />
