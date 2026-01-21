@@ -5553,19 +5553,19 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
           </div>
 
           {/* Streak Calendar */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                  <StreakIcon className="w-5 h-5 text-orange-600" />
+                <div className="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                  <StreakIcon className="w-5 h-5 text-orange-400" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-slate-900">{dayStreak} Day Streak</h2>
-                  <p className="text-xs text-slate-500">Last 12 weeks of activity</p>
+                  <h2 className="font-semibold text-primary-text">{dayStreak} Day Streak</h2>
+                  <p className="text-xs text-secondary-text">Last 12 weeks of activity</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Calendar Grid */}
             <div className="flex gap-1 overflow-x-auto pb-2">
               {(() => {
@@ -5573,7 +5573,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 const weeks = [];
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
+
                 for (let w = 11; w >= 0; w--) {
                   const weekDays = [];
                   for (let d = 6; d >= 0; d--) {
@@ -5583,16 +5583,16 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                     const activity = dailyActivity[key];
                     const questions = activity?.questions ?? 0;
                     const intensity = questions === 0 ? 0 : questions >= 10 ? 4 : questions >= 7 ? 3 : questions >= 4 ? 2 : 1;
-                    
+
                     weekDays.push(
                       <div
                         key={key}
                         className={`w-4 h-4 rounded-sm transition-colors ${
-                          intensity === 0 ? 'bg-slate-100' :
-                          intensity === 1 ? 'bg-violet-200' :
-                          intensity === 2 ? 'bg-violet-300' :
-                          intensity === 3 ? 'bg-violet-400' :
-                          'bg-violet-600'
+                          intensity === 0 ? 'bg-white/10' :
+                          intensity === 1 ? 'bg-violet/30' :
+                          intensity === 2 ? 'bg-violet/50' :
+                          intensity === 3 ? 'bg-violet/70' :
+                          'bg-violet'
                         }`}
                         title={`${key}: ${questions} questions`}
                       />
@@ -5607,108 +5607,108 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 return weeks;
               })()}
             </div>
-            
+
             {/* Legend */}
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-              <div className="flex items-center gap-2 text-xs text-slate-500">
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+              <div className="flex items-center gap-2 text-xs text-secondary-text">
                 <span>Less</span>
-                <div className="w-3 h-3 rounded-sm bg-slate-100" />
-                <div className="w-3 h-3 rounded-sm bg-violet-200" />
-                <div className="w-3 h-3 rounded-sm bg-violet-300" />
-                <div className="w-3 h-3 rounded-sm bg-violet-400" />
-                <div className="w-3 h-3 rounded-sm bg-violet-600" />
+                <div className="w-3 h-3 rounded-sm bg-white/10" />
+                <div className="w-3 h-3 rounded-sm bg-violet/30" />
+                <div className="w-3 h-3 rounded-sm bg-violet/50" />
+                <div className="w-3 h-3 rounded-sm bg-violet/70" />
+                <div className="w-3 h-3 rounded-sm bg-violet" />
                 <span>More</span>
               </div>
-              <div className="text-xs text-slate-500">
+              <div className="text-xs text-secondary-text">
                 {Object.keys(loadDailyActivity()).length} days practiced
               </div>
             </div>
           </div>
 
           {/* Overall Stats */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-emerald-600" />
+              <div className="w-10 h-10 bg-mint/20 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-mint" />
               </div>
-              <h2 className="font-semibold text-slate-900">All-Time Stats</h2>
+              <h2 className="font-semibold text-primary-text">All-Time Stats</h2>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-slate-900">{totalSessions}</div>
-                <div className="text-sm text-slate-500">Total Sessions</div>
+              <div className="glass-panel rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-primary-text">{totalSessions}</div>
+                <div className="text-sm text-secondary-text">Total Sessions</div>
               </div>
-              <div className="bg-slate-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-slate-900">{totalQuestions}</div>
-                <div className="text-sm text-slate-500">Questions Answered</div>
+              <div className="glass-panel rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-primary-text">{totalQuestions}</div>
+                <div className="text-sm text-secondary-text">Questions Answered</div>
               </div>
-              <div className="bg-emerald-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-emerald-600">{overallAccuracy}%</div>
-                <div className="text-sm text-emerald-600">Accuracy</div>
+              <div className="bg-mint/20 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-mint">{overallAccuracy}%</div>
+                <div className="text-sm text-mint">Accuracy</div>
               </div>
-              <div className="bg-violet-50 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-violet-600">{dayStreak}</div>
-                <div className="text-sm text-violet-600">Current Streak</div>
+              <div className="bg-violet/20 rounded-xl p-4 text-center">
+                <div className="text-2xl font-bold text-violet-light">{dayStreak}</div>
+                <div className="text-sm text-violet-light">Current Streak</div>
               </div>
             </div>
-            
+
             {/* Streak Protection Stats */}
-            <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
-              <div className="bg-amber-50 rounded-xl p-3 text-center">
-                <div className="text-xl font-bold text-amber-600">{loadStreakData().longestStreak}</div>
-                <div className="text-xs text-amber-600">🏆 Longest Streak</div>
+            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-4">
+              <div className="bg-amber-500/20 rounded-xl p-3 text-center">
+                <div className="text-xl font-bold text-amber-400">{loadStreakData().longestStreak}</div>
+                <div className="text-xs text-amber-400">🏆 Longest Streak</div>
               </div>
-              <div className="bg-blue-50 rounded-xl p-3 text-center">
-                <div className="text-xl font-bold text-blue-600">{loadStreakData().freezesAvailable}</div>
-                <div className="text-xs text-blue-600">🛡️ Streak Freezes</div>
+              <div className="bg-blue-500/20 rounded-xl p-3 text-center">
+                <div className="text-xl font-bold text-blue-400">{loadStreakData().freezesAvailable}</div>
+                <div className="text-xs text-blue-400">🛡️ Streak Freezes</div>
               </div>
             </div>
-            
-            <p className="text-xs text-slate-400 mt-3 text-center">
+
+            <p className="text-xs text-secondary-text mt-3 text-center">
               Earn freezes at 7, 14, 30, 60, 90, 180 & 365 day milestones
             </p>
             
             {/* Best Practice Time */}
             {getBestPracticeTime() && (
-              <div className="mt-4 pt-4 border-t border-slate-100">
+              <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="text-slate-500">🕐 Best time to practice:</span>
-                  <span className="font-semibold text-slate-700">{getBestPracticeTime()}</span>
+                  <span className="text-secondary-text">🕐 Best time to practice:</span>
+                  <span className="font-semibold text-primary-text">{getBestPracticeTime()}</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">Based on when you're most active</p>
+                <p className="text-xs text-white/40 mt-1">Based on when you're most active</p>
               </div>
             )}
           </div>
 
           {/* Topic Breakdown */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
-                <Award className="w-5 h-5 text-violet-600" />
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                <Award className="w-5 h-5 text-violet-light" />
               </div>
-              <h2 className="font-semibold text-slate-900">Topic Mastery</h2>
+              <h2 className="font-semibold text-primary-text">Topic Mastery</h2>
             </div>
-            
+
             <div className="space-y-3">
               {Object.entries(topicStats).map(([topic, stats]) => (
                 <div key={topic} className="space-y-1">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <div 
+                      <div
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: TOPIC_HEX[topic] }}
                       />
-                      <span className="font-medium text-slate-700">{topic}</span>
+                      <span className="font-medium text-primary-text">{topic}</span>
                     </div>
-                    <span className="text-slate-500">
+                    <span className="text-secondary-text">
                       {stats.mastered}/{stats.total} mastered
                     </span>
                   </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div 
+                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                    <div
                       className="h-full rounded-full transition-all"
-                      style={{ 
+                      style={{
                         width: `${stats.percentage}%`,
                         backgroundColor: TOPIC_HEX[topic]
                       }}
@@ -5721,24 +5721,24 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 
           {/* Recent Sessions */}
           {sessionHistory.length > 0 && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+            <div className="glass-panel rounded-2xl p-6 shadow-glass">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-amber-600" />
+                <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center">
+                  <Zap className="w-5 h-5 text-amber-400" />
                 </div>
-                <h2 className="font-semibold text-slate-900">Recent Sessions</h2>
+                <h2 className="font-semibold text-primary-text">Recent Sessions</h2>
               </div>
-              
+
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {sessionHistory.slice(-10).reverse().map((session, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
                     <div>
-                      <div className="text-sm font-medium text-slate-700">
+                      <div className="text-sm font-medium text-primary-text">
                         Session #{session.sessionNumber}
                       </div>
-                      <div className="text-xs text-slate-500">
-                        {new Date(session.date).toLocaleDateString('en-GB', { 
-                          day: 'numeric', 
+                      <div className="text-xs text-secondary-text">
+                        {new Date(session.date).toLocaleDateString('en-GB', {
+                          day: 'numeric',
                           month: 'short',
                           hour: '2-digit',
                           minute: '2-digit'
@@ -5747,13 +5747,13 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                     </div>
                     <div className="text-right">
                       <div className={`text-sm font-bold ${
-                        session.correct === session.total ? 'text-emerald-600' :
-                        session.correct >= session.total * 0.8 ? 'text-blue-600' :
-                        'text-slate-600'
+                        session.correct === session.total ? 'text-mint' :
+                        session.correct >= session.total * 0.8 ? 'text-blue-400' :
+                        'text-secondary-text'
                       }`}>
                         {session.correct}/{session.total}
                       </div>
-                      <div className="text-xs text-slate-500">
+                      <div className="text-xs text-secondary-text">
                         {Math.round((session.correct / session.total) * 100)}%
                       </div>
                     </div>
