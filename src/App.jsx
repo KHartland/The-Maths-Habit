@@ -3997,88 +3997,89 @@ What is the student's answer?`
   // Pre-session screen
   if (!sessionStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      <div className="min-h-screen bg-void relative overflow-hidden">
+        <div className="ambient-glow" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4">
+        <div className="pt-24 pb-24 px-4 relative z-10">
           <div className="max-w-md mx-auto">
-            <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+            <div className="glass-panel rounded-3xl p-8 shadow-glass">
               <div className="text-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 bg-gradient-violet rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow-violet">
                   <PracticeIcon className="w-8 h-8 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900">Practice Session</h2>
-                <p className="text-slate-500 mt-1">Build lasting maths skills</p>
+                <h2 className="text-2xl font-bold text-primary-text">Practice Session</h2>
+                <p className="text-secondary-text mt-1">Build lasting maths skills</p>
               </div>
 
               {/* Practice Mode Selection - Quick Fire unlocks after 5 mastered OR 3-day streak */}
               {(() => {
                 const quickFireUnlocked = masteredCount >= QUICKFIRE_MASTERY_THRESHOLD || dayStreak >= QUICKFIRE_STREAK_THRESHOLD;
                 const examModeUnlocked = masteredCount >= 10; // Exam mode after 10 mastered
-                
+
                 return (
                   <div className="mb-6">
-                    <label className="text-sm font-medium text-slate-700 mb-2 block">Practice Mode</label>
+                    <label className="text-sm font-medium text-secondary-text mb-2 block">Practice Mode</label>
                     <div className="grid grid-cols-3 gap-2">
                       {/* Standard Mode - Always available */}
                       <button
                         onClick={() => setPracticeMode('standard')}
                         className={`p-3 rounded-xl border-2 transition-all text-left ${
                           practiceMode === 'standard'
-                            ? 'border-violet-500 bg-violet-50'
-                            : 'border-slate-200 hover:border-slate-300'
+                            ? 'border-violet bg-violet/20'
+                            : 'border-white/20 hover:border-white/40 bg-white/5'
                         }`}
                       >
-                        <StandardIcon className="w-6 h-6 text-violet-600 mb-1" />
-                        <div className="font-semibold text-slate-900 text-sm">Standard</div>
-                        <div className="text-[10px] text-slate-500">With hints</div>
+                        <StandardIcon className="w-6 h-6 text-violet-light mb-1" />
+                        <div className="font-semibold text-primary-text text-sm">Standard</div>
+                        <div className="text-[10px] text-secondary-text">With hints</div>
                       </button>
-                      
+
                       {/* Quick Fire - Unlocks after 5 mastered OR 3-day streak */}
                       <button
                         onClick={() => quickFireUnlocked && mcqObjectiveCount >= 5 && setPracticeMode('quickfire')}
                         disabled={!quickFireUnlocked || mcqObjectiveCount < 5}
                         className={`p-3 rounded-xl border-2 transition-all text-left ${
                           !quickFireUnlocked || mcqObjectiveCount < 5
-                            ? 'border-slate-200 bg-slate-50 opacity-50 cursor-not-allowed'
+                            ? 'border-white/10 bg-white/5 opacity-50 cursor-not-allowed'
                             : practiceMode === 'quickfire'
-                              ? 'border-orange-500 bg-orange-50'
-                              : 'border-slate-200 hover:border-slate-300'
+                              ? 'border-orange-500 bg-orange-500/20'
+                              : 'border-white/20 hover:border-white/40 bg-white/5'
                         }`}
                       >
                         <div className="text-lg mb-1">{quickFireUnlocked ? '⚡' : '🔒'}</div>
-                        <div className="font-semibold text-slate-900 text-sm">Quick Fire</div>
-                        <div className="text-[10px] text-slate-500">
-                          {!quickFireUnlocked 
+                        <div className="font-semibold text-primary-text text-sm">Quick Fire</div>
+                        <div className="text-[10px] text-secondary-text">
+                          {!quickFireUnlocked
                             ? `${QUICKFIRE_MASTERY_THRESHOLD - masteredCount} more to unlock`
                             : '15s timer'}
                         </div>
                       </button>
-                      
+
                       {/* Exam Mode - Unlocks after 10 mastered */}
                       <button
                         onClick={() => examModeUnlocked && setPracticeMode('exam')}
                         disabled={!examModeUnlocked}
                         className={`p-3 rounded-xl border-2 transition-all text-left ${
                           !examModeUnlocked
-                            ? 'border-slate-200 bg-slate-50 opacity-50 cursor-not-allowed'
+                            ? 'border-white/10 bg-white/5 opacity-50 cursor-not-allowed'
                             : practiceMode === 'exam'
-                              ? 'border-red-500 bg-red-50'
-                              : 'border-slate-200 hover:border-slate-300'
+                              ? 'border-red-500 bg-red-500/20'
+                              : 'border-white/20 hover:border-white/40 bg-white/5'
                         }`}
                       >
                         <div className="text-lg mb-1">{examModeUnlocked ? '🎯' : '🔒'}</div>
-                        <div className="font-semibold text-slate-900 text-sm">Exam</div>
-                        <div className="text-[10px] text-slate-500">
-                          {!examModeUnlocked 
+                        <div className="font-semibold text-primary-text text-sm">Exam</div>
+                        <div className="text-[10px] text-secondary-text">
+                          {!examModeUnlocked
                             ? `${10 - masteredCount} more to unlock`
                             : 'No hints'}
                         </div>
                       </button>
                     </div>
-                    
+
                     {/* Exam Mode explanation */}
                     {practiceMode === 'exam' && (
-                      <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
+                      <div className="mt-3 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-sm text-red-300">
                         <strong>Exam conditions:</strong> No hints, no scaffolding, delayed feedback. Train your exam mindset.
                       </div>
                     )}
@@ -4088,19 +4089,19 @@ What is the student's answer?`
 
               {/* Stats */}
               <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="bg-slate-50 rounded-xl p-3 text-center">
-                  <div className="text-2xl font-bold text-slate-900">{dueCount}</div>
-                  <div className="text-xs text-slate-500">Due now</div>
+                <div className="glass-panel rounded-xl p-3 text-center">
+                  <div className="text-2xl font-bold text-primary-text">{dueCount}</div>
+                  <div className="text-xs text-secondary-text">Due now</div>
                 </div>
-                <div className="bg-emerald-50 rounded-xl p-3 text-center">
-                  <div className="text-2xl font-bold text-emerald-600">{masteredCount}</div>
-                  <div className="text-xs text-emerald-600">Mastered</div>
+                <div className="glass-panel rounded-xl p-3 text-center border-mint/30">
+                  <div className="text-2xl font-bold text-mint">{masteredCount}</div>
+                  <div className="text-xs text-mint">Mastered</div>
                 </div>
               </div>
-              
+
               {cooldownCount > 0 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6">
-                  <div className="flex items-center gap-2 text-amber-700">
+                <div className="bg-amber-500/20 border border-amber-500/40 rounded-xl p-3 mb-6">
+                  <div className="flex items-center gap-2 text-amber-300">
                     <span className="text-lg">📚</span>
                     <span className="text-sm">
                       <strong>{cooldownCount}</strong> {cooldownCount === 1 ? 'objective needs' : 'objectives need'} revision
@@ -4111,7 +4112,7 @@ What is the student's answer?`
 
               {/* Question count selector - simplified to 2 options */}
               <div className="mb-6">
-                <label className="text-sm font-medium text-slate-700 mb-2 block">Questions</label>
+                <label className="text-sm font-medium text-secondary-text mb-2 block">Questions</label>
                 <div className="flex gap-2">
                   {[5, 10].map(n => (
                     <button
@@ -4119,12 +4120,12 @@ What is the student's answer?`
                       onClick={() => setQuestionCount(n)}
                       className={`flex-1 py-3 rounded-xl font-medium transition-all ${
                         questionCount === n
-                          ? practiceMode === 'quickfire' 
-                            ? 'bg-orange-500 text-white' 
+                          ? practiceMode === 'quickfire'
+                            ? 'bg-orange-500 text-white'
                             : practiceMode === 'exam'
                               ? 'bg-red-500 text-white'
-                              : 'bg-slate-900 text-white'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              : 'bg-gradient-violet text-white'
+                          : 'bg-white/10 text-secondary-text hover:bg-white/20'
                       }`}
                     >
                       {n === 5 ? '5 (Quick)' : '10 (Full)'}
@@ -4135,35 +4136,35 @@ What is the student's answer?`
 
               {/* AI Coach Progress - shows until unlocked */}
               {!aiUnlocked && (
-                <div className="mb-6 p-4 bg-gradient-to-br from-slate-50 to-purple-50 border border-purple-100 rounded-xl">
+                <div className="mb-6 p-4 glass-panel border-violet/30 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-violet/30 rounded-full flex items-center justify-center">
                       <span className="text-lg">🔒</span>
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-slate-700">AI Coach</p>
-                      <p className="text-xs text-slate-500">Unlocks in {AI_UNLOCK_THRESHOLD - totalQuestionsAnswered} questions</p>
+                      <p className="text-sm font-medium text-primary-text">AI Coach</p>
+                      <p className="text-xs text-secondary-text">Unlocks in {AI_UNLOCK_THRESHOLD - totalQuestionsAnswered} questions</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold text-purple-600">{totalQuestionsAnswered}/{AI_UNLOCK_THRESHOLD}</p>
+                      <p className="text-lg font-bold text-violet-light">{totalQuestionsAnswered}/{AI_UNLOCK_THRESHOLD}</p>
                     </div>
                   </div>
-                  <div className="mt-2 h-2 bg-purple-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-purple-400 to-violet-500 rounded-full transition-all duration-500"
+                  <div className="mt-2 h-2 bg-violet/20 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-violet rounded-full transition-all duration-500"
                       style={{ width: `${(totalQuestionsAnswered / AI_UNLOCK_THRESHOLD) * 100}%` }}
                     />
                   </div>
                 </div>
               )}
-              
+
               {/* AI Coach Active indicator - shows when unlocked */}
               {aiUnlocked && (
-                <div className="mb-6 p-3 bg-gradient-to-r from-purple-100 to-violet-100 border border-purple-200 rounded-xl">
-                  <div className="flex items-center gap-2 text-purple-700">
+                <div className="mb-6 p-3 glass-panel border-violet/40 rounded-xl">
+                  <div className="flex items-center gap-2 text-violet-light">
                     <span className="text-lg">🤖</span>
                     <span className="text-sm font-medium">AI Coach Active</span>
-                    <span className="ml-auto text-xs bg-purple-200 px-2 py-0.5 rounded-full">Smart feedback enabled</span>
+                    <span className="ml-auto text-xs bg-violet/30 px-2 py-0.5 rounded-full text-primary-text">Smart feedback enabled</span>
                   </div>
                 </div>
               )}
@@ -4174,7 +4175,7 @@ What is the student's answer?`
                 className={`w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg ${
                   practiceMode === 'quickfire'
                     ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-orange-500/25'
-                    : 'bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-indigo-500/25'
+                    : 'btn-gradient-mint text-void shadow-glow-mint'
                 }`}
               >
                 {practiceMode === 'quickfire' ? '⚡ Start Quick Fire' : 'Start Session'}
@@ -4191,27 +4192,28 @@ What is the student's answer?`
   const progressPct = ((currentIndex + (showFeedback ? 1 : 0)) / sessionQueue.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-      
-      <div className="pt-24 pb-24 px-4">
+
+      <div className="pt-24 pb-24 px-4 relative z-10">
         <div className="max-w-lg mx-auto">
           {/* Quick Fire Timer */}
           {practiceMode === 'quickfire' && timeLeft !== null && !showFeedback && (
             <div className="mb-4">
               <div className={`text-center p-3 rounded-xl ${
-                timeLeft <= 5 ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
+                timeLeft <= 5 ? 'bg-red-500/20 border border-red-500/40 text-red-300' : 'bg-orange-500/20 border border-orange-500/40 text-orange-300'
               }`}>
                 <div className="text-3xl font-bold">{timeLeft}s</div>
                 <div className="text-xs">⚡ Quick Fire Mode</div>
               </div>
             </div>
           )}
-          
+
           {/* Exam Mode Banner */}
           {practiceMode === 'exam' && !showFeedback && (
             <div className="mb-4">
-              <div className="text-center p-3 rounded-xl bg-red-50 border border-red-200 text-red-700">
+              <div className="text-center p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300">
                 <div className="font-bold">🎯 Exam Conditions</div>
                 <div className="text-xs">No hints · No scaffolding · Delayed feedback</div>
               </div>
@@ -4221,17 +4223,17 @@ What is the student's answer?`
           {/* Progress bar */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-slate-600">Question {currentIndex + 1} of {sessionQueue.length}</span>
-              <span className="text-sm font-bold text-slate-900">{sessionResults.filter(r => r.correct).length} correct</span>
+              <span className="text-sm font-medium text-secondary-text">Question {currentIndex + 1} of {sessionQueue.length}</span>
+              <span className="text-sm font-bold text-mint">{sessionResults.filter(r => r.correct).length} correct</span>
             </div>
-            <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   practiceMode === 'quickfire'
                     ? 'bg-gradient-to-r from-orange-500 to-red-500'
                     : practiceMode === 'exam'
                       ? 'bg-gradient-to-r from-red-500 to-rose-500'
-                      : 'bg-gradient-to-r from-indigo-500 to-violet-500'
+                      : 'bg-gradient-violet'
                 }`}
                 style={{ width: `${progressPct}%` }}
               />
@@ -4242,23 +4244,23 @@ What is the student's answer?`
               <div className="mt-2 flex items-center gap-2 text-xs">
                 <span className={`px-2 py-0.5 rounded-full font-medium ${
                   current._sessionPhase === 'warmup'
-                    ? 'bg-green-100 text-green-700'
+                    ? 'bg-green-500/20 text-green-300'
                     : current._sessionPhase === 'cooldown'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'bg-violet-100 text-violet-700'
+                      ? 'bg-blue-500/20 text-blue-300'
+                      : 'bg-violet/30 text-violet-light'
                 }`}>
                   {current._sessionPhase === 'warmup' && '🌱 Warm-up'}
                   {current._sessionPhase === 'challenge' && '💪 Challenge'}
                   {current._sessionPhase === 'cooldown' && '✨ Cool-down'}
                 </span>
                 {current._sessionPhase === 'warmup' && (
-                  <span className="text-slate-500">Build confidence</span>
+                  <span className="text-secondary-text">Build confidence</span>
                 )}
                 {current._sessionPhase === 'challenge' && (
-                  <span className="text-slate-500">Main learning</span>
+                  <span className="text-secondary-text">Main learning</span>
                 )}
                 {current._sessionPhase === 'cooldown' && (
-                  <span className="text-slate-500">End on a win</span>
+                  <span className="text-secondary-text">End on a win</span>
                 )}
               </div>
             )}
@@ -4266,9 +4268,9 @@ What is the student's answer?`
 
           {/* Question card */}
           {current && (
-            <div className={`bg-white rounded-3xl border shadow-[0_20px_60px_rgba(15,23,42,0.08)] overflow-hidden ${
-              isScaffoldQuestion ? 'border-indigo-300 ring-2 ring-indigo-100' : 
-              current.isExamQuestion ? 'border-amber-300 ring-2 ring-amber-100' : 'border-slate-200'
+            <div className={`glass-panel rounded-3xl shadow-glass overflow-hidden ${
+              isScaffoldQuestion ? 'border-violet/50 ring-2 ring-violet/20' :
+              current.isExamQuestion ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
             }`}>
               {/* Building Block Banner */}
               {isScaffoldQuestion && (
@@ -4287,33 +4289,33 @@ What is the student's answer?`
               )}
 
               {/* Header with badges */}
-              <div 
+              <div
                 className="px-6 py-3 flex items-center gap-2 flex-wrap"
-                style={{ backgroundColor: isScaffoldQuestion ? '#eef2ff' : current.isExamQuestion ? '#fef3c7' : TOPIC_HEX[current.objective.topic] + '15' }}
+                style={{ backgroundColor: isScaffoldQuestion ? 'rgba(110, 51, 177, 0.2)' : current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
               >
-                <span 
+                <span
                   className="px-2 py-1 rounded-lg text-xs font-bold text-white"
-                  style={{ backgroundColor: isScaffoldQuestion ? '#6366f1' : current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
+                  style={{ backgroundColor: isScaffoldQuestion ? '#6E33B1' : current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
                 >
                   {current.prerequisiteCode || current.objective.code}
                 </span>
-                <span className="text-xs font-medium px-2 py-1 bg-white/50 rounded-lg" style={{ color: isScaffoldQuestion ? '#6366f1' : current.isExamQuestion ? '#b45309' : TOPIC_HEX[current.objective.topic] }}>
+                <span className="text-xs font-medium px-2 py-1 bg-white/10 rounded-lg text-primary-text">
                   {isScaffoldQuestion ? 'Foundation Skill' : current.objective.topicName}
                 </span>
                 {current.objective.isHigher && !isScaffoldQuestion && (
                   <span className="px-2 py-1 bg-purple-500 text-white text-xs font-bold rounded-lg">Higher</span>
                 )}
-                
+
                 {/* Progress toward mastery - show for non-scaffold questions */}
                 {!isScaffoldQuestion && !current.isExamQuestion && (
-                  <span className="px-2 py-1 bg-violet-100 text-violet-700 text-xs font-medium rounded-lg">
+                  <span className="px-2 py-1 bg-violet/30 text-violet-light text-xs font-medium rounded-lg">
                     {Math.min(progress[current.objective.code]?.quickCorrect ?? 0, 4)}/4 quick
                   </span>
                 )}
-                
+
                 {/* Calculator badge */}
                 <span className={`ml-auto px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
-                  current.calculator ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'
+                  current.calculator ? 'bg-mint/20 text-mint' : 'bg-white/10 text-secondary-text'
                 }`}>
                   {current.calculator ? '🧮' : '✏️'}
                   {current.calculator ? 'Calculator' : 'Non-calc'}
@@ -4328,22 +4330,22 @@ What is the student's answer?`
                 )}
 
                 {/* Question text */}
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                <h3 className="text-lg font-semibold text-primary-text mb-4">
                   {renderRecurring(current.q)}
                 </h3>
 
                 {/* Calculator indicator and button */}
                 {current.calculator && !showFeedback && (
                   <div className="flex items-center gap-3 mb-4">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-full text-sm text-emerald-700">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-mint/20 border border-mint/40 rounded-full text-sm text-mint">
                       <span>🧮</span> Calculator allowed
                     </span>
                     <button
                       onClick={() => setShowCalculator(!showCalculator)}
                       className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
                         showCalculator
-                          ? 'bg-violet-600 text-white'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                          ? 'bg-violet text-white'
+                          : 'bg-white/10 hover:bg-white/20 text-secondary-text'
                       }`}
                     >
                       {showCalculator ? 'Hide Calculator' : 'Show Calculator'}
@@ -4363,7 +4365,7 @@ What is the student's answer?`
 
                 {/* Hint for scaffold questions */}
                 {current.hint && (settings?.showHints || isScaffoldQuestion) && (
-                  <p className="text-sm text-slate-500 mb-4 italic">💡 {current.hint}</p>
+                  <p className="text-sm text-secondary-text mb-4 italic">💡 {current.hint}</p>
                 )}
 
                 {/* Answer input */}
@@ -4371,18 +4373,18 @@ What is the student's answer?`
                   <>
                     {current.type === 'self' ? (
                       <div className="space-y-3">
-                        <p className="text-sm text-slate-500 mb-4">Try this on paper, then mark yourself:</p>
+                        <p className="text-sm text-secondary-text mb-4">Try this on paper, then mark yourself:</p>
                         <div className="flex gap-3">
                           <button
                             onClick={() => checkAnswer(true)}
-                            className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-3 bg-mint hover:bg-mint/80 text-void font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
                           >
                             <Check className="w-5 h-5" />
                             Got it right
                           </button>
                           <button
                             onClick={() => checkAnswer(false)}
-                            className="flex-1 py-3 bg-red-400 hover:bg-red-500 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
                           >
                             <X className="w-5 h-5" />
                             Got it wrong
@@ -4396,12 +4398,12 @@ What is the student's answer?`
                             key={i}
                             onClick={() => { setUserAnswer(option); }}
                             className={`w-full p-4 rounded-xl border-2 text-left font-medium transition-all ${
-                              userAnswer === option 
-                                ? 'border-violet-500 bg-violet-50 text-violet-900' 
-                                : 'border-slate-200 hover:border-slate-300 text-slate-700'
+                              userAnswer === option
+                                ? 'border-violet bg-violet/20 text-primary-text'
+                                : 'border-white/20 hover:border-white/40 bg-white/5 text-primary-text'
                             }`}
                           >
-                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-600 text-sm font-bold mr-3">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-secondary-text text-sm font-bold mr-3">
                               {['A', 'B', 'C', 'D'][i]}
                             </span>
                             {renderRecurring(option)}
@@ -4410,8 +4412,8 @@ What is the student's answer?`
 
                         {/* Confidence Rating for MCQ (cognitive science feature) */}
                         {userAnswer && practiceMode === 'standard' && (
-                          <div className="mt-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                            <p className="text-xs text-slate-600 mb-2 font-medium">How confident are you? <span className="text-slate-400">(optional)</span></p>
+                          <div className="mt-3 p-3 glass-panel rounded-xl">
+                            <p className="text-xs text-secondary-text mb-2 font-medium">How confident are you? <span className="text-white/40">(optional)</span></p>
                             <div className="grid grid-cols-4 gap-1">
                               {[
                                 { value: 1, label: '🎲', desc: 'Guessing' },
@@ -4425,8 +4427,8 @@ What is the student's answer?`
                                   onClick={() => setUserConfidence(userConfidence === value ? null : value)}
                                   className={`py-1.5 px-1 rounded-lg text-center transition-all text-sm ${
                                     userConfidence === value
-                                      ? 'bg-violet-100 border-2 border-violet-400 text-violet-700'
-                                      : 'bg-white border border-slate-200 text-slate-600 hover:border-violet-300'
+                                      ? 'bg-violet/30 border-2 border-violet text-violet-light'
+                                      : 'bg-white/5 border border-white/20 text-secondary-text hover:border-violet/50'
                                   }`}
                                 >
                                   <span className="text-lg block">{label}</span>
@@ -4440,7 +4442,7 @@ What is the student's answer?`
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer}
-                          className="w-full mt-4 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 text-white font-semibold rounded-xl transition-all"
+                          className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
                         >
                           Submit Answer
                         </button>
@@ -4448,14 +4450,14 @@ What is the student's answer?`
                     ) : (
                       <div className="space-y-3">
                         {/* Input mode toggle */}
-                        <div className="flex rounded-xl bg-slate-100 p-1">
+                        <div className="flex rounded-xl bg-white/10 p-1">
                           <button
                             type="button"
                             onClick={() => { setInputMode('type'); clearPhoto(); }}
                             className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                               inputMode === 'type'
-                                ? 'bg-white text-slate-900 shadow-sm'
-                                : 'text-slate-500 hover:text-slate-700'
+                                ? 'bg-violet text-white shadow-sm'
+                                : 'text-secondary-text hover:text-primary-text'
                             }`}
                           >
                             <span>⌨️</span> Type
@@ -4466,16 +4468,16 @@ What is the student's answer?`
                             disabled={!aiUnlocked}
                             className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                               !aiUnlocked
-                                ? 'text-slate-300 cursor-not-allowed'
+                                ? 'text-white/30 cursor-not-allowed'
                                 : inputMode === 'photo'
-                                  ? 'bg-white text-slate-900 shadow-sm'
-                                  : 'text-slate-500 hover:text-slate-700'
+                                  ? 'bg-violet text-white shadow-sm'
+                                  : 'text-secondary-text hover:text-primary-text'
                             }`}
                             title={aiUnlocked ? 'Photo mode' : `Unlocks after ${AI_UNLOCK_THRESHOLD - totalQuestionsAnswered} more questions`}
                           >
                             <span>{aiUnlocked ? '📷' : '🔒'}</span> Photo
                             {!aiUnlocked && (
-                              <span className="text-xs bg-slate-200 px-1.5 py-0.5 rounded-full">
+                              <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded-full">
                                 {AI_UNLOCK_THRESHOLD - totalQuestionsAnswered}
                               </span>
                             )}
@@ -4494,7 +4496,7 @@ What is the student's answer?`
                                 onChange={(e) => setUserAnswer(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && userAnswer && checkAnswer()}
                                 placeholder="Type your answer..."
-                                className="w-full px-4 py-3 pr-12 border-2 border-slate-200 rounded-xl focus:border-violet-500 focus:outline-none text-lg"
+                                className="w-full px-4 py-3 pr-12 border-2 border-white/20 rounded-xl focus:border-violet focus:outline-none text-lg bg-white/10 text-primary-text placeholder-secondary-text"
                                 autoFocus
                               />
                               {/* Math keyboard toggle button */}
@@ -4502,9 +4504,9 @@ What is the student's answer?`
                                 type="button"
                                 onClick={() => setShowMathKeyboard(!showMathKeyboard)}
                                 className={`absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg flex items-center justify-center transition-all ${
-                                  showMathKeyboard 
-                                    ? 'bg-violet-100 text-violet-700 ring-2 ring-violet-300' 
-                                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                  showMathKeyboard
+                                    ? 'bg-violet/30 text-violet-light ring-2 ring-violet/50'
+                                    : 'bg-white/10 text-secondary-text hover:bg-white/20'
                                 }`}
                                 title="Math symbols"
                               >
@@ -5456,95 +5458,96 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   const maxQuestions = Math.max(...weeklyActivity.map(d => d.questions), 1);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-      
-      <div className="pt-24 pb-24 px-4">
+
+      <div className="pt-24 pb-24 px-4 relative z-10">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-900">Progress Analytics</h1>
-            <p className="text-slate-500 mt-1">Track your learning journey</p>
+            <h1 className="text-2xl font-bold text-primary-text">Progress Analytics</h1>
+            <p className="text-secondary-text mt-1">Track your learning journey</p>
           </div>
 
           {/* Exam Readiness Card */}
-          <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
+          <div className="glass-panel rounded-3xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-2xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-violet rounded-2xl flex items-center justify-center shadow-glow-violet">
                 <Target className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-slate-900">Exam Readiness</h2>
+                <h2 className="font-bold text-primary-text">Exam Readiness</h2>
                 <p className={`text-sm font-medium ${readiness.color}`}>{readiness.label}</p>
               </div>
               <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-slate-900">{readinessScore}%</div>
+                <div className="text-3xl font-bold text-primary-text">{readinessScore}%</div>
               </div>
             </div>
-            
+
             {/* Readiness bar */}
-            <div className="h-4 bg-slate-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-1000"
+            <div className="h-4 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
                 style={{ width: `${readinessScore}%` }}
               />
             </div>
-            
+
             <div className="grid grid-cols-3 gap-3 mt-4">
               <div className="text-center">
-                <div className="text-lg font-bold text-emerald-600">{masteredCount}</div>
-                <div className="text-xs text-slate-500">Mastered</div>
+                <div className="text-lg font-bold text-mint">{masteredCount}</div>
+                <div className="text-xs text-secondary-text">Mastered</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-amber-600">{learningCount}</div>
-                <div className="text-xs text-slate-500">Learning</div>
+                <div className="text-lg font-bold text-amber-400">{learningCount}</div>
+                <div className="text-xs text-secondary-text">Learning</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-slate-400">{totalObjectiveCount - masteredCount - learningCount}</div>
-                <div className="text-xs text-slate-500">Not Started</div>
+                <div className="text-lg font-bold text-secondary-text">{totalObjectiveCount - masteredCount - learningCount}</div>
+                <div className="text-xs text-secondary-text">Not Started</div>
               </div>
             </div>
           </div>
 
           {/* Weekly Activity Chart */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                  <Calendar className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-violet-light" />
                 </div>
-                <h2 className="font-semibold text-slate-900">Weekly Activity</h2>
+                <h2 className="font-semibold text-primary-text">Weekly Activity</h2>
               </div>
             </div>
-            
+
             {/* Simple bar chart */}
             <div className="flex items-end justify-between gap-2 h-32 mt-4">
               {weeklyActivity.map((day, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-1">
                   <div className="w-full flex flex-col items-center justify-end h-24">
                     {day.questions > 0 ? (
-                      <div 
-                        className="w-full max-w-[40px] bg-gradient-to-t from-indigo-500 to-violet-400 rounded-t-lg transition-all"
+                      <div
+                        className="w-full max-w-[40px] bg-gradient-to-t from-violet to-violet-light rounded-t-lg transition-all"
                         style={{ height: `${(day.questions / maxQuestions) * 100}%`, minHeight: '8px' }}
                       />
                     ) : (
-                      <div className="w-full max-w-[40px] h-2 bg-slate-100 rounded-lg" />
+                      <div className="w-full max-w-[40px] h-2 bg-white/10 rounded-lg" />
                     )}
                   </div>
-                  <span className="text-xs text-slate-500">{day.day}</span>
-                  <span className="text-xs font-medium text-slate-700">{day.questions}</span>
+                  <span className="text-xs text-secondary-text">{day.day}</span>
+                  <span className="text-xs font-medium text-primary-text">{day.questions}</span>
                 </div>
               ))}
             </div>
-            
-            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-slate-100">
+
+            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-white/10">
               <div className="text-center">
-                <div className="text-lg font-bold text-slate-900">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
-                <div className="text-xs text-slate-500">Sessions this week</div>
+                <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
+                <div className="text-xs text-secondary-text">Sessions this week</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-slate-900">{weeklyActivity.reduce((s, d) => s + d.questions, 0)}</div>
-                <div className="text-xs text-slate-500">Questions answered</div>
+                <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.questions, 0)}</div>
+                <div className="text-xs text-secondary-text">Questions answered</div>
               </div>
             </div>
           </div>
@@ -5913,45 +5916,46 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+    <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-      
-      <div className="pt-24 pb-24 px-4">
+
+      <div className="pt-24 pb-24 px-4 relative z-10">
         <div className="max-w-lg mx-auto space-y-6">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-            <p className="text-slate-500 mt-1">Customise your learning experience</p>
+            <h1 className="text-2xl font-bold text-primary-text">Settings</h1>
+            <p className="text-secondary-text mt-1">Customise your learning experience</p>
           </div>
 
           {/* Account Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)] mb-6">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass mb-6">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <User className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                <User className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-slate-900">Account</h2>
-                <p className="text-sm text-slate-500">Manage your account and subscription</p>
+                <h2 className="font-semibold text-primary-text">Account</h2>
+                <p className="text-sm text-secondary-text">Manage your account and subscription</p>
               </div>
             </div>
 
             {user ? (
               <div className="space-y-4">
                 {/* User info */}
-                <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="w-10 h-10 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold">
                       {(profile?.display_name || user.email)?.[0]?.toUpperCase() || '?'}
                     </div>
                     <div>
-                      <div className="font-medium text-slate-900">{profile?.display_name || 'User'}</div>
-                      <div className="text-sm text-slate-500">{user.email}</div>
+                      <div className="font-medium text-primary-text">{profile?.display_name || 'User'}</div>
+                      <div className="text-sm text-secondary-text">{user.email}</div>
                     </div>
                   </div>
                   <button
                     onClick={onSignOut}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     Sign out
@@ -5959,21 +5963,21 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 </div>
 
                 {/* Subscription status */}
-                <div className="flex items-center justify-between p-4 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl border border-violet-100">
+                <div className="flex items-center justify-between p-4 bg-violet/20 rounded-xl border border-violet/30">
                   <div>
-                    <div className="text-sm text-slate-600">Subscription</div>
-                    <div className="font-semibold text-slate-900">
+                    <div className="text-sm text-secondary-text">Subscription</div>
+                    <div className="font-semibold text-primary-text">
                       {isSubscribed ? (
-                        <span className="text-green-600">Premium Active</span>
+                        <span className="text-mint">Premium Active</span>
                       ) : (
-                        <span className="text-amber-600">Free Plan</span>
+                        <span className="text-amber-400">Free Plan</span>
                       )}
                     </div>
                   </div>
                   {!isSubscribed && (
                     <button
                       onClick={onUpgrade}
-                      className="px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
+                      className="px-4 py-2 btn-gradient-mint text-void text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
                     >
                       Upgrade
                     </button>
@@ -5981,31 +5985,31 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 </div>
 
                 {/* Sync status */}
-                <div className="flex items-center gap-2 text-sm text-green-600">
+                <div className="flex items-center gap-2 text-sm text-mint">
                   <Check className="w-4 h-4" />
                   Progress syncing to cloud
                 </div>
               </div>
             ) : (
               <div className="space-y-4">
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-secondary-text">
                   Create an account to sync your progress across devices and unlock unlimited practice.
                 </p>
                 <div className="flex gap-3">
                   <button
                     onClick={onSignUp}
-                    className="flex-1 py-3 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium rounded-xl hover:opacity-90 transition-opacity"
+                    className="flex-1 py-3 btn-gradient-mint text-void font-medium rounded-xl hover:opacity-90 transition-opacity"
                   >
                     Create Account
                   </button>
                   <button
                     onClick={onSignIn}
-                    className="flex-1 py-3 border border-slate-300 text-slate-700 font-medium rounded-xl hover:bg-slate-50 transition-colors"
+                    className="flex-1 py-3 border border-white/20 text-primary-text font-medium rounded-xl hover:bg-white/10 transition-colors"
                   >
                     Sign In
                   </button>
                 </div>
-                <p className="text-xs text-slate-400 text-center">
+                <p className="text-xs text-secondary-text text-center">
                   Free: 5 questions/day · Premium: Unlimited
                 </p>
               </div>
@@ -6013,14 +6017,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           </div>
 
           {/* Study Preferences */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-violet-600" />
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-slate-900">Study Preferences</h2>
-                <p className="text-sm text-slate-500">Adjust your practice sessions</p>
+                <h2 className="font-semibold text-primary-text">Study Preferences</h2>
+                <p className="text-sm text-secondary-text">Adjust your practice sessions</p>
               </div>
             </div>
 
@@ -6028,8 +6032,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Questions per session */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium text-slate-700">Questions per session</label>
-                  <span className="text-sm font-bold text-violet-600 bg-violet-50 px-2 py-1 rounded-lg">
+                  <label className="text-sm font-medium text-secondary-text">Questions per session</label>
+                  <span className="text-sm font-bold text-violet-light bg-violet/30 px-2 py-1 rounded-lg">
                     {settings.questionsPerSession}
                   </span>
                 </div>
@@ -6040,9 +6044,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="5"
                   value={settings.questionsPerSession}
                   onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer accent-violet-600"
+                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-violet"
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>5</span>
                   <span>30</span>
                 </div>
@@ -6051,13 +6055,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Show hints toggle */}
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-sm font-medium text-slate-700">Show hints</div>
-                  <div className="text-xs text-slate-500">Display helpful hints during practice</div>
+                  <div className="text-sm font-medium text-secondary-text">Show hints</div>
+                  <div className="text-xs text-white/40">Display helpful hints during practice</div>
                 </div>
                 <button
                   onClick={() => updateSetting('showHints', !settings.showHints)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.showHints ? 'bg-violet-600' : 'bg-slate-200'
+                    settings.showHints ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -6069,13 +6073,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Higher tier toggle */}
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-sm font-medium text-slate-700">Include Higher tier</div>
-                  <div className="text-xs text-slate-500">Add Higher-only objectives to practice</div>
+                  <div className="text-sm font-medium text-secondary-text">Include Higher tier</div>
+                  <div className="text-xs text-white/40">Add Higher-only objectives to practice</div>
                 </div>
                 <button
                   onClick={() => updateSetting('includeHigherTier', !settings.includeHigherTier)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.includeHigherTier ? 'bg-violet-600' : 'bg-slate-200'
+                    settings.includeHigherTier ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -6085,10 +6089,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
 
               {/* Daily goal */}
-              <div className="pt-4 border-t border-slate-100">
+              <div className="pt-4 border-t border-white/10">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium text-slate-700">Daily question goal</label>
-                  <span className="text-sm font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg">
+                  <label className="text-sm font-medium text-secondary-text">Daily question goal</label>
+                  <span className="text-sm font-bold text-mint bg-mint/20 px-2 py-1 rounded-lg">
                     {settings.dailyGoal ?? 10}
                   </span>
                 </div>
@@ -6099,9 +6103,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="5"
                   value={settings.dailyGoal ?? 10}
                   onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer accent-emerald-600"
+                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-mint"
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>5</span>
                   <span>50</span>
                 </div>
@@ -6110,8 +6114,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Weekly mastery goal */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm font-medium text-slate-700">Weekly mastery goal</label>
-                  <span className="text-sm font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">
+                  <label className="text-sm font-medium text-secondary-text">Weekly mastery goal</label>
+                  <span className="text-sm font-bold text-amber-400 bg-amber-400/20 px-2 py-1 rounded-lg">
                     {settings.weeklyMasteryGoal ?? 3}
                   </span>
                 </div>
@@ -6122,33 +6126,33 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="1"
                   value={settings.weeklyMasteryGoal ?? 3}
                   onChange={(e) => updateSetting('weeklyMasteryGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-full appearance-none cursor-pointer accent-amber-600"
+                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-400"
                 />
-                <div className="flex justify-between text-xs text-slate-400 mt-1">
+                <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>1</span>
                   <span>10</span>
                 </div>
-                <p className="text-xs text-slate-500 mt-2">Objectives to master each week</p>
+                <p className="text-xs text-white/40 mt-2">Objectives to master each week</p>
               </div>
             </div>
           </div>
 
           {/* Accessibility & Focus */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Target className="w-5 h-5 text-blue-600" />
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                <Target className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-slate-900">Accessibility</h2>
-                <p className="text-sm text-slate-500">Customize your learning experience</p>
+                <h2 className="font-semibold text-primary-text">Accessibility</h2>
+                <p className="text-sm text-secondary-text">Customize your learning experience</p>
               </div>
             </div>
 
             <div className="space-y-6">
               {/* Font Size */}
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-2 block">Text Size</label>
+                <label className="text-sm font-medium text-secondary-text mb-2 block">Text Size</label>
                 <div className="flex gap-2">
                   {[
                     { value: 'normal', label: 'A', size: 'text-sm' },
