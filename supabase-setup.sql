@@ -12,9 +12,14 @@ create table if not exists public.profiles (
   tier text default 'foundation',
   subscription_status text default 'free',
   stripe_customer_id text,
+  stripe_subscription_id text,
+  subscription_updated_at timestamp with time zone,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
   updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
+
+-- Index for faster Stripe webhook lookups
+create index if not exists idx_profiles_stripe_customer_id on public.profiles(stripe_customer_id);
 
 -- 2. USER PROGRESS TABLE
 -- Stores progress per objective (migrated from localStorage)

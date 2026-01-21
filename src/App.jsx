@@ -1,18 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, BookOpen, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, Home, Play, Settings, Flame, Brain, Trophy } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
+import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon } from './components/MathIcons';
 
-// Using Lucide icons - all standard icons for reliability
-const HomeIcon = Home;
-const PracticeIcon = Play;
-const SettingsIcon = Settings;
-const StreakIcon = Flame;
-const StatsIcon = Brain;
-const TrophyIcon = Trophy;
-const StandardIcon = BookOpen;
+// Custom maths-themed icons for the app
+const HomeIcon = CubeIcon;           // 3D cube for Home
+const PracticeIcon = SquareRootIcon; // Square root √ for Practice
+const SettingsIcon = CompassIcon;    // Drawing compass for Settings
+const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
+const StatsIcon = BrainIcon;         // Brain for Stats
+const TrophyIcon = CompassStarIcon;  // Compass star for Awards
+const StandardIcon = BooksIcon;      // Stack of books for Standard mode
 
 // ==================== RECURRING DECIMAL COMPONENT ====================
 // Renders recurring decimals with clear dots above digits (UK GCSE standard)
@@ -2807,11 +2808,46 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     });
   });
 
-  // Separate into buckets for session structure
-  const dueCards = allQuestions.filter(q => q.dueScore <= 1).sort((a, b) => a.dueScore - b.dueScore);
-  const newCards = allQuestions.filter(q => q.state === 'new' && q.dueScore > 1);
-  const examReadyCards = allQuestions.filter(q => q.isExamReady);
-  const easyCards = allQuestions.filter(q => q.difficulty < 0.4 && q.retrievability > 0.8);
+  // Helper for randomized sorting (breaks ties randomly for variety)
+  const randomizedSort = (arr, scoreFn) => {
+    return [...arr].sort((a, b) => {
+      const scoreA = scoreFn(a);
+      const scoreB = scoreFn(b);
+      // If scores are very close (within 0.01), randomize
+      if (Math.abs(scoreA - scoreB) < 0.01) {
+        return Math.random() - 0.5;
+      }
+      return scoreA - scoreB;
+    });
+  };
+
+  // Shuffle array helper (Fisher-Yates)
+  const shuffleArray = (arr) => {
+    const shuffled = [...arr];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Group questions by topic for balanced selection
+  const questionsByTopic = {};
+  allQuestions.forEach(q => {
+    const topic = q.objective?.topic || 'Unknown';
+    if (!questionsByTopic[topic]) questionsByTopic[topic] = [];
+    questionsByTopic[topic].push(q);
+  });
+  const topicNames = Object.keys(questionsByTopic);
+
+  // Separate into buckets with randomized sorting for variety
+  const dueCards = randomizedSort(
+    allQuestions.filter(q => q.dueScore <= 1),
+    q => q.dueScore
+  );
+  const newCards = shuffleArray(allQuestions.filter(q => q.state === 'new' && q.dueScore > 1));
+  const examReadyCards = shuffleArray(allQuestions.filter(q => q.isExamReady));
+  const easyCards = shuffleArray(allQuestions.filter(q => q.difficulty < 0.4 && q.retrievability > 0.8));
 
   // Build session with structure
   const queue = [];
@@ -2839,18 +2875,46 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     return (objectiveCount[objCode] || 0) < MAX_PER_OBJECTIVE;
   };
 
-  // Helper to apply discriminative interleaving
+  // Track topic usage for balanced distribution
+  const topicCount = {};
+  const getTopicCount = (topic) => topicCount[topic] || 0;
+  const incrementTopicCount = (topic) => {
+    topicCount[topic] = (topicCount[topic] || 0) + 1;
+  };
+
+  // Find the least-used topic among candidates
+  const getLeastUsedTopicCandidate = (candidates) => {
+    let minCount = Infinity;
+    let bestIdx = -1;
+
+    for (let i = 0; i < candidates.length; i++) {
+      const c = candidates[i];
+      if (!c?.objective?.code ||
+          usedQuestionIds.has(c.questionId) ||
+          !canAddObjective(c.objective.code)) {
+        continue;
+      }
+
+      const topic = c.objective.topic;
+      const count = getTopicCount(topic);
+
+      if (count < minCount) {
+        minCount = count;
+        bestIdx = i;
+      }
+    }
+
+    return bestIdx;
+  };
+
+  // Helper to apply discriminative interleaving with topic balancing
   const addWithInterleaving = (candidates, phase, maxCount) => {
     let added = 0;
     const candidatesCopy = [...candidates];
 
     while (added < maxCount && candidatesCopy.length > 0) {
-      // Pick next candidate that hasn't exceeded objective limit
-      const nextIdx = candidatesCopy.findIndex(c =>
-        c?.objective?.code &&
-        !usedQuestionIds.has(c.questionId) &&
-        canAddObjective(c.objective.code)
-      );
+      // Pick candidate from the least-used topic for better variety
+      const nextIdx = getLeastUsedTopicCandidate(candidatesCopy);
 
       if (nextIdx === -1) break; // No more valid candidates
 
@@ -2858,6 +2922,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
 
       if (addToQueue(next, phase)) {
         added++;
+        incrementTopicCount(next.objective.topic);
 
         // Try to add a confusable pair immediately after (interleaving)
         if (added < maxCount && next.objective?.code && confusablePairs[next.objective.code]) {
@@ -2872,6 +2937,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
             const confusable = candidatesCopy.splice(confusableIdx, 1)[0];
             if (addToQueue(confusable, phase)) {
               added++;
+              incrementTopicCount(confusable.objective.topic);
             }
           }
         }
@@ -2880,20 +2946,13 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     return added;
   };
 
-  // Phase 1: Warm-up (easy questions from different objectives)
+  // Phase 1: Warm-up (easy questions from different objectives, randomized for variety)
   const warmUpCandidates = easyCards.length > 0
     ? easyCards
-    : allQuestions.filter(q => q.difficulty < 0.5).sort((a, b) => a.difficulty - b.difficulty);
+    : shuffleArray(allQuestions.filter(q => q.difficulty < 0.5));
 
-  let warmUpAdded = 0;
-  for (let i = 0; i < warmUpCandidates.length && warmUpAdded < SESSION_STRUCTURE.warmUp; i++) {
-    const candidate = warmUpCandidates[i];
-    if (candidate?.objective?.code && canAddObjective(candidate.objective.code)) {
-      if (addToQueue(candidate, 'warmup')) {
-        warmUpAdded++;
-      }
-    }
-  }
+  // Use topic balancing for warm-up too
+  addWithInterleaving(warmUpCandidates, 'warmup', SESSION_STRUCTURE.warmUp);
 
   // Phase 2: Challenge (interleaved due cards, exam-ready, and new)
   const challengeTarget = SESSION_STRUCTURE.challenge;
@@ -2921,42 +2980,43 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0)
     newTarget
   );
 
-  // Phase 3: Cool-down (end on an easy success from a different objective)
-  const coolDownCandidates = allQuestions
-    .filter(q =>
+  // Phase 3: Cool-down (end on an easy success from a different objective/topic)
+  const coolDownCandidates = shuffleArray(
+    allQuestions.filter(q =>
       !usedQuestionIds.has(q.questionId) &&
       q.difficulty < 0.4 &&
       q?.objective?.code &&
       canAddObjective(q.objective.code)
     )
-    .sort((a, b) => a.difficulty - b.difficulty);
+  );
 
-  if (coolDownCandidates.length > 0) {
-    addToQueue(coolDownCandidates[0], 'cooldown');
-  } else {
-    // Fall back to any unused question from a different objective
-    const fallback = allQuestions.find(q =>
+  // Use topic balancing for cool-down
+  addWithInterleaving(coolDownCandidates, 'cooldown', SESSION_STRUCTURE.coolDown);
+
+  // If no cool-down was added, fall back to any unused question
+  if (queue.filter(q => q.sessionPhase === 'cooldown').length === 0) {
+    const fallback = shuffleArray(allQuestions.filter(q =>
       !usedQuestionIds.has(q.questionId) &&
       q?.objective?.code &&
       canAddObjective(q.objective.code)
-    );
-    if (fallback) addToQueue(fallback, 'cooldown');
+    ));
+    if (fallback.length > 0) {
+      addToQueue(fallback[0], 'cooldown');
+      incrementTopicCount(fallback[0].objective.topic);
+    }
   }
 
-  // Fill any remaining slots with questions from different objectives
+  // Fill any remaining slots with topic-balanced questions
   const remainingSlots = count - queue.length;
   if (remainingSlots > 0) {
-    const unused = allQuestions
-      .filter(q =>
+    const unused = shuffleArray(
+      allQuestions.filter(q =>
         !usedQuestionIds.has(q.questionId) &&
         q?.objective?.code &&
         canAddObjective(q.objective.code)
       )
-      .sort((a, b) => a.dueScore - b.dueScore);
-
-    for (let i = 0; i < Math.min(remainingSlots, unused.length); i++) {
-      addToQueue(unused[i], 'challenge');
-    }
+    );
+    addWithInterleaving(unused, 'challenge', remainingSlots);
   }
 
   // Reorder to ensure warm-up first, cool-down last

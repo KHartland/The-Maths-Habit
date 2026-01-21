@@ -1,13 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { redirectToCheckout, STRIPE_PRICES } from '../lib/stripe';
 
 const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
   const { user, questionsRemaining, FREE_DAILY_LIMIT, dailyQuestionsUsed } = useAuth();
+  const [selectedPlan, setSelectedPlan] = useState('yearly');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   if (!isOpen) return null;
 
   const remaining = questionsRemaining();
   const isLimitReached = remaining <= 0;
+
+  const handleUpgrade = async () => {
+    if (!user) {
+      onSignUp();
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const priceId = selectedPlan === 'monthly'
+        ? STRIPE_PRICES.MONTHLY
+        : STRIPE_PRICES.YEARLY;
+
+      await redirectToCheckout({
+        priceId,
+        userId: user.id,
+        userEmail: user.email,
+      });
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError('Unable to start checkout. Please try again.');
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -19,6 +49,7 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          disabled={isLoading}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -63,19 +94,35 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
 
           {/* Pricing cards */}
           <div className="grid grid-cols-2 gap-3 mb-6">
-            <div className="border-2 border-gray-200 rounded-xl p-4 text-left">
+            <button
+              onClick={() => setSelectedPlan('monthly')}
+              disabled={isLoading}
+              className={`border-2 rounded-xl p-4 text-left transition-all ${
+                selectedPlan === 'monthly'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <div className="text-sm text-gray-500 mb-1">Monthly</div>
               <div className="text-2xl font-bold">£3.99</div>
               <div className="text-xs text-gray-400">/month</div>
-            </div>
-            <div className="border-2 border-blue-500 rounded-xl p-4 text-left relative bg-blue-50">
+            </button>
+            <button
+              onClick={() => setSelectedPlan('yearly')}
+              disabled={isLoading}
+              className={`border-2 rounded-xl p-4 text-left relative transition-all ${
+                selectedPlan === 'yearly'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               <div className="absolute -top-2 right-2 bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
                 Save 37%
               </div>
               <div className="text-sm text-gray-500 mb-1">Yearly</div>
               <div className="text-2xl font-bold">£29.99</div>
               <div className="text-xs text-gray-400">/year</div>
-            </div>
+            </button>
           </div>
 
           {/* Features */}
@@ -106,16 +153,31 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
             </div>
           </div>
 
+          {/* Error message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+
           {/* CTA Buttons */}
           {user ? (
             <button
-              onClick={() => {
-                // TODO: Redirect to Stripe checkout
-                alert('Stripe checkout coming soon!');
-              }}
-              className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+              onClick={handleUpgrade}
+              disabled={isLoading}
+              className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Upgrade Now
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Processing...
+                </>
+              ) : (
+                `Upgrade Now - ${selectedPlan === 'monthly' ? '£3.99/mo' : '£29.99/yr'}`
+              )}
             </button>
           ) : (
             <>
@@ -133,6 +195,14 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
               </button>
             </>
           )}
+
+          {/* Secure payment badge */}
+          <p className="mt-4 text-xs text-gray-400 flex items-center justify-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Secure payment via Stripe
+          </p>
         </div>
       </div>
     </div>
