@@ -5959,7 +5959,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
             </div>
 
-            {user ? (
+            {user && (
               <div className="space-y-4">
                 {/* User info */}
                 <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
@@ -6008,29 +6008,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   <Check className="w-4 h-4" />
                   Progress syncing to cloud
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-sm text-secondary-text">
-                  Create an account to sync your progress across devices and unlock unlimited practice.
-                </p>
-                <div className="flex gap-3">
-                  <button
-                    onClick={onSignUp}
-                    className="flex-1 py-3 btn-gradient-mint text-void font-medium rounded-xl hover:opacity-90 transition-opacity"
-                  >
-                    Create Account
-                  </button>
-                  <button
-                    onClick={onSignIn}
-                    className="flex-1 py-3 border border-white/20 text-primary-text font-medium rounded-xl hover:bg-white/10 transition-colors"
-                  >
-                    Sign In
-                  </button>
-                </div>
-                <p className="text-xs text-secondary-text text-center">
-                  Free: 5 questions/day · Premium: Unlimited
-                </p>
               </div>
             )}
           </div>
