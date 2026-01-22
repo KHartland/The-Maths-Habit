@@ -6249,7 +6249,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Export button */}
               <button
                 onClick={handleExport}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-xl transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Export Progress
@@ -6258,7 +6258,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Import button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-2 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-3 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-xl transition-colors"
               >
                 <Upload className="w-4 h-4" />
                 Import Progress
@@ -6274,39 +6274,39 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Import status */}
               {importStatus && (
                 <div className={`p-3 rounded-xl text-sm ${
-                  importStatus === 'success' 
-                    ? 'bg-emerald-50 text-emerald-700' 
-                    : 'bg-red-50 text-red-700'
+                  importStatus === 'success'
+                    ? 'bg-mint/20 text-mint'
+                    : 'bg-red-500/20 text-red-400'
                 }`}>
-                  {importStatus === 'success' 
-                    ? '✓ Progress imported successfully!' 
+                  {importStatus === 'success'
+                    ? '✓ Progress imported successfully!'
                     : '✗ Failed to import. Check file format.'}
                 </div>
               )}
 
               {/* Reset button */}
-              <div className="pt-4 border-t border-slate-100">
+              <div className="pt-4 border-t border-white/10">
                 {!showResetConfirm ? (
                   <button
                     onClick={() => setShowResetConfirm(true)}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium rounded-xl transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                     Reset All Progress
                   </button>
                 ) : (
-                  <div className="bg-red-50 rounded-xl p-4">
-                    <div className="flex items-center gap-2 text-red-700 mb-3">
+                  <div className="bg-red-500/20 rounded-xl p-4 border border-red-500/30">
+                    <div className="flex items-center gap-2 text-red-400 mb-3">
                       <AlertTriangle className="w-5 h-5" />
                       <span className="font-semibold">Are you sure?</span>
                     </div>
-                    <p className="text-sm text-red-600 mb-4">
+                    <p className="text-sm text-red-300 mb-4">
                       This will permanently delete all your progress. This action cannot be undone.
                     </p>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowResetConfirm(false)}
-                        className="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg transition-colors border border-slate-200"
+                        className="flex-1 py-2 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-lg transition-colors"
                       >
                         Cancel
                       </button>
@@ -6324,24 +6324,24 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           </div>
 
           {/* About */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <Info className="w-5 h-5 text-indigo-600" />
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                <Info className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-slate-900">About</h2>
-                <p className="text-sm text-slate-500">The Maths Habit v1.0</p>
+                <h2 className="font-semibold text-primary-text">About</h2>
+                <p className="text-sm text-secondary-text">The Maths Habit v1.0</p>
               </div>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              A spaced repetition app designed to help GCSE students master every maths objective. 
+            <p className="text-sm text-secondary-text leading-relaxed">
+              A spaced repetition app designed to help GCSE students master every maths objective.
               Practice a little each day to build lasting understanding and confidence.
             </p>
-            <div className="mt-4 pt-4 border-t border-slate-100">
+            <div className="mt-4 pt-4 border-t border-white/10">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-500">Objectives tracked</span>
-                <span className="font-medium text-slate-900">{Object.keys(progress).length}</span>
+                <span className="text-secondary-text">Objectives tracked</span>
+                <span className="font-medium text-primary-text">{Object.keys(progress).length}</span>
               </div>
             </div>
           </div>
