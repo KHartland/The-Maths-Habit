@@ -4120,24 +4120,33 @@ What is the student's answer?`
               <div className="mb-6">
                 <label className="text-sm font-medium text-secondary-text mb-2 block">Questions</label>
                 <div className="flex gap-2">
-                  {[5, 10].map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setQuestionCount(n)}
-                      className={`flex-1 py-3 rounded-xl font-medium transition-all ${
-                        questionCount === n
-                          ? practiceMode === 'quickfire'
-                            ? 'bg-orange-500 text-white'
-                            : practiceMode === 'exam'
-                              ? 'bg-red-500 text-white'
-                              : 'bg-gradient-violet text-white'
-                          : 'bg-white/10 text-secondary-text hover:bg-white/20'
-                      }`}
-                    >
-                      {n === 5 ? '5 (Quick)' : '10 (Full)'}
-                    </button>
-                  ))}
+                  {[5, 10].map(n => {
+                    const isLocked = !isSubscribed && n > (FREE_DAILY_LIMIT ?? 5);
+                    return (
+                      <button
+                        key={n}
+                        onClick={() => !isLocked && setQuestionCount(n)}
+                        disabled={isLocked}
+                        className={`flex-1 py-3 rounded-xl font-medium transition-all ${
+                          isLocked
+                            ? 'bg-white/5 text-secondary-text/50 cursor-not-allowed'
+                            : questionCount === n
+                              ? practiceMode === 'quickfire'
+                                ? 'bg-orange-500 text-white'
+                                : practiceMode === 'exam'
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-gradient-violet text-white'
+                              : 'bg-white/10 text-secondary-text hover:bg-white/20'
+                        }`}
+                      >
+                        {isLocked ? '🔒 10' : n === 5 ? '5 (Quick)' : '10 (Full)'}
+                      </button>
+                    );
+                  })}
                 </div>
+                {!isSubscribed && (
+                  <p className="text-xs text-amber-400 mt-2">Free plan: 5 questions per day</p>
+                )}
               </div>
 
               {/* AI Coach Progress - shows until unlocked */}
