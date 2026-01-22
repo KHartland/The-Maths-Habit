@@ -3085,7 +3085,7 @@ const getQuestion = (objective, progressData) => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT }) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -3093,7 +3093,12 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
   const [sessionResults, setSessionResults] = useState([]);
-  const [questionCount, setQuestionCount] = useState(settings?.questionsPerSession ?? 5);
+  const [questionCount, setQuestionCount] = useState(() => {
+    // Free users are limited to 5 questions per session
+    const requested = settings?.questionsPerSession ?? 5;
+    if (!isSubscribed) return Math.min(requested, FREE_DAILY_LIMIT ?? 5);
+    return requested;
+  });
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
   const [masteryGained, setMasteryGained] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -6035,22 +6040,39 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-secondary-text">Questions per session</label>
                   <span className="text-sm font-bold text-violet-light bg-violet/30 px-2 py-1 rounded-lg">
-                    {settings.questionsPerSession}
+                    {isSubscribed ? settings.questionsPerSession : 5}
                   </span>
                 </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="30"
-                  step="5"
-                  value={settings.questionsPerSession}
-                  onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
-                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-violet"
-                />
-                <div className="flex justify-between text-xs text-secondary-text mt-1">
-                  <span>5</span>
-                  <span>30</span>
-                </div>
+                {isSubscribed ? (
+                  <input
+                    type="range"
+                    min="5"
+                    max="30"
+                    step="5"
+                    value={settings.questionsPerSession}
+                    onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
+                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-violet"
+                  />
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="range"
+                      min="5"
+                      max="30"
+                      step="5"
+                      value={5}
+                      disabled
+                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                    />
+                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
+                  </div>
+                )}
+                {isSubscribed && (
+                  <div className="flex justify-between text-xs text-secondary-text mt-1">
+                    <span>5</span>
+                    <span>30</span>
+                  </div>
+                )}
               </div>
 
               {/* Show hints toggle */}
@@ -6094,22 +6116,39 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-secondary-text">Daily question goal</label>
                   <span className="text-sm font-bold text-mint bg-mint/20 px-2 py-1 rounded-lg">
-                    {settings.dailyGoal ?? 10}
+                    {isSubscribed ? (settings.dailyGoal ?? 10) : 5}
                   </span>
                 </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="50"
-                  step="5"
-                  value={settings.dailyGoal ?? 10}
-                  onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-mint"
-                />
-                <div className="flex justify-between text-xs text-secondary-text mt-1">
-                  <span>5</span>
-                  <span>50</span>
-                </div>
+                {isSubscribed ? (
+                  <input
+                    type="range"
+                    min="5"
+                    max="50"
+                    step="5"
+                    value={settings.dailyGoal ?? 10}
+                    onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
+                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-mint"
+                  />
+                ) : (
+                  <div className="relative">
+                    <input
+                      type="range"
+                      min="5"
+                      max="50"
+                      step="5"
+                      value={5}
+                      disabled
+                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                    />
+                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
+                  </div>
+                )}
+                {isSubscribed && (
+                  <div className="flex justify-between text-xs text-secondary-text mt-1">
+                    <span>5</span>
+                    <span>50</span>
+                  </div>
+                )}
               </div>
 
               {/* Weekly mastery goal */}
@@ -7132,7 +7171,7 @@ function AppContent() {
   const dailyActivity = loadDailyActivity();
   const todayKey = getTodayKey();
   const todayQuestions = dailyActivity[todayKey]?.questions ?? 0;
-  const dailyGoal = settings.dailyGoal ?? 10;
+  const dailyGoal = isSubscribed ? (settings.dailyGoal ?? 10) : FREE_DAILY_LIMIT;
   const dailyProgress = Math.min((todayQuestions / dailyGoal) * 100, 100);
   
   // Weekly mastery progress
@@ -7257,7 +7296,7 @@ function AppContent() {
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
-      <PracticePage 
+      <PracticePage
         dailyObjectives={dailyObjectives}
         progress={progress}
         setProgress={setProgress}
@@ -7266,6 +7305,8 @@ function AppContent() {
         dayStreak={dayStreak}
         allObjectives={allObjectives}
         settings={settings}
+        isSubscribed={isSubscribed}
+        FREE_DAILY_LIMIT={FREE_DAILY_LIMIT}
       />
     );
   }
