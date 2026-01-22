@@ -7604,23 +7604,18 @@ function AppContent() {
                       aspectRatio: '1',
                       borderRadius: 8,
                       background: getTileColor(TOPIC_HEX[obj.topic], level, recency),
-                      border: isMastered ? '2px solid rgba(56,230,162,0.8)' :
-                              isExamReady ? '2px solid rgba(251,191,36,0.7)' :
+                      border: isMastered ? '2px solid rgba(255,255,255,0.9)' :
+                              isExamReady ? '2px solid rgba(56,230,162,0.8)' :
                               needsRevisit ? '1px dashed rgba(255,255,255,0.2)' :
                               '1px solid rgba(255,255,255,0.06)',
-                      boxShadow: isMastered ? '0 0 12px rgba(56,230,162,0.3)' :
-                                 isExamReady ? '0 0 8px rgba(251,191,36,0.2)' : 'none',
+                      boxShadow: isMastered ? '0 0 10px rgba(255,255,255,0.25)' :
+                                 isExamReady ? '0 0 10px rgba(56,230,162,0.3)' : 'none',
                     }}
                     className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >
                     {isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <Check className="w-4 h-4 text-white drop-shadow-md" strokeWidth={3} />
-                      </span>
-                    )}
-                    {isExamReady && !isMastered && (
-                      <span className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-xs">📝</span>
                       </span>
                     )}
                     {needsRevisit && !isExamReady && (
@@ -7642,8 +7637,8 @@ function AppContent() {
                 <div
                   style={{
                     width: 18, height: 18, borderRadius: 4,
-                    background: '#8B5CF6', border: '2px solid rgba(255,255,255,0.8)',
-                    boxShadow: '0 2px 8px rgba(139,92,246,0.4)',
+                    background: '#8B5CF6', border: '2px solid rgba(255,255,255,0.9)',
+                    boxShadow: '0 0 8px rgba(255,255,255,0.2)',
                   }}
                   className="flex items-center justify-center"
                 >
@@ -7656,7 +7651,8 @@ function AppContent() {
                   style={{
                     width: 18, height: 18, borderRadius: 4,
                     background: mixWithWhite('#8B5CF6', 0.75),
-                    border: '2px solid #f59e0b',
+                    border: '2px solid rgba(56,230,162,0.8)',
+                    boxShadow: '0 0 6px rgba(56,230,162,0.25)',
                   }}
                 />
                 <span>Exam ready</span>
