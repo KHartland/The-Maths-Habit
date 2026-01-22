@@ -606,15 +606,15 @@ const revisionHints = {
 const levelLabels = ['Not started', '1/4 quick', '2/4 quick', '3/4 quick', 'Exam ready!', '✓ Mastered'];
 
 const TOPIC_HEX = {
-  Number: "#EF4444",
-  Algebra: "#7B4DFF",
-  Ratio: "#F2A93B",
-  Geometry: "#4FB9A8",
-  Probability: "#2563EB",
-  Statistics: "#E35AA6",
+  Number: "#A78BFA",      // Soft violet
+  Algebra: "#38E6A2",     // Mint green
+  Ratio: "#F0ABFC",       // Light orchid
+  Geometry: "#67E8F9",    // Cyan
+  Probability: "#818CF8", // Indigo
+  Statistics: "#C084FC",  // Purple
 };
 
-const INTENSITY = { 0: 0.1, 1: 0.22, 2: 0.38, 3: 0.58, 4: 0.75, 5: 0.95 };
+const INTENSITY = { 0: 0.08, 1: 0.25, 2: 0.42, 3: 0.6, 4: 0.78, 5: 0.95 };
 
 function mixWithWhite(hex, intensity) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -635,25 +635,26 @@ function getRecencyFactor(lastPracticed) {
   return 0.35; // Older = faded (needs revisiting)
 }
 
-// Mix color with both progress intensity AND recency saturation
+// Mix color with dark background for progress AND recency
 function getTileColor(hex, progressLevel, recencyFactor) {
-  const baseIntensity = INTENSITY[progressLevel] || 0.1;
-  // Recency affects saturation - old topics fade toward gray
+  const baseIntensity = INTENSITY[progressLevel] || 0.08;
+  // Dark background RGB (void: #0E0307)
+  const bgR = 14, bgG = 3, bgB = 7;
+
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-  
-  // First apply progress intensity (mix with white)
-  const progressMix = (c) => Math.round(c + (255 - c) * (1 - baseIntensity));
-  let pr = progressMix(r);
-  let pg = progressMix(g);
-  let pb = progressMix(b);
-  
-  // Then apply recency (desaturate old topics toward gray)
-  const gray = Math.round((pr + pg + pb) / 3);
-  const saturate = (c) => Math.round(gray + (c - gray) * recencyFactor);
-  
-  return `#${[saturate(pr), saturate(pg), saturate(pb)].map(c => 
+
+  // Mix with dark background based on progress (brighter = more progress)
+  const progressMix = (c, bg) => Math.round(bg + (c - bg) * baseIntensity);
+  let pr = progressMix(r, bgR);
+  let pg = progressMix(g, bgG);
+  let pb = progressMix(b, bgB);
+
+  // Apply recency (desaturate old topics toward darker)
+  const dim = (c) => Math.round(c * (0.4 + 0.6 * recencyFactor));
+
+  return `#${[dim(pr), dim(pg), dim(pb)].map(c =>
     Math.min(255, Math.max(0, c)).toString(16).padStart(2, "0")
   ).join("")}`;
 }
@@ -7553,20 +7554,20 @@ function AppContent() {
                   <p className="text-sm font-medium text-primary-text mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm bg-white/10 border border-white/5 shrink-0" />
-                      <span>Empty = not started yet</span>
+                      <span className="w-4 h-4 rounded-sm bg-white/5 border border-white/10 shrink-0" />
+                      <span>Dark = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm opacity-40 shrink-0" style={{backgroundColor: '#6E33B1'}} />
-                      <span>Faint = just started (1-2 correct)</span>
+                      <span className="w-4 h-4 rounded-sm shrink-0" style={{backgroundColor: 'rgba(167,139,250,0.3)'}} />
+                      <span>Dim glow = just started (1-2 correct)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm shrink-0" style={{backgroundColor: '#6E33B1'}} />
+                      <span className="w-4 h-4 rounded-sm shrink-0" style={{backgroundColor: 'rgba(167,139,250,0.7)'}} />
                       <span>Bright = getting stronger (3-4 correct)</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm border-2 border-white/80 shrink-0" style={{backgroundColor: '#6E33B1'}} />
-                      <span>White border = mastered! 🎉</span>
+                      <span className="w-4 h-4 rounded-sm border-2 border-mint/80 shrink-0" style={{backgroundColor: 'rgba(167,139,250,0.9)'}} />
+                      <span>Mint border = mastered! 🎉</span>
                     </div>
                   </div>
                   <p className="text-xs text-secondary-text/60 mt-2">Tap any square to see its objective details</p>
@@ -7603,12 +7604,12 @@ function AppContent() {
                       aspectRatio: '1',
                       borderRadius: 8,
                       background: getTileColor(TOPIC_HEX[obj.topic], level, recency),
-                      border: isMastered ? '2px solid rgba(255,255,255,0.8)' : 
-                              isExamReady ? '2px solid #f59e0b' : 
-                              needsRevisit ? '2px dashed rgba(0,0,0,0.2)' :
-                              '1px solid rgba(0,0,0,0.06)',
-                      boxShadow: isMastered ? '0 2px 8px rgba(0,0,0,0.15)' : 
-                                 isExamReady ? '0 2px 8px rgba(245,158,11,0.3)' : 'none',
+                      border: isMastered ? '2px solid rgba(56,230,162,0.8)' :
+                              isExamReady ? '2px solid rgba(251,191,36,0.7)' :
+                              needsRevisit ? '1px dashed rgba(255,255,255,0.2)' :
+                              '1px solid rgba(255,255,255,0.06)',
+                      boxShadow: isMastered ? '0 0 12px rgba(56,230,162,0.3)' :
+                                 isExamReady ? '0 0 8px rgba(251,191,36,0.2)' : 'none',
                     }}
                     className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >

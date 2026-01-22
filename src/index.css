@@ -191,13 +191,13 @@ body {
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Topic Colors - Updated for dark theme */
-.topic-number { color: #FF6B6B; }
-.topic-algebra { color: #A78BFA; }
-.topic-ratio { color: #FBBF24; }
-.topic-geometry { color: #34D399; }
-.topic-probability { color: #60A5FA; }
-.topic-statistics { color: #F472B6; }
+/* Topic Colors - Deep Space Glassmorphism palette */
+.topic-number { color: #A78BFA; }
+.topic-algebra { color: #38E6A2; }
+.topic-ratio { color: #F0ABFC; }
+.topic-geometry { color: #67E8F9; }
+.topic-probability { color: #818CF8; }
+.topic-statistics { color: #C084FC; }
 
 /* Badge styles */
 .badge-solved {
