@@ -3,6 +3,7 @@ import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriang
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
+import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon } from './components/MathIcons';
 
@@ -6443,6 +6444,317 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   );
 }
 
+// Onboarding Auth Form Component
+function OnboardingAuthForm({ onSuccess }) {
+  const [mode, setMode] = useState('signup'); // 'signin' or 'signup'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const { signIn, signUp, signInWithGoogle } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setMessage('');
+    setLoading(true);
+
+    try {
+      if (mode === 'signin') {
+        const { error } = await signIn(email, password);
+        if (error) throw error;
+        onSuccess();
+      } else {
+        const { error } = await signUp(email, password, displayName);
+        if (error) throw error;
+        setMessage('Check your email to confirm your account!');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const { error } = await signInWithGoogle();
+      if (error) throw error;
+      // Success will be handled by the useEffect in parent
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Error/Success messages */}
+      {error && (
+        <div className="p-3 bg-red-500/20 border border-red-500/40 text-red-300 rounded-lg text-sm">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="p-3 bg-mint/20 border border-mint/40 text-mint rounded-lg text-sm">
+          {message}
+        </div>
+      )}
+
+      {/* Google Sign In - Primary option */}
+      <button
+        onClick={handleGoogleSignIn}
+        disabled={loading}
+        className="w-full py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+      >
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+        </svg>
+        Continue with Google
+      </button>
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-white/10" />
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-3 bg-void text-secondary-text">or {mode === 'signup' ? 'create account' : 'sign in'} with email</span>
+        </div>
+      </div>
+
+      {/* Email Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {mode === 'signup' && (
+          <div>
+            <label className="block text-sm font-medium text-secondary-text mb-1">
+              Display Name
+            </label>
+            <input
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+              placeholder="Your name"
+              required
+            />
+          </div>
+        )}
+
+        <div>
+          <label className="block text-sm font-medium text-secondary-text mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-secondary-text mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+            placeholder="••••••••"
+            required
+            minLength={6}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 btn-gradient-violet text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          {loading ? (
+            <span className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Loading...
+            </span>
+          ) : (
+            mode === 'signup' ? 'Create Account' : 'Sign In'
+          )}
+        </button>
+      </form>
+
+      {/* Mode switcher */}
+      <div className="text-center text-sm">
+        {mode === 'signup' ? (
+          <button
+            onClick={() => { setMode('signin'); setError(''); setMessage(''); }}
+            className="text-violet-light hover:text-primary-text transition-colors"
+          >
+            Already have an account? Sign in
+          </button>
+        ) : (
+          <button
+            onClick={() => { setMode('signup'); setError(''); setMessage(''); }}
+            className="text-violet-light hover:text-primary-text transition-colors"
+          >
+            Need an account? Create one
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Onboarding Plan Selection Card (Premium)
+function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
+  const [selectedPlan, setSelectedPlan] = useState('yearly');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleUpgrade = async () => {
+    if (!userId) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const priceId = selectedPlan === 'monthly'
+        ? STRIPE_PRICES.MONTHLY
+        : STRIPE_PRICES.YEARLY;
+
+      await redirectToCheckout({
+        priceId,
+        userId,
+        userEmail,
+      });
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError('Unable to start checkout. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="glass-panel-strong rounded-2xl p-6 border-2 border-mint/50 relative overflow-hidden">
+      {/* Popular badge */}
+      <div className="absolute top-0 right-0 bg-mint text-void text-xs font-bold px-3 py-1 rounded-bl-lg">
+        RECOMMENDED
+      </div>
+
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-xl font-bold text-primary-text mb-1">Premium</h3>
+          <p className="text-secondary-text text-sm">Unlimited practice, maximum results</p>
+        </div>
+      </div>
+
+      {/* Plan Toggle */}
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => setSelectedPlan('monthly')}
+          disabled={isLoading}
+          className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
+            selectedPlan === 'monthly'
+              ? 'bg-violet text-white'
+              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+          }`}
+        >
+          Monthly
+        </button>
+        <button
+          onClick={() => setSelectedPlan('yearly')}
+          disabled={isLoading}
+          className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all relative ${
+            selectedPlan === 'yearly'
+              ? 'bg-violet text-white'
+              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+          }`}
+        >
+          Yearly
+          <span className="absolute -top-2 -right-2 bg-mint text-void text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+            Save 37%
+          </span>
+        </button>
+      </div>
+
+      {/* Price Display */}
+      <div className="text-center mb-4">
+        <div className="text-4xl font-bold text-primary-text">
+          {selectedPlan === 'monthly' ? '£3.99' : '£29.99'}
+        </div>
+        <div className="text-secondary-text text-sm">
+          {selectedPlan === 'monthly' ? 'per month' : 'per year (£2.50/mo)'}
+        </div>
+      </div>
+
+      {/* Features */}
+      <ul className="space-y-2 text-sm mb-6">
+        <li className="flex items-center gap-2 text-secondary-text">
+          <span className="text-mint">✓</span> Unlimited daily questions
+        </li>
+        <li className="flex items-center gap-2 text-secondary-text">
+          <span className="text-mint">✓</span> Sync progress across all devices
+        </li>
+        <li className="flex items-center gap-2 text-secondary-text">
+          <span className="text-mint">✓</span> All 700+ GCSE questions
+        </li>
+        <li className="flex items-center gap-2 text-secondary-text">
+          <span className="text-mint">✓</span> Priority support
+        </li>
+      </ul>
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300 text-sm">
+          {error}
+        </div>
+      )}
+
+      {/* Upgrade Button */}
+      <button
+        onClick={handleUpgrade}
+        disabled={isLoading}
+        className="w-full py-3 btn-gradient-mint font-bold rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        {isLoading ? (
+          <>
+            <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+          </>
+        ) : (
+          `Start Premium - ${selectedPlan === 'monthly' ? '£3.99/mo' : '£29.99/yr'}`
+        )}
+      </button>
+
+      {/* Secure payment */}
+      <p className="mt-3 text-xs text-secondary-text/60 flex items-center justify-center gap-1">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        Secure payment via Stripe
+      </p>
+    </div>
+  );
+}
+
 // Inner App component that uses auth context
 function AppContent() {
   const [tier, setTier] = useState('foundation');
@@ -6451,6 +6763,7 @@ function AppContent() {
   const [settings, setSettings] = useState(() => loadSettings());
   const [currentPage, setCurrentPage] = useState('home');
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingComplete());
+  const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Plan Selection
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('signin');
@@ -6511,61 +6824,192 @@ function AppContent() {
     setShowOnboarding(false);
     setCurrentPage('practice'); // Go straight to practice
   };
-  
-  // Simple onboarding screen - Deep Space Glassmorphism
+
+  // Move to plan selection after successful auth
+  useEffect(() => {
+    if (showOnboarding && onboardingStep === 2 && user) {
+      // User just signed in/up, move to plan selection
+      setOnboardingStep(3);
+    }
+  }, [user, showOnboarding, onboardingStep]);
+
+  // Multi-step Onboarding Flow - Deep Space Glassmorphism
   if (showOnboarding) {
-    return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
-        {/* Ambient glow background */}
-        <div className="ambient-glow" />
+    // Step 1: Welcome Screen
+    if (onboardingStep === 1) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
 
-        {/* Floating orb decoration */}
-        <div className="orb w-64 h-64 -top-20 -right-20 opacity-60" />
-        <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
+          {/* Floating orb decoration */}
+          <div className="orb w-64 h-64 -top-20 -right-20 opacity-60" />
+          <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
 
-        <div className="max-w-md w-full text-center relative z-10">
-          {/* Heatmap Icon with glow */}
-          <div className="w-24 h-24 glass-panel-strong rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow-violet p-3 animate-float">
-            <div className="grid grid-cols-3 gap-1.5 w-full h-full">
-              {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
-                <div
-                  key={i}
-                  className="rounded-sm"
-                  style={{ backgroundColor: `rgba(110, 51, 177,${opacity})` }}
-                />
-              ))}
+          <div className="max-w-md w-full text-center relative z-10">
+            {/* Heatmap Icon with glow */}
+            <div className="w-24 h-24 glass-panel-strong rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow-violet p-3 animate-float">
+              <div className="grid grid-cols-3 gap-1.5 w-full h-full">
+                {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
+                  <div
+                    key={i}
+                    className="rounded-sm"
+                    style={{ backgroundColor: `rgba(110, 51, 177,${opacity})` }}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <h1 className="text-4xl font-bold text-primary-text mb-3 tracking-tight">The Maths Habit</h1>
+            <p className="text-xl text-secondary-text mb-10">
+              Elevate your thinking.<br />
+              <span className="text-violet-light">Master every GCSE objective.</span>
+            </p>
+
+            {/* Trust indicators */}
+            <div className="flex justify-center gap-6 mb-10 text-secondary-text text-sm">
+              <div className="flex items-center gap-1.5">
+                <span className="text-mint">✓</span> 90+ objectives
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-mint">✓</span> AI-powered learning
+              </div>
+            </div>
+
+            <button
+              onClick={() => setOnboardingStep(2)}
+              className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
+            >
+              Get Started →
+            </button>
+
+            {/* Step indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="w-2 h-2 rounded-full bg-mint" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
             </div>
           </div>
-
-          <h1 className="text-4xl font-bold text-primary-text mb-3 tracking-tight">The Maths Habit</h1>
-          <p className="text-xl text-secondary-text mb-10">
-            Elevate your thinking.<br />
-            <span className="text-violet-light">Master every GCSE objective.</span>
-          </p>
-
-          {/* Trust indicators */}
-          <div className="flex justify-center gap-6 mb-10 text-secondary-text text-sm">
-            <div className="flex items-center gap-1.5">
-              <span className="text-mint">✓</span> 90+ objectives
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="text-mint">✓</span> AI-powered learning
-            </div>
-          </div>
-
-          <button
-            onClick={completeOnboarding}
-            className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
-          >
-            Start Practicing →
-          </button>
-
-          <p className="text-secondary-text/60 text-xs mt-6">
-            No account needed · Progress saves locally
-          </p>
         </div>
-      </div>
-    );
+      );
+    }
+
+    // Step 2: Account Creation/Sign-in
+    if (onboardingStep === 2) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
+
+          {/* Floating orb decoration */}
+          <div className="orb w-64 h-64 -top-20 -right-20 opacity-60" />
+          <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
+
+          <div className="max-w-md w-full relative z-10">
+            {/* Back button */}
+            <button
+              onClick={() => setOnboardingStep(1)}
+              className="flex items-center gap-2 text-secondary-text hover:text-primary-text mb-6 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back
+            </button>
+
+            <div className="glass-panel rounded-2xl p-8">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-primary-text mb-2">Create your account</h2>
+                <p className="text-secondary-text">
+                  Save your progress and sync across devices
+                </p>
+              </div>
+
+              {/* Embedded Auth Form */}
+              <OnboardingAuthForm
+                onSuccess={() => setOnboardingStep(3)}
+              />
+            </div>
+
+            {/* Step indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-mint" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Step 3: Plan Selection
+    if (onboardingStep === 3) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
+
+          {/* Floating orb decoration */}
+          <div className="orb w-64 h-64 -top-20 -right-20 opacity-60" />
+          <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
+
+          <div className="max-w-lg w-full relative z-10">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-primary-text mb-2">Choose your plan</h2>
+              <p className="text-secondary-text">
+                Start with free or unlock unlimited practice
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Free Plan Card */}
+              <div className="glass-panel rounded-2xl p-6 card-hover cursor-pointer border border-transparent hover:border-violet/50"
+                onClick={completeOnboarding}
+              >
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h3 className="text-xl font-bold text-primary-text mb-1">Free Plan</h3>
+                    <p className="text-secondary-text text-sm mb-4">Perfect for getting started</p>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-center gap-2 text-secondary-text">
+                        <span className="text-mint">✓</span> {FREE_DAILY_LIMIT} questions per day
+                      </li>
+                      <li className="flex items-center gap-2 text-secondary-text">
+                        <span className="text-mint">✓</span> Track your progress
+                      </li>
+                      <li className="flex items-center gap-2 text-secondary-text">
+                        <span className="text-mint">✓</span> AI-powered explanations
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-3xl font-bold text-primary-text">£0</div>
+                    <div className="text-secondary-text text-sm">Forever free</div>
+                  </div>
+                </div>
+                <button className="w-full mt-6 py-3 border border-violet rounded-xl text-primary-text font-medium hover:bg-violet/20 transition-colors">
+                  Start Free →
+                </button>
+              </div>
+
+              {/* Premium Plan Card */}
+              <OnboardingPlanCard
+                onSelectFree={completeOnboarding}
+                userId={user?.id}
+                userEmail={user?.email}
+              />
+            </div>
+
+            {/* Step indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-mint" />
+            </div>
+          </div>
+        </div>
+      );
+    }
   }
   
   // Calculate real streak from activity with protection
