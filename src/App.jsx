@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -6164,8 +6164,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       onClick={() => updateSetting('fontSize', option.value)}
                       className={`flex-1 py-2 rounded-lg font-medium transition-all ${option.size} ${
                         (settings.fontSize ?? 'normal') === option.value
-                          ? 'bg-slate-900 text-white'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                          ? 'bg-violet text-white'
+                          : 'bg-white/10 text-secondary-text hover:bg-white/20'
                       }`}
                     >
                       {option.label}
@@ -6177,13 +6177,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* Dyslexia-friendly font */}
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-sm font-medium text-slate-700">Dyslexia-friendly font</div>
-                  <div className="text-xs text-slate-500">Use OpenDyslexic for easier reading</div>
+                  <div className="text-sm font-medium text-secondary-text">Dyslexia-friendly font</div>
+                  <div className="text-xs text-white/40">Use OpenDyslexic for easier reading</div>
                 </div>
                 <button
                   onClick={() => updateSetting('dyslexiaFont', !settings.dyslexiaFont)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.dyslexiaFont ? 'bg-violet-600' : 'bg-slate-200'
+                    settings.dyslexiaFont ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -6195,13 +6195,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               {/* High Contrast */}
               <div className="flex items-center justify-between py-2">
                 <div>
-                  <div className="text-sm font-medium text-slate-700">High contrast</div>
-                  <div className="text-xs text-slate-500">Increase color contrast for visibility</div>
+                  <div className="text-sm font-medium text-secondary-text">High contrast</div>
+                  <div className="text-xs text-white/40">Increase color contrast for visibility</div>
                 </div>
                 <button
                   onClick={() => updateSetting('highContrast', !settings.highContrast)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.highContrast ? 'bg-slate-900' : 'bg-slate-200'
+                    settings.highContrast ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -6213,22 +6213,22 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           </div>
 
           {/* Data Management */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-[0_4px_20px_rgba(15,23,42,0.05)]">
+          <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
-                <Download className="w-5 h-5 text-slate-600" />
+              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+                <Download className="w-5 h-5 text-secondary-text" />
               </div>
               <div>
-                <h2 className="font-semibold text-slate-900">Data Management</h2>
-                <p className="text-sm text-slate-500">Backup and manage your progress</p>
+                <h2 className="font-semibold text-primary-text">Data Management</h2>
+                <p className="text-sm text-secondary-text">Backup and manage your progress</p>
               </div>
             </div>
 
             <div className="space-y-3">
               {/* Weekly Summary for Parents/Teachers */}
-              <div className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl mb-4">
+              <div className="p-4 bg-violet/20 border border-violet/30 rounded-xl mb-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="text-xl">📋</span>
                   </div>
                   <div className="flex-1">
