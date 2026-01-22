@@ -1120,6 +1120,54 @@ const setOnboardingComplete = () => {
   } catch {}
 };
 
+// ==================== PRACTICE TIPS SYSTEM ====================
+const TIPS_STORAGE_KEY = 'maths-habit-tips-shown';
+
+const PRACTICE_TIPS = {
+  firstQuestion: {
+    id: 'firstQuestion',
+    text: 'Answer each question to build your mastery. Get 4 right to master an objective!',
+  },
+  firstCorrect: {
+    id: 'firstCorrect',
+    text: 'Nice! Keep practising to unlock Quick Fire mode (5 objectives mastered) and Exam mode (10 mastered).',
+  },
+  firstIncorrect: {
+    id: 'firstIncorrect',
+    text: "Don't worry! Mistakes help you learn. You'll get easier building-block questions to strengthen your skills.",
+  },
+  sessionComplete: {
+    id: 'sessionComplete',
+    text: 'Come back tomorrow to build your streak! Consistent daily practice is the fastest way to improve.',
+  },
+  aiCoach: {
+    id: 'aiCoach',
+    text: 'Answer 15 questions total to unlock your AI Coach — a personal tutor that analyses your mistakes!',
+  },
+  secondSession: {
+    id: 'secondSession',
+    text: 'Your progress is tracked on the home screen heatmap. Each square represents a GCSE objective.',
+  },
+};
+
+const loadShownTips = () => {
+  try {
+    return JSON.parse(localStorage.getItem(TIPS_STORAGE_KEY) || '[]');
+  } catch {
+    return [];
+  }
+};
+
+const markTipShown = (tipId) => {
+  try {
+    const shown = loadShownTips();
+    if (!shown.includes(tipId)) {
+      shown.push(tipId);
+      localStorage.setItem(TIPS_STORAGE_KEY, JSON.stringify(shown));
+    }
+  } catch {}
+};
+
 const defaultStreakData = {
   freezesAvailable: 1, // Start with 1 free freeze
   freezesUsed: [], // Dates when freezes were used
@@ -3107,6 +3155,19 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
   
+  // Practice tips state
+  const [currentTip, setCurrentTip] = useState(null);
+  const shownTipsRef = useRef(loadShownTips());
+
+  const showTip = (tipId) => {
+    if (shownTipsRef.current.includes(tipId)) return;
+    setCurrentTip(PRACTICE_TIPS[tipId]);
+    markTipShown(tipId);
+    shownTipsRef.current.push(tipId);
+  };
+
+  const dismissTip = () => setCurrentTip(null);
+
   // Scaffolding state
   const [failureCounts, setFailureCounts] = useState({}); // Track consecutive failures per objective
   const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // AI diagnosis of error
@@ -3470,6 +3531,13 @@ What is the student's answer?`
     if (mode === 'quickfire') {
       setTimeout(() => startQuestionTimer(), 100);
     }
+
+    // Show practice tips for new users
+    if (sessionCount <= 1) {
+      setTimeout(() => showTip('firstQuestion'), 800);
+    } else if (sessionCount === 2) {
+      setTimeout(() => showTip('secondSession'), 800);
+    }
   };
 
   // Convert answer correctness and response time to FSRS rating
@@ -3504,12 +3572,24 @@ What is the student's answer?`
 
     setIsCorrect(correct);
     setShowFeedback(true);
-    
+
+    // Show tips for new users on first correct/incorrect
+    if (correct) {
+      setTimeout(() => showTip('firstCorrect'), 600);
+    } else {
+      setTimeout(() => showTip('firstIncorrect'), 600);
+    }
+
     // Track total questions answered (for AI unlock)
     const newTotal = totalQuestionsAnswered + 1;
     setTotalQuestionsAnswered(newTotal);
     saveTotalQuestions(newTotal);
-    
+
+    // Show AI coach tip on first session
+    if (newTotal === 1) {
+      setTimeout(() => showTip('aiCoach'), 1500);
+    }
+
     // Check if AI just got unlocked
     if (newTotal === AI_UNLOCK_THRESHOLD) {
       setTimeout(() => setShowAIUnlockNotification(true), 500);
@@ -3814,6 +3894,9 @@ What is the student's answer?`
       }
       
       setSessionStarted(false); // Show results
+
+      // Show session complete tip for new users
+      setTimeout(() => showTip('sessionComplete'), 1000);
     }
   };
 
@@ -3883,6 +3966,21 @@ What is the student's answer?`
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-28 px-4 relative z-10">
           <div className="max-w-md mx-auto">
+            {/* Practice Tip Banner */}
+            {currentTip && (
+              <div className="mb-4 p-4 glass-panel rounded-xl border border-mint/30 animate-fade-in">
+                <div className="flex items-start gap-3">
+                  <span className="text-lg shrink-0">💡</span>
+                  <p className="flex-1 text-sm text-secondary-text">{currentTip.text}</p>
+                  <button
+                    onClick={dismissTip}
+                    className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="glass-panel rounded-3xl p-8 shadow-glass">
               {/* Header */}
               <div className="text-center mb-6">
@@ -4280,6 +4378,22 @@ What is the student's answer?`
               </div>
             )}
           </div>
+
+          {/* Practice Tip Banner */}
+          {currentTip && (
+            <div className="mb-4 p-4 glass-panel rounded-xl border border-mint/30 animate-fade-in">
+              <div className="flex items-start gap-3">
+                <span className="text-lg shrink-0">💡</span>
+                <p className="flex-1 text-sm text-secondary-text">{currentTip.text}</p>
+                <button
+                  onClick={dismissTip}
+                  className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Question card */}
           {current && (
