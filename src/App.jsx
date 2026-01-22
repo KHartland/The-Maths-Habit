@@ -5687,44 +5687,6 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             )}
           </div>
 
-          {/* Topic Breakdown */}
-          <div className="glass-panel rounded-2xl p-6 shadow-glass">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
-                <Award className="w-5 h-5 text-violet-light" />
-              </div>
-              <h2 className="font-semibold text-primary-text">Topic Mastery</h2>
-            </div>
-
-            <div className="space-y-3">
-              {Object.entries(topicStats).map(([topic, stats]) => (
-                <div key={topic} className="space-y-1">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: TOPIC_HEX[topic] }}
-                      />
-                      <span className="font-medium text-primary-text">{topic}</span>
-                    </div>
-                    <span className="text-secondary-text">
-                      {stats.mastered}/{stats.total} mastered
-                    </span>
-                  </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${stats.percentage}%`,
-                        backgroundColor: TOPIC_HEX[topic]
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Recent Sessions */}
           {sessionHistory.length > 0 && (
             <div className="glass-panel rounded-2xl p-6 shadow-glass">
