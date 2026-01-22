@@ -7518,6 +7518,43 @@ function AppContent() {
             ))}
           </div>
 
+          {/* Heatmap Explainer - shows for new users */}
+          {!loadShownTips().includes('heatmapExplainer') && (
+            <div className="mb-4 p-4 glass-panel rounded-xl border border-violet/30 animate-fade-in">
+              <div className="flex items-start gap-3">
+                <span className="text-lg shrink-0">🗺️</span>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-primary-text mb-2">How the heatmap works</p>
+                  <div className="space-y-1.5 text-xs text-secondary-text">
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-sm bg-white/10 border border-white/5 shrink-0" />
+                      <span>Empty = not started yet</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-sm opacity-40 shrink-0" style={{backgroundColor: '#6E33B1'}} />
+                      <span>Faint = just started (1-2 correct)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-sm shrink-0" style={{backgroundColor: '#6E33B1'}} />
+                      <span>Bright = getting stronger (3-4 correct)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-sm border-2 border-white/80 shrink-0" style={{backgroundColor: '#6E33B1'}} />
+                      <span>White border = mastered! 🎉</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-secondary-text/60 mt-2">Tap any square to see its objective details</p>
+                </div>
+                <button
+                  onClick={(e) => { e.currentTarget.closest('.animate-fade-in').remove(); markTipShown('heatmapExplainer'); }}
+                  className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* THE HEATMAP - Hero Element */}
           <div className="flex justify-center py-4">
             <div style={{
