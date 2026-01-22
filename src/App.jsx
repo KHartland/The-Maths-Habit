@@ -6213,7 +6213,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   <div className="text-xs text-white/40">Add Higher-only objectives to practice</div>
                 </div>
                 <button
-                  onClick={() => updateSetting('includeHigherTier', !settings.includeHigherTier)}
+                  onClick={() => {
+                    const newVal = !settings.includeHigherTier;
+                    updateSetting('includeHigherTier', newVal);
+                    setTier(newVal ? 'higher' : 'foundation');
+                  }}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
                     settings.includeHigherTier ? 'bg-violet' : 'bg-white/20'
                   }`}
@@ -7012,7 +7016,7 @@ function PromoCodeInput({ onSuccess }) {
 
 // Inner App component that uses auth context
 function AppContent() {
-  const [tier, setTier] = useState('foundation');
+  const [tier, setTier] = useState(() => loadSettings().includeHigherTier ? 'higher' : 'foundation');
   const [tooltip, setTooltip] = useState({ open: false, x: 0, y: 0, objective: null });
   const [progress, setProgress] = useState(() => loadProgress());
   const [settings, setSettings] = useState(() => loadSettings());
@@ -7291,10 +7295,7 @@ function AppContent() {
   const weeklyMastery = getWeeklyMastery(progress);
   const weeklyGoal = settings.weeklyMasteryGoal ?? 3;
 
-  // Sync tier with settings
-  const effectiveTier = settings.includeHigherTier ? 'higher' : tier;
-
-  const getObjectives = (topic) => effectiveTier === 'higher' ? [...topic.foundation, ...topic.higher] : topic.foundation;
+  const getObjectives = (topic) => tier === 'higher' ? [...topic.foundation, ...topic.higher] : topic.foundation;
   
   const allObjectives = topics.flatMap(t => 
     getObjectives(t).map(code => ({ 
