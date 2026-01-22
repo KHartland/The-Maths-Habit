@@ -675,83 +675,110 @@ function isReadyForExam(progress) {
   return (progress?.quickCorrect ?? 0) >= 4 && !(progress?.examPassed);
 }
 
-function HoverTooltip({ open, x, y, objective, progress }) {
+function TileDetailModal({ open, objective, progress, onClose }) {
   if (!open || !objective) return null;
-  
-  const pad = 12;
-  const width = 320;
-  const left = Math.min(Math.max(pad, x - width / 2), window.innerWidth - width - pad);
-  const top = Math.max(pad, y - 120);
+
   const quickCorrect = progress?.quickCorrect ?? 0;
   const examPassed = progress?.examPassed ?? false;
   const level = getUnderstandingLevel(progress);
-  
+  const lastPracticed = progress?.lastPracticed;
+
   return (
-    <div
-      className="fixed z-50 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl pointer-events-none"
-      style={{ left, top, width }}
-    >
-      <div className="flex items-center gap-2">
-        <span
-          className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold text-white"
-          style={{ backgroundColor: TOPIC_HEX[objective.topic] }}
-        >
-          {objective.code}
-        </span>
-        <span className="text-xs text-slate-500">{objective.topicName}</span>
-        {objective.isHigher && (
-          <span className="ml-auto px-1.5 py-0.5 bg-purple-500 text-white text-xs font-bold rounded">H</span>
-        )}
-      </div>
-      <div className="mt-2 text-sm font-semibold text-slate-900">
-        {objective.title}
-      </div>
-      
-      {/* Progress toward mastery */}
-      <div className="mt-3 space-y-2">
-        {/* Quick questions progress */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500 w-20">Quick:</span>
-          <div className="flex gap-1 flex-1">
-            {[0, 1, 2, 3].map(i => (
-              <div
-                key={i}
-                className={`h-2 flex-1 rounded-full ${
-                  i < quickCorrect ? 'bg-violet-500' : 'bg-slate-200'
-                }`}
-              />
-            ))}
+    <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-4" onClick={onClose}>
+      <div
+        className="glass-panel-strong rounded-2xl w-full max-w-sm p-5 animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-bold text-white"
+              style={{ backgroundColor: TOPIC_HEX[objective.topic] }}
+            >
+              {objective.code}
+            </span>
+            <span className="text-xs text-secondary-text">{objective.topicName}</span>
+            {objective.isHigher && (
+              <span className="px-1.5 py-0.5 bg-violet text-white text-xs font-bold rounded">H</span>
+            )}
           </div>
-          <span className="text-xs font-medium text-slate-600">{Math.min(quickCorrect, 4)}/4</span>
+          <button onClick={onClose} className="text-secondary-text/60 hover:text-primary-text p-1">
+            <X className="w-5 h-5" />
+          </button>
         </div>
-        
-        {/* Exam question progress */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500 w-20">Exam:</span>
-          <div className="flex gap-1 flex-1">
-            <div className={`h-2 flex-1 rounded-full ${
-              examPassed ? 'bg-emerald-500' : quickCorrect >= 4 ? 'bg-amber-300' : 'bg-slate-200'
-            }`} />
-          </div>
-          <span className="text-xs font-medium text-slate-600">
-            {examPassed ? '✓' : quickCorrect >= 4 ? 'Ready!' : 'Locked'}
+
+        {/* Title */}
+        <h3 className="text-lg font-semibold text-primary-text mb-4">
+          {objective.title}
+        </h3>
+
+        {/* Status badge */}
+        <div className="mb-4">
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${
+            level >= 5 ? 'bg-mint/20 text-mint border border-mint/30' :
+            level >= 4 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
+            level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
+            'bg-white/10 text-secondary-text border border-white/10'
+          }`}>
+            {level >= 5 ? '✓ Mastered' :
+             level >= 4 ? '📝 Exam ready' :
+             level > 0 ? '📚 Learning' :
+             '○ Not started'}
           </span>
         </div>
-      </div>
-      
-      <div className="mt-3 text-xs text-slate-600">
-        <span className={`font-medium ${level >= 5 ? 'text-emerald-600' : ''}`}>
-          {level >= 5 ? '✓ Mastered!' : level >= 4 ? '📝 Take the exam!' : levelLabels[level]}
-        </span>
-      </div>
-      <div className="mt-1.5 h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all"
-          style={{
-            width: `${Math.min(quickCorrect / 4 * 100, 100)}%`,
-            backgroundColor: TOPIC_HEX[objective.topic],
-          }}
-        />
+
+        {/* Progress bars */}
+        <div className="space-y-3 mb-4">
+          {/* Quick questions */}
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-secondary-text">Quick questions</span>
+              <span className="font-medium text-primary-text">{Math.min(quickCorrect, 4)}/4</span>
+            </div>
+            <div className="flex gap-1.5">
+              {[0, 1, 2, 3].map(i => (
+                <div
+                  key={i}
+                  className="h-2.5 flex-1 rounded-full transition-all"
+                  style={{
+                    backgroundColor: i < quickCorrect
+                      ? TOPIC_HEX[objective.topic]
+                      : 'rgba(255,255,255,0.1)'
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Exam question */}
+          <div>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-secondary-text">Exam question</span>
+              <span className="font-medium text-primary-text">
+                {examPassed ? '✓ Passed' : quickCorrect >= 4 ? 'Ready!' : 'Locked'}
+              </span>
+            </div>
+            <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: examPassed ? '100%' : quickCorrect >= 4 ? '50%' : '0%',
+                  backgroundColor: examPassed ? '#38E6A2' : '#f59e0b'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Last practiced */}
+        {lastPracticed && (
+          <p className="text-xs text-secondary-text/60">
+            Last practiced: {new Date(lastPracticed).toLocaleDateString('en-GB', {
+              day: 'numeric', month: 'short', year: 'numeric'
+            })}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -7289,17 +7316,16 @@ function AppContent() {
   ).length;
   const totalCards = Object.keys(fsrsData.questionCards || {}).length;
 
-  const handleMouseEnter = (e, obj) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const handleTileTap = (obj) => {
     setTooltip({
       open: true,
-      x: rect.left + rect.width / 2,
-      y: rect.top,
+      x: 0,
+      y: 0,
       objective: obj
     });
   };
 
-  const handleMouseLeave = () => {
+  const closeTileDetail = () => {
     setTooltip(t => ({ ...t, open: false }));
   };
 
@@ -7572,8 +7598,7 @@ function AppContent() {
                 return (
                   <div
                     key={obj.code}
-                    onMouseEnter={(e) => handleMouseEnter(e, obj)}
-                    onMouseLeave={handleMouseLeave}
+                    onClick={() => handleTileTap(obj)}
                     style={{
                       aspectRatio: '1',
                       borderRadius: 8,
@@ -7585,7 +7610,7 @@ function AppContent() {
                       boxShadow: isMastered ? '0 2px 8px rgba(0,0,0,0.15)' : 
                                  isExamReady ? '0 2px 8px rgba(245,158,11,0.3)' : 'none',
                     }}
-                    className="w-full transition-all duration-200 hover:scale-125 hover:shadow-xl hover:z-20 relative cursor-default"
+                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >
                     {isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
@@ -7759,13 +7784,12 @@ function AppContent() {
         </div>
       </div>
 
-      {/* Hover Tooltip */}
-      <HoverTooltip
+      {/* Tile Detail Modal */}
+      <TileDetailModal
         open={tooltip.open}
-        x={tooltip.x}
-        y={tooltip.y}
         objective={tooltip.objective}
         progress={tooltip.objective ? progress[tooltip.objective.code] : null}
+        onClose={closeTileDetail}
       />
 
       {/* Auth Modal */}
