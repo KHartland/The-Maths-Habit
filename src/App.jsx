@@ -5709,36 +5709,9 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             </div>
           </div>
 
-          {/* Overall Stats */}
+          {/* Streak Stats */}
           <div className="glass-panel rounded-2xl p-6 shadow-glass">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-mint/20 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-mint" />
-              </div>
-              <h2 className="font-semibold text-primary-text">All-Time Stats</h2>
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
-              <div className="glass-panel rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-primary-text">{totalSessions}</div>
-                <div className="text-sm text-secondary-text">Total Sessions</div>
-              </div>
-              <div className="glass-panel rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-primary-text">{totalQuestions}</div>
-                <div className="text-sm text-secondary-text">Questions Answered</div>
-              </div>
-              <div className="bg-mint/20 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-mint">{overallAccuracy}%</div>
-                <div className="text-sm text-mint">Accuracy</div>
-              </div>
-              <div className="bg-violet/20 rounded-xl p-4 text-center">
-                <div className="text-2xl font-bold text-violet-light">{dayStreak}</div>
-                <div className="text-sm text-violet-light">Current Streak</div>
-              </div>
-            </div>
-
-            {/* Streak Protection Stats */}
-            <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-4">
               <div className="bg-amber-500/20 rounded-xl p-3 text-center">
                 <div className="text-xl font-bold text-amber-400">{loadStreakData().longestStreak}</div>
                 <div className="text-xs text-amber-400">🏆 Longest Streak</div>
