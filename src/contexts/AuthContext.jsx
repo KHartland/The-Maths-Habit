@@ -152,6 +152,82 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
+  // Redeem a promo code for free premium
+  const redeemPromoCode = async (code) => {
+    if (!user) return { error: { message: 'You must be logged in to redeem a code' } };
+
+    // Check if the code exists and is valid
+    const { data: promoCode, error: fetchError } = await supabase
+      .from('promo_codes')
+      .select('*')
+      .eq('code', code.toUpperCase().trim())
+      .single();
+
+    if (fetchError || !promoCode) {
+      return { error: { message: 'Invalid promo code' } };
+    }
+
+    // Check if code is still active
+    if (!promoCode.is_active) {
+      return { error: { message: 'This promo code is no longer active' } };
+    }
+
+    // Check if code has uses remaining
+    if (promoCode.max_uses && promoCode.times_used >= promoCode.max_uses) {
+      return { error: { message: 'This promo code has reached its usage limit' } };
+    }
+
+    // Check expiry date
+    if (promoCode.expires_at && new Date(promoCode.expires_at) < new Date()) {
+      return { error: { message: 'This promo code has expired' } };
+    }
+
+    // Check if user already used this code
+    const { data: existingRedemption } = await supabase
+      .from('promo_redemptions')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('promo_code_id', promoCode.id)
+      .single();
+
+    if (existingRedemption) {
+      return { error: { message: 'You have already redeemed this code' } };
+    }
+
+    // Redeem the code - update user's subscription status
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        subscription_status: 'active',
+        subscription_type: 'promo',
+        promo_code_used: promoCode.code
+      })
+      .eq('id', user.id);
+
+    if (updateError) {
+      return { error: { message: 'Failed to apply promo code. Please try again.' } };
+    }
+
+    // Record the redemption
+    await supabase
+      .from('promo_redemptions')
+      .insert({
+        user_id: user.id,
+        promo_code_id: promoCode.id
+      });
+
+    // Increment the usage count
+    await supabase
+      .from('promo_codes')
+      .update({ times_used: promoCode.times_used + 1 })
+      .eq('id', promoCode.id);
+
+    // Refresh profile
+    await fetchProfile(user.id);
+
+    return { success: true, message: 'Premium access activated!' };
+  };
+
   // Listen for auth changes
   useEffect(() => {
     // Get initial session
@@ -194,6 +270,7 @@ export const AuthProvider = ({ children }) => {
     signOut,
     resetPassword,
     updateProfile,
+    redeemPromoCode,
     canPractice,
     questionsRemaining,
     incrementDailyQuestions,

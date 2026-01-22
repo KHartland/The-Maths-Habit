@@ -6755,6 +6755,109 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
   );
 }
 
+// Promo Code Input Component
+function PromoCodeInput({ onSuccess }) {
+  const [showInput, setShowInput] = useState(false);
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const { redeemPromoCode } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!code.trim()) return;
+
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+
+    const result = await redeemPromoCode(code);
+
+    if (result.error) {
+      setError(result.error.message);
+      setIsLoading(false);
+    } else {
+      setSuccess(result.message);
+      setTimeout(() => {
+        onSuccess();
+      }, 1500);
+    }
+  };
+
+  if (!showInput) {
+    return (
+      <div className="text-center">
+        <button
+          onClick={() => setShowInput(true)}
+          className="text-violet-light hover:text-primary-text text-sm transition-colors"
+        >
+          Have a class code? Enter it here
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="glass-panel rounded-2xl p-5">
+      <h4 className="text-primary-text font-medium mb-3 flex items-center gap-2">
+        <svg className="w-5 h-5 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+        Enter Class Code
+      </h4>
+
+      {error && (
+        <div className="mb-3 p-2 bg-red-500/20 border border-red-500/40 rounded-lg text-red-300 text-sm">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-3 p-2 bg-mint/20 border border-mint/40 rounded-lg text-mint text-sm flex items-center gap-2">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          {success}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder="e.g. MATHS2024"
+          className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
+          disabled={isLoading || success}
+        />
+        <button
+          type="submit"
+          disabled={isLoading || !code.trim() || success}
+          className="px-5 py-2.5 bg-violet hover:bg-violet-light text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {isLoading ? (
+            <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+          ) : (
+            'Apply'
+          )}
+        </button>
+      </form>
+
+      <button
+        onClick={() => { setShowInput(false); setCode(''); setError(''); }}
+        className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
+      >
+        Cancel
+      </button>
+    </div>
+  );
+}
+
 // Inner App component that uses auth context
 function AppContent() {
   const [tier, setTier] = useState('foundation');
@@ -6998,6 +7101,9 @@ function AppContent() {
                 userId={user?.id}
                 userEmail={user?.email}
               />
+
+              {/* Promo Code Section */}
+              <PromoCodeInput onSuccess={completeOnboarding} />
             </div>
 
             {/* Step indicator */}
