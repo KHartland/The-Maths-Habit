@@ -5,14 +5,14 @@ import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
-import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon } from './components/MathIcons';
+import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 
 // Custom maths-themed icons for the app
 const HomeIcon = CubeIcon;           // 3D cube for Home
 const PracticeIcon = SquareRootIcon; // Square root √ for Practice
 const SettingsIcon = CompassIcon;    // Drawing compass for Settings
 const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
-const StatsIcon = BrainIcon;         // Brain for Stats
+const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
 

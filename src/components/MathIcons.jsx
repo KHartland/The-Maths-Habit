@@ -158,6 +158,15 @@ export const BooksIcon = ({ className = "w-6 h-6" }) => (
   </svg>
 );
 
+// Pi symbol icon
+export const PiIcon = ({ className = "w-6 h-6", strokeWidth = 2, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+    <path d="M7 7h10" />
+    <path d="M9 7v10" />
+    <path d="M15 7v10" />
+  </svg>
+);
+
 // Export all icons as a named object for convenience
 export const MathIcons = {
   CubeIcon,
@@ -167,6 +176,7 @@ export const MathIcons = {
   BrainIcon,
   CompassStarIcon,
   BooksIcon,
+  PiIcon,
 };
 
 export default MathIcons;
