@@ -6,6 +6,8 @@ import UpgradePrompt from './components/UpgradePrompt';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
+import DragDropOrder from './components/DragDropOrder';
+import DragDropMatch from './components/DragDropMatch';
 
 // Custom maths-themed icons for the app
 const HomeIcon = CubeIcon;           // 3D cube for Home
@@ -1543,6 +1545,8 @@ const questionBank = {
     { q: "Which is the largest?", type: "mcq", options: ["5.304[r]", "5.344", "5.34", "5.3[r]4[r]"], a: "5.3[r]4[r]", calculator: false },
     { q: "Order these from smallest to largest: 0.45, 0.405, 0.54, 0.045", a: "0.045, 0.405, 0.45, 0.54", type: "text", calculator: false },
     { q: "Which decimal is equivalent to 1/3?", type: "mcq", options: ["0.3", "0.33", "0.3[r]", "0.33[r]"], a: "0.3[r]", calculator: false },
+    { q: "Put these decimals in order from smallest to largest:", type: "order", items: ["0.7", "0.07", "0.77", "0.707"], correctOrder: ["0.07", "0.7", "0.707", "0.77"], calculator: false },
+    { q: "Order these decimals from largest to smallest:", type: "order", items: ["0.35", "0.5", "0.305", "0.53"], correctOrder: ["0.53", "0.5", "0.35", "0.305"], calculator: false },
   ],
   N2: [
     { q: "Work out: −7 × −4", a: "28", type: "number", calculator: false },
@@ -1566,6 +1570,7 @@ const questionBank = {
     { q: "Calculate: 2³ + 3²", a: "17", type: "number", calculator: false },
     { q: "What is √225?", type: "mcq", options: ["13", "14", "15", "16"], a: "15", calculator: false },
     { q: "Calculate: 5² - √49", a: "18", type: "number", calculator: false },
+    { q: "Put these in order from smallest to largest:", type: "order", items: ["2³", "3²", "√25", "4²"], correctOrder: ["√25", "2³", "3²", "4²"], calculator: false },
   ],
   N7: [
     { q: "What is the 4th cube number?", type: "mcq", options: ["27", "64", "81", "125"], a: "64", calculator: false },
@@ -1583,6 +1588,8 @@ const questionBank = {
     { q: "Write 35% as a decimal", a: "0.35", type: "text", calculator: false },
     { q: "What is 0.4 as a percentage?", type: "mcq", options: ["4%", "0.4%", "40%", "400%"], a: "40%", calculator: false },
     { q: "Convert 2/5 to a decimal", a: "0.4", type: "text", calculator: false },
+    { q: "Match each fraction to its decimal:", type: "match", leftItems: ["1/4", "1/2", "3/4", "1/5"], rightItems: ["0.5", "0.25", "0.2", "0.75"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
+    { q: "Match each percentage to its fraction:", type: "match", leftItems: ["25%", "50%", "75%", "20%"], rightItems: ["1/2", "1/4", "1/5", "3/4"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
   ],
   N12: [
     { q: "Work out 15% of 80", a: "12", type: "number", calculator: true },
@@ -3591,8 +3598,20 @@ What is the student's answer?`
     let correct = selfAssessedCorrect;
 
     if (current.type !== 'self' && selfAssessedCorrect === null) {
-      // Use forgiving answer checker that accepts mathematical equivalents
-      correct = answersEquivalent(userAnswer, current.a);
+      if (current.type === 'order') {
+        // Check if order matches the correct order
+        const userOrder = JSON.parse(userAnswer || '[]');
+        correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
+      } else if (current.type === 'match') {
+        // Check if all matches are correct
+        const userMatches = JSON.parse(userAnswer || '{}');
+        correct = Object.entries(current.correctMatches).every(
+          ([left, right]) => userMatches[left] === right
+        );
+      } else {
+        // Use forgiving answer checker that accepts mathematical equivalents
+        correct = answersEquivalent(userAnswer, current.a);
+      }
     }
 
     // Calculate response time for FSRS
@@ -4599,6 +4618,36 @@ What is the student's answer?`
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer}
+                          className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
+                        >
+                          Submit Answer
+                        </button>
+                      </div>
+                    ) : current.type === 'order' ? (
+                      <div className="space-y-4">
+                        <p className="text-sm text-secondary-text">Drag to put in the correct order:</p>
+                        <DragDropOrder
+                          items={current.items}
+                          onOrderChange={(newOrder) => setUserAnswer(JSON.stringify(newOrder))}
+                        />
+                        <button
+                          onClick={() => checkAnswer()}
+                          disabled={!userAnswer}
+                          className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
+                        >
+                          Submit Answer
+                        </button>
+                      </div>
+                    ) : current.type === 'match' ? (
+                      <div className="space-y-4">
+                        <DragDropMatch
+                          leftItems={current.leftItems}
+                          rightItems={current.rightItems}
+                          onMatchChange={(pairs, matchObj) => setUserAnswer(JSON.stringify(matchObj))}
+                        />
+                        <button
+                          onClick={() => checkAnswer()}
+                          disabled={!userAnswer || Object.keys(JSON.parse(userAnswer || '{}')).length < current.leftItems.length}
                           className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
                         >
                           Submit Answer
