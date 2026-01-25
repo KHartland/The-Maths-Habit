@@ -151,6 +151,7 @@ const renderRecurring = (text) => {
 
 const Calculator = ({ onInsert, onClose }) => {
   const [display, setDisplay] = useState('0');
+  const [history, setHistory] = useState('');
   const [memory, setMemory] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
   const [pendingOperator, setPendingOperator] = useState(null);
@@ -176,14 +177,18 @@ const Calculator = ({ onInsert, onClose }) => {
 
   const clear = () => {
     setDisplay('0');
+    setHistory('');
     setPreviousValue(null);
     setPendingOperator(null);
     setWaitingForOperand(false);
   };
 
-  const clearEntry = () => {
-    setDisplay('0');
-    setWaitingForOperand(false);
+  const backspace = () => {
+    if (display.length > 1) {
+      setDisplay(display.slice(0, -1));
+    } else {
+      setDisplay('0');
+    }
   };
 
   const toggleSign = () => {
@@ -199,7 +204,7 @@ const Calculator = ({ onInsert, onClose }) => {
   const calculate = (leftOperand, rightOperand, operator) => {
     switch (operator) {
       case '+': return leftOperand + rightOperand;
-      case '-': return leftOperand - rightOperand;
+      case '−': return leftOperand - rightOperand;
       case '×': return leftOperand * rightOperand;
       case '÷': return rightOperand !== 0 ? leftOperand / rightOperand : 'Error';
       case '^': return Math.pow(leftOperand, rightOperand);
@@ -212,10 +217,12 @@ const Calculator = ({ onInsert, onClose }) => {
 
     if (previousValue === null) {
       setPreviousValue(inputValue);
+      setHistory(`${inputValue} ${nextOperator}`);
     } else if (pendingOperator) {
       const result = calculate(previousValue, inputValue, pendingOperator);
       setDisplay(String(result));
       setPreviousValue(result);
+      setHistory(`${result} ${nextOperator}`);
     }
 
     setWaitingForOperand(true);
@@ -226,6 +233,7 @@ const Calculator = ({ onInsert, onClose }) => {
     if (pendingOperator && previousValue !== null) {
       const inputValue = parseFloat(display);
       const result = calculate(previousValue, inputValue, pendingOperator);
+      setHistory(`${previousValue} ${pendingOperator} ${inputValue} =`);
       setDisplay(String(result));
       setPreviousValue(null);
       setPendingOperator(null);
@@ -235,37 +243,38 @@ const Calculator = ({ onInsert, onClose }) => {
 
   const sqrt = () => {
     const value = parseFloat(display);
+    setHistory(`√${value}`);
     setDisplay(value >= 0 ? String(Math.sqrt(value)) : 'Error');
   };
 
   const square = () => {
     const value = parseFloat(display);
+    setHistory(`${value}²`);
     setDisplay(String(value * value));
   };
 
   const cube = () => {
     const value = parseFloat(display);
+    setHistory(`${value}³`);
     setDisplay(String(value * value * value));
-  };
-
-  const reciprocal = () => {
-    const value = parseFloat(display);
-    setDisplay(value !== 0 ? String(1 / value) : 'Error');
   };
 
   const sin = () => {
     const value = parseFloat(display);
-    setDisplay(String(Math.sin(value * Math.PI / 180))); // Degrees
+    setHistory(`sin(${value}°)`);
+    setDisplay(String(Math.sin(value * Math.PI / 180)));
   };
 
   const cos = () => {
     const value = parseFloat(display);
-    setDisplay(String(Math.cos(value * Math.PI / 180))); // Degrees
+    setHistory(`cos(${value}°)`);
+    setDisplay(String(Math.cos(value * Math.PI / 180)));
   };
 
   const tan = () => {
     const value = parseFloat(display);
-    setDisplay(String(Math.tan(value * Math.PI / 180))); // Degrees
+    setHistory(`tan(${value}°)`);
+    setDisplay(String(Math.tan(value * Math.PI / 180)));
   };
 
   const pi = () => {
@@ -280,103 +289,97 @@ const Calculator = ({ onInsert, onClose }) => {
 
   const useAnswer = () => {
     if (onInsert && display !== '0' && display !== 'Error') {
-      // Round to reasonable precision for answers
       const value = parseFloat(display);
       const rounded = Math.abs(value) < 0.0001 ? value : Math.round(value * 10000) / 10000;
       onInsert(String(rounded));
     }
   };
 
-  const buttonClass = (type = 'default') => {
-    const base = 'p-2 rounded-lg font-semibold text-sm transition-all active:scale-95 ';
-    switch (type) {
-      case 'number': return base + 'bg-white border border-slate-200 hover:bg-slate-50 text-slate-900';
-      case 'operator': return base + 'bg-amber-100 border border-amber-200 hover:bg-amber-200 text-amber-900';
-      case 'function': return base + 'bg-slate-100 border border-slate-200 hover:bg-slate-200 text-slate-700 text-xs';
-      case 'equals': return base + 'bg-violet-600 hover:bg-violet-700 text-white';
-      case 'clear': return base + 'bg-red-100 border border-red-200 hover:bg-red-200 text-red-700';
-      case 'use': return base + 'bg-emerald-600 hover:bg-emerald-700 text-white';
-      default: return base + 'bg-slate-100 hover:bg-slate-200 text-slate-700';
-    }
-  };
+  const btnBase = 'p-3 rounded-xl font-semibold transition-all active:scale-95 select-none ';
+  const btnNum = btnBase + 'bg-white/10 hover:bg-white/20 text-white text-lg';
+  const btnOp = btnBase + 'bg-violet/40 hover:bg-violet/60 text-violet-light text-lg';
+  const btnFn = btnBase + 'bg-white/5 hover:bg-white/10 text-secondary-text text-sm';
+  const btnEq = btnBase + 'bg-mint hover:bg-mint/80 text-void text-lg font-bold';
+  const btnClear = btnBase + 'bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm';
 
   return (
-    <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 w-72">
+    <div className="glass-panel rounded-2xl p-4 w-80 shadow-2xl border border-violet/30">
       {/* Header */}
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-          🧮 Scientific Calculator
-          {memory !== null && <span className="text-violet-600 ml-1">M</span>}
-        </span>
-        <button onClick={onClose} className="p-1 hover:bg-slate-100 rounded">
-          <X className="w-4 h-4 text-slate-400" />
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-lg">🧮</span>
+          <span className="text-sm font-semibold text-primary-text">Scientific Calculator</span>
+          {memory !== null && <span className="text-xs bg-violet/30 text-violet-light px-2 py-0.5 rounded-full">M</span>}
+        </div>
+        <button onClick={onClose} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+          <X className="w-5 h-5 text-secondary-text" />
         </button>
       </div>
 
       {/* Display */}
-      <div className="bg-slate-900 rounded-xl p-3 mb-2">
-        <div className="text-right text-2xl font-mono text-white truncate">
-          {display}
-        </div>
-        {pendingOperator && (
-          <div className="text-right text-xs text-slate-400 mt-1">
-            {previousValue} {pendingOperator}
+      <div className="bg-void/80 rounded-xl p-4 mb-3 border border-white/10">
+        {history && (
+          <div className="text-right text-xs text-secondary-text mb-1 truncate h-4">
+            {history}
           </div>
         )}
+        <div className="text-right text-3xl font-mono text-primary-text truncate">
+          {display}
+        </div>
       </div>
 
-      {/* Scientific functions row */}
-      <div className="grid grid-cols-5 gap-1 mb-1">
-        <button onClick={sin} className={buttonClass('function')}>sin</button>
-        <button onClick={cos} className={buttonClass('function')}>cos</button>
-        <button onClick={tan} className={buttonClass('function')}>tan</button>
-        <button onClick={pi} className={buttonClass('function')}>π</button>
-        <button onClick={() => performOperation('^')} className={buttonClass('function')}>xʸ</button>
+      {/* Scientific functions */}
+      <div className="grid grid-cols-5 gap-1.5 mb-2">
+        <button onClick={sin} className={btnFn}>sin</button>
+        <button onClick={cos} className={btnFn}>cos</button>
+        <button onClick={tan} className={btnFn}>tan</button>
+        <button onClick={pi} className={btnFn}>π</button>
+        <button onClick={() => performOperation('^')} className={btnFn}>xʸ</button>
       </div>
 
-      {/* Memory and functions row */}
-      <div className="grid grid-cols-5 gap-1 mb-1">
-        <button onClick={memoryClear} className={buttonClass('function')}>MC</button>
-        <button onClick={memoryRecall} className={buttonClass('function')}>MR</button>
-        <button onClick={memoryAdd} className={buttonClass('function')}>M+</button>
-        <button onClick={sqrt} className={buttonClass('function')}>√</button>
-        <button onClick={square} className={buttonClass('function')}>x²</button>
+      {/* Memory row */}
+      <div className="grid grid-cols-5 gap-1.5 mb-2">
+        <button onClick={memoryClear} className={btnFn}>MC</button>
+        <button onClick={memoryRecall} className={btnFn}>MR</button>
+        <button onClick={memoryAdd} className={btnFn}>M+</button>
+        <button onClick={sqrt} className={btnFn}>√</button>
+        <button onClick={square} className={btnFn}>x²</button>
       </div>
 
       {/* Main keypad */}
-      <div className="grid grid-cols-4 gap-1">
-        <button onClick={clear} className={buttonClass('clear')}>AC</button>
-        <button onClick={clearEntry} className={buttonClass('clear')}>CE</button>
-        <button onClick={percentage} className={buttonClass('function')}>%</button>
-        <button onClick={() => performOperation('÷')} className={buttonClass('operator')}>÷</button>
+      <div className="grid grid-cols-4 gap-1.5">
+        <button onClick={clear} className={btnClear}>AC</button>
+        <button onClick={backspace} className={btnClear}>⌫</button>
+        <button onClick={percentage} className={btnFn}>%</button>
+        <button onClick={() => performOperation('÷')} className={btnOp}>÷</button>
 
-        <button onClick={() => inputDigit('7')} className={buttonClass('number')}>7</button>
-        <button onClick={() => inputDigit('8')} className={buttonClass('number')}>8</button>
-        <button onClick={() => inputDigit('9')} className={buttonClass('number')}>9</button>
-        <button onClick={() => performOperation('×')} className={buttonClass('operator')}>×</button>
+        <button onClick={() => inputDigit('7')} className={btnNum}>7</button>
+        <button onClick={() => inputDigit('8')} className={btnNum}>8</button>
+        <button onClick={() => inputDigit('9')} className={btnNum}>9</button>
+        <button onClick={() => performOperation('×')} className={btnOp}>×</button>
 
-        <button onClick={() => inputDigit('4')} className={buttonClass('number')}>4</button>
-        <button onClick={() => inputDigit('5')} className={buttonClass('number')}>5</button>
-        <button onClick={() => inputDigit('6')} className={buttonClass('number')}>6</button>
-        <button onClick={() => performOperation('-')} className={buttonClass('operator')}>−</button>
+        <button onClick={() => inputDigit('4')} className={btnNum}>4</button>
+        <button onClick={() => inputDigit('5')} className={btnNum}>5</button>
+        <button onClick={() => inputDigit('6')} className={btnNum}>6</button>
+        <button onClick={() => performOperation('−')} className={btnOp}>−</button>
 
-        <button onClick={() => inputDigit('1')} className={buttonClass('number')}>1</button>
-        <button onClick={() => inputDigit('2')} className={buttonClass('number')}>2</button>
-        <button onClick={() => inputDigit('3')} className={buttonClass('number')}>3</button>
-        <button onClick={() => performOperation('+')} className={buttonClass('operator')}>+</button>
+        <button onClick={() => inputDigit('1')} className={btnNum}>1</button>
+        <button onClick={() => inputDigit('2')} className={btnNum}>2</button>
+        <button onClick={() => inputDigit('3')} className={btnNum}>3</button>
+        <button onClick={() => performOperation('+')} className={btnOp}>+</button>
 
-        <button onClick={toggleSign} className={buttonClass('function')}>±</button>
-        <button onClick={() => inputDigit('0')} className={buttonClass('number')}>0</button>
-        <button onClick={inputDecimal} className={buttonClass('number')}>.</button>
-        <button onClick={equals} className={buttonClass('equals')}>=</button>
+        <button onClick={toggleSign} className={btnFn}>±</button>
+        <button onClick={() => inputDigit('0')} className={btnNum}>0</button>
+        <button onClick={inputDecimal} className={btnNum}>.</button>
+        <button onClick={equals} className={btnEq}>=</button>
       </div>
 
       {/* Use Answer button */}
       <button
         onClick={useAnswer}
-        className={`w-full mt-2 py-2 ${buttonClass('use')} flex items-center justify-center gap-2`}
+        className="w-full mt-3 py-3 btn-gradient-mint text-void font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
       >
-        <Check className="w-4 h-4" />
+        <Check className="w-5 h-5" />
         Use Answer
       </button>
     </div>
