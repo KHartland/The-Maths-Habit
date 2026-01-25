@@ -18,6 +18,52 @@ const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
 
+// ==================== ANIMATED LOGO COMPONENT ====================
+// Landing page logo with squares that pulse/glow at different times
+const AnimatedLogo = () => {
+  const [activeSquares, setActiveSquares] = useState([]);
+
+  useEffect(() => {
+    // Randomly light up squares at intervals
+    const interval = setInterval(() => {
+      // Pick 2-3 random squares to pulse
+      const numSquares = Math.floor(Math.random() * 2) + 2;
+      const squares = [];
+      for (let i = 0; i < numSquares; i++) {
+        squares.push(Math.floor(Math.random() * 9));
+      }
+      setActiveSquares(squares);
+
+      // Clear after animation
+      setTimeout(() => setActiveSquares([]), 600);
+    }, 1200);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const baseOpacities = [0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95];
+
+  return (
+    <div className="grid grid-cols-3 gap-1.5 w-full h-full">
+      {baseOpacities.map((baseOpacity, i) => {
+        const isActive = activeSquares.includes(i);
+        const opacity = isActive ? Math.min(1, baseOpacity + 0.4) : baseOpacity;
+        return (
+          <div
+            key={i}
+            className="rounded-sm transition-all duration-500"
+            style={{
+              backgroundColor: `rgba(110, 51, 177, ${opacity})`,
+              boxShadow: isActive ? '0 0 12px rgba(139, 92, 246, 0.6)' : 'none',
+              transform: isActive ? 'scale(1.05)' : 'scale(1)',
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 // ==================== RECURRING DECIMAL COMPONENT ====================
 // Renders recurring decimals with clear dots above digits (UK GCSE standard)
 // Usage: <Rec>0.3</Rec> for 0.3̇ or <Rec>0.142857</Rec> for 0.1̇42857̇
@@ -7032,17 +7078,9 @@ function AppContent() {
           <div className="orb w-48 h-48 -bottom-10 -left-10 opacity-40" />
 
           <div className="max-w-md w-full text-center relative z-10">
-            {/* Heatmap Icon with glow */}
+            {/* Animated Heatmap Logo */}
             <div className="w-24 h-24 glass-panel-strong rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow-violet p-3 animate-float">
-              <div className="grid grid-cols-3 gap-1.5 w-full h-full">
-                {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
-                  <div
-                    key={i}
-                    className="rounded-sm"
-                    style={{ backgroundColor: `rgba(110, 51, 177,${opacity})` }}
-                  />
-                ))}
-              </div>
+              <AnimatedLogo />
             </div>
 
             <h1 className="text-4xl font-bold text-primary-text mb-3 tracking-tight">The Maths Habit</h1>
