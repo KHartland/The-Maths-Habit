@@ -7061,8 +7061,8 @@ function AppContent() {
 
             <h1 className="text-4xl font-bold text-primary-text mb-3 tracking-tight">The Maths Habit</h1>
             <p className="text-xl text-secondary-text mb-10">
-              Elevate your thinking.<br />
-              <span className="text-violet-light">Master every GCSE objective.</span>
+              Mastering maths<br />
+              <span className="text-violet-light">one square at a time.</span>
             </p>
 
             {/* Trust indicators */}
