@@ -386,32 +386,88 @@ const Calculator = ({ onInsert, onClose }) => {
   );
 };
 
+// AQA GCSE Mathematics (8300) Specification - Tier Assignments
+// Foundation = Basic Foundation + Additional Foundation content
+// Higher = Higher content only (also includes all Foundation content)
 const topics = [
   { id: 'number', name: 'Number', strand: 'Number',
-    foundation: ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8', 'N10', 'N11', 'N12', 'N13', 'N14', 'N15'],
-    higher: ['N9', 'N16'] },
+    // N1-N8: Foundation (N7 roots/integer indices, N8 fractions/π)
+    // N9: Additional Foundation (standard form)
+    // N10: Foundation (terminating decimals), Higher (recurring decimals)
+    // N16: Additional Foundation (limits of accuracy), Higher (upper/lower bounds)
+    foundation: ['N1', 'N2', 'N3', 'N4', 'N5', 'N6', 'N7', 'N8', 'N9', 'N10', 'N11', 'N12', 'N13', 'N14', 'N15', 'N16'],
+    higher: [] },
   { id: 'algebra', name: 'Algebra', strand: 'Algebra',
-    foundation: ['A1', 'A2', 'A3', 'A4', 'A5', 'A7', 'A13', 'A14', 'A15', 'A17', 'A21', 'A23', 'A24'],
-    higher: ['A6', 'A8', 'A9', 'A10', 'A11', 'A12', 'A16', 'A18', 'A19', 'A20', 'A22', 'A25'] },
+    // A1-A5: Foundation (basic manipulation, formulae)
+    // A6: Additional Foundation (identities/arguments), Higher (proofs)
+    // A7: Foundation (functions), Higher (inverse/composite)
+    // A8: Foundation (coordinates all quadrants)
+    // A9: Additional Foundation (y=mx+c, parallel), Higher (perpendicular)
+    // A10: Foundation (gradients and intercepts)
+    // A11: Additional Foundation (quadratics graphically), Higher (completing square)
+    // A12: Foundation (linear/quadratic), Additional (cubic/reciprocal), Higher (exponential/trig)
+    // A13: Higher only (graph transformations)
+    // A14: Foundation (graphs in context)
+    // A15: Higher only (gradients of curves, areas under graphs)
+    // A16: Higher only (circle equations)
+    // A17: Foundation (linear equations)
+    // A18: Additional Foundation (factorising quadratics), Higher (completing square/formula)
+    // A19: Additional Foundation (simultaneous linear), Higher (linear/quadratic)
+    // A20: Higher only (iteration)
+    // A21: Additional Foundation (form equations)
+    // A22: Additional Foundation (linear inequalities), Higher (quadratic inequalities)
+    // A23: Foundation (sequences term-to-term/position-to-term)
+    // A24: Foundation (triangular/square/cube/arithmetic), Additional (Fibonacci/quadratic/geometric)
+    // A25: Foundation (nth term linear), Higher (nth term quadratic)
+    foundation: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A14', 'A17', 'A18', 'A19', 'A21', 'A22', 'A23', 'A24', 'A25'],
+    higher: ['A13', 'A15', 'A16', 'A20'] },
   { id: 'ratio', name: 'Ratio', strand: 'Ratio',
-    foundation: ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R14'],
-    higher: ['R13', 'R15', 'R16'] },
+    // R1-R12: Foundation
+    // R13: Additional Foundation (inverse proportion concept), Higher (construct equations)
+    // R14: Additional Foundation (gradient as rate of change)
+    // R15: Higher only (instantaneous rate of change)
+    // R16: Additional Foundation (compound interest), Higher (iterative processes)
+    foundation: ['R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R16'],
+    higher: ['R15'] },
   { id: 'geometry', name: 'Geometry', strand: 'Geometry',
-    foundation: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G11', 'G13', 'G14', 'G15', 'G19', 'G20'],
-    higher: ['G10', 'G12', 'G16', 'G17', 'G18', 'G21', 'G22', 'G23', 'G24', 'G25'] },
+    // G1-G9: Foundation (G7 fractional SF = Additional, G9 tangent/arc/sector = Additional)
+    // G10: Higher only (circle theorems)
+    // G11: Foundation (geometrical problems on coordinates)
+    // G12: Foundation (properties of 3D shapes)
+    // G13: Foundation (plans and elevations)
+    // G14-G16: Foundation (measures, bearings, area formulae)
+    // G17: Foundation (circle formulae, perimeter, area), Additional (spheres/pyramids/cones)
+    // G18: Additional Foundation (arc lengths, sectors)
+    // G19: Additional Foundation (similarity lengths), Higher (area/volume ratios)
+    // G20: Additional Foundation (Pythagoras/trig 2D), Higher (3D)
+    // G21: Additional Foundation (exact trig values)
+    // G22-G23: Higher only (sine/cosine rule, area formula)
+    // G24: Foundation (translations as vectors)
+    // G25: Additional Foundation (vector operations), Higher (vector proofs)
+    foundation: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20', 'G21', 'G24', 'G25'],
+    higher: ['G10', 'G22', 'G23'] },
   { id: 'prob', name: 'Probability', strand: 'Probability',
-    foundation: ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7'],
-    higher: ['P8', 'P9'] },
+    // P1-P7: Foundation
+    // P8: Additional Foundation (independent/dependent events)
+    // P9: Higher only (conditional probability)
+    foundation: ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'],
+    higher: ['P9'] },
   { id: 'stats', name: 'Statistics', strand: 'Statistics',
-    foundation: ['S1', 'S2', 'S3', 'S4', 'S5'],
-    higher: ['S6'] }
+    // S1: Additional Foundation (sampling)
+    // S2: Foundation (tables/charts), Additional (time series)
+    // S3: Higher only (histograms with unequal class intervals, cumulative frequency)
+    // S4: Foundation (averages/range), Higher (box plots, quartiles/IQR)
+    // S5: Foundation (statistics to describe population)
+    // S6: Foundation (scatter graphs), Additional (line of best fit, predictions)
+    foundation: ['S1', 'S2', 'S4', 'S5', 'S6'],
+    higher: ['S3'] }
 ];
 
 const descriptions = {
   // Number
   N1: 'Order and compare decimals including recurring (e.g. circle the largest: 5.304[r], 5.344, 5.34, 5.3[r]4[r])',
   N2: 'Add, subtract, multiply and divide with integers, decimals and negatives',
-  N3: 'Understand place value (e.g. what is the value of the 7 in 34,728?)',
+  N3: 'Use inverse operations and priority of operations (BIDMAS with brackets, powers, roots, reciprocals)',
   N4: 'Use inverse operations to check answers (e.g. multiplication ↔ division)',
   N5: 'Apply BIDMAS to calculations with brackets, indices and operations',
   N6: 'Calculate with powers and roots (e.g. work out d when d = g² − 2h)',
@@ -523,7 +579,7 @@ const revisionHints = {
   // Number
   N1: 'Revise how to compare decimals by looking at each digit from left to right. For recurring decimals, write out several decimal places to compare.',
   N2: 'Revise the rules for calculating with negative numbers: negative × negative = positive, negative × positive = negative.',
-  N3: 'Revise place value - each digit has a value based on its position (units, tens, hundreds, thousands, etc.).',
+  N3: 'Revise inverse operations (square ↔ square root, cube ↔ cube root, × ↔ ÷) and reciprocals (reciprocal of n is 1/n). Use BIDMAS for priority.',
   N4: 'Revise inverse operations - addition undoes subtraction, multiplication undoes division. Use these to check your answers.',
   N5: 'Revise BIDMAS order: Brackets, Indices, Division/Multiplication (left to right), Addition/Subtraction (left to right).',
   N6: 'Revise powers (e.g. 3² = 9) and roots (e.g. √16 = 4). Remember: squaring and square rooting are inverse operations.',
@@ -1580,10 +1636,11 @@ const questionBank = {
     { q: "Calculate: 2.4 × 3.5", a: "8.4", type: "number", calculator: false },
   ],
   N3: [
-    { q: "What is the value of the 7 in 34,728?", type: "mcq", options: ["7", "70", "700", "7000"], a: "700", calculator: false },
-    { q: "Write 45,000 in standard form", a: "4.5 × 10⁴", type: "text", calculator: false },
-    { q: "What is 3.2 × 10³ as an ordinary number?", a: "3200", type: "number", calculator: false },
-    { q: "Write 0.00056 in standard form", a: "5.6 × 10⁻⁴", type: "text", calculator: false },
+    { q: "Which operation is the inverse of squaring?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
+    { q: "Simplify using inverse operations: 15 × 4 ÷ 4", a: "15", type: "number", calculator: false },
+    { q: "What is the reciprocal of 4?", type: "mcq", options: ["4", "-4", "0.25", "2"], a: "0.25", calculator: false },
+    { q: "Calculate: 8 + 2 × 3", a: "14", type: "number", calculator: false, hint: "Remember BIDMAS" },
+    { q: "Which calculation should be done first in: 5 + 3² × 2?", type: "mcq", options: ["5 + 3", "3²", "3 × 2", "² × 2"], a: "3²", calculator: false },
   ],
   N5: [
     { q: "Work out: 3 + 4 × 2", a: "11", type: "number", calculator: false },
@@ -1600,9 +1657,9 @@ const questionBank = {
   ],
   N7: [
     { q: "What is the 4th cube number?", type: "mcq", options: ["27", "64", "81", "125"], a: "64", calculator: false },
-    { q: "Is 64 a cube number? (yes/no)", a: "yes", type: "text", calculator: false },
+    { q: "Which of these is a cube number?", type: "mcq", options: ["36", "49", "64", "81"], a: "64", calculator: false },
     { q: "What is 5³?", a: "125", type: "number", calculator: false },
-    { q: "Find ³√216", a: "6", type: "number", calculator: false },
+    { q: "Find ³√8", a: "2", type: "number", calculator: false },
   ],
   N8: [
     { q: "Find the HCF of 24 and 36", a: "12", type: "number", calculator: false },
@@ -2215,15 +2272,15 @@ const higherQuestionBank = {
     { q: "Calculate: 0.125 × 0.8 ÷ 0.04", a: "2.5", type: "number", calculator: false },
   ],
   N3: [
-    { q: "Write 0.000052 in standard form", a: "5.2 × 10⁻⁵", type: "text", calculator: false },
-    { q: "Calculate: (3 × 10⁴) × (2 × 10⁻²)", a: "6 × 10²", type: "text", calculator: false },
-    { q: "Which calculation gives 8 × 10⁷?", type: "mcq", options: ["(2 × 10⁴) × (4 × 10³)", "(4 × 10⁵) × (2 × 10³)", "(8 × 10⁴) × (1 × 10²)", "(2 × 10⁵) × (4 × 10³)"], a: "(2 × 10⁴) × (4 × 10³)", calculator: false },
-    { q: "Write (4.8 × 10⁵) ÷ (1.2 × 10⁻²) in standard form", a: "4 × 10⁷", type: "text", calculator: false },
-    { q: "Order from smallest to largest:", type: "order", items: ["3 × 10⁻⁴", "3.1 × 10⁻⁵", "0.0003", "2.9 × 10⁻⁴"], correctOrder: ["3.1 × 10⁻⁵", "2.9 × 10⁻⁴", "0.0003", "3 × 10⁻⁴"], calculator: false },
+    { q: "What is the reciprocal of 0.25?", a: "4", type: "number", calculator: false },
+    { q: "Simplify: 24 × 15 ÷ 15 × 3 ÷ 3", a: "24", type: "number", calculator: false },
+    { q: "Calculate: 2³ + 4 × (5 - 2)² ÷ 6", a: "14", type: "number", calculator: false },
+    { q: "Which is the reciprocal of 2/3?", type: "mcq", options: ["-2/3", "3/2", "2/3", "-3/2"], a: "3/2", calculator: false },
+    { q: "Calculate: √(16 + 9) × 2 - 3²", a: "1", type: "number", calculator: false },
   ],
   N4: [
     { q: "I calculated (2.5)³ = 15.625. Which check confirms this?", type: "mcq", options: ["15.625 ÷ 2.5", "∛15.625", "15.625 × 3", "2.5 × 3"], a: "∛15.625", calculator: false },
-    { q: "Use estimation to check: 48.7 × 21.3 ≈ 1037. Is this reasonable? (yes/no)", a: "yes", type: "text", calculator: false, hint: "50 × 20 = 1000" },
+    { q: "Estimate 48.7 × 21.3 by rounding to 1 s.f. What do you get?", a: "1000", type: "number", calculator: false, hint: "Round 48.7 to 50, round 21.3 to 20" },
     { q: "Which inverse operation checks √324 = 18?", a: "18²", type: "text", calculator: false },
     { q: "I calculated 4.8 ÷ 0.12 = 40. Which calculation verifies this?", type: "mcq", options: ["40 × 0.12", "4.8 × 0.12", "40 - 0.12", "4.8 + 40"], a: "40 × 0.12", calculator: false },
   ],
@@ -2729,7 +2786,7 @@ const examQuestions = {
   ],
   // Added exam questions for objectives that were missing them
   N3: [
-    { q: "Write (4.5 × 10³) × (2 × 10²) in standard form.", a: "9 × 10⁵", type: "text", calculator: false, marks: 2 },
+    { q: "Work out: 4² + (12 - 4) × 3 ÷ √36. Show each step of your working.", a: "20", type: "number", calculator: false, marks: 3 },
   ],
   N7: [
     { q: "Simplify: ³√125 × 2³", a: "40", type: "number", calculator: false, marks: 2 },
@@ -2965,7 +3022,7 @@ const higherExamQuestions = {
     { q: "Show that (-2)³ × (-3)² ÷ (-6) = 12", a: "-8 × 9 ÷ (-6) = -72 ÷ (-6) = 12", type: "text", calculator: false, marks: 3 },
   ],
   N3: [
-    { q: "The mass of an atom is 3.2 × 10⁻²⁶ kg. The mass of a molecule is 5.4 × 10⁻²⁵ kg. How many atoms are in one molecule? Give your answer to 2 significant figures.", a: "17", type: "number", calculator: true, marks: 3 },
+    { q: "Show that (√64 + 3²) × (1/2)⁻² - 5³ ÷ 25 = 63. Show all working.", a: "(8 + 9) × 4 - 125 ÷ 25 = 17 × 4 - 5 = 68 - 5 = 63", type: "text", calculator: false, marks: 4 },
   ],
   N5: [
     { q: "Show that (2³ + 4²) × 3 - √144 ÷ 2 = 66", a: "(8 + 16) × 3 - 12 ÷ 2 = 24 × 3 - 6 = 72 - 6 = 66", type: "text", calculator: false, marks: 3 },
