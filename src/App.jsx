@@ -2048,6 +2048,152 @@ const questionBank = {
     { q: "In a Venn diagram, the intersection shows:", type: "mcq", options: ["Neither A nor B", "A or B", "A and B", "Only A"], a: "A and B", calculator: false },
     { q: "50 people were surveyed. 32 like tea, 28 like coffee, 15 like both. How many like neither?", a: "5", type: "number", calculator: false },
   ],
+
+  // ========== HIGHER TIER OBJECTIVES ==========
+
+  // Number - Higher
+  N9: [
+    { q: "Simplify: 8^(2/3)", a: "4", type: "number", calculator: false, hint: "8^(2/3) = (³√8)² = 2² = 4" },
+    { q: "Simplify: 27^(-1/3)", a: "1/3", type: "text", calculator: false },
+    { q: "What is 16^(3/4)?", type: "mcq", options: ["8", "12", "64", "4"], a: "8", calculator: false },
+    { q: "Simplify: 5^(-2)", a: "1/25", type: "text", calculator: false },
+  ],
+
+  // Algebra - Higher
+  A8: [
+    { q: "Is 2(x + 3) = 2x + 6 an equation or identity?", type: "mcq", options: ["Equation", "Identity"], a: "Identity", calculator: false },
+    { q: "Which is an identity?", type: "mcq", options: ["x² = 9", "x² - 9 = (x+3)(x-3)", "x² = x + 6", "2x = 10"], a: "x² - 9 = (x+3)(x-3)", calculator: false },
+    { q: "An identity is true for:", type: "mcq", options: ["One value of x", "Two values of x", "All values of x", "No values of x"], a: "All values of x", calculator: false },
+    { q: "Is (x + 1)² = x² + 2x + 1 an identity?", type: "mcq", options: ["Yes", "No"], a: "Yes", calculator: false },
+  ],
+  A10: [
+    { q: "Prove that (n+1)² - n² is always odd", a: "= 2n + 1, which is always odd", type: "text", calculator: false },
+    { q: "The sum of any two consecutive integers is:", type: "mcq", options: ["Always even", "Always odd", "Sometimes even", "A multiple of 4"], a: "Always odd", calculator: false },
+    { q: "If n is even, what is n² + n?", type: "mcq", options: ["Always even", "Always odd", "Could be either"], a: "Always even", calculator: false },
+    { q: "Prove the sum of 3 consecutive integers is divisible by 3", a: "n + (n+1) + (n+2) = 3n + 3 = 3(n+1)", type: "text", calculator: false },
+  ],
+  A11: [
+    { q: "If f(x) = 2x + 3, find f⁻¹(x)", a: "(x - 3)/2", type: "text", calculator: false },
+    { q: "The inverse of 'multiply by 4 then add 5' is:", type: "mcq", options: ["Subtract 5 then divide by 4", "Divide by 4 then subtract 5", "Add 5 then multiply by 4", "Subtract 4 then divide by 5"], a: "Subtract 5 then divide by 4", calculator: false },
+    { q: "If f(x) = x² for x ≥ 0, find f⁻¹(25)", a: "5", type: "number", calculator: false },
+    { q: "If g(x) = 3x - 1, what is g⁻¹(8)?", a: "3", type: "number", calculator: false },
+  ],
+  A12: [
+    { q: "f(x) = 2x + 1, g(x) = x². Find fg(3)", a: "19", type: "number", calculator: false, hint: "fg(3) = f(g(3)) = f(9) = 19" },
+    { q: "f(x) = x + 3, g(x) = 2x. Find gf(5)", a: "16", type: "number", calculator: false },
+    { q: "f(x) = x², g(x) = x + 1. What is fg(x)?", type: "mcq", options: ["x² + 1", "(x + 1)²", "x² + x", "2x²"], a: "(x + 1)²", calculator: false },
+    { q: "f(x) = 3x, g(x) = x - 2. Find gf(4) - fg(4)", a: "4", type: "number", calculator: false },
+  ],
+  A16: [
+    { q: "Where does y = x³ cross the y-axis?", a: "(0, 0)", type: "text", calculator: false },
+    { q: "The graph y = x³ - 8 crosses the x-axis at:", type: "mcq", options: ["x = 0", "x = 2", "x = 8", "x = -2"], a: "x = 2", calculator: false },
+    { q: "How many turning points does a cubic graph have at most?", type: "mcq", options: ["0", "1", "2", "3"], a: "2", calculator: false },
+    { q: "Sketch y = x³ passes through which quadrants?", type: "mcq", options: ["1 and 3", "2 and 4", "1 and 2", "All four"], a: "1 and 3", calculator: false },
+  ],
+  A20: [
+    { q: "Using xₙ₊₁ = (xₙ + 5/xₙ)/2 with x₀ = 2, find x₁", a: "2.25", type: "number", calculator: true },
+    { q: "The iteration xₙ₊₁ = 3 + 1/xₙ with x₀ = 3 gives x₁ =", type: "mcq", options: ["3.33", "3.5", "4", "3.25"], a: "3.33", calculator: true },
+    { q: "What does iteration help us find?", type: "mcq", options: ["Exact solutions", "Approximate solutions", "Factors", "Graphs"], a: "Approximate solutions", calculator: false },
+    { q: "Using xₙ₊₁ = √(10 - xₙ) with x₀ = 3, find x₂ to 2dp", a: "2.83", type: "number", calculator: true },
+  ],
+  A22: [
+    { q: "Solve: 3x - 7 > 5", a: "x > 4", type: "text", calculator: false },
+    { q: "Solve: 2x + 1 ≤ 9", a: "x ≤ 4", type: "text", calculator: false },
+    { q: "If -3 < x ≤ 2 and x is an integer, list all values", a: "-2, -1, 0, 1, 2", type: "text", calculator: false },
+    { q: "Solve: 4 < 2x + 6 < 12", a: "-1 < x < 3", type: "text", calculator: false },
+  ],
+  A25: [
+    { q: "Find the nth term of: 2, 6, 12, 20, 30, ...", a: "n² + n", type: "text", calculator: false, hint: "Second difference = 2, so starts with n²" },
+    { q: "The second difference of a quadratic sequence is:", type: "mcq", options: ["Always 0", "Always constant", "Always 2", "Variable"], a: "Always constant", calculator: false },
+    { q: "Find the nth term of: 1, 4, 9, 16, 25, ...", a: "n²", type: "text", calculator: false },
+    { q: "Find the 10th term of the sequence with nth term n² + 3n", a: "130", type: "number", calculator: false },
+  ],
+
+  // Ratio - Higher
+  R13: [
+    { q: "y is directly proportional to x². When x = 2, y = 12. Find y when x = 5.", a: "75", type: "number", calculator: false },
+    { q: "y is inversely proportional to x. When x = 4, y = 6. Find y when x = 8.", a: "3", type: "number", calculator: false },
+    { q: "If A ∝ r², and A = 50 when r = 5, find A when r = 7.", a: "98", type: "number", calculator: false },
+    { q: "P is inversely proportional to √Q. P = 8 when Q = 9. Find P when Q = 16.", a: "6", type: "number", calculator: false },
+  ],
+  R15: [
+    { q: "Two similar shapes have lengths in ratio 2:3. What is the ratio of their areas?", a: "4:9", type: "text", calculator: false },
+    { q: "Two similar solids have surface areas in ratio 4:9. What is the ratio of their volumes?", a: "8:27", type: "text", calculator: false },
+    { q: "A model is 1:50 scale. The real car is 4m long. The model's surface area is 0.032m². What is the real car's surface area?", a: "80", type: "number", calculator: true },
+    { q: "Similar cones have volumes 64cm³ and 27cm³. The larger has height 12cm. Find the smaller's height.", a: "9", type: "number", calculator: false },
+  ],
+  R16: [
+    { q: "£5000 is invested at 3% compound interest per year. Find the value after 2 years.", a: "5304.50", type: "number", calculator: true },
+    { q: "A car depreciates by 15% per year. It cost £12000. Find its value after 3 years (to nearest £).", a: "7370", type: "number", calculator: true },
+    { q: "A population of 10000 grows by 5% each year. After how many years will it exceed 12000?", type: "mcq", options: ["3", "4", "5", "6"], a: "4", calculator: true },
+    { q: "The formula for compound interest is:", type: "mcq", options: ["P(1 + r)ⁿ", "P + Prn", "P × r × n", "P/(1 + r)ⁿ"], a: "P(1 + r)ⁿ", calculator: false },
+  ],
+
+  // Geometry - Higher
+  G10: [
+    { q: "A shape is enlarged from 12cm to 8cm. What is the scale factor?", a: "2/3", type: "text", calculator: false },
+    { q: "Scale factor -2 means:", type: "mcq", options: ["Enlarge by 2", "Reduce by half", "Enlarge by 2 and rotate 180°", "Reflect and double"], a: "Enlarge by 2 and rotate 180°", calculator: false },
+    { q: "A shape is enlarged SF 3 from centre (1, 2). Point (3, 4) maps to:", a: "(7, 8)", type: "text", calculator: false },
+    { q: "Two similar triangles have sides 6cm and 9cm. What is the scale factor?", a: "3/2", type: "text", calculator: false },
+  ],
+  G12: [
+    { q: "Angle in a semicircle is always:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
+    { q: "Angles in the same segment are:", type: "mcq", options: ["Supplementary", "Equal", "Complementary", "Different"], a: "Equal", calculator: false },
+    { q: "The angle at the centre is _____ the angle at the circumference", type: "mcq", options: ["Half", "Equal to", "Twice", "Three times"], a: "Twice", calculator: false },
+    { q: "A tangent meets a radius at:", type: "mcq", options: ["45°", "60°", "90°", "Any angle"], a: "90°", calculator: false },
+  ],
+  G18: [
+    { q: "Which congruence rule needs two sides and the included angle?", type: "mcq", options: ["SSS", "SAS", "ASA", "RHS"], a: "SAS", calculator: false },
+    { q: "Two triangles have sides 3, 4, 5 and 3, 4, 5. They are congruent by:", type: "mcq", options: ["SSS", "SAS", "ASA", "AAS"], a: "SSS", calculator: false },
+    { q: "RHS applies only to:", type: "mcq", options: ["All triangles", "Isosceles triangles", "Right-angled triangles", "Equilateral triangles"], a: "Right-angled triangles", calculator: false },
+    { q: "If △ABC ≅ △DEF by SAS, which angle must be between the two sides?", type: "mcq", options: ["Any angle", "The largest angle", "The included angle", "The smallest angle"], a: "The included angle", calculator: false },
+  ],
+  G21: [
+    { q: "What is sin 30°?", a: "1/2", type: "text", calculator: false },
+    { q: "What is cos 60°?", a: "1/2", type: "text", calculator: false },
+    { q: "What is tan 45°?", a: "1", type: "number", calculator: false },
+    { q: "sin 90° = ", type: "mcq", options: ["0", "1/2", "√2/2", "1"], a: "1", calculator: false },
+  ],
+  G22: [
+    { q: "In triangle ABC, a = 8cm, angle A = 40°, angle B = 60°. Find b (to 1dp).", a: "10.8", type: "number", calculator: true, hint: "Use sine rule: a/sinA = b/sinB" },
+    { q: "The sine rule is used when you know:", type: "mcq", options: ["Three sides", "Two sides and included angle", "A side and opposite angle", "All angles"], a: "A side and opposite angle", calculator: false },
+    { q: "In sine rule, a/sin A = ", type: "mcq", options: ["b/sin B", "b × sin B", "sin B/b", "a × sin A"], a: "b/sin B", calculator: false },
+    { q: "Find angle B if a = 10, b = 15, angle A = 30°", a: "48.6", type: "number", calculator: true },
+  ],
+  G23: [
+    { q: "Find the area of a triangle with sides 7cm and 9cm and included angle 50°", a: "24.1", type: "number", calculator: true, hint: "Area = ½ab sin C" },
+    { q: "Area = ½ab sin C requires:", type: "mcq", options: ["Three sides", "Two sides and included angle", "Two angles and a side", "All angles"], a: "Two sides and included angle", calculator: false },
+    { q: "A triangle has sides 8cm and 6cm with included angle 90°. Find the area.", a: "24", type: "number", calculator: false },
+    { q: "Find the area: a = 12, b = 10, C = 30°", a: "30", type: "number", calculator: false, hint: "sin 30° = 0.5" },
+  ],
+  G24: [
+    { q: "If a = (3, 4), find |a| (the magnitude)", a: "5", type: "number", calculator: false },
+    { q: "If a = (2, 5) and b = (3, -1), find a + b", a: "(5, 4)", type: "text", calculator: false },
+    { q: "If a = (4, 2), find 3a", a: "(12, 6)", type: "text", calculator: false },
+    { q: "Find the magnitude of vector (5, 12)", a: "13", type: "number", calculator: false },
+  ],
+  G25: [
+    { q: "If a = (1, 3) and b = (2, -1), find 2a + b", a: "(4, 5)", type: "text", calculator: false },
+    { q: "If a = (3, 1) and b = (-1, 4), find a - b", a: "(4, -3)", type: "text", calculator: false },
+    { q: "OA = a, OB = b. Express AB in terms of a and b.", a: "b - a", type: "text", calculator: false },
+    { q: "If M is midpoint of AB, OM = ", type: "mcq", options: ["a + b", "(a + b)/2", "a - b", "2(a + b)"], a: "(a + b)/2", calculator: false },
+  ],
+
+  // Probability - Higher
+  P9: [
+    { q: "A bag has 4 red and 3 blue balls. Two are drawn without replacement. Find P(both red) as a fraction.", a: "2/7", type: "text", calculator: false },
+    { q: "From 5 cards (1,2,3,4,5), two are picked without replacement. Find P(both even).", a: "1/10", type: "text", calculator: false },
+    { q: "A box has 6 red and 4 blue. Two are taken without replacement. Find P(different colours).", a: "8/15", type: "text", calculator: false },
+    { q: "Without replacement changes probabilities because:", type: "mcq", options: ["Total stays same", "Total decreases", "Probabilities stay same", "Events become independent"], a: "Total decreases", calculator: false },
+  ],
+
+  // Statistics - Higher
+  S6: [
+    { q: "Frequency density = ", type: "mcq", options: ["Frequency × class width", "Frequency ÷ class width", "Class width ÷ frequency", "Frequency + class width"], a: "Frequency ÷ class width", calculator: false },
+    { q: "A histogram bar has width 10 and height (FD) 3. What is the frequency?", a: "30", type: "number", calculator: false },
+    { q: "Class 10-20 has frequency 24. What is the frequency density?", a: "2.4", type: "number", calculator: false },
+    { q: "In a histogram, the area of a bar represents:", type: "mcq", options: ["Class width", "Frequency density", "Frequency", "Midpoint"], a: "Frequency", calculator: false },
+  ],
 };
 
 // Exam-style questions - harder, multi-step problems for mastery
@@ -2281,6 +2427,73 @@ const examQuestions = {
   ],
   S4: [
     { q: "A car journey is shown on a distance-time graph. It travels 60km in the first hour, stops for 30 mins, then travels 40km in 30 mins. Find the average speed for the whole journey.", a: "50", type: "number", calculator: true, marks: 3 },
+  ],
+  // Higher tier exam questions
+  N9: [
+    { q: "Simplify fully: (16^(3/4) × 8^(-2/3)) ÷ 4^(1/2)", a: "2", type: "number", calculator: false, marks: 4 },
+  ],
+  A8: [
+    { q: "Show that (x + 2)² - (x - 2)² ≡ 8x", a: "LHS = x² + 4x + 4 - (x² - 4x + 4) = 8x", type: "text", calculator: false, marks: 3 },
+  ],
+  A10: [
+    { q: "Prove algebraically that the sum of the squares of any two consecutive odd numbers is always 2 more than a multiple of 8.", a: "(2n+1)² + (2n+3)² = 8n² + 16n + 10 = 8(n² + 2n + 1) + 2", type: "text", calculator: false, marks: 4 },
+  ],
+  A11: [
+    { q: "f(x) = (3x + 2)/(x - 1). Find f⁻¹(x) and state any values of x for which f⁻¹(x) is undefined.", a: "f⁻¹(x) = (x + 2)/(x - 3), undefined when x = 3", type: "text", calculator: false, marks: 4 },
+  ],
+  A12: [
+    { q: "f(x) = 2x - 1, g(x) = x² + 3. Find x when fg(x) = gf(x).", a: "x = 1 or x = -1", type: "text", calculator: false, marks: 4 },
+  ],
+  A16: [
+    { q: "The curve y = x³ - 6x² + 9x passes through the origin. Find the coordinates of the other points where it crosses the x-axis.", a: "(3, 0)", type: "text", calculator: false, marks: 3 },
+  ],
+  A20: [
+    { q: "Use iteration with xₙ₊₁ = ³√(20 - 3xₙ) and x₀ = 2 to find x₃ to 3 decimal places.", a: "2.366", type: "number", calculator: true, marks: 3 },
+  ],
+  A22: [
+    { q: "Find the integer values of n that satisfy -3 < 2n - 5 ≤ 7.", a: "2, 3, 4, 5, 6", type: "text", calculator: false, marks: 3 },
+  ],
+  A25: [
+    { q: "The nth term of a sequence is an² + bn + c. The first three terms are 4, 10, 18. Find a, b and c.", a: "a = 1, b = 3, c = 0", type: "text", calculator: false, marks: 4 },
+  ],
+  R13: [
+    { q: "The force F between two magnets is inversely proportional to d². When d = 2, F = 20. Find F when d = 4.", a: "5", type: "number", calculator: false, marks: 3 },
+  ],
+  R15: [
+    { q: "Two similar cones have surface areas 36π cm² and 100π cm². The smaller cone has volume 48π cm³. Find the volume of the larger cone.", a: "222.2π", type: "text", calculator: true, marks: 4 },
+  ],
+  R16: [
+    { q: "£8000 is invested at 2.5% compound interest. After how many complete years will the investment first exceed £9000?", a: "5", type: "number", calculator: true, marks: 3 },
+  ],
+  G10: [
+    { q: "Triangle ABC is enlarged by scale factor -2, centre P(1, 1). A(3, 2) maps to A'. Find the coordinates of A'.", a: "(-3, -1)", type: "text", calculator: false, marks: 3 },
+  ],
+  G12: [
+    { q: "In a circle, AB is a diameter. C is a point on the circumference. Angle CAB = 35°. Find angle ACB.", a: "90", type: "number", calculator: false, marks: 2 },
+  ],
+  G18: [
+    { q: "Prove triangles ABC and DEC are congruent given: AC = DC, BC = EC, and angle ACB = angle DCE.", a: "SAS: AC = DC, angle ACB = angle DCE, BC = EC", type: "text", calculator: false, marks: 3 },
+  ],
+  G21: [
+    { q: "Find the exact value of (sin 60° × cos 30°) + (cos 60° × sin 30°)", a: "1", type: "number", calculator: false, marks: 3 },
+  ],
+  G22: [
+    { q: "In triangle ABC, BC = 8cm, angle ABC = 72°, angle ACB = 53°. Find AC.", a: "8.5", type: "number", calculator: true, marks: 3 },
+  ],
+  G23: [
+    { q: "Find the area of triangle PQR where PQ = 11cm, QR = 8cm and angle PQR = 67°.", a: "40.5", type: "number", calculator: true, marks: 3 },
+  ],
+  G24: [
+    { q: "Vectors a = (3, -2) and b = (1, 4). Find |2a - b| giving your answer in surd form.", a: "√89", type: "text", calculator: false, marks: 3 },
+  ],
+  G25: [
+    { q: "In triangle OAB, OA = a and OB = b. M is the midpoint of AB. Express OM in terms of a and b.", a: "½(a + b)", type: "text", calculator: false, marks: 3 },
+  ],
+  P9: [
+    { q: "A bag contains 5 red and 3 blue counters. Two counters are taken without replacement. Find the probability they are different colours.", a: "15/28", type: "text", calculator: false, marks: 4 },
+  ],
+  S6: [
+    { q: "A histogram shows heights. The bar for 150-160cm has frequency density 2.4. If 36 people are in this class, what is the frequency density for 160-180cm if it contains 30 people?", a: "1.5", type: "number", calculator: true, marks: 3 },
   ],
 };
 
