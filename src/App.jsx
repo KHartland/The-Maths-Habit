@@ -1665,9 +1665,16 @@ const questionBank = {
     { q: "What is x if 4x + 1 = 17?", type: "mcq", options: ["3", "4", "4.5", "5"], a: "4", calculator: false },
   ],
   A18: [
-    { q: "Solve: x² = 49 (positive solution)", a: "7", type: "number", calculator: false },
-    { q: "Solve: x² - 5x + 6 = 0 (smaller solution)", a: "2", type: "number", calculator: false },
-    { q: "What are the solutions to x² = 25?", type: "mcq", options: ["5", "-5", "±5", "±25"], a: "±5", calculator: false },
+    // Foundation - factorising
+    { q: "Solve by factorising: x² + 5x + 6 = 0", a: "x = -2 and x = -3", type: "text", calculator: false },
+    { q: "Solve by factorising: x² - 7x + 12 = 0", a: "x = 3 and x = 4", type: "text", calculator: false },
+    { q: "Solve: x² - 9 = 0", type: "mcq", options: ["x = 3", "x = -3", "x = 3 and x = -3", "x = 9"], a: "x = 3 and x = -3", calculator: false },
+    // Foundation - reading from graph
+    { q: "Use the graph to solve x² - 2x - 3 = 0", a: "x = -1 and x = 3", type: "text", calculator: false, image: "quadratic-graph-1.png" },
+    // Higher - rearrangement
+    { q: "Solve: x² + 3x = 10 (give both solutions)", a: "x = 2 and x = -5", type: "text", calculator: false, tier: "higher" },
+    // Higher - quadratic formula
+    { q: "Solve 2x² + 5x - 3 = 0 using the quadratic formula", type: "mcq", options: ["x = 0.5 and x = -3", "x = -0.5 and x = 3", "x = 1 and x = -1.5", "x = 3 and x = -0.5"], a: "x = 0.5 and x = -3", calculator: true, tier: "higher" },
   ],
   A19: [
     { q: "Solve: 2x + y = 7 and x + y = 4. Find x.", a: "3", type: "number", calculator: false },
