@@ -1642,7 +1642,25 @@ const questionBank = {
     { q: "A time is 24 seconds to the nearest second. What is the upper bound?", a: "24.5", type: "number", calculator: false },
     { q: "A length is 3.5m to 1 d.p. What is the lower bound?", type: "mcq", options: ["3.4", "3.45", "3.49", "3.0"], a: "3.45", calculator: false },
   ],
-  
+  N4: [
+    { q: "I calculate 156 ÷ 12 = 13. Which calculation checks this?", type: "mcq", options: ["156 × 12", "13 × 12", "156 - 12", "13 + 12"], a: "13 × 12", calculator: false },
+    { q: "Check: Is 23 × 17 = 391? Use the inverse operation.", a: "yes", type: "text", calculator: true, hint: "Calculate 391 ÷ 17" },
+    { q: "I subtracted and got 458 - 279 = 179. What calculation checks this?", a: "179 + 279", type: "text", calculator: false },
+    { q: "Which is the inverse of squaring a number?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
+  ],
+  N11: [
+    { q: "Express 15 as a fraction of 60", a: "1/4", type: "text", calculator: false },
+    { q: "Write 30 as a fraction of 50 in simplest form", a: "3/5", type: "text", calculator: false },
+    { q: "What is 12 out of 48 as a fraction in simplest form?", type: "mcq", options: ["12/48", "1/4", "1/3", "2/8"], a: "1/4", calculator: false },
+    { q: "Express 45 minutes as a fraction of 1 hour", a: "3/4", type: "text", calculator: false },
+  ],
+  N13: [
+    { q: "Convert 3.5 metres to centimetres", a: "350", type: "number", calculator: false },
+    { q: "Convert 4500 grams to kilograms", a: "4.5", type: "number", calculator: false },
+    { q: "How many millilitres in 2.5 litres?", type: "mcq", options: ["25", "250", "2500", "25000"], a: "2500", calculator: false },
+    { q: "Convert 3 m² to cm²", a: "30000", type: "number", calculator: false, hint: "1 m² = 10000 cm²" },
+  ],
+
   // Algebra
   A2: [
     { q: "If y = 3x + 5, find y when x = 4", a: "17", type: "number", calculator: false },
@@ -1698,7 +1716,55 @@ const questionBank = {
     { q: "A sequence has nth term 2n + 5. What is the 8th term?", type: "mcq", options: ["13", "16", "21", "24"], a: "21", calculator: false },
     { q: "Find the nth term: 7, 11, 15, 19, ...", a: "4n + 3", type: "text", calculator: false },
   ],
-  
+  A1: [
+    { q: "Write 'add 5 to x, then multiply by 3' as an algebraic expression", a: "3(x + 5)", type: "text", calculator: false },
+    { q: "What does 4x mean?", type: "mcq", options: ["4 + x", "4 - x", "4 × x", "4 ÷ x"], a: "4 × x", calculator: false },
+    { q: "Simplify: a + a + a", a: "3a", type: "text", calculator: false },
+    { q: "Write using algebra: the cost of n books at £5 each", a: "5n", type: "text", calculator: false },
+  ],
+  A3: [
+    { q: "Is '3x + 5' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Expression", calculator: false },
+    { q: "Is '3x + 5 = 20' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Equation", calculator: false },
+    { q: "Is 'A = πr²' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Formula", calculator: false },
+    { q: "Which is an identity?", type: "mcq", options: ["x + 5 = 12", "2(x + 3) = 2x + 6", "A = lw", "3x - 1"], a: "2(x + 3) = 2x + 6", calculator: false },
+  ],
+  A5: [
+    { q: "Use V = lwh to find V when l = 5, w = 4, h = 3", a: "60", type: "number", calculator: false },
+    { q: "Use A = ½bh to find A when b = 8 and h = 6", a: "24", type: "number", calculator: false },
+    { q: "The formula for speed is s = d/t. Find s when d = 150 and t = 3.", a: "50", type: "number", calculator: false },
+    { q: "Use C = 2πr to find C when r = 7 (give answer in terms of π)", a: "14π", type: "text", calculator: false },
+  ],
+  A7: [
+    { q: "A function machine does: input → ×3 → +2 → output. If input is 5, what is output?", a: "17", type: "number", calculator: false },
+    { q: "A function machine does: input → -4 → ×2 → output. If input is 10, what is output?", a: "12", type: "number", calculator: false },
+    { q: "A function machine gives output 20. It does: input → ×4 → +8 → output. Find the input.", a: "3", type: "number", calculator: false },
+    { q: "Which function machine gives y = 2x + 1?", type: "mcq", options: ["×2 then +1", "+1 then ×2", "×1 then +2", "+2 then ×1"], a: "×2 then +1", calculator: false },
+  ],
+  A13: [
+    { q: "What are the coordinates of point A at 3 along and 5 up?", a: "(3, 5)", type: "text", calculator: false },
+    { q: "Find the midpoint of (2, 4) and (6, 8)", a: "(4, 6)", type: "text", calculator: false },
+    { q: "Find the midpoint of (0, 3) and (4, 7)", a: "(2, 5)", type: "text", calculator: false },
+    { q: "Point P is at (-3, 4). Which quadrant is P in?", type: "mcq", options: ["1st", "2nd", "3rd", "4th"], a: "2nd", calculator: false },
+  ],
+  A15: [
+    { q: "A quadratic has roots x = 2 and x = 6. What is the x-coordinate of the turning point?", a: "4", type: "number", calculator: false },
+    { q: "A parabola crosses the x-axis at x = -1 and x = 5. Find the x-coordinate of the vertex.", a: "2", type: "number", calculator: false },
+    { q: "The turning point x-coordinate is halfway between the roots. If roots are x = 0 and x = 8, find it.", a: "4", type: "number", calculator: false },
+    { q: "A quadratic has roots at x = -3 and x = 1. The turning point x-coordinate is:", type: "mcq", options: ["-3", "-1", "0", "1"], a: "-1", calculator: false },
+  ],
+  A21: [
+    { q: "Write as an inequality: x is greater than 5", a: "x > 5", type: "text", calculator: false },
+    { q: "Write as an inequality: y is at most 10", a: "y ≤ 10", type: "text", calculator: false },
+    { q: "A ride requires height h cm where h ≥ 120. Can someone 115cm tall go on?", type: "mcq", options: ["Yes", "No"], a: "No", calculator: false },
+    { q: "n is an integer where -2 < n ≤ 3. List all possible values of n.", a: "-1, 0, 1, 2, 3", type: "text", calculator: false },
+  ],
+  A24: [
+    { q: "What is the next term in: 1, 1, 2, 3, 5, 8, ...?", a: "13", type: "number", calculator: false, hint: "Fibonacci - add the previous two terms" },
+    { q: "What is the next term in: 1, 4, 9, 16, 25, ...?", a: "36", type: "number", calculator: false, hint: "Square numbers" },
+    { q: "Identify the sequence: 2, 6, 12, 20, 30, ...", type: "mcq", options: ["Square numbers", "Cube numbers", "Triangular numbers", "Pronic numbers"], a: "Pronic numbers", calculator: false },
+    { q: "What is the next triangular number after 10?", a: "15", type: "number", calculator: false },
+  ],
+
   // Ratio
   R3: [
     { q: "Work out 2/5 of 35", a: "14", type: "number", calculator: false },
@@ -1737,8 +1803,62 @@ const questionBank = {
     { q: "A plan is drawn at scale 1:200. A room is 6 cm long on the plan. What is the actual length in metres?", a: "12", type: "number", calculator: true },
     { q: "The scale on a map is 1 cm : 2 km. What is this as a ratio?", type: "mcq", options: ["1:200", "1:2000", "1:20000", "1:200000"], a: "1:200000", calculator: false },
   ],
+  R1: [
+    { q: "Convert 2.5 km to metres", a: "2500", type: "number", calculator: false },
+    { q: "Convert 450 cm to metres", a: "4.5", type: "number", calculator: false },
+    { q: "How many grams in 3.2 kg?", type: "mcq", options: ["32", "320", "3200", "32000"], a: "3200", calculator: false },
+    { q: "Convert 180 minutes to hours", a: "3", type: "number", calculator: false },
+  ],
+  R5: [
+    { q: "For every 3 red sweets there are 5 blue sweets. If there are 12 red sweets, how many blue?", a: "20", type: "number", calculator: false },
+    { q: "The ratio of boys to girls is 2:3. There are 10 boys. How many girls?", a: "15", type: "number", calculator: false },
+    { q: "For every £2 Tom saves, Amy saves £5. Tom saves £8. How much does Amy save?", a: "20", type: "number", calculator: false },
+    { q: "Purple paint is made with red and blue in ratio 3:7. I use 9 litres of red. How much blue?", type: "mcq", options: ["7 litres", "14 litres", "21 litres", "28 litres"], a: "21 litres", calculator: false },
+  ],
+  R6: [
+    { q: "Write 15 ÷ 20 as a ratio in simplest form", a: "3:4", type: "text", calculator: false },
+    { q: "The ratio 2:5 means dividing in the proportion:", type: "mcq", options: ["2 ÷ 5", "2 out of 5", "2 out of 7", "5 out of 7"], a: "2 out of 7", calculator: false },
+    { q: "Express the ratio 1:4 as a fraction (smaller part)", a: "1/5", type: "text", calculator: false },
+    { q: "Write 12:18 as a division", a: "12 ÷ 18 or 2 ÷ 3", type: "text", calculator: false },
+  ],
+  R7: [
+    { q: "5 pens cost £3. How much do 8 pens cost?", a: "4.80", type: "number", calculator: true },
+    { q: "3 workers take 12 days to complete a job. How long would 4 workers take?", a: "9", type: "number", calculator: false, hint: "Inverse proportion" },
+    { q: "If 4 apples cost £1.20, how much do 10 apples cost?", a: "3", type: "number", calculator: true },
+    { q: "y is directly proportional to x. When x = 4, y = 20. Find y when x = 7.", a: "35", type: "number", calculator: false },
+  ],
+  R8: [
+    { q: "In a ratio 2:3, what fraction is the first part?", a: "2/5", type: "text", calculator: false },
+    { q: "The ratio of flour to sugar is 3:1. What fraction of the mixture is flour?", a: "3/4", type: "text", calculator: false },
+    { q: "A line goes through (0,0) and (2,6). What is the ratio x:y?", a: "1:3", type: "text", calculator: false },
+    { q: "The ratio a:b = 4:5. Write a as a fraction of b.", a: "4/5", type: "text", calculator: false },
+  ],
+  R11: [
+    { q: "A TV was £400, now £340. What is the percentage decrease?", a: "15", type: "number", calculator: true },
+    { q: "Population grew from 5000 to 6500. Find the percentage increase.", a: "30", type: "number", calculator: true },
+    { q: "Which is better value: 20% off £50, or £12 off £50?", type: "mcq", options: ["20% off", "£12 off", "Same"], a: "£12 off", calculator: true },
+    { q: "Shop A sells item for £80 (was £100). Shop B sells same item for £85 (was £110). Which has bigger % discount?", type: "mcq", options: ["Shop A", "Shop B", "Same"], a: "Shop B", calculator: true },
+  ],
+  R14: [
+    { q: "Speed = distance ÷ time. Find speed if distance = 150km and time = 3 hours.", a: "50", type: "number", calculator: false },
+    { q: "Density = mass ÷ volume. Find density when mass = 240g and volume = 30cm³.", a: "8", type: "number", calculator: false },
+    { q: "What are the units of speed if distance is in miles and time is in hours?", type: "mcq", options: ["miles", "hours", "mph", "m/s"], a: "mph", calculator: false },
+    { q: "A car travels 180 miles in 3 hours. What is its average speed?", a: "60", type: "number", calculator: false },
+  ],
 
   // Geometry
+  G1: [
+    { q: "What is the name of a 7-sided polygon?", type: "mcq", options: ["Hexagon", "Heptagon", "Octagon", "Nonagon"], a: "Heptagon", calculator: false },
+    { q: "How many vertices does a cube have?", a: "8", type: "number", calculator: false },
+    { q: "What type of angle is 135°?", type: "mcq", options: ["Acute", "Right", "Obtuse", "Reflex"], a: "Obtuse", calculator: false },
+    { q: "A line from center to edge of a circle is called a:", type: "mcq", options: ["Diameter", "Chord", "Radius", "Tangent"], a: "Radius", calculator: false },
+  ],
+  G2: [
+    { q: "To construct a 60° angle, you need:", type: "mcq", options: ["Protractor only", "Compass and ruler", "Ruler only", "Set square only"], a: "Compass and ruler", calculator: false },
+    { q: "An angle bisector divides an angle into:", type: "mcq", options: ["Three equal parts", "Two equal parts", "Unequal parts", "Four parts"], a: "Two equal parts", calculator: false },
+    { q: "A perpendicular bisector of a line segment:", type: "mcq", options: ["Goes through one end", "Cuts at 45°", "Cuts at 90° through the midpoint", "Is parallel to it"], a: "Cuts at 90° through the midpoint", calculator: false },
+    { q: "The locus of points equidistant from two fixed points is:", type: "mcq", options: ["A circle", "A straight line", "Two parallel lines", "An arc"], a: "A straight line", calculator: false },
+  ],
   G3: [
     { q: "Angles on a straight line sum to how many degrees?", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
     { q: "Angles around a point sum to how many degrees?", a: "360", type: "number", calculator: false },
@@ -1756,6 +1876,36 @@ const questionBank = {
     { q: "Find the sum of interior angles of a pentagon", a: "540", type: "number", calculator: false },
     { q: "What is the interior angle of a regular hexagon?", type: "mcq", options: ["90°", "108°", "120°", "135°"], a: "120°", calculator: false },
     { q: "A regular polygon has exterior angles of 40°. How many sides does it have?", a: "9", type: "number", calculator: false },
+  ],
+  G6: [
+    { q: "Which quadrilateral has all sides equal and all angles 90°?", type: "mcq", options: ["Rectangle", "Rhombus", "Square", "Parallelogram"], a: "Square", calculator: false },
+    { q: "A rhombus has how many lines of symmetry?", a: "2", type: "number", calculator: false },
+    { q: "Which quadrilateral has exactly one pair of parallel sides?", type: "mcq", options: ["Rectangle", "Parallelogram", "Trapezium", "Kite"], a: "Trapezium", calculator: false },
+    { q: "The diagonals of a rectangle:", type: "mcq", options: ["Are perpendicular", "Are equal length", "Bisect the angles", "Are different lengths"], a: "Are equal length", calculator: false },
+  ],
+  G8: [
+    { q: "Describe the translation from (2, 3) to (5, 7) as a column vector", a: "(3, 4)", type: "text", calculator: false },
+    { q: "A shape is translated by vector (−2, 5). Point (4, 1) moves to:", type: "mcq", options: ["(2, 6)", "(6, 6)", "(2, −4)", "(6, −4)"], a: "(2, 6)", calculator: false },
+    { q: "What is the column vector for 3 left and 2 up?", a: "(-3, 2)", type: "text", calculator: false },
+    { q: "Point A(1, 4) is translated by (5, −3). Find the new coordinates.", a: "(6, 1)", type: "text", calculator: false },
+  ],
+  G9: [
+    { q: "A shape is rotated 90° clockwise about the origin. Point (2, 0) moves to:", type: "mcq", options: ["(0, 2)", "(0, −2)", "(−2, 0)", "(2, 0)"], a: "(0, −2)", calculator: false },
+    { q: "Reflecting in the line y = x swaps:", type: "mcq", options: ["x with -x", "y with -y", "x with y", "Nothing changes"], a: "x with y", calculator: false },
+    { q: "A shape is reflected in the x-axis. Point (3, 5) maps to:", type: "mcq", options: ["(−3, 5)", "(3, −5)", "(−3, −5)", "(5, 3)"], a: "(3, −5)", calculator: false },
+    { q: "What single transformation is the same as two reflections in parallel lines?", type: "mcq", options: ["Rotation", "Translation", "Enlargement", "Reflection"], a: "Translation", calculator: false },
+  ],
+  G11: [
+    { q: "A tangent to a circle meets the radius at:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
+    { q: "An arc is part of a:", type: "mcq", options: ["Diameter", "Radius", "Circumference", "Chord"], a: "Circumference", calculator: false },
+    { q: "A chord divides a circle into:", type: "mcq", options: ["Two semicircles", "A segment and major arc", "Two segments", "A sector"], a: "Two segments", calculator: false },
+    { q: "The angle in a semicircle is:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
+  ],
+  G13: [
+    { q: "A plan view shows a shape from:", type: "mcq", options: ["The front", "The side", "Above", "Below"], a: "Above", calculator: false },
+    { q: "How many faces does a triangular prism have?", a: "5", type: "number", calculator: false },
+    { q: "The front elevation of a cylinder looks like:", type: "mcq", options: ["A circle", "A rectangle", "A triangle", "An oval"], a: "A rectangle", calculator: false },
+    { q: "A cube has how many edges?", a: "12", type: "number", calculator: false },
   ],
   G14: [
     { q: "Find the area of a triangle with base 8cm and height 5cm", a: "20", type: "number", calculator: false },
@@ -1794,11 +1944,41 @@ const questionBank = {
   ],
   
   // Probability
+  P1: [
+    { q: "A coin is flipped 20 times. Heads appears 12 times. What is the experimental probability of heads as a decimal?", a: "0.6", type: "number", calculator: false },
+    { q: "A dice is rolled 50 times. Which table best records the outcomes?", type: "mcq", options: ["List of all 50 numbers", "Tally chart with frequency", "Bar chart", "Pie chart"], a: "Tally chart with frequency", calculator: false },
+    { q: "In an experiment, a spinner lands on red 15 times out of 60 spins. What is the relative frequency of red?", a: "0.25", type: "number", calculator: false },
+    { q: "Why do we record experimental outcomes in a table?", type: "mcq", options: ["It looks neat", "To spot patterns and calculate probabilities", "The teacher said so", "It's faster"], a: "To spot patterns and calculate probabilities", calculator: false },
+  ],
+  P2: [
+    { q: "A dice has faces 1,1,1,2,2,3. Is it fair?", type: "mcq", options: ["Yes", "No"], a: "No", calculator: false },
+    { q: "For a fair spinner with 5 equal sections, P(any section) = ", a: "0.2", type: "number", calculator: false },
+    { q: "A coin is fair. What is P(heads)?", type: "mcq", options: ["0.25", "0.5", "0.75", "1"], a: "0.5", calculator: false },
+    { q: "Which would make an experiment unfair?", type: "mcq", options: ["Using a normal dice", "Flipping a coin", "Using a weighted dice", "Drawing from a shuffled deck"], a: "Using a weighted dice", calculator: false },
+  ],
+  P3: [
+    { q: "A spinner lands on blue 18 times in 60 spins. What is the relative frequency of blue?", a: "0.3", type: "number", calculator: false },
+    { q: "After 100 trials, an event occurred 35 times. Estimate the probability.", a: "0.35", type: "number", calculator: false },
+    { q: "Relative frequency = ", type: "mcq", options: ["Total trials ÷ successes", "Successes ÷ total trials", "Successes × total trials", "Total - successes"], a: "Successes ÷ total trials", calculator: false },
+    { q: "As the number of trials increases, relative frequency gets closer to:", type: "mcq", options: ["Zero", "One", "Theoretical probability", "Infinity"], a: "Theoretical probability", calculator: false },
+  ],
   P4: [
     { q: "The probability of rain is 0.3. What is the probability of no rain?", a: "0.7", type: "text", calculator: false },
     { q: "P(A) = 0.45. What is P(not A)?", type: "mcq", options: ["0.45", "0.55", "0.65", "1.45"], a: "0.55", calculator: false },
     { q: "P(winning) = 1/5. Find P(not winning) as a fraction.", a: "4/5", type: "text", calculator: false },
     { q: "Events A and B are mutually exclusive. P(A) = 0.3, P(B) = 0.4. Find P(A or B).", a: "0.7", type: "number", calculator: false },
+  ],
+  P5: [
+    { q: "An event is certain to happen. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "2"], a: "1", calculator: false },
+    { q: "An event is impossible. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "-1"], a: "0", calculator: false },
+    { q: "P(event) = 0.75. Describe this likelihood:", type: "mcq", options: ["Impossible", "Unlikely", "Evens", "Likely"], a: "Likely", calculator: false },
+    { q: "Put in order from least to most likely: P=0.8, P=0.2, P=0.5, P=0.95", a: "0.2, 0.5, 0.8, 0.95", type: "text", calculator: false },
+  ],
+  P7: [
+    { q: "Two coins are flipped. List all possible outcomes.", a: "HH, HT, TH, TT", type: "text", calculator: false },
+    { q: "A dice is rolled and a coin is flipped. How many possible outcomes?", a: "12", type: "number", calculator: false },
+    { q: "Two dice are rolled. How many ways can you get a total of 7?", a: "6", type: "number", calculator: false },
+    { q: "From cards A, B, C, how many ways can you pick 2 in order?", type: "mcq", options: ["3", "6", "9", "12"], a: "6", calculator: false },
   ],
   P8: [
     { q: "Using the tree diagram, find the probability of getting two gold cards. Give your answer as a decimal.", a: "0.0025", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "Multiply along the branches: 0.05 × 0.05" },
@@ -1808,11 +1988,29 @@ const questionBank = {
   ],
   
   // Statistics
+  S1: [
+    { q: "Which sampling method picks names from a hat?", type: "mcq", options: ["Systematic", "Random", "Stratified", "Quota"], a: "Random", calculator: false },
+    { q: "A survey only asks people in a shopping centre. This is:", type: "mcq", options: ["Random sampling", "Stratified sampling", "Biased sampling", "Systematic sampling"], a: "Biased sampling", calculator: false },
+    { q: "To get a representative sample of a school, you should:", type: "mcq", options: ["Ask your friends", "Ask one class", "Sample from each year group", "Ask teachers only"], a: "Sample from each year group", calculator: false },
+    { q: "Why might an online survey about internet usage be biased?", type: "mcq", options: ["It's free", "Only internet users respond", "It's anonymous", "It's quick"], a: "Only internet users respond", calculator: false },
+  ],
   S2: [
     { q: "The pie chart shows votes in an election. Amy received 162°. If 180 people voted in total, how many voted for Amy?", a: "81", type: "number", diagram: "pie-chart-talent", calculator: true, hint: "162° out of 360° represents what fraction?" },
     { q: "What fraction of the total votes did Amy receive? Give your answer in simplest form.", a: "9/20", type: "text", diagram: "pie-chart-talent", calculator: false },
     { q: "Reading a pie chart: 90° represents what fraction of the total?", type: "mcq", options: ["1/2", "1/3", "1/4", "1/5"], a: "1/4", calculator: false },
     { q: "In a pie chart, 45 people are represented by 90°. How many degrees represent 60 people?", a: "120", type: "number", calculator: false },
+  ],
+  S3: [
+    { q: "In a pie chart, how many degrees represent the whole?", a: "360", type: "number", calculator: false },
+    { q: "25% of data in a pie chart is represented by:", type: "mcq", options: ["25°", "45°", "90°", "180°"], a: "90°", calculator: false },
+    { q: "40 people out of 120 chose 'red'. What angle represents 'red' on a pie chart?", a: "120", type: "number", calculator: false },
+    { q: "A pie chart sector is 72°. What percentage of the total is this?", a: "20", type: "number", calculator: false },
+  ],
+  S4: [
+    { q: "On a distance-time graph, a steeper line means:", type: "mcq", options: ["Slower speed", "Faster speed", "Stopped", "Going backwards"], a: "Faster speed", calculator: false },
+    { q: "A horizontal line on a distance-time graph means:", type: "mcq", options: ["Moving fast", "Moving slowly", "Stationary", "Accelerating"], a: "Stationary", calculator: false },
+    { q: "The gradient of a distance-time graph gives:", type: "mcq", options: ["Distance", "Time", "Speed", "Acceleration"], a: "Speed", calculator: false },
+    { q: "On a graph, the rate of change is found by:", type: "mcq", options: ["Reading the y-axis", "Reading the x-axis", "Drawing a tangent and finding its gradient", "Adding coordinates"], a: "Drawing a tangent and finding its gradient", calculator: false },
   ],
   S5: [
     { q: "Find the mean of: 4, 7, 9, 12, 8", a: "8", type: "number", calculator: true },
@@ -1983,6 +2181,106 @@ const examQuestions = {
   ],
   S2: [
     { q: "In a pie chart, the 'Sport' sector is 108°. If 60 people were surveyed, how many chose Sport?", a: "18", type: "number", calculator: true, marks: 2 },
+  ],
+  // New foundation exam questions
+  N4: [
+    { q: "Tom calculated 847 ÷ 7 = 121. Use an inverse operation to check if he is correct. Show your working.", a: "121 × 7 = 847, so correct", type: "text", calculator: false, marks: 2 },
+  ],
+  N11: [
+    { q: "In a class of 32 students, 12 are boys. Express the number of girls as a fraction of the total in simplest form.", a: "5/8", type: "text", calculator: false, marks: 2 },
+  ],
+  N13: [
+    { q: "A room is 4.5m by 3m. Calculate the area in cm².", a: "135000", type: "number", calculator: true, marks: 3 },
+  ],
+  A1: [
+    { q: "Write an expression for: 'Think of a number, double it, then add 5'", a: "2n + 5", type: "text", calculator: false, marks: 2 },
+  ],
+  A3: [
+    { q: "State whether each is an expression, equation, formula or identity: (a) 3x + 7 (b) 3x + 7 = 19 (c) A = ½bh (d) 2(x+3) ≡ 2x + 6", a: "expression, equation, formula, identity", type: "text", calculator: false, marks: 4 },
+  ],
+  A5: [
+    { q: "The formula for the volume of a cylinder is V = πr²h. Find V when r = 3 and h = 7. Give your answer in terms of π.", a: "63π", type: "text", calculator: false, marks: 2 },
+  ],
+  A7: [
+    { q: "A function machine does: input → ×4 → -5 → ÷3 → output. If output is 5, find the input.", a: "5", type: "number", calculator: false, marks: 3 },
+  ],
+  A13: [
+    { q: "A and B have coordinates (2, 8) and (10, 4). Find the midpoint of AB and the length of AB.", a: "Midpoint (6, 6), Length ~8.94", type: "text", calculator: true, marks: 4 },
+  ],
+  A15: [
+    { q: "A quadratic y = (x-3)(x+1) has roots at x = 3 and x = -1. Find the coordinates of the turning point.", a: "(1, -4)", type: "text", calculator: false, marks: 3 },
+  ],
+  A21: [
+    { q: "Write an inequality for: 'You must be at least 12 years old and under 18 to join the youth club'", a: "12 ≤ age < 18", type: "text", calculator: false, marks: 2 },
+  ],
+  A24: [
+    { q: "Find the next two terms in the Fibonacci-like sequence: 2, 5, 7, 12, 19, ...", a: "31, 50", type: "text", calculator: false, marks: 2 },
+  ],
+  R1: [
+    { q: "A recipe needs 1.2 kg of flour. How many grams is this? If flour costs 80p per 500g, how much does 1.2kg cost?", a: "1200g, £1.92", type: "text", calculator: true, marks: 3 },
+  ],
+  R5: [
+    { q: "The ratio of cats to dogs at a shelter is 3:5. There are 40 animals in total. How many cats are there?", a: "15", type: "number", calculator: false, marks: 3 },
+  ],
+  R6: [
+    { q: "In a bag of sweets, the ratio of red to blue to green is 2:5:3. What fraction of the sweets are blue?", a: "1/2", type: "text", calculator: false, marks: 2 },
+  ],
+  R7: [
+    { q: "It takes 6 workers 8 days to build a wall. How long would it take 4 workers?", a: "12", type: "number", calculator: false, marks: 3 },
+  ],
+  R8: [
+    { q: "The ratio of x:y = 3:4. Express x as a fraction of (x+y).", a: "3/7", type: "text", calculator: false, marks: 2 },
+  ],
+  R11: [
+    { q: "A TV was £450. In a sale it is reduced to £360. Find the percentage decrease.", a: "20", type: "number", calculator: true, marks: 2 },
+  ],
+  R14: [
+    { q: "A car travels 180km in 2 hours 15 minutes. Calculate the average speed in km/h.", a: "80", type: "number", calculator: true, marks: 3 },
+  ],
+  G1: [
+    { q: "Name the 3D shape that has 6 faces, 12 edges and 8 vertices. All faces are congruent.", a: "Cube", type: "text", calculator: false, marks: 2 },
+  ],
+  G2: [
+    { q: "Describe how to construct the perpendicular bisector of a line segment AB.", a: "Draw arcs from A and B with same radius, join intersection points", type: "text", calculator: false, marks: 3 },
+  ],
+  G6: [
+    { q: "List two properties that a rhombus has that a rectangle does not.", a: "All sides equal, diagonals bisect at right angles", type: "text", calculator: false, marks: 2 },
+  ],
+  G8: [
+    { q: "Shape P is translated to shape Q by vector (4, -3). Point A on P is at (2, 5). What are the coordinates of the corresponding point on Q?", a: "(6, 2)", type: "text", calculator: false, marks: 2 },
+  ],
+  G9: [
+    { q: "Triangle T has vertices at (1, 1), (3, 1), (2, 4). Draw the reflection of T in the line y = x and give the coordinates of the reflected vertices.", a: "(1, 1), (1, 3), (4, 2)", type: "text", calculator: false, marks: 3 },
+  ],
+  G11: [
+    { q: "In a circle, a chord is 8cm from the centre. The radius is 10cm. Find the length of the chord.", a: "12", type: "number", calculator: true, marks: 3 },
+  ],
+  G13: [
+    { q: "A solid is made from a cylinder with a cone on top. The cylinder has height 6cm and the cone has height 4cm. Both have radius 3cm. Find the total volume in terms of π.", a: "66π", type: "text", calculator: false, marks: 4 },
+  ],
+  P1: [
+    { q: "A spinner was spun 200 times. Results: Red 82, Blue 68, Green 50. Calculate the relative frequency of blue.", a: "0.34", type: "number", calculator: true, marks: 2 },
+  ],
+  P2: [
+    { q: "A bag contains 3 red and 7 blue balls. Explain why selecting a ball at random is not equally likely to be red or blue.", a: "Different numbers of each colour", type: "text", calculator: false, marks: 2 },
+  ],
+  P3: [
+    { q: "A dice is rolled 150 times and lands on 6 exactly 30 times. Calculate the relative frequency and compare to the theoretical probability.", a: "0.2 vs 1/6 ≈ 0.167", type: "text", calculator: true, marks: 3 },
+  ],
+  P5: [
+    { q: "P(rain) = 0.3, P(wind) = 0.6. If these are independent, find P(rain and wind).", a: "0.18", type: "number", calculator: true, marks: 2 },
+  ],
+  P7: [
+    { q: "Three coins are flipped. List all possible outcomes and find P(exactly 2 heads).", a: "3/8", type: "text", calculator: false, marks: 4 },
+  ],
+  S1: [
+    { q: "A school has 600 Year 7, 550 Year 8, and 450 Year 9 students. A stratified sample of 80 is needed. How many Year 8 students should be selected?", a: "28", type: "number", calculator: true, marks: 3 },
+  ],
+  S3: [
+    { q: "Draw a pie chart for: Football 30 students, Tennis 15 students, Swimming 25 students, Other 10 students. Calculate each angle.", a: "135°, 67.5°, 112.5°, 45°", type: "text", calculator: true, marks: 4 },
+  ],
+  S4: [
+    { q: "A car journey is shown on a distance-time graph. It travels 60km in the first hour, stops for 30 mins, then travels 40km in 30 mins. Find the average speed for the whole journey.", a: "50", type: "number", calculator: true, marks: 3 },
   ],
 };
 
