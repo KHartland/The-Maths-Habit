@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Bank Review - The Maths Habit</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0E0307;
+      color: #EEEBF3;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #8B4CD4;
+    }
+    .stats {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #C0B4E3;
+    }
+    .filters {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .filters button {
+      padding: 8px 16px;
+      border: 1px solid #6E33B1;
+      background: transparent;
+      color: #C0B4E3;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .filters button.active, .filters button:hover {
+      background: #6E33B1;
+      color: white;
+    }
+    .objective {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .objective h2 {
+      color: #8B4CD4;
+      margin-bottom: 5px;
+      font-size: 1.2em;
+    }
+    .objective .description {
+      color: #C0B4E3;
+      font-size: 0.9em;
+      margin-bottom: 15px;
+    }
+    .question {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+    .meta {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      font-size: 0.85em;
+    }
+    .meta span {
+      background: rgba(110, 51, 177, 0.3);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+    .answer {
+      color: #38E6A2;
+      font-weight: bold;
+    }
+    .type { color: #67E8F9; }
+    .calc-yes { color: #FBBF24; }
+    .calc-no { color: #C0B4E3; }
+    .options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    .options span {
+      background: rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.9em;
+    }
+    .options span.correct {
+      background: rgba(56, 230, 162, 0.3);
+      border: 1px solid #38E6A2;
+    }
+    .hint {
+      color: #FBBF24;
+      font-style: italic;
+      margin-top: 8px;
+      font-size: 0.9em;
+    }
+    .order-items, .match-items {
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+    }
+    .order-items h4, .match-items h4 {
+      color: #C0B4E3;
+      font-size: 0.85em;
+      margin-bottom: 5px;
+    }
+    .exam-section {
+      border-left: 3px solid #FBBF24;
+      padding-left: 15px;
+    }
+    .exam-section h3 {
+      color: #FBBF24;
+      margin-bottom: 10px;
+    }
+    .marks {
+      background: #FBBF24;
+      color: #0E0307;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .search {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px 16px;
+      border: 1px solid #6E33B1;
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border-radius: 8px;
+      margin: 0 auto 20px;
+      display: block;
+      font-size: 1em;
+    }
+    .search::placeholder { color: #C0B4E3; }
+    .hidden { display: none !important; }
+    .count-badge {
+      background: #6E33B1;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8em;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Question Bank Review</h1>
+  <p class="stats" id="stats">Loading...</p>
+
+  <input type="text" class="search" id="search" placeholder="Search questions...">
+
+  <div class="filters" id="filters">
+    <button class="active" data-filter="all">All</button>
+    <button data-filter="mcq">MCQ</button>
+    <button data-filter="number">Number</button>
+    <button data-filter="text">Text</button>
+    <button data-filter="order">Order</button>
+    <button data-filter="match">Match</button>
+    <button data-filter="exam">Exam Only</button>
+  </div>
+
+  <div id="content"></div>
+
+  <script>
+    // This will be populated from App.jsx
+    const questionBank = {
+      N1: [
+        { q: "Which is the largest?", type: "mcq", options: ["5.304[r]", "5.344", "5.34", "5.3[r]4[r]"], a: "5.3[r]4[r]", calculator: false },
+        { q: "Order these from smallest to largest: 0.45, 0.405, 0.54, 0.045", a: "0.045, 0.405, 0.45, 0.54", type: "text", calculator: false },
+        { q: "Which decimal is equivalent to 1/3?", type: "mcq", options: ["0.3", "0.33", "0.3[r]", "0.33[r]"], a: "0.3[r]", calculator: false },
+        { q: "Put these decimals in order from smallest to largest:", type: "order", items: ["0.7", "0.07", "0.77", "0.707"], correctOrder: ["0.07", "0.7", "0.707", "0.77"], calculator: false },
+        { q: "Order these decimals from largest to smallest:", type: "order", items: ["0.35", "0.5", "0.305", "0.53"], correctOrder: ["0.53", "0.5", "0.35", "0.305"], calculator: false },
+      ],
+      N2: [
+        { q: "Work out: −7 × −4", a: "28", type: "number", calculator: false },
+        { q: "Calculate: 3.6 ÷ 0.4", a: "9", type: "number", calculator: true },
+        { q: "What is −15 ÷ 3?", type: "mcq", options: ["-5", "5", "-45", "45"], a: "-5", calculator: false },
+        { q: "Calculate: 2.4 × 3.5", a: "8.4", type: "number", calculator: true },
+      ],
+      N3: [
+        { q: "What is the value of the 7 in 34,728?", type: "mcq", options: ["7", "70", "700", "7000"], a: "700", calculator: false },
+        { q: "Write 45,000 in standard form", a: "4.5 × 10⁴", type: "text", calculator: false },
+        { q: "What is 3.2 × 10³ as an ordinary number?", a: "3200", type: "number", calculator: false },
+      ],
+      N5: [
+        { q: "Work out: 3 + 4 × 2", a: "11", type: "number", calculator: false },
+        { q: "Calculate: (5 + 3)² ÷ 4", a: "16", type: "number", calculator: false },
+        { q: "What is 20 - 3 × 4?", type: "mcq", options: ["68", "8", "32", "17"], a: "8", calculator: false },
+        { q: "Calculate: 6 + 12 ÷ (2 + 1)", a: "10", type: "number", calculator: false },
+      ],
+      N6: [
+        { q: "Work out: √144", a: "12", type: "number", calculator: false },
+        { q: "Calculate: 2³ + 3²", a: "17", type: "number", calculator: false },
+        { q: "What is √225?", type: "mcq", options: ["13", "14", "15", "16"], a: "15", calculator: false },
+        { q: "Calculate: 5² - √49", a: "18", type: "number", calculator: false },
+        { q: "Put these in order from smallest to largest:", type: "order", items: ["2³", "3²", "√25", "4²"], correctOrder: ["√25", "2³", "3²", "4²"], calculator: false },
+      ],
+      N7: [
+        { q: "What is the 4th cube number?", type: "mcq", options: ["27", "64", "81", "125"], a: "64", calculator: false },
+        { q: "Is 64 a cube number? (yes/no)", a: "yes", type: "text", calculator: false },
+        { q: "What is 5³?", a: "125", type: "number", calculator: false },
+      ],
+      N8: [
+        { q: "Find the HCF of 24 and 36", a: "12", type: "number", calculator: false },
+        { q: "Find the LCM of 6 and 8", a: "24", type: "number", calculator: false },
+        { q: "What is the HCF of 18 and 24?", type: "mcq", options: ["2", "3", "6", "12"], a: "6", calculator: false },
+        { q: "Find the LCM of 4 and 6", a: "12", type: "number", calculator: false },
+      ],
+      N10: [
+        { q: "Write 0.75 as a fraction in simplest form", a: "3/4", type: "text", calculator: false },
+        { q: "Write 35% as a decimal", a: "0.35", type: "text", calculator: false },
+        { q: "What is 0.4 as a percentage?", type: "mcq", options: ["4%", "0.4%", "40%", "400%"], a: "40%", calculator: false },
+        { q: "Convert 2/5 to a decimal", a: "0.4", type: "text", calculator: false },
+        { q: "Match each fraction to its decimal:", type: "match", leftItems: ["1/4", "1/2", "3/4", "1/5"], rightItems: ["0.5", "0.25", "0.2", "0.75"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
+        { q: "Match each percentage to its fraction:", type: "match", leftItems: ["25%", "50%", "75%", "20%"], rightItems: ["1/2", "1/4", "1/5", "3/4"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
+      ],
+      N12: [
+        { q: "Work out 15% of 80", a: "12", type: "number", calculator: true },
+        { q: "Find 3/4 of 60", a: "45", type: "number", calculator: false },
+        { q: "What is 20% of 150?", type: "mcq", options: ["15", "20", "30", "35"], a: "30", calculator: true },
+        { q: "Calculate 12.5% of 400", a: "50", type: "number", calculator: true },
+      ],
+      N14: [
+        { q: "Estimate: 4.8 × 21.3", a: "100", type: "number", hint: "Round to 1 s.f.", calculator: false },
+        { q: "Estimate: 198 ÷ 4.1", a: "50", type: "number", hint: "Round to 1 s.f.", calculator: false },
+        { q: "Estimate 9.7 × 5.2", type: "mcq", options: ["40", "45", "50", "55"], a: "50", hint: "Round to 1 s.f.", calculator: false },
+      ],
+      N15: [
+        { q: "Round 3.456 to 2 decimal places", a: "3.46", type: "text", calculator: false },
+        { q: "Round 12,345 to 2 significant figures", a: "12000", type: "text", calculator: false },
+        { q: "What is 0.0456 rounded to 2 s.f.?", type: "mcq", options: ["0.04", "0.05", "0.046", "0.045"], a: "0.046", calculator: false },
+      ],
+      N16: [
+        { q: "A length is 8 cm to the nearest cm. What is the lower bound?", a: "7.5", type: "number", calculator: false },
+        { q: "A mass is 50g to the nearest 10g. Write the error interval.", a: "45 ≤ x < 55", type: "text", calculator: false },
+      ],
+      A2: [
+        { q: "If y = 3x + 5, find y when x = 4", a: "17", type: "number", calculator: false },
+        { q: "Work out d when d = g² − 2h, g = 5, h = 3", a: "19", type: "number", calculator: false },
+        { q: "If P = 2(l + w), find P when l = 7 and w = 3", a: "20", type: "number", calculator: false },
+      ],
+      A4: [
+        { q: "Expand: 3(x + 4)", a: "3x + 12", type: "text", calculator: false },
+        { q: "Factorise: x² + 5x", a: "x(x + 5)", type: "text", calculator: false },
+        { q: "Expand: 2(3x - 5)", type: "mcq", options: ["6x - 5", "6x - 10", "5x - 10", "6x + 10"], a: "6x - 10", calculator: false },
+        { q: "Factorise: 6x + 9", a: "3(2x + 3)", type: "text", calculator: false },
+      ],
+      A6: [
+        { q: "Make x the subject: y = 3x + 2", a: "x = (y - 2)/3", type: "text", calculator: false },
+        { q: "Rearrange for r: A = πr²", a: "r = √(A/π)", type: "text", calculator: false },
+      ],
+      A9: [
+        { q: "Points A, B and C lie on a straight line. Find the gradient of the line.", a: "-2", type: "number", diagram: "linear-graph-abc", calculator: false, hint: "Use gradient = change in y ÷ change in x" },
+        { q: "Find the y-intercept of the line through A, B and C.", a: "1", type: "number", diagram: "linear-graph-abc", calculator: false },
+        { q: "A straight line has gradient 3 and passes through (0, 2). Find its equation.", a: "y = 3x + 2", type: "text", calculator: false },
+        { q: "What is the gradient of y = 5x - 3?", type: "mcq", options: ["5", "-3", "3", "-5"], a: "5", calculator: false },
+      ],
+      A14: [
+        { q: "Find the gradient of the line joining (0, 2) and (3, 8)", a: "2", type: "number", calculator: false },
+        { q: "A line has equation y = 4x - 3. What is its gradient?", type: "mcq", options: ["-3", "3", "4", "-4"], a: "4", calculator: false },
+        { q: "Find the y-intercept of y = 2x + 7", a: "7", type: "number", calculator: false },
+      ],
+      A17: [
+        { q: "Solve: 3x + 7 = 22", a: "5", type: "number", calculator: false },
+        { q: "Solve: 2(x - 3) = 10", a: "8", type: "number", calculator: false },
+        { q: "Solve: 5x - 3 = 2x + 9", a: "4", type: "number", calculator: false },
+        { q: "What is x if 4x + 1 = 17?", type: "mcq", options: ["3", "4", "4.5", "5"], a: "4", calculator: false },
+      ],
+      A18: [
+        { q: "Solve: x² = 49 (positive solution)", a: "7", type: "number", calculator: false },
+        { q: "Solve: x² - 5x + 6 = 0 (smaller solution)", a: "2", type: "number", calculator: false },
+        { q: "What are the solutions to x² = 25?", type: "mcq", options: ["5", "-5", "±5", "±25"], a: "±5", calculator: false },
+      ],
+      A19: [
+        { q: "Solve: 2x + y = 7 and x + y = 4. Find x.", a: "3", type: "number", calculator: false },
+        { q: "Solve: x + y = 10 and x - y = 4. Find x.", a: "7", type: "number", calculator: false },
+      ],
+      A23: [
+        { q: "Find the nth term: 5, 8, 11, 14, ...", a: "3n + 2", type: "text", calculator: false },
+        { q: "Find the 10th term of: 4, 7, 10, 13, ...", a: "31", type: "number", calculator: false },
+        { q: "A sequence has nth term 2n + 5. What is the 8th term?", type: "mcq", options: ["13", "16", "21", "24"], a: "21", calculator: false },
+      ],
+      A26: [
+        { q: "A circle has centre O at the origin. Point (0, 6) lies on the circle. What is the equation of the circle?", a: "x² + y² = 36", type: "text", diagram: "circle-equation", calculator: false },
+        { q: "The point (3, 4) lies on a circle centred at the origin. Find the radius.", a: "5", type: "number", calculator: false, hint: "Use r² = x² + y²" },
+        { q: "Which point lies on the circle x² + y² = 25?", type: "mcq", options: ["(3, 3)", "(4, 3)", "(3, 4)", "(4, 4)"], a: "(3, 4)", calculator: false },
+      ],
+      R2: [
+        { q: "On a map, the scale is 1 cm : 5 km. Two towns are 6 cm apart on the map. What is the actual distance in km?", a: "30", type: "number", calculator: true, diagram: "scale-map-towns" },
+        { q: "A model car is made at scale 1:50. The real car is 4 metres long. How long is the model in cm?", a: "8", type: "number", calculator: true },
+        { q: "A map has scale 1:25000. Two points are 8 cm apart on the map. What is the real distance in km?", a: "2", type: "number", calculator: true },
+        { q: "A plan is drawn at scale 1:200. A room is 6 cm long on the plan. What is the actual length in metres?", a: "12", type: "number", calculator: true },
+        { q: "The scale on a map is 1 cm : 2 km. What is this as a ratio?", type: "mcq", options: ["1:200", "1:2000", "1:20000", "1:200000"], a: "1:200000", calculator: false },
+      ],
+      R3: [
+        { q: "Work out 2/5 of 35", a: "14", type: "number", calculator: false },
+        { q: "Find 3/8 of 56", a: "21", type: "number", calculator: false },
+        { q: "What is 1/4 of 84?", type: "mcq", options: ["16", "20", "21", "24"], a: "21", calculator: false },
+      ],
+      R4: [
+        { q: "Simplify the ratio 12:18", a: "2:3", type: "text", calculator: false },
+        { q: "Write 3:5 in the form 1:n", a: "1:1.67", type: "text", hint: "Round to 2 d.p.", calculator: true },
+        { q: "Simplify 24:36", type: "mcq", options: ["2:3", "4:6", "12:18", "3:4"], a: "2:3", calculator: false },
+      ],
+      R9: [
+        { q: "Express 45 as a percentage of 180", a: "25", type: "number", calculator: true },
+        { q: "What is 12 as a percentage of 60?", type: "mcq", options: ["12%", "15%", "20%", "25%"], a: "20%", calculator: true },
+      ],
+      R10: [
+        { q: "A price increases from £80 to £92. Find the percentage increase.", a: "15", type: "number", calculator: true },
+        { q: "A value decreases from 50 to 40. What is the percentage decrease?", type: "mcq", options: ["10%", "15%", "20%", "25%"], a: "20%", calculator: true },
+      ],
+      R12: [
+        { q: "After a 20% decrease, a price is £64. What was the original price?", a: "80", type: "number", calculator: true },
+        { q: "After a 25% increase, a price is £100. What was the original?", a: "80", type: "number", calculator: true },
+      ],
+      G3: [
+        { q: "Angles on a straight line sum to how many degrees?", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
+        { q: "Angles around a point sum to how many degrees?", a: "360", type: "number", calculator: false },
+      ],
+      G4: [
+        { q: "Two parallel lines are cut by a transversal. One angle is 70°. What is the corresponding angle?", a: "70", type: "number", diagram: "parallel", calculator: false },
+        { q: "Alternate angles are:", type: "mcq", options: ["Always equal", "Add to 90°", "Add to 180°", "Never equal"], a: "Always equal", calculator: false },
+      ],
+      G5: [
+        { q: "Find the exterior angle of a regular hexagon", a: "60", type: "number", calculator: false },
+        { q: "Find the sum of interior angles of a pentagon", a: "540", type: "number", calculator: false },
+        { q: "What is the interior angle of a regular hexagon?", type: "mcq", options: ["90°", "108°", "120°", "135°"], a: "120°", calculator: false },
+      ],
+      G7: [
+        { q: "Describe fully the single transformation that maps shape A onto shape B.", a: "Rotation 180° about the origin", type: "text", diagram: "transformation-grid", calculator: false },
+        { q: "Which transformation keeps the shape the same size?", type: "mcq", options: ["Enlargement", "Rotation", "Stretch", "Scale factor 2"], a: "Rotation", calculator: false },
+        { q: "A shape is reflected in the y-axis. Point (3, 5) maps to:", type: "mcq", options: ["(-3, 5)", "(3, -5)", "(-3, -5)", "(5, 3)"], a: "(-3, 5)", calculator: false },
+      ],
+      G14: [
+        { q: "Find the area of a triangle with base 8cm and height 5cm", a: "20", type: "number", calculator: false },
+        { q: "A triangle has area 24cm² and height 6cm. Find the base.", a: "8", type: "number", calculator: false },
+      ],
+      G15: [
+        { q: "Find the area of a circle with radius 5 cm. Give your answer to 1 d.p.", a: "78.5", type: "number", hint: "Use π = 3.14", calculator: true },
+        { q: "Find the circumference of a circle with diameter 10cm (to 1 d.p.)", a: "31.4", type: "number", calculator: true },
+        { q: "The formula for circumference is:", type: "mcq", options: ["πr", "2πr", "πr²", "2πr²"], a: "2πr", calculator: false },
+      ],
+      G16: [
+        { q: "Find the area of this sector. Give your answer in terms of π.", a: "24π", type: "text", diagram: "sector-60-degrees", calculator: false, hint: "Area = (θ/360) × πr²" },
+        { q: "Find the arc length of this sector. Give your answer in terms of π.", a: "4π", type: "text", diagram: "sector-60-degrees", calculator: false, hint: "Arc length = (θ/360) × 2πr" },
+        { q: "A sector has angle 90° and radius 8cm. Find the area in terms of π.", a: "16π", type: "text", calculator: false },
+        { q: "The formula for arc length is:", type: "mcq", options: ["(θ/360) × πr²", "(θ/360) × 2πr", "(θ/180) × πr", "θ × r"], a: "(θ/360) × 2πr", calculator: false },
+      ],
+      G17: [
+        { q: "Find the volume of this cone. Give your answer in terms of π.", a: "100π", type: "text", diagram: "cone-diagram", calculator: false, hint: "Volume = (1/3)πr²h" },
+        { q: "Find the curved surface area of this cone. Give your answer in terms of π.", a: "65π", type: "text", diagram: "cone-diagram", calculator: false, hint: "Curved SA = πrl where l is slant height" },
+        { q: "The formula for volume of a cone is:", type: "mcq", options: ["πr²h", "(1/2)πr²h", "(1/3)πr²h", "(2/3)πr²h"], a: "(1/3)πr²h", calculator: false },
+      ],
+      G19: [
+        { q: "Find the value of x in this right-angled triangle. Give your answer to 1 decimal place.", a: "19.6", type: "number", diagram: "pythagoras-triangle", calculator: true, hint: "Use Pythagoras: x² + 24² = 31²" },
+        { q: "Find the hypotenuse of a right-angled triangle with sides 3 cm and 4 cm", a: "5", type: "number", diagram: "pythagoras", calculator: false },
+        { q: "A right triangle has hypotenuse 13 and one side 5. Find the other side.", a: "12", type: "number", calculator: true },
+        { q: "In Pythagoras' theorem a² + b² = c², c is:", type: "mcq", options: ["Any side", "The shortest side", "The hypotenuse", "The base"], a: "The hypotenuse", calculator: false },
+      ],
+      G20: [
+        { q: "In a right-angled triangle, the opposite side is 4 and the adjacent is 3. Find tan(θ) as a fraction.", a: "4/3", type: "text", diagram: "triangle", calculator: false },
+        { q: "SOH CAH TOA: sin(θ) = ", type: "mcq", options: ["O/A", "A/H", "O/H", "H/O"], a: "O/H", calculator: false },
+        { q: "Find sin(30°)", type: "mcq", options: ["1/2", "√2/2", "√3/2", "1"], a: "1/2", calculator: false },
+      ],
+      P4: [
+        { q: "The probability of rain is 0.3. What is the probability of no rain?", a: "0.7", type: "text", calculator: false },
+        { q: "P(A) = 0.45. What is P(not A)?", type: "mcq", options: ["0.45", "0.55", "0.65", "1.45"], a: "0.55", calculator: false },
+      ],
+      P6: [
+        { q: "In a group of 30 students, 18 study German (G), 15 study Latin (L), and 8 study both. How many study neither?", a: "5", type: "number", diagram: "venn-diagram-gl", calculator: false, hint: "Use: n(G∪L) = n(G) + n(L) - n(G∩L)" },
+        { q: "Using the Venn diagram context: Find the number who study German only.", a: "10", type: "number", diagram: "venn-diagram-gl", calculator: false },
+        { q: "In a Venn diagram, the intersection shows:", type: "mcq", options: ["Neither A nor B", "A or B", "A and B", "Only A"], a: "A and B", calculator: false },
+      ],
+      P8: [
+        { q: "Using the tree diagram, find the probability of getting two gold cards. Give your answer as a decimal.", a: "0.0025", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "Multiply along the branches: 0.05 × 0.05" },
+        { q: "Using the tree diagram, find P(at least one gold card). Give your answer as a decimal.", a: "0.0975", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "P(at least one) = 1 - P(none)" },
+        { q: "A bag has 3 red and 2 blue balls. One is picked and replaced, then another is picked. Find P(both red) as a fraction.", a: "9/25", type: "text", calculator: false },
+        { q: "Two coins are flipped. P(both heads) = ", type: "mcq", options: ["1/2", "1/3", "1/4", "1/8"], a: "1/4", calculator: false },
+      ],
+      S2: [
+        { q: "The pie chart shows votes in an election. Amy received 162°. If 180 people voted in total, how many voted for Amy?", a: "81", type: "number", diagram: "pie-chart-talent", calculator: true, hint: "162° out of 360° represents what fraction?" },
+        { q: "What fraction of the total votes did Amy receive? Give your answer in simplest form.", a: "9/20", type: "text", diagram: "pie-chart-talent", calculator: false },
+        { q: "Reading a pie chart: 90° represents what fraction of the total?", type: "mcq", options: ["1/2", "1/3", "1/4", "1/5"], a: "1/4", calculator: false },
+      ],
+      S5: [
+        { q: "Find the mean of: 4, 7, 9, 12, 8", a: "8", type: "number", calculator: true },
+        { q: "Find the median of: 3, 7, 2, 9, 5", a: "5", type: "number", calculator: false },
+        { q: "Find the range of: 4, 8, 2, 11, 5", a: "9", type: "number", calculator: false },
+        { q: "The mode is:", type: "mcq", options: ["The middle value", "The most common value", "The average", "The difference"], a: "The most common value", calculator: false },
+      ],
+    };
+
+    const examQuestions = {
+      N1: [{ q: "Put in order from smallest to largest: 0.7[r], 0.77, 0.707, 0.7[r]0[r]7[r]. Show your working.", a: "0.707, 0.7[r]0[r]7[r], 0.7[r], 0.77", type: "text", calculator: false, marks: 3 }],
+      N2: [{ q: "Calculate: (-3)² × (-2) + 18 ÷ (-3)", a: "-24", type: "number", calculator: false, marks: 3 }],
+      N5: [{ q: "Work out: 4² + 3 × (8 - 2) ÷ 2", a: "25", type: "number", calculator: false, marks: 3 }],
+      N6: [{ q: "Find the value of √(64 + 36) × 2³", a: "80", type: "number", calculator: false, marks: 3 }],
+      N8: [{ q: "Find the HCF and LCM of 60 and 84. Use prime factorisation.", a: "HCF=12, LCM=420", type: "text", calculator: false, marks: 4 }],
+      N10: [{ q: "Write 0.36[r] as a fraction in its simplest form. Show your working.", a: "11/30", type: "text", calculator: false, marks: 3 }],
+      N12: [{ q: "A shop reduces prices by 15%. A jacket now costs £68. What was the original price?", a: "80", type: "number", calculator: true, marks: 3 }],
+      A4: [{ q: "Expand and simplify: (2x + 3)(x - 4) + 5x", a: "2x² + 2x - 12", type: "text", calculator: false, marks: 3 }],
+      A6: [{ q: "Make t the subject of: v = u + at", a: "t = (v - u)/a", type: "text", calculator: false, marks: 2 }],
+      A14: [{ q: "A quadratic y = x² - 4x + 3 crosses the x-axis at two points. Find both x values.", a: "x = 1 and x = 3", type: "text", calculator: false, marks: 3 }],
+      A17: [{ q: "Solve: 3(2x - 1) = 4x + 9", a: "6", type: "number", calculator: false, marks: 3 }],
+      R3: [{ q: "John earns £2400 per month. He spends 2/5 on rent and 1/6 on food. How much is left?", a: "1040", type: "number", calculator: true, marks: 4 }],
+      R4: [{ q: "Share £270 in the ratio 2:3:4", a: "£60, £90, £120", type: "text", calculator: true, marks: 3 }],
+      R10: [{ q: "A house value increases by 8% in Year 1, then decreases by 5% in Year 2. If it's now worth £308,880, what was the original value?", a: "301000", type: "number", calculator: true, marks: 4 }],
+      G3: [{ q: "Three angles meet at a point. Two are 127° and 85°. Find the third angle.", a: "148", type: "number", calculator: false, marks: 2 }],
+      G5: [{ q: "A regular polygon has interior angles of 156°. How many sides does it have?", a: "15", type: "number", calculator: true, marks: 3 }],
+      G14: [{ q: "A triangle has vertices at (1,2), (5,2) and (3,6). Find its area.", a: "8", type: "number", calculator: false, marks: 3 }],
+      G15: [{ q: "A circle has circumference 31.4cm. Find its area to 1 d.p.", a: "78.5", type: "number", calculator: true, marks: 3 }],
+      G19: [{ q: "A ladder of length 5m leans against a wall. The foot is 1.5m from the wall. How high up the wall does it reach? Give your answer to 2 d.p.", a: "4.77", type: "number", calculator: true, marks: 3 }],
+      G20: [{ q: "From a point 50m from a tower, the angle of elevation to the top is 32°. Find the height of the tower to 1 d.p.", a: "31.2", type: "number", calculator: true, marks: 3 }],
+      P4: [{ q: "P(A) = 0.4 and P(B) = 0.3. If A and B are independent, find P(A and B).", a: "0.12", type: "number", calculator: true, marks: 2 }],
+      P8: [{ q: "A bag contains 4 red and 6 blue balls. Two are picked without replacement. Find P(both red) as a fraction.", a: "2/15", type: "text", calculator: false, marks: 3 }],
+      S5: [{ q: "The mean of 5 numbers is 12. Four of the numbers are 8, 10, 14, and 15. Find the fifth number.", a: "13", type: "number", calculator: true, marks: 3 }],
+    };
+
+    const descriptions = {
+      N1: "Order positive and negative integers, decimals and fractions",
+      N2: "Apply the four operations with negative numbers",
+      N3: "Understand place value, standard form",
+      N5: "Order of operations (BIDMAS)",
+      N6: "Powers and roots",
+      N7: "Recognise prime, square and cube numbers",
+      N8: "HCF and LCM using prime factorisation",
+      N10: "Convert between fractions, decimals and percentages",
+      N12: "Calculate percentages of quantities",
+      N14: "Estimate calculations",
+      N15: "Round numbers appropriately",
+      N16: "Upper and lower bounds",
+      A2: "Substitute values into expressions",
+      A4: "Expand and factorise expressions",
+      A6: "Rearrange formulae",
+      A9: "Plot and interpret graphs of linear functions",
+      A14: "Find gradients and y-intercepts",
+      A17: "Solve linear equations",
+      A18: "Solve quadratic equations",
+      A19: "Solve simultaneous equations",
+      A23: "Find the nth term of arithmetic sequences",
+      A26: "Recognise and use equations of circles",
+      R2: "Use scale factors, scale diagrams and maps",
+      R3: "Calculate fractions of quantities",
+      R4: "Use ratio notation and simplify ratios",
+      R9: "Express one quantity as a percentage of another",
+      R10: "Calculate percentage change",
+      R12: "Reverse percentages",
+      G3: "Angle facts (straight lines, around a point)",
+      G4: "Parallel lines and transversals",
+      G5: "Interior and exterior angles of polygons",
+      G7: "Describe transformations",
+      G14: "Calculate areas of triangles and quadrilaterals",
+      G15: "Circumference and area of circles",
+      G16: "Arc lengths and sectors",
+      G17: "Volume and surface area of 3D shapes",
+      G19: "Pythagoras' theorem",
+      G20: "Trigonometric ratios",
+      P4: "Calculate probability of complementary events",
+      P6: "Venn diagrams",
+      P8: "Tree diagrams and combined events",
+      S2: "Interpret pie charts",
+      S5: "Calculate mean, median, mode and range",
+    };
+
+    function renderRecurring(text) {
+      return text.replace(/\[r\]/g, '̇');
+    }
+
+    function renderQuestion(q, isExam = false) {
+      let html = `<div class="question ${isExam ? 'exam-question' : ''}">`;
+      html += `<div class="question-text">${renderRecurring(q.q)}</div>`;
+
+      if (q.options) {
+        html += `<div class="options">`;
+        q.options.forEach(opt => {
+          const isCorrect = opt === q.a;
+          html += `<span class="${isCorrect ? 'correct' : ''}">${renderRecurring(opt)}</span>`;
+        });
+        html += `</div>`;
+      }
+
+      if (q.type === 'order') {
+        html += `<div class="order-items"><h4>Items to order:</h4>${q.items.join(' → ')}<br><strong>Correct order:</strong> ${q.correctOrder.join(' → ')}</div>`;
+      }
+
+      if (q.type === 'match') {
+        html += `<div class="match-items"><h4>Match:</h4>`;
+        q.leftItems.forEach((left, i) => {
+          const rightIdx = q.correctMatches[i];
+          html += `${left} → ${q.rightItems[rightIdx]}<br>`;
+        });
+        html += `</div>`;
+      }
+
+      if (q.hint) {
+        html += `<div class="hint">💡 ${q.hint}</div>`;
+      }
+
+      html += `<div class="meta">`;
+      html += `<span class="answer">Answer: ${renderRecurring(q.a || 'See above')}</span>`;
+      html += `<span class="type">${q.type}</span>`;
+      html += `<span class="${q.calculator ? 'calc-yes' : 'calc-no'}">${q.calculator ? '🧮 Calculator' : '✏️ Non-calc'}</span>`;
+      if (q.diagram) html += `<span>📊 ${q.diagram}</span>`;
+      if (q.marks) html += `<span class="marks">${q.marks} marks</span>`;
+      html += `</div></div>`;
+
+      return html;
+    }
+
+    function render(filter = 'all', search = '') {
+      const content = document.getElementById('content');
+      let html = '';
+      let totalQuestions = 0;
+      let totalExam = 0;
+
+      const searchLower = search.toLowerCase();
+
+      Object.keys(questionBank).sort().forEach(code => {
+        const questions = questionBank[code];
+        const exam = examQuestions[code] || [];
+
+        let filteredQ = questions;
+        let filteredE = exam;
+
+        if (filter !== 'all' && filter !== 'exam') {
+          filteredQ = questions.filter(q => q.type === filter);
+          filteredE = [];
+        } else if (filter === 'exam') {
+          filteredQ = [];
+          filteredE = exam;
+        }
+
+        if (search) {
+          filteredQ = filteredQ.filter(q =>
+            q.q.toLowerCase().includes(searchLower) ||
+            (q.a && q.a.toLowerCase().includes(searchLower))
+          );
+          filteredE = filteredE.filter(q =>
+            q.q.toLowerCase().includes(searchLower) ||
+            (q.a && q.a.toLowerCase().includes(searchLower))
+          );
+        }
+
+        if (filteredQ.length === 0 && filteredE.length === 0) return;
+
+        html += `<div class="objective">`;
+        html += `<h2>${code}<span class="count-badge">${filteredQ.length + filteredE.length}</span></h2>`;
+        html += `<p class="description">${descriptions[code] || ''}</p>`;
+
+        filteredQ.forEach(q => {
+          html += renderQuestion(q);
+          totalQuestions++;
+        });
+
+        if (filteredE.length > 0) {
+          html += `<div class="exam-section"><h3>📝 Exam Questions</h3>`;
+          filteredE.forEach(q => {
+            html += renderQuestion(q, true);
+            totalExam++;
+          });
+          html += `</div>`;
+        }
+
+        html += `</div>`;
+      });
+
+      content.innerHTML = html;
+      document.getElementById('stats').textContent =
+        `${totalQuestions} practice questions + ${totalExam} exam questions across ${Object.keys(questionBank).length} objectives`;
+    }
+
+    // Event listeners
+    document.querySelectorAll('.filters button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render(btn.dataset.filter, document.getElementById('search').value);
+      });
+    });
+
+    document.getElementById('search').addEventListener('input', (e) => {
+      const activeFilter = document.querySelector('.filters button.active').dataset.filter;
+      render(activeFilter, e.target.value);
+    });
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
