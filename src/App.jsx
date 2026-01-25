@@ -1839,10 +1839,13 @@ const examQuestions = {
     { q: "Make t the subject of: v = u + at", a: "t = (v - u)/a", type: "text", calculator: false, marks: 2 },
   ],
   A14: [
-    { q: "A quadratic y = x² - 4x + 3 crosses the x-axis at two points. Find both x values.", a: "x = 1 and x = 3", type: "text", calculator: false, marks: 3 },
+    { q: "A line passes through (1, 5) and (4, 14). Find the equation of the line in the form y = mx + c.", a: "y = 3x + 2", type: "text", calculator: false, marks: 3 },
   ],
   A17: [
     { q: "Solve: 3(2x - 1) = 4x + 9", a: "6", type: "number", calculator: false, marks: 3 },
+  ],
+  A18: [
+    { q: "A quadratic y = x² - 4x + 3 crosses the x-axis at two points. Find both x values.", a: "x = 1 and x = 3", type: "text", calculator: false, marks: 3 },
   ],
   R3: [
     { q: "John earns £2400 per month. He spends 2/5 on rent and 1/6 on food. How much is left?", a: "1040", type: "number", calculator: true, marks: 4 },
