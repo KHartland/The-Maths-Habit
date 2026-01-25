@@ -1583,6 +1583,7 @@ const questionBank = {
     { q: "What is the value of the 7 in 34,728?", type: "mcq", options: ["7", "70", "700", "7000"], a: "700", calculator: false },
     { q: "Write 45,000 in standard form", a: "4.5 × 10⁴", type: "text", calculator: false },
     { q: "What is 3.2 × 10³ as an ordinary number?", a: "3200", type: "number", calculator: false },
+    { q: "Write 0.00056 in standard form", a: "5.6 × 10⁻⁴", type: "text", calculator: false },
   ],
   N5: [
     { q: "Work out: 3 + 4 × 2", a: "11", type: "number", calculator: false },
@@ -1601,6 +1602,7 @@ const questionBank = {
     { q: "What is the 4th cube number?", type: "mcq", options: ["27", "64", "81", "125"], a: "64", calculator: false },
     { q: "Is 64 a cube number? (yes/no)", a: "yes", type: "text", calculator: false },
     { q: "What is 5³?", a: "125", type: "number", calculator: false },
+    { q: "Find ³√216", a: "6", type: "number", calculator: false },
   ],
   N8: [
     { q: "Find the HCF of 24 and 36", a: "12", type: "number", calculator: false },
@@ -1626,15 +1628,19 @@ const questionBank = {
     { q: "Estimate: 4.8 × 21.3", a: "100", type: "number", hint: "Round to 1 s.f.", calculator: false },
     { q: "Estimate: 198 ÷ 4.1", a: "50", type: "number", hint: "Round to 1 s.f.", calculator: false },
     { q: "Estimate 9.7 × 5.2", type: "mcq", options: ["40", "45", "50", "55"], a: "50", hint: "Round to 1 s.f.", calculator: false },
+    { q: "Estimate: (29.8 × 4.1) ÷ 9.7", a: "12", type: "number", hint: "Round to 1 s.f.", calculator: false },
   ],
   N15: [
     { q: "Round 3.456 to 2 decimal places", a: "3.46", type: "text", calculator: false },
     { q: "Round 12,345 to 2 significant figures", a: "12000", type: "text", calculator: false },
     { q: "What is 0.0456 rounded to 2 s.f.?", type: "mcq", options: ["0.04", "0.05", "0.046", "0.045"], a: "0.046", calculator: false },
+    { q: "Round 0.006789 to 3 significant figures", a: "0.00679", type: "text", calculator: false },
   ],
   N16: [
     { q: "A length is 8 cm to the nearest cm. What is the lower bound?", a: "7.5", type: "number", calculator: false },
     { q: "A mass is 50g to the nearest 10g. Write the error interval.", a: "45 ≤ x < 55", type: "text", calculator: false },
+    { q: "A time is 24 seconds to the nearest second. What is the upper bound?", a: "24.5", type: "number", calculator: false },
+    { q: "A length is 3.5m to 1 d.p. What is the lower bound?", type: "mcq", options: ["3.4", "3.45", "3.49", "3.0"], a: "3.45", calculator: false },
   ],
   
   // Algebra
@@ -1642,6 +1648,7 @@ const questionBank = {
     { q: "If y = 3x + 5, find y when x = 4", a: "17", type: "number", calculator: false },
     { q: "Work out d when d = g² − 2h, g = 5, h = 3", a: "19", type: "number", calculator: false },
     { q: "If P = 2(l + w), find P when l = 7 and w = 3", a: "20", type: "number", calculator: false },
+    { q: "If V = lwh, find V when l = 5, w = 3 and h = 4", a: "60", type: "number", calculator: false },
   ],
   A4: [
     { q: "Expand: 3(x + 4)", a: "3x + 12", type: "text", calculator: false },
@@ -1652,11 +1659,14 @@ const questionBank = {
   A6: [
     { q: "Make x the subject: y = 3x + 2", a: "x = (y - 2)/3", type: "text", calculator: false },
     { q: "Rearrange for r: A = πr²", a: "r = √(A/π)", type: "text", calculator: false },
+    { q: "Make b the subject: a = 5b - 7", a: "b = (a + 7)/5", type: "text", calculator: false },
+    { q: "Make h the subject: V = πr²h", type: "mcq", options: ["h = V/πr²", "h = Vπr²", "h = V - πr²", "h = V/πr"], a: "h = V/πr²", calculator: false },
   ],
   A14: [
     { q: "Find the gradient of the line joining (0, 2) and (3, 8)", a: "2", type: "number", calculator: false },
     { q: "A line has equation y = 4x - 3. What is its gradient?", type: "mcq", options: ["-3", "3", "4", "-4"], a: "4", calculator: false },
     { q: "Find the y-intercept of y = 2x + 7", a: "7", type: "number", calculator: false },
+    { q: "Find the gradient of the line joining (2, 5) and (6, 13)", a: "2", type: "number", calculator: false },
   ],
   A17: [
     { q: "Solve: 3x + 7 = 22", a: "5", type: "number", calculator: false },
@@ -1679,11 +1689,14 @@ const questionBank = {
   A19: [
     { q: "Solve: 2x + y = 7 and x + y = 4. Find x.", a: "3", type: "number", calculator: false },
     { q: "Solve: x + y = 10 and x - y = 4. Find x.", a: "7", type: "number", calculator: false },
+    { q: "Solve: 3x + 2y = 19 and x + 2y = 13. Find x.", a: "3", type: "number", calculator: false },
+    { q: "Solve: 2x + y = 11 and x - y = 1. Find y.", type: "mcq", options: ["2", "3", "4", "5"], a: "3", calculator: false },
   ],
   A23: [
     { q: "Find the nth term: 5, 8, 11, 14, ...", a: "3n + 2", type: "text", calculator: false },
     { q: "Find the 10th term of: 4, 7, 10, 13, ...", a: "31", type: "number", calculator: false },
     { q: "A sequence has nth term 2n + 5. What is the 8th term?", type: "mcq", options: ["13", "16", "21", "24"], a: "21", calculator: false },
+    { q: "Find the nth term: 7, 11, 15, 19, ...", a: "4n + 3", type: "text", calculator: false },
   ],
   
   // Ratio
@@ -1691,23 +1704,31 @@ const questionBank = {
     { q: "Work out 2/5 of 35", a: "14", type: "number", calculator: false },
     { q: "Find 3/8 of 56", a: "21", type: "number", calculator: false },
     { q: "What is 1/4 of 84?", type: "mcq", options: ["16", "20", "21", "24"], a: "21", calculator: false },
+    { q: "Find 5/6 of 42", a: "35", type: "number", calculator: false },
   ],
   R4: [
     { q: "Simplify the ratio 12:18", a: "2:3", type: "text", calculator: false },
     { q: "Write 3:5 in the form 1:n", a: "1:1.67", type: "text", hint: "Round to 2 d.p.", calculator: true },
     { q: "Simplify 24:36", type: "mcq", options: ["2:3", "4:6", "12:18", "3:4"], a: "2:3", calculator: false },
+    { q: "Share £60 in the ratio 2:3", a: "£24 and £36", type: "text", calculator: false },
   ],
   R9: [
     { q: "Express 45 as a percentage of 180", a: "25", type: "number", calculator: true },
     { q: "What is 12 as a percentage of 60?", type: "mcq", options: ["12%", "15%", "20%", "25%"], a: "20%", calculator: true },
+    { q: "Express 18 as a percentage of 72", a: "25", type: "number", calculator: true },
+    { q: "What is 35 as a percentage of 140?", a: "25", type: "number", calculator: true },
   ],
   R10: [
     { q: "A price increases from £80 to £92. Find the percentage increase.", a: "15", type: "number", calculator: true },
     { q: "A value decreases from 50 to 40. What is the percentage decrease?", type: "mcq", options: ["10%", "15%", "20%", "25%"], a: "20%", calculator: true },
+    { q: "A house price rises from £200,000 to £230,000. Find the percentage increase.", a: "15", type: "number", calculator: true },
+    { q: "A car value drops from £12,000 to £9,000. Find the percentage decrease.", a: "25", type: "number", calculator: true },
   ],
   R12: [
     { q: "After a 20% decrease, a price is £64. What was the original price?", a: "80", type: "number", calculator: true },
     { q: "After a 25% increase, a price is £100. What was the original?", a: "80", type: "number", calculator: true },
+    { q: "A sale item is £45 after a 10% reduction. What was the original price?", a: "50", type: "number", calculator: true },
+    { q: "After a 15% increase, a price is £230. What was the original?", type: "mcq", options: ["£195.50", "£200", "£210", "£215"], a: "£200", calculator: true },
   ],
   R2: [
     { q: "On a map, the scale is 1 cm : 5 km. Two towns are 6 cm apart on the map. What is the actual distance in km?", a: "30", type: "number", calculator: true, diagram: "scale-map-towns" },
@@ -1721,24 +1742,32 @@ const questionBank = {
   G3: [
     { q: "Angles on a straight line sum to how many degrees?", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
     { q: "Angles around a point sum to how many degrees?", a: "360", type: "number", calculator: false },
+    { q: "Two angles on a straight line are x and 115°. Find x.", a: "65", type: "number", calculator: false },
+    { q: "Vertically opposite angles are:", type: "mcq", options: ["Always equal", "Add to 90°", "Add to 180°", "Add to 360°"], a: "Always equal", calculator: false },
   ],
   G4: [
     { q: "Two parallel lines are cut by a transversal. One angle is 70°. What is the corresponding angle?", a: "70", type: "number", diagram: "parallel", calculator: false },
     { q: "Alternate angles are:", type: "mcq", options: ["Always equal", "Add to 90°", "Add to 180°", "Never equal"], a: "Always equal", calculator: false },
+    { q: "Co-interior (allied) angles add up to:", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
+    { q: "Angle x and angle y are co-interior. If x = 115°, find y.", a: "65", type: "number", calculator: false },
   ],
   G5: [
     { q: "Find the exterior angle of a regular hexagon", a: "60", type: "number", calculator: false },
     { q: "Find the sum of interior angles of a pentagon", a: "540", type: "number", calculator: false },
     { q: "What is the interior angle of a regular hexagon?", type: "mcq", options: ["90°", "108°", "120°", "135°"], a: "120°", calculator: false },
+    { q: "A regular polygon has exterior angles of 40°. How many sides does it have?", a: "9", type: "number", calculator: false },
   ],
   G14: [
     { q: "Find the area of a triangle with base 8cm and height 5cm", a: "20", type: "number", calculator: false },
     { q: "A triangle has area 24cm² and height 6cm. Find the base.", a: "8", type: "number", calculator: false },
+    { q: "Find the area of a parallelogram with base 12cm and height 7cm", a: "84", type: "number", calculator: false },
+    { q: "A trapezium has parallel sides 6cm and 10cm, and height 4cm. Find the area.", a: "32", type: "number", calculator: false },
   ],
   G15: [
     { q: "Find the area of a circle with radius 5 cm. Give your answer to 1 d.p.", a: "78.5", type: "number", hint: "Use π = 3.14", calculator: true },
     { q: "Find the circumference of a circle with diameter 10cm (to 1 d.p.)", a: "31.4", type: "number", calculator: true },
     { q: "The formula for circumference is:", type: "mcq", options: ["πr", "2πr", "πr²", "2πr²"], a: "2πr", calculator: false },
+    { q: "A circle has circumference 20π cm. Find the radius.", a: "10", type: "number", calculator: false },
   ],
   G16: [
     { q: "Find the area of this sector. Give your answer in terms of π.", a: "24π", type: "text", diagram: "sector-60-degrees", calculator: false, hint: "Area = (θ/360) × πr²" },
@@ -1761,12 +1790,15 @@ const questionBank = {
     { q: "In a right-angled triangle, the opposite side is 4 and the adjacent is 3. Find tan(θ) as a fraction.", a: "4/3", type: "text", diagram: "triangle", calculator: false },
     { q: "SOH CAH TOA: sin(θ) = ", type: "mcq", options: ["O/A", "A/H", "O/H", "H/O"], a: "O/H", calculator: false },
     { q: "Find sin(30°)", type: "mcq", options: ["1/2", "√2/2", "√3/2", "1"], a: "1/2", calculator: false },
+    { q: "In a right-angled triangle, the hypotenuse is 10 and the adjacent is 8. Find cos(θ) as a decimal.", a: "0.8", type: "number", calculator: false },
   ],
   
   // Probability
   P4: [
     { q: "The probability of rain is 0.3. What is the probability of no rain?", a: "0.7", type: "text", calculator: false },
     { q: "P(A) = 0.45. What is P(not A)?", type: "mcq", options: ["0.45", "0.55", "0.65", "1.45"], a: "0.55", calculator: false },
+    { q: "P(winning) = 1/5. Find P(not winning) as a fraction.", a: "4/5", type: "text", calculator: false },
+    { q: "Events A and B are mutually exclusive. P(A) = 0.3, P(B) = 0.4. Find P(A or B).", a: "0.7", type: "number", calculator: false },
   ],
   P8: [
     { q: "Using the tree diagram, find the probability of getting two gold cards. Give your answer as a decimal.", a: "0.0025", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "Multiply along the branches: 0.05 × 0.05" },
@@ -1780,6 +1812,7 @@ const questionBank = {
     { q: "The pie chart shows votes in an election. Amy received 162°. If 180 people voted in total, how many voted for Amy?", a: "81", type: "number", diagram: "pie-chart-talent", calculator: true, hint: "162° out of 360° represents what fraction?" },
     { q: "What fraction of the total votes did Amy receive? Give your answer in simplest form.", a: "9/20", type: "text", diagram: "pie-chart-talent", calculator: false },
     { q: "Reading a pie chart: 90° represents what fraction of the total?", type: "mcq", options: ["1/2", "1/3", "1/4", "1/5"], a: "1/4", calculator: false },
+    { q: "In a pie chart, 45 people are represented by 90°. How many degrees represent 60 people?", a: "120", type: "number", calculator: false },
   ],
   S5: [
     { q: "Find the mean of: 4, 7, 9, 12, 8", a: "8", type: "number", calculator: true },
@@ -1799,6 +1832,7 @@ const questionBank = {
     { q: "A circle has centre O at the origin. Point (0, 6) lies on the circle. What is the equation of the circle?", a: "x² + y² = 36", type: "text", diagram: "circle-equation", calculator: false },
     { q: "The point (3, 4) lies on a circle centred at the origin. Find the radius.", a: "5", type: "number", calculator: false, hint: "Use r² = x² + y²" },
     { q: "Which point lies on the circle x² + y² = 25?", type: "mcq", options: ["(3, 3)", "(4, 3)", "(3, 4)", "(4, 4)"], a: "(3, 4)", calculator: false },
+    { q: "A circle has equation x² + y² = 100. What is its radius?", a: "10", type: "number", calculator: false },
   ],
 
   // Geometry with diagrams
@@ -1806,6 +1840,7 @@ const questionBank = {
     { q: "Describe fully the single transformation that maps shape A onto shape B.", a: "Rotation 180° about the origin", type: "text", diagram: "transformation-grid", calculator: false },
     { q: "Which transformation keeps the shape the same size?", type: "mcq", options: ["Enlargement", "Rotation", "Stretch", "Scale factor 2"], a: "Rotation", calculator: false },
     { q: "A shape is reflected in the y-axis. Point (3, 5) maps to:", type: "mcq", options: ["(-3, 5)", "(3, -5)", "(-3, -5)", "(5, 3)"], a: "(-3, 5)", calculator: false },
+    { q: "A shape is rotated 90° clockwise about the origin. Point (2, 3) maps to:", type: "mcq", options: ["(3, -2)", "(-3, 2)", "(3, 2)", "(-2, -3)"], a: "(3, -2)", calculator: false },
   ],
 
   // Probability with diagrams
@@ -1813,6 +1848,7 @@ const questionBank = {
     { q: "In a group of 30 students, 18 study German (G), 15 study Latin (L), and 8 study both. How many study neither?", a: "5", type: "number", diagram: "venn-diagram-gl", calculator: false, hint: "Use: n(G∪L) = n(G) + n(L) - n(G∩L)" },
     { q: "Using the Venn diagram context: Find the number who study German only.", a: "10", type: "number", diagram: "venn-diagram-gl", calculator: false },
     { q: "In a Venn diagram, the intersection shows:", type: "mcq", options: ["Neither A nor B", "A or B", "A and B", "Only A"], a: "A and B", calculator: false },
+    { q: "50 people were surveyed. 32 like tea, 28 like coffee, 15 like both. How many like neither?", a: "5", type: "number", calculator: false },
   ],
 };
 
@@ -1889,6 +1925,64 @@ const examQuestions = {
   ],
   S5: [
     { q: "The mean of 5 numbers is 12. Four of the numbers are 8, 10, 14, and 15. Find the fifth number.", a: "13", type: "number", calculator: true, marks: 3 },
+  ],
+  // Added exam questions for objectives that were missing them
+  N3: [
+    { q: "Write (4.5 × 10³) × (2 × 10²) in standard form.", a: "9 × 10⁵", type: "text", calculator: false, marks: 2 },
+  ],
+  N7: [
+    { q: "Simplify: ³√125 × 2³", a: "40", type: "number", calculator: false, marks: 2 },
+  ],
+  N14: [
+    { q: "Estimate the value of (58.3 × 4.9) ÷ (0.52)². Show your working.", a: "1000", type: "number", calculator: false, marks: 3 },
+  ],
+  N15: [
+    { q: "A number is given as 4.7 × 10⁻³. Write this to 2 significant figures.", a: "0.0047", type: "text", calculator: false, marks: 2 },
+  ],
+  N16: [
+    { q: "The length of a rectangle is 12cm to the nearest cm. The width is 8cm to the nearest cm. Calculate the lower bound of the area.", a: "86.25", type: "number", calculator: true, marks: 3 },
+  ],
+  A2: [
+    { q: "Given s = ut + ½at², find s when u = 5, t = 4 and a = 3.", a: "44", type: "number", calculator: false, marks: 3 },
+  ],
+  A9: [
+    { q: "Line L passes through (2, 7) and (6, -1). Find the equation of line L in the form y = mx + c.", a: "y = -2x + 11", type: "text", calculator: false, marks: 3 },
+  ],
+  A19: [
+    { q: "Solve simultaneously: 3x + 2y = 13 and 2x - y = 4. Find both x and y.", a: "x = 3, y = 2", type: "text", calculator: false, marks: 4 },
+  ],
+  A23: [
+    { q: "The nth term of a sequence is 4n - 7. Is 101 in the sequence? Explain your answer.", a: "Yes, when n = 27", type: "text", calculator: false, marks: 3 },
+  ],
+  A26: [
+    { q: "A circle has centre (0, 0) and passes through (5, 12). Find the equation of the circle.", a: "x² + y² = 169", type: "text", calculator: false, marks: 3 },
+  ],
+  R2: [
+    { q: "On a map with scale 1:50000, a lake has area 3.2 cm². Find the actual area in km².", a: "0.8", type: "number", calculator: true, marks: 3 },
+  ],
+  R9: [
+    { q: "In a class, 18 out of 30 students passed a test. Express this as a percentage.", a: "60", type: "number", calculator: true, marks: 2 },
+  ],
+  R12: [
+    { q: "After two successive 10% decreases, a price is £162. Find the original price.", a: "200", type: "number", calculator: true, marks: 3 },
+  ],
+  G4: [
+    { q: "Two parallel lines are crossed by a transversal. One acute angle is 65°. Find all four angles at one intersection.", a: "65°, 65°, 115°, 115°", type: "text", calculator: false, marks: 3 },
+  ],
+  G7: [
+    { q: "Triangle A has vertices at (1,1), (3,1), (2,3). It is enlarged by scale factor 2, centre origin. Give the coordinates of the vertices of the image.", a: "(2,2), (6,2), (4,6)", type: "text", calculator: false, marks: 3 },
+  ],
+  G16: [
+    { q: "A sector has radius 10cm and arc length 15cm. Find the angle of the sector in degrees.", a: "86", type: "number", calculator: true, marks: 3, hint: "Use arc length = (θ/360) × 2πr" },
+  ],
+  G17: [
+    { q: "A cone has radius 6cm and height 8cm. Find the total surface area. Give your answer in terms of π.", a: "96π", type: "text", calculator: false, marks: 4, hint: "Total SA = πr² + πrl" },
+  ],
+  P6: [
+    { q: "In a class of 30: 20 like maths, 18 like science, 5 like neither. How many like both?", a: "13", type: "number", calculator: false, marks: 3 },
+  ],
+  S2: [
+    { q: "In a pie chart, the 'Sport' sector is 108°. If 60 people were surveyed, how many chose Sport?", a: "18", type: "number", calculator: true, marks: 2 },
   ],
 };
 
