@@ -3179,6 +3179,12 @@ const extractMultipleValues = (str) => {
 const answersEquivalent = (userAnswer, correctAnswer) => {
   if (!userAnswer || !correctAnswer) return false;
 
+  // For recurring decimals with [r] notation, require exact match
+  // This prevents 5.3[r] being treated as equivalent to 5.34
+  if (correctAnswer.includes('[r]') || userAnswer.includes('[r]')) {
+    return userAnswer === correctAnswer;
+  }
+
   const userNorm = normalizeString(userAnswer);
   const correctNorm = normalizeString(correctAnswer);
 
