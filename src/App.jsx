@@ -19,47 +19,23 @@ const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
 
 // ==================== ANIMATED LOGO COMPONENT ====================
-// Landing page logo with squares that pulse/glow at different times
+// Landing page logo with squares that pulse/glow using CSS animations
 const AnimatedLogo = () => {
-  const [activeSquares, setActiveSquares] = useState([]);
-
-  useEffect(() => {
-    // Randomly light up squares at intervals
-    const interval = setInterval(() => {
-      // Pick 2-3 random squares to pulse
-      const numSquares = Math.floor(Math.random() * 2) + 2;
-      const squares = [];
-      for (let i = 0; i < numSquares; i++) {
-        squares.push(Math.floor(Math.random() * 9));
-      }
-      setActiveSquares(squares);
-
-      // Clear after animation
-      setTimeout(() => setActiveSquares([]), 600);
-    }, 1200);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const baseOpacities = [0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95];
+  const delays = [0, 0.8, 0.4, 1.2, 0.2, 1.0, 0.6, 1.4, 0.3]; // Staggered delays
 
   return (
     <div className="grid grid-cols-3 gap-1.5 w-full h-full">
-      {baseOpacities.map((baseOpacity, i) => {
-        const isActive = activeSquares.includes(i);
-        const opacity = isActive ? Math.min(1, baseOpacity + 0.4) : baseOpacity;
-        return (
-          <div
-            key={i}
-            className="rounded-sm transition-all duration-500"
-            style={{
-              backgroundColor: `rgba(110, 51, 177, ${opacity})`,
-              boxShadow: isActive ? '0 0 12px rgba(139, 92, 246, 0.6)' : 'none',
-              transform: isActive ? 'scale(1.05)' : 'scale(1)',
-            }}
-          />
-        );
-      })}
+      {baseOpacities.map((baseOpacity, i) => (
+        <div
+          key={i}
+          className="rounded-sm animate-logo-pulse"
+          style={{
+            backgroundColor: `rgba(110, 51, 177, ${baseOpacity})`,
+            animationDelay: `${delays[i]}s`,
+          }}
+        />
+      ))}
     </div>
   );
 };

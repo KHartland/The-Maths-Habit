@@ -191,6 +191,25 @@ body {
   animation: fadeIn 0.4s ease-out;
 }
 
+/* Logo pulse animation for landing page */
+@keyframes logo-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: none;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.6);
+    filter: brightness(1.3);
+  }
+}
+
+.animate-logo-pulse {
+  animation: logo-pulse 2.4s ease-in-out infinite;
+}
+
 /* Topic Colors - Deep Space Glassmorphism palette */
 .topic-number { color: #A78BFA; }
 .topic-algebra { color: #38E6A2; }
