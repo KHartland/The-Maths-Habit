@@ -1,0 +1,348 @@
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { Eraser, RotateCcw, Check, X, Pencil, Loader2 } from 'lucide-react';
+
+/**
+ * HandwritingInput - Canvas-based handwriting input with Mathpix recognition
+ * Similar to Arc Maths' handwriting experience
+ */
+
+const HandwritingInput = ({
+  onSubmit,
+  onCancel,
+  placeholder = "Write your answer...",
+  mathpixAppId,
+  mathpixAppKey
+}) => {
+  const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [strokes, setStrokes] = useState([]); // Array of stroke objects
+  const [currentStroke, setCurrentStroke] = useState([]); // Current stroke points
+  const [recognizedText, setRecognizedText] = useState('');
+  const [isRecognizing, setIsRecognizing] = useState(false);
+  const [error, setError] = useState('');
+  const recognitionTimeoutRef = useRef(null);
+  const sessionIdRef = useRef(null);
+
+  // Canvas setup
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    // Set canvas size to match container
+    const updateSize = () => {
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      redrawStrokes();
+    };
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  // Redraw all strokes
+  const redrawStrokes = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = '#374151';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // Draw all completed strokes
+    strokes.forEach(stroke => {
+      if (stroke.points.length < 2) return;
+      ctx.beginPath();
+      ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
+      stroke.points.forEach(point => {
+        ctx.lineTo(point.x, point.y);
+      });
+      ctx.stroke();
+    });
+
+    // Draw current stroke
+    if (currentStroke.length >= 2) {
+      ctx.beginPath();
+      ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+      currentStroke.forEach(point => {
+        ctx.lineTo(point.x, point.y);
+      });
+      ctx.stroke();
+    }
+  }, [strokes, currentStroke]);
+
+  useEffect(() => {
+    redrawStrokes();
+  }, [redrawStrokes]);
+
+  // Get position from event (works for both mouse and touch)
+  const getPosition = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    if (e.touches && e.touches.length > 0) {
+      return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top,
+        t: Date.now()
+      };
+    }
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      t: Date.now()
+    };
+  };
+
+  // Start drawing
+  const handleStart = (e) => {
+    e.preventDefault();
+    setIsDrawing(true);
+    const pos = getPosition(e);
+    setCurrentStroke([pos]);
+  };
+
+  // Continue drawing
+  const handleMove = (e) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    const pos = getPosition(e);
+    setCurrentStroke(prev => [...prev, pos]);
+  };
+
+  // End drawing
+  const handleEnd = (e) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    setIsDrawing(false);
+
+    if (currentStroke.length > 1) {
+      const newStroke = {
+        points: currentStroke,
+        id: Date.now()
+      };
+      setStrokes(prev => [...prev, newStroke]);
+
+      // Trigger recognition after a short delay
+      triggerRecognition([...strokes, newStroke]);
+    }
+    setCurrentStroke([]);
+  };
+
+  // Convert strokes to Mathpix format
+  const strokesToMathpixFormat = (strokesArray) => {
+    return strokesArray.map(stroke => ({
+      x: stroke.points.map(p => Math.round(p.x)),
+      y: stroke.points.map(p => Math.round(p.y)),
+      t: stroke.points.map(p => p.t)
+    }));
+  };
+
+  // Call Mathpix API for recognition
+  const triggerRecognition = useCallback(async (strokesToRecognize) => {
+    // Clear any pending recognition
+    if (recognitionTimeoutRef.current) {
+      clearTimeout(recognitionTimeoutRef.current);
+    }
+
+    // Debounce - wait 500ms after last stroke
+    recognitionTimeoutRef.current = setTimeout(async () => {
+      if (!mathpixAppId || !mathpixAppKey) {
+        // Fallback: just show that we captured strokes
+        setRecognizedText(`[${strokesToRecognize.length} strokes captured]`);
+        return;
+      }
+
+      setIsRecognizing(true);
+      setError('');
+
+      try {
+        const mathpixStrokes = strokesToMathpixFormat(strokesToRecognize);
+
+        const response = await fetch('https://api.mathpix.com/v3/strokes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'app_id': mathpixAppId,
+            'app_key': mathpixAppKey
+          },
+          body: JSON.stringify({
+            strokes: mathpixStrokes,
+            formats: ['text', 'latex_simplified'],
+            include_detected_alphabets: true
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Recognition failed: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Extract the recognized text
+        let recognized = '';
+        if (data.text) {
+          recognized = data.text;
+        } else if (data.latex_simplified) {
+          // Convert simple LaTeX to text
+          recognized = data.latex_simplified
+            .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2')
+            .replace(/\\\(/g, '')
+            .replace(/\\\)/g, '')
+            .replace(/\\cdot/g, '×')
+            .replace(/\\times/g, '×')
+            .replace(/\\div/g, '÷')
+            .replace(/\\sqrt\{([^}]+)\}/g, '√$1')
+            .replace(/\^2/g, '²')
+            .replace(/\^3/g, '³')
+            .replace(/\\pi/g, 'π');
+        }
+
+        setRecognizedText(recognized || '');
+      } catch (err) {
+        console.error('Recognition error:', err);
+        setError('Recognition failed. Please try again.');
+      } finally {
+        setIsRecognizing(false);
+      }
+    }, 500);
+  }, [mathpixAppId, mathpixAppKey]);
+
+  // Clear canvas
+  const handleClear = () => {
+    setStrokes([]);
+    setCurrentStroke([]);
+    setRecognizedText('');
+    setError('');
+    sessionIdRef.current = null;
+  };
+
+  // Undo last stroke
+  const handleUndo = () => {
+    if (strokes.length > 0) {
+      const newStrokes = strokes.slice(0, -1);
+      setStrokes(newStrokes);
+      if (newStrokes.length > 0) {
+        triggerRecognition(newStrokes);
+      } else {
+        setRecognizedText('');
+      }
+    }
+  };
+
+  // Submit recognized answer
+  const handleSubmit = () => {
+    if (recognizedText) {
+      onSubmit(recognizedText);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+      {/* Header */}
+      <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Pencil className="w-4 h-4" />
+          <span className="text-sm font-medium">Write your answer</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={handleUndo}
+            disabled={strokes.length === 0}
+            className="p-2 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            title="Undo"
+          >
+            <RotateCcw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={handleClear}
+            disabled={strokes.length === 0}
+            className="p-2 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            title="Clear"
+          >
+            <Eraser className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Canvas */}
+      <div
+        ref={containerRef}
+        className="relative h-40 bg-white cursor-crosshair"
+        style={{
+          backgroundImage: 'linear-gradient(#e5e7eb 1px, transparent 1px)',
+          backgroundSize: '100% 2rem'
+        }}
+      >
+        <canvas
+          ref={canvasRef}
+          onMouseDown={handleStart}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={handleStart}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+          className="absolute inset-0 touch-none"
+        />
+
+        {/* Placeholder */}
+        {strokes.length === 0 && !isDrawing && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-gray-400 text-lg">{placeholder}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Recognition result */}
+      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            {isRecognizing ? (
+              <div className="flex items-center gap-2 text-gray-500">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-sm">Recognizing...</span>
+              </div>
+            ) : error ? (
+              <span className="text-sm text-red-500">{error}</span>
+            ) : recognizedText ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Recognized:</span>
+                <span className="text-lg font-mono font-semibold text-gray-800">{recognizedText}</span>
+              </div>
+            ) : strokes.length > 0 ? (
+              <span className="text-sm text-gray-400">Keep writing...</span>
+            ) : (
+              <span className="text-sm text-gray-400">Draw with finger or stylus</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onCancel}
+              className="px-3 py-1.5 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={!recognizedText || isRecognizing}
+              className="px-4 py-1.5 btn-gradient-mint text-gray-800 font-semibold rounded-lg disabled:opacity-50 flex items-center gap-1 text-sm"
+            >
+              <Check className="w-4 h-4" />
+              Use Answer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default HandwritingInput;

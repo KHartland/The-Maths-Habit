@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
+import OneVsOne from './components/OneVsOne';
+import HandwritingInput from './components/HandwritingInput';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -296,34 +298,34 @@ const Calculator = ({ onInsert, onClose }) => {
   };
 
   const btnBase = 'p-3 rounded-xl font-semibold transition-all active:scale-95 select-none ';
-  const btnNum = btnBase + 'bg-white/10 hover:bg-white/20 text-white text-lg';
-  const btnOp = btnBase + 'bg-violet/40 hover:bg-violet/60 text-violet-light text-lg';
-  const btnFn = btnBase + 'bg-white/5 hover:bg-white/10 text-secondary-text text-sm';
-  const btnEq = btnBase + 'bg-mint hover:bg-mint/80 text-void text-lg font-bold';
-  const btnClear = btnBase + 'bg-red-500/20 hover:bg-red-500/30 text-red-400 text-sm';
+  const btnNum = btnBase + 'bg-white hover:bg-gray-50 text-gray-800 text-lg border border-gray-200 shadow-sm';
+  const btnOp = btnBase + 'bg-metallic-base/20 hover:bg-metallic-base/30 text-metallic-shadow text-lg border border-metallic-base/30';
+  const btnFn = btnBase + 'bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm';
+  const btnEq = btnBase + 'bg-mint hover:bg-mint/80 text-gray-800 text-lg font-bold';
+  const btnClear = btnBase + 'bg-red-100 hover:bg-red-200 text-red-600 text-sm';
 
   return (
-    <div className="glass-panel rounded-2xl p-4 w-80 shadow-2xl border border-violet/30">
+    <div className="bg-white rounded-2xl p-4 w-80 shadow-2xl border border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <span className="text-lg">🧮</span>
-          <span className="text-sm font-semibold text-primary-text">Scientific Calculator</span>
-          {memory !== null && <span className="text-xs bg-violet/30 text-violet-light px-2 py-0.5 rounded-full">M</span>}
+          <span className="text-sm font-semibold text-gray-800">Scientific Calculator</span>
+          {memory !== null && <span className="text-xs bg-metallic-base/20 text-metallic-shadow px-2 py-0.5 rounded-full">M</span>}
         </div>
-        <button onClick={onClose} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
-          <X className="w-5 h-5 text-secondary-text" />
+        <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+          <X className="w-5 h-5 text-gray-500" />
         </button>
       </div>
 
       {/* Display */}
-      <div className="bg-void/80 rounded-xl p-4 mb-3 border border-white/10">
+      <div className="bg-gray-50 rounded-xl p-4 mb-3 border border-gray-200">
         {history && (
-          <div className="text-right text-xs text-secondary-text mb-1 truncate h-4">
+          <div className="text-right text-xs text-gray-500 mb-1 truncate h-4">
             {history}
           </div>
         )}
-        <div className="text-right text-3xl font-mono text-primary-text truncate">
+        <div className="text-right text-3xl font-mono text-gray-800 truncate">
           {display}
         </div>
       </div>
@@ -377,7 +379,7 @@ const Calculator = ({ onInsert, onClose }) => {
       {/* Use Answer button */}
       <button
         onClick={useAnswer}
-        className="w-full mt-3 py-3 btn-gradient-mint text-void font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+        className="w-full mt-3 py-3 btn-gradient-mint text-gray-800 font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
       >
         <Check className="w-5 h-5" />
         Use Answer
@@ -4628,7 +4630,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('type'); // 'type' or 'photo'
+  const [inputMode, setInputMode] = useState('type'); // 'type', 'handwriting', or 'photo'
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -5987,35 +5989,6 @@ What is the student's answer?`
                           </button>
                         ))}
 
-                        {/* Confidence Rating for MCQ (cognitive science feature) */}
-                        {userAnswer && practiceMode === 'standard' && (
-                          <div className="mt-3 p-3 glass-panel rounded-xl">
-                            <p className="text-xs text-secondary-text mb-2 font-medium">How confident are you? <span className="text-white/40">(optional)</span></p>
-                            <div className="grid grid-cols-4 gap-1">
-                              {[
-                                { value: 1, label: '🎲', desc: 'Guessing' },
-                                { value: 2, label: '🤔', desc: 'Unsure' },
-                                { value: 3, label: '😊', desc: 'Fairly sure' },
-                                { value: 4, label: '😎', desc: 'Certain' },
-                              ].map(({ value, label, desc }) => (
-                                <button
-                                  key={value}
-                                  type="button"
-                                  onClick={() => setUserConfidence(userConfidence === value ? null : value)}
-                                  className={`py-1.5 px-1 rounded-lg text-center transition-all text-sm ${
-                                    userConfidence === value
-                                      ? 'bg-violet/30 border-2 border-violet text-violet-light'
-                                      : 'bg-white/5 border border-white/20 text-secondary-text hover:border-violet/50'
-                                  }`}
-                                >
-                                  <span className="text-lg block">{label}</span>
-                                  <span className="text-[10px] block">{desc}</span>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer}
@@ -6068,6 +6041,17 @@ What is the student's answer?`
                             }`}
                           >
                             <span>⌨️</span> Type
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setInputMode('handwriting'); clearPhoto(); }}
+                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+                              inputMode === 'handwriting'
+                                ? 'bg-violet text-white shadow-sm'
+                                : 'text-secondary-text hover:text-primary-text'
+                            }`}
+                          >
+                            <span>✏️</span> Write
                           </button>
                           <button
                             type="button"
@@ -6364,6 +6348,21 @@ What is the student's answer?`
                           </>
                         )}
 
+                        {/* Handwriting mode */}
+                        {inputMode === 'handwriting' && (
+                          <HandwritingInput
+                            onSubmit={(recognizedAnswer) => {
+                              setUserAnswer(recognizedAnswer);
+                              // Switch to type mode so user can verify/edit the recognized answer
+                              setInputMode('type');
+                            }}
+                            onCancel={() => setInputMode('type')}
+                            placeholder="Write your answer here..."
+                            mathpixAppId={import.meta.env.VITE_MATHPIX_APP_ID}
+                            mathpixAppKey={import.meta.env.VITE_MATHPIX_APP_KEY}
+                          />
+                        )}
+
                         {/* Photo mode */}
                         {inputMode === 'photo' && (
                           <div className="space-y-3">
@@ -6460,35 +6459,6 @@ What is the student's answer?`
                           </div>
                         )}
                         
-                        {/* Confidence Rating (cognitive science feature) */}
-                        {userAnswer && !isProcessingImage && practiceMode === 'standard' && (
-                          <div className="mb-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                            <p className="text-xs text-slate-600 mb-2 font-medium">How confident are you? <span className="text-slate-400">(optional)</span></p>
-                            <div className="grid grid-cols-4 gap-1">
-                              {[
-                                { value: 1, label: '🎲', desc: 'Guessing' },
-                                { value: 2, label: '🤔', desc: 'Unsure' },
-                                { value: 3, label: '😊', desc: 'Fairly sure' },
-                                { value: 4, label: '😎', desc: 'Certain' },
-                              ].map(({ value, label, desc }) => (
-                                <button
-                                  key={value}
-                                  type="button"
-                                  onClick={() => setUserConfidence(userConfidence === value ? null : value)}
-                                  className={`py-1.5 px-1 rounded-lg text-center transition-all text-sm ${
-                                    userConfidence === value
-                                      ? 'bg-violet-100 border-2 border-violet-400 text-violet-700'
-                                      : 'bg-white border border-slate-200 text-slate-600 hover:border-violet-300'
-                                  }`}
-                                >
-                                  <span className="text-lg block">{label}</span>
-                                  <span className="text-[10px] block">{desc}</span>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer || isProcessingImage}
@@ -6717,12 +6687,6 @@ What is the student's answer?`
                                 </div>
                               </div>
                           
-                              {/* Exam Tip */}
-                              <div className="bg-amber-100/50 rounded-lg p-3">
-                                <p className="text-sm text-amber-900">
-                                  <span className="font-semibold">📝 Exam Tip:</span> {workedExamples[current.objective.code].examTip}
-                                </p>
-                              </div>
                             </div>
                           </details>
                         )}
@@ -6736,14 +6700,6 @@ What is the student's answer?`
                           </div>
                         )}
 
-                        {/* Exam technique tip - standard mode only */}
-                        {isCorrect && !isScaffoldQuestion && examTips[current.objective.topic] && practiceMode !== 'exam' && (
-                          <div className="p-3 bg-violet-50 border border-violet-200 rounded-lg">
-                            <p className="text-sm text-violet-800">
-                              <span className="font-semibold">📝 Exam Tip:</span> {examTips[current.objective.topic]}
-                            </p>
-                          </div>
-                        )}
                       </>
                     )}
 
@@ -8353,6 +8309,7 @@ function AppContent() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('signin');
+  const [showOneVsOne, setShowOneVsOne] = useState(false);
 
   // Auth context
   const {
@@ -8725,6 +8682,25 @@ function AppContent() {
     dailyObjectives = allObjectives.slice(0, 5);
   }
 
+  // 1v1 Battle Mode
+  if (showOneVsOne) {
+    if (!user) {
+      // Need to be logged in for 1v1
+      setShowAuthModal(true);
+      setAuthModalMode('signin');
+      setShowOneVsOne(false);
+      return null;
+    }
+    return (
+      <OneVsOne
+        user={user}
+        questionBank={questionBank}
+        onClose={() => setShowOneVsOne(false)}
+        answersEquivalent={answersEquivalent}
+      />
+    );
+  }
+
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
@@ -9078,17 +9054,28 @@ function AppContent() {
             </div>
 
             {/* Start Practice Button */}
-            <button
-              onClick={() => setCurrentPage('practice')}
-              className={`px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 ${
-                needsRepair
-                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-[0_4px_20px_rgba(251,191,36,0.3)]'
-                  : 'btn-gradient-violet'
-              }`}
-            >
-              <PracticeIcon className="w-4 h-4" />
-              {needsRepair ? 'Repair Streak' : 'Practice'}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setCurrentPage('practice')}
+                className={`px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  needsRepair
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-[0_4px_20px_rgba(251,191,36,0.3)]'
+                    : 'btn-gradient-violet'
+                }`}
+              >
+                <PracticeIcon className="w-4 h-4" />
+                {needsRepair ? 'Repair Streak' : 'Practice'}
+              </button>
+
+              {/* 1v1 Battle Button */}
+              <button
+                onClick={() => setShowOneVsOne(true)}
+                className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_4px_20px_rgba(249,115,22,0.3)]"
+              >
+                <Swords className="w-4 h-4" />
+                1v1 Battle
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -200,4 +200,84 @@ If continuing this work in a new session:
 
 ---
 
+### 7 February 2026
+**Focus:** UI overhaul + 1v1 Battle Mode
+
+**Work completed:**
+
+**UI Changes:**
+- Switched from dark purple theme to **metallic blue gradient** (light theme)
+- Updated all CSS in `index.css` and `tailwind.config.js`
+- Fixed calculator - number buttons were invisible on light theme
+- Removed "How confident are you?" selection
+- Removed exam tips (didn't match questions)
+- Updated N7 question volume from 125m³ to 64m³ (answer: 8 cubes)
+- Updated A15 question to calculable turning point question
+
+**1v1 Battle Mode (NEW FEATURE):**
+- Created `src/components/OneVsOne.jsx` - full multiplayer UI
+- Created `src/lib/matchService.js` - Supabase real-time match logic
+- Created `supabase/migrations/001_create_matches_table.sql` - database schema
+- Added "1v1 Battle" button on home page
+
+**1v1 Game Rules:**
+- Winner = highest score (time only for tiebreaker)
+- Create match → get 6-digit code to share
+- Both players get same random questions
+- Real-time score tracking via Supabase
+- Uses existing `answersEquivalent` function for smart answer checking
+
+**Setup Required:**
+1. Run SQL migration in Supabase dashboard
+2. Enable Realtime for `matches` table
+
+**Files changed:**
+- `src/index.css` - New metallic blue theme
+- `tailwind.config.js` - Updated colour palette
+- `src/App.jsx` - Calculator fix, removed confidence/tips, added 1v1
+- `src/components/OneVsOne.jsx` - NEW
+- `src/lib/matchService.js` - NEW
+- `supabase/migrations/001_create_matches_table.sql` - NEW
+
+---
+
+### 7 February 2026 (continued)
+**Focus:** Handwriting Input (Arc Maths style)
+
+**Work completed:**
+
+**Handwriting Input Feature:**
+- Created `src/components/HandwritingInput.jsx` - Canvas-based handwriting component
+- Uses Mathpix Digital Ink API for real-time recognition (industry standard for math OCR)
+- Added "Write" mode toggle alongside Type and Photo modes
+- Smooth flow: write → recognize → verify/edit → submit
+
+**Technical Implementation:**
+- Canvas captures mouse/touch strokes with timestamps
+- Debounced API calls (500ms after last stroke)
+- Converts stroke data to Mathpix format (x, y, t arrays)
+- LaTeX simplification: fractions, roots, powers converted to readable format
+- Works without API keys (shows stroke count as fallback)
+
+**User Flow:**
+1. User selects ✏️ Write mode
+2. Draws answer on canvas (with undo/clear)
+3. Recognition displays in real-time
+4. Click "Use Answer" → switches to Type mode with recognized text
+5. User can verify/edit before submitting
+
+**Setup Required:**
+- Add Mathpix API keys to `.env`:
+  ```
+  VITE_MATHPIX_APP_ID=your_app_id
+  VITE_MATHPIX_APP_KEY=your_app_key
+  ```
+- Get keys from https://accounts.mathpix.com/
+
+**Files changed:**
+- `src/components/HandwritingInput.jsx` - NEW
+- `src/App.jsx` - Added import, handwriting toggle, integration
+
+---
+
 *To add to this log, say "Update PROJECT-NOTES.md with what we did today"*
