@@ -1,0 +1,474 @@
+THE MATHS HABIT - HIGGSFIELD IMAGE PROMPTS
+============================================
+
+Copy and paste each prompt individually into Higgsfield.
+Filename suggestion included for each.
+
+============================================
+FOUNDATION TIER - NUMBER
+============================================
+
+--- N1: Juice Bottles ---
+Filename: N1_juice_bottles.png
+
+Four different sized glass juice bottles on a white supermarket shelf, warm lighting. Bottles arranged smallest to largest: Small (orange juice, £1.50 price tag), Medium (red berry juice, £2.50), Large (yellow tropical juice, £3.50), Family size (purple grape juice, £5.00). Each bottle has a clean white label with the size name and cute fruit icons. Price tags are small rounded rectangles below each bottle. Soft blurred supermarket background. Modern product photography style, vibrant colours, high quality, 4K.
+
+---
+
+--- N2: Submarine Depth ---
+Filename: N2_submarine_depth.png
+
+Modern clean diagram showing ocean depth cross-section. Gradient blue background from light (surface) to darker (deep). Horizontal line at top labelled "Sea Level 0m". Vertical depth scale on left in orange: 0, -20, -40, -60, -80, -100. Cute cartoon-style yellow submarine with simple details. Blue dashed arrows showing movement: up arrow labelled "+18m", down arrow labelled "dive". Depth markers at -45m, -27m, -81m with small orange labels. Clean, friendly educational illustration style, high quality.
+
+---
+
+--- N6: Square Garden ---
+Filename: N6_square_garden.png
+
+Bird's eye view diagram of a square garden. Light green fill for grass area. Blue outline for the square border. Small brown circles representing wooden fence posts, 8 evenly spaced along each side. Orange dimension arrow along one side showing "12 m". Corner posts slightly larger. Subtle shadow under the garden. Clean white background. Modern flat design with slight depth, educational style.
+
+---
+
+--- N7: Storage Cubes ---
+Filename: N7_storage_cubes.png
+
+3D isometric diagram of two cubes - large transparent cube containing smaller solid cube. Large cube: light blue edges like glass wireframe, dimensions "5 m" in orange on three visible edges. Small cube inside: solid warm wood texture, "2 m" labels in orange. Soft shadow beneath. Clean white background. Modern technical illustration style, friendly educational feel.
+
+---
+
+--- N8: Bus Stop ---
+Filename: N8_bus_stop.png
+
+Modern British bus stop scene with two colourful buses. Red double-decker bus labelled "Route A" and blue single-decker labelled "Route B" at a contemporary glass bus shelter. Digital clock display showing "9:00 AM". Timetable board visible. Bright daylight, clean urban setting. Friendly, inviting atmosphere. Slight depth of field blur on background. High quality, vibrant.
+
+---
+
+--- N12: Clothing Sale ---
+Filename: N12_clothing_sale.png
+
+Bright, modern clothing shop window display. Large "SALE 15% OFF" sign in red and white. Stylish jacket on mannequin torso, original price tag showing "£80" crossed out, new price "£68" in bold. Warm lighting, contemporary boutique feel. Clean composition with soft bokeh lights in background. British high street aesthetic, aspirational, high quality.
+
+---
+
+--- N13: Living Room Floor Plan ---
+Filename: N13_floor_plan.png
+
+Top-down floor plan diagram of empty rectangular room. Light warm wood flooring texture. Blue outline walls. Orange dimension arrows: "4.5 m" along length, "3 m" along width. Small carpet roll icon in corner. Grid overlay faintly suggesting square metres. Clean white border. Modern architectural plan style with warmth.
+
+---
+
+--- N16: Field Measurement ---
+Filename: N16_field_measurement.png
+
+Aerial photograph style view of rectangular green field. White measurement poles at corners. Orange tape measure lines along two edges showing "≈12 m" and "≈8 m". Surveying equipment visible at one corner. British countryside setting with hedgerows at edges. Warm golden hour lighting. Professional but accessible style.
+
+---
+
+============================================
+FOUNDATION TIER - ALGEBRA
+============================================
+
+--- A1: Plumber ---
+Filename: A1_plumber.png
+
+Friendly British plumber in clean blue overalls standing by white van. Holding a wrench, smiling. Clipboard in other hand showing invoice: "Call-out fee: £30, Hourly rate: £__". Van has cheerful logo. Residential driveway setting with British house in background. Warm, trustworthy atmosphere. Modern lifestyle photography style, high quality.
+
+---
+
+--- A2: Ball Trajectory ---
+Filename: A2_ball_trajectory.png
+
+Clean coordinate graph on light grey grid background. Blue axes with arrow heads, labelled "h (metres)" vertical 0-20, "t (seconds)" horizontal 0-4. Smooth orange parabola curve from origin, peaking at (2, 20), returning to (4, 0). Key points marked with blue dots. Formula "h = 20t - 5t²" in purple text. Small ball icon at peak. Modern educational graph style.
+
+---
+
+--- A5: Cylindrical Water Tank ---
+Filename: A5_water_tank.png
+
+3D diagram of cylindrical water tank, semi-transparent blue showing water inside. Clean blue outline. Orange dimension arrows: radius "3 m" across top with dashed line from centre, height "7 m" along side. Small right angle symbol where radius meets edge. Soft shadow beneath. Light grey background. Modern technical illustration, friendly feel.
+
+---
+
+--- A7: Taxi ---
+Filename: A7_taxi.png
+
+Classic black British taxi cab on a London-style street. Illuminated orange "TAXI" sign on roof. Digital meter display visible through window showing fare calculation. Red brick buildings softly blurred in background. Evening lighting with warm street lamps. Modern cinematic style, high quality.
+
+---
+
+--- A9: Zipline Coordinates ---
+Filename: A9_zipline.png
+
+Coordinate grid with light grey gridlines on white background. Blue axes from -2 to 8 on both axes, with arrow heads. Blue line segment from point A to point B. Point A marked with blue dot at (2, 7), labelled "A(2, 7)". Point B at (6, -1), labelled "B(6, -1)". Small zipline person silhouette on the line. Modern clean graph style.
+
+---
+
+--- A15: Firework Parabola ---
+Filename: A15_firework.png
+
+Coordinate graph with dark navy background suggesting night sky. Light grey grid. White axes labelled. Golden orange parabola curve showing firework trajectory, subtle sparkle effects along curve. Crosses x-axis at -1 and 3. Peak at (1, 4) with small starburst. Equation "y = (x-3)(x+1)" in white text. Beautiful, magical yet mathematical.
+
+---
+
+--- A17: Cinema ---
+Filename: A17_cinema.png
+
+Modern British cinema foyer with red carpet and warm lighting. Ticket counter with illuminated price board: "TICKETS - Adults: £x, Children: Half Price". Family of five (3 adults, 2 children) at counter, seen from behind. Popcorn stand visible. Contemporary multiplex feel. "Total: £36" on display. High quality.
+
+---
+
+--- A19: Café Order ---
+Filename: A19_cafe.png
+
+Cosy British café table from above. Two coffee cups and two tea cups on wooden table. Receipt showing partial totals. Chalkboard menu blurred in background showing "Coffee £? Tea £?". Warm lighting. Hygge aesthetic, inviting and relatable. High quality food photography style.
+
+---
+
+--- A21: Height Restriction ---
+Filename: A21_height_restriction.png
+
+Theme park ride entrance with colourful height measuring board. Vertical ruler marked 100-220 cm. Bracket at 120 cm with green "MIN" label, bracket at 200 cm with red "MAX" label. Green zone highlighted between them. Exciting roller coaster track visible in background. Bright, fun atmosphere.
+
+---
+
+--- A23: Theatre Seating ---
+Filename: A23_theatre.png
+
+Bird's eye view of theatre seating arrangement. Elegant red velvet seats arranged in curved rows. Row 1 with 15 seats, Row 2 with 19 seats, Row 3 with 23 seats, Row 4 with 27 seats - numbers shown as small labels. Stage rectangle at front in gold. Warm theatre lighting. Sophisticated but clear diagram.
+
+---
+
+--- A26: Fountain in Park ---
+Filename: A26_fountain.png
+
+Bird's eye view of circular fountain in a park. Blue water with central spray. Coordinate grid overlay with blue axes, origin at fountain centre. Bench icon at position (5, 12) with label. Grass texture around fountain, paths crossing. Park trees at edges. Clean coordinate labels. Modern illustrated map style.
+
+---
+
+============================================
+FOUNDATION TIER - RATIO & PROPORTION
+============================================
+
+--- R2: Map Scale ---
+Filename: R2_map_scale.png
+
+Hands holding an Ordnance Survey style map. Focus on a blue lake on the map. Clear ruler measuring across lake showing "3.2 cm". Map legend visible with "Scale 1:50,000". British countryside map with contour lines and footpaths. Warm natural lighting. Outdoor adventure feeling.
+
+---
+
+--- R4: Raffle Winners ---
+Filename: R4_raffle.png
+
+Three happy diverse friends holding coloured raffle tickets triumphantly. Banner behind them: "£270 PRIZE WINNER!". First person holds 2 blue tickets, second holds 3 red tickets, third holds 4 green tickets. Celebratory atmosphere, confetti in air. Community hall setting. Joyful, relatable.
+
+---
+
+--- R5: Animal Shelter ---
+Filename: R5_animal_shelter.png
+
+Cute animal shelter scene. Clean, modern shelter interior. One side shows 6 cats in cosy spaces, other side shows 10 dogs. Glass partition between. "Cats" and "Dogs" signs above each section. Warm, caring atmosphere. Heartwarming, not sad. High quality.
+
+---
+
+--- R7: Hotel Painters ---
+Filename: R7_hotel_painters.png
+
+Large hotel lobby being painted by decorators in white overalls. Paint cans, ladders, dust sheets visible. Workers actively painting. Progress chart showing "Day 3 of 8". Professional but friendly atmosphere. Grand staircase partially covered. British hotel interior. Warm lighting.
+
+---
+
+--- R14: Delivery Van ---
+Filename: R14_delivery_van.png
+
+Modern delivery van driving on British motorway. Inside view showing dashboard: satnav display with "180 km" distance and "2h 15min" time, speedometer visible. Driver's hands on wheel. Sunny day, green countryside beyond. Motion blur suggesting movement. Professional aesthetic.
+
+---
+
+============================================
+FOUNDATION TIER - GEOMETRY
+============================================
+
+--- G1: Cube Properties ---
+Filename: G1_cube.png
+
+3D cube diagram on light grey background. Blue edges for visible lines, blue dashed for hidden edges. Vertices marked with small orange dots, labelled A-H. Three callout labels: "Vertex" pointing to corner, "Edge" pointing to side, "Face" pointing to surface with light blue tint. Subtle shadow beneath. Clean, modern, educational.
+
+---
+
+--- G3: Roundabout Angles ---
+Filename: G3_roundabout.png
+
+Top-down diagram of a roundabout with three roads. Grey circular roundabout in centre, three white roads extending outward. Angles between roads marked with blue arcs. Two angles labelled "127°" and "85°" in orange. Third angle marked "?" in purple. Modern traffic diagram style, clean and clear.
+
+---
+
+--- G4: Railway Crossing ---
+Filename: G4_railway_crossing.png
+
+Top-down diagram of railway tracks crossing a road. Two parallel grey railway lines crossing white road diagonally. Four angles at intersection marked with blue arcs. One angle labelled "65°" in orange. Other three marked "?" in purple. Level crossing markings. Clean technical style.
+
+---
+
+--- G5: Regular Polygon Patio ---
+Filename: G5_polygon_patio.png
+
+Top-down view of a 15-sided polygon representing stone patio. Light sandstone texture fill. Blue outline. One interior angle marked with blue arc and "156°" in orange. Small tick marks showing equal lengths. Green garden texture around edges with flowers. Modern landscape diagram style.
+
+---
+
+--- G8: Vector Game ---
+Filename: G8_vector_game.png
+
+Retro-modern video game screen style. Pixel art character on coordinate grid (0-8 both axes). Blue grid lines on dark background. Character at position P(2, 5) with label. Blue arrow showing movement to (6, 2). Vector notation "(4, -3)" in orange. Sparkle trail along path. Fun gaming aesthetic with maths.
+
+---
+
+--- G9: Logo Reflection ---
+Filename: G9_reflection.png
+
+Coordinate grid with clean blue axes. Triangle shape with vertices at (1,1), (3,1), (2,4) in solid teal colour. Dashed blue diagonal line for y = x, labelled. Reflected triangle on other side in lighter teal. Vertices labelled A, B, C and A', B', C'. White background. Modern graphic design meets maths.
+
+---
+
+--- G11: Table with Chord ---
+Filename: G11_table_chord.png
+
+Top-down view of circular wooden table with warm wood texture. Blue circle outline overlaid. Centre marked "O". Horizontal chord drawn across. Radius "10 cm" in orange. Perpendicular dashed line from centre to chord: "8 cm" in orange. Right angle square. Chord length "? cm" in purple.
+
+---
+
+--- G13: Grain Silo ---
+Filename: G13_grain_silo.png
+
+Side view diagram of grain silo - cylinder with cone roof. Slight 3D effect with subtle shading. Blue outlines. Cylinder: "radius = 3 m" at base, "6 m" height. Cone roof: "4 m" height. Dashed centre line. Warm farm background softly visible. Modern technical illustration with context.
+
+---
+
+--- G14: Triangular Flower Bed ---
+Filename: G14_flower_bed.png
+
+Bird's eye view of triangular flower bed in garden. Colourful flowers filling the triangle. Blue coordinate grid overlay. Vertices at (1,2), (5,2), (3,6) labelled A, B, C. Grid squares visible with "1 m" scale. Green lawn around. Orange dimension indicators. Beautiful garden meets mathematics.
+
+---
+
+--- G15: Circular Pond ---
+Filename: G15_circular_pond.png
+
+Garden pond from above - circular with lily pads and koi fish. Blue water. Person's hands holding measuring tape around circumference showing "31.4 m". Centre point marked. Radius line with "r = ?" in purple. Lush garden setting. Beautiful, practical context for circle maths.
+
+---
+
+--- G16: Pizza Sector ---
+Filename: G16_pizza_sector.png
+
+Single pizza slice on white plate, photographed from above. Pepperoni pizza, appetising. Blue geometric overlay: two lines from point to crust edges, labelled "15 cm" in orange. Arc (crust) labelled "12 cm" in orange. Angle marked "θ = ?" in purple. Delicious meets mathematical. Clean food photography.
+
+---
+
+--- G19: Ladder Against Wall ---
+Filename: G19_ladder.png
+
+Side view of ladder against brick wall. Realistic textures: red brick wall, wooden ladder, paved ground. Blue triangle overlay showing geometry. Labels in orange: "5 m" along ladder, "1.5 m" along ground. "? m" in purple for height. Blue right angle square in corner. Hard hat icon. Modern safety diagram.
+
+---
+
+--- G20: Church Tower Survey ---
+Filename: G20_church_survey.png
+
+British village scene with stone church tower. Surveyor with modern equipment at marked point. Blue dashed line from surveyor to tower top. Orange labels: "50 m" along ground, "32°" for angle. Height "h = ?" in purple. Warm lighting, picturesque village. Professional surveying meets charming context.
+
+---
+
+============================================
+FOUNDATION TIER - PROBABILITY
+============================================
+
+--- P2: Sweet Bag ---
+Filename: P2_sweet_bag.png
+
+Clear cellophane sweet bag on white surface. Contains exactly 3 red strawberry sweets and 7 brown cola bottle sweets, all clearly visible and countable. Shiny wrapper texture. Labels: "3 strawberry, 7 cola". Hand reaching toward bag. Bright, appealing product style. Tempting but mathematical.
+
+---
+
+--- P6: Venn Diagram Food ---
+Filename: P6_venn_diagram.png
+
+Modern Venn diagram on light background. Two overlapping circles: left coral/orange with pizza slice icon and "Pizza" label, right blue with burger icon and "Burgers" label. Numbers in each region clearly visible. Outside region labelled "Neither". Rectangle border "30 students". Friendly infographic style.
+
+---
+
+--- P7: Coin Flip Game ---
+Filename: P7_coin_flip.png
+
+Restaurant table with three coins showing mix of heads and tails. Colourful promotional card: "FLIP FOR YOUR DISCOUNT!". Stylised tree diagram overlay showing H/T branches. Eight outcomes listed (HHH, HHT, etc.). Fun restaurant promotion atmosphere. Engaging and mathematical.
+
+---
+
+--- P8: Lucky Dip ---
+Filename: P8_lucky_dip.png
+
+Colourful lucky dip tub at summer fete. Festive decorated barrel with wrapped prizes - clearly showing 4 red wrapped and 6 blue wrapped gifts. Excited children's hands reaching in. Bunting and fair decorations. Joyful, summery atmosphere. British fete setting.
+
+---
+
+============================================
+FOUNDATION TIER - STATISTICS
+============================================
+
+--- S2: Pie Chart Sports ---
+Filename: S2_pie_chart.png
+
+Modern infographic pie chart. Colourful segments with icons: Football (largest, orange, 108°), Basketball (teal), Tennis (purple), Swimming (blue). Clean white background. Labels around edge. Title "Favourite Sports - 60 students". Angle marking on football segment. Contemporary data visualisation style.
+
+---
+
+--- S4: Distance-Time Graph ---
+Filename: S4_distance_time.png
+
+Clean line graph on light grey grid. Blue axes: "Time (hours)" 0-2.5, "Distance (km)" 0-100. Orange line: steep rise to 60km at 1hr, flat line until 1.5hr, steep rise to 100km at 2hr. Small delivery van icons at key points. Modern infographic style, clear and educational.
+
+---
+
+--- S5: Screen Time Mean ---
+Filename: S5_screen_time.png
+
+Five diverse teenagers standing together, each holding smartphone. Speech bubbles showing screen time: "8 hrs", "10 hrs", "?", "14 hrs", "15 hrs". Large text: "Mean = 12 hours". Modern, relatable teens in casual clothing. Bright, contemporary style. Social media aesthetic.
+
+---
+
+============================================
+HIGHER TIER - ALGEBRA
+============================================
+
+--- A2-H: Box Dimensions ---
+Filename: higher_A2_box.png
+
+3D open cardboard box diagram, isometric view. Realistic cardboard texture. Blue edge highlights. Three dimensions in purple algebra: "(2x + 3)" length, "(x - 4)" width, "(x + 1)" height. Soft shadow beneath. Clean white background. Modern packaging illustration with maths overlay.
+
+---
+
+--- A13-H: Mosaic Pattern ---
+Filename: higher_A13_mosaic.png
+
+Beautiful mosaic wall pattern with triangular arrangement. Mediterranean style colourful tiles. Rows visible: Row 1 = 5 tiles, Row 2 = 12 tiles, Row 3 = 23 tiles, Row 4 = 38 tiles. Small labels showing counts. Warm terracotta and blue tile colours. Artistic yet mathematical, showing quadratic sequence.
+
+---
+
+--- A15-H: Parabola and Line ---
+Filename: higher_A15_parabola_line.png
+
+Clean coordinate graph, light grey grid. Blue axes. Orange parabola for y = x² - 4x + 5. Teal straight line for y = 2x - 3. Point of intersection highlighted with purple dot and coordinates. Both equations labelled in matching colours. Modern mathematical graph, elegant.
+
+---
+
+--- A17-H: Football Trajectory ---
+Filename: higher_A17_football.png
+
+Sports field background with green grass. Football trajectory shown as orange parabola arc. Peak marked "20 m" height with "t = 2s". Landing point at "t = 4s". Faint coordinate axes overlay. Footballer silhouette at origin. Dynamic sports merged with mathematical diagram.
+
+---
+
+--- A24-H: Projectile Graph ---
+Filename: higher_A24_projectile.png
+
+Coordinate graph with stadium sky background. Axes: "t (seconds)" 0-5, "h (metres)" 0-25. Orange parabola from origin, peak at (2, 20), returning to x-axis at (4, 0). Key points marked. Dashed vertical line at maximum. Football icon at peak. Modern sports science aesthetic.
+
+---
+
+============================================
+HIGHER TIER - GEOMETRY
+============================================
+
+--- G1-H: Nonagon Tile ---
+Filename: higher_G1_nonagon.png
+
+Beautiful regular 9-sided polygon tile pattern. Moroccan/Mediterranean style with rich blues and golds. One central tile highlighted with blue geometric overlay. Interior angle marked "140°" in orange. Equal side tick marks. Warm artistic photograph merged with clean geometry.
+
+---
+
+--- G3-H: Trapezium Flower Bed ---
+Filename: higher_G3_trapezium.png
+
+Bird's eye garden plan. Trapezium flower bed filled with colourful flowers. Blue geometric outline overlay. Parallel sides "8 m" and "12 m" in orange. Height dashed perpendicular "h = ?" in purple. Right angle squares. "Area = 50 m²" label. Beautiful garden meets geometry.
+
+---
+
+--- G5-H: Cone vs Cylinder ---
+Filename: higher_G5_cone_cylinder.png
+
+Side-by-side 3D diagrams: ice cream style cylinder and cone. Same base radius and height with matching dimension lines. Cylinder "Volume = 300π cm³" in orange. Cone "Volume = ?" in purple. Soft ice cream colours. Modern product illustration, appealing and mathematical.
+
+---
+
+--- G9-H: Sector Radians ---
+Filename: higher_G9_sector.png
+
+Clean sector diagram (pizza slice shape). Warm colour or neutral fill. Blue outline. Two radii labelled "12 cm" in orange. Arc labelled "15 cm" in orange. Angle at centre "θ = ? radians" in purple. Modern clean style with subtle warmth.
+
+---
+
+--- G11-H: Cuboid Space Diagonal ---
+Filename: higher_G11_cuboid.png
+
+3D cuboid with semi-transparent faces. Blue edges. Dimensions: "3 cm", "4 cm", "12 cm" in orange. Space diagonal as purple dashed line through interior from corner to opposite corner, labelled "d = ?". Subtle 3D shading. Clean modern technical illustration.
+
+---
+
+--- G15-H: Hemisphere on Cylinder ---
+Filename: higher_G15_hemisphere.png
+
+3D composite shape: hemisphere dome on cylindrical base like a water tank. Semi-transparent or wireframe style. Blue outlines. Shared radius "6 cm" in orange. Cylinder height "10 cm" labelled. Surface area shading indicated. Soft shadow. Modern technical illustration.
+
+---
+
+--- G19-H: Two Angles of Elevation ---
+Filename: higher_G19_elevations.png
+
+Modern office building with glass windows. Surveyor with equipment at marked position. Two dashed blue sight lines: one to window, one to roof. Labels: "50 m" ground distance, "38°" angle to window, "62°" angle to roof. Window height "h = ?" in purple. Professional urban surveying.
+
+---
+
+============================================
+HIGHER TIER - PROBABILITY & STATISTICS
+============================================
+
+--- P5-H: Expected Value Game ---
+Filename: higher_P5_expected_value.png
+
+Colourful charity stall game board. Large die visible. Prize board: "Roll 6 → Win £10" (green), "Roll Odd → Win £2" (blue), "Roll Even (not 6) → Lose £3" (red). Friendly fairground aesthetic. Probability values: "1/6", "3/6", "2/6". Fun but mathematical.
+
+---
+
+--- P6-H: Two-Box Problem ---
+Filename: higher_P6_two_boxes.png
+
+Two decorative boxes on magician's table. Box A open showing 3 red and 5 blue cards. Box B showing 4 red and 2 blue cards. Curved arrow showing card moving from A to B. Probability tree diagram overlay. Magic show atmosphere with purple velvet. Mysterious yet clear.
+
+---
+
+--- S2-H: Box Plot Comparison ---
+Filename: higher_S2_box_plots.png
+
+Two horizontal box plots on same scale (0-100). Top: "Class A" median at 62, small box IQR 15. Bottom: "Class B" median at 58, larger box IQR 24. Clean blue and teal colouring. Scale clearly marked. Contemporary data visualisation style.
+
+---
+
+--- S3-H: Scatter Graph Regression ---
+Filename: higher_S3_regression.png
+
+Scatter graph with light grey grid. Axes: "Hours Studied" x 0-10, "Exam Mark %" y 0-100. Blue dot markers showing positive correlation. Orange line of best fit. Equation "y = 2.3x + 15" labelled. Small student studying icon. Modern educational data viz style.
+
+---
+
+============================================
+END OF PROMPTS
+============================================
+
+Total: 52 prompts
+- Foundation: 40 prompts
+- Higher: 12 prompts
+
+Colour coding used throughout:
+- Blue (#4A90D9): Lines, shapes, outlines
+- Orange (#F59E0B): Given measurements
+- Purple (#8B5CF6): Unknown values (?, x, y)

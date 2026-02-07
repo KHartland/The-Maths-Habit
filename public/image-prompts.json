@@ -1,0 +1,534 @@
+{
+  "foundation": {
+    "N1": {
+      "filename": "foundation_N1_juice_bottles.png",
+      "prompt": "Four different sized juice bottles on a white shelf, clearly labelled Small, Medium, Large, and Family. Simple colourful fruit juice packaging, realistic product photography style, price tags visible on each. Clean supermarket shelf background. Educational diagram style, no text on bottles except size labels.",
+      "topic": "Comparing decimals",
+      "priority": "high"
+    },
+    "N2": {
+      "filename": "foundation_N2_submarine.png",
+      "prompt": "Side-view cross-section diagram showing ocean depth with a yellow submarine. Depth markers on the left side showing negative numbers (-45m, -30m, -60m, -81m). Blue gradient water from light at surface to dark at depth. Arrows showing upward and downward movement. Simple educational illustration style, clean lines.",
+      "topic": "Negative numbers",
+      "priority": "high"
+    },
+    "N6": {
+      "filename": "foundation_N6_garden_posts.png",
+      "prompt": "Bird's eye view of a square garden with green grass, surrounded by wooden fence posts equally spaced along each side. 8 posts visible on each side. Simple diagram style with measurements shown. Top-down garden plan illustration.",
+      "topic": "Square roots and perimeter",
+      "priority": "medium"
+    },
+    "N7": {
+      "filename": "foundation_N7_storage_crates.png",
+      "prompt": "3D diagram showing a large transparent cube (storage container) with dimensions 5m × 5m × 5m, with a small solid wooden crate (2m × 2m × 2m) inside. Measurement arrows showing dimensions. Isometric technical drawing style, clean white background.",
+      "topic": "Cube roots and volume",
+      "priority": "high"
+    },
+    "N8": {
+      "filename": "foundation_N8_bus_routes.png",
+      "prompt": "Two colourful buses (one red Route A, one blue Route B) at a modern bus station stop. Digital clock showing 9:00. Bus timetable board in background. Clean, bright, British urban setting. Cheerful educational illustration style.",
+      "topic": "LCM in context",
+      "priority": "high"
+    },
+    "N12": {
+      "filename": "foundation_N12_sale_jacket.png",
+      "prompt": "Shop window display with SALE 15% OFF sign. Mannequin wearing a stylish jacket with original price tag crossed out and sale price £68 visible. British high street fashion store aesthetic. Bright, appealing retail photography style.",
+      "topic": "Reverse percentages",
+      "priority": "medium"
+    },
+    "N13": {
+      "filename": "foundation_N13_carpet_room.png",
+      "prompt": "Bird's eye view floor plan of an empty rectangular living room, dimensions clearly marked (4.5m × 3m). Carpet roll partially unrolled in the corner. Simple architectural diagram style with grid lines suggesting square metres.",
+      "topic": "Area and cost",
+      "priority": "medium"
+    },
+    "N16": {
+      "filename": "foundation_N16_field_bounds.png",
+      "prompt": "Aerial view of a rectangular green field with white measurement markers at corners. Surveying equipment (tape measure, ranging poles) visible at edges. Dimensions marked approximately 12m × 8m. Farm setting with hedgerows visible at edges.",
+      "topic": "Upper and lower bounds",
+      "priority": "medium"
+    },
+    "A1": {
+      "filename": "foundation_A1_plumber.png",
+      "prompt": "Friendly plumber in blue overalls holding a wrench, with a van in background. Invoice/clipboard visible showing Call-out fee: £30 and Hourly rate: £?. Simple, clean illustration style, British setting.",
+      "topic": "Writing expressions",
+      "priority": "high"
+    },
+    "A2": {
+      "filename": "foundation_A2_ball_trajectory.png",
+      "prompt": "Side-view diagram showing trajectory of a red ball being thrown upward. Dotted arc showing path. Height markers on y-axis (0m, 5m, 10m, 15m, 20m), time markers on x-axis (0s, 1s, 2s, 3s, 4s). Person throwing ball at origin. Clean educational physics diagram style.",
+      "topic": "Substitution into formulae",
+      "priority": "high"
+    },
+    "A5": {
+      "filename": "foundation_A5_water_tank.png",
+      "prompt": "Technical diagram of a tall cylindrical water tank, semi-transparent blue showing water inside. Dimensions clearly labelled: radius 3m (arrow across circular top), height 7m (arrow along side). Clean isometric engineering drawing style.",
+      "topic": "Volume formula",
+      "priority": "high"
+    },
+    "A7": {
+      "filename": "foundation_A7_taxi.png",
+      "prompt": "British black taxi cab with illuminated TAXI sign. Digital meter display visible through window showing fare calculation. Urban British street setting with recognisable but generic London-style buildings. Clean, friendly illustration style.",
+      "topic": "Function machines",
+      "priority": "medium"
+    },
+    "A9": {
+      "filename": "foundation_A9_zipline.png",
+      "prompt": "Side-view diagram of a zipline going from a high wooden platform (point A at coordinates 2,7 marked) down to ground level (point B at 6,-1). Person on zipline mid-descent. Coordinate grid overlay with axes marked. Adventure park setting, clean educational style.",
+      "topic": "Equation of a line",
+      "priority": "high"
+    },
+    "A13": {
+      "filename": "foundation_A13_phone_masts.png",
+      "prompt": "Two mobile phone/telecommunications masts in a landscape, labelled A and B with coordinates (2,8) and (10,4). Coordinate grid overlay. Signal booster box shown at midpoint between them with dotted lines connecting to both masts. Clean technical diagram style.",
+      "topic": "Midpoint and distance",
+      "priority": "medium"
+    },
+    "A15": {
+      "filename": "foundation_A15_firework.png",
+      "prompt": "Night sky with a single firework trajectory shown as a glowing arc/parabola. Dotted grid overlay showing the curve y = (x-3)(x+1). Ground level clearly marked at y=0. Mathematical diagram merged with beautiful night scene.",
+      "topic": "Quadratic graphs",
+      "priority": "high"
+    },
+    "A17": {
+      "filename": "foundation_A17_cinema.png",
+      "prompt": "Cinema foyer with ADULTS and CHILDREN HALF PRICE on ticket price board. Family of 5 (3 adults, 2 children) at counter. British cinema setting, warm lighting, friendly illustration style.",
+      "topic": "Forming equations",
+      "priority": "medium"
+    },
+    "A18": {
+      "filename": "foundation_A18_photo_frame.png",
+      "prompt": "A rectangular photograph or picture frame on a wall, with dimension arrows showing width x and length (x+2). Area = 15cm² written nearby. Clean diagram style with elegant frame design.",
+      "topic": "Quadratic equations",
+      "priority": "medium"
+    },
+    "A19": {
+      "filename": "foundation_A19_cafe.png",
+      "prompt": "Cosy British café table with coffee cups and teacups, receipt visible. Chalkboard menu in background showing coffee and tea with question marks for prices. Warm, inviting café atmosphere, hygge aesthetic.",
+      "topic": "Simultaneous equations",
+      "priority": "high"
+    },
+    "A21": {
+      "filename": "foundation_A21_height_restriction.png",
+      "prompt": "Theme park ride entrance with height measuring stick/chart showing You must be THIS tall to ride style graphic. Marks at 120cm and 200cm clearly visible. Rollercoaster track visible in background. Fun, exciting but safe atmosphere.",
+      "topic": "Writing inequalities",
+      "priority": "high"
+    },
+    "A23": {
+      "filename": "foundation_A23_theatre.png",
+      "prompt": "Bird's eye view of theatre seating layout showing rows from the stage. Row 1 closest to stage with visibly fewer seats, rows getting wider towards back. Seat counts: Row 1 = 15, Row 2 = 19, Row 3 = 23 labelled. Red velvet seats, elegant theatre interior.",
+      "topic": "Arithmetic sequences",
+      "priority": "high"
+    },
+    "A26": {
+      "filename": "foundation_A26_fountain.png",
+      "prompt": "Bird's eye view of a circular fountain in a park with coordinate grid overlay, centre at origin (0,0). Water spray in centre. Bench visible at edge of fountain at point (5,12). Park setting with paths and grass. Clean diagram merged with realistic scene.",
+      "topic": "Circle equations",
+      "priority": "medium"
+    },
+    "R2": {
+      "filename": "foundation_R2_map_scale.png",
+      "prompt": "Hand holding an Ordnance Survey style map with a lake visible. Ruler measuring the lake on map. Scale 1:50000 clearly visible in map corner. British countryside map aesthetic.",
+      "topic": "Scale and area",
+      "priority": "high"
+    },
+    "R3": {
+      "filename": "foundation_R3_budget.png",
+      "prompt": "Pie chart diagram showing budget breakdown: rent (2/5 segment), bills (1/6 segment), and remaining section for other expenses. British pound notes and coins decoratively around the edges. Clean infographic style, modern and relatable.",
+      "topic": "Fractions of amounts",
+      "priority": "medium"
+    },
+    "R4": {
+      "filename": "foundation_R4_raffle.png",
+      "prompt": "Three happy friends holding raffle tickets, with £270 PRIZE banner behind them. Tickets coloured to suggest 2:3:4 ratio (2 blue, 3 red, 4 green held by respective people). Celebratory but educational style.",
+      "topic": "Sharing in ratio",
+      "priority": "high"
+    },
+    "R5": {
+      "filename": "foundation_R5_animal_shelter.png",
+      "prompt": "Animal shelter scene with cats and dogs in separate but adjacent areas. Ratio 3:5 visually represented (6 cats and 10 dogs visible). Cute, friendly animals, clean shelter setting.",
+      "topic": "Ratio problems",
+      "priority": "high"
+    },
+    "R7": {
+      "filename": "foundation_R7_hotel_painters.png",
+      "prompt": "Large hotel interior with painters/decorators at work with paint rollers and brushes. Paint cans, ladders, and protective sheets visible. Progress chart or calendar visible showing days remaining. Professional but approachable illustration style.",
+      "topic": "Inverse proportion",
+      "priority": "medium"
+    },
+    "R10": {
+      "filename": "foundation_R10_house_value.png",
+      "prompt": "A detached British house with SOLD sign in garden. Graph overlay showing value rising then falling (8% up arrow, then 5% down arrow). Estate agent aesthetic combined with mathematical diagram.",
+      "topic": "Compound percentage change",
+      "priority": "medium"
+    },
+    "R14": {
+      "filename": "foundation_R14_delivery_van.png",
+      "prompt": "Delivery van on a British motorway/road. Satnav/GPS display showing 180km distance and 2h 15min time. Speedometer visible. Clean, modern delivery company van design.",
+      "topic": "Average speed",
+      "priority": "high"
+    },
+    "G1": {
+      "filename": "foundation_G1_cube_properties.png",
+      "prompt": "3D transparent cube/box with vertices, edges, and faces highlighted in different colours (vertices red, edges blue, faces yellow). Labels pointing to Vertex, Edge, Face. Clean mathematical diagram style on white background.",
+      "topic": "3D shape properties",
+      "priority": "high"
+    },
+    "G2": {
+      "filename": "foundation_G2_midpoint_construction.png",
+      "prompt": "Garden scene with two trees labelled A and B. Person using rope to draw arcs on the ground (shown as dotted curved lines meeting at two points). Point marked where arcs cross for fountain location. Step-by-step construction diagram style.",
+      "topic": "Perpendicular bisector",
+      "priority": "medium"
+    },
+    "G3": {
+      "filename": "foundation_G3_roundabout.png",
+      "prompt": "Bird's eye view of a roundabout with three roads meeting it. Angles between roads marked: 127°, 85°, and unknown angle marked with ?°. British road markings and signs, aerial photograph style merged with diagram.",
+      "topic": "Angles at a point",
+      "priority": "high"
+    },
+    "G4": {
+      "filename": "foundation_G4_railway_crossing.png",
+      "prompt": "Bird's eye view of railway tracks crossing a road diagonally. Angle of 65° marked at one corner. All four angles at intersection visible. Level crossing barriers visible. Technical diagram merged with realistic scene.",
+      "topic": "Angles on lines",
+      "priority": "high"
+    },
+    "G5": {
+      "filename": "foundation_G5_polygon_patio.png",
+      "prompt": "Garden with paving stones arranged in a regular 15-sided polygon shape. One interior angle marked as 156°. Beautiful garden setting, stone/slate patio, flowers around edges.",
+      "topic": "Polygon angles",
+      "priority": "high"
+    },
+    "G7": {
+      "filename": "foundation_G7_scale_model.png",
+      "prompt": "Split image: left side shows REAL doorway with coordinates (1,1), (3,1), (2,3) marked, right side shows MODEL ×2 enlarged version with corresponding doubled coordinates. Coordinate grids on both. Architectural drawing style.",
+      "topic": "Enlargement",
+      "priority": "medium"
+    },
+    "G8": {
+      "filename": "foundation_G8_game_vector.png",
+      "prompt": "Computer game screen with pixel/retro style character. Coordinate grid overlay. Arrow showing movement vector (4, -3) from start position P(2,5) to end position. Fun gaming aesthetic with maths overlay.",
+      "topic": "Vectors",
+      "priority": "high"
+    },
+    "G9": {
+      "filename": "foundation_G9_logo_reflection.png",
+      "prompt": "Triangle logo on left side of coordinate grid with vertices at (1,1), (3,1), (2,4). Line y = x shown as dashed diagonal line through origin. Reflected triangle shown on right side as mirror image. Clean graphic design style with grid.",
+      "topic": "Reflection",
+      "priority": "high"
+    },
+    "G11": {
+      "filename": "foundation_G11_table_crack.png",
+      "prompt": "Top-down view of a round wooden table with a visible crack running across it (chord). Radius marked as 10cm from centre to edge, perpendicular distance from centre to crack marked as 8cm. Crack length shown with question mark. Realistic wood texture with mathematical overlay.",
+      "topic": "Circle theorems",
+      "priority": "medium"
+    },
+    "G13": {
+      "filename": "foundation_G13_grain_silo.png",
+      "prompt": "Agricultural grain silo consisting of a cylindrical body with conical roof. Technical cutaway view showing interior. Dimensions clearly marked: cylinder radius 3m, cylinder height 6m, cone height 4m. Farm setting background.",
+      "topic": "Combined volumes",
+      "priority": "high"
+    },
+    "G14": {
+      "filename": "foundation_G14_flower_bed.png",
+      "prompt": "Bird's eye view of a triangular flower bed in a garden filled with colourful flowers. Coordinate grid overlay with corners at (1,2), (5,2), (3,6) clearly marked. Each grid square = 1 metre notation. Beautiful garden photography merged with diagram.",
+      "topic": "Area from coordinates",
+      "priority": "medium"
+    },
+    "G15": {
+      "filename": "foundation_G15_pond_net.png",
+      "prompt": "Garden pond (circular) with lily pads and fish visible. Person measuring circumference with tape showing 31.4m. Pond netting/cover partially rolled nearby ready to cover. Garden setting, practical measuring scenario.",
+      "topic": "Circle area from circumference",
+      "priority": "high"
+    },
+    "G16": {
+      "filename": "foundation_G16_pizza_slice.png",
+      "prompt": "A single slice of pizza on a white plate, with radius marked as 15cm from point to centre of crust, and crust (arc) length marked as 12cm. Angle at the point marked with ?°. Appetising pepperoni pizza with clear geometric overlay.",
+      "topic": "Arc length",
+      "priority": "high"
+    },
+    "G19": {
+      "filename": "foundation_G19_ladder.png",
+      "prompt": "Extension ladder leaning against brick wall of a house. Foot of ladder 1.5m from wall base (marked), ladder length 5m (marked along ladder), height reached on wall marked with ?. Safety context visible. Clear diagram showing right-angled triangle formed.",
+      "topic": "Pythagoras theorem",
+      "priority": "high"
+    },
+    "G20": {
+      "filename": "foundation_G20_church_survey.png",
+      "prompt": "Surveyor with theodolite/measuring equipment standing 50m from a church tower (distance marked on ground). Line of sight to top of tower marked with dashed line, angle of elevation 32° shown. British village church setting with stone tower.",
+      "topic": "Trigonometry",
+      "priority": "high"
+    },
+    "P1": {
+      "filename": "foundation_P1_quality_spinner.png",
+      "prompt": "Factory quality control setting with a large spinner divided into three coloured sections: Pass (green), Minor fault (yellow), Major fault (red). Tally chart nearby showing 200 spins with results. Industrial but clean setting.",
+      "topic": "Relative frequency",
+      "priority": "medium"
+    },
+    "P2": {
+      "filename": "foundation_P2_sweet_bag.png",
+      "prompt": "Clear cellophane sweet bag containing exactly 3 red (strawberry) sweets and 7 brown (cola) sweets, all clearly countable. Hand reaching in to pick one out. Clean product photography style on white background.",
+      "topic": "Probability misconceptions",
+      "priority": "high"
+    },
+    "P6": {
+      "filename": "foundation_P6_venn_diagram.png",
+      "prompt": "Venn diagram with two overlapping circles labelled Pizza (with pizza icon) and Burgers (with burger icon). Numbers visible in each region showing the distribution. Neither region also marked. Clean infographic style.",
+      "topic": "Venn diagrams",
+      "priority": "high"
+    },
+    "P7": {
+      "filename": "foundation_P7_coin_flip.png",
+      "prompt": "Restaurant table with three coins showing mix of heads and tails. FLIP FOR DISCOUNT promotional table tent/sign. Tree diagram or sample space list faintly visible as overlay showing all 8 outcomes. Fun restaurant promotion atmosphere.",
+      "topic": "Sample space",
+      "priority": "medium"
+    },
+    "P8": {
+      "filename": "foundation_P8_lucky_dip.png",
+      "prompt": "Lucky dip tub/barrel at a fair with wrapped prizes inside - clearly showing some red wrapped and some blue wrapped prizes. Two children's hands reaching in excitedly. Fairground/fete setting, colourful and fun.",
+      "topic": "Probability without replacement",
+      "priority": "high"
+    },
+    "S1": {
+      "filename": "foundation_S1_stratified_sample.png",
+      "prompt": "School assembly hall with students in three distinct year groups shown by different coloured ties or badges (Year 7, Year 8, Year 9). Teacher with survey clipboard visible. Numbers 600, 550, 450 floating above each group. School setting.",
+      "topic": "Stratified sampling",
+      "priority": "medium"
+    },
+    "S2": {
+      "filename": "foundation_S2_pie_chart_sports.png",
+      "prompt": "Pie chart showing favourite sports with coloured sectors. Football sector clearly marked as 108°. Sport icons (football, basketball, tennis, swimming) next to their respective sectors. Clean infographic style with 60 people surveyed noted.",
+      "topic": "Pie charts",
+      "priority": "high"
+    },
+    "S3": {
+      "filename": "foundation_S3_school_trip.png",
+      "prompt": "Four images arranged around a blank circle: Theme Park (rollercoaster), Zoo (animals), Beach (seaside), Museum (building with columns). Numbers 30, 15, 25, 10 next to each. Blank circle in centre ready for pie chart. School trip planning aesthetic.",
+      "topic": "Drawing pie charts",
+      "priority": "medium"
+    },
+    "S4": {
+      "filename": "foundation_S4_distance_time.png",
+      "prompt": "Distance-time graph on grid paper with van journey plotted: steep line going up (60km in 1hr), horizontal flat line (30min stop), steeper line (40km in 30min). Small delivery van icons at key points on the line. Clean mathematical graph style.",
+      "topic": "Distance-time graphs",
+      "priority": "high"
+    },
+    "S5": {
+      "filename": "foundation_S5_screen_time.png",
+      "prompt": "Five diverse teenage friends holding smartphones, with screen time hours shown in speech bubbles above each head: 8, 10, ?, 14, 15. Text showing Mean = 12 hours prominently. Modern teenagers, relatable illustration style.",
+      "topic": "Working with mean",
+      "priority": "high"
+    }
+  },
+  "higher": {
+    "N7": {
+      "filename": "higher_N7_cube_sculptures.png",
+      "prompt": "Artist's workshop with wooden cube sculptures. One large cube with 343cm³ labelled, one smaller cube being crafted with surface area calculation visible. Woodworking tools (chisel, sandpaper) visible. Creative studio atmosphere with mathematical annotations.",
+      "topic": "Related cube properties",
+      "priority": "medium"
+    },
+    "N8": {
+      "filename": "higher_N8_lighthouses.png",
+      "prompt": "Night seascape with two lighthouses on rocky outcrops, beams sweeping across dark sky. Stars and crescent moon visible. Digital timing displays on each showing flash intervals. Both beams shown meeting/crossing. Dramatic but educational coastal scene.",
+      "topic": "HCF and LCM",
+      "priority": "high"
+    },
+    "N12": {
+      "filename": "higher_N12_car_depreciation.png",
+      "prompt": "Timeline showing same car at three stages: Year 0 (showroom new with full price), Year 1 (slightly used, -18% label), Year 2 (more worn, -15% label). Value decreasing graph overlay. Car dealership to used car progression.",
+      "topic": "Compound depreciation",
+      "priority": "medium"
+    },
+    "N15": {
+      "filename": "higher_N15_precision_engineering.png",
+      "prompt": "Engineering workshop with precision measuring tools (digital micrometer, vernier caliper) measuring a metal component. Digital display showing 8.745 mm with ± tolerance indicated. Technical, precision manufacturing aesthetic.",
+      "topic": "Bounds in measurement",
+      "priority": "medium"
+    },
+    "A2": {
+      "filename": "higher_A2_box_dimensions.png",
+      "prompt": "3D diagram of an open cardboard box with algebraic dimension labels: length (2x+3), width (x-4), height (x+1). Assembly diagram style with fold lines visible. Clean technical drawing on white background.",
+      "topic": "Expanding brackets",
+      "priority": "high"
+    },
+    "A13": {
+      "filename": "higher_A13_mosaic.png",
+      "prompt": "Beautiful triangular mosaic pattern on a wall showing rows with increasing tiles: Row 1 = 5 tiles, Row 2 = 12 tiles, Row 3 = 23 tiles, Row 4 = 38 tiles visible. Mediterranean or Roman-style colourful geometric mosaic design.",
+      "topic": "Quadratic sequences",
+      "priority": "high"
+    },
+    "A14": {
+      "filename": "higher_A14_zipwire_support.png",
+      "prompt": "Technical diagram of adventure park zipwire from platform A(2,5) to ground B(6,-3). Perpendicular support post shown at midpoint (4,1). Coordinate grid overlay with measurements. Engineering drawing style merged with outdoor setting.",
+      "topic": "Perpendicular lines",
+      "priority": "medium"
+    },
+    "A15": {
+      "filename": "higher_A15_drone_laser.png",
+      "prompt": "Night scene with drone flying along curved parabolic path (shown as dotted green line) and red laser beam (straight line) crossing it. Single point of intersection highlighted with a glow. Modern tech demonstration style with coordinate overlay.",
+      "topic": "Simultaneous equations",
+      "priority": "high"
+    },
+    "A17": {
+      "filename": "higher_A17_projectile.png",
+      "prompt": "Sports field with trajectory of kicked football shown as smooth parabola arc. Height h on y-axis (0 to 20m), horizontal distance x on x-axis. Maximum height point marked at peak, landing points marked on ground. Sports action merged with physics diagram.",
+      "topic": "Completing the square",
+      "priority": "high"
+    },
+    "A21": {
+      "filename": "higher_A21_bridge_arch.png",
+      "prompt": "Elegant parabolic arch bridge over a calm river with reflection. Coordinate grid overlay showing the bridge arch as a downward parabola touching the ground (x-axis) at two points. Civil engineering diagram merged with scenic bridge photograph.",
+      "topic": "Discriminant",
+      "priority": "medium"
+    },
+    "A23": {
+      "filename": "higher_A23_light_brightness.png",
+      "prompt": "Dark room with single light bulb hanging. Two light meters on stands at different distances (4m and 16m marked). Digital displays showing brightness readings (10 units and 5 units). Scientific measurement setup, educational style.",
+      "topic": "Inverse proportion",
+      "priority": "medium"
+    },
+    "A24": {
+      "filename": "higher_A24_football.png",
+      "prompt": "Football being kicked by player, trajectory shown as dotted parabola arc through sky. Maximum height point marked (20m, t=2s), launch point and landing point (t=4s) marked on ground. Sports action photography merged with physics diagram.",
+      "topic": "Quadratic maximum",
+      "priority": "high"
+    },
+    "R1": {
+      "filename": "higher_R1_restaurant_bill.png",
+      "prompt": "Three friends (Ann, Ben, Carl labelled) at restaurant table with bill showing £180 total visible. Different sized meals in front of each person (large, medium, starter only). Modern British restaurant setting, receipt visible.",
+      "topic": "Complex ratio",
+      "priority": "medium"
+    },
+    "R2": {
+      "filename": "higher_R2_construction.png",
+      "prompt": "Construction site with workers building a brick wall. Some workers shown walking away to van labelled Day 3. Wall approximately 3/8 complete. Project timeline chart visible showing original 8 days plan. Hard hats, high-vis vests.",
+      "topic": "Inverse proportion",
+      "priority": "high"
+    },
+    "R8": {
+      "filename": "higher_R8_express_train.png",
+      "prompt": "Modern express train (British style) on tracks, motion blur suggesting speed. Digital platform display showing Distance: 240km. Two time options shown: Current speed and +20km/h faster. Railway station setting.",
+      "topic": "Speed problems",
+      "priority": "medium"
+    },
+    "R12": {
+      "filename": "higher_R12_bacteria.png",
+      "prompt": "Laboratory scene with petri dish under microscope showing bacteria colonies. Growth chart on screen showing exponential doubling curve with 20 minute intervals marked. Timer display. Scientific laboratory setting, educational biology aesthetic.",
+      "topic": "Exponential growth",
+      "priority": "high"
+    },
+    "R14": {
+      "filename": "higher_R14_pool_pipes.png",
+      "prompt": "Swimming pool being filled by two large pipes (Pipe A and Pipe B clearly labelled). Flow rate gauges/meters on each pipe showing different rates. Timer/clock display visible. Pool gradually filling. Leisure centre pool facility setting.",
+      "topic": "Combined rates",
+      "priority": "medium"
+    },
+    "G1": {
+      "filename": "higher_G1_nonagon_tile.png",
+      "prompt": "Regular nonagon (9-sided) decorative tile pattern, one central tile highlighted with interior angle marked as 140°. Beautiful geometric Islamic or Mediterranean style tilework. Colours complementing, clean mathematical overlay.",
+      "topic": "Polygon angles",
+      "priority": "high"
+    },
+    "G3": {
+      "filename": "higher_G3_trapezium_bed.png",
+      "prompt": "Bird's eye view of a trapezium-shaped garden flower bed filled with colourful flowers. Parallel sides marked as 8m and 12m on edges. Area 50m² annotated. Width to be found marked with ?. Garden design plan aesthetic.",
+      "topic": "Trapezium area",
+      "priority": "high"
+    },
+    "G5": {
+      "filename": "higher_G5_ice_cream.png",
+      "prompt": "Ice cream cone and cylindrical tub side by side on ice cream parlour counter, clearly same base radius and height. Volume 300π cm³ marked on tub. Cone volume marked with ?. Appetising ice cream colours, mathematical overlay.",
+      "topic": "Volume comparison",
+      "priority": "high"
+    },
+    "G9": {
+      "filename": "higher_G9_pizza_sector.png",
+      "prompt": "Single pizza slice (sector) on a plate with radius 12cm marked from tip to centre of crust, arc length (crust) 15cm marked along curve. Angle at tip marked with ? radians. Appetising pizza with clear geometric overlay lines.",
+      "topic": "Radians and sectors",
+      "priority": "high"
+    },
+    "G11": {
+      "filename": "higher_G11_box_diagonal.png",
+      "prompt": "Transparent cuboid box with dimensions 3cm × 4cm × 12cm labelled. Space diagonal drawn as a bright line from one corner through the interior to opposite corner. Diagonal length marked with ?. 3D technical diagram style.",
+      "topic": "3D Pythagoras",
+      "priority": "high"
+    },
+    "G13": {
+      "filename": "higher_G13_garden_rotation.png",
+      "prompt": "Bird's eye garden plan on coordinate grid. Statue icon at P(4,2), circular fountain icon at Q(1,1). Curved rotation arrow showing 90° anticlockwise movement. New position marked with ?. Garden design merged with mathematical overlay.",
+      "topic": "Rotation",
+      "priority": "medium"
+    },
+    "G15": {
+      "filename": "higher_G15_water_tank.png",
+      "prompt": "Technical cutaway diagram of water storage tank: hemisphere dome (radius 6cm) on top of cylinder (radius 6cm, height 10cm). All dimensions clearly labelled. Surface area shading on exterior. Technical plumbing diagram style.",
+      "topic": "Combined surface area",
+      "priority": "high"
+    },
+    "G19": {
+      "filename": "higher_G19_building_survey.png",
+      "prompt": "Surveyor with theodolite/total station standing 50m from tall modern building (distance marked). Two dashed lines of sight: one to roof at 62° angle of elevation, one to visible window at 38°. Window height marked with ?. Professional surveying scene.",
+      "topic": "Angles of elevation",
+      "priority": "high"
+    },
+    "G20": {
+      "filename": "higher_G20_os_map.png",
+      "prompt": "Ordnance Survey style map section showing a lake. Scale bar showing 1:25000 clearly visible. Transparent ruler overlay measuring lake at approximately 6.4cm². British countryside map aesthetic with contour lines.",
+      "topic": "Map scales",
+      "priority": "medium"
+    },
+    "P1": {
+      "filename": "higher_P1_factory_machines.png",
+      "prompt": "Factory floor with two large industrial machines labelled Machine A and Machine B. Digital reliability displays: P(A fails) = 0.3, P(B fails) = 0.5. Worker monitoring both. Industrial manufacturing setting, clean and educational.",
+      "topic": "Independent events",
+      "priority": "medium"
+    },
+    "P2": {
+      "filename": "higher_P2_loaded_die.png",
+      "prompt": "Board game setting with oversized six-sided die, the 6 face prominently shown/highlighted. Probability notation card: P(6) = x, P(not 6) = 0.8. Game board and pieces in background. Game night aesthetic with mathematical overlay.",
+      "topic": "Biased probability",
+      "priority": "medium"
+    },
+    "P5": {
+      "filename": "higher_P5_charity_game.png",
+      "prompt": "Charity fair stall with dice rolling game. Colourful prize board showing rules: Roll 6 = Win £10, Roll Odd = Win £2, Otherwise = Lose £3. Die on green felt. Fairground/fete atmosphere, fun charitable event.",
+      "topic": "Expected value",
+      "priority": "high"
+    },
+    "P6": {
+      "filename": "higher_P6_magic_boxes.png",
+      "prompt": "Magician's table with two decorated boxes labelled Box A and Box B. Box A shows 3 red, 5 blue cards visible. Box B shows 4 red, 2 blue cards. Arrow showing card transfer between boxes. Magic show atmosphere with probability overlay.",
+      "topic": "Conditional probability",
+      "priority": "high"
+    },
+    "S2": {
+      "filename": "higher_S2_box_plots.png",
+      "prompt": "Two horizontal box plots on same scale, labelled Class A (median 62, smaller box) and Class B (median 58, larger box showing greater spread). Clean statistical diagram with scale marked 0-100. Exam results comparison aesthetic.",
+      "topic": "Box plot comparison",
+      "priority": "high"
+    },
+    "S3": {
+      "filename": "higher_S3_regression.png",
+      "prompt": "Scatter graph with data points and line of best fit drawn through them. Axes labelled Hours Studied (x-axis, 0-10) and Exam Mark % (y-axis, 0-100). Equation y = 2.3x + 15 shown. Student studying at desk in background. Statistical diagram style.",
+      "topic": "Regression lines",
+      "priority": "high"
+    },
+    "S5": {
+      "filename": "higher_S5_quality_control.png",
+      "prompt": "Factory production floor with two conveyor lines from Machine A (40% label) and Machine B (60% label). Defect rate displays: 2% and 5%. Quality control inspector examining a defective component with magnifying glass. Industrial quality control aesthetic.",
+      "topic": "Conditional probability",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "totalImages": 95,
+    "styleGuidelines": [
+      "Clean and educational - suitable for GCSE students aged 14-16",
+      "British context - use £, UK settings, British spellings",
+      "Clear mathematical labels - measurements, coordinates visible",
+      "Minimal clutter - focus on the concept",
+      "Consistent colour coding - red for unknowns, blue for given values"
+    ],
+    "namingConvention": "{tier}_{code}_{description}.png",
+    "recommendedSize": "1024x1024 or 1024x768 for landscape scenes"
+  }
+}

@@ -1,0 +1,330 @@
+{
+  "styleGuide": {
+    "description": "AQA GCSE Maths Exam Paper Style",
+    "characteristics": [
+      "Black and white only - no colour",
+      "Simple line drawings with thin, consistent stroke weight",
+      "No shading, gradients, or fills",
+      "Sans-serif labels (Arial-style)",
+      "Capital letters for vertices (A, B, C)",
+      "Italic lowercase for variables (x, y, h)",
+      "Small squares for right angles",
+      "Tick marks for equal sides",
+      "Dashed lines for hidden edges or construction lines",
+      "Text: 'Not drawn accurately' on geometry diagrams"
+    ],
+    "masterPromptPrefix": "Create a black and white mathematical diagram in the style of a UK GCSE exam paper. Pure black lines on white background, no colour, no shading. Clean geometric shapes with thin consistent line weight. Sans-serif font for labels. Include 'Not drawn accurately' text. "
+  },
+  "foundation": {
+    "N2": {
+      "filename": "aqa_foundation_N2_submarine-depth.png",
+      "prompt": "Black and white line diagram showing vertical ocean cross-section. Horizontal line at top labelled '0m' for sea level. Vertical depth scale on left: 0, -20, -40, -60, -80, -100. Simple submarine shape drawn with thin black lines only, no fill - just an oval outline with small conning tower. Dotted arrow showing upward movement of 18m. Solid arrow showing downward dive. Depth labels at -45m, -27m, -81m positions. Clean technical diagram style, no shading. Text 'Not drawn accurately' in small font bottom right.",
+      "topic": "Negative numbers",
+      "priority": "high"
+    },
+    "N6": {
+      "filename": "aqa_foundation_N6_square-garden.png",
+      "prompt": "Black and white top-down view of a square. Four equal sides with small tick marks indicating equal lengths. Small circles (8 per side) evenly spaced along each edge representing fence posts. Dimension arrow along one side showing '12 m'. Corner posts clearly marked. No fill or shading. Text 'Not drawn accurately' in small font.",
+      "topic": "Square roots and perimeter",
+      "priority": "medium"
+    },
+    "N7": {
+      "filename": "aqa_foundation_N7_cube-crates.png",
+      "prompt": "Black and white isometric diagram of two cubes - larger outer cube containing smaller inner cube. Solid lines for visible edges, dashed lines for hidden edges. Dimension arrows: large cube '5 m' on three visible edges, small cube '2 m' on visible edges. Clean technical drawing style, no shading or fill. Text 'Not drawn accurately'.",
+      "topic": "Cube roots and volume",
+      "priority": "high"
+    },
+    "N8": {
+      "filename": "aqa_foundation_N8_bus-timeline.png",
+      "prompt": "Black and white timeline diagram. Horizontal number line with arrow, marked '9:00 AM' at start. Time markers every 6 minutes. Two parallel rows of markers above line: Row A with X marks every 12 minutes, Row B with O marks every 18 minutes. Points where both align marked with larger symbol. Labels 'Route A: every 12 min' and 'Route B: every 18 min'. Clean diagram style.",
+      "topic": "LCM in context",
+      "priority": "high"
+    },
+    "A2": {
+      "filename": "aqa_foundation_A2_ball-trajectory.png",
+      "prompt": "Black and white coordinate graph. Vertical axis 'h (metres)' scaled 0, 5, 10, 15, 20. Horizontal axis 't (seconds)' scaled 0, 1, 2, 3, 4. Smooth parabola curve from origin, maximum around t=2, h=20, returning to axis at t=4. Thin grid lines. Key points marked with small crosses. Formula 'h = 20t - 5t²' shown. Clean graph paper style, no colour.",
+      "topic": "Substitution into formulae",
+      "priority": "high"
+    },
+    "A5": {
+      "filename": "aqa_foundation_A5_cylinder.png",
+      "prompt": "Black and white 3D cylinder diagram. Solid ellipse for top, solid ellipse for base, two vertical lines connecting. Dimension arrow across top diameter: 'radius = 3 m'. Dimension arrow along height: '7 m'. Dashed line from centre to edge showing radius. Small right angle square where vertical meets base. Clean technical drawing, no shading. Text 'Not drawn accurately'.",
+      "topic": "Volume formula",
+      "priority": "high"
+    },
+    "A9": {
+      "filename": "aqa_foundation_A9_line-graph.png",
+      "prompt": "Black and white coordinate grid. X-axis 0 to 8, Y-axis -2 to 8. Thin grid lines. Straight line segment from point A(2, 7) to point B(6, -1). Points marked with small crosses. Labels 'A(2, 7)' and 'B(6, -1)'. Axes with arrow heads. Clean graph style, no decoration.",
+      "topic": "Equation of a line",
+      "priority": "high"
+    },
+    "A15": {
+      "filename": "aqa_foundation_A15_parabola.png",
+      "prompt": "Black and white coordinate graph. X-axis -2 to 4, Y-axis -2 to 5. Parabola y = (x-3)(x+1) crossing x-axis at x = -1 and x = 3. Vertex at (1, 4) marked with cross. Thin dotted grid lines. Axes with labels and arrow heads. Clean mathematical style.",
+      "topic": "Quadratic graphs",
+      "priority": "high"
+    },
+    "A17": {
+      "filename": "aqa_foundation_A17_ticket-prices.png",
+      "prompt": "Black and white simple diagram. Rectangle representing price board containing: 'TICKET PRICES' at top, 'Adult: £x', 'Child: half price'. Below: 5 simple stick figures (3 taller for adults, 2 shorter for children). Text 'Total: £36'. Clean minimal line drawing style.",
+      "topic": "Forming equations",
+      "priority": "medium"
+    },
+    "A19": {
+      "filename": "aqa_foundation_A19_cafe-order.png",
+      "prompt": "Black and white diagram showing two equations visually. Line 1: Three cup symbols + two different cup symbols = £13. Line 2: Two cup symbols + one cup symbol = £8. Cups as simple outlines only - circles with small handles. Labels 'coffee' and 'tea' near respective cups. Clean minimal style.",
+      "topic": "Simultaneous equations",
+      "priority": "high"
+    },
+    "A21": {
+      "filename": "aqa_foundation_A21_number-line.png",
+      "prompt": "Black and white vertical number line from 100 to 220 cm. Solid circle at 120 labelled 'minimum'. Open circle at 200 labelled 'maximum'. Bold line segment between 120 and 200 showing valid range. Arrows pointing to the valid region. Label 'Height h cm'. Clean diagram style.",
+      "topic": "Writing inequalities",
+      "priority": "high"
+    },
+    "A23": {
+      "filename": "aqa_foundation_A23_theatre-rows.png",
+      "prompt": "Black and white bird's eye view diagram. Four curved rows of rectangles (seats) getting wider from front to back. Row labels: 'Row 1: 15 seats', 'Row 2: 19 seats', 'Row 3: 23 seats', 'Row 4: 27 seats'. Rectangle at front labelled 'STAGE'. Clean architectural plan style.",
+      "topic": "Arithmetic sequences",
+      "priority": "high"
+    },
+    "R4": {
+      "filename": "aqa_foundation_R4_bar-model.png",
+      "prompt": "Black and white bar model diagram. Long rectangle divided into 9 equal parts with vertical lines. First 2 parts bracketed below: 'Ann'. Next 3 parts: 'Ben'. Final 4 parts: 'Carl'. '£270' written above whole bar. '2 : 3 : 4' written below. Clean diagram style.",
+      "topic": "Sharing in ratio",
+      "priority": "high"
+    },
+    "R5": {
+      "filename": "aqa_foundation_R5_ratio-bar.png",
+      "prompt": "Black and white bar model. Rectangle divided into 8 equal parts. First 3 parts bracketed and labelled 'Cats'. Remaining 5 parts labelled 'Dogs'. '40 animals' above. '3 : 5' below. Clean minimal style.",
+      "topic": "Ratio problems",
+      "priority": "high"
+    },
+    "G1": {
+      "filename": "aqa_foundation_G1_cube-labelled.png",
+      "prompt": "Black and white 3D cube diagram. Solid lines for visible edges, dashed lines for 3 hidden edges. Vertices labelled A, B, C, D, E, F, G, H. Small arrows pointing to one vertex labelled 'vertex', one edge labelled 'edge', one face labelled 'face'. Clean isometric style.",
+      "topic": "3D shape properties",
+      "priority": "high"
+    },
+    "G3": {
+      "filename": "aqa_foundation_G3_angles-point.png",
+      "prompt": "Black and white diagram. Three straight lines meeting at a central point. Small arcs marking the three angles between lines. Two angles labelled '127°' and '85°'. Third angle labelled 'x'. Clean geometric diagram. Text 'Not drawn accurately'.",
+      "topic": "Angles at a point",
+      "priority": "high"
+    },
+    "G4": {
+      "filename": "aqa_foundation_G4_intersecting-lines.png",
+      "prompt": "Black and white diagram of two straight lines crossing. Four angles formed at intersection, each marked with small arc. One angle labelled '65°'. Other three angles each labelled with '?'. Clean line diagram. Text 'Not drawn accurately'.",
+      "topic": "Angles on lines",
+      "priority": "high"
+    },
+    "G5": {
+      "filename": "aqa_foundation_G5_regular-polygon.png",
+      "prompt": "Black and white regular polygon with approximately 15 sides (exact count less important). Small tick marks on a few sides showing equal lengths. One interior angle marked with arc and labelled '156°'. Clean geometric line drawing. Text 'Not drawn accurately'.",
+      "topic": "Polygon angles",
+      "priority": "high"
+    },
+    "G8": {
+      "filename": "aqa_foundation_G8_vector.png",
+      "prompt": "Black and white coordinate grid 0 to 8 on both axes. Point P marked with cross at (2, 5), labelled 'P(2, 5)'. Arrow from P to (6, 2) with arrow head. Vector notation in column form beside arrow. Grid lines visible. Clean graph style.",
+      "topic": "Vectors",
+      "priority": "high"
+    },
+    "G9": {
+      "filename": "aqa_foundation_G9_reflection.png",
+      "prompt": "Black and white coordinate grid. Triangle ABC with vertices at (1,1), (3,1), (2,4) drawn with solid lines, vertices labelled. Dashed diagonal line y = x through origin. Reflected triangle A'B'C' on other side of mirror line, labelled. Clean geometric style.",
+      "topic": "Reflection",
+      "priority": "high"
+    },
+    "G11": {
+      "filename": "aqa_foundation_G11_circle-chord.png",
+      "prompt": "Black and white circle. Centre marked with dot and labelled 'O'. Horizontal chord AB drawn across circle. Radius from O to edge labelled '10 cm'. Dashed perpendicular line from O to chord, meeting at point M. Distance OM labelled '8 cm'. Small right angle square at M. Chord length labelled 'x cm'. Text 'Not drawn accurately'.",
+      "topic": "Circle theorems",
+      "priority": "medium"
+    },
+    "G13": {
+      "filename": "aqa_foundation_G13_cylinder-cone.png",
+      "prompt": "Black and white side elevation. Cylinder at bottom: two vertical lines with ellipse top and bottom. Cone on top: two diagonal lines meeting at apex, sharing base with cylinder top. Dashed vertical centre line. Labels: 'radius = 3 m' with arrow across base, '6 m' for cylinder height, '4 m' for cone height. Text 'Not drawn accurately'.",
+      "topic": "Combined volumes",
+      "priority": "high"
+    },
+    "G14": {
+      "filename": "aqa_foundation_G14_triangle-coords.png",
+      "prompt": "Black and white coordinate grid. Triangle with vertices at (1,2), (5,2), (3,6). Vertices labelled A, B, C. Grid squares visible. Axes labelled with numbers. Note: 'Each square = 1 metre'. Clean graph style.",
+      "topic": "Area from coordinates",
+      "priority": "medium"
+    },
+    "G15": {
+      "filename": "aqa_foundation_G15_circle-circumference.png",
+      "prompt": "Black and white circle. Centre marked with dot 'O'. Curved arrow along circumference with label 'Circumference = 31.4 m'. Radius line from centre to edge with label 'r = ?'. Clean geometric style. Text 'Not drawn accurately'.",
+      "topic": "Circle area from circumference",
+      "priority": "high"
+    },
+    "G16": {
+      "filename": "aqa_foundation_G16_sector.png",
+      "prompt": "Black and white sector diagram (pie slice shape). Two straight edges (radii) each labelled '15 cm'. Curved edge (arc) labelled '12 cm'. Angle at centre marked with arc and labelled 'θ = ?'. Clean geometric diagram. Text 'Not drawn accurately'.",
+      "topic": "Arc length",
+      "priority": "high"
+    },
+    "G19": {
+      "filename": "aqa_foundation_G19_ladder.png",
+      "prompt": "Black and white right-angled triangle diagram. Vertical line (wall) on right. Horizontal line (ground) at bottom. Diagonal line (ladder) connecting them. Small right angle square in corner. Labels: '5 m' along diagonal, '1.5 m' along horizontal, '? m' along vertical. Text 'Not drawn accurately'.",
+      "topic": "Pythagoras theorem",
+      "priority": "high"
+    },
+    "G20": {
+      "filename": "aqa_foundation_G20_elevation.png",
+      "prompt": "Black and white diagram. Vertical line on right representing building/tower. Horizontal ground line. Point on ground labelled '50 m' from building base. Dashed line from point to top of building. Angle at ground point marked '32°'. Height of building labelled 'h = ?'. Text 'Not drawn accurately'.",
+      "topic": "Trigonometry",
+      "priority": "high"
+    },
+    "P6": {
+      "filename": "aqa_foundation_P6_venn.png",
+      "prompt": "Black and white Venn diagram. Rectangle outline. Two overlapping circles inside. Left circle labelled 'Pizza'. Right circle labelled 'Burgers'. Numbers in each region (left only, overlap, right only, outside both). Rectangle labelled '30 students'. Clean diagram style.",
+      "topic": "Venn diagrams",
+      "priority": "high"
+    },
+    "P7": {
+      "filename": "aqa_foundation_P7_tree.png",
+      "prompt": "Black and white probability tree diagram. Three levels for three coin flips. Each branch splits into H and T. Probability 1/2 on each branch. Eight final outcomes listed: HHH, HHT, HTH, HTT, THH, THT, TTH, TTT. Clean tree diagram style.",
+      "topic": "Sample space",
+      "priority": "medium"
+    },
+    "P8": {
+      "filename": "aqa_foundation_P8_tree-replacement.png",
+      "prompt": "Black and white probability tree. First branch from 'Pick 1': Red (4/10) and Blue (6/10). Second branches from each for 'Pick 2': adjusted fractions (3/9, 6/9 from Red; 4/9, 5/9 from Blue). Outcomes and probabilities at ends. Clean labelled tree.",
+      "topic": "Probability without replacement",
+      "priority": "high"
+    },
+    "S4": {
+      "filename": "aqa_foundation_S4_distance-time.png",
+      "prompt": "Black and white graph on grid. X-axis: 'Time (hours)' 0 to 2.5. Y-axis: 'Distance (km)' 0 to 100. Plotted line: diagonal from (0,0) to (1,60), horizontal from (1,60) to (1.5,60), diagonal from (1.5,60) to (2,100). Grid lines visible. Clean graph style.",
+      "topic": "Distance-time graphs",
+      "priority": "high"
+    },
+    "S5": {
+      "filename": "aqa_foundation_S5_mean.png",
+      "prompt": "Black and white diagram. Five boxes in a row. Four boxes contain: 8, 10, 14, 15. Fifth box contains '?'. Text above: 'Mean = 12 hours'. Clean simple diagram.",
+      "topic": "Working with mean",
+      "priority": "high"
+    }
+  },
+  "higher": {
+    "A2": {
+      "filename": "aqa_higher_A2_box-algebra.png",
+      "prompt": "Black and white 3D open box diagram in isometric view. Three visible dimensions labelled with expressions: '(2x + 3)', '(x - 4)', '(x + 1)'. Dashed lines for hidden edges. Clean technical drawing. Text 'Not drawn accurately'.",
+      "topic": "Expanding brackets",
+      "priority": "high"
+    },
+    "A13": {
+      "filename": "aqa_higher_A13_sequence-pattern.png",
+      "prompt": "Black and white dot pattern diagram. Four rows building triangular pattern. Row 1: 5 dots. Row 2: 12 dots. Row 3: 23 dots. Row 4: 38 dots. Each row labelled with 'n = ' and count. Clean mathematical diagram.",
+      "topic": "Quadratic sequences",
+      "priority": "high"
+    },
+    "A15": {
+      "filename": "aqa_higher_A15_simultaneous-graph.png",
+      "prompt": "Black and white coordinate graph. Grid visible. Parabola for y = x² - 4x + 5 drawn as smooth curve. Straight line for y = 2x - 3. Point of tangency/intersection marked with cross and coordinates. Equations labelled. Clean graph style.",
+      "topic": "Simultaneous equations",
+      "priority": "high"
+    },
+    "A17": {
+      "filename": "aqa_higher_A17_projectile.png",
+      "prompt": "Black and white graph. X-axis 't (seconds)' 0 to 5. Y-axis 'h (metres)' 0 to 25. Inverted parabola from origin, maximum at (2, 20), returning to x-axis at (4, 0). Maximum point marked with dashed vertical line. Key points labelled. Grid visible. Clean style.",
+      "topic": "Completing the square",
+      "priority": "high"
+    },
+    "A21": {
+      "filename": "aqa_higher_A21_discriminant.png",
+      "prompt": "Black and white graph showing three parabolas on same axes. One crossing x-axis twice, one touching x-axis once, one above x-axis entirely. Labels: 'b² - 4ac > 0 (2 roots)', 'b² - 4ac = 0 (1 root)', 'b² - 4ac < 0 (0 roots)'. Clean mathematical diagram.",
+      "topic": "Discriminant",
+      "priority": "medium"
+    },
+    "A24": {
+      "filename": "aqa_higher_A24_football-path.png",
+      "prompt": "Black and white trajectory diagram. Horizontal ground line. Parabola from origin reaching maximum then returning to ground. Maximum height marked '20 m' with dashed vertical. Times marked: 't = 0', 't = 2 s' at max, 't = 4 s' at landing. Axes labels: 'h (metres)', 't (seconds)'. Text 'Not drawn accurately'.",
+      "topic": "Quadratic maximum",
+      "priority": "high"
+    },
+    "R2": {
+      "filename": "aqa_higher_R2_workers.png",
+      "prompt": "Black and white bar diagram. Rectangle (wall) divided into 8 equal sections. First 3 sections shaded with diagonal lines, labelled 'Completed: 3 days, 12 workers'. Remaining 5 sections empty, labelled 'Remaining: 8 workers'. Clean diagram style.",
+      "topic": "Inverse proportion",
+      "priority": "high"
+    },
+    "G1": {
+      "filename": "aqa_higher_G1_nonagon.png",
+      "prompt": "Black and white regular 9-sided polygon (nonagon). Equal sides shown with tick marks. One interior angle marked with arc and labelled '140°'. Clean geometric line drawing. Text 'Not drawn accurately'.",
+      "topic": "Polygon angles",
+      "priority": "high"
+    },
+    "G3": {
+      "filename": "aqa_higher_G3_trapezium.png",
+      "prompt": "Black and white trapezium. Top parallel side labelled '8 m'. Bottom parallel side labelled '12 m'. Dashed vertical line between parallel sides showing height, labelled 'h = ?'. Small right angle squares where height meets parallel sides. 'Area = 50 m²' noted. Text 'Not drawn accurately'.",
+      "topic": "Trapezium area",
+      "priority": "high"
+    },
+    "G5": {
+      "filename": "aqa_higher_G5_cone-cylinder.png",
+      "prompt": "Black and white side-by-side diagrams. Left: cylinder outline with 'r' radius and 'h' height, labelled 'Volume = 300π cm³'. Right: cone outline with same 'r' and 'h', labelled 'Volume = ?'. Equal dimensions indicated. Text 'Not drawn accurately'.",
+      "topic": "Volume comparison",
+      "priority": "high"
+    },
+    "G9": {
+      "filename": "aqa_higher_G9_sector-radians.png",
+      "prompt": "Black and white sector. Two radii each labelled '12 cm'. Arc labelled '15 cm'. Angle at centre marked with arc and labelled 'θ = ? radians'. Clean geometric diagram. Text 'Not drawn accurately'.",
+      "topic": "Radians and sectors",
+      "priority": "high"
+    },
+    "G11": {
+      "filename": "aqa_higher_G11_cuboid-diagonal.png",
+      "prompt": "Black and white 3D cuboid. Dimensions labelled '3 cm', '4 cm', '12 cm' on visible edges. Dashed line drawn from one corner through interior to opposite corner (space diagonal). Diagonal labelled 'd = ?'. Hidden edges as dashed lines. Text 'Not drawn accurately'.",
+      "topic": "3D Pythagoras",
+      "priority": "high"
+    },
+    "G15": {
+      "filename": "aqa_higher_G15_hemisphere-cylinder.png",
+      "prompt": "Black and white composite shape. Cylinder with hemisphere on top, shown in cross-section or 3D outline. Radius '6 cm' marked on both. Cylinder height '10 cm' marked. Dashed lines for hidden parts. Text 'Not drawn accurately'.",
+      "topic": "Combined surface area",
+      "priority": "high"
+    },
+    "G19": {
+      "filename": "aqa_higher_G19_two-elevations.png",
+      "prompt": "Black and white diagram. Vertical building outline with window marked partway up and roof at top. Point on ground line '50 m' from building. Two dashed sight lines: lower one at '38°' to window, upper one at '62°' to roof. Window height labelled 'h = ?'. Text 'Not drawn accurately'.",
+      "topic": "Angles of elevation",
+      "priority": "high"
+    },
+    "P5": {
+      "filename": "aqa_higher_P5_expected-value.png",
+      "prompt": "Black and white table with grid lines. Headers: 'Outcome', 'Probability', 'Winnings'. Row 1: 'Roll 6', '1/6', '+£10'. Row 2: 'Roll 1,3,5', '3/6', '+£2'. Row 3: 'Roll 2,4', '2/6', '-£3'. Clean table format.",
+      "topic": "Expected value",
+      "priority": "high"
+    },
+    "P6": {
+      "filename": "aqa_higher_P6_two-stage-tree.png",
+      "prompt": "Black and white probability tree. Stage 1 'Box A': branches 'Red 3/8' and 'Blue 5/8'. Stage 2 'Box B' from each: four branches with adjusted probabilities. All probabilities labelled on branches. Final outcomes listed. Clean tree diagram.",
+      "topic": "Conditional probability",
+      "priority": "high"
+    },
+    "S2": {
+      "filename": "aqa_higher_S2_box-plots.png",
+      "prompt": "Black and white diagram with two horizontal box plots on same scale. Scale 0 to 100 on x-axis. Top box plot labelled 'Class A': median line at 62, box showing IQR = 15. Bottom box plot labelled 'Class B': median at 58, larger box showing IQR = 24. Whiskers extending to min/max. Clean statistical style.",
+      "topic": "Box plot comparison",
+      "priority": "high"
+    },
+    "S3": {
+      "filename": "aqa_higher_S3_regression.png",
+      "prompt": "Black and white scatter graph. X-axis 'Hours studied' 0-10. Y-axis 'Exam mark %' 0-100. Approximately 10 cross marks showing positive correlation. Line of best fit drawn through points. Equation 'y = 2.3x + 15' labelled. Grid visible. Clean graph style.",
+      "topic": "Regression lines",
+      "priority": "high"
+    }
+  },
+  "metadata": {
+    "style": "AQA GCSE Exam Paper",
+    "totalImages": 60,
+    "namingConvention": "aqa_{tier}_{code}_{description}.png",
+    "recommendedFormat": "PNG with transparent or white background",
+    "recommendedSize": "800x600 or 1:1 aspect ratio",
+    "colourMode": "Grayscale or pure black/white"
+  }
+}

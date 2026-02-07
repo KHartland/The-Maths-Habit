@@ -1,0 +1,481 @@
+THE MATHS HABIT - HIGGSFIELD IMAGE PROMPTS V4
+==============================================
+
+STYLE GUIDE: Modern, sophisticated, realistic. Suitable for teenagers aged 14-16.
+Avoid: Cartoonish, childish, overly cute illustrations.
+Aim for: Clean infographics, realistic photography, sleek diagrams, editorial style.
+
+NOTE: Answers have been removed from all prompts - only given information shown.
+Images provide visual context without revealing calculated values.
+
+==============================================
+FOUNDATION TIER - NUMBER
+==============================================
+
+--- N1: Juice Bottles ---
+Filename: N1_juice_bottles.png
+
+Professional product photography of four glass juice bottles on a minimalist white supermarket shelf. Bottles arranged smallest to largest with sophisticated labels: Small (orange juice), Medium (red berry), Large (yellow tropical), Family (purple grape). Modern minimalist label design with clean typography showing only bottle names and sizes - NO PRICES SHOWN. Shallow depth of field, studio lighting, premium retail aesthetic. High-end commercial photography style, 4K.
+
+---
+
+--- N2: Submarine Depth ---
+Filename: N2_submarine_depth.png
+
+Technical cross-section diagram of ocean depth. Clean infographic style with gradient blue ocean from light surface to dark depths. Modern military-style submarine silhouette in dark grey/black. Vertical depth scale on left side: 0 to -100m with clean sans-serif typography and tick marks every 10m. No labels on the submarine or trajectory - just the depth scale as reference. Professional technical illustration style, like a naval operations diagram. Sleek, modern, sophisticated.
+
+---
+
+--- N6: Square Garden ---
+Filename: N6_square_garden.png
+
+Architectural site plan view of a square garden plot. Professional landscape architecture style. Muted green grass texture, clean boundary lines. Simple square shape with neat edges. Text overlay: "Area = 144 m²" and "Find the perimeter". NO dimension lines showing side length - the student must calculate this. Minimalist, technical, like a professional garden design blueprint. Neutral colour palette, clean typography.
+
+---
+
+--- N7: Storage Cubes ---
+Filename: N7_storage_cubes.png
+
+Clean 3D technical render of two cubes - large wireframe cube containing smaller solid cube inside. Industrial design aesthetic. Large cube shown as transparent wireframe with label "Volume = 125 m³" - NO side length shown. Smaller cube inside with wood or metal texture, dimensions "2 m × 2 m × 2 m" labelled. Text: "How many small cubes fit inside?". Soft ambient occlusion shadows. White studio background. Modern CAD render style, professional product visualisation.
+
+---
+
+--- N8: Bus Stop ---
+Filename: N8_bus_stop.png
+
+Modern urban street photography of a British bus station. Sleek contemporary buses - one red labelled "Route A - every 12 min", one blue labelled "Route B - every 18 min" - at a modern glass shelter. Digital clock showing "9:00 AM". Clean, professional transport photography. Natural daylight, slight motion blur suggesting city energy. Editorial travel photography style, sophisticated urban aesthetic.
+
+---
+
+--- N12: Clothing Sale ---
+Filename: N12_clothing_sale.png
+
+High-end retail window display photography. Minimalist "15% OFF" signage with sophisticated typography. Quality jacket on sleek mannequin, sale price tag showing "NOW £68". Contemporary boutique interior, soft natural lighting. Fashion editorial style, aspirational but accessible. Clean, modern retail aesthetic.
+
+---
+
+--- N13: Living Room Floor Plan ---
+Filename: N13_floor_plan.png
+
+Professional architectural floor plan. Clean CAD-style drawing of rectangular room. Precise dimension annotations: 4.5m × 3m. Light wood floor indication, minimal wall hatching. Professional architectural drawing conventions. Scale bar included. Clean, technical, like a real estate or interior design document.
+
+---
+
+--- N16: Field Measurement ---
+Filename: N16_field_measurement.png
+
+Aerial drone photography of a green rectangular field. Professional surveying context - visible measurement markers at corners. Clean overlay graphics showing approximate dimensions "≈12 m" and "≈8 m". British countryside setting. High-quality aerial photography with subtle graphic overlay. Documentary or land survey aesthetic.
+
+---
+
+==============================================
+FOUNDATION TIER - ALGEBRA
+==============================================
+
+--- A1: Plumber ---
+Filename: A1_plumber.png
+
+Professional trades photography. Skilled plumber in clean navy workwear beside modern white van. Confident, professional pose. Tablet or clipboard visible showing digital invoice: "Call-out: £30, Hourly rate: £n per hour". Contemporary British residential setting. Editorial portrait style, like a professional services advertisement. Authentic, trustworthy, modern.
+
+---
+
+--- A2: Ball Trajectory ---
+Filename: A2_ball_trajectory.png
+
+Clean data visualisation style graph. Minimal grid on off-white background. Sleek axes with "h (metres)" vertical and "t (seconds)" horizontal, scale marked but no plotted points. Equation "h = 20t - 5t²" prominently displayed. Text: "Find the height at t = 3 seconds". Small basketball or football icon. Infographic style like a sports science analysis. Professional, clean, modern.
+
+---
+
+--- A5: Cylindrical Water Tank ---
+Filename: A5_water_tank.png
+
+Technical 3D render of industrial water tank. Semi-transparent cylinder showing water level. Professional engineering diagram style. Clean dimension callouts: radius 3m, height 7m. Subtle material textures - brushed metal or industrial grey. CAD visualisation aesthetic. Clean white or grey background. Professional, technical, industrial design.
+
+---
+
+--- A7: Taxi ---
+Filename: A7_taxi.png
+
+Cinematic street photography of classic black London taxi. Evening city scene, atmospheric lighting from street lamps. Taxi meter visible through window. Urban British setting with period architecture softly blurred. Editorial photography style, like a travel magazine feature. Moody, sophisticated, authentic London atmosphere.
+
+---
+
+--- A9: Zipline Coordinates ---
+Filename: A9_zipline.png
+
+Clean coordinate grid infographic. Minimal grey grid on white background. Sleek blue axes with clear labels. Two points marked: A(2,7) and B(6,-1) with small dots. Coordinates labelled in clean typography. Small adventure/zipline silhouette suggesting context. Modern data visualisation aesthetic. No line drawn between points.
+
+---
+
+--- A15: Parabola Turning Point ---
+Filename: A15_parabola.png
+
+Elegant mathematical visualisation on dark background. Subtle grid overlay with axes marked. Equation "y = (x-3)(x+1)" prominently displayed in refined typography. Text: "Find the turning point". No curve drawn - empty axes for reference only. Sophisticated, like a physics textbook illustration. Beautiful but mathematical.
+
+---
+
+--- A17: Cinema ---
+Filename: A17_cinema.png
+
+Modern cinema foyer photography. Contemporary multiplex interior with ambient lighting. Sleek digital pricing display: "Adults: £x, Children: Half Price". Family group of 3 adults and 2 children at counter, natural candid composition. Small text: "Total: £36". Modern entertainment venue aesthetic. Clean, aspirational, like a cinema chain promotional image.
+
+---
+
+--- A19: Cafe Order ---
+Filename: A19_cafe.png
+
+Overhead flat-lay photography of cafe table. Minimalist styling - quality ceramic cups, artisan coffee and tea. Two separate groupings: "Order 1: 3 coffees + 2 teas = £13" and "Order 2: 2 coffees + 1 tea = £8" shown on paper receipts. Clean wooden table surface. Soft natural lighting. Contemporary food photography style. Sophisticated, relatable, modern.
+
+---
+
+--- A21: Height Restriction ---
+Filename: A21_height_restriction.png
+
+Theme park safety signage photography. Modern height measurement board with clear scale 100-220cm. Professional safety graphics indicating minimum 120cm and maximum 200cm zones. Roller coaster structure visible in background. Clean, official, like genuine theme park safety documentation. Professional but exciting context.
+
+---
+
+--- A23: Theatre Seating ---
+Filename: A23_theatre.png
+
+Architectural plan view of theatre seating. Professional venue layout diagram. Elegant curved rows with visible seat counts increasing towards back: Row 1 (15), Row 2 (19), Row 3 (23), continuing pattern. Stage area indicated. Clean technical drawing style with sophisticated colour palette - burgundy seats, gold accents. Like a professional theatre booking system diagram.
+
+---
+
+--- A26: Fountain in Park ---
+Filename: A26_fountain.png
+
+Aerial/plan view of park with coordinate overlay. Elegant landscape plan showing circular fountain at origin. Clean coordinate grid integrated subtly. Bench icon at position (5,12) labelled. Text: "Find the equation of the fountain's circular edge". Professional landscape architecture or urban planning aesthetic. Muted greens and blues, sophisticated cartography style.
+
+---
+
+==============================================
+FOUNDATION TIER - RATIO & PROPORTION
+==============================================
+
+--- R2: Map Scale ---
+Filename: R2_map_scale.png
+
+Close-up photography of Ordnance Survey map with measuring. Hands holding quality ruler against map showing lake measuring 3.2 cm on map. Scale "1:50,000" visible in map legend. Authentic British topographical map with contour lines. Natural lighting, outdoor adventure context. Editorial travel or hiking magazine aesthetic.
+
+---
+
+--- R4: Raffle Winners ---
+Filename: R4_raffle.png
+
+Authentic event photography of three young adults celebrating with raffle tickets. Genuine excitement, natural expressions. Prize banner "£270" visible. Different coloured tickets visible (first person 2 tickets, second 3 tickets, third 4 tickets - suggesting ratio). Community event setting. Documentary photography style, authentic and relatable. Not staged or cheesy.
+
+---
+
+--- R5: Animal Shelter ---
+Filename: R5_animal_shelter.png
+
+Professional animal shelter photography. Modern, clean facility interior. Cats and dogs in well-maintained spaces. Sign visible: "Ratio of cats to dogs is 3:5" and "Total: 40 animals". Warm, caring atmosphere without being saccharine. Documentary or charity campaign photography style. Authentic, emotive, mature.
+
+---
+
+--- R7: Hotel Painters ---
+Filename: R7_hotel_painters.png
+
+Professional construction/renovation photography. Hotel lobby mid-refurbishment. Workers in clean white overalls, professional equipment. Visible sign or schedule: "6 decorators - estimated 8 days". Grand interior partially covered with dust sheets. Editorial architecture or construction industry photography. Professional, dynamic, authentic workplace scene.
+
+---
+
+--- R14: Delivery Van ---
+Filename: R14_delivery_van.png
+
+In-vehicle photography of delivery driver's perspective. Modern dashboard with satnav showing "180 km" and "2h 15min". Motorway visible through windscreen. Professional, clean cab interior. Motion and journey feeling. Commercial fleet or logistics company photography style. Professional, contemporary.
+
+---
+
+==============================================
+FOUNDATION TIER - GEOMETRY
+==============================================
+
+--- G1: Cube Properties ---
+Filename: G1_cube.png
+
+Clean 3D technical diagram of cube. Professional CAD render style. Transparent/wireframe edges with vertices highlighted. Sophisticated labelling: "Vertex", "Edge", "Face" with minimal callout lines. Subtle shadows on white background. Technical illustration style like an engineering or design textbook. Clean, precise, professional.
+
+---
+
+--- G3: Roundabout Angles ---
+Filename: G3_roundabout.png
+
+Aerial view diagram of three-way roundabout. Clean technical illustration style like a driving theory test or highway code diagram. Roads in grey/white, roundabout clearly marked. Angles between roads shown with clean arcs: two angles labelled "127°" and "85°", third angle marked with "?" symbol. Professional road planning aesthetic. Clear, informative, mature.
+
+---
+
+--- G4: Railway Crossing ---
+Filename: G4_railway_crossing.png
+
+Technical diagram of railway level crossing from above. Clean infrastructure illustration style. Parallel tracks crossing road at angle. One angle marked as "65°", other three angles marked with "?" symbols. Like a transport engineering or safety documentation diagram. Clean, technical, precise.
+
+---
+
+--- G5: Regular Polygon Patio ---
+Filename: G5_polygon_patio.png
+
+Landscape architecture plan of polygon-shaped patio (regular polygon, sides not counted). Professional garden design drawing. Stone/paving texture in muted tones. Clean geometric outline with one interior angle marked as "156°". Text: "Find the number of sides". Surrounding garden indicated subtly. Architectural drawing conventions. Sophisticated, professional design document style.
+
+---
+
+--- G8: Vector Translation ---
+Filename: G8_vector.png
+
+Clean coordinate grid infographic. Minimal design on white background. Professional axes with clear scale 0-8. Starting point P marked at (2,5). Vector arrow showing translation with label "(4, -3)". End point marked with "?" symbol. Modern data visualisation or physics diagram aesthetic. Clean, professional.
+
+---
+
+--- G9: Reflection ---
+Filename: G9_reflection.png
+
+Clean geometric diagram on white background. Triangle with vertices labelled A, B, C at positions (1,1), (3,1), (2,4) in solid colour. Mirror line y=x shown as dashed line and labelled. Space on other side empty for reflected triangle. Text: "Draw the reflection". Professional mathematical illustration style. Clean, precise, textbook quality.
+
+---
+
+--- G11: Circle Chord ---
+Filename: G11_circle_chord.png
+
+Technical geometry diagram. Circle with centre O marked. Horizontal chord drawn across. Radius labelled "10 cm", perpendicular distance from centre to chord labelled "8 cm". Right angle symbol at intersection. Chord length marked with "? cm". Clean mathematical illustration with professional notation. Elegant, precise.
+
+---
+
+--- G13: Grain Silo ---
+Filename: G13_grain_silo.png
+
+Technical illustration of grain silo - cylinder with conical roof. Architectural elevation style. Clean outline with professional dimension annotations: radius 3m, cylinder height 6m, cone height 4m. Subtle agricultural context in background. Like an agricultural engineering or architecture diagram. Professional, technical, contextual.
+
+---
+
+--- G14: Triangle Coordinates ---
+Filename: G14_triangle.png
+
+Coordinate geometry diagram. Triangle plotted on clean grid at points (1,2), (5,2), (3,6) with vertices labelled. Professional infographic style with clear labels. Scale indicator "1m per unit". Text: "Find the area". Clean, sophisticated presentation.
+
+---
+
+--- G15: Circular Pond ---
+Filename: G15_pond.png
+
+Aerial photograph of circular garden pond with geometric overlay. Real pond with water plants visible. Clean graphic overlay showing circumference measurement "31.4 m" around edge and radius line with "r = ?". Text: "Find the area". Elegant combination of photography and technical graphics. Landscape or garden design documentation style.
+
+---
+
+--- G16: Pizza Sector ---
+Filename: G16_pizza_sector.png
+
+High-quality food photography of single pizza slice on clean plate. Professional food styling. Subtle geometric overlay: two radius lines labelled "15 cm", arc (crust) length labelled "12 cm", angle marked "θ = ?". Clean, minimal graphic treatment on professional food photograph. Food magazine meets mathematics. Sophisticated, appetising.
+
+---
+
+--- G19: Ladder Safety ---
+Filename: G19_ladder.png
+
+Professional safety or construction photography. Real ladder against brick wall. Clean geometric overlay showing right triangle: ladder length "5 m", ground distance from wall "1.5 m", height reached marked "? m". Right angle symbol at wall-ground corner. Safety context - hard hat visible. Health and safety documentation aesthetic. Professional, realistic, practical.
+
+---
+
+--- G20: Surveying ---
+Filename: G20_surveying.png
+
+Professional surveying photography. Surveyor with theodolite equipment standing at marked position. Church tower or tall building in background. Clean graphic overlay showing: horizontal distance "50 m", angle of elevation "32°", height of building marked "h = ?". Documentary or engineering photography style. Professional, authentic, educational.
+
+---
+
+==============================================
+FOUNDATION TIER - PROBABILITY
+==============================================
+
+--- P2: Sweet Selection ---
+Filename: P2_sweets.png
+
+Clean product photography of clear bag containing sweets. Exactly 3 red strawberry sweets and 7 brown cola sweets clearly visible and countable. Minimalist styling on white surface. Premium confectionery photography style. Clean, clear, sophisticated.
+
+---
+
+--- P6: Venn Diagram ---
+Filename: P6_venn.png
+
+Modern infographic Venn diagram. Clean, professional design on white background. Two overlapping circles with sophisticated colour palette (coral and teal). Labels "Pizza" and "Burgers". Regions empty or marked with "?" for students to complete. "30 students surveyed" label. Contemporary data visualisation style like a business or research infographic.
+
+---
+
+--- P7: Probability Game ---
+Filename: P7_probability.png
+
+Stylish flat-lay of three coins on restaurant table showing mixed heads and tails. Elegant promotional card: "FLIP 3 COINS FOR YOUR DISCOUNT". Clean, sophisticated restaurant setting. No tree diagram shown - just the scenario setup. Professional food/lifestyle photography. Sophisticated restaurant promotion aesthetic.
+
+---
+
+--- P8: Lucky Dip ---
+Filename: P8_lucky_dip.png
+
+Event photography of prize draw at summer fair. Elegant container with wrapped prizes - 4 red and 6 blue clearly visible and countable. Natural, candid moment of anticipation. British fete or charity event setting. Text: "Two prizes drawn without replacement". Documentary photography style, authentic atmosphere. Mature, genuine, not childish.
+
+---
+
+==============================================
+FOUNDATION TIER - STATISTICS
+==============================================
+
+--- S2: Pie Chart ---
+Filename: S2_pie_chart.png
+
+Professional infographic pie chart. Modern data visualisation design. One segment for Football with angle marked as "108°", other segments for Basketball, Tennis, Swimming in sophisticated colour palette (angles not marked). Clean typography: "Favourite Sports - 60 students surveyed". Contemporary business or editorial infographic style. Clean, professional, informative.
+
+---
+
+--- S4: Distance-Time Graph ---
+Filename: S4_distance_time.png
+
+Clean line graph infographic. Professional data visualisation style. Axes clearly labelled: Time (hours) 0-2.5, Distance (km) 0-100. Journey line plotted: rises steeply to 60km at 1hr, flat horizontal line until 1.5hr (stopped), then rises steeply to 100km at 2hr. Text: "Find the average speed for the whole journey". Minimal, modern design. Like a logistics or transport analysis graphic.
+
+---
+
+--- S5: Screen Time ---
+Filename: S5_screen_time.png
+
+Contemporary lifestyle photography of five teenagers with phones. Diverse group, natural poses, authentic setting. Clean graphic overlay showing screen times above each person: "8 hrs", "10 hrs", "?", "14 hrs", "15 hrs". Text: "The mean is 12 hours. Find the missing value." Modern editorial or social research photography style. Relatable, current, authentic.
+
+---
+
+==============================================
+HIGHER TIER - ALGEBRA
+==============================================
+
+--- A2-H: Algebraic Box ---
+Filename: higher_A2_box.png
+
+Professional 3D product render of open cardboard box. Clean CAD style on white background. Dimensions labelled with algebraic expressions: length "(2x + 3)", width "(x - 4)", height "(x + 1)". Realistic cardboard material. Text: "Find the volume". Product design or packaging engineering visualisation style. Professional, technical, sophisticated.
+
+---
+
+--- A13-H: Quadratic Sequence ---
+Filename: higher_A13_mosaic.png
+
+Architectural photography of decorative tile pattern. Sophisticated Mediterranean or Moroccan tilework. Pattern showing rows with increasing tiles: Row 1 has 5 tiles, Row 2 has 12 tiles, Row 3 has 23 tiles, Row 4 has 38 tiles. Labels indicating row numbers and counts. Text: "Find the nth term". Art and architecture photography style. Beautiful, cultural, mathematical pattern in real-world context.
+
+---
+
+--- A15-H: Simultaneous Equations Graph ---
+Filename: higher_A15_graph.png
+
+Clean mathematical graph with axes marked but curves not drawn. Professional textbook illustration quality. Text showing equations: "y = x² - 4x + 5" and "y = 2x - 3". Instructions: "Sketch both curves and find where they intersect". Sophisticated colour palette on clean background. University-level mathematical visualisation aesthetic.
+
+---
+
+--- A17-H: Projectile Motion ---
+Filename: higher_A17_projectile.png
+
+Sports photography of footballer about to kick ball, dynamic pose. Clean pitch background. Overlay showing equation "h = 20t - 5t²" where h = height in metres, t = time in seconds. Text: "Find the maximum height and when the ball lands". No trajectory curve drawn. Like a sports analytics or biomechanics study setup. Professional, dynamic, scientific.
+
+---
+
+--- A24-H: Height-Time Graph ---
+Filename: higher_A24_graph.png
+
+Professional physics diagram setup. Clean axes labelled "h (metres)" vertical and "t (seconds)" horizontal, scales marked. Equation displayed: "h = 20t - 5t²". Text: "Sketch the graph and find key points". No curve drawn - axes ready for student plotting. Scientific publication quality. Elegant, precise, professional.
+
+---
+
+==============================================
+HIGHER TIER - GEOMETRY
+==============================================
+
+--- G1-H: Nonagon ---
+Filename: higher_G1_nonagon.png
+
+Architectural detail photography of decorative polygon element - could be tilework or window design. Clean geometric overlay highlighting one interior angle marked as "140°". Text: "This is a regular polygon. Find the number of sides." Art and architecture aesthetic. Beautiful real-world geometry. Cultural, sophisticated, mathematical.
+
+---
+
+--- G3-H: Trapezium ---
+Filename: higher_G3_trapezium.png
+
+Landscape architecture plan. Trapezium-shaped garden bed with planting indication. Professional drawing style. Parallel sides labelled "8 m" and "12 m". Height marked "h = ?". Note: "Area = 50 m²". Garden design documentation quality. Professional, technical, contextual.
+
+---
+
+--- G5-H: Volume Comparison ---
+Filename: higher_G5_volumes.png
+
+Clean 3D render comparing cylinder and cone side by side. Same base radius and height clearly indicated with matching dimension lines. Cylinder labelled "Volume = 300π cm³", cone labelled "Volume = ?". Text: "Both shapes have the same radius and height". White studio background, subtle shadows. Technical comparison visualisation. Elegant, mathematical, professional.
+
+---
+
+--- G9-H: Sector ---
+Filename: higher_G9_sector.png
+
+Clean geometric diagram of sector (pie slice shape). Professional mathematical illustration. Two radius lines both labelled "12 cm", arc length labelled "15 cm", angle at centre marked "θ = ? radians". Text: "Find the angle and area". Elegant colour palette on white background. Textbook or academic publication quality. Precise, sophisticated, mathematical.
+
+---
+
+--- G11-H: Cuboid Diagonal ---
+Filename: higher_G11_cuboid.png
+
+Professional 3D technical render of cuboid. Semi-transparent faces allowing view inside. Dimensions clearly labelled: "3 cm", "4 cm", "12 cm" on edges. Space diagonal drawn from one corner to opposite corner, labelled "d = ?". Text: "Find the length of the space diagonal". CAD visualisation quality. Engineering or product design aesthetic. Clean, precise, professional.
+
+---
+
+--- G15-H: Composite Shape ---
+Filename: higher_G15_composite.png
+
+Technical 3D render of hemisphere on cylinder (like a storage tank or capsule). Professional engineering visualisation. Dimensions: radius "6 cm", cylinder height "10 cm" clearly labelled. Text: "Find the total surface area". Industrial design or engineering documentation style. Clean, technical, professional.
+
+---
+
+--- G19-H: Double Angle of Elevation ---
+Filename: higher_G19_elevations.png
+
+Professional surveying or architecture photography. Modern building with surveyor at marked position on ground. Two sightlines indicated - one to window partway up, one to roof. Labels: horizontal distance "50 m", lower angle "38°", upper angle "62°", window height marked "h = ?". Engineering survey documentation style. Professional, technical, real-world context.
+
+---
+
+==============================================
+HIGHER TIER - PROBABILITY & STATISTICS
+==============================================
+
+--- P5-H: Expected Value ---
+Filename: higher_P5_expected.png
+
+Clean infographic showing game rules. Professional design with dice visual. Rules displayed: "Roll 6: Win £10", "Roll 1, 3, or 5: Win £2", "Roll 2 or 4: Lose £3". Text: "Find the expected profit per game". Data visualisation or decision analysis aesthetic. Sophisticated, mathematical, clear.
+
+---
+
+--- P6-H: Conditional Probability ---
+Filename: higher_P6_conditional.png
+
+Elegant probability visualisation. Two containers clearly shown: Box A containing "3 red, 5 blue" cards/counters, Box B containing "4 red, 2 blue". Arrow indicating transfer from A to B. Text: "A card is taken from A and placed in B. Then a card is drawn from B. Find P(red from B)". Professional infographic style. Sophisticated, clear, mathematical.
+
+---
+
+--- S2-H: Box Plots ---
+Filename: higher_S2_boxplots.png
+
+Professional statistical visualisation. Two horizontal box plots on same scale (0-100). Labels: "Class A" with median marked at 62 and IQR 15, "Class B" with median at 58 and IQR 24. Text: "Compare the two distributions". Clean, modern data visualisation design. Research or academic publication quality. Professional, informative, sophisticated.
+
+---
+
+--- S3-H: Regression ---
+Filename: higher_S3_regression.png
+
+Clean scatter plot with data points showing positive correlation. Axes: "Hours Studied" (x, 0-10) vs "Exam Mark %" (y, 0-100). Line of best fit drawn through points with equation "y = 2.3x + 15" labelled. Text: "Interpret the gradient and y-intercept in context". Academic or research publication quality. Sophisticated, clean, informative.
+
+---
+
+==============================================
+END OF PROMPTS V4
+==============================================
+
+Total: 52 prompts
+Style: Mature, sophisticated, professional - suitable for ages 14-16
+Aesthetic: Editorial photography, professional infographics, technical illustrations
+
+KEY CHANGES FROM V3:
+- N1: Removed prices from bottles (question gives price per litre, not total prices)
+- N2: Simplified to just depth scale (0 to -100m) with no trajectory labels
+- N6: Updated for new question (perimeter) - shows "Area = 144 m²" without side length
+- N7: Removed large cube dimension (shows only "Volume = 125 m³") - student calculates side length
+
+PRINCIPLE: Images show GIVEN information only. Students must calculate any derived values.

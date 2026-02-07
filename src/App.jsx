@@ -2712,235 +2712,246 @@ const getQuestionBankForTier = (tier) => {
 
 // Exam-style questions - harder, multi-step problems for mastery
 const examQuestions = {
+  // ========== FOUNDATION EXAM QUESTIONS - AQA Style with Real-Life Contexts ==========
+
+  // Number
   N1: [
-    { q: "Put in order from smallest to largest: 0.7[r], 0.77, 0.707, 0.7[r]0[r]7[r]. Show your working.", a: "0.707, 0.7[r]0[r]7[r], 0.7[r], 0.77", type: "text", calculator: false, marks: 3 },
+    { q: "A shop sells four sizes of juice bottles. The prices per litre are: Small £0.7[r], Medium £0.77, Large £0.707, Family £0.7[r]0[r]7[r]. Which bottle gives the best value for money? Show your working.", a: "Large (0.707) is cheapest per litre", type: "text", calculator: false, marks: 3 },
   ],
   N2: [
-    { q: "Calculate: (-3)² × (-2) + 18 ÷ (-3)", a: "-24", type: "number", calculator: false, marks: 3 },
+    { q: "A submarine is at -45 metres. It rises 18 metres, then dives 3 times that distance. What is its final depth?", a: "-81", type: "number", calculator: false, marks: 3 },
+  ],
+  N3: [
+    { q: "Maya buys 4 books at £8 each and gets a £5 discount. She pays with a £50 note. Show how she can check her change of £23 is correct using inverse operations.", a: "23 + (4 × 8) - 5 = 50 ✓", type: "text", calculator: false, marks: 3 },
+  ],
+  N4: [
+    { q: "Tom calculated that 847 cakes shared equally among 7 charity stalls gives 121 cakes each. Use an inverse operation to check if he is correct.", a: "121 × 7 = 847, so correct", type: "text", calculator: false, marks: 2 },
   ],
   N5: [
-    { q: "Work out: 4² + 3 × (8 - 2) ÷ 2", a: "25", type: "number", calculator: false, marks: 3 },
+    { q: "A phone plan costs £12 base fee plus £4 for each GB of data, squared, divided by 2. Emma uses 3GB. Calculate her total bill.", a: "£30", type: "number", calculator: false, marks: 3 },
   ],
   N6: [
-    { q: "Find the value of √(64 + 36) × 2³", a: "80", type: "number", calculator: false, marks: 3 },
-  ],
-  N8: [
-    { q: "Find the HCF and LCM of 60 and 84. Use prime factorisation.", a: "HCF=12, LCM=420", type: "text", calculator: false, marks: 4 },
-  ],
-  N10: [
-    { q: "Write 0.36[r] as a fraction in its simplest form. Show your working.", a: "11/30", type: "text", calculator: false, marks: 3 },
-  ],
-  N12: [
-    { q: "A shop reduces prices by 15%. A jacket now costs £68. What was the original price?", a: "80", type: "number", calculator: true, marks: 3 },
-  ],
-  A4: [
-    { q: "Expand and simplify: (2x + 3)(x - 4) + 5x", a: "2x² + 2x - 12", type: "text", calculator: false, marks: 3 },
-  ],
-  A6: [
-    { q: "Make t the subject of: v = u + at", a: "t = (v - u)/a", type: "text", calculator: false, marks: 2 },
-  ],
-  A14: [
-    { q: "A line passes through (1, 5) and (4, 14). Find the equation of the line in the form y = mx + c.", a: "y = 3x + 2", type: "text", calculator: false, marks: 3 },
-  ],
-  A17: [
-    { q: "Solve: 3(2x - 1) = 4x + 9", a: "6", type: "number", calculator: false, marks: 3 },
-  ],
-  A18: [
-    { q: "A quadratic y = x² - 4x + 3 crosses the x-axis at two points. Find both x values.", a: "x = 1 and x = 3", type: "text", calculator: false, marks: 3 },
-  ],
-  R3: [
-    { q: "John earns £2400 per month. He spends 2/5 on rent and 1/6 on food. How much is left?", a: "1040", type: "number", calculator: true, marks: 4 },
-  ],
-  R4: [
-    { q: "Share £270 in the ratio 2:3:4", a: "£60, £90, £120", type: "text", calculator: true, marks: 3 },
-  ],
-  R10: [
-    { q: "A house value increases by 8% in Year 1, then decreases by 5% in Year 2. If it's now worth £308,880, what was the original value?", a: "301000", type: "number", calculator: true, marks: 4 },
-  ],
-  G3: [
-    { q: "Three angles meet at a point. Two are 127° and 85°. Find the third angle.", a: "148", type: "number", calculator: false, marks: 2 },
-  ],
-  G5: [
-    { q: "A regular polygon has interior angles of 156°. How many sides does it have?", a: "15", type: "number", calculator: true, marks: 3 },
-  ],
-  G14: [
-    { q: "A triangle has vertices at (1,2), (5,2) and (3,6). Find its area.", a: "8", type: "number", calculator: false, marks: 3 },
-  ],
-  G15: [
-    { q: "A circle has circumference 31.4cm. Find its area to 1 d.p.", a: "78.5", type: "number", calculator: true, marks: 3 },
-  ],
-  G19: [
-    { q: "A ladder of length 5m leans against a wall. The foot is 1.5m from the wall. How high up the wall does it reach? Give your answer to 2 d.p.", a: "4.77", type: "number", calculator: true, marks: 3 },
-  ],
-  G20: [
-    { q: "From a point 50m from a tower, the angle of elevation to the top is 32°. Find the height of the tower to 1 d.p.", a: "31.2", type: "number", calculator: true, marks: 3 },
-  ],
-  P4: [
-    { q: "P(A) = 0.4 and P(B) = 0.3. If A and B are independent, find P(A and B).", a: "0.12", type: "number", calculator: true, marks: 2 },
-  ],
-  P8: [
-    { q: "A bag contains 4 red and 6 blue balls. Two are picked without replacement. Find P(both red) as a fraction.", a: "2/15", type: "text", calculator: false, marks: 3 },
-  ],
-  S5: [
-    { q: "The mean of 5 numbers is 12. Four of the numbers are 8, 10, 14, and 15. Find the fifth number.", a: "13", type: "number", calculator: true, marks: 3 },
-  ],
-  // Added exam questions for objectives that were missing them
-  N3: [
-    { q: "Work out: 4² + (12 - 4) × 3 ÷ √36. Show each step of your working.", a: "20", type: "number", calculator: false, marks: 3 },
+    { q: "A square garden has area 144 m². What is the perimeter of the garden?", a: "48", type: "number", calculator: false, marks: 3 },
   ],
   N7: [
-    { q: "Simplify: ³√125 × 2³", a: "40", type: "number", calculator: false, marks: 2 },
+    { q: "A storage container is a cube with volume 64 m³. Crates that are 2m × 2m × 2m need to be stacked inside. What is the maximum number of crates that can fit?", a: "8", type: "number", calculator: false, marks: 3 },
   ],
-  N14: [
-    { q: "Estimate the value of (58.3 × 4.9) ÷ (0.52)². Show your working.", a: "1000", type: "number", calculator: false, marks: 3 },
+  N8: [
+    { q: "Two bus routes start together at 9am. Route A runs every 12 minutes, Route B every 18 minutes. When will they next leave together? How many times do they leave together before 12pm?", a: "9:36am, 5 times", type: "text", calculator: false, marks: 4 },
   ],
-  N15: [
-    { q: "A number is given as 4.7 × 10⁻³. Write this to 2 significant figures.", a: "0.0047", type: "text", calculator: false, marks: 2 },
-  ],
-  N16: [
-    { q: "The length of a rectangle is 12cm to the nearest cm. The width is 8cm to the nearest cm. Calculate the lower bound of the area.", a: "86.25", type: "number", calculator: true, marks: 3 },
-  ],
-  A2: [
-    { q: "Given s = ut + ½at², find s when u = 5, t = 4 and a = 3.", a: "44", type: "number", calculator: false, marks: 3 },
-  ],
-  A9: [
-    { q: "Line L passes through (2, 7) and (6, -1). Find the equation of line L in the form y = mx + c.", a: "y = -2x + 11", type: "text", calculator: false, marks: 3 },
-  ],
-  A19: [
-    { q: "Solve simultaneously: 3x + 2y = 13 and 2x - y = 4. Find both x and y.", a: "x = 3, y = 2", type: "text", calculator: false, marks: 4 },
-  ],
-  A23: [
-    { q: "The nth term of a sequence is 4n - 7. Is 101 in the sequence? Explain your answer.", a: "Yes, when n = 27", type: "text", calculator: false, marks: 3 },
-  ],
-  A26: [
-    { q: "A circle has centre (0, 0) and passes through (5, 12). Find the equation of the circle.", a: "x² + y² = 169", type: "text", calculator: false, marks: 3 },
-  ],
-  R2: [
-    { q: "On a map with scale 1:50000, a lake has area 3.2 cm². Find the actual area in km².", a: "0.8", type: "number", calculator: true, marks: 3 },
-  ],
-  R9: [
-    { q: "In a class, 18 out of 30 students passed a test. Express this as a percentage.", a: "60", type: "number", calculator: true, marks: 2 },
-  ],
-  R12: [
-    { q: "After two successive 10% decreases, a price is £162. Find the original price.", a: "200", type: "number", calculator: true, marks: 3 },
-  ],
-  G4: [
-    { q: "Two parallel lines are crossed by a transversal. One acute angle is 65°. Find all four angles at one intersection.", a: "65°, 65°, 115°, 115°", type: "text", calculator: false, marks: 3 },
-  ],
-  G7: [
-    { q: "Triangle A has vertices at (1,1), (3,1), (2,3). It is enlarged by scale factor 2, centre origin. Give the coordinates of the vertices of the image.", a: "(2,2), (6,2), (4,6)", type: "text", calculator: false, marks: 3 },
-  ],
-  G16: [
-    { q: "A sector has radius 10cm and arc length 15cm. Find the angle of the sector in degrees.", a: "86", type: "number", calculator: true, marks: 3, hint: "Use arc length = (θ/360) × 2πr" },
-  ],
-  G17: [
-    { q: "A cone has radius 6cm and height 8cm. Find the total surface area. Give your answer in terms of π.", a: "96π", type: "text", calculator: false, marks: 4, hint: "Total SA = πr² + πrl" },
-  ],
-  P6: [
-    { q: "In a class of 30: 20 like maths, 18 like science, 5 like neither. How many like both?", a: "13", type: "number", calculator: false, marks: 3 },
-  ],
-  S2: [
-    { q: "In a pie chart, the 'Sport' sector is 108°. If 60 people were surveyed, how many chose Sport?", a: "18", type: "number", calculator: true, marks: 2 },
-  ],
-  // New foundation exam questions
-  N4: [
-    { q: "Tom calculated 847 ÷ 7 = 121. Use an inverse operation to check if he is correct. Show your working.", a: "121 × 7 = 847, so correct", type: "text", calculator: false, marks: 2 },
+  N10: [
+    { q: "A recipe uses 0.36[r] kg of flour per batch of cookies. Write this as a fraction in its simplest form.", a: "11/30", type: "text", calculator: false, marks: 3 },
   ],
   N11: [
-    { q: "In a class of 32 students, 12 are boys. Express the number of girls as a fraction of the total in simplest form.", a: "5/8", type: "text", calculator: false, marks: 2 },
+    { q: "In a school of 32 students, 12 chose to study French. Express the number who did NOT choose French as a fraction of the total, in simplest form.", a: "5/8", type: "text", calculator: false, marks: 2 },
+  ],
+  N12: [
+    { q: "In a closing down sale, a clothes shop reduces all prices by 15%. Sarah buys a jacket that now costs £68. What was the original price?", a: "80", type: "number", calculator: true, marks: 3 },
   ],
   N13: [
-    { q: "A room is 4.5m by 3m. Calculate the area in cm².", a: "135000", type: "number", calculator: true, marks: 3 },
+    { q: "A living room is 4.5m by 3m. Carpet costs £12.50 per m². How much will it cost to carpet the room? Give your answer to the nearest penny.", a: "168.75", type: "number", calculator: true, marks: 3 },
   ],
+  N14: [
+    { q: "A builder estimates costs for materials: 58.3m of timber at £4.90 per metre, divided between 0.52 of his workers. Estimate the cost per worker. Show your rounding.", a: "£1000", type: "number", calculator: false, marks: 3 },
+  ],
+  N15: [
+    { q: "A scientist measures a bacteria sample as 4.7 × 10⁻³ mm. Write this measurement to 2 significant figures.", a: "0.0047", type: "text", calculator: false, marks: 2 },
+  ],
+  N16: [
+    { q: "A farmer measures a rectangular field as 12m by 8m, both to the nearest metre. Calculate the lower bound of the area of the field.", a: "86.25", type: "number", calculator: true, marks: 3 },
+  ],
+
+  // Algebra
   A1: [
-    { q: "Write an expression for: 'Think of a number, double it, then add 5'", a: "2n + 5", type: "text", calculator: false, marks: 2 },
+    { q: "A plumber charges a £30 call-out fee plus £n per hour. Write an expression for the total cost of a job lasting h hours.", a: "30 + nh", type: "text", calculator: false, marks: 2 },
+  ],
+  A2: [
+    { q: "A ball is thrown upwards. Its height h metres after t seconds is given by h = 20t - 5t². Find the height after 3 seconds.", a: "15", type: "number", calculator: false, marks: 3 },
   ],
   A3: [
-    { q: "State whether each is an expression, equation, formula or identity: (a) 3x + 7 (b) 3x + 7 = 19 (c) A = ½bh (d) 2(x+3) ≡ 2x + 6", a: "expression, equation, formula, identity", type: "text", calculator: false, marks: 4 },
+    { q: "State whether each is an expression, equation, formula or identity: (a) The cost of x apples at 40p each: 40x (b) 40x = 200 (c) C = 40x (d) 2(20x) ≡ 40x", a: "expression, equation, formula, identity", type: "text", calculator: false, marks: 4 },
+  ],
+  A4: [
+    { q: "The area of a rectangular pool is (2x + 3)(x - 4) m². An extra 5x m² is added for decking. Write and simplify the total area.", a: "2x² + 2x - 12", type: "text", calculator: false, marks: 3 },
   ],
   A5: [
-    { q: "The formula for the volume of a cylinder is V = πr²h. Find V when r = 3 and h = 7. Give your answer in terms of π.", a: "63π", type: "text", calculator: false, marks: 2 },
+    { q: "A cylindrical water tank has volume V = πr²h. The radius is 3m and height is 7m. Find the volume, giving your answer in terms of π.", a: "63π", type: "text", calculator: false, marks: 2 },
+  ],
+  A6: [
+    { q: "The formula for velocity is v = u + at. A driving instructor needs to find the time taken. Make t the subject.", a: "t = (v - u)/a", type: "text", calculator: false, marks: 2 },
   ],
   A7: [
-    { q: "A function machine does: input → ×4 → -5 → ÷3 → output. If output is 5, find the input.", a: "5", type: "number", calculator: false, marks: 3 },
+    { q: "A taxi fare is calculated as: start with the number of miles, multiply by 4, subtract 5, then divide by 3. If the fare is £5, how many miles was the journey?", a: "5", type: "number", calculator: false, marks: 3 },
+  ],
+  A9: [
+    { q: "A zipline runs from point A(2, 7) on a platform to point B(6, -1) on the ground. Find the equation of the zipline in the form y = mx + c.", a: "y = -2x + 11", type: "text", calculator: false, marks: 3 },
   ],
   A13: [
-    { q: "A and B have coordinates (2, 8) and (10, 4). Find the midpoint of AB and the length of AB.", a: "Midpoint (6, 6), Length ~8.94", type: "text", calculator: true, marks: 4 },
+    { q: "Two mobile phone masts are at coordinates A(2, 8) and B(10, 4). A signal booster is placed exactly halfway between them. Find its coordinates and the distance between the masts.", a: "Midpoint (6, 6), Distance ≈ 8.94km", type: "text", calculator: true, marks: 4 },
+  ],
+  A14: [
+    { q: "A train travels from station P at (1, 5) to station Q at (4, 14). Find the equation of the railway line in the form y = mx + c.", a: "y = 3x + 2", type: "text", calculator: false, marks: 3 },
   ],
   A15: [
-    { q: "A quadratic y = (x-3)(x+1) has roots at x = 3 and x = -1. Find the coordinates of the turning point.", a: "(1, -4)", type: "text", calculator: false, marks: 3 },
+    { q: "The equation y = (x-3)(x+1) represents a parabola. Find the coordinates of its turning point.", a: "(1, -4)", type: "text", calculator: false, marks: 3 },
+  ],
+  A17: [
+    { q: "Cinema tickets cost £x. The Smith family buys 3 adult and 2 child tickets. Child tickets are half price. They pay £36. Write and solve an equation to find the adult ticket price.", a: "3x + 2(x/2) = 36, x = 9", type: "text", calculator: false, marks: 3 },
+  ],
+  A18: [
+    { q: "A rectangular photo has width x cm and length (x + 2) cm. The area is 15 cm². Form and solve an equation to find the dimensions.", a: "x² + 2x - 15 = 0, width = 3cm, length = 5cm", type: "text", calculator: false, marks: 4 },
+  ],
+  A19: [
+    { q: "At a café, 3 coffees and 2 teas cost £13. 2 coffees and 1 tea cost £8. Find the cost of one coffee and one tea.", a: "Coffee £3, Tea £2", type: "text", calculator: false, marks: 4 },
   ],
   A21: [
-    { q: "Write an inequality for: 'You must be at least 12 years old and under 18 to join the youth club'", a: "12 ≤ age < 18", type: "text", calculator: false, marks: 2 },
+    { q: "A theme park ride has a height restriction. You must be at least 120cm but under 200cm. Write this as an inequality using h for height.", a: "120 ≤ h < 200", type: "text", calculator: false, marks: 2 },
+  ],
+  A23: [
+    { q: "Seats in a theatre follow the pattern: Row 1 has 15 seats, Row 2 has 19 seats, Row 3 has 23 seats. Is there a row with exactly 99 seats? Explain your answer.", a: "Yes, row 22 (nth term = 4n + 11, when 4n + 11 = 99, n = 22)", type: "text", calculator: false, marks: 3 },
   ],
   A24: [
-    { q: "Find the next two terms in the Fibonacci-like sequence: 2, 5, 7, 12, 19, ...", a: "31, 50", type: "text", calculator: false, marks: 2 },
+    { q: "The number of rabbits on a farm follows a Fibonacci-like pattern: 2, 5, 7, 12, 19, ... How many rabbits will there be in the next two months?", a: "31, 50", type: "text", calculator: false, marks: 2 },
   ],
+  A26: [
+    { q: "A circular fountain is centred at the origin of a park map. A bench at point (5, 12) is on the edge of the fountain. Find the equation of the fountain's boundary.", a: "x² + y² = 169", type: "text", calculator: false, marks: 3 },
+  ],
+
+  // Ratio, Proportion and Rates of Change
   R1: [
-    { q: "A recipe needs 1.2 kg of flour. How many grams is this? If flour costs 80p per 500g, how much does 1.2kg cost?", a: "1200g, £1.92", type: "text", calculator: true, marks: 3 },
+    { q: "A recipe needs 1.2 kg of flour. How many grams is this? If flour costs 80p per 500g bag, how much will the flour for this recipe cost?", a: "1200g, £1.92", type: "text", calculator: true, marks: 3 },
+  ],
+  R2: [
+    { q: "On a map with scale 1:50000, a lake measures 3.2 cm². What is the actual area of the lake in km²?", a: "0.8", type: "number", calculator: true, marks: 3 },
+  ],
+  R3: [
+    { q: "Emma earns £2400 per month. She spends 2/5 on rent and 1/6 on bills. How much money does she have left for other expenses?", a: "1040", type: "number", calculator: true, marks: 4 },
+  ],
+  R4: [
+    { q: "Three friends win £270 in a raffle. They agree to share it in the ratio 2:3:4 based on how many tickets each bought. How much does each person receive?", a: "£60, £90, £120", type: "text", calculator: true, marks: 3 },
   ],
   R5: [
-    { q: "The ratio of cats to dogs at a shelter is 3:5. There are 40 animals in total. How many cats are there?", a: "15", type: "number", calculator: false, marks: 3 },
+    { q: "At an animal shelter, the ratio of cats to dogs is 3:5. There are 40 animals in total. How many cats are there?", a: "15", type: "number", calculator: false, marks: 3 },
   ],
   R6: [
-    { q: "In a bag of sweets, the ratio of red to blue to green is 2:5:3. What fraction of the sweets are blue?", a: "1/2", type: "text", calculator: false, marks: 2 },
+    { q: "A bag of pick 'n' mix contains sweets in the ratio red:blue:green = 2:5:3. What fraction of the sweets are blue?", a: "1/2", type: "text", calculator: false, marks: 2 },
   ],
   R7: [
-    { q: "It takes 6 workers 8 days to build a wall. How long would it take 4 workers?", a: "12", type: "number", calculator: false, marks: 3 },
+    { q: "It takes 6 decorators 8 days to paint a hotel. The hotel needs to open sooner. How long would it take 4 decorators working at the same rate?", a: "12", type: "number", calculator: false, marks: 3 },
   ],
   R8: [
-    { q: "The ratio of x:y = 3:4. Express x as a fraction of (x+y).", a: "3/7", type: "text", calculator: false, marks: 2 },
+    { q: "In a concrete mix, the ratio of cement to sand is 3:4. Express the amount of cement as a fraction of the total mixture.", a: "3/7", type: "text", calculator: false, marks: 2 },
+  ],
+  R9: [
+    { q: "In a driving test, 18 out of 30 candidates passed. Express this as a percentage.", a: "60", type: "number", calculator: true, marks: 2 },
+  ],
+  R10: [
+    { q: "A house increases in value by 8% in Year 1, then decreases by 5% in Year 2. It is now worth £308,880. What was its original value?", a: "301000", type: "number", calculator: true, marks: 4 },
   ],
   R11: [
-    { q: "A TV was £450. In a sale it is reduced to £360. Find the percentage decrease.", a: "20", type: "number", calculator: true, marks: 2 },
+    { q: "A television was £450. In the Black Friday sale it is reduced to £360. Calculate the percentage decrease.", a: "20", type: "number", calculator: true, marks: 2 },
+  ],
+  R12: [
+    { q: "After two successive 10% price reductions, a sofa costs £162. What was the original price?", a: "200", type: "number", calculator: true, marks: 3 },
   ],
   R14: [
-    { q: "A car travels 180km in 2 hours 15 minutes. Calculate the average speed in km/h.", a: "80", type: "number", calculator: true, marks: 3 },
+    { q: "A delivery driver travels 180km in 2 hours 15 minutes. Calculate the average speed in km/h.", a: "80", type: "number", calculator: true, marks: 3 },
   ],
+
+  // Geometry and Measures
   G1: [
-    { q: "Name the 3D shape that has 6 faces, 12 edges and 8 vertices. All faces are congruent.", a: "Cube", type: "text", calculator: false, marks: 2 },
+    { q: "A storage box has 6 faces, 12 edges and 8 vertices. All faces are identical squares. Name the shape and state its order of rotational symmetry.", a: "Cube, order 4 (about face axis)", type: "text", calculator: false, marks: 2 },
   ],
   G2: [
-    { q: "Describe how to construct the perpendicular bisector of a line segment AB.", a: "Draw arcs from A and B with same radius, join intersection points", type: "text", calculator: false, marks: 3 },
+    { q: "A garden designer needs to place a fountain exactly halfway between two trees. Describe how to find this point using only a rope and pegs.", a: "Draw arcs from both trees with same radius (rope), place fountain where arcs cross", type: "text", calculator: false, marks: 3 },
+  ],
+  G3: [
+    { q: "Three roads meet at a roundabout. The angles between two pairs of roads are 127° and 85°. Find the angle between the third pair of roads.", a: "148", type: "number", calculator: false, marks: 2 },
+  ],
+  G4: [
+    { q: "A railway line crosses a road. The angle between the railway and one side of the road is 65°. Find all four angles at the crossing.", a: "65°, 65°, 115°, 115°", type: "text", calculator: false, marks: 3 },
+  ],
+  G5: [
+    { q: "A garden patio is in the shape of a regular polygon. Each interior angle is 156°. How many sides does the patio have?", a: "15", type: "number", calculator: true, marks: 3 },
   ],
   G6: [
-    { q: "List two properties that a rhombus has that a rectangle does not.", a: "All sides equal, diagonals bisect at right angles", type: "text", calculator: false, marks: 2 },
+    { q: "A chocolate box is rhombus-shaped. Give two geometric properties of a rhombus that a rectangular box would not have.", a: "All sides equal length, diagonals cross at right angles", type: "text", calculator: false, marks: 2 },
+  ],
+  G7: [
+    { q: "An architect makes a scale model where everything is twice the size. The real doorway is at position (1,1) to (3,1) to (2,3). Give the coordinates on the model.", a: "(2,2), (6,2), (4,6)", type: "text", calculator: false, marks: 3 },
   ],
   G8: [
-    { q: "Shape P is translated to shape Q by vector (4, -3). Point A on P is at (2, 5). What are the coordinates of the corresponding point on Q?", a: "(6, 2)", type: "text", calculator: false, marks: 2 },
+    { q: "In a computer game, a character moves from position P(2, 5) by vector (4, -3). What are the coordinates of the new position?", a: "(6, 2)", type: "text", calculator: false, marks: 2 },
   ],
   G9: [
-    { q: "Triangle T has vertices at (1, 1), (3, 1), (2, 4). Draw the reflection of T in the line y = x and give the coordinates of the reflected vertices.", a: "(1, 1), (1, 3), (4, 2)", type: "text", calculator: false, marks: 3 },
+    { q: "A logo consists of a triangle with vertices at (1, 1), (3, 1), (2, 4). It is reflected in the line y = x. Give the coordinates of the reflected triangle.", a: "(1, 1), (1, 3), (4, 2)", type: "text", calculator: false, marks: 3 },
   ],
   G11: [
-    { q: "In a circle, a chord is 8cm from the centre. The radius is 10cm. Find the length of the chord.", a: "12", type: "number", calculator: true, marks: 3 },
+    { q: "A circular table has radius 10cm. A straight crack runs 8cm from the centre. How long is the crack?", a: "12", type: "number", calculator: true, marks: 3 },
   ],
   G13: [
-    { q: "A solid is made from a cylinder with a cone on top. The cylinder has height 6cm and the cone has height 4cm. Both have radius 3cm. Find the total volume in terms of π.", a: "66π", type: "text", calculator: false, marks: 4 },
+    { q: "A grain silo consists of a cylinder (radius 3m, height 6m) with a conical roof (height 4m). Calculate the total volume in terms of π.", a: "66π", type: "text", calculator: false, marks: 4 },
   ],
+  G14: [
+    { q: "A triangular flower bed has corners at coordinates (1,2), (5,2) and (3,6) on a garden plan. Each unit represents 1 metre. Calculate the area of the flower bed.", a: "8", type: "number", calculator: false, marks: 3 },
+  ],
+  G15: [
+    { q: "A circular pond has a circumference of 31.4m. A gardener wants to cover it with a net. Calculate the area of net needed, to 1 decimal place.", a: "78.5", type: "number", calculator: true, marks: 3 },
+  ],
+  G16: [
+    { q: "A pizza slice is a sector with radius 15cm and arc length (crust) of 12cm. Calculate the angle of the slice to the nearest degree.", a: "46", type: "number", calculator: true, marks: 3 },
+  ],
+  G17: [
+    { q: "An ice cream cone has radius 3cm and height 10cm. Calculate the total surface area (cone plus circular top) in terms of π.", a: "9π + 3π√109", type: "text", calculator: false, marks: 4 },
+  ],
+  G19: [
+    { q: "A 5-metre ladder leans against a wall with its foot 1.5m from the base. Health and safety requires it to reach at least 4.5m high. Does this ladder meet the requirement?", a: "Yes, reaches 4.77m", type: "text", calculator: true, marks: 3 },
+  ],
+  G20: [
+    { q: "A surveyor stands 50m from a church tower. The angle of elevation to the top is 32°. Calculate the height of the tower to 1 decimal place.", a: "31.2", type: "number", calculator: true, marks: 3 },
+  ],
+
+  // Probability
   P1: [
-    { q: "A spinner was spun 200 times. Results: Red 82, Blue 68, Green 50. Calculate the relative frequency of blue.", a: "0.34", type: "number", calculator: true, marks: 2 },
+    { q: "A quality control spinner was tested 200 times. Results: Pass 82, Minor fault 68, Major fault 50. Calculate the relative frequency of a minor fault.", a: "0.34", type: "number", calculator: true, marks: 2 },
   ],
   P2: [
-    { q: "A bag contains 3 red and 7 blue balls. Explain why selecting a ball at random is not equally likely to be red or blue.", a: "Different numbers of each colour", type: "text", calculator: false, marks: 2 },
+    { q: "A sweet bag contains 3 strawberry and 7 cola sweets. Amy says 'I have a 50% chance of picking strawberry because there are two flavours.' Explain why Amy is wrong.", a: "There are different numbers of each flavour, so probabilities are 3/10 and 7/10", type: "text", calculator: false, marks: 2 },
   ],
   P3: [
-    { q: "A dice is rolled 150 times and lands on 6 exactly 30 times. Calculate the relative frequency and compare to the theoretical probability.", a: "0.2 vs 1/6 ≈ 0.167", type: "text", calculator: true, marks: 3 },
+    { q: "A factory tests dice by rolling each one 150 times. One die landed on 6 exactly 30 times. Calculate the relative frequency and compare it to what you would expect for a fair die.", a: "RF = 0.2, expected = 1/6 ≈ 0.167, so slightly biased", type: "text", calculator: true, marks: 3 },
+  ],
+  P4: [
+    { q: "The probability it rains on any day is 0.4. The probability of heavy traffic is 0.3. If these are independent, find the probability of both rain and heavy traffic.", a: "0.12", type: "number", calculator: true, marks: 2 },
   ],
   P5: [
-    { q: "P(rain) = 0.3, P(wind) = 0.6. If these are independent, find P(rain and wind).", a: "0.18", type: "number", calculator: true, marks: 2 },
+    { q: "Weather forecast: P(rain) = 0.3, P(wind) = 0.6. These events are independent. Find the probability that it is both rainy and windy.", a: "0.18", type: "number", calculator: true, marks: 2 },
+  ],
+  P6: [
+    { q: "In a class of 30 students: 20 like pizza, 18 like burgers, 5 like neither. How many students like both pizza and burgers?", a: "13", type: "number", calculator: false, marks: 3 },
   ],
   P7: [
-    { q: "Three coins are flipped. List all possible outcomes and find P(exactly 2 heads).", a: "3/8", type: "text", calculator: false, marks: 4 },
+    { q: "A restaurant offers a meal deal: flip 3 coins and get a discount based on heads. List all possible outcomes and find P(exactly 2 heads).", a: "HHH, HHT, HTH, THH, HTT, THT, TTH, TTT; P = 3/8", type: "text", calculator: false, marks: 4 },
   ],
+  P8: [
+    { q: "A lucky dip contains 4 red prizes and 6 blue prizes. Two children each take a prize without looking. Find P(both get red).", a: "2/15", type: "text", calculator: false, marks: 3 },
+  ],
+
+  // Statistics
   S1: [
-    { q: "A school has 600 Year 7, 550 Year 8, and 450 Year 9 students. A stratified sample of 80 is needed. How many Year 8 students should be selected?", a: "28", type: "number", calculator: true, marks: 3 },
+    { q: "A school has 600 Year 7, 550 Year 8, and 450 Year 9 students. A survey needs a stratified sample of 80 students. How many Year 8 students should be included?", a: "28", type: "number", calculator: true, marks: 3 },
+  ],
+  S2: [
+    { q: "In a survey about favourite sports, the 'Football' sector of a pie chart is 108°. If 60 people were surveyed, how many chose football?", a: "18", type: "number", calculator: true, marks: 2 },
   ],
   S3: [
-    { q: "Draw a pie chart for: Football 30 students, Tennis 15 students, Swimming 25 students, Other 10 students. Calculate each angle.", a: "135°, 67.5°, 112.5°, 45°", type: "text", calculator: true, marks: 4 },
+    { q: "Students voted for a school trip: Theme Park 30, Zoo 15, Beach 25, Museum 10. Draw a pie chart by calculating the angle for each destination.", a: "Theme Park 135°, Zoo 67.5°, Beach 112.5°, Museum 45°", type: "text", calculator: true, marks: 4 },
   ],
   S4: [
-    { q: "A car journey is shown on a distance-time graph. It travels 60km in the first hour, stops for 30 mins, then travels 40km in 30 mins. Find the average speed for the whole journey.", a: "50", type: "number", calculator: true, marks: 3 },
+    { q: "A delivery van travels 60km in the first hour, stops for 30 minutes, then travels 40km in 30 minutes. Calculate the average speed for the whole journey.", a: "50", type: "number", calculator: true, marks: 3 },
+  ],
+  S5: [
+    { q: "Five friends compare their weekly screen time. The mean is 12 hours. Four of them use 8, 10, 14, and 15 hours. Find the fifth person's screen time.", a: "13", type: "number", calculator: true, marks: 3 },
   ],
   // Higher tier exam questions
   N9: [
@@ -3016,200 +3027,200 @@ const examQuestions = {
 const higherExamQuestions = {
   // Number - Higher exam style (multi-step, unstructured)
   N1: [
-    { q: "Arrange in order from smallest to largest: 2.3 × 10⁻², √0.05, 0.02[r]3[r], 1/45. Show all working.", a: "2.3 × 10⁻², 0.02[r]3[r], 1/45, √0.05", type: "text", calculator: true, marks: 4 },
+    { q: "Four different protein powders show their concentration as: Brand A: 2.3 × 10⁻² g/ml, Brand B: √0.05 g/ml, Brand C: 0.02[r]3[r] g/ml, Brand D: 1/45 g/ml. Arrange from lowest to highest concentration. Show all working.", a: "2.3 × 10⁻², 0.02[r]3[r], 1/45, √0.05", type: "text", calculator: true, marks: 4 },
   ],
   N2: [
-    { q: "Show that (-2)³ × (-3)² ÷ (-6) = 12", a: "-8 × 9 ÷ (-6) = -72 ÷ (-6) = 12", type: "text", calculator: false, marks: 3 },
+    { q: "A physics student calculates (-2)³ × (-3)² ÷ (-6) and claims the answer is -12. Show that the student is wrong and find the correct answer.", a: "-8 × 9 ÷ (-6) = -72 ÷ (-6) = 12", type: "text", calculator: false, marks: 3 },
   ],
   N3: [
-    { q: "Show that (√64 + 3²) × (1/2)⁻² - 5³ ÷ 25 = 63. Show all working.", a: "(8 + 9) × 4 - 125 ÷ 25 = 17 × 4 - 5 = 68 - 5 = 63", type: "text", calculator: false, marks: 4 },
+    { q: "A puzzle states: (√64 + 3²) × (1/2)⁻² - 5³ ÷ 25 = 63. Verify this is correct by showing all working.", a: "(8 + 9) × 4 - 125 ÷ 25 = 17 × 4 - 5 = 68 - 5 = 63", type: "text", calculator: false, marks: 4 },
   ],
   N5: [
-    { q: "Show that (2³ + 4²) × 3 - √144 ÷ 2 = 66", a: "(8 + 16) × 3 - 12 ÷ 2 = 24 × 3 - 6 = 72 - 6 = 66", type: "text", calculator: false, marks: 3 },
+    { q: "A code uses the calculation (2³ + 4²) × 3 - √144 ÷ 2 to generate a number. Show that this number is 66.", a: "(8 + 16) × 3 - 12 ÷ 2 = 24 × 3 - 6 = 72 - 6 = 66", type: "text", calculator: false, marks: 3 },
   ],
   N6: [
-    { q: "Given that 5^x = 125 and 5^y = 1/25, find the value of 5^(2x + y)", a: "125", type: "number", calculator: false, marks: 4 },
+    { q: "A computer uses powers of 5 for encryption. Given that 5^x = 125 and 5^y = 1/25, find the value of 5^(2x + y) to decode the message.", a: "125", type: "number", calculator: false, marks: 4 },
   ],
   N7: [
-    { q: "A cube has volume 343 cm³. A second cube has a surface area equal to the first cube's volume. Find the side length of the second cube to 2 d.p.", a: "7.56", type: "number", calculator: true, marks: 4 },
+    { q: "An artist creates a wooden cube sculpture with volume 343 cm³. She wants to make a second cube where the surface area equals the first cube's volume numerically. Find the side length of the second cube to 2 d.p.", a: "7.56", type: "number", calculator: true, marks: 4 },
   ],
   N8: [
-    { q: "A = 2³ × 3 × 5 and B = 2 × 3² × 7. Find (a) HCF(A, B) and (b) LCM(A, B). Hence verify that HCF × LCM = A × B.", a: "HCF = 6, LCM = 2520", type: "text", calculator: false, marks: 5 },
+    { q: "Two lighthouse beams flash at intervals. Beam A flashes every A = 2³ × 3 × 5 seconds and Beam B flashes every B = 2 × 3² × 7 seconds. Find (a) how often they flash together (HCF), (b) when they next flash together (LCM). Verify that HCF × LCM = A × B.", a: "HCF = 6, LCM = 2520", type: "text", calculator: false, marks: 5 },
   ],
   N10: [
-    { q: "Prove algebraically that 0.4[r]5[r] = 5/11", a: "Let x = 0.454545... Then 100x = 45.454545... So 99x = 45, x = 45/99 = 5/11", type: "text", calculator: false, marks: 4 },
+    { q: "A student measures a chemical reaction rate as 0.4[r]5[r] ml per second. Prove algebraically that this equals exactly 5/11 ml per second.", a: "Let x = 0.454545... Then 100x = 45.454545... So 99x = 45, x = 45/99 = 5/11", type: "text", calculator: false, marks: 4 },
   ],
   N11: [
-    { q: "In a sale, prices are reduced by 15%. A dress now costs £68. Express the original price as a fraction of £100.", a: "4/5", type: "text", calculator: false, marks: 3 },
+    { q: "In a clothing sale, all prices are reduced by 15%. Emma buys a dress for £68. The shop originally priced all items so they would cost a whole number of pounds. Express the original price as a fraction of £100.", a: "4/5", type: "text", calculator: false, marks: 3 },
   ],
   N12: [
-    { q: "A car depreciates by 18% in year 1 and 15% in year 2. Show that the total depreciation is not 33% and find the actual percentage decrease.", a: "30.3%", type: "number", calculator: true, marks: 4 },
+    { q: "A new car loses 18% of its value in year 1 and 15% in year 2. The salesperson claims total depreciation is 33%. Show this is incorrect and find the actual percentage decrease.", a: "30.3%", type: "number", calculator: true, marks: 4 },
   ],
   N14: [
-    { q: "Estimate (4.8² × √99) ÷ 0.49, showing your rounding. State whether your answer is an overestimate or underestimate.", a: "≈ 500, underestimate", type: "text", calculator: false, marks: 4 },
+    { q: "A factory needs to quickly estimate (4.8² × √99) ÷ 0.49 for quality control. Without a calculator, estimate this value showing your rounding. State whether your answer is an overestimate or underestimate.", a: "≈ 500, underestimate", type: "text", calculator: false, marks: 4 },
   ],
   N15: [
-    { q: "The calculation 8.745 × 3.92 gives 34.2804. Using bounds, find the greatest and least values this product could be. Round each to 3 s.f.", a: "Greatest: 34.4, Least: 34.1", type: "text", calculator: true, marks: 4 },
+    { q: "A precision engineering firm measures components as 8.745 mm × 3.92 mm = 34.2804 mm². Using bounds (measurements to 3 d.p. and 2 d.p. respectively), find the greatest and least actual values. Round each to 3 s.f.", a: "Greatest: 34.4, Least: 34.1", type: "text", calculator: true, marks: 4 },
   ],
 
   // Algebra - Higher exam style
   A1: [
-    { q: "Simplify fully: (27x⁶y³)^(2/3) ÷ (9x²y)^(1/2)", a: "3x³y/√y or 3x³√y", type: "text", calculator: false, marks: 4 },
+    { q: "In a physics formula, the expression (27x⁶y³)^(2/3) ÷ (9x²y)^(1/2) appears. Simplify this fully.", a: "3x³y/√y or 3x³√y", type: "text", calculator: false, marks: 4 },
   ],
   A2: [
-    { q: "Expand and simplify: (2x + 3)(x - 4)(x + 1). Hence factorise 2x³ - x² - 13x - 12.", a: "2x³ - x² - 13x - 12 = (2x + 3)(x - 4)(x + 1)", type: "text", calculator: false, marks: 5 },
+    { q: "A box has dimensions (2x + 3), (x - 4), and (x + 1) cm. Expand and simplify to find the volume. Hence factorise 2x³ - x² - 13x - 12.", a: "2x³ - x² - 13x - 12 = (2x + 3)(x - 4)(x + 1)", type: "text", calculator: false, marks: 5 },
   ],
   A3: [
-    { q: "Factorise completely: 2x³ - 8x² - 10x", a: "2x(x - 5)(x + 1)", type: "text", calculator: false, marks: 3 },
+    { q: "The volume of water in a tank over time is modelled by 2x³ - 8x² - 10x litres. Factorise this completely to find when the tank is empty.", a: "2x(x - 5)(x + 1)", type: "text", calculator: false, marks: 3 },
   ],
   A4: [
-    { q: "Solve by factorising: 6x² - x - 15 = 0. Show your working.", a: "x = 5/3 or x = -3/2", type: "text", calculator: false, marks: 4 },
+    { q: "The profit P of a business is modelled by 6P² - P - 15 = 0 (in thousands of pounds). Solve by factorising to find the break-even points.", a: "P = 5/3 or P = -3/2", type: "text", calculator: false, marks: 4 },
   ],
   A5: [
-    { q: "Solve: (3x - 2)/4 - (x + 5)/6 = 2. Give your answer as a fraction in its simplest form.", a: "x = 46/7", type: "text", calculator: false, marks: 4 },
+    { q: "A recipe requires (3x - 2)/4 cups of flour minus (x + 5)/6 cups already in the mix to equal 2 cups total. Solve for x, giving your answer as a fraction.", a: "x = 46/7", type: "text", calculator: false, marks: 4 },
   ],
   A7: [
-    { q: "Make x the subject of y = (2x + a)/(x - b). Show all steps.", a: "x = (a + by)/(y - 2)", type: "text", calculator: false, marks: 4 },
+    { q: "A speed-distance formula is y = (2x + a)/(x - b) where x is speed. Make x the subject to find what speed is needed for a given journey time y.", a: "x = (a + by)/(y - 2)", type: "text", calculator: false, marks: 4 },
   ],
   A13: [
-    { q: "A quadratic sequence starts 5, 12, 23, 38, ... Find the nth term and hence determine which term equals 173.", a: "2n² + 3n, 8th term", type: "text", calculator: false, marks: 5 },
+    { q: "The number of tiles in each row of a triangular mosaic pattern follows: 5, 12, 23, 38, ... Find the nth term formula and determine which row contains exactly 173 tiles.", a: "2n² + 3n, 8th term", type: "text", calculator: false, marks: 5 },
   ],
   A14: [
-    { q: "Line L passes through A(2, 5) and B(6, -3). Find the equation of the line perpendicular to L passing through the midpoint of AB.", a: "y = ½x + 1", type: "text", calculator: false, marks: 5 },
+    { q: "A zip wire runs from point A(2, 5) to point B(6, -3) on a coordinate grid (units in metres). A support post must be placed perpendicular to the wire at its midpoint. Find the equation of the line along which the support must be placed.", a: "y = ½x + 1", type: "text", calculator: false, marks: 5 },
   ],
   A15: [
-    { q: "Solve simultaneously: y = x² - 4x + 5 and y = 2x - 3. Interpret your answer geometrically.", a: "x = 2, y = 1 (one solution - line is tangent to curve)", type: "text", calculator: false, marks: 5 },
+    { q: "A drone follows the path y = x² - 4x + 5 and a laser beam follows y = 2x - 3 (units in metres). Solve simultaneously to find where they intersect. Interpret your answer geometrically.", a: "x = 2, y = 1 (one solution - line is tangent to curve)", type: "text", calculator: false, marks: 5 },
   ],
   A17: [
-    { q: "Solve x² - 6x - 3 = 0 by completing the square. Give exact answers in surd form.", a: "x = 3 ± 2√3", type: "text", calculator: false, marks: 4 },
+    { q: "A projectile's height follows h = x² - 6x - 3 where h is height and x is horizontal distance. Find when h = 0 by completing the square. Give exact answers in surd form.", a: "x = 3 ± 2√3", type: "text", calculator: false, marks: 4 },
   ],
   A21: [
-    { q: "Find the range of values of k for which x² + 4x + k = 0 has two distinct real roots.", a: "k < 4", type: "text", calculator: false, marks: 3 },
+    { q: "A parabolic bridge arch is modelled by x² + 4x + k = 0. For the arch to touch the ground at two distinct points, find the range of values of k.", a: "k < 4", type: "text", calculator: false, marks: 3 },
   ],
   A23: [
-    { q: "y is inversely proportional to the square root of x. When x = 16, y = 5. Find (a) y when x = 4, (b) x when y = 2.", a: "y = 10, x = 100", type: "text", calculator: false, marks: 5 },
+    { q: "The brightness of a light y is inversely proportional to the square root of distance x. At 16 metres, brightness is 5 units. Find (a) brightness at 4 metres, (b) distance when brightness is 2 units.", a: "y = 10, x = 100", type: "text", calculator: false, marks: 5 },
   ],
   A24: [
-    { q: "A ball is thrown upwards. Its height h metres after t seconds is h = 20t - 5t². Find (a) the maximum height, (b) when it returns to ground level.", a: "20m at t = 2s, returns at t = 4s", type: "text", calculator: false, marks: 5 },
+    { q: "A football is kicked upwards. Its height h metres after t seconds is h = 20t - 5t². Find (a) the maximum height reached, (b) when it returns to ground level.", a: "20m at t = 2s, returns at t = 4s", type: "text", calculator: false, marks: 5 },
   ],
 
   // Ratio - Higher exam style
   R1: [
-    { q: "Ann, Ben and Carl share £180 so that Ann gets twice as much as Ben, and Carl gets £30 less than Ann. Work out how much each person gets.", a: "Ann £84, Ben £42, Carl £54", type: "text", calculator: false, marks: 4 },
+    { q: "Three friends Ann, Ben and Carl split a restaurant bill of £180. Ann pays twice as much as Ben because she ordered more. Carl pays £30 less than Ann as he only had a starter. Work out how much each person pays.", a: "Ann £84, Ben £42, Carl £54", type: "text", calculator: false, marks: 4 },
   ],
   R2: [
-    { q: "12 workers can build a wall in 8 days. After 3 days, 4 workers leave. How many more days will it take to complete the wall?", a: "7.5 days", type: "number", calculator: true, marks: 4 },
+    { q: "A construction company has 12 workers who can build a wall in 8 days. After 3 days of work, 4 workers are moved to another urgent project. How many more days will it take the remaining workers to complete the wall?", a: "7.5 days", type: "number", calculator: true, marks: 4 },
   ],
   R3: [
-    { q: "A shop reduces all prices by 20%. During a sale, there is a further reduction of 15%. Work out the overall percentage reduction.", a: "32%", type: "number", calculator: false, marks: 3 },
+    { q: "A department store reduces all prices by 20% for Black Friday. The following week, remaining stock has a further 15% reduction. Work out the overall percentage reduction from the original price.", a: "32%", type: "number", calculator: false, marks: 3 },
   ],
   R4: [
-    { q: "£5000 is invested at r% compound interest. After 2 years it is worth £5408. Find r.", a: "4%", type: "number", calculator: true, marks: 4 },
+    { q: "Grandparents invest £5000 for their grandchild at r% compound interest per year. After 2 years it is worth £5408. Find the interest rate r.", a: "4%", type: "number", calculator: true, marks: 4 },
   ],
   R5: [
-    { q: "After a 12% increase followed by a 12% decrease, a price is £295.68. What was the original price?", a: "300", type: "number", calculator: true, marks: 4 },
+    { q: "A house price increased by 12% one year then decreased by 12% the next year. The house is now worth £295,680. What was the original price before both changes?", a: "300", type: "number", calculator: true, marks: 4 },
   ],
   R7: [
-    { q: "Simplify fully: (2x²/3y) ÷ (4x/9y²)", a: "3xy/2", type: "text", calculator: false, marks: 3 },
+    { q: "In a chemistry equation, the concentration ratio (2x²/3y) ÷ (4x/9y²) appears. Simplify this fully.", a: "3xy/2", type: "text", calculator: false, marks: 3 },
   ],
   R8: [
-    { q: "A train travels 240km at an average speed of v km/h. If the train travelled 20 km/h faster, the journey would take 30 minutes less. Find v.", a: "80", type: "number", calculator: true, marks: 5 },
+    { q: "An express train travels 240km between two cities at an average speed of v km/h. If the train travelled 20 km/h faster, the journey would take 30 minutes less. Find v.", a: "80", type: "number", calculator: true, marks: 5 },
   ],
   R9: [
-    { q: "A scale model has a scale of 1:50. The model has a surface area of 0.8 m². Find the actual surface area in m².", a: "2000", type: "number", calculator: false, marks: 3 },
+    { q: "An architect builds a scale model of a building at 1:50 scale. The model has a surface area of 0.8 m². Find the actual surface area of the real building in m².", a: "2000", type: "number", calculator: false, marks: 3 },
   ],
   R10: [
-    { q: "A solid gold sphere has radius 3 cm. Gold has density 19.3 g/cm³. Find the mass to the nearest gram.", a: "2186", type: "number", calculator: true, marks: 4 },
+    { q: "A jeweller melts down a solid gold sphere with radius 3 cm to make a ring. Gold has density 19.3 g/cm³. Find the mass of gold available to the nearest gram.", a: "2186", type: "number", calculator: true, marks: 4 },
   ],
   R11: [
-    { q: "A car travels up a hill with gradient 1:12. After travelling 650m along the road, how high has it climbed? Give your answer to 1 d.p.", a: "54.2", type: "number", calculator: true, marks: 3 },
+    { q: "A mountain road has a gradient of 1:12. A cyclist travels 650m along the road. How many metres has the cyclist climbed vertically? Give your answer to 1 d.p.", a: "54.2", type: "number", calculator: true, marks: 3 },
   ],
   R12: [
-    { q: "Bacteria double every 20 minutes. Starting with 500 bacteria, how many complete hours until there are more than 1 million?", a: "4", type: "number", calculator: true, marks: 4 },
+    { q: "In a laboratory experiment, bacteria double every 20 minutes. Starting with 500 bacteria, after how many complete hours will there be more than 1 million bacteria?", a: "4", type: "number", calculator: true, marks: 4 },
   ],
   R14: [
-    { q: "A swimming pool is filled by two pipes. Pipe A alone fills it in 6 hours. Pipe B alone fills it in 4 hours. How long to fill using both pipes?", a: "2.4 hours or 2h 24min", type: "text", calculator: true, marks: 4 },
+    { q: "A swimming pool can be filled by Pipe A alone in 6 hours, or by Pipe B alone in 4 hours. The pool manager wants to fill it as quickly as possible using both pipes. How long will this take?", a: "2.4 hours or 2h 24min", type: "text", calculator: true, marks: 4 },
   ],
 
   // Geometry - Higher exam style
   G1: [
-    { q: "The interior angle of a regular polygon is 140°. Find the number of sides and the sum of its interior angles.", a: "9 sides, 1260°", type: "text", calculator: false, marks: 4 },
+    { q: "A decorative tile is in the shape of a regular polygon. Each interior angle measures 140°. Find the number of sides the tile has and the sum of its interior angles.", a: "9 sides, 1260°", type: "text", calculator: false, marks: 4 },
   ],
   G3: [
-    { q: "A trapezium has parallel sides 8cm and 12cm. Its area is 50cm². Find the perpendicular distance between the parallel sides.", a: "5", type: "number", calculator: false, marks: 3 },
+    { q: "A flower bed is in the shape of a trapezium with parallel sides 8m and 12m. The gardener calculates the area is 50m². Find the width of the flower bed (perpendicular distance between parallel sides).", a: "5", type: "number", calculator: false, marks: 3 },
   ],
   G4: [
-    { q: "A semicircle has the same perimeter as a square of side 7cm. Find the radius of the semicircle to 2 d.p.", a: "5.47", type: "number", calculator: true, marks: 4 },
+    { q: "A designer creates a logo using a semicircle that has the same perimeter as a square of side 7cm. Find the radius of the semicircle to 2 d.p.", a: "5.47", type: "number", calculator: true, marks: 4 },
   ],
   G5: [
-    { q: "A cone and cylinder have the same base and height. The cylinder has volume 300π cm³. Find the volume of the cone.", a: "100π", type: "text", calculator: false, marks: 3 },
+    { q: "An ice cream company sells cones and tubs. A cone and cylindrical tub have the same base radius and height. The tub holds 300π cm³ of ice cream. How much does the cone hold?", a: "100π", type: "text", calculator: false, marks: 3 },
   ],
   G7: [
-    { q: "Two similar triangles have areas 20cm² and 45cm². The smaller has perimeter 16cm. Find the perimeter of the larger.", a: "24", type: "number", calculator: true, marks: 4 },
+    { q: "Two similar triangular road signs have areas 20cm² and 45cm² on a design drawing. The smaller sign has perimeter 16cm in the drawing. Find the perimeter of the larger sign in the drawing.", a: "24", type: "number", calculator: true, marks: 4 },
   ],
   G8: [
-    { q: "Triangle ABC has AB = 8cm, angle BAC = 52°, and area 20cm². Find the length BC.", a: "6.35", type: "number", calculator: true, marks: 4 },
+    { q: "A surveyor measures a triangular plot of land. Side AB = 80m, angle BAC = 52°, and the area is 2000m². Find the length of side BC.", a: "6.35", type: "number", calculator: true, marks: 4 },
   ],
   G9: [
-    { q: "A sector has radius 12cm and arc length 15cm. Find (a) the angle in radians, (b) the area of the sector.", a: "1.25 radians, 90 cm²", type: "text", calculator: true, marks: 4 },
+    { q: "A pizza slice (sector) has radius 12cm and curved edge (arc) length 15cm. Find (a) the angle of the slice in radians, (b) the area of the slice.", a: "1.25 radians, 90 cm²", type: "text", calculator: true, marks: 4 },
   ],
   G11: [
-    { q: "A cuboid has dimensions 3cm by 4cm by 12cm. Find the length of the space diagonal.", a: "13", type: "number", calculator: false, marks: 4 },
+    { q: "A storage box has internal dimensions 3cm by 4cm by 12cm. What is the longest straight rod that could fit inside the box diagonally?", a: "13", type: "number", calculator: false, marks: 4 },
   ],
   G13: [
-    { q: "Point P(4, 2) is rotated 90° anticlockwise about Q(1, 1). Find the coordinates of the image.", a: "(2, 4)", type: "text", calculator: false, marks: 3 },
+    { q: "On a coordinate grid representing a garden, a statue at point P(4, 2) is rotated 90° anticlockwise about the fountain at Q(1, 1). Find the new coordinates of the statue.", a: "(2, 4)", type: "text", calculator: false, marks: 3 },
   ],
   G14: [
-    { q: "Describe fully the single transformation that maps y = f(x) to y = 2f(x - 3) + 1", a: "Stretch scale factor 2 parallel to y-axis, translation (3, 1)", type: "text", calculator: false, marks: 4 },
+    { q: "A sound wave y = f(x) is transformed to y = 2f(x - 3) + 1 by audio software. Describe fully the single transformation applied to the wave.", a: "Stretch scale factor 2 parallel to y-axis, translation (3, 1)", type: "text", calculator: false, marks: 4 },
   ],
   G15: [
-    { q: "A hemisphere of radius 6cm is attached to a cylinder of radius 6cm and height 10cm. Find the total surface area.", a: "180π or 565.5 cm²", type: "text", calculator: true, marks: 5 },
+    { q: "A water storage tank consists of a hemisphere of radius 6cm on top of a cylinder of radius 6cm and height 10cm. Find the total surface area to be painted.", a: "180π or 565.5 cm²", type: "text", calculator: true, marks: 5 },
   ],
   G19: [
-    { q: "From a point 50m from the base of a building, the angle of elevation to the top is 62°. From the same point, the angle of elevation to a window is 38°. Find the height of the window above ground.", a: "39.1", type: "number", calculator: true, marks: 4 },
+    { q: "From a point 50m from a building, a surveyor measures the angle of elevation to the roof as 62° and to a second-floor window as 38°. Find the height of the window above ground.", a: "39.1", type: "number", calculator: true, marks: 4 },
   ],
   G20: [
-    { q: "On a 1:25000 map, a lake has area 6.4 cm². Find the actual area of the lake in km².", a: "0.4", type: "number", calculator: true, marks: 3 },
+    { q: "On a 1:25000 Ordnance Survey map, a lake covers 6.4 cm². A conservation team needs to know the actual area. Find the real area of the lake in km².", a: "0.4", type: "number", calculator: true, marks: 3 },
   ],
 
   // Probability - Higher exam style
   P1: [
-    { q: "P(A) = 0.3, P(B) = 0.5. Given that A and B are independent, find P(A' ∩ B').", a: "0.35", type: "number", calculator: false, marks: 3 },
+    { q: "In a factory, machine A breaking down (probability 0.3) is independent of machine B breaking down (probability 0.5). Find the probability that neither machine breaks down.", a: "0.35", type: "number", calculator: false, marks: 3 },
   ],
   P2: [
-    { q: "A biased dice has P(6) = x. All other faces are equally likely. If P(not 6) = 0.8, find x and P(even).", a: "x = 0.2, P(even) = 0.52", type: "text", calculator: false, marks: 4 },
+    { q: "A loaded die used in a board game has P(6) = x. All other faces are equally likely. If P(not rolling 6) = 0.8, find x and find P(rolling an even number).", a: "x = 0.2, P(even) = 0.52", type: "text", calculator: false, marks: 4 },
   ],
   P3: [
-    { q: "Two dice are thrown. Find P(product is a perfect square).", a: "8/36 or 2/9", type: "text", calculator: false, marks: 4 },
+    { q: "A game involves throwing two dice and multiplying the scores. To win a prize, the product must be a perfect square. Find the probability of winning.", a: "8/36 or 2/9", type: "text", calculator: false, marks: 4 },
   ],
   P4: [
-    { q: "A bag contains 4 red and 6 blue counters. Two are taken without replacement. Find P(same colour) and P(at least one red).", a: "P(same) = 7/15, P(≥1 red) = 2/3", type: "text", calculator: false, marks: 5 },
+    { q: "A bag contains 4 red and 6 blue sweets. Tom takes two sweets without looking. Find P(same colour) and P(at least one red sweet).", a: "P(same) = 7/15, P(≥1 red) = 2/3", type: "text", calculator: false, marks: 5 },
   ],
   P5: [
-    { q: "In a game, you roll a die. If you get 6, you win £10. If you get odd, you win £2. Otherwise you lose £3. Find the expected profit per game.", a: "£0.50", type: "text", calculator: false, marks: 4 },
+    { q: "At a charity stall, you roll a die. Roll 6: win £10. Roll odd: win £2. Otherwise: lose £3. Is this a fair game? Find the expected profit per game.", a: "£0.50", type: "text", calculator: false, marks: 4 },
   ],
   P6: [
-    { q: "Box A: 3 red, 5 blue. Box B: 4 red, 2 blue. A ball is taken from A and put in B, then a ball is taken from B. Find P(red from B).", a: "19/56", type: "text", calculator: false, marks: 5 },
+    { q: "A magic trick uses two boxes. Box A: 3 red, 5 blue cards. Box B: 4 red, 2 blue cards. A card is taken from A and placed in B, then a card is drawn from B. Find P(red from B).", a: "19/56", type: "text", calculator: false, marks: 5 },
   ],
   P7: [
-    { q: "In a class, 15 study French, 12 study Spanish, 5 study both. If a student is chosen at random from those studying at least one language, find P(French only | at least one language).", a: "10/22 or 5/11", type: "text", calculator: false, marks: 4 },
+    { q: "In a year group, 15 students study French, 12 study Spanish, and 5 study both languages. A student studying at least one language is chosen at random. Find P(studies French only | studies at least one language).", a: "10/22 or 5/11", type: "text", calculator: false, marks: 4 },
   ],
 
   // Statistics - Higher exam style
   S1: [
-    { q: "Data: 12, 15, 18, 21, 24, 27, 30, 33, 36. The mean is 24. One value is removed and the new mean is 25. Which value was removed?", a: "15", type: "number", calculator: true, marks: 4 },
+    { q: "Nine students score 12, 15, 18, 21, 24, 27, 30, 33, 36 in a test. The mean is 24. One student's score is removed from the data and the new mean is 25. Which score was removed?", a: "15", type: "number", calculator: true, marks: 4 },
   ],
   S2: [
-    { q: "Two box plots show exam results. Class A: median 62, IQR 15. Class B: median 58, IQR 24. Compare the distributions.", a: "Class A higher average and more consistent (smaller IQR)", type: "text", calculator: false, marks: 3 },
+    { q: "Two Year 11 classes took the same maths test. Class A: median 62, IQR 15. Class B: median 58, IQR 24. Compare the performance of the two classes.", a: "Class A higher average and more consistent (smaller IQR)", type: "text", calculator: false, marks: 3 },
   ],
   S3: [
-    { q: "The equation of a regression line is y = 2.3x + 15. Interpret the gradient and y-intercept in context where x = hours studied and y = mark.", a: "Each extra hour gives 2.3 more marks; 15 is the mark with 0 hours study", type: "text", calculator: false, marks: 3 },
+    { q: "A study of revision time (x hours) and exam mark (y%) gives the regression line y = 2.3x + 15. Interpret what the gradient and y-intercept tell us about the relationship.", a: "Each extra hour gives 2.3 more marks; 15 is the mark with 0 hours study", type: "text", calculator: false, marks: 3 },
   ],
   S4: [
-    { q: "Sales data shows seasonal variation: Q1: -15, Q2: +20, Q3: +25, Q4: -30. The trend for Q3 of year 3 predicts 180 units. Find the actual predicted sales.", a: "205", type: "number", calculator: false, marks: 3 },
+    { q: "A shop analyses ice cream sales with seasonal variation: Q1: -15, Q2: +20, Q3: +25, Q4: -30 (units from trend). The trend line predicts 180 units for Q3 of year 3. Find the actual predicted sales.", a: "205", type: "number", calculator: false, marks: 3 },
   ],
   S5: [
-    { q: "A factory produces 40% from machine A, 60% from machine B. Defect rates are 2% (A) and 5% (B). A defective item is found. Find P(from machine A).", a: "8/38 or 4/19", type: "text", calculator: false, marks: 5 },
+    { q: "A electronics factory produces 40% of components on machine A and 60% on machine B. Defect rates are 2% (A) and 5% (B). A faulty component is found. Find the probability it came from machine A.", a: "8/38 or 4/19", type: "text", calculator: false, marks: 5 },
   ],
 };
 
