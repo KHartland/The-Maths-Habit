@@ -31,7 +31,7 @@ const AnimatedLogo = () => {
           key={i}
           className="rounded-sm animate-logo-pulse"
           style={{
-            backgroundColor: `rgba(110, 51, 177, ${baseOpacity})`,
+            backgroundColor: `rgba(91, 127, 199, ${baseOpacity})`,
             animationDelay: `${delays[i]}s`,
           }}
         />
