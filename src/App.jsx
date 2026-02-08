@@ -5356,8 +5356,8 @@ What is the student's answer?`
 
       // Auto-dismiss toast after 6 seconds
       setTimeout(() => setSessionToastData(null), 6000);
-      // Clear animation highlights after 7 seconds (0.3s delay + stagger + 1.8s animation + linger)
-      setTimeout(() => setRecentSessionCodes([]), 7000);
+      // Clear animation highlights after 10 seconds (stagger + flash + afterpulse celebration)
+      setTimeout(() => setRecentSessionCodes([]), 10000);
     }
   };
 
@@ -8426,17 +8426,36 @@ function AppContent() {
                     }}
                     className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >
-                    {/* Glow overlay for recently practiced tiles */}
-                    {recentSessionCodes.includes(obj.code) && (
-                      <div
-                        className="heatmap-glow-overlay"
-                        style={{
-                          position: 'absolute', inset: -4, borderRadius: 12, pointerEvents: 'none',
-                          zIndex: 10,
-                          animationDelay: `${0.5 + recentSessionCodes.indexOf(obj.code) * 0.5}s`,
-                        }}
-                      />
-                    )}
+                    {/* Celebration overlay for recently practiced tiles */}
+                    {recentSessionCodes.includes(obj.code) && (() => {
+                      const delay = 0.5 + recentSessionCodes.indexOf(obj.code) * 0.6;
+                      return (
+                        <>
+                          {/* White flash fills the tile */}
+                          <div className="heatmap-glow-flash" style={{
+                            position: 'absolute', inset: 0, borderRadius: 8, pointerEvents: 'none',
+                            zIndex: 10, animationDelay: `${delay}s`,
+                          }} />
+                          {/* Expanding ring 1 */}
+                          <div className="heatmap-glow-ring" style={{
+                            position: 'absolute', inset: -2, borderRadius: 12, pointerEvents: 'none',
+                            zIndex: 11, border: '3px solid white', background: 'transparent',
+                            animationDelay: `${delay + 0.1}s`,
+                          }} />
+                          {/* Expanding ring 2 */}
+                          <div className="heatmap-glow-ring-2" style={{
+                            position: 'absolute', inset: -2, borderRadius: 12, pointerEvents: 'none',
+                            zIndex: 11, border: '2px solid white', background: 'transparent',
+                            animationDelay: `${delay + 0.3}s`,
+                          }} />
+                          {/* Pulsing afterglow */}
+                          <div className="heatmap-glow-afterpulse" style={{
+                            position: 'absolute', inset: -1, borderRadius: 10, pointerEvents: 'none',
+                            zIndex: 9, animationDelay: `${delay + 1.5}s`,
+                          }} />
+                        </>
+                      );
+                    })()}
                     {isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <Check className="w-4 h-4 text-white drop-shadow-md" strokeWidth={3} />
