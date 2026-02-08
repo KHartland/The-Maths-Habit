@@ -4567,7 +4567,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation' }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData }) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -5337,16 +5337,27 @@ What is the student's answer?`
       
       setAchievements(newAchievements);
       
-      // Only show confetti for mastery gains - not trivial achievements
-      if (masteryGained > 0) {
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 4000);
-      }
-      
-      setSessionStarted(false); // Show results
+      // Extract practiced objective codes for heatmap animation
+      const allResults = [...sessionResults, { correct: isCorrect, code: current.prerequisiteCode || current.objective.code, topic: current.objective.topic }];
+      const practicedCodes = [...new Set(allResults.map(r => r.code))];
 
-      // Show session complete tip for new users
-      setTimeout(() => showTip('sessionComplete'), 1000);
+      setRecentSessionCodes(practicedCodes);
+      setSessionToastData({
+        correctCount,
+        totalQuestions,
+        accuracy: Math.round((correctCount / totalQuestions) * 100),
+        achievements: newAchievements,
+      });
+
+      // Navigate directly to home — skip results screen
+      setSessionResults([]);
+      setSessionStarted(false);
+      setCurrentPage('home');
+
+      // Auto-dismiss toast after 5 seconds
+      setTimeout(() => setSessionToastData(null), 5000);
+      // Clear animation highlights after 3 seconds
+      setTimeout(() => setRecentSessionCodes([]), 3000);
     }
   };
 
@@ -7797,6 +7808,8 @@ function AppContent() {
   const [progress, setProgress] = useState(() => loadProgress());
   const [settings, setSettings] = useState(() => loadSettings());
   const [currentPage, setCurrentPage] = useState('home');
+  const [recentSessionCodes, setRecentSessionCodes] = useState([]);
+  const [sessionToastData, setSessionToastData] = useState(null);
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingComplete());
   const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Plan Selection
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -8209,6 +8222,8 @@ function AppContent() {
         isSubscribed={isSubscribed}
         FREE_DAILY_LIMIT={FREE_DAILY_LIMIT}
         tier={tier}
+        setRecentSessionCodes={setRecentSessionCodes}
+        setSessionToastData={setSessionToastData}
       />
     );
   }
@@ -8275,6 +8290,29 @@ function AppContent() {
 
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
+
+      {/* Session Results Toast */}
+      {sessionToastData && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40" style={{ animation: 'fadeIn 0.4s ease-out' }}>
+          <div className="glass-panel rounded-2xl px-5 py-3 shadow-2xl border border-white/20">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">
+                {sessionToastData.accuracy === 100 ? '🎯' :
+                 sessionToastData.accuracy >= 80 ? '🎉' :
+                 sessionToastData.accuracy >= 60 ? '👏' : '💪'}
+              </div>
+              <div>
+                <p className="font-bold text-primary-text text-sm">
+                  {sessionToastData.correctCount}/{sessionToastData.totalQuestions} correct
+                </p>
+                <p className="text-xs text-secondary-text">
+                  {sessionToastData.accuracy}% accuracy
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
@@ -8385,8 +8423,14 @@ function AppContent() {
                               '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isMastered ? '0 0 10px rgba(255,255,255,0.25)' :
                                  isExamReady ? '0 0 10px rgba(56,230,162,0.3)' : 'none',
+                      ...(recentSessionCodes.includes(obj.code) ? {
+                        animationDelay: `${recentSessionCodes.indexOf(obj.code) * 0.15}s`,
+                        animationFillMode: 'both',
+                      } : {}),
                     }}
-                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
+                    className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95 ${
+                      recentSessionCodes.includes(obj.code) ? 'heatmap-tile-pop' : ''
+                    }`}
                   >
                     {isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
