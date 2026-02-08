@@ -8621,11 +8621,13 @@ function AppContent() {
 
 // Landscape prompt — asks mobile users to rotate to landscape
 function LandscapePrompt() {
-  const [isPortrait, setIsPortrait] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 1024 && window.innerHeight > window.innerWidth;
+  });
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Only show on mobile-sized screens
     const checkOrientation = () => {
       const isMobile = window.innerWidth < 1024;
       const portrait = window.innerHeight > window.innerWidth;
@@ -8634,7 +8636,9 @@ function LandscapePrompt() {
 
     checkOrientation();
     window.addEventListener('resize', checkOrientation);
-    window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 100));
+
+    const onOrientationChange = () => setTimeout(checkOrientation, 150);
+    window.addEventListener('orientationchange', onOrientationChange);
 
     // Try to lock orientation in PWA / fullscreen mode
     try {
@@ -8645,34 +8649,49 @@ function LandscapePrompt() {
 
     return () => {
       window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', onOrientationChange);
     };
   }, []);
 
   if (!isPortrait || dismissed) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-void flex flex-col items-center justify-center p-8 text-center">
-      <div className="ambient-glow" />
-      <div className="relative z-10 flex flex-col items-center">
-        {/* Rotating phone icon */}
-        <div className="text-6xl mb-6 animate-pulse">
-          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
-            <rect x="12" y="4" width="40" height="56" rx="6" stroke="#A78BFA" strokeWidth="3" fill="none" />
-            <rect x="28" y="52" width="8" height="2" rx="1" fill="#A78BFA" />
-          </svg>
-        </div>
-        <div className="text-3xl mb-4" style={{ transform: 'scaleX(-1)' }}>↩️</div>
-        <h2 className="text-2xl font-bold text-primary-text mb-3">Rotate your phone</h2>
-        <p className="text-secondary-text text-lg mb-8 max-w-xs">
-          The Maths Habit works best in landscape mode — turn your phone sideways!
-        </p>
-        <button
-          onClick={() => setDismissed(true)}
-          className="px-6 py-3 text-sm text-secondary-text bg-white/10 rounded-xl hover:bg-white/20 transition-all"
-        >
-          Continue in portrait anyway
-        </button>
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      zIndex: 99999, backgroundColor: '#0a0a1a',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '2rem', textAlign: 'center'
+    }}>
+      {/* Phone rotation animation */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Phone in portrait */}
+          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
+          {/* Phone rotated to landscape */}
+          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
+          <circle cx="54" cy="44" r="2" fill="#5B7FC7" />
+          {/* Arrow showing rotation */}
+          <path d="M52 14 C60 14, 66 20, 66 28" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M63 26 L66 28 L68 25" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </div>
+
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
+        Turn your phone sideways
+      </h2>
+      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
+        The Maths Habit is designed for landscape mode
+      </p>
+      <button
+        onClick={() => setDismissed(true)}
+        style={{
+          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
+          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
+          cursor: 'pointer'
+        }}
+      >
+        Continue in portrait
+      </button>
     </div>
   );
 }
