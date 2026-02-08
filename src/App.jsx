@@ -4993,27 +4993,28 @@ What is the student's answer?`
   };
 
   // Check answer
-  const checkAnswer = (selfAssessedCorrect = null) => {
+  const checkAnswer = (selfAssessedCorrect = null, answerOverride = null) => {
     // Stop Quick Fire timer
     if (timerRef.current) clearInterval(timerRef.current);
 
     const current = sessionQueue[currentIndex];
+    const answerToCheck = answerOverride || userAnswer;
     let correct = selfAssessedCorrect;
 
     if (current.type !== 'self' && selfAssessedCorrect === null) {
       if (current.type === 'order') {
         // Check if order matches the correct order
-        const userOrder = JSON.parse(userAnswer || '[]');
+        const userOrder = JSON.parse(answerToCheck || '[]');
         correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
       } else if (current.type === 'match') {
         // Check if all matches are correct
-        const userMatches = JSON.parse(userAnswer || '{}');
+        const userMatches = JSON.parse(answerToCheck || '{}');
         correct = Object.entries(current.correctMatches).every(
           ([left, right]) => userMatches[left] === right
         );
       } else {
         // Use forgiving answer checker that accepts mathematical equivalents
-        correct = answersEquivalent(userAnswer, current.a);
+        correct = answersEquivalent(answerToCheck, current.a);
       }
     }
 
@@ -6080,8 +6081,8 @@ What is the student's answer?`
                           <HandwritingInput
                             onSubmit={(recognizedAnswer) => {
                               setUserAnswer(recognizedAnswer);
-                              // Switch to type mode so user can verify/edit the recognized answer
-                              setInputMode('type');
+                              // Auto-check the answer immediately — no keyboard popup
+                              setTimeout(() => checkAnswer(null, recognizedAnswer), 100);
                             }}
                             onCancel={() => setInputMode('type')}
                             placeholder="Write your answer here..."
