@@ -4630,7 +4630,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('type'); // 'type', 'handwriting', or 'photo'
+  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -4943,7 +4943,7 @@ What is the student's answer?`
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
-    setInputMode('type');
+    setInputMode('handwriting');
     
     // Reset scaffolding state
     setFailureCounts({});
@@ -5800,18 +5800,7 @@ What is the student's answer?`
                         <div className="flex rounded-xl bg-white/10 p-1">
                           <button
                             type="button"
-                            onClick={() => { setInputMode('type'); clearPhoto(); }}
-                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                              inputMode === 'type'
-                                ? 'bg-violet text-white shadow-sm'
-                                : 'text-secondary-text hover:text-primary-text'
-                            }`}
-                          >
-                            <span>⌨️</span> Type
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setInputMode('handwriting'); clearPhoto(); }}
+                            onClick={() => setInputMode('handwriting')}
                             className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
                               inputMode === 'handwriting'
                                 ? 'bg-violet text-white shadow-sm'
@@ -5822,23 +5811,14 @@ What is the student's answer?`
                           </button>
                           <button
                             type="button"
-                            onClick={() => aiUnlocked && setInputMode('photo')}
-                            disabled={!aiUnlocked}
+                            onClick={() => setInputMode('type')}
                             className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                              !aiUnlocked
-                                ? 'text-white/30 cursor-not-allowed'
-                                : inputMode === 'photo'
-                                  ? 'bg-violet text-white shadow-sm'
-                                  : 'text-secondary-text hover:text-primary-text'
+                              inputMode === 'type'
+                                ? 'bg-violet text-white shadow-sm'
+                                : 'text-secondary-text hover:text-primary-text'
                             }`}
-                            title={aiUnlocked ? 'Photo mode' : `Unlocks after ${AI_UNLOCK_THRESHOLD - totalQuestionsAnswered} more questions`}
                           >
-                            <span>{aiUnlocked ? '📷' : '🔒'}</span> Photo
-                            {!aiUnlocked && (
-                              <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded-full">
-                                {AI_UNLOCK_THRESHOLD - totalQuestionsAnswered}
-                              </span>
-                            )}
+                            <span>⌨️</span> Type
                           </button>
                         </div>
 
@@ -6121,7 +6101,7 @@ What is the student's answer?`
                             onSubmit={(recognizedAnswer) => {
                               setUserAnswer(recognizedAnswer);
                               // Switch to type mode so user can verify/edit the recognized answer
-                              setInputMode('type');
+                              setInputMode('handwriting');
                             }}
                             onCancel={() => setInputMode('type')}
                             placeholder="Write your answer here..."
@@ -6130,102 +6110,6 @@ What is the student's answer?`
                           />
                         )}
 
-                        {/* Photo mode */}
-                        {inputMode === 'photo' && (
-                          <div className="space-y-3">
-                            {/* Hidden file input */}
-                            <input
-                              ref={fileInputRef}
-                              type="file"
-                              accept="image/*"
-                              capture="environment"
-                              onChange={handlePhotoCapture}
-                              className="hidden"
-                            />
-                            
-                            {!capturedImage ? (
-                              <div className="space-y-2">
-                                {/* Camera capture button */}
-                                <button
-                                  type="button"
-                                  onClick={() => fileInputRef.current?.click()}
-                                  className="w-full py-8 border-2 border-dashed border-slate-300 rounded-xl hover:border-violet-400 hover:bg-violet-50 transition-all flex flex-col items-center gap-2 text-slate-500 hover:text-violet-600"
-                                >
-                                  <span className="text-4xl">📷</span>
-                                  <span className="font-medium">Take a photo of your answer</span>
-                                  <span className="text-xs text-slate-400">or tap to upload from gallery</span>
-                                </button>
-                                
-                                <p className="text-xs text-center text-slate-400">
-                                  Write your answer clearly on paper, then photograph it
-                                </p>
-                              </div>
-                            ) : (
-                              <div className="space-y-3">
-                                {/* Image preview */}
-                                <div className="relative">
-                                  <img 
-                                    src={capturedImage} 
-                                    alt="Your handwritten answer" 
-                                    className="w-full rounded-xl border border-slate-200"
-                                  />
-                                  {/* Processing overlay */}
-                                  {isProcessingImage && (
-                                    <div className="absolute inset-0 bg-white/80 rounded-xl flex items-center justify-center">
-                                      <div className="text-center">
-                                        <div className="animate-spin text-3xl mb-2">🔍</div>
-                                        <p className="text-sm font-medium text-slate-600">Reading your handwriting...</p>
-                                      </div>
-                                    </div>
-                                  )}
-                                  {/* Clear button */}
-                                  <button
-                                    type="button"
-                                    onClick={clearPhoto}
-                                    className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-all shadow-lg"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </button>
-                                </div>
-                                
-                                {/* Extracted answer display */}
-                                {userAnswer && !isProcessingImage && (
-                                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-                                    <p className="text-xs text-emerald-600 mb-1">AI read your answer as:</p>
-                                    <p className="text-lg font-semibold text-emerald-700">{userAnswer}</p>
-                                    <p className="text-xs text-emerald-500 mt-1">
-                                      You can edit this if it's not quite right
-                                    </p>
-                                  </div>
-                                )}
-                                
-                                {/* Editable answer field */}
-                                {!isProcessingImage && (
-                                  <div className="relative">
-                                    <input
-                                      type="text"
-                                      value={userAnswer}
-                                      onChange={(e) => setUserAnswer(e.target.value)}
-                                      onKeyDown={(e) => e.key === 'Enter' && userAnswer && checkAnswer()}
-                                      placeholder="Edit answer if needed..."
-                                      className="w-full px-4 py-2 border-2 border-slate-200 rounded-xl focus:border-violet-500 focus:outline-none text-lg"
-                                    />
-                                  </div>
-                                )}
-                                
-                                {/* Retake button */}
-                                <button
-                                  type="button"
-                                  onClick={() => { clearPhoto(); fileInputRef.current?.click(); }}
-                                  className="w-full py-2 text-sm text-slate-500 hover:text-violet-600 transition-all"
-                                >
-                                  📷 Take a new photo
-                                </button>
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer || isProcessingImage}
@@ -6607,14 +6491,6 @@ What is the student's answer?`
                   <div>
                     <p className="font-semibold text-purple-900">Smart Error Analysis</p>
                     <p className="text-xs text-purple-600">AI identifies exactly where you went wrong</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3 p-3 bg-violet-50 rounded-xl">
-                  <span className="text-2xl">📷</span>
-                  <div>
-                    <p className="font-semibold text-violet-900">Photo Answers</p>
-                    <p className="text-xs text-violet-600">Photograph your handwritten working</p>
                   </div>
                 </div>
                 
