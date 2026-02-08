@@ -5416,21 +5416,6 @@ What is the student's answer?`
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-28 px-4 relative z-10">
           <div className="max-w-md mx-auto">
-            {/* Practice Tip Banner */}
-            {currentTip && (
-              <div className="mb-4 p-4 glass-panel rounded-xl border border-mint/30 animate-fade-in">
-                <div className="flex items-start gap-3">
-                  <span className="text-lg shrink-0">💡</span>
-                  <p className="flex-1 text-sm text-secondary-text">{currentTip.text}</p>
-                  <button
-                    onClick={dismissTip}
-                    className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
             <div className="glass-panel rounded-3xl p-8 shadow-glass">
               {/* Header */}
               <div className="text-center mb-6">
@@ -5492,11 +5477,6 @@ What is the student's answer?`
                         </span>
                       )}
                     </div>
-                    {!r.correct && revisionHints[r.code] && (
-                      <p className="text-xs text-red-400 mt-2 ml-9">
-                        📚 {revisionHints[r.code]}
-                      </p>
-                    )}
                   </div>
                 ))}
               </div>
@@ -5565,184 +5545,22 @@ What is the student's answer?`
                 <p className="text-secondary-text mt-1">Build lasting maths skills</p>
               </div>
 
-              {/* Practice Mode Selection - Quick Fire unlocks after 5 mastered OR 3-day streak */}
-              {(() => {
-                const quickFireUnlocked = masteredCount >= QUICKFIRE_MASTERY_THRESHOLD || dayStreak >= QUICKFIRE_STREAK_THRESHOLD;
-                const examModeUnlocked = masteredCount >= 10; // Exam mode after 10 mastered
+              {/* Mode buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => { setPracticeMode('standard'); startSession('standard'); }}
+                  className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
+                >
+                  Start Practice
+                </button>
 
-                return (
-                  <div className="mb-6">
-                    <label className="text-sm font-medium text-secondary-text mb-2 block">Practice Mode</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {/* Standard Mode - Always available */}
-                      <button
-                        onClick={() => setPracticeMode('standard')}
-                        className={`p-3 rounded-xl border-2 transition-all text-left ${
-                          practiceMode === 'standard'
-                            ? 'border-violet bg-violet/20'
-                            : 'border-white/20 hover:border-white/40 bg-white/5'
-                        }`}
-                      >
-                        <StandardIcon className="w-6 h-6 text-violet-light mb-1" />
-                        <div className="font-semibold text-primary-text text-sm">Standard</div>
-                        <div className="text-[10px] text-secondary-text">With hints</div>
-                      </button>
-
-                      {/* Quick Fire - Unlocks after 5 mastered OR 3-day streak */}
-                      <button
-                        onClick={() => quickFireUnlocked && mcqObjectiveCount >= 5 && setPracticeMode('quickfire')}
-                        disabled={!quickFireUnlocked || mcqObjectiveCount < 5}
-                        className={`p-3 rounded-xl border-2 transition-all text-left ${
-                          !quickFireUnlocked || mcqObjectiveCount < 5
-                            ? 'border-white/10 bg-white/5 opacity-50 cursor-not-allowed'
-                            : practiceMode === 'quickfire'
-                              ? 'border-orange-500 bg-orange-500/20'
-                              : 'border-white/20 hover:border-white/40 bg-white/5'
-                        }`}
-                      >
-                        <div className="text-lg mb-1">{quickFireUnlocked ? '⚡' : '🔒'}</div>
-                        <div className="font-semibold text-primary-text text-sm">Quick Fire</div>
-                        <div className="text-[10px] text-secondary-text">
-                          {!quickFireUnlocked
-                            ? `${QUICKFIRE_MASTERY_THRESHOLD - masteredCount} more to unlock`
-                            : '15s timer'}
-                        </div>
-                      </button>
-
-                      {/* Exam Mode - Unlocks after 10 mastered */}
-                      <button
-                        onClick={() => examModeUnlocked && setPracticeMode('exam')}
-                        disabled={!examModeUnlocked}
-                        className={`p-3 rounded-xl border-2 transition-all text-left ${
-                          !examModeUnlocked
-                            ? 'border-white/10 bg-white/5 opacity-50 cursor-not-allowed'
-                            : practiceMode === 'exam'
-                              ? 'border-red-500 bg-red-500/20'
-                              : 'border-white/20 hover:border-white/40 bg-white/5'
-                        }`}
-                      >
-                        <div className="text-lg mb-1">{examModeUnlocked ? '🎯' : '🔒'}</div>
-                        <div className="font-semibold text-primary-text text-sm">Exam</div>
-                        <div className="text-[10px] text-secondary-text">
-                          {!examModeUnlocked
-                            ? `${10 - masteredCount} more to unlock`
-                            : 'No hints'}
-                        </div>
-                      </button>
-                    </div>
-
-                    {/* Exam Mode explanation */}
-                    {practiceMode === 'exam' && (
-                      <div className="mt-3 p-3 bg-red-500/20 border border-red-500/40 rounded-xl text-sm text-red-300">
-                        <strong>Exam conditions:</strong> No hints, no scaffolding, delayed feedback. Train your exam mindset.
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-
-              {/* Stats */}
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div className="glass-panel rounded-xl p-3 text-center">
-                  <div className="text-2xl font-bold text-primary-text">{dueCount}</div>
-                  <div className="text-xs text-secondary-text">Due now</div>
-                </div>
-                <div className="glass-panel rounded-xl p-3 text-center border-mint/30">
-                  <div className="text-2xl font-bold text-mint">{masteredCount}</div>
-                  <div className="text-xs text-mint">Mastered</div>
-                </div>
+                <button
+                  disabled
+                  className="w-full py-4 font-bold text-lg rounded-xl transition-all bg-white/10 text-secondary-text cursor-not-allowed border-2 border-white/10"
+                >
+                  1v1 Challenge — Coming Soon
+                </button>
               </div>
-
-              {cooldownCount > 0 && (
-                <div className="bg-amber-500/20 border border-amber-500/40 rounded-xl p-3 mb-6">
-                  <div className="flex items-center gap-2 text-amber-300">
-                    <span className="text-lg">📚</span>
-                    <span className="text-sm">
-                      <strong>{cooldownCount}</strong> {cooldownCount === 1 ? 'objective needs' : 'objectives need'} revision
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Question count selector - simplified to 2 options */}
-              <div className="mb-6">
-                <label className="text-sm font-medium text-secondary-text mb-2 block">Questions</label>
-                <div className="flex gap-2">
-                  {[5, 10].map(n => {
-                    const isLocked = !isSubscribed && n > (FREE_DAILY_LIMIT ?? 5);
-                    return (
-                      <button
-                        key={n}
-                        onClick={() => !isLocked && setQuestionCount(n)}
-                        disabled={isLocked}
-                        className={`flex-1 py-3 rounded-xl font-medium transition-all ${
-                          isLocked
-                            ? 'bg-white/5 text-secondary-text/50 cursor-not-allowed'
-                            : questionCount === n
-                              ? practiceMode === 'quickfire'
-                                ? 'bg-orange-500 text-white'
-                                : practiceMode === 'exam'
-                                  ? 'bg-red-500 text-white'
-                                  : 'bg-gradient-violet text-white'
-                              : 'bg-white/10 text-secondary-text hover:bg-white/20'
-                        }`}
-                      >
-                        {isLocked ? '🔒 10' : n === 5 ? '5 (Quick)' : '10 (Full)'}
-                      </button>
-                    );
-                  })}
-                </div>
-                {!isSubscribed && (
-                  <p className="text-xs text-amber-400 mt-2">Free plan: 5 questions per day</p>
-                )}
-              </div>
-
-              {/* AI Coach Progress - shows until unlocked */}
-              {!aiUnlocked && (
-                <div className="mb-6 p-4 glass-panel border-violet/30 rounded-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-violet/30 rounded-full flex items-center justify-center">
-                      <span className="text-lg">🔒</span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-primary-text">AI Coach</p>
-                      <p className="text-xs text-secondary-text">Unlocks in {AI_UNLOCK_THRESHOLD - totalQuestionsAnswered} questions</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-violet-light">{totalQuestionsAnswered}/{AI_UNLOCK_THRESHOLD}</p>
-                    </div>
-                  </div>
-                  <div className="mt-2 h-2 bg-violet/20 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-violet rounded-full transition-all duration-500"
-                      style={{ width: `${(totalQuestionsAnswered / AI_UNLOCK_THRESHOLD) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* AI Coach Active indicator - shows when unlocked */}
-              {aiUnlocked && (
-                <div className="mb-6 p-3 glass-panel border-violet/40 rounded-xl">
-                  <div className="flex items-center gap-2 text-violet-light">
-                    <span className="text-lg">🤖</span>
-                    <span className="text-sm font-medium">AI Coach Active</span>
-                    <span className="ml-auto text-xs bg-violet/30 px-2 py-0.5 rounded-full text-primary-text">Smart feedback enabled</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Start button */}
-              <button
-                onClick={() => startSession(practiceMode)}
-                className={`w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg ${
-                  practiceMode === 'quickfire'
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-orange-500/25'
-                    : 'btn-gradient-mint text-void shadow-glow-mint'
-                }`}
-              >
-                {practiceMode === 'quickfire' ? '⚡ Start Quick Fire' : 'Start Session'}
-              </button>
             </div>
           </div>
         </div>
@@ -5778,7 +5596,7 @@ What is the student's answer?`
             <div className="mb-4">
               <div className="text-center p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300">
                 <div className="font-bold">🎯 Exam Conditions</div>
-                <div className="text-xs">No hints · No scaffolding · Delayed feedback</div>
+                <div className="text-xs">No scaffolding · Delayed feedback</div>
               </div>
             </div>
           )}
@@ -5802,48 +5620,8 @@ What is the student's answer?`
               />
             </div>
 
-            {/* Session Phase Indicator (FSRS-based learning structure) */}
-            {current?._sessionPhase && practiceMode === 'standard' && (
-              <div className="mt-2 flex items-center gap-2 text-xs">
-                <span className={`px-2 py-0.5 rounded-full font-medium ${
-                  current._sessionPhase === 'warmup'
-                    ? 'bg-green-500/20 text-green-300'
-                    : current._sessionPhase === 'cooldown'
-                      ? 'bg-blue-500/20 text-blue-300'
-                      : 'bg-violet/30 text-violet-light'
-                }`}>
-                  {current._sessionPhase === 'warmup' && '🌱 Warm-up'}
-                  {current._sessionPhase === 'challenge' && '💪 Challenge'}
-                  {current._sessionPhase === 'cooldown' && '✨ Cool-down'}
-                </span>
-                {current._sessionPhase === 'warmup' && (
-                  <span className="text-secondary-text">Build confidence</span>
-                )}
-                {current._sessionPhase === 'challenge' && (
-                  <span className="text-secondary-text">Main learning</span>
-                )}
-                {current._sessionPhase === 'cooldown' && (
-                  <span className="text-secondary-text">End on a win</span>
-                )}
-              </div>
-            )}
           </div>
 
-          {/* Practice Tip Banner */}
-          {currentTip && (
-            <div className="mb-4 p-4 glass-panel rounded-xl border border-mint/30 animate-fade-in">
-              <div className="flex items-start gap-3">
-                <span className="text-lg shrink-0">💡</span>
-                <p className="flex-1 text-sm text-secondary-text">{currentTip.text}</p>
-                <button
-                  onClick={dismissTip}
-                  className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Question card */}
           {current && (
@@ -5892,13 +5670,6 @@ What is the student's answer?`
                   </span>
                 )}
 
-                {/* Calculator badge */}
-                <span className={`ml-auto px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 ${
-                  current.calculator ? 'bg-mint/20 text-mint' : 'bg-white/10 text-secondary-text'
-                }`}>
-                  {current.calculator ? '🧮' : '✏️'}
-                  {current.calculator ? 'Calculator' : 'Non-calc'}
-                </span>
               </div>
 
               {/* Question content */}
@@ -5942,10 +5713,6 @@ What is the student's answer?`
                   </div>
                 )}
 
-                {/* Hint for scaffold questions */}
-                {current.hint && (settings?.showHints || isScaffoldQuestion) && (
-                  <p className="text-sm text-secondary-text mb-4 italic">💡 {current.hint}</p>
-                )}
 
                 {/* Answer input */}
                 {!showFeedback && (
@@ -6502,19 +6269,6 @@ What is the student's answer?`
                       </div>
                     ) : (
                       <>
-                        {/* Scaffold Question Indicator */}
-                        {isScaffoldQuestion && (
-                          <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-xl">
-                            <div className="flex items-center gap-2 text-indigo-700">
-                              <span className="text-xl">🧱</span>
-                              <div>
-                                <span className="font-semibold">Building Block Question</span>
-                                <p className="text-xs text-indigo-600">Strengthening your foundation before the harder question</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
                         <div className={`p-4 rounded-xl ${
                           isCorrect 
                             ? 'bg-emerald-50 border border-emerald-200' 
@@ -6525,7 +6279,7 @@ What is the student's answer?`
                               <>
                                 <Check className="w-5 h-5 text-emerald-600" />
                                 <span className="font-semibold text-emerald-700">
-                                  {isScaffoldQuestion ? 'Great! Foundation strengthened!' : 'Correct!'}
+                                  Correct!
                                 </span>
                               </>
                             ) : (
@@ -6568,12 +6322,12 @@ What is the student's answer?`
                               <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
                                 currentDiagnosis.isAI ? 'bg-purple-100' : 'bg-amber-100'
                               }`}>
-                                <span className="text-xl">{currentDiagnosis.isAI ? '🤖' : '💡'}</span>
+                                <span className="text-xl">🤖</span>
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
                                   <h4 className={`font-semibold ${currentDiagnosis.isAI ? 'text-purple-900' : 'text-amber-900'}`}>
-                                    {currentDiagnosis.isAI ? 'What went wrong?' : 'Hint'}
+                                    What went wrong?
                                   </h4>
                                   {currentDiagnosis.isAI && (
                                     <span className="text-[10px] px-1.5 py-0.5 bg-purple-200 text-purple-700 rounded-full font-medium">
@@ -6584,13 +6338,6 @@ What is the student's answer?`
                                 <p className={`text-sm mb-2 ${currentDiagnosis.isAI ? 'text-purple-800' : 'text-amber-800'}`}>
                                   {currentDiagnosis.diagnosis}
                                 </p>
-                                {currentDiagnosis.tip && (
-                                  <div className={`mt-2 p-2 rounded-lg ${currentDiagnosis.isAI ? 'bg-white/60' : 'bg-white/80'}`}>
-                                    <p className={`text-xs ${currentDiagnosis.isAI ? 'text-purple-700' : 'text-amber-700'}`}>
-                                      <span className="font-semibold">💡 Try this:</span> {currentDiagnosis.tip}
-                                    </p>
-                                  </div>
-                                )}
                                 {currentDiagnosis.encouragement && currentDiagnosis.isAI && (
                                   <p className="text-xs text-purple-600 mt-2 italic">
                                     {currentDiagnosis.encouragement}
@@ -6691,14 +6438,6 @@ What is the student's answer?`
                           </details>
                         )}
                     
-                        {/* Simple revision hint if no worked example and no diagnosis */}
-                        {!isCorrect && !currentDiagnosis?.hasDiagnosis && !workedExamples[current.objective.code] && revisionHints[current.objective.code] && (
-                          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                            <p className="text-sm text-amber-800">
-                              <span className="font-semibold">📚 Revision tip:</span> {revisionHints[current.objective.code]}
-                            </p>
-                          </div>
-                        )}
 
                       </>
                     )}
@@ -6806,12 +6545,6 @@ What is the student's answer?`
                 </ul>
               </div>
               
-              {/* Quick Tip */}
-              <div className="bg-amber-100 rounded-xl p-4">
-                <p className="font-bold text-amber-900 text-lg">
-                  {currentMiniLesson.quickTip}
-                </p>
-              </div>
               
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4 border-t">
@@ -6853,14 +6586,6 @@ What is the student's answer?`
           <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl animate-bounce-in">
             {/* Header with gradient */}
             <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-8 text-center relative overflow-hidden">
-              {/* Sparkles */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-4 left-8 text-2xl animate-pulse">✨</div>
-                <div className="absolute top-8 right-12 text-xl animate-pulse delay-100">⭐</div>
-                <div className="absolute bottom-6 left-16 text-lg animate-pulse delay-200">💫</div>
-                <div className="absolute bottom-4 right-8 text-2xl animate-pulse delay-300">✨</div>
-              </div>
-              
               <div className="relative">
                 <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
                   <span className="text-5xl">🤖</span>
@@ -6906,7 +6631,7 @@ What is the student's answer?`
                 onClick={() => setShowAIUnlockNotification(false)}
                 className="w-full py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-xl hover:from-violet-600 hover:to-purple-600 transition-all shadow-lg mt-4"
               >
-                Let's Go! 🚀
+                Let's Go!
               </button>
             </div>
           </div>
@@ -7008,11 +6733,11 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
     : 0;
   
   const getReadinessLabel = (score) => {
-    if (score >= 80) return { label: 'Exam Ready! 🎯', color: 'text-emerald-600' };
-    if (score >= 60) return { label: 'Almost There! 📚', color: 'text-blue-600' };
-    if (score >= 40) return { label: 'Making Progress 💪', color: 'text-amber-600' };
-    if (score >= 20) return { label: 'Getting Started 🌱', color: 'text-orange-600' };
-    return { label: 'Just Beginning 🚀', color: 'text-slate-600' };
+    if (score >= 80) return { label: 'Exam Ready', color: 'text-emerald-600' };
+    if (score >= 60) return { label: 'Almost There', color: 'text-blue-600' };
+    if (score >= 40) return { label: 'Making Progress', color: 'text-amber-600' };
+    if (score >= 20) return { label: 'Getting Started', color: 'text-orange-600' };
+    return { label: 'Just Beginning', color: 'text-slate-600' };
   };
   
   const readiness = getReadinessLabel(readinessScore);
@@ -7471,23 +7196,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 )}
               </div>
 
-              {/* Show hints toggle */}
-              <div className="flex items-center justify-between py-2">
-                <div>
-                  <div className="text-sm font-medium text-secondary-text">Show hints</div>
-                  <div className="text-xs text-white/40">Display helpful hints during practice</div>
-                </div>
-                <button
-                  onClick={() => updateSetting('showHints', !settings.showHints)}
-                  className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.showHints ? 'bg-violet' : 'bg-white/20'
-                  }`}
-                >
-                  <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    settings.showHints ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
-                </button>
-              </div>
 
               {/* Higher tier toggle */}
               <div className="flex items-center justify-between py-2">
@@ -8795,12 +8503,6 @@ function AppContent() {
             <div>
               <h1 className="text-3xl font-bold text-primary-text tracking-tight">Your Maths Journey</h1>
               <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
-              <div className="flex items-center gap-2 mt-2">
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-mint/10 text-mint text-xs font-medium rounded-full border border-mint/30">
-                  <span>✨</span> Smart Learning Active
-                </span>
-                <span className="text-xs text-secondary-text/60">Powered by spaced repetition</span>
-              </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
