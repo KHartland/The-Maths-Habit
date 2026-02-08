@@ -155,8 +155,8 @@ const HandwritingInput = ({
     // Debounce - wait 500ms after last stroke
     recognitionTimeoutRef.current = setTimeout(async () => {
       if (!mathpixAppId || !mathpixAppKey) {
-        // Fallback: just show that we captured strokes
-        setRecognizedText(`[${strokesToRecognize.length} strokes captured]`);
+        console.warn('Mathpix keys missing:', { appId: !!mathpixAppId, appKey: !!mathpixAppKey });
+        setError('Handwriting recognition not configured');
         return;
       }
 
