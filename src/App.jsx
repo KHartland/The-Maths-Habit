@@ -5576,10 +5576,16 @@ What is the student's answer?`
     <div className="min-h-screen bg-void relative overflow-hidden">
       <LandscapePrompt />
       <div className="ambient-glow" />
-      <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      <div className="pt-24 pb-24 px-4 relative z-10 page-content">
+      <div className="pt-2 pb-2 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
+          {/* Minimal back button */}
+          <button
+            onClick={() => setCurrentPage('home')}
+            className="mb-2 flex items-center gap-1 text-secondary-text hover:text-primary-text text-sm transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 rotate-180" /> Exit
+          </button>
           {/* Quick Fire Timer */}
           {practiceMode === 'quickfire' && timeLeft !== null && !showFeedback && (
             <div className="mb-4">
