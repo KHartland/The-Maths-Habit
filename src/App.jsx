@@ -5354,10 +5354,10 @@ What is the student's answer?`
       setSessionStarted(false);
       setCurrentPage('home');
 
-      // Auto-dismiss toast after 5 seconds
-      setTimeout(() => setSessionToastData(null), 5000);
-      // Clear animation highlights after 4 seconds (animation is 1.2s + stagger + linger)
-      setTimeout(() => setRecentSessionCodes([]), 4000);
+      // Auto-dismiss toast after 6 seconds
+      setTimeout(() => setSessionToastData(null), 6000);
+      // Clear animation highlights after 7 seconds (0.3s delay + stagger + 1.8s animation + linger)
+      setTimeout(() => setRecentSessionCodes([]), 7000);
     }
   };
 
@@ -8419,7 +8419,7 @@ function AppContent() {
                       boxShadow: isMastered ? '0 0 10px rgba(255,255,255,0.25)' :
                                  isExamReady ? '0 0 10px rgba(56,230,162,0.3)' : 'none',
                       ...(recentSessionCodes.includes(obj.code) ? {
-                        animationDelay: `${recentSessionCodes.indexOf(obj.code) * 0.15}s`,
+                        animationDelay: `${0.3 + recentSessionCodes.indexOf(obj.code) * 0.4}s`,
                         animationFillMode: 'both',
                       } : {}),
                     }}
