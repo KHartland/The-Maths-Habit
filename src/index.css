@@ -453,6 +453,23 @@ select:focus {
     display: none !important;
   }
 
+  /* Two-column layout — question left, answer right */
+  .question-card-layout {
+    display: flex !important;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .question-side {
+    flex: 1;
+    min-width: 0;
+  }
+  .answer-side {
+    flex: 1.2;
+    min-width: 0;
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+
   /* Question card — tighter padding */
   .question-card {
     padding: 0.75rem 1rem !important;
@@ -461,20 +478,17 @@ select:focus {
     padding: 0.5rem 1rem !important;
   }
   .question-text {
-    font-size: 1rem !important;
-    margin-bottom: 0.5rem !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 0.25rem !important;
   }
 
   /* Handwriting canvas — shorter */
   .handwriting-canvas {
-    height: 6rem !important;
+    height: 5.5rem !important;
   }
 
   /* Input area — compact */
   .answer-section {
-    gap: 0.5rem !important;
-  }
-  .answer-section .space-y-3 {
     gap: 0.5rem !important;
   }
 

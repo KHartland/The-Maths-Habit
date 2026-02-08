@@ -5666,6 +5666,8 @@ What is the student's answer?`
 
               {/* Question content */}
               <div className="p-6 question-card">
+                <div className="question-card-layout">
+                <div className="question-side">
                 {/* Diagram if applicable */}
                 {current.diagram && (
                   <div className="mb-4" dangerouslySetInnerHTML={{ __html: generateDiagram(current.diagram) }} />
@@ -5675,6 +5677,8 @@ What is the student's answer?`
                 <h3 className="text-lg font-semibold text-primary-text mb-4 question-text">
                   {renderRecurring(current.q)}
                 </h3>
+                </div>
+                <div className="answer-side">
 
                 {/* Calculator indicator and button */}
                 {current.calculator && !showFeedback && (
@@ -6276,6 +6280,8 @@ What is the student's answer?`
                     </button>
                   </div>
                 )}
+                </div>
+                </div>
               </div>
             </div>
           )}
