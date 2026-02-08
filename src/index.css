@@ -626,12 +626,28 @@ select:focus {
     padding-bottom: 0 !important;
   }
 
-  /* Calculator — compact for landscape */
+  /* Calculator — fixed overlay for landscape */
+  .calc-overlay-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0.5rem !important;
+  }
   .calc-wrapper {
     width: auto !important;
-    max-width: 320px !important;
+    max-width: 360px !important;
+    max-height: 95vh !important;
     padding: 0.4rem !important;
     border-radius: 0.75rem !important;
+    overflow-y: auto !important;
   }
   .calc-header {
     margin-bottom: 0.25rem !important;

@@ -5692,11 +5692,11 @@ What is the student's answer?`
                   </div>
                 )}
 
-                {/* On-screen calculator */}
+                {/* On-screen calculator — fixed overlay in landscape */}
                 {current.calculator && showCalculator && !showFeedback && (
-                  <div className="mb-4 flex justify-center">
+                  <div className="mb-4 flex justify-center calc-overlay-container">
                     <Calculator
-                      onInsert={(value) => setUserAnswer(value)}
+                      onInsert={(value) => { setUserAnswer(value); setShowCalculator(false); }}
                       onClose={() => setShowCalculator(false)}
                     />
                   </div>
