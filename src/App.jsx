@@ -446,8 +446,8 @@ const topics = [
     // G22-G23: Higher only (sine/cosine rule, area formula)
     // G24: Foundation (translations as vectors)
     // G25: Additional Foundation (vector operations), Higher (vector proofs)
-    foundation: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G17', 'G18', 'G19', 'G20', 'G21', 'G24', 'G25'],
-    higher: ['G10', 'G22', 'G23'] },
+    foundation: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G11', 'G12', 'G13', 'G14', 'G15', 'G16', 'G18', 'G19', 'G20', 'G21', 'G24', 'G25'],
+    higher: ['G10', 'G17', 'G22', 'G23'] },
   { id: 'prob', name: 'Probability', strand: 'Probability',
     // P1-P7: Foundation
     // P8: Additional Foundation (independent/dependent events)
