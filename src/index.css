@@ -423,3 +423,79 @@ select:focus {
     --text-primary: #374151;
   }
 }
+
+/* ==================== LANDSCAPE MOBILE ==================== */
+/* Targets phones in landscape (wide + short viewport) */
+@media (orientation: landscape) and (max-height: 500px) {
+
+  /* Page content area — reduce massive top/bottom padding */
+  .page-content {
+    padding-top: 3rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Content container — use full width in landscape */
+  .content-container {
+    max-width: 100% !important;
+  }
+
+  /* Top nav bar — make thinner */
+  .top-nav-bar {
+    height: 2.75rem !important;
+  }
+  .top-nav-bar .nav-logo {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  /* Bottom mobile nav — hide in landscape */
+  .bottom-nav {
+    display: none !important;
+  }
+
+  /* Question card — tighter padding */
+  .question-card {
+    padding: 0.75rem 1rem !important;
+  }
+  .question-card-header {
+    padding: 0.5rem 1rem !important;
+  }
+  .question-text {
+    font-size: 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Handwriting canvas — shorter */
+  .handwriting-canvas {
+    height: 6rem !important;
+  }
+
+  /* Input area — compact */
+  .answer-section {
+    gap: 0.5rem !important;
+  }
+  .answer-section .space-y-3 {
+    gap: 0.5rem !important;
+  }
+
+  /* Feedback section — compact */
+  .feedback-section {
+    padding: 0.75rem !important;
+  }
+
+  /* Check Answer button — thinner */
+  .check-btn {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Progress bar area */
+  .progress-area {
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Make the page scrollable without bouncing */
+  .min-h-screen {
+    min-height: auto !important;
+  }
+}

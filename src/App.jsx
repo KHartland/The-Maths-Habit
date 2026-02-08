@@ -5356,7 +5356,7 @@ What is the student's answer?`
       <div className="min-h-screen bg-void relative overflow-hidden">
         <div className="ambient-glow" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4 text-center relative z-10">
+        <div className="pt-24 pb-24 px-4 text-center relative z-10 page-content">
           <PracticeIcon className="w-16 h-16 text-secondary-text/40 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-primary-text">No questions available</h2>
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
@@ -5414,8 +5414,8 @@ What is the student's answer?`
         )}
 
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-28 px-4 relative z-10">
-          <div className="max-w-md mx-auto">
+        <div className="pt-24 pb-28 px-4 relative z-10 page-content">
+          <div className="max-w-md mx-auto content-container">
             <div className="glass-panel rounded-3xl p-8 shadow-glass">
               {/* Header */}
               <div className="text-center mb-6">
@@ -5534,8 +5534,8 @@ What is the student's answer?`
       <div className="min-h-screen bg-void relative overflow-hidden">
         <div className="ambient-glow" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4 relative z-10">
-          <div className="max-w-md mx-auto">
+        <div className="pt-24 pb-24 px-4 relative z-10 page-content">
+          <div className="max-w-md mx-auto content-container">
             <div className="glass-panel rounded-3xl p-8 shadow-glass">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 bg-gradient-violet rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow-violet">
@@ -5577,8 +5577,8 @@ What is the student's answer?`
       <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      <div className="pt-24 pb-24 px-4 relative z-10">
-        <div className="max-w-lg mx-auto">
+      <div className="pt-24 pb-24 px-4 relative z-10 page-content">
+        <div className="max-w-lg mx-auto content-container">
           {/* Quick Fire Timer */}
           {practiceMode === 'quickfire' && timeLeft !== null && !showFeedback && (
             <div className="mb-4">
@@ -5602,7 +5602,7 @@ What is the student's answer?`
           )}
 
           {/* Progress bar */}
-          <div className="mb-6">
+          <div className="mb-6 progress-area">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-secondary-text">Question {currentIndex + 1} of {sessionQueue.length}</span>
               <span className="text-sm font-bold text-mint">{sessionResults.filter(r => r.correct).length} correct</span>
@@ -5639,7 +5639,7 @@ What is the student's answer?`
 
               {/* Header with badges */}
               <div
-                className="px-6 py-3 flex items-center gap-2 flex-wrap"
+                className="px-6 py-3 flex items-center gap-2 flex-wrap question-card-header"
                 style={{ backgroundColor: current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
               >
                 <span
@@ -5665,14 +5665,14 @@ What is the student's answer?`
               </div>
 
               {/* Question content */}
-              <div className="p-6">
+              <div className="p-6 question-card">
                 {/* Diagram if applicable */}
                 {current.diagram && (
                   <div className="mb-4" dangerouslySetInnerHTML={{ __html: generateDiagram(current.diagram) }} />
                 )}
 
                 {/* Question text */}
-                <h3 className="text-lg font-semibold text-primary-text mb-4">
+                <h3 className="text-lg font-semibold text-primary-text mb-4 question-text">
                   {renderRecurring(current.q)}
                 </h3>
 
@@ -5787,7 +5787,7 @@ What is the student's answer?`
                         </button>
                       </div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-3 answer-section">
                         {/* Input mode toggle */}
                         <div className="flex rounded-xl bg-white/10 p-1">
                           <button
@@ -6105,7 +6105,7 @@ What is the student's answer?`
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer || isProcessingImage}
-                          className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 text-white font-semibold rounded-xl transition-all"
+                          className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 text-white font-semibold rounded-xl transition-all check-btn"
                         >
                           {isProcessingImage ? 'Processing...' : 'Check Answer'}
                         </button>
@@ -6558,8 +6558,8 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
       <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      <div className="pt-24 pb-24 px-4 relative z-10">
-        <div className="max-w-2xl mx-auto space-y-6">
+      <div className="pt-24 pb-24 px-4 relative z-10 page-content">
+        <div className="max-w-2xl mx-auto space-y-6 content-container">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-primary-text">Progress Analytics</h1>
@@ -6878,8 +6878,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       <div className="ambient-glow" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      <div className="pt-24 pb-24 px-4 relative z-10">
-        <div className="max-w-lg mx-auto space-y-6">
+      <div className="pt-24 pb-24 px-4 relative z-10 page-content">
+        <div className="max-w-lg mx-auto space-y-6 content-container">
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-primary-text">Settings</h1>
@@ -7328,12 +7328,12 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar">
+        <div className="max-w-4xl mx-auto px-4 h-full">
+          <div className="flex items-center justify-between h-full">
             {/* Logo */}
             <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet to-violet-dark rounded-xl flex items-center justify-center p-1.5 shadow-glow-violet group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 bg-gradient-to-br from-violet to-violet-dark rounded-xl flex items-center justify-center p-1.5 shadow-glow-violet group-hover:scale-105 transition-transform nav-logo">
                 <div className="grid grid-cols-3 gap-0.5 w-full h-full">
                   {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
                     <div key={i} className="rounded-sm" style={{ backgroundColor: `rgba(255,255,255,${opacity})` }} />
@@ -7371,7 +7371,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
       </nav>
 
       {/* Mobile Bottom Nav - Floating Glass Pill */}
-      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden">
+      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden bottom-nav">
         <div className="glass-panel-strong rounded-2xl shadow-glass mx-auto max-w-sm">
           <div className="flex items-center justify-around h-16 px-2">
             {navItems.map((item) => {

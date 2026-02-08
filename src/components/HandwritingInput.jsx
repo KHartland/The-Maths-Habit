@@ -292,7 +292,7 @@ const HandwritingInput = ({
       {/* Canvas */}
       <div
         ref={containerRef}
-        className="relative h-40 bg-white cursor-crosshair"
+        className="relative h-40 bg-white cursor-crosshair handwriting-canvas"
         style={{
           backgroundImage: 'linear-gradient(#d1d5db 1px, transparent 1px), linear-gradient(90deg, #d1d5db 1px, transparent 1px)',
           backgroundSize: '20px 20px'
