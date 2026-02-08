@@ -532,7 +532,23 @@ select:focus {
     flex: 1;
     min-width: 0;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+  /* Diagrams fill the question column */
+  .question-side img {
+    max-height: 55vh !important;
+    width: 100% !important;
+    object-fit: contain !important;
+  }
+  .question-side svg {
+    max-height: 55vh !important;
+    width: 100% !important;
+  }
+  .question-side .mb-4 {
+    margin-bottom: 0.25rem !important;
   }
   .answer-side {
     flex: 2;

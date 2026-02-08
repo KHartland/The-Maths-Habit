@@ -4174,7 +4174,7 @@ const generateDiagram = (type) => {
 
   // Check for image-based diagram first
   if (imageDiagrams[type]) {
-    return `<img src="/images/${imageDiagrams[type]}" alt="${type}" class="max-w-full h-auto max-h-64 mx-auto rounded-lg" />`;
+    return `<img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto rounded-lg" />`;
   }
 
   // Fallback SVG diagrams for legacy questions
