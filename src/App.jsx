@@ -1820,7 +1820,7 @@ const questionBank = {
   A24: [
     { q: "What is the next term in: 1, 1, 2, 3, 5, 8, ...?", a: "13", type: "number", calculator: false, hint: "Fibonacci - add the previous two terms" },
     { q: "What is the next term in: 1, 4, 9, 16, 25, ...?", a: "36", type: "number", calculator: false, hint: "Square numbers" },
-    { q: "Identify the sequence: 2, 6, 12, 20, 30, ...", type: "mcq", options: ["Square numbers", "Cube numbers", "Triangular numbers", "Pronic numbers"], a: "Pronic numbers", calculator: false },
+    { q: "What is the next term in: 1, 3, 6, 10, 15, ...?", a: "21", type: "number", calculator: false, hint: "Triangular numbers - add 1 more each time" },
     { q: "What is the next triangular number after 10?", a: "15", type: "number", calculator: false },
   ],
 
