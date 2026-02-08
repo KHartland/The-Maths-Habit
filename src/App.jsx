@@ -8619,10 +8619,69 @@ function AppContent() {
   );
 }
 
+// Landscape prompt — asks mobile users to rotate to landscape
+function LandscapePrompt() {
+  const [isPortrait, setIsPortrait] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    // Only show on mobile-sized screens
+    const checkOrientation = () => {
+      const isMobile = window.innerWidth < 1024;
+      const portrait = window.innerHeight > window.innerWidth;
+      setIsPortrait(isMobile && portrait);
+    };
+
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', () => setTimeout(checkOrientation, 100));
+
+    // Try to lock orientation in PWA / fullscreen mode
+    try {
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+    } catch (e) {}
+
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+    };
+  }, []);
+
+  if (!isPortrait || dismissed) return null;
+
+  return (
+    <div className="fixed inset-0 z-[9999] bg-void flex flex-col items-center justify-center p-8 text-center">
+      <div className="ambient-glow" />
+      <div className="relative z-10 flex flex-col items-center">
+        {/* Rotating phone icon */}
+        <div className="text-6xl mb-6 animate-pulse">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ transform: 'rotate(-90deg)' }}>
+            <rect x="12" y="4" width="40" height="56" rx="6" stroke="#A78BFA" strokeWidth="3" fill="none" />
+            <rect x="28" y="52" width="8" height="2" rx="1" fill="#A78BFA" />
+          </svg>
+        </div>
+        <div className="text-3xl mb-4" style={{ transform: 'scaleX(-1)' }}>↩️</div>
+        <h2 className="text-2xl font-bold text-primary-text mb-3">Rotate your phone</h2>
+        <p className="text-secondary-text text-lg mb-8 max-w-xs">
+          The Maths Habit works best in landscape mode — turn your phone sideways!
+        </p>
+        <button
+          onClick={() => setDismissed(true)}
+          className="px-6 py-3 text-sm text-secondary-text bg-white/10 rounded-xl hover:bg-white/20 transition-all"
+        >
+          Continue in portrait anyway
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // Main App wrapper with AuthProvider
 export default function App() {
   return (
     <AuthProvider>
+      <LandscapePrompt />
       <AppContent />
     </AuthProvider>
   );
