@@ -8129,7 +8129,23 @@ function AppContent() {
     setTooltip(t => ({ ...t, open: false }));
   };
 
-  const cols = Math.ceil(Math.sqrt(allObjectives.length * 1.3));
+  // Responsive columns: wider grid in landscape to avoid scrolling
+  const [isLandscapeMobile, setIsLandscapeMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth > window.innerHeight && window.innerHeight < 500;
+  });
+  useEffect(() => {
+    const checkLandscape = () => {
+      setIsLandscapeMobile(window.innerWidth > window.innerHeight && window.innerHeight < 500);
+    };
+    window.addEventListener('resize', checkLandscape);
+    window.addEventListener('orientationchange', () => setTimeout(checkLandscape, 150));
+    return () => window.removeEventListener('resize', checkLandscape);
+  }, []);
+
+  const cols = isLandscapeMobile
+    ? Math.ceil(Math.sqrt(allObjectives.length * 3))
+    : Math.ceil(Math.sqrt(allObjectives.length * 1.3));
 
   // Spaced retrieval: weight objectives by how much they need practice
   const getWeightedObjectives = () => {
@@ -8306,11 +8322,11 @@ function AppContent() {
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
       {/* Main Content */}
-      <div className="pt-20 pb-28 md:pb-10 relative z-10">
+      <div className="pt-20 pb-28 md:pb-10 relative z-10 home-content">
 
       {/* Hero Heatmap Card - Glassmorphism */}
       <div className="max-w-4xl mx-auto px-4">
-        <div className="glass-panel rounded-3xl p-6 md:p-10 shadow-glass card-hover">
+        <div className="glass-panel rounded-3xl p-6 md:p-10 shadow-glass card-hover heatmap-card">
 
           {/* Header with stats */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -8387,11 +8403,11 @@ function AppContent() {
           )}
 
           {/* THE HEATMAP - Hero Element */}
-          <div className="flex justify-center py-4">
-            <div style={{
+          <div className="flex justify-center py-4 heatmap-grid-wrap">
+            <div className="heatmap-grid" style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cols}, minmax(28px, 36px))`,
-              gap: 6
+              gridTemplateColumns: `repeat(${cols}, minmax(${isLandscapeMobile ? '16px, 22px' : '28px, 36px'}))`,
+              gap: isLandscapeMobile ? 3 : 6
             }}>
               {allObjectives.map((obj) => {
                 const level = getLevel(obj.code);
