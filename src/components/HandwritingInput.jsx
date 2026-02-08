@@ -50,8 +50,8 @@ const HandwritingInput = ({
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#374151';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
@@ -164,9 +164,17 @@ const HandwritingInput = ({
       setError('');
 
       try {
-        // Convert canvas to base64 image
+        // Convert canvas to base64 image with white background
+        // (canvas is transparent by default — Mathpix needs solid background)
         const canvas = canvasRef.current;
-        const imageData = canvas.toDataURL('image/png');
+        const exportCanvas = document.createElement('canvas');
+        exportCanvas.width = canvas.width;
+        exportCanvas.height = canvas.height;
+        const exportCtx = exportCanvas.getContext('2d');
+        exportCtx.fillStyle = '#FFFFFF';
+        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+        exportCtx.drawImage(canvas, 0, 0);
+        const imageData = exportCanvas.toDataURL('image/png');
 
         // Send image to Mathpix text endpoint
         const response = await fetch('https://api.mathpix.com/v3/text', {
