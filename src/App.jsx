@@ -421,8 +421,8 @@ const topics = [
     // A23: Foundation (sequences term-to-term/position-to-term)
     // A24: Foundation (triangular/square/cube/arithmetic), Additional (Fibonacci/quadratic/geometric)
     // A25: Foundation (nth term linear), Higher (nth term quadratic)
-    foundation: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12', 'A14', 'A17', 'A18', 'A19', 'A21', 'A22', 'A23', 'A24', 'A25'],
-    higher: ['A13', 'A15', 'A16', 'A20'] },
+    foundation: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A14', 'A17', 'A18', 'A19', 'A21', 'A22', 'A23', 'A24', 'A25'],
+    higher: ['A12', 'A13', 'A15', 'A16', 'A20'] },
   { id: 'ratio', name: 'Ratio', strand: 'Ratio',
     // R1-R12: Foundation
     // R13: Additional Foundation (inverse proportion concept), Higher (construct equations)
