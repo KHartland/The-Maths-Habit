@@ -6079,7 +6079,7 @@ What is the student's answer?`
                             onSubmit={(recognizedAnswer) => {
                               setUserAnswer(recognizedAnswer);
                               // Switch to type mode so user can verify/edit the recognized answer
-                              setInputMode('handwriting');
+                              setInputMode('type');
                             }}
                             onCancel={() => setInputMode('type')}
                             placeholder="Write your answer here..."
