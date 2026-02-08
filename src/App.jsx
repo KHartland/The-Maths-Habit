@@ -5213,6 +5213,7 @@ What is the student's answer?`
     setShowMathKeyboard(false);
     setCapturedImage(null);
     setShowCalculator(false);
+    setInputMode('handwriting');
 
     // Reset FSRS state for next question
     setQuestionStartTime(Date.now());
