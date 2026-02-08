@@ -4436,15 +4436,29 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   // Phase 2: Challenge (interleaved due cards, exam-ready, and new)
   const challengeTarget = SESSION_STRUCTURE.challenge;
 
-  // Prioritize exam-ready (up to 2)
+  // GUARANTEED: At least 1 never-practised objective per session (if any exist)
+  const neverPractisedCards = shuffleArray(allQuestions.filter(q => {
+    const prog = progress[q.objective?.code];
+    return !prog || (!prog.quickCorrect && !prog.examPassed && !prog.lastPracticed);
+  }));
+  if (neverPractisedCards.length > 0) {
+    addWithInterleaving(
+      neverPractisedCards.filter(q => !usedQuestionIds.has(q.questionId)),
+      'challenge',
+      1
+    );
+  }
+
+  // Prioritize exam-ready (up to 1, reduced from 2 to leave room for variety)
   addWithInterleaving(
     examReadyCards.filter(q => !usedQuestionIds.has(q.questionId)),
     'challenge',
-    Math.min(2, challengeTarget)
+    Math.min(1, challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp))
   );
 
   // Add due cards with interleaving
-  const dueTarget = Math.ceil((challengeTarget - queue.length + 1) * 0.6);
+  const remainingChallenge = challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp);
+  const dueTarget = Math.ceil(remainingChallenge * 0.5);
   addWithInterleaving(
     dueCards.filter(q => !usedQuestionIds.has(q.questionId)),
     'challenge',
@@ -4452,7 +4466,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   );
 
   // Fill with new cards
-  const newTarget = challengeTarget - queue.length + SESSION_STRUCTURE.warmUp;
+  const newTarget = challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp);
   addWithInterleaving(
     newCards.filter(q => !usedQuestionIds.has(q.questionId)).sort(() => Math.random() - 0.5),
     'challenge',
@@ -8120,15 +8134,32 @@ function AppContent() {
 
   // Spaced retrieval: weight objectives by how much they need practice
   const getWeightedObjectives = () => {
+    // Load recent daily selections to avoid repeating same objectives
+    let recentCodes = [];
+    try {
+      const stored = localStorage.getItem('maths_habit_recent_daily');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Keep last 3 days of selections
+        const threeDaysAgo = Date.now() - (3 * 24 * 60 * 60 * 1000);
+        recentCodes = parsed.filter(e => e.ts > threeDaysAgo).flatMap(e => e.codes);
+      }
+    } catch (e) { /* ignore */ }
+
     return allObjectives.map(obj => {
       const prog = progress[obj.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
       const examPassed = prog?.examPassed ?? false;
       const lastPracticed = prog?.lastPracticed ?? 0;
+      const neverPractised = !prog || (!quickCorrect && !examPassed && !lastPracticed);
       const daysSince = lastPracticed ? Math.floor((Date.now() - lastPracticed) / (1000 * 60 * 60 * 24)) : 999;
-      
+
+      // Never-practised objectives get a massive boost
+      if (neverPractised) {
+        return { ...obj, weight: 50 };
+      }
+
       // Weight: lower progress = higher weight, longer time since practice = higher weight
-      // Mastered objectives get lowest weight (1), exam ready get medium (3), others higher
       let progressWeight;
       if (examPassed) {
         progressWeight = 1; // Mastered - low priority
@@ -8137,10 +8168,15 @@ function AppContent() {
       } else {
         progressWeight = Math.max(5 - quickCorrect, 2); // Learning - higher priority
       }
-      
+
       const timeWeight = Math.min(daysSince + 1, 7); // 1-7 based on days
-      const weight = progressWeight * timeWeight;
-      
+      let weight = progressWeight * timeWeight;
+
+      // Penalise objectives that appeared in recent days to force rotation
+      if (recentCodes.includes(obj.code)) {
+        weight = Math.max(weight * 0.3, 1);
+      }
+
       return { ...obj, weight };
     });
   };
@@ -8150,27 +8186,41 @@ function AppContent() {
     const weighted = getWeightedObjectives();
     const selected = [];
     const available = [...weighted];
-    
+
     // Seeded random for consistent daily selection
     const seededRandom = (i) => {
       const x = Math.sin(seed + i * 9999) * 10000;
       return x - Math.floor(x);
     };
-    
-    for (let i = 0; i < 5 && available.length > 0; i++) {
+
+    // GUARANTEE: Pick at least 2 never-practised objectives first (if available)
+    const neverPractised = available.filter(o => o.weight === 50);
+    const shuffledNever = [...neverPractised].sort((a, b) => {
+      return seededRandom(a.code.charCodeAt(0)) - seededRandom(b.code.charCodeAt(0));
+    });
+    for (let i = 0; i < Math.min(2, shuffledNever.length) && selected.length < 5; i++) {
+      const idx = available.findIndex(a => a.code === shuffledNever[i].code);
+      if (idx !== -1) {
+        selected.push(available[idx]);
+        available.splice(idx, 1);
+      }
+    }
+
+    // Fill remaining slots with weighted random
+    for (let i = selected.length; i < 5 && available.length > 0; i++) {
       const totalWeight = available.reduce((sum, obj) => sum + obj.weight, 0);
-      let rand = seededRandom(i) * totalWeight;
-      
+      let rand = seededRandom(i + 100) * totalWeight;
+
       for (let j = 0; j < available.length; j++) {
         rand -= available[j].weight;
         if (rand <= 0) {
           selected.push(available[j]);
-          available.splice(j, 1); // Remove selected item
+          available.splice(j, 1);
           break;
         }
       }
     }
-    
+
     // Fallback: if selection failed, just take first 5
     if (selected.length < 5) {
       const remaining = weighted.filter(w => !selected.find(s => s.code === w.code));
@@ -8178,7 +8228,24 @@ function AppContent() {
         selected.push(remaining.shift());
       }
     }
-    
+
+    // Save today's selection for rotation tracking
+    try {
+      let stored = [];
+      try {
+        stored = JSON.parse(localStorage.getItem('maths_habit_recent_daily') || '[]');
+      } catch (e) { /* ignore */ }
+      const todayStr = new Date().toDateString();
+      // Only add if not already saved today
+      if (!stored.find(e => new Date(e.ts).toDateString() === todayStr)) {
+        stored.push({ ts: Date.now(), codes: selected.map(s => s.code) });
+        // Keep only last 5 days
+        const fiveDaysAgo = Date.now() - (5 * 24 * 60 * 60 * 1000);
+        stored = stored.filter(e => e.ts > fiveDaysAgo);
+        localStorage.setItem('maths_habit_recent_daily', JSON.stringify(stored));
+      }
+    } catch (e) { /* ignore */ }
+
     return selected;
   };
 
