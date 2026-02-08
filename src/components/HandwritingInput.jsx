@@ -137,11 +137,12 @@ const HandwritingInput = ({
 
   // Convert strokes to Mathpix format
   const strokesToMathpixFormat = (strokesArray) => {
-    return strokesArray.map(stroke => ({
-      x: stroke.points.map(p => Math.round(p.x)),
-      y: stroke.points.map(p => Math.round(p.y)),
-      t: stroke.points.map(p => p.t)
-    }));
+    return {
+      strokes: strokesArray.map(stroke => ({
+        x: stroke.points.map(p => Math.round(p.x)),
+        y: stroke.points.map(p => Math.round(p.y))
+      }))
+    };
   };
 
   // Call Mathpix API for recognition
@@ -163,9 +164,12 @@ const HandwritingInput = ({
       setError('');
 
       try {
-        const mathpixStrokes = strokesToMathpixFormat(strokesToRecognize);
+        // Convert canvas to base64 image
+        const canvas = canvasRef.current;
+        const imageData = canvas.toDataURL('image/png');
 
-        const response = await fetch('https://api.mathpix.com/v3/strokes', {
+        // Send image to Mathpix text endpoint
+        const response = await fetch('https://api.mathpix.com/v3/text', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -173,9 +177,11 @@ const HandwritingInput = ({
             'app_key': mathpixAppKey
           },
           body: JSON.stringify({
-            strokes: mathpixStrokes,
+            src: imageData,
             formats: ['text', 'latex_simplified'],
-            include_detected_alphabets: true
+            data_options: {
+              include_asciimath: true
+            }
           })
         });
 
@@ -185,23 +191,35 @@ const HandwritingInput = ({
 
         const data = await response.json();
 
-        // Extract the recognized text
+        // Extract the recognized text - prefer text, fallback to latex
         let recognized = '';
-        if (data.text) {
-          recognized = data.text;
-        } else if (data.latex_simplified) {
-          // Convert simple LaTeX to text
-          recognized = data.latex_simplified
-            .replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, '$1/$2')
+
+        // Try to get clean text first
+        if (data.text && !data.text.includes('\\')) {
+          recognized = data.text.trim();
+        } else {
+          // Convert LaTeX to readable format
+          let latex = data.latex_simplified || data.latex || data.text || '';
+          recognized = latex
+            // Remove LaTeX delimiters
             .replace(/\\\(/g, '')
             .replace(/\\\)/g, '')
+            .replace(/\$/g, '')
+            // Convert fractions
+            .replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g, '$1/$2')
+            // Convert common symbols
             .replace(/\\cdot/g, '×')
             .replace(/\\times/g, '×')
             .replace(/\\div/g, '÷')
             .replace(/\\sqrt\{([^}]+)\}/g, '√$1')
+            .replace(/\\pi/g, 'π')
+            // Convert powers
             .replace(/\^2/g, '²')
             .replace(/\^3/g, '³')
-            .replace(/\\pi/g, 'π');
+            .replace(/\^\{([^}]+)\}/g, '^$1')
+            // Clean up whitespace
+            .replace(/\s+/g, '')
+            .trim();
         }
 
         setRecognizedText(recognized || '');
