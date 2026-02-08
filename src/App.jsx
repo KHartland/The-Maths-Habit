@@ -8288,6 +8288,11 @@ function AppContent() {
       <div className="orb w-96 h-96 -top-48 -right-48 opacity-30 fixed" />
       <div className="orb w-64 h-64 top-1/2 -left-32 opacity-20 fixed" />
 
+      {/* Portrait Prompt — shown after practice when still in landscape */}
+      {recentSessionCodes.length > 0 && (
+        <PortraitPrompt onDismiss={() => {}} />
+      )}
+
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
@@ -8707,6 +8712,70 @@ function LandscapePrompt() {
         }}
       >
         Continue in portrait
+      </button>
+    </div>
+  );
+}
+
+function PortraitPrompt({ onDismiss }) {
+  const [isLandscape, setIsLandscape] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 1024 && window.innerWidth > window.innerHeight;
+  });
+  const [dismissed, setDismissed] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsLandscape(mobile && window.innerWidth > window.innerHeight);
+    };
+    check();
+    window.addEventListener('resize', check);
+    const onOr = () => setTimeout(check, 150);
+    window.addEventListener('orientationchange', onOr);
+    return () => {
+      window.removeEventListener('resize', check);
+      window.removeEventListener('orientationchange', onOr);
+    };
+  }, []);
+
+  if (!isLandscape || dismissed) return null;
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+      zIndex: 99999, backgroundColor: '#0a0a1a',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '2rem', textAlign: 'center'
+    }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Phone in landscape */}
+          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
+          {/* Phone rotated to portrait */}
+          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
+          <circle cx="40" cy="52" r="2" fill="#5B7FC7" />
+          {/* Arrow showing rotation back */}
+          <path d="M14 20 C14 12, 20 6, 28 6" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
+          <path d="M26 3 L28 6 L25 8" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
+        Rotate back to portrait
+      </h2>
+      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
+        Turn your phone upright to see your progress on the heatmap
+      </p>
+      <button
+        onClick={() => setDismissed(true)}
+        style={{
+          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
+          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
+          cursor: 'pointer'
+        }}
+      >
+        Continue in landscape
       </button>
     </div>
   );
