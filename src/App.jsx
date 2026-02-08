@@ -5626,16 +5626,8 @@ What is the student's answer?`
           {/* Question card */}
           {current && (
             <div className={`glass-panel rounded-3xl shadow-glass overflow-hidden ${
-              isScaffoldQuestion ? 'border-violet/50 ring-2 ring-violet/20' :
               current.isExamQuestion ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
             }`}>
-              {/* Building Block Banner */}
-              {isScaffoldQuestion && (
-                <div className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-center">
-                  <span className="text-sm font-semibold">🧱 Building Block Question</span>
-                  <span className="text-xs ml-2 opacity-80">· Strengthen your foundation</span>
-                </div>
-              )}
               
               {/* Exam Question Banner */}
               {current.isExamQuestion && !isScaffoldQuestion && (
@@ -5648,23 +5640,23 @@ What is the student's answer?`
               {/* Header with badges */}
               <div
                 className="px-6 py-3 flex items-center gap-2 flex-wrap"
-                style={{ backgroundColor: isScaffoldQuestion ? 'rgba(110, 51, 177, 0.2)' : current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
+                style={{ backgroundColor: current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
               >
                 <span
                   className="px-2 py-1 rounded-lg text-xs font-bold text-white"
-                  style={{ backgroundColor: isScaffoldQuestion ? '#6E33B1' : current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
+                  style={{ backgroundColor: current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
                 >
                   {current.prerequisiteCode || current.objective.code}
                 </span>
                 <span className="text-xs font-medium px-2 py-1 bg-white/10 rounded-lg text-primary-text">
-                  {isScaffoldQuestion ? 'Foundation Skill' : current.objective.topicName}
+                  {current.objective.topicName}
                 </span>
-                {current.objective.isHigher && !isScaffoldQuestion && (
+                {current.objective.isHigher && (
                   <span className="px-2 py-1 bg-purple-500 text-white text-xs font-bold rounded-lg">Higher</span>
                 )}
 
-                {/* Progress toward mastery - show for non-scaffold questions */}
-                {!isScaffoldQuestion && !current.isExamQuestion && (
+                {/* Progress toward mastery */}
+                {!current.isExamQuestion && (
                   <span className="px-2 py-1 bg-violet/30 text-violet-light text-xs font-medium rounded-lg">
                     {Math.min(progress[current.objective.code]?.quickCorrect ?? 0, 4)}/4 quick
                   </span>
@@ -6232,61 +6224,7 @@ What is the student's answer?`
                           </div>
                         )}
 
-                        {/* Skill Tool Offer - shown immediately on failure if prerequisite exists */}
-                        {!isCorrect && scaffoldInfo && !isScaffoldQuestion && scaffoldInfo.prereqCode && miniLessons[scaffoldInfo.prereqCode] && (
-                          <div className="p-4 bg-gradient-to-br from-violet-50 to-purple-50 border border-violet-300 rounded-xl">
-                            <div className="flex items-start gap-3">
-                              <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                                <span className="text-2xl">🔧</span>
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-bold text-violet-900 mb-1">
-                                  The {miniLessons[scaffoldInfo.prereqCode].title} Tool
-                                </h4>
-                                <p className="text-sm text-violet-700 mb-3">
-                                  {scaffoldInfo.reason}
-                                </p>
-                                <div className="flex gap-2">
-                                  <button
-                                    onClick={() => startMiniLesson(scaffoldInfo.prereqCode)}
-                                    className="px-4 py-2 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-semibold rounded-lg hover:from-violet-600 hover:to-purple-600 transition-all shadow-md flex items-center gap-2"
-                                  >
-                                    <span>🔧</span> Use This Tool
-                                  </button>
-                                  <button
-                                    onClick={() => nextQuestion()}
-                                    className="px-4 py-2 bg-slate-200 text-slate-700 font-medium rounded-lg hover:bg-slate-300 transition-all"
-                                  >
-                                    Skip
-                                  </button>
-                                </div>
-                                <p className="text-xs text-violet-500 mt-2">
-                                  60 seconds · Then try a practice question
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
                     
-                        {/* Building Block Notice - when no mini-lesson available */}
-                        {!isCorrect && scaffoldInfo && !isScaffoldQuestion && (!scaffoldInfo.prereqCode || !miniLessons[scaffoldInfo.prereqCode]) && (
-                          <div className="p-4 bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-300 rounded-xl">
-                            <div className="flex items-start gap-3">
-                              <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                <span className="text-xl">🪜</span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-amber-900 mb-1">Let's build up to this!</h4>
-                                <p className="text-sm text-amber-800">
-                                  Next, you'll get a simpler question to strengthen your foundation.
-                                </p>
-                                <p className="text-xs text-amber-600 mt-2">
-                                  ✨ This is how the best maths learners improve - one step at a time!
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
 
                         {/* Worked Example - only show when incorrect and no diagnosis */}
                         {!isCorrect && !currentDiagnosis?.hasDiagnosis && workedExamples[current.objective.code] && (
@@ -6328,15 +6266,9 @@ What is the student's answer?`
 
                     <button
                       onClick={nextQuestion}
-                      className={`w-full py-3 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 ${
-                        scaffoldInfo && !isScaffoldQuestion && !isCorrect && practiceMode !== 'exam'
-                          ? 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white'
-                          : 'bg-slate-900 hover:bg-slate-800 text-white'
-                      }`}
+                      className="w-full py-3 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white"
                     >
-                      {scaffoldInfo && !isScaffoldQuestion && !isCorrect && practiceMode !== 'exam' ? (
-                        <>🧱 Try Building Block</>
-                      ) : currentIndex < sessionQueue.length - 1 ? (
+                      {currentIndex < sessionQueue.length - 1 ? (
                         <>Continue <ChevronRight className="w-5 h-5" /></>
                       ) : (
                         <>See Results <ChevronRight className="w-5 h-5" /></>
