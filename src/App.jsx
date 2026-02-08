@@ -5356,8 +5356,8 @@ What is the student's answer?`
 
       // Auto-dismiss toast after 5 seconds
       setTimeout(() => setSessionToastData(null), 5000);
-      // Clear animation highlights after 3 seconds
-      setTimeout(() => setRecentSessionCodes([]), 3000);
+      // Clear animation highlights after 4 seconds (animation is 1.2s + stagger + linger)
+      setTimeout(() => setRecentSessionCodes([]), 4000);
     }
   };
 
@@ -8296,11 +8296,6 @@ function AppContent() {
         <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-40" style={{ animation: 'fadeIn 0.4s ease-out' }}>
           <div className="glass-panel rounded-2xl px-5 py-3 shadow-2xl border border-white/20">
             <div className="flex items-center gap-3">
-              <div className="text-2xl">
-                {sessionToastData.accuracy === 100 ? '🎯' :
-                 sessionToastData.accuracy >= 80 ? '🎉' :
-                 sessionToastData.accuracy >= 60 ? '👏' : '💪'}
-              </div>
               <div>
                 <p className="font-bold text-primary-text text-sm">
                   {sessionToastData.correctCount}/{sessionToastData.totalQuestions} correct
