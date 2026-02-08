@@ -5579,96 +5579,68 @@ What is the student's answer?`
 
       <div className="pt-2 pb-2 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
-          {/* Minimal back button */}
-          <button
-            onClick={() => setCurrentPage('home')}
-            className="mb-2 flex items-center gap-1 text-secondary-text hover:text-primary-text text-sm transition-colors"
-          >
-            <ChevronRight className="w-4 h-4 rotate-180" /> Exit
-          </button>
-          {/* Quick Fire Timer */}
-          {practiceMode === 'quickfire' && timeLeft !== null && !showFeedback && (
-            <div className="mb-4">
-              <div className={`text-center p-3 rounded-xl ${
-                timeLeft <= 5 ? 'bg-red-500/20 border border-red-500/40 text-red-300' : 'bg-orange-500/20 border border-orange-500/40 text-orange-300'
-              }`}>
-                <div className="text-3xl font-bold">{timeLeft}s</div>
-                <div className="text-xs">⚡ Quick Fire Mode</div>
-              </div>
-            </div>
-          )}
-
-          {/* Exam Mode Banner */}
-          {practiceMode === 'exam' && !showFeedback && (
-            <div className="mb-4">
-              <div className="text-center p-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-300">
-                <div className="font-bold">🎯 Exam Conditions</div>
-                <div className="text-xs">No scaffolding · Delayed feedback</div>
-              </div>
-            </div>
-          )}
-
-          {/* Progress bar */}
-          <div className="mb-6 progress-area">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-secondary-text">Question {currentIndex + 1} of {sessionQueue.length}</span>
-              <span className="text-sm font-bold text-mint">{sessionResults.filter(r => r.correct).length} correct</span>
-            </div>
-            <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                  practiceMode === 'quickfire'
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500'
-                    : practiceMode === 'exam'
-                      ? 'bg-gradient-to-r from-red-500 to-rose-500'
-                      : 'bg-gradient-violet'
-                }`}
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-
-          </div>
-
-
           {/* Question card */}
           {current && (
             <div className={`glass-panel rounded-3xl shadow-glass overflow-hidden ${
               current.isExamQuestion ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
             }`}>
-              
-              {/* Exam Question Banner */}
-              {current.isExamQuestion && !isScaffoldQuestion && (
-                <div className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-center">
-                  <span className="text-sm font-semibold">📝 Exam Question</span>
-                  <span className="text-xs ml-2 opacity-80">· Get this right to master {current.objective.code}!</span>
-                </div>
-              )}
 
-              {/* Header with badges */}
+              {/* Combined header bar: Exit · Topic · Progress · Score */}
               <div
-                className="px-6 py-3 flex items-center gap-2 flex-wrap question-card-header"
+                className="px-3 py-2 flex items-center gap-2 question-card-header"
                 style={{ backgroundColor: current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
               >
+                {/* Exit button */}
+                <button
+                  onClick={() => setCurrentPage('home')}
+                  className="flex items-center gap-0.5 text-secondary-text hover:text-primary-text text-xs transition-colors shrink-0"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 rotate-180" />
+                </button>
+
+                {/* Topic code badge */}
                 <span
-                  className="px-2 py-1 rounded-lg text-xs font-bold text-white"
+                  className="px-2 py-0.5 rounded-md text-xs font-bold text-white shrink-0"
                   style={{ backgroundColor: current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
                 >
                   {current.prerequisiteCode || current.objective.code}
                 </span>
-                <span className="text-xs font-medium px-2 py-1 bg-white/10 rounded-lg text-primary-text">
+
+                {/* Topic name */}
+                <span className="text-xs font-medium text-primary-text truncate">
                   {current.objective.topicName}
                 </span>
+
                 {current.objective.isHigher && (
-                  <span className="px-2 py-1 bg-purple-500 text-white text-xs font-bold rounded-lg">Higher</span>
+                  <span className="px-1.5 py-0.5 bg-purple-500 text-white text-[10px] font-bold rounded-md shrink-0">H</span>
                 )}
 
-                {/* Progress toward mastery */}
-                {!current.isExamQuestion && (
-                  <span className="px-2 py-1 bg-violet/30 text-violet-light text-xs font-medium rounded-lg">
-                    {Math.min(progress[current.objective.code]?.quickCorrect ?? 0, 4)}/4 quick
-                  </span>
-                )}
+                {/* Spacer */}
+                <div className="flex-1" />
 
+                {/* Progress bar (inline) */}
+                <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden shrink-0">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      practiceMode === 'quickfire'
+                        ? 'bg-gradient-to-r from-orange-500 to-red-500'
+                        : practiceMode === 'exam'
+                          ? 'bg-gradient-to-r from-red-500 to-rose-500'
+                          : 'bg-gradient-violet'
+                    }`}
+                    style={{ width: `${progressPct}%` }}
+                  />
+                </div>
+
+                {/* Question count */}
+                <span className="text-xs text-secondary-text shrink-0">
+                  {currentIndex + 1}/{sessionQueue.length}
+                </span>
+
+                {/* Correct count */}
+                <span className="text-xs font-bold text-mint shrink-0">
+                  {sessionResults.filter(r => r.correct).length}✓
+                </span>
               </div>
 
               {/* Question content */}
