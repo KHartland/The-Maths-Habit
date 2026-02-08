@@ -4581,7 +4581,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex }) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -8314,6 +8314,8 @@ function AppContent() {
         setRecentSessionCodes={setRecentSessionCodes}
         setSessionToastData={setSessionToastData}
         setShowOneVsOne={setShowOneVsOne}
+        setShowCelebration={setShowCelebration}
+        setCelebrationIndex={setCelebrationIndex}
       />
     );
   }
