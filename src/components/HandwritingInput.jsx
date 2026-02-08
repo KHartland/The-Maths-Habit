@@ -262,29 +262,29 @@ const HandwritingInput = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden handwriting-wrapper">
       {/* Header */}
-      <div className="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Pencil className="w-4 h-4" />
-          <span className="text-sm font-medium">Write your answer</span>
+      <div className="px-3 py-1.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between handwriting-header">
+        <div className="flex items-center gap-1.5 text-gray-600">
+          <Pencil className="w-3.5 h-3.5" />
+          <span className="text-xs font-medium">Write your answer</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <button
             onClick={handleUndo}
             disabled={strokes.length === 0}
-            className="p-2 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
             title="Undo"
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={handleClear}
             disabled={strokes.length === 0}
-            className="p-2 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
             title="Clear"
           >
-            <Eraser className="w-4 h-4" />
+            <Eraser className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
@@ -319,42 +319,42 @@ const HandwritingInput = ({
       </div>
 
       {/* Recognition result */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+      <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-200 handwriting-footer">
         <div className="flex items-center justify-between">
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             {isRecognizing ? (
-              <div className="flex items-center gap-2 text-gray-500">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">Recognizing...</span>
+              <div className="flex items-center gap-1.5 text-gray-500">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span className="text-xs">Recognizing...</span>
               </div>
             ) : error ? (
-              <span className="text-sm text-red-500">{error}</span>
+              <span className="text-xs text-red-500">{error}</span>
             ) : recognizedText ? (
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Recognized:</span>
-                <span className="text-lg font-mono font-semibold text-gray-800">{recognizedText}</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-gray-500">Read:</span>
+                <span className="text-sm font-mono font-semibold text-gray-800 truncate">{recognizedText}</span>
               </div>
             ) : strokes.length > 0 ? (
-              <span className="text-sm text-gray-400">Keep writing...</span>
+              <span className="text-xs text-gray-400">Keep writing...</span>
             ) : (
-              <span className="text-sm text-gray-400">Draw with finger or stylus</span>
+              <span className="text-xs text-gray-400">Draw with finger or stylus</span>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={onCancel}
-              className="px-3 py-1.5 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors text-sm"
+              className="px-2 py-1 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors text-xs"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
               disabled={!recognizedText || isRecognizing}
-              className="px-4 py-1.5 btn-gradient-mint text-gray-800 font-semibold rounded-lg disabled:opacity-50 flex items-center gap-1 text-sm"
+              className="px-3 py-1 btn-gradient-mint text-gray-800 font-semibold rounded-lg disabled:opacity-50 flex items-center gap-1 text-xs"
             >
-              <Check className="w-4 h-4" />
-              Use Answer
+              <Check className="w-3.5 h-3.5" />
+              Submit
             </button>
           </div>
         </div>

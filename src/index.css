@@ -428,27 +428,26 @@ select:focus {
 /* Targets phones in landscape (wide + short viewport) */
 @media (orientation: landscape) and (max-height: 500px) {
 
-  /* Page content area — reduce massive top/bottom padding */
+  /* Page content — flush to edges */
   .page-content {
-    padding-top: 3rem !important;
-    padding-bottom: 0.5rem !important;
+    padding: 0.25rem 0.5rem !important;
   }
 
-  /* Content container — use full width in landscape */
+  /* Content container — full width */
   .content-container {
     max-width: 100% !important;
   }
 
-  /* Top nav bar — make thinner */
+  /* Top nav bar — compact */
   .top-nav-bar {
-    height: 2.75rem !important;
+    height: 2.5rem !important;
   }
   .top-nav-bar .nav-logo {
-    width: 2rem !important;
-    height: 2rem !important;
+    width: 1.75rem !important;
+    height: 1.75rem !important;
   }
 
-  /* Bottom mobile nav — hide in landscape */
+  /* Bottom mobile nav — hidden */
   .bottom-nav {
     display: none !important;
   }
@@ -456,59 +455,79 @@ select:focus {
   /* Two-column layout — question left, answer right */
   .question-card-layout {
     display: flex !important;
-    gap: 1rem;
-    align-items: flex-start;
+    gap: 0.75rem;
+    align-items: stretch;
   }
   .question-side {
     flex: 1;
     min-width: 0;
+    display: flex;
+    align-items: center;
   }
   .answer-side {
-    flex: 1.2;
+    flex: 1.3;
     min-width: 0;
-    max-height: 55vh;
+    max-height: 75vh;
     overflow-y: auto;
   }
 
-  /* Question card — tighter padding */
+  /* Question card — minimal padding */
   .question-card {
-    padding: 0.75rem 1rem !important;
+    padding: 0.5rem 0.75rem !important;
   }
+
+  /* Header bar — tight */
   .question-card-header {
-    padding: 0.5rem 1rem !important;
+    padding: 0.25rem 0.75rem !important;
   }
+
+  /* Question text — fills its column */
   .question-text {
-    font-size: 1.1rem !important;
-    margin-bottom: 0.25rem !important;
+    font-size: 1.05rem !important;
+    margin-bottom: 0 !important;
   }
 
-  /* Handwriting canvas — shorter */
-  .handwriting-canvas {
-    height: 5.5rem !important;
-  }
-
-  /* Input area — compact */
+  /* Answer section — minimal gaps */
   .answer-section {
-    gap: 0.5rem !important;
+    gap: 0.25rem !important;
+  }
+  .answer-section > * {
+    margin-bottom: 0 !important;
   }
 
-  /* Feedback section — compact */
-  .feedback-section {
-    padding: 0.75rem !important;
+  /* Write/Type toggle — smaller */
+  .answer-section .flex.rounded-xl {
+    padding: 2px !important;
+  }
+  .answer-section .flex.rounded-xl button {
+    padding: 0.25rem 0.75rem !important;
+    font-size: 0.75rem !important;
   }
 
-  /* Check Answer button — thinner */
+  /* Handwriting input — fill available space */
+  .handwriting-canvas {
+    height: 45vh !important;
+  }
+
+  /* Handwriting header/footer — compact */
+  .handwriting-canvas + div,
+  .handwriting-canvas ~ div {
+    padding: 0.25rem 0.5rem !important;
+  }
+
+  /* Check Answer button — slim */
   .check-btn {
-    padding-top: 0.5rem !important;
-    padding-bottom: 0.5rem !important;
+    padding-top: 0.4rem !important;
+    padding-bottom: 0.4rem !important;
+    font-size: 0.85rem !important;
   }
 
-  /* Progress bar area */
-  .progress-area {
-    margin-bottom: 0.5rem !important;
+  /* Glass panel — tighter border radius on practice */
+  .glass-panel.rounded-3xl {
+    border-radius: 0.75rem !important;
   }
 
-  /* Make the page scrollable without bouncing */
+  /* No min-height lock */
   .min-h-screen {
     min-height: auto !important;
   }
