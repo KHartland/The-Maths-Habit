@@ -4567,7 +4567,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne }) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -5566,10 +5566,11 @@ What is the student's answer?`
                 </button>
 
                 <button
-                  disabled
-                  className="w-full py-4 font-bold text-lg rounded-xl transition-all bg-white/10 text-secondary-text cursor-not-allowed border-2 border-white/10"
+                  onClick={() => { setCurrentPage('home'); setShowOneVsOne(true); }}
+                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_4px_20px_rgba(249,115,22,0.3)]"
                 >
-                  1v1 Challenge — Coming Soon
+                  <Swords className="w-5 h-5" />
+                  1v1 Challenge
                 </button>
               </div>
             </div>
@@ -8224,6 +8225,7 @@ function AppContent() {
         tier={tier}
         setRecentSessionCodes={setRecentSessionCodes}
         setSessionToastData={setSessionToastData}
+        setShowOneVsOne={setShowOneVsOne}
       />
     );
   }
