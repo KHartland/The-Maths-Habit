@@ -125,15 +125,22 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
     setGameState(STATES.CREATING);
 
     try {
-      const newMatch = await createMatch(user.id, displayName, {
-        questionCount,
-        tier
-      });
+      // Add timeout so spinner doesn't hang forever
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 10000)
+      );
+
+      const newMatch = await Promise.race([
+        createMatch(user.id, displayName, { questionCount, tier }),
+        timeoutPromise
+      ]);
+
       setMatch(newMatch);
       setPlayerType('host');
       setGameState(STATES.WAITING);
     } catch (err) {
-      setError(err.message);
+      console.error('Create match error:', err);
+      setError(err.message || 'Failed to create match');
       setGameState(STATES.MENU);
     }
   };
@@ -149,12 +156,21 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
     setGameState(STATES.JOINING);
 
     try {
-      const joinedMatch = await joinMatch(joinCode, user.id, displayName);
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Connection timed out. Please try again.')), 10000)
+      );
+
+      const joinedMatch = await Promise.race([
+        joinMatch(joinCode, user.id, displayName),
+        timeoutPromise
+      ]);
+
       setMatch(joinedMatch);
       setPlayerType('guest');
       setGameState(STATES.READY);
     } catch (err) {
-      setError(err.message);
+      console.error('Join match error:', err);
+      setError(err.message || 'Failed to join match');
       setGameState(STATES.MENU);
     }
   };
