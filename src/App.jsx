@@ -8423,15 +8423,20 @@ function AppContent() {
                               '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isMastered ? '0 0 10px rgba(255,255,255,0.25)' :
                                  isExamReady ? '0 0 10px rgba(56,230,162,0.3)' : 'none',
-                      ...(recentSessionCodes.includes(obj.code) ? {
-                        animationDelay: `${0.3 + recentSessionCodes.indexOf(obj.code) * 0.4}s`,
-                        animationFillMode: 'both',
-                      } : {}),
                     }}
-                    className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95 ${
-                      recentSessionCodes.includes(obj.code) ? 'heatmap-tile-pop' : ''
-                    }`}
+                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >
+                    {/* Glow overlay for recently practiced tiles */}
+                    {recentSessionCodes.includes(obj.code) && (
+                      <div
+                        className="heatmap-glow-overlay"
+                        style={{
+                          position: 'absolute', inset: -4, borderRadius: 12, pointerEvents: 'none',
+                          zIndex: 10,
+                          animationDelay: `${0.5 + recentSessionCodes.indexOf(obj.code) * 0.5}s`,
+                        }}
+                      />
+                    )}
                     {isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <Check className="w-4 h-4 text-white drop-shadow-md" strokeWidth={3} />
