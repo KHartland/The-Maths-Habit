@@ -465,9 +465,9 @@ select:focus {
     align-items: center;
   }
   .answer-side {
-    flex: 1.3;
+    flex: 2;
     min-width: 0;
-    max-height: 75vh;
+    max-height: 85vh;
     overflow-y: auto;
   }
 
