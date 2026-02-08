@@ -305,9 +305,9 @@ const Calculator = ({ onInsert, onClose }) => {
   const btnClear = btnBase + 'bg-red-100 hover:bg-red-200 text-red-600 text-sm';
 
   return (
-    <div className="bg-white rounded-2xl p-4 w-80 shadow-2xl border border-gray-200">
+    <div className="bg-white rounded-2xl p-4 w-80 shadow-2xl border border-gray-200 calc-wrapper">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 calc-header">
         <div className="flex items-center gap-2">
           <span className="text-lg">🧮</span>
           <span className="text-sm font-semibold text-gray-800">Scientific Calculator</span>
@@ -319,19 +319,19 @@ const Calculator = ({ onInsert, onClose }) => {
       </div>
 
       {/* Display */}
-      <div className="bg-gray-50 rounded-xl p-4 mb-3 border border-gray-200">
+      <div className="bg-gray-50 rounded-xl p-4 mb-3 border border-gray-200 calc-display">
         {history && (
           <div className="text-right text-xs text-gray-500 mb-1 truncate h-4">
             {history}
           </div>
         )}
-        <div className="text-right text-3xl font-mono text-gray-800 truncate">
+        <div className="text-right text-3xl font-mono text-gray-800 truncate calc-display-text">
           {display}
         </div>
       </div>
 
       {/* Scientific functions */}
-      <div className="grid grid-cols-5 gap-1.5 mb-2">
+      <div className="grid grid-cols-5 gap-1.5 mb-2 calc-row">
         <button onClick={sin} className={btnFn}>sin</button>
         <button onClick={cos} className={btnFn}>cos</button>
         <button onClick={tan} className={btnFn}>tan</button>
@@ -340,7 +340,7 @@ const Calculator = ({ onInsert, onClose }) => {
       </div>
 
       {/* Memory row */}
-      <div className="grid grid-cols-5 gap-1.5 mb-2">
+      <div className="grid grid-cols-5 gap-1.5 mb-2 calc-row">
         <button onClick={memoryClear} className={btnFn}>MC</button>
         <button onClick={memoryRecall} className={btnFn}>MR</button>
         <button onClick={memoryAdd} className={btnFn}>M+</button>
@@ -349,7 +349,7 @@ const Calculator = ({ onInsert, onClose }) => {
       </div>
 
       {/* Main keypad */}
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid grid-cols-4 gap-1.5 calc-keypad">
         <button onClick={clear} className={btnClear}>AC</button>
         <button onClick={backspace} className={btnClear}>⌫</button>
         <button onClick={percentage} className={btnFn}>%</button>
@@ -379,7 +379,7 @@ const Calculator = ({ onInsert, onClose }) => {
       {/* Use Answer button */}
       <button
         onClick={useAnswer}
-        className="w-full mt-3 py-3 btn-gradient-mint text-gray-800 font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+        className="w-full mt-3 py-3 btn-gradient-mint text-gray-800 font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 calc-use-btn"
       >
         <Check className="w-5 h-5" />
         Use Answer

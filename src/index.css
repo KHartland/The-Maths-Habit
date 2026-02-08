@@ -610,4 +610,58 @@ select:focus {
     padding-bottom: 0 !important;
   }
 
+  /* Calculator — compact for landscape */
+  .calc-wrapper {
+    width: auto !important;
+    max-width: 320px !important;
+    padding: 0.4rem !important;
+    border-radius: 0.75rem !important;
+  }
+  .calc-header {
+    margin-bottom: 0.25rem !important;
+  }
+  .calc-header span.text-lg {
+    font-size: 0.85rem !important;
+  }
+  .calc-header span.text-sm {
+    font-size: 0.7rem !important;
+  }
+  .calc-display {
+    padding: 0.35rem 0.5rem !important;
+    margin-bottom: 0.25rem !important;
+    border-radius: 0.5rem !important;
+  }
+  .calc-display .h-4 {
+    height: auto !important;
+    font-size: 0.6rem !important;
+    margin-bottom: 0 !important;
+  }
+  .calc-display-text {
+    font-size: 1.2rem !important;
+  }
+  .calc-row {
+    gap: 2px !important;
+    margin-bottom: 2px !important;
+  }
+  .calc-row button {
+    padding: 0.25rem !important;
+    font-size: 0.65rem !important;
+    border-radius: 0.4rem !important;
+  }
+  .calc-keypad {
+    gap: 2px !important;
+  }
+  .calc-keypad button {
+    padding: 0.3rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 0.4rem !important;
+  }
+  .calc-use-btn {
+    margin-top: 0.25rem !important;
+    padding-top: 0.35rem !important;
+    padding-bottom: 0.35rem !important;
+    font-size: 0.75rem !important;
+    border-radius: 0.5rem !important;
+  }
+
 }
