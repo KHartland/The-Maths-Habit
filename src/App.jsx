@@ -5577,7 +5577,7 @@ What is the student's answer?`
       <LandscapePrompt />
       <div className="ambient-glow" />
 
-      <div className="pt-2 pb-2 px-4 relative z-10 page-content">
+      <div className="pt-2 pb-0 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
           {/* Question card */}
           {current && (
@@ -5772,29 +5772,21 @@ What is the student's answer?`
                     ) : (
                       <div className="space-y-3 answer-section">
                         {/* Input mode toggle */}
-                        <div className="flex rounded-xl bg-white/10 p-1">
-                          <button
-                            type="button"
-                            onClick={() => setInputMode('handwriting')}
-                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                              inputMode === 'handwriting'
-                                ? 'bg-violet text-white shadow-sm'
-                                : 'text-secondary-text hover:text-primary-text'
-                            }`}
-                          >
-                            <span>✏️</span> Write
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setInputMode('type')}
-                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${
-                              inputMode === 'type'
-                                ? 'bg-violet text-white shadow-sm'
-                                : 'text-secondary-text hover:text-primary-text'
-                            }`}
-                          >
-                            <span>⌨️</span> Type
-                          </button>
+                        <div className="flex glass-panel rounded-lg p-1">
+                          {['handwriting', 'type'].map(mode => (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={() => setInputMode(mode)}
+                              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                                inputMode === mode
+                                  ? 'bg-gradient-violet text-white shadow-glow-violet'
+                                  : 'text-secondary-text hover:text-primary-text'
+                              }`}
+                            >
+                              {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
+                            </button>
+                          ))}
                         </div>
 
                         {/* Type mode */}

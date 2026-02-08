@@ -428,9 +428,9 @@ select:focus {
 /* Targets phones in landscape (wide + short viewport) */
 @media (orientation: landscape) and (max-height: 500px) {
 
-  /* Page content — flush to edges */
+  /* Page content — flush to edges, slightly more top for exit button */
   .page-content {
-    padding: 0.25rem 0.5rem !important;
+    padding: 0.5rem 0.5rem 0 0.5rem !important;
   }
 
   /* Content container — full width */
@@ -495,13 +495,13 @@ select:focus {
     margin-bottom: 0 !important;
   }
 
-  /* Write/Type toggle — smaller */
-  .answer-section .flex.rounded-xl {
+  /* Write/Type toggle — compact */
+  .answer-section .flex.rounded-lg.glass-panel {
     padding: 2px !important;
   }
-  .answer-section .flex.rounded-xl button {
-    padding: 0.25rem 0.75rem !important;
-    font-size: 0.75rem !important;
+  .answer-section .flex.rounded-lg.glass-panel button {
+    padding: 0.15rem 0.5rem !important;
+    font-size: 0.7rem !important;
   }
 
   /* Handwriting input — fill available space */
@@ -525,11 +525,19 @@ select:focus {
   /* Glass panel — tighter border radius on practice */
   .glass-panel.rounded-3xl {
     border-radius: 0.75rem !important;
+    margin-bottom: 0 !important;
   }
 
-  /* No min-height lock */
+  /* No min-height lock, no bottom padding */
   .min-h-screen {
     min-height: auto !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Kill any remaining bottom gaps */
+  .content-container {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
   }
 
 }
