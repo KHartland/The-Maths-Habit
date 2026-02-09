@@ -3822,6 +3822,9 @@ const normalizeString = (str) => {
     .toLowerCase()
     .replace(/\s+/g, '') // Remove all whitespace
     .replace(/[−–—]/g, '-') // Normalize different minus signs
+    .replace(/<=/g, '≤') // Normalize inequality text to symbols
+    .replace(/>=/g, '≥')
+    .replace(/!=/g, '≠')
     .replace(/×/g, '*')
     .replace(/÷/g, '/')
     .replace(/['']/g, "'")

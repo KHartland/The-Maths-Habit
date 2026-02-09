@@ -215,6 +215,18 @@ const HandwritingInput = ({
             .replace(/\$/g, '')
             // Convert fractions
             .replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g, '$1/$2')
+            // Convert inequality symbols
+            .replace(/\\leqslant/g, '≤')
+            .replace(/\\geqslant/g, '≥')
+            .replace(/\\leq/g, '≤')
+            .replace(/\\geq/g, '≥')
+            .replace(/\\le\b/g, '≤')
+            .replace(/\\ge\b/g, '≥')
+            .replace(/\\lt\b/g, '<')
+            .replace(/\\gt\b/g, '>')
+            .replace(/\\neq/g, '≠')
+            .replace(/\\ne\b/g, '≠')
+            .replace(/\\approx/g, '≈')
             // Convert common symbols
             .replace(/\\cdot/g, '×')
             .replace(/\\times/g, '×')
