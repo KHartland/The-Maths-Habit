@@ -193,12 +193,19 @@ create trigger on_auth_user_created
 -- =============================================
 create table if not exists public.schools (
   id uuid primary key default gen_random_uuid(),
-  name text not null unique,
+  name text not null,
+  town text not null default '',
   created_by uuid references auth.users on delete set null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(name, town)
 );
 
 create index if not exists idx_schools_name on public.schools(name);
+
+-- To add the town column to an existing schools table, run:
+-- ALTER TABLE public.schools ADD COLUMN IF NOT EXISTS town text NOT NULL DEFAULT '';
+-- ALTER TABLE public.schools DROP CONSTRAINT IF EXISTS schools_name_key;
+-- ALTER TABLE public.schools ADD CONSTRAINT schools_name_town_key UNIQUE (name, town);
 
 alter table public.schools enable row level security;
 

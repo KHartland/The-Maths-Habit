@@ -1,12 +1,27 @@
 import { supabase } from './supabase';
 
+// Fetch all schools for the dropdown picker (with town)
+export const getAllSchools = async () => {
+  const { data, error } = await supabase
+    .from('schools')
+    .select('id, name, town')
+    .order('name', { ascending: true });
+
+  if (error) {
+    console.error('Error fetching schools:', error);
+    return [];
+  }
+
+  return data || [];
+};
+
 // Search for schools by name (for the school picker)
 export const searchSchools = async (query) => {
   if (!query || query.trim().length === 0) return [];
 
   const { data, error } = await supabase
     .from('schools')
-    .select('id, name')
+    .select('id, name, town')
     .ilike('name', `%${query.trim()}%`)
     .order('name', { ascending: true })
     .limit(20);
@@ -19,17 +34,20 @@ export const searchSchools = async (query) => {
   return data || [];
 };
 
-// Create a new school
-export const createSchool = async (schoolName, userId) => {
+// Create a new school (with town)
+export const createSchool = async (schoolName, town, userId) => {
   if (!schoolName?.trim()) throw new Error('School name is required');
+  if (!town?.trim()) throw new Error('Town/region is required');
 
-  const trimmed = schoolName.trim();
+  const trimmedName = schoolName.trim();
+  const trimmedTown = town.trim();
 
-  // Check if it already exists (case-insensitive)
+  // Check if it already exists (case-insensitive name + town)
   const { data: existing } = await supabase
     .from('schools')
-    .select('id, name')
-    .ilike('name', trimmed)
+    .select('id, name, town')
+    .ilike('name', trimmedName)
+    .ilike('town', trimmedTown)
     .limit(1)
     .maybeSingle();
 
@@ -37,7 +55,7 @@ export const createSchool = async (schoolName, userId) => {
 
   const { data, error } = await supabase
     .from('schools')
-    .insert({ name: trimmed, created_by: userId })
+    .insert({ name: trimmedName, town: trimmedTown, created_by: userId })
     .select()
     .single();
 
@@ -86,13 +104,13 @@ export const leaveSchool = async (userId) => {
   }
 };
 
-// Get user's current school (returns { id, name } or null)
+// Get user's current school (returns { id, name, town } or null)
 export const getUserSchool = async (userId) => {
   if (!userId) return null;
 
   const { data, error } = await supabase
     .from('school_members')
-    .select('school_id, schools(id, name)')
+    .select('school_id, schools(id, name, town)')
     .eq('user_id', userId)
     .maybeSingle();
 

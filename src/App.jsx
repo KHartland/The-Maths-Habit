@@ -6,7 +6,7 @@ import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
 import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
-import { searchSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
+import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -6844,11 +6844,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
-  const [schoolSearch, setSchoolSearch] = useState('');
-  const [schoolResults, setSchoolResults] = useState([]);
-  const [schoolSearching, setSchoolSearching] = useState(false);
+  const [allSchoolsList, setAllSchoolsList] = useState([]);
+  const [schoolFilter, setSchoolFilter] = useState('');
+  const [schoolDropdownOpen, setSchoolDropdownOpen] = useState(false);
   const [schoolError, setSchoolError] = useState('');
   const [schoolJoining, setSchoolJoining] = useState(false);
+  const [showAddSchool, setShowAddSchool] = useState(false);
+  const [newSchoolName, setNewSchoolName] = useState('');
+  const [newSchoolTown, setNewSchoolTown] = useState('');
   
   // Generate plain-English weekly summary for teachers/parents
   const generateWeeklySummary = () => {
@@ -6990,20 +6993,19 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     saveSettings(newSettings);
   };
 
-  // School search with debounce
+  // Load all schools when dropdown opens
   useEffect(() => {
-    if (!schoolSearch.trim() || schoolSearch.trim().length < 2) {
-      setSchoolResults([]);
-      return;
+    if (schoolDropdownOpen && allSchoolsList.length === 0) {
+      getAllSchools().then(setAllSchoolsList);
     }
-    setSchoolSearching(true);
-    const timer = setTimeout(async () => {
-      const results = await searchSchools(schoolSearch);
-      setSchoolResults(results);
-      setSchoolSearching(false);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [schoolSearch]);
+  }, [schoolDropdownOpen]);
+
+  // Filter schools by search text
+  const filteredSchools = allSchoolsList.filter(s => {
+    if (!schoolFilter.trim()) return true;
+    const q = schoolFilter.toLowerCase();
+    return s.name.toLowerCase().includes(q) || (s.town || '').toLowerCase().includes(q);
+  });
 
   // Handle joining a school
   const handleJoinSchool = async (school) => {
@@ -7013,8 +7015,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     try {
       await joinSchool(user.id, school.id);
       setUserSchool(school);
-      setSchoolSearch('');
-      setSchoolResults([]);
+      setSchoolDropdownOpen(false);
+      setSchoolFilter('');
     } catch (err) {
       setSchoolError(err.message || 'Failed to join school');
     } finally {
@@ -7022,17 +7024,19 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     }
   };
 
-  // Handle creating + joining a new school
+  // Handle creating + joining a new school (with town)
   const handleCreateSchool = async () => {
-    if (!user || !schoolSearch.trim()) return;
+    if (!user || !newSchoolName.trim() || !newSchoolTown.trim()) return;
     setSchoolJoining(true);
     setSchoolError('');
     try {
-      const school = await createSchool(schoolSearch.trim(), user.id);
+      const school = await createSchool(newSchoolName.trim(), newSchoolTown.trim(), user.id);
       await joinSchool(user.id, school.id);
       setUserSchool(school);
-      setSchoolSearch('');
-      setSchoolResults([]);
+      setShowAddSchool(false);
+      setNewSchoolName('');
+      setNewSchoolTown('');
+      setAllSchoolsList(prev => [...prev, school].sort((a, b) => a.name.localeCompare(b.name)));
     } catch (err) {
       setSchoolError(err.message || 'Failed to create school');
     } finally {
@@ -7152,7 +7156,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       </div>
                       <div>
                         <div className="font-medium text-primary-text">{userSchool.name}</div>
-                        <div className="text-xs text-secondary-text">View leaderboard in Stats tab</div>
+                        {userSchool.town && <div className="text-xs text-secondary-text">{userSchool.town}</div>}
                       </div>
                     </div>
                     <button
@@ -7163,49 +7167,99 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                   </div>
                 </div>
-              ) : (
+              ) : showAddSchool ? (
+                /* Add new school form */
                 <div className="space-y-3">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text" />
-                    <input
-                      type="text"
-                      value={schoolSearch}
-                      onChange={(e) => setSchoolSearch(e.target.value)}
-                      placeholder="Search for your school..."
-                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
-                    />
-                    {schoolSearching && (
-                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
-                    )}
+                  <p className="text-sm text-secondary-text">Add your school to the list:</p>
+                  <input
+                    type="text"
+                    value={newSchoolName}
+                    onChange={(e) => setNewSchoolName(e.target.value)}
+                    placeholder="School name..."
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                  />
+                  <input
+                    type="text"
+                    value={newSchoolTown}
+                    onChange={(e) => setNewSchoolTown(e.target.value)}
+                    placeholder="Town / region..."
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleCreateSchool}
+                      disabled={schoolJoining || !newSchoolName.trim() || !newSchoolTown.trim()}
+                      className="flex-1 py-3 btn-gradient-mint text-void font-semibold rounded-xl disabled:opacity-50"
+                    >
+                      {schoolJoining ? 'Adding...' : 'Add & Join'}
+                    </button>
+                    <button
+                      onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
+                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-white/5 rounded-xl transition-colors"
+                    >
+                      Back
+                    </button>
                   </div>
+                </div>
+              ) : (
+                /* School dropdown selector */
+                <div className="space-y-3">
+                  <button
+                    onClick={() => setSchoolDropdownOpen(!schoolDropdownOpen)}
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text"
+                  >
+                    <span className="text-secondary-text/60">Select your school...</span>
+                    <svg className={`w-4 h-4 text-secondary-text transition-transform ${schoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
 
-                  {/* Search results */}
-                  {schoolSearch.trim().length >= 2 && !schoolSearching && (
-                    <div className="space-y-1 max-h-48 overflow-y-auto">
-                      {schoolResults.map(school => (
-                        <button
-                          key={school.id}
-                          onClick={() => handleJoinSchool(school)}
-                          disabled={schoolJoining}
-                          className="w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-metallic-base/10 transition-colors flex items-center justify-between disabled:opacity-50"
-                        >
-                          <span className="text-sm text-primary-text">{school.name}</span>
-                          <span className="text-xs text-metallic-base font-medium">Join</span>
-                        </button>
-                      ))}
-
-                      {schoolResults.length === 0 && schoolSearch.trim().length >= 2 && (
-                        <div className="text-center py-4">
-                          <p className="text-sm text-secondary-text mb-3">No schools found for "{schoolSearch}"</p>
-                          <button
-                            onClick={handleCreateSchool}
-                            disabled={schoolJoining}
-                            className="px-4 py-2 btn-gradient-mint text-void text-sm font-medium rounded-lg disabled:opacity-50"
-                          >
-                            {schoolJoining ? 'Creating...' : `Create "${schoolSearch.trim()}"`}
-                          </button>
+                  {schoolDropdownOpen && (
+                    <div className="rounded-xl border border-white/10 bg-void/95 backdrop-blur overflow-hidden">
+                      {/* Filter input */}
+                      <div className="p-2 border-b border-white/10">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text" />
+                          <input
+                            type="text"
+                            value={schoolFilter}
+                            onChange={(e) => setSchoolFilter(e.target.value)}
+                            placeholder="Type to filter..."
+                            autoFocus
+                            className="w-full pl-10 pr-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-primary-text placeholder-secondary-text/60"
+                          />
                         </div>
-                      )}
+                      </div>
+
+                      {/* School list */}
+                      <div className="max-h-56 overflow-y-auto">
+                        {filteredSchools.length > 0 ? filteredSchools.map(school => (
+                          <button
+                            key={school.id}
+                            onClick={() => handleJoinSchool(school)}
+                            disabled={schoolJoining}
+                            className="w-full text-left px-4 py-3 hover:bg-metallic-base/10 transition-colors flex items-center justify-between disabled:opacity-50 border-b border-white/5 last:border-b-0"
+                          >
+                            <div>
+                              <div className="text-sm text-primary-text">{school.name}</div>
+                              {school.town && <div className="text-xs text-secondary-text">{school.town}</div>}
+                            </div>
+                            <span className="text-xs text-metallic-base font-medium shrink-0 ml-3">Join</span>
+                          </button>
+                        )) : (
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
+                            {allSchoolsList.length === 0 ? 'Loading schools...' : 'No schools match your filter'}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Can't find school option */}
+                      <div className="p-2 border-t border-white/10">
+                        <button
+                          onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); }}
+                          className="w-full py-2 text-sm text-metallic-base hover:text-mint font-medium transition-colors"
+                        >
+                          Can't find your school? Add it
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -8975,7 +9029,7 @@ function AppContent() {
           <div className="glass-panel rounded-2xl p-5 shadow-glass">
             <div className="flex items-center gap-2 mb-3">
               <Trophy className="w-5 h-5 text-[#FBBF24]" />
-              <h2 className="font-bold text-primary-text">{userSchool.name} Leaderboard</h2>
+              <h2 className="font-bold text-primary-text">{userSchool.name}{userSchool.town ? `, ${userSchool.town}` : ''}</h2>
             </div>
             <SchoolLeaderboard
               schoolId={userSchool.id}
