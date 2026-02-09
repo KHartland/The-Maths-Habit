@@ -3992,16 +3992,60 @@ const answersEquivalent = (userAnswer, correctAnswer) => {
   if (yesVariants.includes(userNorm) && yesVariants.includes(correctNorm)) return true;
   if (noVariants.includes(userNorm) && noVariants.includes(correctNorm)) return true;
   
-  // Handle percentage as decimal (when answer has %)
+  // === Full fraction ↔ decimal ↔ percentage equivalence ===
+  // Parse a value into its decimal form, aware of percentages
+  const toDecimal = (str) => {
+    if (!str) return null;
+    const trimmed = str.trim();
+    // If it's a percentage, divide by 100
+    if (trimmed.endsWith('%')) {
+      const pctVal = parseFloat(trimmed.replace('%', ''));
+      if (!isNaN(pctVal)) return pctVal / 100;
+    }
+    // Try fraction
+    const frac = parseFraction(normalizeString(trimmed));
+    if (frac !== null) return frac;
+    // Try mixed number
+    const mixed = parseMixedNumber(normalizeString(trimmed));
+    if (mixed !== null) return mixed;
+    // Try plain number
+    const num = extractNumber(trimmed);
+    if (num !== null) return num;
+    return null;
+  };
+
+  const userDecimal = toDecimal(userAnswer);
+  const correctDecimal = toDecimal(correctAnswer);
+
+  if (userDecimal !== null && correctDecimal !== null) {
+    // Direct comparison as decimals (handles 3/4 = 0.75 = 75%)
+    if (numbersEquivalent(userDecimal, correctDecimal)) return true;
+  }
+
+  // Also handle the case where one side is a percentage number without %
+  // e.g. correct = "40" (meaning 40%) and user enters "0.4" or "2/5"
+  // This is ambiguous, so only do it if the correct answer literally has %
   if (correctAnswer.includes('%')) {
     const correctPct = parseFloat(correctAnswer.replace('%', ''));
     if (!isNaN(correctPct)) {
-      // User might enter as decimal (15% -> 0.15) or just number (15)
       if (numbersEquivalent(userNum, correctPct)) return true;
       if (numbersEquivalent(userNum, correctPct / 100)) return true;
+      // User enters fraction equivalent of the percentage
+      const userFracVal = parseFraction(userNorm);
+      if (userFracVal !== null && numbersEquivalent(userFracVal, correctPct / 100)) return true;
     }
   }
-  
+  // Reverse: user enters percentage, correct is a plain number or fraction
+  if (userAnswer.includes('%') && !correctAnswer.includes('%')) {
+    const userPct = parseFloat(userAnswer.replace('%', ''));
+    if (!isNaN(userPct)) {
+      // e.g. user enters "75%" and correct is "0.75" or "3/4"
+      if (correctNum !== null && numbersEquivalent(userPct / 100, correctNum)) return true;
+      const correctFracVal = parseFraction(correctNorm);
+      if (correctFracVal !== null && numbersEquivalent(userPct / 100, correctFracVal)) return true;
+    }
+  }
+
   // Handle expressions like "2x² + 2x - 12" with different spacing/ordering
   // Remove all spaces and compare
   const userExpr = userNorm.replace(/\s/g, '').replace(/\+-/g, '-').replace(/-\+/g, '-');
