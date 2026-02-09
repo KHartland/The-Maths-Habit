@@ -5376,7 +5376,10 @@ What is the student's answer?`
         };
       });
 
+      // Set celebration data BEFORE navigating (all batched in one render)
       setRecentSessionCodes(practicedCodes);
+      setCelebrationIndex(0);
+      setShowCelebration(true);
       setSessionToastData({
         correctCount,
         totalQuestions,
@@ -5385,12 +5388,10 @@ What is the student's answer?`
         practicedObjectives,
       });
 
-      // Navigate to home and trigger celebration carousel
+      // Navigate to home — celebration overlay will show immediately
       setSessionResults([]);
       setSessionStarted(false);
       setCurrentPage('home');
-      setCelebrationIndex(0);
-      setShowCelebration(true);
     }
   };
 
@@ -8389,22 +8390,15 @@ function AppContent() {
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
       {/* Full-screen celebration carousel */}
-      {showCelebration && sessionToastData?.practicedObjectives && (() => {
-        const objectives = sessionToastData.practicedObjectives;
-        const current = objectives[celebrationIndex];
-        if (!current) return null;
-
-        const topicColor = TOPIC_HEX[current.topic] || '#A78BFA';
-        const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Exam ready', 'Mastered!'];
-        const levelLabel = levelLabels[current.level] || 'Learning';
-        const progressPct = (current.level / 5) * 100;
-        const isLast = celebrationIndex >= objectives.length - 1;
-
-        const advanceCelebration = () => {
-          if (isLast) {
+      <CelebrationCarousel
+        show={showCelebration}
+        objectives={sessionToastData?.practicedObjectives || []}
+        currentIndex={celebrationIndex}
+        onAdvance={() => {
+          const objs = sessionToastData?.practicedObjectives || [];
+          if (celebrationIndex >= objs.length - 1) {
             setShowCelebration(false);
             setCelebrationIndex(0);
-            // Keep codes for heatmap glow
             setTimeout(() => {
               setSessionToastData(null);
               setRecentSessionCodes([]);
@@ -8412,149 +8406,8 @@ function AppContent() {
           } else {
             setCelebrationIndex(prev => prev + 1);
           }
-        };
-
-        return (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
-            style={{ background: 'rgba(10, 10, 20, 0.92)' }}
-            onClick={advanceCelebration}
-          >
-            {/* Animated tile card */}
-            <div
-              key={current.code}
-              className="celebration-card"
-              style={{
-                width: 'min(85vw, 340px)',
-                aspectRatio: '1',
-                borderRadius: 24,
-                background: `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
-                border: `3px solid ${topicColor}`,
-                boxShadow: `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '2rem',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              {/* White glow pulse behind card */}
-              <div className="celebration-glow" style={{
-                position: 'absolute', inset: -8, borderRadius: 32,
-                border: '2px solid rgba(255,255,255,0.6)',
-                boxShadow: '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
-                pointerEvents: 'none',
-              }} />
-
-              {/* Topic badge */}
-              <span style={{
-                color: topicColor,
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: '0.5rem',
-              }}>
-                {current.topic}
-              </span>
-
-              {/* Objective code */}
-              <span style={{
-                color: 'white',
-                fontSize: '2.5rem',
-                fontWeight: 800,
-                marginBottom: '0.25rem',
-              }}>
-                {current.code}
-              </span>
-
-              {/* Objective title */}
-              <span style={{
-                color: 'rgba(255,255,255,0.85)',
-                fontSize: '1.1rem',
-                fontWeight: 500,
-                textAlign: 'center',
-                marginBottom: '1.5rem',
-                lineHeight: 1.3,
-                maxWidth: '90%',
-              }}>
-                {current.title}
-              </span>
-
-              {/* Session result */}
-              <span style={{
-                color: current.correctInSession === current.totalInSession ? '#38E6A2' : 'rgba(255,255,255,0.7)',
-                fontSize: '1rem',
-                fontWeight: 600,
-                marginBottom: '1rem',
-              }}>
-                {current.correctInSession}/{current.totalInSession} correct this session
-              </span>
-
-              {/* Progress bar */}
-              <div style={{
-                width: '80%',
-                height: 12,
-                borderRadius: 6,
-                background: 'rgba(255,255,255,0.15)',
-                overflow: 'hidden',
-                marginBottom: '0.5rem',
-              }}>
-                <div className="celebration-progress-fill" style={{
-                  height: '100%',
-                  width: `${progressPct}%`,
-                  borderRadius: 6,
-                  background: `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
-                  boxShadow: `0 0 12px ${topicColor}80`,
-                }} />
-              </div>
-
-              {/* Level label */}
-              <span style={{
-                color: current.level >= 5 ? '#FFD700' : 'rgba(255,255,255,0.7)',
-                fontSize: '0.9rem',
-                fontWeight: current.level >= 5 ? 700 : 500,
-              }}>
-                {current.level >= 5 ? '⭐ ' : ''}{levelLabel}
-              </span>
-            </div>
-
-            {/* Dots indicator */}
-            <div style={{
-              position: 'fixed',
-              bottom: '3rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              gap: 8,
-            }}>
-              {objectives.map((_, i) => (
-                <div key={i} style={{
-                  width: i === celebrationIndex ? 24 : 8,
-                  height: 8,
-                  borderRadius: 4,
-                  background: i === celebrationIndex ? 'white' : 'rgba(255,255,255,0.3)',
-                  transition: 'all 0.3s ease',
-                }} />
-              ))}
-            </div>
-
-            {/* Tap prompt */}
-            <p style={{
-              position: 'fixed',
-              bottom: '1.2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              color: 'rgba(255,255,255,0.4)',
-              fontSize: '0.8rem',
-            }}>
-              {isLast ? 'Tap to finish' : 'Tap to continue'}
-            </p>
-          </div>
-        );
-      })()}
+        }}
+      />
 
       {/* Main Content */}
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
@@ -8956,6 +8809,103 @@ function LandscapePrompt() {
       >
         Continue in portrait
       </button>
+    </div>
+  );
+}
+
+function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
+  if (!show || !objectives || objectives.length === 0) return null;
+
+  const current = objectives[currentIndex];
+  if (!current) return null;
+
+  const topicColor = TOPIC_HEX[current.topic] || '#A78BFA';
+  const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Exam ready', 'Mastered!'];
+  const levelLabel = levelLabels[current.level] || 'Learning';
+  const progressPct = (current.level / 5) * 100;
+  const isLast = currentIndex >= objectives.length - 1;
+
+  return (
+    <div
+      onClick={onAdvance}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 60,
+        background: 'rgba(10, 10, 20, 0.93)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Animated card */}
+      <div
+        key={current.code}
+        className="celebration-card"
+        style={{
+          width: 'min(85vw, 340px)',
+          aspectRatio: '1',
+          borderRadius: 24,
+          background: `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
+          border: `3px solid ${topicColor}`,
+          boxShadow: `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          padding: '2rem', position: 'relative', overflow: 'hidden',
+        }}
+      >
+        {/* White glow pulse */}
+        <div className="celebration-glow" style={{
+          position: 'absolute', inset: -8, borderRadius: 32,
+          border: '2px solid rgba(255,255,255,0.6)',
+          boxShadow: '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
+          pointerEvents: 'none',
+        }} />
+
+        <span style={{ color: topicColor, fontSize: '0.85rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+          {current.topic}
+        </span>
+
+        <span style={{ color: 'white', fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.25rem' }}>
+          {current.code}
+        </span>
+
+        <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: '1.1rem', fontWeight: 500, textAlign: 'center', marginBottom: '1.5rem', lineHeight: 1.3, maxWidth: '90%' }}>
+          {current.title}
+        </span>
+
+        <span style={{
+          color: current.correctInSession === current.totalInSession ? '#38E6A2' : 'rgba(255,255,255,0.7)',
+          fontSize: '1rem', fontWeight: 600, marginBottom: '1rem',
+        }}>
+          {current.correctInSession}/{current.totalInSession} correct this session
+        </span>
+
+        {/* Progress bar */}
+        <div style={{ width: '80%', height: 12, borderRadius: 6, background: 'rgba(255,255,255,0.15)', overflow: 'hidden', marginBottom: '0.5rem' }}>
+          <div className="celebration-progress-fill" style={{
+            height: '100%', width: `${progressPct}%`, borderRadius: 6,
+            background: `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
+            boxShadow: `0 0 12px ${topicColor}80`,
+          }} />
+        </div>
+
+        <span style={{ color: current.level >= 5 ? '#FFD700' : 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: current.level >= 5 ? 700 : 500 }}>
+          {current.level >= 5 ? '⭐ ' : ''}{levelLabel}
+        </span>
+      </div>
+
+      {/* Dots */}
+      <div style={{ position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+        {objectives.map((_, i) => (
+          <div key={i} style={{
+            width: i === currentIndex ? 24 : 8, height: 8, borderRadius: 4,
+            background: i === currentIndex ? 'white' : 'rgba(255,255,255,0.3)',
+            transition: 'all 0.3s ease',
+          }} />
+        ))}
+      </div>
+
+      <p style={{ position: 'fixed', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>
+        {isLast ? 'Tap to finish' : 'Tap to continue'}
+      </p>
     </div>
   );
 }
