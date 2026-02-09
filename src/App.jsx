@@ -4289,6 +4289,19 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     });
   });
 
+  // Filter out questions answered correctly today (nextReview in the future + reviewed today)
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+  const todayMs = todayStart.getTime();
+
+  const availableQuestions = allQuestions.filter(q => {
+    // Keep new cards (never reviewed) — they can't have been answered today
+    if (!q.card.lastReview) return true;
+    // If last reviewed today and next review is in the future, it was answered correctly today — skip it
+    if (q.card.lastReview >= todayMs && q.card.nextReview > now) return false;
+    return true;
+  });
+
   // Helper for randomized sorting (breaks ties randomly for variety)
   const randomizedSort = (arr, scoreFn) => {
     return [...arr].sort((a, b) => {
@@ -4314,7 +4327,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // Group questions by topic for balanced selection
   const questionsByTopic = {};
-  allQuestions.forEach(q => {
+  availableQuestions.forEach(q => {
     const topic = q.objective?.topic || 'Unknown';
     if (!questionsByTopic[topic]) questionsByTopic[topic] = [];
     questionsByTopic[topic].push(q);
@@ -4323,12 +4336,12 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // Separate into buckets with randomized sorting for variety
   const dueCards = randomizedSort(
-    allQuestions.filter(q => q.dueScore <= 1),
+    availableQuestions.filter(q => q.dueScore <= 1),
     q => q.dueScore
   );
-  const newCards = shuffleArray(allQuestions.filter(q => q.state === 'new' && q.dueScore > 1));
-  const examReadyCards = shuffleArray(allQuestions.filter(q => q.isExamReady));
-  const easyCards = shuffleArray(allQuestions.filter(q => q.difficulty < 0.4 && q.retrievability > 0.8));
+  const newCards = shuffleArray(availableQuestions.filter(q => q.state === 'new' && q.dueScore > 1));
+  const examReadyCards = shuffleArray(availableQuestions.filter(q => q.isExamReady));
+  const easyCards = shuffleArray(availableQuestions.filter(q => q.difficulty < 0.4 && q.retrievability > 0.8));
 
   // Build session with structure
   const queue = [];
@@ -4430,7 +4443,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   // Phase 1: Warm-up (easy questions from different objectives, randomized for variety)
   const warmUpCandidates = easyCards.length > 0
     ? easyCards
-    : shuffleArray(allQuestions.filter(q => q.difficulty < 0.5));
+    : shuffleArray(availableQuestions.filter(q => q.difficulty < 0.5));
 
   // Use topic balancing for warm-up too
   addWithInterleaving(warmUpCandidates, 'warmup', SESSION_STRUCTURE.warmUp);
@@ -4439,7 +4452,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   const challengeTarget = SESSION_STRUCTURE.challenge;
 
   // GUARANTEED: At least 1 never-practised objective per session (if any exist)
-  const neverPractisedCards = shuffleArray(allQuestions.filter(q => {
+  const neverPractisedCards = shuffleArray(availableQuestions.filter(q => {
     const prog = progress[q.objective?.code];
     return !prog || (!prog.quickCorrect && !prog.examPassed && !prog.lastPracticed);
   }));
@@ -4477,7 +4490,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // Phase 3: Cool-down (end on an easy success from a different objective/topic)
   const coolDownCandidates = shuffleArray(
-    allQuestions.filter(q =>
+    availableQuestions.filter(q =>
       !usedQuestionIds.has(q.questionId) &&
       q.difficulty < 0.4 &&
       q?.objective?.code &&
@@ -4490,7 +4503,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // If no cool-down was added, fall back to any unused question
   if (queue.filter(q => q.sessionPhase === 'cooldown').length === 0) {
-    const fallback = shuffleArray(allQuestions.filter(q =>
+    const fallback = shuffleArray(availableQuestions.filter(q =>
       !usedQuestionIds.has(q.questionId) &&
       q?.objective?.code &&
       canAddObjective(q.objective.code)
@@ -4505,7 +4518,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   const remainingSlots = count - queue.length;
   if (remainingSlots > 0) {
     const unused = shuffleArray(
-      allQuestions.filter(q =>
+      availableQuestions.filter(q =>
         !usedQuestionIds.has(q.questionId) &&
         q?.objective?.code &&
         canAddObjective(q.objective.code)
