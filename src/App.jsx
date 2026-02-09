@@ -1628,7 +1628,7 @@ const questionBank = {
   // Number - with multiple choice and calculator modes
   N1: [
     { q: "Which is the largest?", type: "mcq", options: ["5.304[r]", "5.344", "5.34", "5.3[r]4[r]"], a: "5.3[r]4[r]", calculator: false },
-    { q: "Order these from smallest to largest: 0.45, 0.405, 0.54, 0.045", a: "0.045, 0.405, 0.45, 0.54", type: "text", calculator: false },
+    { q: "Order these from smallest to largest:", type: "order", items: ["0.45", "0.405", "0.54", "0.045"], correctOrder: ["0.045", "0.405", "0.45", "0.54"], calculator: false },
     { q: "Which decimal is equivalent to 1/3?", type: "mcq", options: ["0.3", "0.33", "0.3[r]", "0.33[r]"], a: "0.3[r]", calculator: false },
     { q: "Put these decimals in order from smallest to largest:", type: "order", items: ["0.7", "0.07", "0.77", "0.707"], correctOrder: ["0.07", "0.7", "0.707", "0.77"], calculator: false },
     { q: "Order these decimals from largest to smallest:", type: "order", items: ["0.35", "0.5", "0.305", "0.53"], correctOrder: ["0.53", "0.5", "0.35", "0.305"], calculator: false },
@@ -2033,7 +2033,7 @@ const questionBank = {
     { q: "An event is certain to happen. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "2"], a: "1", calculator: false },
     { q: "An event is impossible. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "-1"], a: "0", calculator: false },
     { q: "P(event) = 0.75. Describe this likelihood:", type: "mcq", options: ["Impossible", "Unlikely", "Evens", "Likely"], a: "Likely", calculator: false },
-    { q: "Put in order from least to most likely: P=0.8, P=0.2, P=0.5, P=0.95", a: "0.2, 0.5, 0.8, 0.95", type: "text", calculator: false },
+    { q: "Put in order from least to most likely:", type: "order", items: ["P=0.8", "P=0.2", "P=0.5", "P=0.95"], correctOrder: ["P=0.2", "P=0.5", "P=0.8", "P=0.95"], calculator: false },
   ],
   P7: [
     { q: "Two coins are flipped. List all possible outcomes.", a: "HH, HT, TH, TT", type: "text", calculator: false },
@@ -2262,10 +2262,10 @@ const questionBank = {
 const higherQuestionBank = {
   // Number - Higher versions (grades 4-9 difficulty)
   N1: [
-    { q: "Order from smallest to largest: 3.2 × 10⁻², 0.03[r], 0.032, 3.02 × 10⁻²", a: "3.2 × 10⁻², 0.032, 3.02 × 10⁻², 0.03[r]", type: "text", calculator: false },
+    { q: "Order from smallest to largest:", type: "order", items: ["3.2 × 10⁻²", "0.03[r]", "0.032", "3.02 × 10⁻²"], correctOrder: ["3.2 × 10⁻²", "0.032", "3.02 × 10⁻²", "0.03[r]"], calculator: false },
     { q: "Which is largest?", type: "mcq", options: ["0.45[r]6[r]", "0.456", "0.4[r]5[r]6[r]", "0.46"], a: "0.4[r]5[r]6[r]", calculator: false },
     { q: "Order from smallest to largest:", type: "order", items: ["√0.16", "0.39", "2/5", "0.4[r]"], correctOrder: ["√0.16", "0.39", "2/5", "0.4[r]"], calculator: false },
-    { q: "Order these from smallest to largest: -0.35, -3/8, -0.3[r], -0.38", a: "-3/8, -0.38, -0.35, -0.3[r]", type: "text", calculator: false },
+    { q: "Order these from smallest to largest:", type: "order", items: ["-0.35", "-3/8", "-0.3[r]", "-0.38"], correctOrder: ["-3/8", "-0.38", "-0.35", "-0.3[r]"], calculator: false },
     { q: "Put in order from largest to smallest:", type: "order", items: ["7.2 × 10⁻³", "0.072", "7.02 × 10⁻²", "0.007[r]"], correctOrder: ["7.02 × 10⁻²", "0.072", "0.007[r]", "7.2 × 10⁻³"], calculator: false },
   ],
   N2: [
