@@ -5601,7 +5601,8 @@ What is the student's answer?`
 
                 <button
                   onClick={() => { setCurrentPage('home'); setShowOneVsOne(true); }}
-                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_4px_20px_rgba(249,115,22,0.3)]"
+                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 text-white"
+                  style={{ background: 'linear-gradient(to right, #f97316, #ef4444)', boxShadow: '0 4px 20px rgba(249,115,22,0.3)' }}
                 >
                   <Swords className="w-5 h-5" />
                   1v1 Challenge
@@ -5667,13 +5668,14 @@ What is the student's answer?`
                 {/* Progress bar (inline) */}
                 <div className="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden shrink-0">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      practiceMode === 'quickfire'
-                        ? 'bg-gradient-to-r from-orange-500 to-red-500'
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      background: practiceMode === 'quickfire'
+                        ? 'linear-gradient(to right, #f97316, #ef4444)'
                         : practiceMode === 'exam'
-                          ? 'bg-gradient-to-r from-red-500 to-rose-500'
-                          : 'bg-gradient-violet'
-                    }`}
+                          ? 'linear-gradient(to right, #ef4444, #f43f5e)'
+                          : 'linear-gradient(180deg, #8BA8D9, #5B7FC7, #3D5A8A)'
+                    }}
                     style={{ width: `${progressPct}%` }}
                   />
                 </div>
@@ -8697,7 +8699,8 @@ function AppContent() {
               {/* 1v1 Battle Button */}
               <button
                 onClick={() => setShowOneVsOne(true)}
-                className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_4px_20px_rgba(249,115,22,0.3)]"
+                className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-white"
+                style={{ background: 'linear-gradient(to right, #f97316, #ef4444)', boxShadow: '0 4px 20px rgba(249,115,22,0.3)' }}
               >
                 <Swords className="w-4 h-4" />
                 1v1 Battle
