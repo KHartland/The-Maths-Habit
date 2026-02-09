@@ -5601,8 +5601,7 @@ What is the student's answer?`
 
                 <button
                   onClick={() => { setCurrentPage('home'); setShowOneVsOne(true); }}
-                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 text-white"
-                  style={{ background: 'linear-gradient(to right, #f97316, #ef4444)', boxShadow: '0 4px 20px rgba(249,115,22,0.3)' }}
+                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 text-white btn-gradient-violet"
                 >
                   <Swords className="w-5 h-5" />
                   1v1 Challenge
@@ -8699,8 +8698,7 @@ function AppContent() {
               {/* 1v1 Battle Button */}
               <button
                 onClick={() => setShowOneVsOne(true)}
-                className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-white"
-                style={{ background: 'linear-gradient(to right, #f97316, #ef4444)', boxShadow: '0 4px 20px rgba(249,115,22,0.3)' }}
+                className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-white btn-gradient-violet"
               >
                 <Swords className="w-4 h-4" />
                 1v1 Battle
