@@ -1814,7 +1814,7 @@ const questionBank = {
   A21: [
     { q: "Write as an inequality: x is greater than 5", a: "x > 5", type: "text", calculator: false },
     { q: "Write as an inequality: y is at most 10", a: "y ≤ 10", type: "text", calculator: false },
-    { q: "A ride requires height h cm where h ≥ 120. Can someone 115cm tall go on?", type: "mcq", options: ["Yes", "No"], a: "No", calculator: false },
+    { q: "Solve the inequality 3x + 1 < 10", a: "x < 3", type: "text", calculator: false },
     { q: "n is an integer where -2 < n ≤ 3. List all possible values of n.", a: "-1, 0, 1, 2, 3", type: "text", calculator: false },
   ],
   A24: [
@@ -2010,7 +2010,7 @@ const questionBank = {
     { q: "Why do we record experimental outcomes in a table?", type: "mcq", options: ["It looks neat", "To spot patterns and calculate probabilities", "The teacher said so", "It's faster"], a: "To spot patterns and calculate probabilities", calculator: false },
   ],
   P2: [
-    { q: "A dice has faces 1,1,1,2,2,3. Is it fair?", type: "mcq", options: ["Yes", "No"], a: "No", calculator: false },
+    { q: "A dice has faces 1,1,1,2,2,3. What is P(rolling a 1)?", type: "mcq", options: ["1/6", "1/3", "1/2", "2/3"], a: "1/2", calculator: false },
     { q: "For a fair spinner with 5 equal sections, P(any section) = ", a: "0.2", type: "number", calculator: false },
     { q: "A coin is fair. What is P(heads)?", type: "mcq", options: ["0.25", "0.5", "0.75", "1"], a: "0.5", calculator: false },
     { q: "Which would make an experiment unfair?", type: "mcq", options: ["Using a normal dice", "Flipping a coin", "Using a weighted dice", "Drawing from a shuffled deck"], a: "Using a weighted dice", calculator: false },
@@ -2123,7 +2123,7 @@ const questionBank = {
     { q: "Is 2(x + 3) = 2x + 6 an equation or identity?", type: "mcq", options: ["Equation", "Identity"], a: "Identity", calculator: false },
     { q: "Which is an identity?", type: "mcq", options: ["x² = 9", "x² - 9 = (x+3)(x-3)", "x² = x + 6", "2x = 10"], a: "x² - 9 = (x+3)(x-3)", calculator: false },
     { q: "An identity is true for:", type: "mcq", options: ["One value of x", "Two values of x", "All values of x", "No values of x"], a: "All values of x", calculator: false },
-    { q: "Is (x + 1)² = x² + 2x + 1 an identity?", type: "mcq", options: ["Yes", "No"], a: "Yes", calculator: false },
+    { q: "Which of these is an identity?", type: "mcq", options: ["2x + 1 = 7", "(x + 1)² ≡ x² + 2x + 1", "x² = 9", "3x - 2 = x + 4"], a: "(x + 1)² ≡ x² + 2x + 1", calculator: false },
   ],
   A10: [
     { q: "Prove that (n+1)² - n² is always odd", a: "= 2n + 1, which is always odd", type: "text", calculator: false },
