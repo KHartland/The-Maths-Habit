@@ -504,7 +504,7 @@ const descriptions = {
   A15: 'Find turning points of quadratics from roots (e.g. x-coord = (a+b)/2)',
   A16: 'Work with cubic graphs (e.g. where does y = x³ − 1 cross the y-axis?)',
   A17: 'Solve linear equations including with brackets and fractions',
-  A18: 'Solve quadratics (e.g. solve 2x(x + 10) = 5x − 18)',
+  A18: 'Solve quadratics by factorising (e.g. solve x² + 5x + 6 = 0)',
   A19: 'Solve simultaneous equations (e.g. 7x + 2y = 100 and 3x + 2y = 48)',
   A20: 'Use iteration to find approximate solutions (e.g. Aₙ₊₁ = 1.02×Aₙ − 100)',
   A21: 'Set up inequalities from context (e.g. surface area < 650 cm², find largest x)',
@@ -616,7 +616,7 @@ const revisionHints = {
   A15: 'Revise: the turning point x-coordinate is halfway between the roots. Substitute to find y.',
   A16: 'Revise cubic graphs: they have an S-shape. y = x³ passes through the origin.',
   A17: 'Revise solving equations: do the same to both sides to get the unknown on its own.',
-  A18: 'Revise solving quadratics: factorise and set each bracket = 0, or use the quadratic formula.',
+  A18: 'Revise solving quadratics: factorise and set each bracket = 0.',
   A19: 'Revise simultaneous equations: eliminate one variable by adding/subtracting equations.',
   A20: 'Revise iteration: substitute your answer back into the formula repeatedly until it settles.',
   A21: 'Revise setting up inequalities: translate words into symbols (< less than, > greater than, ≤ at most, ≥ at least).',
@@ -1760,10 +1760,6 @@ const questionBank = {
     { q: "Solve: x² - 9 = 0", type: "mcq", options: ["x = 3", "x = -3", "x = 3 and x = -3", "x = 9"], a: "x = 3 and x = -3", calculator: false },
     // Foundation - reading from graph
     { q: "Use the graph to solve x² - 2x - 3 = 0", a: "x = -1 and x = 3", type: "text", calculator: false, image: "quadratic-graph-1.png" },
-    // Higher - rearrangement
-    { q: "Solve: x² + 3x = 10 (give both solutions)", a: "x = 2 and x = -5", type: "text", calculator: false, tier: "higher" },
-    // Higher - quadratic formula
-    { q: "Solve 2x² + 5x - 3 = 0 using the quadratic formula", type: "mcq", options: ["x = 0.5 and x = -3", "x = -0.5 and x = 3", "x = 1 and x = -1.5", "x = 3 and x = -0.5"], a: "x = 0.5 and x = -3", calculator: true, tier: "higher" },
   ],
   A19: [
     { q: "Solve: 2x + y = 7 and x + y = 4. Find x.", a: "3", type: "number", calculator: false },
@@ -2424,6 +2420,12 @@ const higherQuestionBank = {
     { q: "Use the quadratic formula: x² + 4x - 2 = 0 (2 d.p.)", a: "x = 0.45 or x = -4.45", type: "text", calculator: true },
     { q: "Which are the solutions to x² - 5x + 6 = 0?", type: "mcq", options: ["x = 2 and x = 3", "x = -2 and x = -3", "x = 1 and x = 6", "x = -1 and x = -6"], a: "x = 2 and x = 3", calculator: false },
     { q: "Solve by completing the square: x² + 6x + 5 = 0", a: "x = -1 or x = -5", type: "text", calculator: false },
+  ],
+  A18: [
+    { q: "Solve: x² + 3x = 10 (give both solutions)", a: "x = 2 and x = -5", type: "text", calculator: false },
+    { q: "Solve 2x² + 5x - 3 = 0 using the quadratic formula", type: "mcq", options: ["x = 0.5 and x = -3", "x = -0.5 and x = 3", "x = 1 and x = -1.5", "x = 3 and x = -0.5"], a: "x = 0.5 and x = -3", calculator: true },
+    { q: "Use the quadratic formula: 3x² - 2x - 5 = 0 (2 d.p.)", a: "x = 1.67 or x = -1", type: "text", calculator: true },
+    { q: "Solve by completing the square: x² - 8x + 12 = 0", a: "x = 2 or x = 6", type: "text", calculator: false },
   ],
   A21: [
     { q: "Solve: 3x + 7 ≤ 2x + 12", a: "x ≤ 5", type: "text", calculator: false },
