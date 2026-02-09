@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
 import HandwritingInput from './components/HandwritingInput';
+import SchoolLeaderboard from './components/SchoolLeaderboard';
+import { searchSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -6475,7 +6477,7 @@ What is the student's answer?`
 
 // ==================== STATS PAGE ====================
 
-function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObjectives }) {
+function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObjectives, userSchool, user }) {
   const [timeRange, setTimeRange] = useState('week'); // 'week', 'month', 'all'
   const sessionHistory = loadSessionHistory();
   
@@ -6744,6 +6746,30 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
               </div>
             </div>
           )}
+
+          {/* School Leaderboard */}
+          {userSchool && user ? (
+            <div className="glass-panel rounded-2xl p-6 shadow-glass">
+              <SchoolLeaderboard
+                schoolId={userSchool.id}
+                schoolName={userSchool.name}
+                currentUserId={user.id}
+                compact={false}
+              />
+            </div>
+          ) : user ? (
+            <div className="glass-panel rounded-2xl p-6 shadow-glass text-center">
+              <Trophy className="w-8 h-8 text-[#FBBF24] mx-auto mb-2" />
+              <h3 className="font-semibold text-primary-text mb-1">School Leaderboard</h3>
+              <p className="text-sm text-secondary-text mb-3">Join your school to compete with classmates</p>
+              <button
+                onClick={() => setCurrentPage('settings')}
+                className="px-5 py-2 btn-gradient-violet text-white text-sm font-medium rounded-xl"
+              >
+                Join a School
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
@@ -6752,10 +6778,15 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 
 // ==================== SETTINGS PAGE ====================
 
-function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSettings, progress, setProgress, user, profile, isSubscribed, onSignIn, onSignUp, onSignOut, onUpgrade }) {
+function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSettings, progress, setProgress, user, profile, isSubscribed, onSignIn, onSignUp, onSignOut, onUpgrade, userSchool, setUserSchool }) {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
+  const [schoolSearch, setSchoolSearch] = useState('');
+  const [schoolResults, setSchoolResults] = useState([]);
+  const [schoolSearching, setSchoolSearching] = useState(false);
+  const [schoolError, setSchoolError] = useState('');
+  const [schoolJoining, setSchoolJoining] = useState(false);
   
   // Generate plain-English weekly summary for teachers/parents
   const generateWeeklySummary = () => {
@@ -6897,6 +6928,68 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     saveSettings(newSettings);
   };
 
+  // School search with debounce
+  useEffect(() => {
+    if (!schoolSearch.trim() || schoolSearch.trim().length < 2) {
+      setSchoolResults([]);
+      return;
+    }
+    setSchoolSearching(true);
+    const timer = setTimeout(async () => {
+      const results = await searchSchools(schoolSearch);
+      setSchoolResults(results);
+      setSchoolSearching(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [schoolSearch]);
+
+  // Handle joining a school
+  const handleJoinSchool = async (school) => {
+    if (!user) return;
+    setSchoolJoining(true);
+    setSchoolError('');
+    try {
+      await joinSchool(user.id, school.id);
+      setUserSchool(school);
+      setSchoolSearch('');
+      setSchoolResults([]);
+    } catch (err) {
+      setSchoolError(err.message || 'Failed to join school');
+    } finally {
+      setSchoolJoining(false);
+    }
+  };
+
+  // Handle creating + joining a new school
+  const handleCreateSchool = async () => {
+    if (!user || !schoolSearch.trim()) return;
+    setSchoolJoining(true);
+    setSchoolError('');
+    try {
+      const school = await createSchool(schoolSearch.trim(), user.id);
+      await joinSchool(user.id, school.id);
+      setUserSchool(school);
+      setSchoolSearch('');
+      setSchoolResults([]);
+    } catch (err) {
+      setSchoolError(err.message || 'Failed to create school');
+    } finally {
+      setSchoolJoining(false);
+    }
+  };
+
+  // Handle leaving school
+  const handleLeaveSchool = async () => {
+    if (!user) return;
+    setSchoolError('');
+    try {
+      await leaveSchool(user.id);
+      setUserSchool(null);
+    } catch (err) {
+      setSchoolError(err.message || 'Failed to leave school');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       <div className="ambient-glow" />
@@ -6974,6 +7067,95 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
             )}
           </div>
+
+          {/* Your School */}
+          {user && (
+            <div className="glass-panel rounded-2xl p-6 shadow-glass mb-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
+                  <School className="w-5 h-5 text-violet-light" />
+                </div>
+                <div>
+                  <h2 className="font-semibold text-primary-text">Your School</h2>
+                  <p className="text-sm text-secondary-text">Join your school to see the leaderboard</p>
+                </div>
+              </div>
+
+              {userSchool ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-4 bg-metallic-base/10 rounded-xl border border-metallic-base/20">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold">
+                        {userSchool.name?.[0]?.toUpperCase() || '?'}
+                      </div>
+                      <div>
+                        <div className="font-medium text-primary-text">{userSchool.name}</div>
+                        <div className="text-xs text-secondary-text">View leaderboard in Stats tab</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={handleLeaveSchool}
+                      className="px-3 py-1.5 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                    >
+                      Leave
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text" />
+                    <input
+                      type="text"
+                      value={schoolSearch}
+                      onChange={(e) => setSchoolSearch(e.target.value)}
+                      placeholder="Search for your school..."
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                    />
+                    {schoolSearching && (
+                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
+                    )}
+                  </div>
+
+                  {/* Search results */}
+                  {schoolSearch.trim().length >= 2 && !schoolSearching && (
+                    <div className="space-y-1 max-h-48 overflow-y-auto">
+                      {schoolResults.map(school => (
+                        <button
+                          key={school.id}
+                          onClick={() => handleJoinSchool(school)}
+                          disabled={schoolJoining}
+                          className="w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-metallic-base/10 transition-colors flex items-center justify-between disabled:opacity-50"
+                        >
+                          <span className="text-sm text-primary-text">{school.name}</span>
+                          <span className="text-xs text-metallic-base font-medium">Join</span>
+                        </button>
+                      ))}
+
+                      {schoolResults.length === 0 && schoolSearch.trim().length >= 2 && (
+                        <div className="text-center py-4">
+                          <p className="text-sm text-secondary-text mb-3">No schools found for "{schoolSearch}"</p>
+                          <button
+                            onClick={handleCreateSchool}
+                            disabled={schoolJoining}
+                            className="px-4 py-2 btn-gradient-mint text-void text-sm font-medium rounded-lg disabled:opacity-50"
+                          >
+                            {schoolJoining ? 'Creating...' : `Create "${schoolSearch.trim()}"`}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {schoolError && (
+                <div className="mt-3 p-2 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+                  {schoolError}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Study Preferences */}
           <div className="glass-panel rounded-2xl p-6 shadow-glass">
@@ -7854,6 +8036,7 @@ function AppContent() {
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('signin');
   const [showOneVsOne, setShowOneVsOne] = useState(false);
+  const [userSchool, setUserSchool] = useState(null); // { id, name } or null
 
   // Auth context
   const {
@@ -7889,6 +8072,15 @@ function AppContent() {
       }
     };
     syncOnLogin();
+  }, [user, authLoading]);
+
+  // Fetch user's school on login
+  useEffect(() => {
+    if (user && !authLoading) {
+      getUserSchool(user.id).then(school => setUserSchool(school));
+    } else if (!user) {
+      setUserSchool(null);
+    }
   }, [user, authLoading]);
 
   // Sync progress to cloud when it changes
@@ -8330,6 +8522,8 @@ function AppContent() {
         dayStreak={dayStreak}
         progress={progress}
         allObjectives={allObjectives}
+        userSchool={userSchool}
+        user={user}
       />
     );
   }
@@ -8352,6 +8546,8 @@ function AppContent() {
           onSignUp={() => { setAuthModalMode('signup'); setShowAuthModal(true); }}
           onSignOut={signOut}
           onUpgrade={() => setShowUpgradePrompt(true)}
+          userSchool={userSchool}
+          setUserSchool={setUserSchool}
         />
         {/* Auth Modal */}
         <AuthModal
@@ -8706,6 +8902,48 @@ function AppContent() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* School Leaderboard Card */}
+      <div className="max-w-4xl mx-auto px-4 mt-6">
+        {user && userSchool ? (
+          <div className="glass-panel rounded-2xl p-5 shadow-glass">
+            <div className="flex items-center gap-2 mb-3">
+              <Trophy className="w-5 h-5 text-[#FBBF24]" />
+              <h2 className="font-bold text-primary-text">{userSchool.name} Leaderboard</h2>
+            </div>
+            <SchoolLeaderboard
+              schoolId={userSchool.id}
+              schoolName={userSchool.name}
+              currentUserId={user.id}
+              compact={true}
+            />
+            <button
+              onClick={() => setCurrentPage('stats')}
+              className="w-full mt-3 py-2 text-sm text-metallic-base font-medium hover:bg-metallic-base/10 rounded-xl transition-colors"
+            >
+              View Full Leaderboard →
+            </button>
+          </div>
+        ) : user ? (
+          <div className="glass-panel rounded-2xl p-5 shadow-glass">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Trophy className="w-5 h-5 text-[#FBBF24]" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-primary-text text-sm">School Leaderboard</h3>
+                <p className="text-xs text-secondary-text">Join your school to compete with classmates</p>
+              </div>
+              <button
+                onClick={() => setCurrentPage('settings')}
+                className="px-4 py-2 btn-gradient-violet text-white text-sm font-medium rounded-xl"
+              >
+                Join
+              </button>
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {/* Tile Detail Modal */}
