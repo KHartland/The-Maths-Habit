@@ -6845,6 +6845,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
   const [allSchoolsList, setAllSchoolsList] = useState([]);
+  const [schoolsLoaded, setSchoolsLoaded] = useState(false);
   const [schoolFilter, setSchoolFilter] = useState('');
   const [schoolDropdownOpen, setSchoolDropdownOpen] = useState(false);
   const [schoolError, setSchoolError] = useState('');
@@ -6995,8 +6996,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
   // Load all schools when dropdown opens
   useEffect(() => {
-    if (schoolDropdownOpen && allSchoolsList.length === 0) {
-      getAllSchools().then(setAllSchoolsList);
+    if (schoolDropdownOpen && !schoolsLoaded) {
+      getAllSchools().then(schools => {
+        setAllSchoolsList(schools);
+        setSchoolsLoaded(true);
+      });
     }
   }, [schoolDropdownOpen]);
 
@@ -7246,7 +7250,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           </button>
                         )) : (
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            {allSchoolsList.length === 0 ? 'Loading schools...' : 'No schools match your filter'}
+                            {!schoolsLoaded ? 'Loading schools...' : schoolFilter.trim() ? 'No schools match your filter' : 'No schools yet — add yours below!'}
                           </div>
                         )}
                       </div>
