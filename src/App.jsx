@@ -1641,9 +1641,9 @@ const questionBank = {
   ],
   N3: [
     { q: "Which operation is the inverse of squaring?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
-    { q: "Simplify using inverse operations: 15 × 4 ÷ 4", a: "15", type: "number", calculator: false },
+    { q: "What is 15 × 4 ÷ 4?", type: "mcq", options: ["4", "15", "60", "19"], a: "15", calculator: false },
     { q: "What is the reciprocal of 4?", type: "mcq", options: ["4", "-4", "0.25", "2"], a: "0.25", calculator: false },
-    { q: "Calculate: 8 + 2 × 3", a: "14", type: "number", calculator: false, hint: "Remember BIDMAS" },
+    { q: "What is 8 + 2 × 3?", type: "mcq", options: ["30", "14", "18", "24"], a: "14", calculator: false, hint: "Remember BIDMAS" },
     { q: "Which calculation should be done first in: 5 + 3² × 2?", type: "mcq", options: ["5 + 3", "3²", "3 × 2", "² × 2"], a: "3²", calculator: false },
   ],
   N5: [
@@ -1705,8 +1705,8 @@ const questionBank = {
   ],
   N4: [
     { q: "I calculate 156 ÷ 12 = 13. Which calculation checks this?", type: "mcq", options: ["156 × 12", "13 × 12", "156 - 12", "13 + 12"], a: "13 × 12", calculator: false },
-    { q: "Check: Is 23 × 17 = 391? Use the inverse operation.", a: "yes", type: "text", calculator: true, hint: "Calculate 391 ÷ 17" },
-    { q: "I subtracted and got 458 - 279 = 179. What calculation checks this?", a: "179 + 279", type: "text", calculator: false },
+    { q: "Which calculation checks that 23 × 17 = 391?", type: "mcq", options: ["391 + 17", "391 ÷ 17", "391 × 23", "23 + 17"], a: "391 ÷ 17", calculator: false },
+    { q: "I got 458 - 279 = 179. Which calculation checks this?", type: "mcq", options: ["458 + 279", "179 + 279", "179 × 279", "458 ÷ 179"], a: "179 + 279", calculator: false },
     { q: "Which is the inverse of squaring a number?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
   ],
   N11: [
@@ -2276,16 +2276,16 @@ const higherQuestionBank = {
     { q: "Calculate: 0.125 × 0.8 ÷ 0.04", a: "2.5", type: "number", calculator: false },
   ],
   N3: [
-    { q: "What is the reciprocal of 0.25?", a: "4", type: "number", calculator: false },
-    { q: "Simplify: 24 × 15 ÷ 15 × 3 ÷ 3", a: "24", type: "number", calculator: false },
-    { q: "Calculate: 2³ + 4 × (5 - 2)² ÷ 6", a: "14", type: "number", calculator: false },
+    { q: "What is the reciprocal of 0.25?", type: "mcq", options: ["0.25", "0.75", "4", "-0.25"], a: "4", calculator: false },
+    { q: "What is 24 × 15 ÷ 15 × 3 ÷ 3?", type: "mcq", options: ["24", "72", "8", "360"], a: "24", calculator: false },
+    { q: "What is 2³ + 4 × (5 - 2)² ÷ 6?", type: "mcq", options: ["14", "12", "18", "16"], a: "14", calculator: false },
     { q: "Which is the reciprocal of 2/3?", type: "mcq", options: ["-2/3", "3/2", "2/3", "-3/2"], a: "3/2", calculator: false },
-    { q: "Calculate: √(16 + 9) × 2 - 3²", a: "1", type: "number", calculator: false },
+    { q: "What is √(16 + 9) × 2 - 3²?", type: "mcq", options: ["1", "3", "-1", "7"], a: "1", calculator: false },
   ],
   N4: [
     { q: "I calculated (2.5)³ = 15.625. Which check confirms this?", type: "mcq", options: ["15.625 ÷ 2.5", "∛15.625", "15.625 × 3", "2.5 × 3"], a: "∛15.625", calculator: false },
-    { q: "Estimate 48.7 × 21.3 by rounding to 1 s.f. What do you get?", a: "1000", type: "number", calculator: false, hint: "Round 48.7 to 50, round 21.3 to 20" },
-    { q: "Which inverse operation checks √324 = 18?", a: "18²", type: "text", calculator: false },
+    { q: "Estimate 48.7 × 21.3 by rounding to 1 s.f.", type: "mcq", options: ["900", "1000", "1100", "950"], a: "1000", calculator: false, hint: "Round 48.7 to 50, round 21.3 to 20" },
+    { q: "Which inverse operation checks that √324 = 18?", type: "mcq", options: ["324 ÷ 18", "18²", "18 × 2", "√18"], a: "18²", calculator: false },
     { q: "I calculated 4.8 ÷ 0.12 = 40. Which calculation verifies this?", type: "mcq", options: ["40 × 0.12", "4.8 × 0.12", "40 - 0.12", "4.8 + 40"], a: "40 × 0.12", calculator: false },
   ],
   N5: [
