@@ -5242,8 +5242,17 @@ What is the student's answer?`
             examPassed: newExamPassed,
             lastPracticed: Date.now(),
             nextDue: getNextDueTime(newQuickCorrect, correct),
-            // If wrong, skip this objective for 2 sessions to give time to revise
-            skipUntilSession: correct ? prev[code]?.skipUntilSession : sessionCount + 3,
+            // Skip objective for a few sessions so the student sees variety
+            // Correct: skip proportional to progress (higher mastery = longer break)
+            // Wrong: skip 3 sessions to give time to revise via other topics
+            skipUntilSession: correct
+              ? sessionCount + (
+                  (newExamPassed && newQuickCorrect >= 4) ? 8 : // Mastered — long break
+                  newQuickCorrect >= 4 ? 3 : // Exam ready
+                  newQuickCorrect >= 2 ? 2 : // Making progress
+                  1                           // Just started — short break
+                )
+              : sessionCount + 3,
             // Track when objective was mastered
             masteredAt: (nowMastered && !wasMastered) ? Date.now() : prev[code]?.masteredAt,
           }
