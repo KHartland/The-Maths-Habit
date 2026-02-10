@@ -701,7 +701,10 @@ const TOPIC_HEX = {
   Statistics: "#C084FC",  // Purple
 };
 
-const INTENSITY = { 0: 0.08, 1: 0.25, 2: 0.42, 3: 0.6, 4: 0.78, 5: 0.95 };
+// Exponential curve — bigger jumps at higher levels so progress is visible
+const INTENSITY = { 0: 0.05, 1: 0.14, 2: 0.28, 3: 0.48, 4: 0.72, 5: 1.0 };
+// At higher levels, blend toward white so tiles don't just get "more saturated"
+const WHITE_BLEND = { 0: 0, 1: 0, 2: 0, 3: 0.08, 4: 0.22, 5: 0.4 };
 
 function mixWithWhite(hex, intensity) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -724,7 +727,8 @@ function getRecencyFactor(lastPracticed) {
 
 // Mix color with dark background for progress AND recency
 function getTileColor(hex, progressLevel, recencyFactor) {
-  const baseIntensity = INTENSITY[progressLevel] || 0.08;
+  const baseIntensity = INTENSITY[progressLevel] || 0.05;
+  const whiteBlend = WHITE_BLEND[progressLevel] || 0;
   // Dark background RGB (void: #0E0307)
   const bgR = 14, bgG = 3, bgB = 7;
 
@@ -737,6 +741,13 @@ function getTileColor(hex, progressLevel, recencyFactor) {
   let pr = progressMix(r, bgR);
   let pg = progressMix(g, bgG);
   let pb = progressMix(b, bgB);
+
+  // At higher levels, blend toward white so top tiles look distinctly brighter
+  if (whiteBlend > 0) {
+    pr = Math.round(pr + (255 - pr) * whiteBlend);
+    pg = Math.round(pg + (255 - pg) * whiteBlend);
+    pb = Math.round(pb + (255 - pb) * whiteBlend);
+  }
 
   // Apply recency (desaturate old topics toward darker)
   const dim = (c) => Math.round(c * (0.4 + 0.6 * recencyFactor));
