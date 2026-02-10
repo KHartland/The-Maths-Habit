@@ -444,6 +444,39 @@ body {
   66% { transform: translateY(-5px) rotate(-1deg); }
 }
 
+/* 3D tumble for metallic cubes — each variant uses different axes */
+@keyframes cubeTumbleA {
+  0%   { transform: translateY(0px) perspective(800px) rotateX(15deg) rotateY(0deg) rotateZ(0deg); }
+  25%  { transform: translateY(-12px) perspective(800px) rotateX(25deg) rotateY(90deg) rotateZ(5deg); }
+  50%  { transform: translateY(-5px) perspective(800px) rotateX(10deg) rotateY(180deg) rotateZ(-3deg); }
+  75%  { transform: translateY(-15px) perspective(800px) rotateX(20deg) rotateY(270deg) rotateZ(4deg); }
+  100% { transform: translateY(0px) perspective(800px) rotateX(15deg) rotateY(360deg) rotateZ(0deg); }
+}
+
+@keyframes cubeTumbleB {
+  0%   { transform: translateY(0px) perspective(800px) rotateX(0deg) rotateY(20deg) rotateZ(0deg); }
+  25%  { transform: translateY(-10px) perspective(800px) rotateX(90deg) rotateY(30deg) rotateZ(-5deg); }
+  50%  { transform: translateY(-8px) perspective(800px) rotateX(180deg) rotateY(15deg) rotateZ(3deg); }
+  75%  { transform: translateY(-14px) perspective(800px) rotateX(270deg) rotateY(25deg) rotateZ(-4deg); }
+  100% { transform: translateY(0px) perspective(800px) rotateX(360deg) rotateY(20deg) rotateZ(0deg); }
+}
+
+@keyframes cubeTumbleC {
+  0%   { transform: translateY(0px) perspective(800px) rotateX(10deg) rotateY(10deg) rotateZ(0deg); }
+  25%  { transform: translateY(-8px) perspective(800px) rotateX(20deg) rotateY(100deg) rotateZ(90deg); }
+  50%  { transform: translateY(-12px) perspective(800px) rotateX(5deg) rotateY(190deg) rotateZ(180deg); }
+  75%  { transform: translateY(-6px) perspective(800px) rotateX(18deg) rotateY(280deg) rotateZ(270deg); }
+  100% { transform: translateY(0px) perspective(800px) rotateX(10deg) rotateY(10deg) rotateZ(360deg); }
+}
+
+@keyframes cubeTumbleD {
+  0%   { transform: translateY(0px) perspective(800px) rotateX(20deg) rotateY(-10deg) rotateZ(5deg); }
+  25%  { transform: translateY(-11px) perspective(800px) rotateX(-70deg) rotateY(-10deg) rotateZ(10deg); }
+  50%  { transform: translateY(-7px) perspective(800px) rotateX(-160deg) rotateY(-5deg) rotateZ(0deg); }
+  75%  { transform: translateY(-13px) perspective(800px) rotateX(-250deg) rotateY(-12deg) rotateZ(8deg); }
+  100% { transform: translateY(0px) perspective(800px) rotateX(-340deg) rotateY(-10deg) rotateZ(5deg); }
+}
+
 @keyframes glow {
   0% { opacity: 0.6; }
   100% { opacity: 1; }
@@ -457,16 +490,20 @@ body {
 /* Metallic shine shift — moves the specular highlight */
 @keyframes orbShine {
   0% {
-    filter: brightness(1.0) saturate(1.1);
+    filter: brightness(1.0) saturate(1.1) contrast(1.05);
     box-shadow: 0 0 50px currentColor;
   }
-  50% {
-    filter: brightness(1.5) saturate(1.4);
-    box-shadow: 0 0 80px currentColor;
+  33% {
+    filter: brightness(1.4) saturate(1.3) contrast(1.1);
+    box-shadow: 0 0 75px currentColor;
+  }
+  66% {
+    filter: brightness(1.1) saturate(1.2) contrast(1.0);
+    box-shadow: 0 0 55px currentColor;
   }
   100% {
-    filter: brightness(1.1) saturate(1.2);
-    box-shadow: 0 0 55px currentColor;
+    filter: brightness(1.3) saturate(1.25) contrast(1.08);
+    box-shadow: 0 0 65px currentColor;
   }
 }
 
@@ -668,89 +705,114 @@ select:focus {
 }
 
 /* Metallic orb effect */
+/* Metallic cubes — rounded corners, 3D rotation, specular highlights */
 .orb {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 20%),
-    radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 30%),
-    radial-gradient(ellipse at 40% 40%,
+    linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 40%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.7) 0%, transparent 25%),
+    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.15) 0%, transparent 30%),
+    linear-gradient(160deg,
       var(--metallic-highlight) 0%,
-      var(--metallic-base) 30%,
-      var(--metallic-shadow) 60%,
-      rgba(30, 45, 70, 0.4) 85%,
-      transparent 100%);
-  box-shadow: 0 0 60px rgba(91, 127, 199, 0.5), 0 0 120px rgba(91, 127, 199, 0.2), inset 0 -4px 12px rgba(0, 0, 0, 0.3);
-  animation: floatSlow 8s ease-in-out infinite, orbShine 4s ease-in-out infinite alternate;
+      var(--metallic-base) 35%,
+      var(--metallic-shadow) 65%,
+      rgba(30, 45, 70, 0.6) 100%);
+  box-shadow:
+    0 0 60px rgba(91, 127, 199, 0.5),
+    0 0 120px rgba(91, 127, 199, 0.2),
+    inset 0 2px 4px rgba(255,255,255,0.2),
+    inset 0 -4px 12px rgba(0,0,0,0.4);
+  animation: cubeTumbleA 18s linear infinite, orbShine 4s ease-in-out infinite alternate;
 }
 
-/* Metallic celebration-colored orbs — bright specular highlight + reflective sheen */
+/* Metallic celebration-colored cubes — bright specular + reflective sheen + 3D tumble */
 .orb-purple {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 22%),
-    radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.25) 0%, transparent 32%),
-    radial-gradient(ellipse at 40% 40%,
-      #C4B5FD 0%,
-      #A78BFA 20%,
-      #8B5CF6 45%,
-      #6D28D9 70%,
-      rgba(55, 20, 120, 0.4) 90%,
-      transparent 100%);
-  box-shadow: 0 0 60px rgba(167, 139, 250, 0.5), 0 0 120px rgba(167, 139, 250, 0.2), inset 0 -4px 12px rgba(0, 0, 0, 0.3);
-  animation: floatSlow 10s ease-in-out infinite, orbShine 4s ease-in-out infinite alternate;
+    linear-gradient(135deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.8) 0%, transparent 25%),
+    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.2) 0%, transparent 30%),
+    linear-gradient(160deg,
+      #DDD6FE 0%,
+      #C4B5FD 15%,
+      #A78BFA 35%,
+      #8B5CF6 55%,
+      #6D28D9 75%,
+      rgba(55, 20, 120, 0.7) 100%);
+  box-shadow:
+    0 0 60px rgba(167, 139, 250, 0.5),
+    0 0 120px rgba(167, 139, 250, 0.2),
+    inset 0 2px 4px rgba(255,255,255,0.25),
+    inset 0 -4px 12px rgba(0,0,0,0.4);
+  animation: cubeTumbleA 20s linear infinite, orbShine 4s ease-in-out infinite alternate;
 }
 
 .orb-mint {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 22%),
-    radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.25) 0%, transparent 32%),
-    radial-gradient(ellipse at 40% 40%,
-      #6EE7B7 0%,
-      #38E6A2 20%,
-      #10B981 45%,
-      #059669 70%,
-      rgba(4, 80, 56, 0.4) 90%,
-      transparent 100%);
-  box-shadow: 0 0 60px rgba(56, 230, 162, 0.5), 0 0 120px rgba(56, 230, 162, 0.2), inset 0 -4px 12px rgba(0, 0, 0, 0.3);
-  animation: floatSlow 12s ease-in-out infinite reverse, orbShine 5s ease-in-out infinite alternate;
+    linear-gradient(135deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.8) 0%, transparent 25%),
+    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.2) 0%, transparent 30%),
+    linear-gradient(160deg,
+      #A7F3D0 0%,
+      #6EE7B7 15%,
+      #38E6A2 35%,
+      #10B981 55%,
+      #059669 75%,
+      rgba(4, 80, 56, 0.7) 100%);
+  box-shadow:
+    0 0 60px rgba(56, 230, 162, 0.5),
+    0 0 120px rgba(56, 230, 162, 0.2),
+    inset 0 2px 4px rgba(255,255,255,0.25),
+    inset 0 -4px 12px rgba(0,0,0,0.4);
+  animation: cubeTumbleB 24s linear infinite, orbShine 5s ease-in-out infinite alternate;
 }
 
 .orb-cyan {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 22%),
-    radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.25) 0%, transparent 32%),
-    radial-gradient(ellipse at 40% 40%,
-      #A5F3FC 0%,
-      #67E8F9 20%,
-      #22D3EE 45%,
-      #0891B2 70%,
-      rgba(8, 80, 100, 0.4) 90%,
-      transparent 100%);
-  box-shadow: 0 0 60px rgba(103, 232, 249, 0.5), 0 0 120px rgba(103, 232, 249, 0.2), inset 0 -4px 12px rgba(0, 0, 0, 0.3);
-  animation: floatSlow 9s ease-in-out infinite, orbShine 4.5s ease-in-out infinite alternate;
+    linear-gradient(135deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.8) 0%, transparent 25%),
+    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.2) 0%, transparent 30%),
+    linear-gradient(160deg,
+      #CFFAFE 0%,
+      #A5F3FC 15%,
+      #67E8F9 35%,
+      #22D3EE 55%,
+      #0891B2 75%,
+      rgba(8, 80, 100, 0.7) 100%);
+  box-shadow:
+    0 0 60px rgba(103, 232, 249, 0.5),
+    0 0 120px rgba(103, 232, 249, 0.2),
+    inset 0 2px 4px rgba(255,255,255,0.25),
+    inset 0 -4px 12px rgba(0,0,0,0.4);
+  animation: cubeTumbleC 19s linear infinite, orbShine 4.5s ease-in-out infinite alternate;
 }
 
 .orb-pink {
   position: absolute;
-  border-radius: 50%;
+  border-radius: 18%;
   background:
-    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 22%),
-    radial-gradient(circle at 65% 70%, rgba(255, 255, 255, 0.25) 0%, transparent 32%),
-    radial-gradient(ellipse at 40% 40%,
-      #F5D0FE 0%,
-      #F0ABFC 20%,
-      #D946EF 45%,
-      #A21CAF 70%,
-      rgba(90, 15, 100, 0.4) 90%,
-      transparent 100%);
-  box-shadow: 0 0 60px rgba(240, 171, 252, 0.5), 0 0 120px rgba(240, 171, 252, 0.2), inset 0 -4px 12px rgba(0, 0, 0, 0.3);
-  animation: floatSlow 11s ease-in-out infinite reverse, orbShine 5.5s ease-in-out infinite alternate;
+    linear-gradient(135deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 35%),
+    radial-gradient(circle at 25% 20%, rgba(255,255,255,0.8) 0%, transparent 25%),
+    radial-gradient(circle at 75% 80%, rgba(255,255,255,0.2) 0%, transparent 30%),
+    linear-gradient(160deg,
+      #FAE8FF 0%,
+      #F5D0FE 15%,
+      #F0ABFC 35%,
+      #D946EF 55%,
+      #A21CAF 75%,
+      rgba(90, 15, 100, 0.7) 100%);
+  box-shadow:
+    0 0 60px rgba(240, 171, 252, 0.5),
+    0 0 120px rgba(240, 171, 252, 0.2),
+    inset 0 2px 4px rgba(255,255,255,0.25),
+    inset 0 -4px 12px rgba(0,0,0,0.4);
+  animation: cubeTumbleD 22s linear infinite, orbShine 5.5s ease-in-out infinite alternate;
 }
 
 /* Animated gradient divider line */
