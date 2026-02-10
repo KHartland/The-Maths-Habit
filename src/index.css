@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* The Maths Habit - Metallic Blue Theme */
+/* The Maths Habit - Vibrant Celebration Theme */
 :root {
   /* Core Metallic Blue Gradient */
   --metallic-highlight: #8BA8D9;
@@ -15,10 +15,21 @@
   --teal: #2DD4BF;
   --mint: #38E6A2;
 
+  /* Celebration Colors */
+  --cele-red: #EF4444;
+  --cele-pink: #EC4899;
+  --cele-purple: #8B5CF6;
+  --cele-blue: #3B82F6;
+  --cele-teal: #14B8A6;
+  --cele-green: #10B981;
+  --cele-orange: #F97316;
+  --cele-yellow: #FBBF24;
+
   /* Backgrounds */
   --bg-primary: #F8F9FA;
   --bg-white: #FFFFFF;
   --bg-card: #FFFFFF;
+  --bg-void: #0E0307;
 
   /* Text */
   --text-primary: #374151;
@@ -31,13 +42,40 @@
 }
 
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-void);
   color: var(--text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* ==================== RICH BACKGROUND ==================== */
+/* Animated gradient mesh that replaces flat dark background */
+
+@keyframes bgShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 100%;
+  }
+}
+
+.bg-void {
+  background:
+    radial-gradient(ellipse at 15% 80%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 20%, rgba(56, 230, 162, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(103, 232, 249, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+    #0E0307;
+}
+
 /* ==================== METALLIC BLUE GRADIENT ==================== */
-/* The signature polished 3D look */
 
 .metallic-gradient {
   background: linear-gradient(180deg,
@@ -56,25 +94,60 @@ body {
 /* ==================== CARD STYLES ==================== */
 
 .glass-panel {
-  background: var(--bg-white);
-  border: 1px solid var(--border-light);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 246, 255, 0.92) 50%,
+    rgba(245, 250, 255, 0.95) 100%);
+  border: 1px solid rgba(139, 168, 217, 0.25);
+  box-shadow:
+    0 2px 8px rgba(139, 92, 246, 0.06),
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   border-radius: 12px;
 }
 
 .glass-panel-strong {
-  background: var(--bg-white);
-  border: 1px solid var(--border-medium);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(248, 246, 255, 0.95) 50%,
+    rgba(245, 250, 255, 0.97) 100%);
+  border: 1px solid rgba(139, 168, 217, 0.2);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.08),
+    0 0 30px rgba(139, 92, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Rainbow gradient top accent for strong panels */
+.glass-panel-strong::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #A78BFA 0%,
+    #38E6A2 25%,
+    #67E8F9 50%,
+    #F0ABFC 75%,
+    #818CF8 100%);
+  opacity: 0.7;
 }
 
 /* Card with metallic header */
 .card-metallic-header {
   border-radius: 16px;
   overflow: hidden;
-  background: var(--bg-white);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,246,255,0.95) 100%);
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 10px 15px rgba(0, 0, 0, 0.08),
+    0 0 20px rgba(139, 92, 246, 0.05);
 }
 
 .card-metallic-header > header {
@@ -88,7 +161,6 @@ body {
 
 /* ==================== BUTTON STYLES ==================== */
 
-/* Primary metallic button */
 .btn-gradient-violet,
 .btn-metallic {
   background: linear-gradient(180deg,
@@ -96,6 +168,7 @@ body {
     var(--metallic-base) 40%,
     var(--metallic-shadow) 100%);
   box-shadow: 0 4px 14px rgba(91, 127, 199, 0.4),
+              0 0 20px rgba(139, 92, 246, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.2);
   color: white;
   font-weight: 600;
@@ -106,6 +179,7 @@ body {
 .btn-gradient-violet:hover,
 .btn-metallic:hover {
   box-shadow: 0 6px 20px rgba(91, 127, 199, 0.5),
+              0 0 30px rgba(139, 92, 246, 0.25),
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
@@ -120,6 +194,7 @@ body {
 .btn-gradient-mint {
   background: linear-gradient(180deg, #4AE8AD 0%, #38E6A2 50%, #2BC88A 100%);
   box-shadow: 0 4px 14px rgba(56, 230, 162, 0.3),
+              0 0 20px rgba(56, 230, 162, 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.3);
   color: #1a1a1a;
   font-weight: 600;
@@ -127,7 +202,8 @@ body {
 }
 
 .btn-gradient-mint:hover {
-  box-shadow: 0 6px 20px rgba(56, 230, 162, 0.5);
+  box-shadow: 0 6px 20px rgba(56, 230, 162, 0.5),
+              0 0 30px rgba(56, 230, 162, 0.25);
   transform: translateY(-2px);
 }
 
@@ -143,12 +219,13 @@ body {
 .btn-outline:hover {
   background: var(--metallic-base);
   color: white;
+  box-shadow: 0 0 20px rgba(91, 127, 199, 0.3);
 }
 
 /* ==================== PROGRESS INDICATORS ==================== */
 
 .progress-metallic {
-  background: var(--border-light);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -161,6 +238,7 @@ body {
   height: 100%;
   border-radius: 9999px;
   transition: width 0.5s ease;
+  box-shadow: 0 0 8px rgba(91, 127, 199, 0.4);
 }
 
 /* ==================== NAVIGATION ==================== */
@@ -184,9 +262,9 @@ body {
   display: block;
   height: 3px;
   background: linear-gradient(90deg,
-    var(--metallic-shadow) 0%,
+    #A78BFA 0%,
     var(--metallic-base) 50%,
-    var(--metallic-highlight) 100%);
+    #38E6A2 100%);
   border-radius: 2px;
   margin-top: 4px;
 }
@@ -207,6 +285,15 @@ body {
   background-clip: text;
 }
 
+/* Rainbow gradient text for headings */
+.gradient-text-celebration {
+  background: linear-gradient(135deg, #A78BFA 0%, #38E6A2 25%, #67E8F9 50%, #F0ABFC 75%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+}
+
 /* ==================== CARD HOVER EFFECTS ==================== */
 
 .card-hover {
@@ -215,8 +302,10 @@ body {
 
 .card-hover:hover {
   transform: translateY(-4px);
-  border-color: var(--metallic-base);
-  box-shadow: 0 12px 24px rgba(91, 127, 199, 0.15);
+  border-color: rgba(139, 92, 246, 0.3);
+  box-shadow:
+    0 12px 24px rgba(91, 127, 199, 0.15),
+    0 0 40px rgba(139, 92, 246, 0.08);
 }
 
 /* ==================== FOCUS STYLES ==================== */
@@ -239,17 +328,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-primary);
+  background: rgba(14, 3, 7, 0.5);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--metallic-highlight), var(--metallic-shadow));
+  background: linear-gradient(180deg, #A78BFA, #38E6A2);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--metallic-base);
+  background: linear-gradient(180deg, #8B5CF6, #10B981);
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -268,9 +357,20 @@ body {
   50% { transform: translateY(-10px); }
 }
 
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-15px) rotate(1deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
+}
+
 @keyframes glow {
   0% { opacity: 0.6; }
   100% { opacity: 1; }
+}
+
+@keyframes colorPulse {
+  0%, 100% { opacity: 0.4; filter: hue-rotate(0deg); }
+  50% { opacity: 0.7; filter: hue-rotate(30deg); }
 }
 
 @keyframes pulse-ring {
@@ -324,9 +424,21 @@ body {
   animation: shimmer 3s linear infinite;
 }
 
+/* Rainbow shimmer for celebration feel */
+@keyframes rainbowShimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.celebration-shimmer {
+  background: linear-gradient(90deg,
+    #A78BFA 0%, #38E6A2 20%, #67E8F9 40%, #F0ABFC 60%, #818CF8 80%, #A78BFA 100%);
+  background-size: 200% auto;
+  animation: rainbowShimmer 4s linear infinite;
+}
+
 /* ==================== CELEBRATION CAROUSEL ==================== */
 
-/* Card entrance animation */
 @keyframes celebrationCardIn {
   0% {
     opacity: 0;
@@ -342,7 +454,6 @@ body {
   }
 }
 
-/* White glow pulse around card */
 @keyframes celebrationGlow {
   0%, 100% {
     box-shadow: 0 0 30px rgba(255,255,255,0.2), inset 0 0 30px rgba(255,255,255,0.05);
@@ -354,7 +465,6 @@ body {
   }
 }
 
-/* Progress bar fill animation */
 @keyframes celebrationFill {
   0% {
     width: 0%;
@@ -373,7 +483,7 @@ body {
   animation: celebrationFill 1s ease-out 0.4s both;
 }
 
-/* Pulsing afterglow on heatmap tiles (shown after celebration) */
+/* Pulsing afterglow on heatmap tiles */
 @keyframes tileAfterPulse {
   0%, 100% {
     box-shadow: 0 0 8px 2px rgba(167, 139, 250, 0.4);
@@ -388,14 +498,13 @@ body {
 }
 
 /* ==================== TOPIC COLORS ==================== */
-/* Using the metallic blue palette with variations */
 
-.topic-number { color: var(--metallic-base); }
+.topic-number { color: #A78BFA; }
 .topic-algebra { color: #38E6A2; }
 .topic-ratio { color: var(--orange); }
 .topic-geometry { color: #67E8F9; }
-.topic-probability { color: var(--metallic-shadow); }
-.topic-statistics { color: var(--gold); }
+.topic-probability { color: #818CF8; }
+.topic-statistics { color: #C084FC; }
 
 /* ==================== BADGES ==================== */
 
@@ -415,6 +524,7 @@ body {
   color: white;
   background: linear-gradient(135deg, var(--metallic-base), var(--metallic-shadow));
   border: none;
+  box-shadow: 0 0 10px rgba(91, 127, 199, 0.2);
 }
 
 /* ==================== FORM INPUTS ==================== */
@@ -425,8 +535,8 @@ input[type="email"],
 input[type="password"],
 textarea,
 select {
-  background: var(--bg-white);
-  border: 1px solid var(--border-medium);
+  background: linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(248,246,255,0.97) 100%);
+  border: 1px solid rgba(139, 168, 217, 0.3);
   border-radius: 8px;
   color: var(--text-primary);
   transition: all 0.2s ease;
@@ -437,25 +547,27 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--metallic-base);
-  box-shadow: 0 0 0 3px rgba(91, 127, 199, 0.2);
+  box-shadow: 0 0 0 3px rgba(91, 127, 199, 0.2),
+              0 0 15px rgba(139, 92, 246, 0.1);
 }
 
 /* ==================== UTILITIES ==================== */
 
-/* Ambient glow - subtle metallic blue */
+/* Multi-color ambient glow */
 .ambient-glow {
   position: fixed;
   top: -20%;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
-  height: 40%;
-  background: radial-gradient(ellipse at center,
-    rgba(91, 127, 199, 0.08) 0%,
-    rgba(91, 127, 199, 0.02) 50%,
-    transparent 70%);
+  width: 120%;
+  height: 50%;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(167, 139, 250, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 30%, rgba(56, 230, 162, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 70%, rgba(103, 232, 249, 0.06) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
+  animation: colorPulse 8s ease-in-out infinite;
 }
 
 /* Metallic orb effect */
@@ -468,19 +580,78 @@ select:focus {
     var(--metallic-shadow) 70%,
     transparent 90%);
   filter: blur(1px);
-  animation: float 6s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+  animation: floatSlow 8s ease-in-out infinite, glow 2s ease-in-out infinite alternate;
+}
+
+/* Celebration-colored orb variants */
+.orb-purple {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(167, 139, 250, 0.6) 0%,
+    rgba(139, 92, 246, 0.3) 40%,
+    transparent 70%);
+  filter: blur(2px);
+  animation: floatSlow 10s ease-in-out infinite, colorPulse 6s ease-in-out infinite;
+}
+
+.orb-mint {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(56, 230, 162, 0.5) 0%,
+    rgba(43, 200, 138, 0.2) 40%,
+    transparent 70%);
+  filter: blur(2px);
+  animation: floatSlow 12s ease-in-out infinite reverse, colorPulse 8s ease-in-out infinite;
+}
+
+.orb-cyan {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(103, 232, 249, 0.5) 0%,
+    rgba(59, 130, 246, 0.2) 40%,
+    transparent 70%);
+  filter: blur(2px);
+  animation: floatSlow 9s ease-in-out infinite, colorPulse 7s ease-in-out infinite;
+}
+
+.orb-pink {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+    rgba(240, 171, 252, 0.5) 0%,
+    rgba(236, 72, 153, 0.2) 40%,
+    transparent 70%);
+  filter: blur(2px);
+  animation: floatSlow 11s ease-in-out infinite reverse, colorPulse 9s ease-in-out infinite;
+}
+
+/* Animated gradient divider line */
+.divider-celebration {
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    #A78BFA 15%,
+    #38E6A2 35%,
+    #67E8F9 50%,
+    #F0ABFC 65%,
+    #818CF8 85%,
+    transparent 100%);
+  border: none;
+  opacity: 0.5;
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(91, 127, 199, 0.3);
-  color: var(--text-primary);
+  background: rgba(139, 92, 246, 0.3);
+  color: white;
 }
 
-/* Dark mode override - keep light theme */
+/* Dark mode override - keep current theme */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Keep light theme regardless of system preference */
     --bg-primary: #F8F9FA;
     --bg-white: #FFFFFF;
     --text-primary: #374151;
@@ -488,20 +659,16 @@ select:focus {
 }
 
 /* ==================== LANDSCAPE MOBILE ==================== */
-/* Targets phones in landscape (wide + short viewport) */
 @media (orientation: landscape) and (max-height: 500px) {
 
-  /* Page content — flush to edges, slightly more top for exit button */
   .page-content {
     padding: 0.5rem 0.5rem 0 0.5rem !important;
   }
 
-  /* Content container — full width */
   .content-container {
     max-width: 100% !important;
   }
 
-  /* Top nav bar — compact */
   .top-nav-bar {
     height: 2.5rem !important;
   }
@@ -510,12 +677,10 @@ select:focus {
     height: 1.75rem !important;
   }
 
-  /* Bottom mobile nav — hidden */
   .bottom-nav {
     display: none !important;
   }
 
-  /* Two-column layout — question left, answer right */
   .question-card-layout {
     display: flex !important;
     gap: 0.75rem;
@@ -530,7 +695,6 @@ select:focus {
     overflow-y: auto;
     max-height: 80vh;
   }
-  /* Diagrams fill the question column */
   .question-side img {
     max-height: 55vh !important;
     width: 100% !important;
@@ -550,23 +714,19 @@ select:focus {
     overflow-y: auto;
   }
 
-  /* Question card — minimal padding */
   .question-card {
     padding: 0.5rem 0.75rem !important;
   }
 
-  /* Header bar — tight */
   .question-card-header {
     padding: 0.25rem 0.75rem !important;
   }
 
-  /* Question text — fills its column */
   .question-text {
     font-size: 1.05rem !important;
     margin-bottom: 0 !important;
   }
 
-  /* Answer section — minimal gaps */
   .answer-section {
     gap: 0.25rem !important;
   }
@@ -574,7 +734,6 @@ select:focus {
     margin-bottom: 0 !important;
   }
 
-  /* Write/Type toggle — compact */
   .answer-section .flex.rounded-lg.glass-panel {
     padding: 2px !important;
   }
@@ -583,43 +742,36 @@ select:focus {
     font-size: 0.7rem !important;
   }
 
-  /* Handwriting input — fill available space */
   .handwriting-canvas {
     height: 45vh !important;
   }
 
-  /* Handwriting header/footer — compact */
   .handwriting-canvas + div,
   .handwriting-canvas ~ div {
     padding: 0.25rem 0.5rem !important;
   }
 
-  /* Check Answer button — slim */
   .check-btn {
     padding-top: 0.4rem !important;
     padding-bottom: 0.4rem !important;
     font-size: 0.85rem !important;
   }
 
-  /* Glass panel — tighter border radius on practice */
   .glass-panel.rounded-3xl {
     border-radius: 0.75rem !important;
     margin-bottom: 0 !important;
   }
 
-  /* No min-height lock, no bottom padding */
   .min-h-screen {
     min-height: auto !important;
     padding-bottom: 0 !important;
   }
 
-  /* Kill any remaining bottom gaps */
   .content-container {
     margin-bottom: 0 !important;
     padding-bottom: 0 !important;
   }
 
-  /* Calculator — fixed overlay for landscape */
   .calc-overlay-container {
     position: fixed !important;
     top: 0 !important;
