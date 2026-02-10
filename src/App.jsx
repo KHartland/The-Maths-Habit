@@ -6,7 +6,7 @@ import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
 import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
-import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
+import { searchSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -6844,8 +6844,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
-  const [allSchoolsList, setAllSchoolsList] = useState([]);
-  const [schoolsLoaded, setSchoolsLoaded] = useState(false);
+  const [schoolResults, setSchoolResults] = useState([]);
+  const [schoolSearching, setSchoolSearching] = useState(false);
   const [schoolFilter, setSchoolFilter] = useState('');
   const [schoolDropdownOpen, setSchoolDropdownOpen] = useState(false);
   const [schoolError, setSchoolError] = useState('');
@@ -6994,22 +6994,21 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     saveSettings(newSettings);
   };
 
-  // Load all schools when dropdown opens
+  // Search schools server-side with debounce
   useEffect(() => {
-    if (schoolDropdownOpen && !schoolsLoaded) {
-      getAllSchools().then(schools => {
-        setAllSchoolsList(schools);
-        setSchoolsLoaded(true);
-      });
+    if (!schoolFilter.trim() || schoolFilter.trim().length < 2) {
+      setSchoolResults([]);
+      setSchoolSearching(false);
+      return;
     }
-  }, [schoolDropdownOpen]);
-
-  // Filter schools by search text
-  const filteredSchools = allSchoolsList.filter(s => {
-    if (!schoolFilter.trim()) return true;
-    const q = schoolFilter.toLowerCase();
-    return s.name.toLowerCase().includes(q) || (s.town || '').toLowerCase().includes(q);
-  });
+    setSchoolSearching(true);
+    const timer = setTimeout(async () => {
+      const results = await searchSchools(schoolFilter);
+      setSchoolResults(results);
+      setSchoolSearching(false);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [schoolFilter]);
 
   // Handle joining a school
   const handleJoinSchool = async (school) => {
@@ -7040,7 +7039,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       setShowAddSchool(false);
       setNewSchoolName('');
       setNewSchoolTown('');
-      setAllSchoolsList(prev => [...prev, school].sort((a, b) => a.name.localeCompare(b.name)));
+      setSchoolResults([]);
     } catch (err) {
       setSchoolError(err.message || 'Failed to create school');
     } finally {
@@ -7218,7 +7217,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
                   {schoolDropdownOpen && (
                     <div className="rounded-xl border border-white/10 bg-void/95 backdrop-blur overflow-hidden">
-                      {/* Filter input */}
+                      {/* Search input */}
                       <div className="p-2 border-b border-white/10">
                         <div className="relative">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text" />
@@ -7226,16 +7225,27 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             type="text"
                             value={schoolFilter}
                             onChange={(e) => setSchoolFilter(e.target.value)}
-                            placeholder="Type to filter..."
+                            placeholder="Type your school name..."
                             autoFocus
                             className="w-full pl-10 pr-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-primary-text placeholder-secondary-text/60"
                           />
+                          {schoolSearching && (
+                            <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
+                          )}
                         </div>
                       </div>
 
-                      {/* School list */}
+                      {/* School results */}
                       <div className="max-h-56 overflow-y-auto">
-                        {filteredSchools.length > 0 ? filteredSchools.map(school => (
+                        {schoolFilter.trim().length < 2 ? (
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
+                            Start typing to search schools...
+                          </div>
+                        ) : schoolSearching ? (
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
+                            Searching...
+                          </div>
+                        ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
                             key={school.id}
                             onClick={() => handleJoinSchool(school)}
@@ -7250,7 +7260,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           </button>
                         )) : (
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            {!schoolsLoaded ? 'Loading schools...' : schoolFilter.trim() ? 'No schools match your filter' : 'No schools yet — add yours below!'}
+                            No schools found for "{schoolFilter}"
                           </div>
                         )}
                       </div>

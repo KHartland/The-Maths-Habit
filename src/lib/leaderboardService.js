@@ -15,16 +15,17 @@ export const getAllSchools = async () => {
   return data || [];
 };
 
-// Search for schools by name (for the school picker)
+// Search for schools by name or town (for the school picker)
 export const searchSchools = async (query) => {
-  if (!query || query.trim().length === 0) return [];
+  if (!query || query.trim().length < 2) return [];
 
+  const trimmed = query.trim();
   const { data, error } = await supabase
     .from('schools')
     .select('id, name, town')
-    .ilike('name', `%${query.trim()}%`)
+    .or(`name.ilike.%${trimmed}%,town.ilike.%${trimmed}%`)
     .order('name', { ascending: true })
-    .limit(20);
+    .limit(30);
 
   if (error) {
     console.error('Error searching schools:', error);
