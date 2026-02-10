@@ -5484,8 +5484,8 @@ What is the student's answer?`
     return (
       <div className="min-h-screen bg-void relative overflow-hidden">
         <div className="ambient-glow" />
-        <div className="orb-purple w-64 h-64 -top-32 -right-32 opacity-30 fixed pointer-events-none" />
-        <div className="orb-cyan w-48 h-48 bottom-20 -left-20 opacity-20 fixed pointer-events-none" />
+        <div className="orb-purple w-64 h-64 -top-32 -right-32 opacity-70 fixed pointer-events-none" />
+        <div className="orb-cyan w-48 h-48 bottom-20 -left-20 opacity-60 fixed pointer-events-none" />
         {/* Confetti Animation */}
         {showConfetti && (
           <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
@@ -5643,8 +5643,8 @@ What is the student's answer?`
     return (
       <div className="min-h-screen bg-void relative overflow-hidden">
         <div className="ambient-glow" />
-        <div className="orb-mint w-56 h-56 -top-28 -right-28 opacity-25 fixed pointer-events-none" />
-        <div className="orb-pink w-40 h-40 bottom-32 -left-16 opacity-20 fixed pointer-events-none" />
+        <div className="orb-mint w-56 h-56 -top-28 -right-28 opacity-70 fixed pointer-events-none" />
+        <div className="orb-pink w-40 h-40 bottom-32 -left-16 opacity-60 fixed pointer-events-none" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-24 px-4 relative z-10 page-content">
           <div className="max-w-md mx-auto content-container">
@@ -5689,9 +5689,9 @@ What is the student's answer?`
     <div className="min-h-screen bg-void relative overflow-hidden">
       <LandscapePrompt />
       <div className="ambient-glow" />
-      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-20 fixed pointer-events-none" />
-      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-15 fixed pointer-events-none" />
-      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-10 fixed pointer-events-none" />
+      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" />
+      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" />
+      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" />
 
       <div className="pt-2 pb-0 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
@@ -6650,9 +6650,9 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       <div className="ambient-glow" />
-      <div className="orb-purple w-80 h-80 -top-40 -right-40 opacity-25 fixed pointer-events-none" />
-      <div className="orb-mint w-56 h-56 bottom-20 -left-24 opacity-20 fixed pointer-events-none" />
-      <div className="orb-cyan w-44 h-44 top-1/2 right-0 opacity-12 fixed pointer-events-none" />
+      <div className="orb-purple w-80 h-80 -top-40 -right-40 opacity-70 fixed pointer-events-none" />
+      <div className="orb-mint w-56 h-56 bottom-20 -left-24 opacity-60 fixed pointer-events-none" />
+      <div className="orb-cyan w-44 h-44 top-1/2 right-0 opacity-50 fixed pointer-events-none" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
       <div className="pt-24 pb-24 px-4 relative z-10">
@@ -7071,9 +7071,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       <div className="ambient-glow" />
-      <div className="orb-pink w-72 h-72 -top-36 -right-36 opacity-25 fixed pointer-events-none" />
-      <div className="orb-purple w-48 h-48 bottom-24 -left-20 opacity-20 fixed pointer-events-none" />
-      <div className="orb-mint w-36 h-36 top-1/3 right-0 opacity-15 fixed pointer-events-none" />
+      <div className="orb-pink w-72 h-72 -top-36 -right-36 opacity-70 fixed pointer-events-none" />
+      <div className="orb-purple w-48 h-48 bottom-24 -left-20 opacity-60 fixed pointer-events-none" />
+      <div className="orb-mint w-36 h-36 top-1/3 right-0 opacity-60 fixed pointer-events-none" />
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
       <div className="pt-24 pb-24 px-4 relative z-10">
@@ -8264,10 +8264,10 @@ function AppContent() {
           <div className="ambient-glow" />
 
           {/* Floating orb decoration */}
-          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-40 pointer-events-none" />
-          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-30 pointer-events-none" />
-          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-20 pointer-events-none" />
-          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-25 pointer-events-none" />
+          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
 
           <div className="max-w-md w-full text-center relative z-10">
             {/* Animated Heatmap Logo */}
@@ -8317,10 +8317,10 @@ function AppContent() {
           <div className="ambient-glow" />
 
           {/* Floating orb decoration */}
-          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-40 pointer-events-none" />
-          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-30 pointer-events-none" />
-          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-20 pointer-events-none" />
-          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-25 pointer-events-none" />
+          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
 
           <div className="max-w-md w-full relative z-10">
             {/* Back button */}
@@ -8367,10 +8367,10 @@ function AppContent() {
           <div className="ambient-glow" />
 
           {/* Floating orb decoration */}
-          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-40 pointer-events-none" />
-          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-30 pointer-events-none" />
-          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-20 pointer-events-none" />
-          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-25 pointer-events-none" />
+          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
 
           <div className="max-w-lg w-full relative z-10">
             <div className="text-center mb-8">
@@ -8723,10 +8723,10 @@ function AppContent() {
       <div className="ambient-glow" />
 
       {/* Celebration-colored decorative orbs */}
-      <div className="orb-purple w-96 h-96 -top-48 -right-48 opacity-30 fixed pointer-events-none" />
-      <div className="orb-mint w-64 h-64 top-1/2 -left-32 opacity-20 fixed pointer-events-none" />
-      <div className="orb-cyan w-72 h-72 bottom-20 right-10 opacity-15 fixed pointer-events-none" />
-      <div className="orb-pink w-48 h-48 top-1/4 left-1/3 opacity-10 fixed pointer-events-none" />
+      <div className="orb-purple w-96 h-96 -top-48 -right-48 opacity-70 fixed pointer-events-none" />
+      <div className="orb-mint w-64 h-64 top-1/2 -left-32 opacity-60 fixed pointer-events-none" />
+      <div className="orb-cyan w-72 h-72 bottom-20 right-10 opacity-60 fixed pointer-events-none" />
+      <div className="orb-pink w-48 h-48 top-1/4 left-1/3 opacity-50 fixed pointer-events-none" />
 
       {/* Portrait Prompt — shown after practice when still in landscape */}
       {recentSessionCodes.length > 0 && !showCelebration && (
