@@ -139,6 +139,87 @@ body {
   opacity: 0.7;
 }
 
+/* Dark glass panel - for practice page (pastels on dark) */
+.glass-panel-dark {
+  background: rgba(14, 3, 7, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(139, 92, 246, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+}
+
+/* Rainbow top accent for dark panels */
+.glass-panel-dark::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    #A78BFA 0%,
+    #38E6A2 25%,
+    #67E8F9 50%,
+    #F0ABFC 75%,
+    #818CF8 100%);
+  opacity: 0.6;
+  border-radius: 24px 24px 0 0;
+}
+
+/* Dark keyboard key style */
+.key-dark {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.15s ease;
+}
+.key-dark:hover {
+  background: rgba(167, 139, 250, 0.2);
+  border-color: rgba(167, 139, 250, 0.4);
+}
+.key-dark:active {
+  background: rgba(167, 139, 250, 0.3);
+}
+
+/* Dark keyboard operator key */
+.key-dark-op {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  color: rgba(167, 139, 250, 0.9);
+  transition: all 0.15s ease;
+}
+.key-dark-op:hover {
+  background: rgba(139, 92, 246, 0.3);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/* Dark keyboard special key (fraction, backspace) */
+.key-dark-special {
+  background: rgba(56, 230, 162, 0.1);
+  border: 1px solid rgba(56, 230, 162, 0.25);
+  color: rgba(56, 230, 162, 0.9);
+  transition: all 0.15s ease;
+}
+.key-dark-special:hover {
+  background: rgba(56, 230, 162, 0.2);
+  border-color: rgba(56, 230, 162, 0.4);
+}
+
+/* Dark feedback panels */
+.feedback-correct-dark {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(56, 230, 162, 0.3);
+}
+
+.feedback-incorrect-dark {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
 /* Card with metallic header */
 .card-metallic-header {
   border-radius: 16px;

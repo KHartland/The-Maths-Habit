@@ -300,34 +300,34 @@ const Calculator = ({ onInsert, onClose }) => {
   };
 
   const btnBase = 'p-3 rounded-xl font-semibold transition-all active:scale-95 select-none ';
-  const btnNum = btnBase + 'bg-white hover:bg-gray-50 text-gray-800 text-lg border border-gray-200 shadow-sm';
-  const btnOp = btnBase + 'bg-metallic-base/20 hover:bg-metallic-base/30 text-metallic-shadow text-lg border border-metallic-base/30';
-  const btnFn = btnBase + 'bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm';
-  const btnEq = btnBase + 'bg-mint hover:bg-mint/80 text-gray-800 text-lg font-bold';
-  const btnClear = btnBase + 'bg-red-100 hover:bg-red-200 text-red-600 text-sm';
+  const btnNum = btnBase + 'key-dark text-lg';
+  const btnOp = btnBase + 'key-dark-op text-lg';
+  const btnFn = btnBase + 'key-dark text-sm';
+  const btnEq = btnBase + 'bg-mint hover:bg-mint/80 text-void text-lg font-bold';
+  const btnClear = btnBase + 'bg-red-500/15 hover:bg-red-500/25 text-red-400 text-sm border border-red-500/30';
 
   return (
-    <div className="bg-white rounded-2xl p-4 w-80 shadow-2xl border border-gray-200 calc-wrapper">
+    <div className="bg-void/95 backdrop-blur-xl rounded-2xl p-4 w-80 shadow-2xl border border-white/10 calc-wrapper">
       {/* Header */}
       <div className="flex items-center justify-between mb-3 calc-header">
         <div className="flex items-center gap-2">
           <span className="text-lg">🧮</span>
-          <span className="text-sm font-semibold text-gray-800">Scientific Calculator</span>
+          <span className="text-sm font-semibold text-white/80">Scientific Calculator</span>
           {memory !== null && <span className="text-xs bg-metallic-base/20 text-metallic-shadow px-2 py-0.5 rounded-full">M</span>}
         </div>
-        <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
-          <X className="w-5 h-5 text-gray-500" />
+        <button onClick={onClose} className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+          <X className="w-5 h-5 text-white/50" />
         </button>
       </div>
 
       {/* Display */}
-      <div className="bg-gray-50 rounded-xl p-4 mb-3 border border-gray-200 calc-display">
+      <div className="bg-white/5 rounded-xl p-4 mb-3 border border-white/10 calc-display">
         {history && (
-          <div className="text-right text-xs text-gray-500 mb-1 truncate h-4">
+          <div className="text-right text-xs text-white/40 mb-1 truncate h-4">
             {history}
           </div>
         )}
-        <div className="text-right text-3xl font-mono text-gray-800 truncate calc-display-text">
+        <div className="text-right text-3xl font-mono text-white truncate calc-display-text">
           {display}
         </div>
       </div>
@@ -381,7 +381,7 @@ const Calculator = ({ onInsert, onClose }) => {
       {/* Use Answer button */}
       <button
         onClick={useAnswer}
-        className="w-full mt-3 py-3 btn-gradient-mint text-gray-800 font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 calc-use-btn"
+        className="w-full mt-3 py-3 btn-gradient-mint text-void font-bold rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 calc-use-btn"
       >
         <Check className="w-5 h-5" />
         Use Answer
@@ -5697,7 +5697,7 @@ What is the student's answer?`
         <div className="max-w-lg mx-auto content-container">
           {/* Question card */}
           {current && (
-            <div className={`glass-panel rounded-3xl shadow-glass overflow-hidden ${
+            <div className={`glass-panel-dark rounded-3xl shadow-glass overflow-hidden relative ${
               current.isExamQuestion ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
             }`}>
 
@@ -5723,7 +5723,7 @@ What is the student's answer?`
                 </span>
 
                 {/* Topic name */}
-                <span className="text-xs font-medium text-primary-text truncate">
+                <span className="text-xs font-medium text-white/80 truncate">
                   {current.objective.topicName}
                 </span>
 
@@ -5770,7 +5770,7 @@ What is the student's answer?`
                 )}
 
                 {/* Question text */}
-                <h3 className="text-lg font-semibold text-primary-text mb-4 question-text">
+                <h3 className="text-lg font-semibold text-white/90 mb-4 question-text">
                   {renderRecurring(current.q)}
                 </h3>
                 </div>
@@ -5811,7 +5811,7 @@ What is the student's answer?`
                   <>
                     {current.type === 'self' ? (
                       <div className="space-y-3">
-                        <p className="text-sm text-secondary-text mb-4">Try this on paper, then mark yourself:</p>
+                        <p className="text-sm text-white/50 mb-4">Try this on paper, then mark yourself:</p>
                         <div className="flex gap-3">
                           <button
                             onClick={() => checkAnswer(true)}
@@ -5858,7 +5858,7 @@ What is the student's answer?`
                       </div>
                     ) : current.type === 'order' ? (
                       <div className="space-y-4">
-                        <p className="text-sm text-secondary-text">Drag to put in the correct order:</p>
+                        <p className="text-sm text-white/50">Drag to put in the correct order:</p>
                         <DragDropOrder
                           items={current.items}
                           onOrderChange={(newOrder) => setUserAnswer(JSON.stringify(newOrder))}
@@ -5938,9 +5938,9 @@ What is the student's answer?`
                         
                             {/* Math Keyboard */}
                             {showMathKeyboard && (
-                              <div className="bg-slate-50 border border-slate-200 rounded-xl p-2 shadow-lg">
+                              <div className="bg-white/5 border border-white/10 rounded-xl p-2 shadow-lg backdrop-blur-sm">
                                 {/* Keyboard tabs */}
-                                <div className="flex gap-1 mb-2 pb-2 border-b border-slate-200">
+                                <div className="flex gap-1 mb-2 pb-2 border-b border-white/10">
                                   {[
                                     { id: '123', label: '123' },
                                     { id: 'f(x)', label: 'f(x)' },
@@ -5953,8 +5953,8 @@ What is the student's answer?`
                                       onClick={() => setMathKeyboardTab(tab.id)}
                                       className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                                         mathKeyboardTab === tab.id
-                                          ? 'bg-violet-100 text-violet-700'
-                                          : 'text-slate-500 hover:bg-slate-100'
+                                          ? 'bg-violet/20 text-violet-light'
+                                          : 'text-white/50 hover:bg-white/10'
                                       }`}
                                     >
                                       {tab.label}
@@ -5974,8 +5974,8 @@ What is the student's answer?`
                                       onClick={() => key && insertSymbol(key)}
                                       disabled={!key}
                                       className={`p-2 rounded-lg text-center font-medium transition-all ${
-                                        key ? 'bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100' : ''
-                                      } ${['×', '÷', '+', '−', '='].includes(key) ? 'bg-slate-100' : ''}`}
+                                        key ? 'key-dark' : ''
+                                      } ${['×', '÷', '+', '−', '='].includes(key) ? 'key-dark-op' : ''}`}
                                     >
                                       {key}
                                     </button>
@@ -5984,7 +5984,7 @@ What is the student's answer?`
                                   <button
                                     type="button"
                                     onClick={() => insertSymbol('/')}
-                                    className="p-2 rounded-lg text-center font-medium transition-all bg-amber-50 border border-amber-300 hover:bg-amber-100 hover:border-amber-400 active:bg-amber-200"
+                                    className="p-2 rounded-lg text-center font-medium transition-all key-dark-special"
                                     title="Insert fraction (type like 3/4)"
                                   >
                                     <span className="text-xs leading-none flex flex-col items-center">
@@ -6001,8 +6001,8 @@ What is the student's answer?`
                                       onClick={() => key && insertSymbol(key)}
                                       disabled={!key}
                                       className={`p-2 rounded-lg text-center font-medium transition-all ${
-                                        key ? 'bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100' : ''
-                                      } ${['×', '÷', '+', '−', '='].includes(key) ? 'bg-slate-100' : ''}`}
+                                        key ? 'key-dark' : ''
+                                      } ${['×', '÷', '+', '−', '='].includes(key) ? 'key-dark-op' : ''}`}
                                     >
                                       {key}
                                     </button>
@@ -6011,7 +6011,7 @@ What is the student's answer?`
                                   <button
                                     type="button"
                                     onClick={() => insertSymbol(' /')}
-                                    className="p-2 rounded-lg text-center font-medium transition-all bg-amber-50 border border-amber-300 hover:bg-amber-100 hover:border-amber-400 active:bg-amber-200"
+                                    className="p-2 rounded-lg text-center font-medium transition-all key-dark-special"
                                     title="Insert mixed number (type like 1 3/4)"
                                   >
                                     <span className="text-xs leading-none flex items-center gap-0.5">
@@ -6030,9 +6030,9 @@ What is the student's answer?`
                                       type="button"
                                       onClick={() => key === '⌫' ? setUserAnswer(prev => prev.slice(0, -1)) : insertSymbol(key)}
                                       className={`p-2 rounded-lg text-center font-medium transition-all ${
-                                        key === '⌫' ? 'bg-slate-200 hover:bg-slate-300' :
-                                        'bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100'
-                                      } ${['×', '÷', '+', '−', '=', '≠'].includes(key) ? 'bg-slate-100' : ''}`}
+                                        key === '⌫' ? 'key-dark-special' :
+                                        'key-dark'
+                                      } ${['×', '÷', '+', '−', '=', '≠'].includes(key) ? 'key-dark-op' : ''}`}
                                     >
                                       {key}
                                     </button>
@@ -6045,8 +6045,8 @@ What is the student's answer?`
                                       type="button"
                                       onClick={() => key === '↵' ? (userAnswer && checkAnswer()) : insertSymbol(key)}
                                       className={`p-2 rounded-lg text-center font-medium transition-all ${
-                                        key === '↵' ? 'bg-violet-500 text-white hover:bg-violet-600' :
-                                        'bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100'
+                                        key === '↵' ? 'bg-violet text-white hover:bg-violet/80 shadow-glow-violet' :
+                                        'key-dark'
                                       }`}
                                     >
                                       {key}
@@ -6062,7 +6062,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center text-sm font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center text-sm font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6072,7 +6072,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6082,7 +6082,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6092,7 +6092,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6107,7 +6107,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6117,7 +6117,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6129,8 +6129,8 @@ What is the student's answer?`
                                       onClick={() => key === '⌫' ? setUserAnswer(prev => prev.slice(0, -1)) : key.trim() && insertSymbol(key)}
                                       disabled={!key.trim() && key !== '⌫'}
                                       className={`p-2 rounded-lg text-center font-medium transition-all ${
-                                        key === '⌫' ? 'bg-slate-200 hover:bg-slate-300' :
-                                        key.trim() ? 'bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100' : ''
+                                        key === '⌫' ? 'key-dark-special' :
+                                        key.trim() ? 'key-dark' : ''
                                       }`}
                                     >
                                       {key}
@@ -6146,7 +6146,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6156,7 +6156,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6166,7 +6166,7 @@ What is the student's answer?`
                                       key={i}
                                       type="button"
                                       onClick={() => insertSymbol(key)}
-                                      className="p-2 rounded-lg text-center font-medium bg-white border border-slate-200 hover:bg-violet-50 hover:border-violet-300 active:bg-violet-100 transition-all"
+                                      className="p-2 rounded-lg text-center font-medium key-dark transition-all"
                                     >
                                       {key}
                                     </button>
@@ -6197,7 +6197,7 @@ What is the student's answer?`
                         <button
                           onClick={() => checkAnswer()}
                           disabled={!userAnswer || isProcessingImage}
-                          className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 disabled:from-slate-300 disabled:to-slate-300 text-white font-semibold rounded-xl transition-all check-btn"
+                          className="w-full py-3 btn-gradient-mint text-void font-semibold rounded-xl transition-all disabled:opacity-30 check-btn"
                         >
                           {isProcessingImage ? 'Processing...' : 'Check Answer'}
                         </button>
@@ -6212,22 +6212,22 @@ What is the student's answer?`
                     {/* Exam Mode - Minimal feedback only */}
                     {practiceMode === 'exam' ? (
                       <div className={`p-4 rounded-xl ${
-                        isCorrect 
-                          ? 'bg-emerald-50 border border-emerald-200' 
-                          : 'bg-red-50 border border-red-200'
+                        isCorrect
+                          ? 'feedback-correct-dark'
+                          : 'feedback-incorrect-dark'
                       }`}>
                         <div className="flex items-center gap-2">
                           {isCorrect ? (
                             <>
-                              <Check className="w-5 h-5 text-emerald-600" />
-                              <span className="font-semibold text-emerald-700">Correct</span>
+                              <Check className="w-5 h-5 text-emerald-400" />
+                              <span className="font-semibold text-emerald-400">Correct</span>
                             </>
                           ) : (
                             <>
-                              <X className="w-5 h-5 text-red-600" />
-                              <span className="font-semibold text-red-700">Incorrect</span>
+                              <X className="w-5 h-5 text-red-400" />
+                              <span className="font-semibold text-red-400">Incorrect</span>
                               {current.a && (
-                                <span className="text-sm text-slate-600 ml-2">
+                                <span className="text-sm text-white/60 ml-2">
                                   Answer: <strong>{renderRecurring(current.a)}</strong>
                                 </span>
                               )}
@@ -6238,42 +6238,42 @@ What is the student's answer?`
                     ) : (
                       <>
                         <div className={`p-4 rounded-xl ${
-                          isCorrect 
-                            ? 'bg-emerald-50 border border-emerald-200' 
-                            : 'bg-red-50 border border-red-200'
+                          isCorrect
+                            ? 'feedback-correct-dark'
+                            : 'feedback-incorrect-dark'
                         }`}>
                           <div className="flex items-center gap-2 mb-2">
                             {isCorrect ? (
                               <>
-                                <Check className="w-5 h-5 text-emerald-600" />
-                                <span className="font-semibold text-emerald-700">
+                                <Check className="w-5 h-5 text-emerald-400" />
+                                <span className="font-semibold text-emerald-400">
                                   Correct!
                                 </span>
                               </>
                             ) : (
                               <>
-                                <X className="w-5 h-5 text-red-600" />
-                                <span className="font-semibold text-red-700">Not quite</span>
+                                <X className="w-5 h-5 text-red-400" />
+                                <span className="font-semibold text-red-400">Not quite</span>
                               </>
                             )}
                           </div>
                           {current.a && !isCorrect && (
-                            <p className="text-sm text-slate-600 mb-2">
-                              The answer was: <strong>{renderRecurring(current.a)}</strong>
+                            <p className="text-sm text-white/60 mb-2">
+                              The answer was: <strong className="text-white/80">{renderRecurring(current.a)}</strong>
                             </p>
                           )}
                         </div>
 
                         {/* AI Analyzing Indicator - only when AI is unlocked */}
                         {!isCorrect && isAnalyzing && aiUnlocked && !currentDiagnosis?.isAI && (
-                          <div className="p-4 bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-xl animate-pulse">
+                          <div className="p-4 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30 rounded-xl animate-pulse">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                              <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
                                 <span className="text-xl animate-spin">🤖</span>
                               </div>
                               <div>
-                                <h4 className="font-semibold text-purple-900">AI Coach is analyzing your answer...</h4>
-                                <p className="text-sm text-purple-600">Finding what went wrong</p>
+                                <h4 className="font-semibold text-purple-300">AI Coach is analyzing your answer...</h4>
+                                <p className="text-sm text-purple-400">Finding what went wrong</p>
                               </div>
                             </div>
                           </div>
@@ -6282,32 +6282,32 @@ What is the student's answer?`
                         {/* Error Diagnosis - different style for AI vs pattern matching */}
                         {!isCorrect && currentDiagnosis?.hasDiagnosis && (
                           <div className={`p-4 rounded-xl ${
-                            currentDiagnosis.isAI 
-                              ? 'bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200' 
-                              : 'bg-amber-50 border border-amber-200'
+                            currentDiagnosis.isAI
+                              ? 'bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30'
+                              : 'bg-amber-500/10 border border-amber-500/30'
                           }`}>
                             <div className="flex items-start gap-3">
                               <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                                currentDiagnosis.isAI ? 'bg-purple-100' : 'bg-amber-100'
+                                currentDiagnosis.isAI ? 'bg-purple-500/20' : 'bg-amber-500/20'
                               }`}>
                                 <span className="text-xl">🤖</span>
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-1">
-                                  <h4 className={`font-semibold ${currentDiagnosis.isAI ? 'text-purple-900' : 'text-amber-900'}`}>
+                                  <h4 className={`font-semibold ${currentDiagnosis.isAI ? 'text-purple-300' : 'text-amber-300'}`}>
                                     What went wrong?
                                   </h4>
                                   {currentDiagnosis.isAI && (
-                                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-200 text-purple-700 rounded-full font-medium">
+                                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-500/30 text-purple-300 rounded-full font-medium">
                                       AI Coach
                                     </span>
                                   )}
                                 </div>
-                                <p className={`text-sm mb-2 ${currentDiagnosis.isAI ? 'text-purple-800' : 'text-amber-800'}`}>
+                                <p className={`text-sm mb-2 ${currentDiagnosis.isAI ? 'text-purple-200/80' : 'text-amber-200/80'}`}>
                                   {currentDiagnosis.diagnosis}
                                 </p>
                                 {currentDiagnosis.encouragement && currentDiagnosis.isAI && (
-                                  <p className="text-xs text-purple-600 mt-2 italic">
+                                  <p className="text-xs text-purple-400 mt-2 italic">
                                     {currentDiagnosis.encouragement}
                                   </p>
                                 )}
@@ -6320,26 +6320,26 @@ What is the student's answer?`
 
                         {/* Worked Example - only show when incorrect and no diagnosis */}
                         {!isCorrect && !currentDiagnosis?.hasDiagnosis && workedExamples[current.objective.code] && (
-                          <details className="bg-blue-50 border border-blue-200 rounded-xl overflow-hidden">
-                            <summary className="p-4 cursor-pointer font-semibold text-blue-800 hover:bg-blue-100 transition-colors flex items-center gap-2">
+                          <details className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden">
+                            <summary className="p-4 cursor-pointer font-semibold text-blue-300 hover:bg-blue-500/15 transition-colors flex items-center gap-2">
                               <BookOpen className="w-5 h-5" />
                               View Worked Example: {workedExamples[current.objective.code].title}
                             </summary>
                             <div className="p-4 pt-0 space-y-4">
                               {/* Steps */}
                               <div>
-                                <h4 className="font-semibold text-blue-900 mb-2">Method:</h4>
-                                <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                                <h4 className="font-semibold text-blue-300 mb-2">Method:</h4>
+                                <ol className="text-sm text-blue-200/80 space-y-1 list-decimal list-inside">
                                   {workedExamples[current.objective.code].steps.map((step, i) => (
                                     <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
                                   ))}
                                 </ol>
                               </div>
-                              
+
                               {/* Worked Example */}
-                              <div className="bg-white/50 rounded-lg p-3">
-                                <h4 className="font-semibold text-blue-900 mb-2">Example: {workedExamples[current.objective.code].example.q}</h4>
-                                <div className="text-sm text-blue-800 space-y-1">
+                              <div className="bg-white/5 rounded-lg p-3">
+                                <h4 className="font-semibold text-blue-300 mb-2">Example: {workedExamples[current.objective.code].example.q}</h4>
+                                <div className="text-sm text-blue-200/80 space-y-1">
                                   {workedExamples[current.objective.code].example.solution.map((line, i) => (
                                     <p key={i} className={line.startsWith('Answer') || line.startsWith('=') ? 'font-semibold' : ''}>
                                       {line}
@@ -6358,7 +6358,7 @@ What is the student's answer?`
 
                     <button
                       onClick={nextQuestion}
-                      className="w-full py-3 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white"
+                      className="w-full py-3 font-semibold rounded-xl transition-all flex items-center justify-center gap-2 btn-gradient-mint text-void"
                     >
                       {currentIndex < sessionQueue.length - 1 ? (
                         <>Continue <ChevronRight className="w-5 h-5" /></>
@@ -6379,7 +6379,7 @@ What is the student's answer?`
       {/* Mini-Lesson Modal */}
       {showMiniLesson && currentMiniLesson && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-void/95 backdrop-blur-xl rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-white/10">
             {/* Header */}
             <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-6 rounded-t-3xl">
               <div className="flex items-center justify-between">
@@ -6403,14 +6403,14 @@ What is the student's answer?`
             {/* Content */}
             <div className="p-6 space-y-6">
               {/* Key Points */}
-              <div className="bg-violet-50 rounded-xl p-4">
-                <h3 className="font-bold text-violet-900 mb-3 flex items-center gap-2">
+              <div className="bg-violet/10 border border-violet/20 rounded-xl p-4">
+                <h3 className="font-bold text-violet-light mb-3 flex items-center gap-2">
                   <span>📌</span> Key Points
                 </h3>
                 <ul className="space-y-2">
                   {currentMiniLesson.keyPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-violet-800">
-                      <span className="w-6 h-6 bg-violet-200 rounded-full flex items-center justify-center text-sm font-bold text-violet-700 flex-shrink-0">
+                    <li key={i} className="flex items-start gap-2 text-white/80">
+                      <span className="w-6 h-6 bg-violet/30 rounded-full flex items-center justify-center text-sm font-bold text-violet-light flex-shrink-0">
                         {i + 1}
                       </span>
                       <span className="text-sm">{point}</span>
@@ -6418,20 +6418,20 @@ What is the student's answer?`
                   ))}
                 </ul>
               </div>
-              
+
               {/* Worked Example */}
-              <div className="bg-emerald-50 rounded-xl p-4">
-                <h3 className="font-bold text-emerald-900 mb-3 flex items-center gap-2">
+              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
+                <h3 className="font-bold text-emerald-400 mb-3 flex items-center gap-2">
                   <span>✏️</span> Worked Example
                 </h3>
-                <div className="bg-white rounded-lg p-4 mb-3">
-                  <p className="font-semibold text-slate-900 mb-2">{currentMiniLesson.example.problem}</p>
+                <div className="bg-white/5 rounded-lg p-4 mb-3">
+                  <p className="font-semibold text-white/90 mb-2">{currentMiniLesson.example.problem}</p>
                   <div className="space-y-1">
                     {currentMiniLesson.example.steps.map((step, i) => (
                       <p key={i} className={`text-sm ${
-                        i === currentMiniLesson.example.steps.length - 1 
-                          ? 'font-bold text-emerald-700' 
-                          : 'text-slate-600'
+                        i === currentMiniLesson.example.steps.length - 1
+                          ? 'font-bold text-emerald-400'
+                          : 'text-white/60'
                       }`}>
                         {step}
                       </p>
@@ -6439,25 +6439,25 @@ What is the student's answer?`
                   </div>
                 </div>
               </div>
-              
+
               {/* Common Mistakes */}
-              <div className="bg-red-50 rounded-xl p-4">
-                <h3 className="font-bold text-red-900 mb-3 flex items-center gap-2">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
+                <h3 className="font-bold text-red-400 mb-3 flex items-center gap-2">
                   <span>⚠️</span> Common Mistakes to Avoid
                 </h3>
                 <ul className="space-y-2">
                   {currentMiniLesson.commonMistakes.map((mistake, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-red-800">
-                      <span className="text-red-500">✗</span>
+                    <li key={i} className="flex items-start gap-2 text-sm text-white/70">
+                      <span className="text-red-400">✗</span>
                       <span>{mistake}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              
-              
+
+
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex gap-3 pt-4 border-t border-white/10">
                 {miniLessonComplete ? (
                   <>
                     <button
@@ -6468,17 +6468,17 @@ What is the student's answer?`
                     </button>
                     <button
                       onClick={() => closeMiniLesson(false)}
-                      className="px-6 py-4 bg-slate-200 text-slate-700 font-medium rounded-xl hover:bg-slate-300 transition-all"
+                      className="px-6 py-4 bg-white/10 text-white/70 font-medium rounded-xl hover:bg-white/20 transition-all"
                     >
                       Continue
                     </button>
                   </>
                 ) : (
                   <div className="flex-1 text-center">
-                    <p className="text-slate-500 text-sm mb-2">Take a moment to read through the lesson...</p>
+                    <p className="text-white/50 text-sm mb-2">Take a moment to read through the lesson...</p>
                     <button
                       onClick={() => { setMiniLessonTimer(0); setMiniLessonComplete(true); }}
-                      className="text-violet-600 hover:text-violet-700 text-sm font-medium"
+                      className="text-violet-light hover:text-white text-sm font-medium"
                     >
                       I've finished reading ↓
                     </button>
