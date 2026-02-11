@@ -908,8 +908,8 @@ const FSRS_DEFAULTS = {
   maxInterval: 365,        // Max interval in days
   DECAY: -0.5,
   FACTOR: 19 / 81,
-  learningSteps: [1, 10],  // Minutes for learning steps
-  relearningSteps: [10],   // Minutes for relearning
+  learningSteps: [10, 60],  // Minutes for learning steps (10min, then 1 hour)
+  relearningSteps: [30],    // Minutes for relearning (30 min)
 };
 
 // Rating enum for FSRS
@@ -1353,6 +1353,24 @@ const saveSessionHistory = (history) => {
     // Keep last 100 sessions
     const trimmed = history.slice(-100);
     localStorage.setItem(SESSION_HISTORY_KEY, JSON.stringify(trimmed));
+  } catch {}
+};
+
+// Recently answered question IDs — prevents repeats across sessions
+const RECENT_QUESTIONS_KEY = 'maths-habit-recent-questions';
+const MAX_RECENT_QUESTIONS = 120; // Track last 120 answered questions
+
+const loadRecentQuestions = () => {
+  try {
+    const saved = localStorage.getItem(RECENT_QUESTIONS_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch { return []; }
+};
+
+const saveRecentQuestions = (list) => {
+  try {
+    const trimmed = list.slice(-MAX_RECENT_QUESTIONS);
+    localStorage.setItem(RECENT_QUESTIONS_KEY, JSON.stringify(trimmed));
   } catch {}
 };
 
@@ -4268,12 +4286,12 @@ const generateDiagram = (type) => {
 
 // Spaced repetition intervals (in milliseconds)
 const INTERVALS = {
-  initial: 10 * 60 * 1000,        // 10 minutes
-  level1: 24 * 60 * 60 * 1000,    // 1 day
+  initial: 4 * 60 * 60 * 1000,     // 4 hours (was 10 min — way too short)
+  level1: 24 * 60 * 60 * 1000,     // 1 day
   level2: 3 * 24 * 60 * 60 * 1000, // 3 days
   level3: 7 * 24 * 60 * 60 * 1000, // 7 days
   level4: 21 * 24 * 60 * 60 * 1000, // 21 days
-  wrong: 2 * 60 * 1000,           // 2 minutes
+  wrong: 10 * 60 * 1000,            // 10 minutes (was 2 min)
 };
 
 const getNextDueTime = (streak, isCorrect) => {
@@ -4349,18 +4367,21 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     });
   });
 
-  // Filter out questions answered correctly today (nextReview in the future + reviewed today)
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const todayMs = todayStart.getTime();
+  // Filter out recently answered questions (robust cross-session/cross-day filter)
+  const recentQuestionIds = new Set(loadRecentQuestions());
 
-  const availableQuestions = allQuestions.filter(q => {
-    // Keep new cards (never reviewed) — they can't have been answered today
-    if (!q.card.lastReview) return true;
-    // If last reviewed today and next review is in the future, it was answered correctly today — skip it
-    if (q.card.lastReview >= todayMs && q.card.nextReview > now) return false;
+  let availableQuestions = allQuestions.filter(q => {
+    // If this question was answered recently, skip it
+    if (recentQuestionIds.has(q.questionId)) return false;
     return true;
   });
+
+  // Fallback: if too few questions remain after filtering, clear recent history
+  // This prevents getting stuck when the student has cycled through most questions
+  if (availableQuestions.length < count) {
+    saveRecentQuestions([]); // Reset — they've seen everything, start fresh
+    availableQuestions = allQuestions; // Use full pool
+  }
 
   // Helper for randomized sorting (breaks ties randomly for variety)
   const randomizedSort = (arr, scoreFn) => {
@@ -5299,6 +5320,11 @@ What is the student's answer?`
         saveFsrsData(updatedFsrsData);
         return updatedFsrsData;
       });
+
+      // Track this question as recently answered so it won't repeat soon
+      const recentList = loadRecentQuestions();
+      recentList.push(questionId);
+      saveRecentQuestions(recentList);
     }
   };
 
