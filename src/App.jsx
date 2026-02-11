@@ -2090,7 +2090,7 @@ const questionBank = {
   // Algebra with diagrams
   A9: [
     { q: "Points A, B and C lie on a straight line. Find the gradient of the line.", a: "-2", type: "number", diagram: "linear-graph-abc", calculator: false, hint: "Use gradient = change in y ÷ change in x" },
-    { q: "Find the y-intercept of the line through A, B and C.", a: "1", type: "number", diagram: "linear-graph-abc", calculator: false },
+    { q: "Find the y-intercept of the line through A, B and C.", a: "-1", type: "number", diagram: "linear-graph-abc", calculator: false },
     { q: "A straight line has gradient 3 and passes through (0, 2). Find its equation.", a: "y = 3x + 2", type: "text", calculator: false },
     { q: "What is the gradient of y = 5x - 3?", type: "mcq", options: ["5", "-3", "3", "-5"], a: "5", calculator: false },
   ],
