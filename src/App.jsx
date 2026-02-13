@@ -690,7 +690,7 @@ const revisionHints = {
   S6: 'Revise histograms: frequency density = frequency ÷ class width. Area of bar = frequency.'
 };
 
-const levelLabels = ['Not started', '1/4 quick', '2/4 quick', '3/4 quick', 'Exam ready!', '✓ Mastered'];
+const levelLabels = ['Not started', '1/5 done', '2/5 done', '3/5 done', '4/5 nearly there!', '✓ Mastered'];
 
 const TOPIC_HEX = {
   Number: "#A78BFA",      // Soft violet
@@ -760,10 +760,11 @@ function getTileColor(hex, progressLevel, recencyFactor) {
 // Mastery system: 4 quick questions + 1 exam question = mastered
 function getUnderstandingLevel(progress) {
   const quickCorrect = progress?.quickCorrect ?? 0;
-  const examPassed = progress?.examPassed ?? false;
-  
-  if (examPassed) return 5; // Mastered
-  if (quickCorrect >= 4) return 4; // Ready for exam
+
+  // 5 questions per objective, sequential progression
+  // quickCorrect tracks how many they've got right (0-5)
+  if (quickCorrect >= 5) return 5; // Mastered — all 5 questions correct
+  if (quickCorrect === 4) return 4; // Nearly there
   if (quickCorrect === 3) return 3;
   if (quickCorrect === 2) return 2;
   if (quickCorrect === 1) return 1;
@@ -771,14 +772,15 @@ function getUnderstandingLevel(progress) {
 }
 
 function isReadyForExam(progress) {
-  return (progress?.quickCorrect ?? 0) >= 4 && !(progress?.examPassed);
+  // With 5-question sequential system, "exam ready" = completed 4 of 5
+  return (progress?.quickCorrect ?? 0) === 4;
 }
 
 function TileDetailModal({ open, objective, progress, onClose }) {
   if (!open || !objective) return null;
 
   const quickCorrect = progress?.quickCorrect ?? 0;
-  const examPassed = progress?.examPassed ?? false;
+  const mastered = quickCorrect >= 5;
   const level = getUnderstandingLevel(progress);
   const lastPracticed = progress?.lastPracticed;
 
@@ -821,7 +823,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
             'bg-white/10 text-secondary-text border border-white/10'
           }`}>
             {level >= 5 ? '✓ Mastered' :
-             level >= 4 ? '📝 Exam ready' :
+             level >= 4 ? '🔥 Nearly there' :
              level > 0 ? '📚 Learning' :
              '○ Not started'}
           </span>
@@ -832,11 +834,11 @@ function TileDetailModal({ open, objective, progress, onClose }) {
           {/* Quick questions */}
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="text-secondary-text">Quick questions</span>
-              <span className="font-medium text-primary-text">{Math.min(quickCorrect, 4)}/4</span>
+              <span className="text-secondary-text">Questions</span>
+              <span className="font-medium text-primary-text">{Math.min(quickCorrect, 5)}/5</span>
             </div>
             <div className="flex gap-1.5">
-              {[0, 1, 2, 3].map(i => (
+              {[0, 1, 2, 3, 4].map(i => (
                 <div
                   key={i}
                   className="h-2.5 flex-1 rounded-full transition-all"
@@ -847,25 +849,6 @@ function TileDetailModal({ open, objective, progress, onClose }) {
                   }}
                 />
               ))}
-            </div>
-          </div>
-
-          {/* Exam question */}
-          <div>
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="text-secondary-text">Exam question</span>
-              <span className="font-medium text-primary-text">
-                {examPassed ? '✓ Passed' : quickCorrect >= 4 ? 'Ready!' : 'Locked'}
-              </span>
-            </div>
-            <div className="h-2.5 bg-white/10 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: examPassed ? '100%' : quickCorrect >= 4 ? '50%' : '0%',
-                  backgroundColor: examPassed ? '#38E6A2' : '#f59e0b'
-                }}
-              />
             </div>
           </div>
         </div>
@@ -1165,11 +1148,10 @@ const migrateToFSRS = (progress, questionBank) => {
 
     const questions = questionBank[objectiveCode] || [];
     const quickCorrect = prog.quickCorrect || 0;
-    const examPassed = prog.examPassed || false;
 
     // Estimate FSRS parameters from existing mastery data
     let stability, state, reps;
-    if (examPassed) {
+    if (quickCorrect >= 5) {
       stability = 30; // ~1 month for mastered
       state = 'review';
       reps = 5;
@@ -1652,1077 +1634,13 @@ const importProgress = (jsonString) => {
   }
 };
 
-// Question bank - sample questions for each objective
+
+// Question bank - to be rewritten
 const questionBank = {
-  // Number - with multiple choice and calculator modes
-  N1: [
-    { q: "Which is the largest?", type: "mcq", options: ["5.304[r]", "5.344", "5.34", "5.3[r]4[r]"], a: "5.3[r]4[r]", calculator: false },
-    { q: "Order these from smallest to largest:", type: "order", items: ["0.45", "0.405", "0.54", "0.045"], correctOrder: ["0.045", "0.405", "0.45", "0.54"], calculator: false },
-    { q: "Which decimal is equivalent to 1/3?", type: "mcq", options: ["0.3", "0.33", "0.3[r]", "0.33[r]"], a: "0.3[r]", calculator: false },
-    { q: "Put these decimals in order from smallest to largest:", type: "order", items: ["0.7", "0.07", "0.77", "0.707"], correctOrder: ["0.07", "0.7", "0.707", "0.77"], calculator: false },
-    { q: "Order these decimals from largest to smallest:", type: "order", items: ["0.35", "0.5", "0.305", "0.53"], correctOrder: ["0.53", "0.5", "0.35", "0.305"], calculator: false },
-  ],
-  N2: [
-    { q: "Work out: −7 × −4", a: "28", type: "number", calculator: false },
-    { q: "Calculate: 3.6 ÷ 0.4", a: "9", type: "number", calculator: true },
-    { q: "What is −15 ÷ 3?", type: "mcq", options: ["-5", "5", "-45", "45"], a: "-5", calculator: false },
-    { q: "Calculate: 2.4 × 3.5", a: "8.4", type: "number", calculator: false },
-  ],
-  N3: [
-    { q: "Which operation is the inverse of squaring?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
-    { q: "What is 15 × 4 ÷ 4?", type: "mcq", options: ["4", "15", "60", "19"], a: "15", calculator: false },
-    { q: "What is the reciprocal of 4?", type: "mcq", options: ["4", "-4", "0.25", "2"], a: "0.25", calculator: false },
-    { q: "What is 8 + 2 × 3?", type: "mcq", options: ["30", "14", "18", "24"], a: "14", calculator: false, hint: "Remember BIDMAS" },
-    { q: "Which calculation should be done first in: 5 + 3² × 2?", type: "mcq", options: ["5 + 3", "3²", "3 × 2", "² × 2"], a: "3²", calculator: false },
-  ],
-  N5: [
-    { q: "Work out: 3 + 4 × 2", a: "11", type: "number", calculator: false },
-    { q: "Calculate: (5 + 3)² ÷ 4", a: "16", type: "number", calculator: false },
-    { q: "What is 20 - 3 × 4?", type: "mcq", options: ["68", "8", "32", "17"], a: "8", calculator: false },
-    { q: "Calculate: 6 + 12 ÷ (2 + 1)", a: "10", type: "number", calculator: false },
-  ],
-  N6: [
-    { q: "Work out: √144", a: "12", type: "number", calculator: false },
-    { q: "Calculate: 2³ + 3²", a: "17", type: "number", calculator: false },
-    { q: "What is √225?", type: "mcq", options: ["13", "14", "15", "16"], a: "15", calculator: false },
-    { q: "Calculate: 5² - √49", a: "18", type: "number", calculator: false },
-    { q: "Put these in order from smallest to largest:", type: "order", items: ["2³", "3²", "√25", "4²"], correctOrder: ["√25", "2³", "3²", "4²"], calculator: false },
-  ],
-  N7: [
-    { q: "What is the 4th cube number?", type: "mcq", options: ["27", "64", "81", "125"], a: "64", calculator: false },
-    { q: "Which of these is a cube number?", type: "mcq", options: ["36", "49", "64", "81"], a: "64", calculator: false },
-    { q: "What is 5³?", a: "125", type: "number", calculator: false },
-    { q: "Find ³√8", a: "2", type: "number", calculator: false },
-  ],
-  N8: [
-    { q: "Find the HCF of 24 and 36", a: "12", type: "number", calculator: false },
-    { q: "Find the LCM of 6 and 8", a: "24", type: "number", calculator: false },
-    { q: "What is the HCF of 18 and 24?", type: "mcq", options: ["2", "3", "6", "12"], a: "6", calculator: false },
-    { q: "Find the LCM of 4 and 6", a: "12", type: "number", calculator: false },
-  ],
-  N10: [
-    { q: "Write 0.75 as a fraction in simplest form", a: "3/4", type: "text", calculator: false },
-    { q: "Write 35% as a decimal", a: "0.35", type: "text", calculator: false },
-    { q: "What is 0.4 as a percentage?", type: "mcq", options: ["4%", "0.4%", "40%", "400%"], a: "40%", calculator: false },
-    { q: "Convert 2/5 to a decimal", a: "0.4", type: "text", calculator: false },
-    { q: "Match each fraction to its decimal:", type: "match", leftItems: ["1/4", "1/2", "3/4", "1/5"], rightItems: ["0.5", "0.25", "0.2", "0.75"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
-    { q: "Match each percentage to its fraction:", type: "match", leftItems: ["25%", "50%", "75%", "20%"], rightItems: ["1/2", "1/4", "1/5", "3/4"], correctMatches: { "0": 1, "1": 0, "2": 3, "3": 2 }, calculator: false },
-  ],
-  N12: [
-    { q: "Work out 15% of 80", a: "12", type: "number", calculator: true },
-    { q: "Find 3/4 of 60", a: "45", type: "number", calculator: false },
-    { q: "What is 20% of 150?", type: "mcq", options: ["15", "20", "30", "35"], a: "30", calculator: true },
-    { q: "Calculate 12.5% of 400", a: "50", type: "number", calculator: true },
-  ],
-  N14: [
-    { q: "Estimate: 4.8 × 21.3", a: "100", type: "number", hint: "Round to 1 s.f.", calculator: false },
-    { q: "Estimate: 198 ÷ 4.1", a: "50", type: "number", hint: "Round to 1 s.f.", calculator: false },
-    { q: "Estimate 9.7 × 5.2", type: "mcq", options: ["40", "45", "50", "55"], a: "50", hint: "Round to 1 s.f.", calculator: false },
-    { q: "Estimate: (29.8 × 4.1) ÷ 9.7", a: "12", type: "number", hint: "Round to 1 s.f.", calculator: false },
-  ],
-  N15: [
-    { q: "Round 3.456 to 2 decimal places", a: "3.46", type: "text", calculator: false },
-    { q: "Round 12,345 to 2 significant figures", a: "12000", type: "text", calculator: false },
-    { q: "What is 0.0456 rounded to 2 s.f.?", type: "mcq", options: ["0.04", "0.05", "0.046", "0.045"], a: "0.046", calculator: false },
-    { q: "Round 0.006789 to 3 significant figures", a: "0.00679", type: "text", calculator: false },
-  ],
-  N16: [
-    { q: "A length is 8 cm to the nearest cm. What is the lower bound?", a: "7.5", type: "number", calculator: false },
-    { q: "A mass is 50g to the nearest 10g. Write the error interval.", a: "45 ≤ x < 55", type: "text", calculator: false },
-    { q: "A time is 24 seconds to the nearest second. What is the upper bound?", a: "24.5", type: "number", calculator: false },
-    { q: "A length is 3.5m to 1 d.p. What is the lower bound?", type: "mcq", options: ["3.4", "3.45", "3.49", "3.0"], a: "3.45", calculator: false },
-  ],
-  N4: [
-    { q: "I calculate 156 ÷ 12 = 13. Which calculation checks this?", type: "mcq", options: ["156 × 12", "13 × 12", "156 - 12", "13 + 12"], a: "13 × 12", calculator: false },
-    { q: "Which calculation checks that 23 × 17 = 391?", type: "mcq", options: ["391 + 17", "391 ÷ 17", "391 × 23", "23 + 17"], a: "391 ÷ 17", calculator: false },
-    { q: "I got 458 - 279 = 179. Which calculation checks this?", type: "mcq", options: ["458 + 279", "179 + 279", "179 × 279", "458 ÷ 179"], a: "179 + 279", calculator: false },
-    { q: "Which is the inverse of squaring a number?", type: "mcq", options: ["Halving", "Doubling", "Square rooting", "Cubing"], a: "Square rooting", calculator: false },
-  ],
-  N11: [
-    { q: "Express 15 as a fraction of 60", a: "1/4", type: "text", calculator: false },
-    { q: "Write 30 as a fraction of 50 in simplest form", a: "3/5", type: "text", calculator: false },
-    { q: "What is 12 out of 48 as a fraction in simplest form?", type: "mcq", options: ["12/48", "1/4", "1/3", "2/8"], a: "1/4", calculator: false },
-    { q: "Express 45 minutes as a fraction of 1 hour", a: "3/4", type: "text", calculator: false },
-  ],
-  N13: [
-    { q: "Convert 3.5 metres to centimetres", a: "350", type: "number", calculator: false },
-    { q: "Convert 4500 grams to kilograms", a: "4.5", type: "number", calculator: false },
-    { q: "How many millilitres in 2.5 litres?", type: "mcq", options: ["25", "250", "2500", "25000"], a: "2500", calculator: false },
-    { q: "Convert 3 m² to cm²", a: "30000", type: "number", calculator: false, hint: "1 m² = 10000 cm²" },
-  ],
-
-  // Algebra
-  A2: [
-    { q: "If y = 3x + 5, find y when x = 4", a: "17", type: "number", calculator: false },
-    { q: "Work out d when d = g² − 2h, g = 5, h = 3", a: "19", type: "number", calculator: false },
-    { q: "If P = 2(l + w), find P when l = 7 and w = 3", a: "20", type: "number", calculator: false },
-    { q: "If V = lwh, find V when l = 5, w = 3 and h = 4", a: "60", type: "number", calculator: false },
-  ],
-  A4: [
-    { q: "Expand: 3(x + 4)", a: "3x + 12", type: "text", calculator: false },
-    { q: "Factorise: x² + 5x", a: "x(x + 5)", type: "text", calculator: false },
-    { q: "Expand: 2(3x - 5)", type: "mcq", options: ["6x - 5", "6x - 10", "5x - 10", "6x + 10"], a: "6x - 10", calculator: false },
-    { q: "Factorise: 6x + 9", a: "3(2x + 3)", type: "text", calculator: false },
-  ],
-  A6: [
-    { q: "Make x the subject: y = 3x + 2", a: "x = (y - 2)/3", type: "text", calculator: false },
-    { q: "Rearrange for r: A = πr²", a: "r = √(A/π)", type: "text", calculator: false },
-    { q: "Make b the subject: a = 5b - 7", a: "b = (a + 7)/5", type: "text", calculator: false },
-    { q: "Make h the subject: V = πr²h", type: "mcq", options: ["h = V/πr²", "h = Vπr²", "h = V - πr²", "h = V/πr"], a: "h = V/πr²", calculator: false },
-  ],
-  A14: [
-    { q: "Find the gradient of the line joining (0, 2) and (3, 8)", a: "2", type: "number", calculator: false },
-    { q: "A line has equation y = 4x - 3. What is its gradient?", type: "mcq", options: ["-3", "3", "4", "-4"], a: "4", calculator: false },
-    { q: "Find the y-intercept of y = 2x + 7", a: "7", type: "number", calculator: false },
-    { q: "Find the gradient of the line joining (2, 5) and (6, 13)", a: "2", type: "number", calculator: false },
-  ],
-  A17: [
-    { q: "Solve: 3x + 7 = 22", a: "5", type: "number", calculator: false },
-    { q: "Solve: 2(x - 3) = 10", a: "8", type: "number", calculator: false },
-    { q: "Solve: 5x - 3 = 2x + 9", a: "4", type: "number", calculator: false },
-    { q: "What is x if 4x + 1 = 17?", type: "mcq", options: ["3", "4", "4.5", "5"], a: "4", calculator: false },
-  ],
-  A18: [
-    // Foundation - factorising
-    { q: "Solve by factorising: x² + 5x + 6 = 0", a: "x = -2 and x = -3", type: "text", calculator: false },
-    { q: "Solve by factorising: x² - 7x + 12 = 0", a: "x = 3 and x = 4", type: "text", calculator: false },
-    { q: "Solve: x² - 9 = 0", type: "mcq", options: ["x = 3", "x = -3", "x = 3 and x = -3", "x = 9"], a: "x = 3 and x = -3", calculator: false },
-    // Foundation - reading from graph
-    { q: "Use the graph to solve x² - 2x - 3 = 0", a: "x = -1 and x = 3", type: "text", calculator: false, image: "quadratic-graph-1.png" },
-  ],
-  A19: [
-    { q: "Solve: 2x + y = 7 and x + y = 4. Find x.", a: "3", type: "number", calculator: false },
-    { q: "Solve: x + y = 10 and x - y = 4. Find x.", a: "7", type: "number", calculator: false },
-    { q: "Solve: 3x + 2y = 19 and x + 2y = 13. Find x.", a: "3", type: "number", calculator: false },
-    { q: "Solve: 2x + y = 11 and x - y = 1. Find y.", type: "mcq", options: ["2", "3", "4", "5"], a: "3", calculator: false },
-  ],
-  A23: [
-    { q: "Find the nth term: 5, 8, 11, 14, ...", a: "3n + 2", type: "text", calculator: false },
-    { q: "Find the 10th term of: 4, 7, 10, 13, ...", a: "31", type: "number", calculator: false },
-    { q: "A sequence has nth term 2n + 5. What is the 8th term?", type: "mcq", options: ["13", "16", "21", "24"], a: "21", calculator: false },
-    { q: "Find the nth term: 7, 11, 15, 19, ...", a: "4n + 3", type: "text", calculator: false },
-  ],
-  A1: [
-    { q: "Write 'add 5 to x, then multiply by 3' as an algebraic expression", a: "3(x + 5)", type: "text", calculator: false },
-    { q: "What does 4x mean?", type: "mcq", options: ["4 + x", "4 - x", "4 × x", "4 ÷ x"], a: "4 × x", calculator: false },
-    { q: "Simplify: a + a + a", a: "3a", type: "text", calculator: false },
-    { q: "Write using algebra: the cost of n books at £5 each", a: "5n", type: "text", calculator: false },
-  ],
-  A3: [
-    { q: "Is '3x + 5' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Expression", calculator: false },
-    { q: "Is '3x + 5 = 20' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Equation", calculator: false },
-    { q: "Is 'A = πr²' an expression, equation, formula or identity?", type: "mcq", options: ["Expression", "Equation", "Formula", "Identity"], a: "Formula", calculator: false },
-    { q: "Which is an identity?", type: "mcq", options: ["x + 5 = 12", "2(x + 3) = 2x + 6", "A = lw", "3x - 1"], a: "2(x + 3) = 2x + 6", calculator: false },
-  ],
-  A5: [
-    { q: "Use V = lwh to find V when l = 5, w = 4, h = 3", a: "60", type: "number", calculator: false },
-    { q: "Use A = ½bh to find A when b = 8 and h = 6", a: "24", type: "number", calculator: false },
-    { q: "The formula for speed is s = d/t. Find s when d = 150 and t = 3.", a: "50", type: "number", calculator: false },
-    { q: "Use C = 2πr to find C when r = 7 (give answer in terms of π)", a: "14π", type: "text", calculator: false },
-  ],
-  A7: [
-    { q: "A function machine does: input → ×3 → +2 → output. If input is 5, what is output?", a: "17", type: "number", calculator: false },
-    { q: "A function machine does: input → -4 → ×2 → output. If input is 10, what is output?", a: "12", type: "number", calculator: false },
-    { q: "A function machine gives output 20. It does: input → ×4 → +8 → output. Find the input.", a: "3", type: "number", calculator: false },
-    { q: "Which function machine gives y = 2x + 1?", type: "mcq", options: ["×2 then +1", "+1 then ×2", "×1 then +2", "+2 then ×1"], a: "×2 then +1", calculator: false },
-  ],
-  A13: [
-    { q: "What are the coordinates of point A at 3 along and 5 up?", a: "(3, 5)", type: "text", calculator: false },
-    { q: "Find the midpoint of (2, 4) and (6, 8)", a: "(4, 6)", type: "text", calculator: false },
-    { q: "Find the midpoint of (0, 3) and (4, 7)", a: "(2, 5)", type: "text", calculator: false },
-    { q: "Point P is at (-3, 4). Which quadrant is P in?", type: "mcq", options: ["1st", "2nd", "3rd", "4th"], a: "2nd", calculator: false },
-  ],
-  A15: [
-    { q: "A quadratic has roots x = 2 and x = 6. What is the x-coordinate of the turning point?", a: "4", type: "number", calculator: false },
-    { q: "A parabola crosses the x-axis at x = -1 and x = 5. Find the x-coordinate of the vertex.", a: "2", type: "number", calculator: false },
-    { q: "The turning point x-coordinate is halfway between the roots. If roots are x = 0 and x = 8, find it.", a: "4", type: "number", calculator: false },
-    { q: "A quadratic has roots at x = -3 and x = 1. The turning point x-coordinate is:", type: "mcq", options: ["-3", "-1", "0", "1"], a: "-1", calculator: false },
-  ],
-  A21: [
-    { q: "Write as an inequality: x is greater than 5", a: "x > 5", type: "text", calculator: false },
-    { q: "Write as an inequality: y is at most 10", a: "y ≤ 10", type: "text", calculator: false },
-    { q: "Solve the inequality 3x + 1 < 10", a: "x < 3", type: "text", calculator: false },
-    { q: "n is an integer where -2 < n ≤ 3. List all possible values of n.", a: "-1, 0, 1, 2, 3", type: "text", calculator: false },
-  ],
-  A24: [
-    { q: "What is the next term in: 1, 1, 2, 3, 5, 8, ...?", a: "13", type: "number", calculator: false, hint: "Fibonacci - add the previous two terms" },
-    { q: "What is the next term in: 1, 4, 9, 16, 25, ...?", a: "36", type: "number", calculator: false, hint: "Square numbers" },
-    { q: "What is the next term in: 1, 3, 6, 10, 15, ...?", a: "21", type: "number", calculator: false, hint: "Triangular numbers - add 1 more each time" },
-    { q: "What is the next triangular number after 10?", a: "15", type: "number", calculator: false },
-  ],
-
-  // Ratio
-  R3: [
-    { q: "Work out 2/5 of 35", a: "14", type: "number", calculator: false },
-    { q: "Find 3/8 of 56", a: "21", type: "number", calculator: false },
-    { q: "What is 1/4 of 84?", type: "mcq", options: ["16", "20", "21", "24"], a: "21", calculator: false },
-    { q: "Find 5/6 of 42", a: "35", type: "number", calculator: false },
-  ],
-  R4: [
-    { q: "Simplify the ratio 12:18", a: "2:3", type: "text", calculator: false },
-    { q: "Write 3:5 in the form 1:n", a: "1:1.67", type: "text", hint: "Round to 2 d.p.", calculator: true },
-    { q: "Simplify 24:36", type: "mcq", options: ["2:3", "4:6", "12:18", "3:4"], a: "2:3", calculator: false },
-    { q: "Share £60 in the ratio 2:3", a: "£24 and £36", type: "text", calculator: false },
-  ],
-  R9: [
-    { q: "Express 45 as a percentage of 180", a: "25", type: "number", calculator: true },
-    { q: "What is 12 as a percentage of 60?", type: "mcq", options: ["12%", "15%", "20%", "25%"], a: "20%", calculator: true },
-    { q: "Express 18 as a percentage of 72", a: "25", type: "number", calculator: true },
-    { q: "What is 35 as a percentage of 140?", a: "25", type: "number", calculator: true },
-  ],
-  R10: [
-    { q: "A price increases from £80 to £92. Find the percentage increase.", a: "15", type: "number", calculator: true },
-    { q: "A value decreases from 50 to 40. What is the percentage decrease?", type: "mcq", options: ["10%", "15%", "20%", "25%"], a: "20%", calculator: true },
-    { q: "A house price rises from £200,000 to £230,000. Find the percentage increase.", a: "15", type: "number", calculator: true },
-    { q: "A car value drops from £12,000 to £9,000. Find the percentage decrease.", a: "25", type: "number", calculator: true },
-  ],
-  R12: [
-    { q: "After a 20% decrease, a price is £64. What was the original price?", a: "80", type: "number", calculator: true },
-    { q: "After a 25% increase, a price is £100. What was the original?", a: "80", type: "number", calculator: true },
-    { q: "A sale item is £45 after a 10% reduction. What was the original price?", a: "50", type: "number", calculator: true },
-    { q: "After a 15% increase, a price is £230. What was the original?", type: "mcq", options: ["£195.50", "£200", "£210", "£215"], a: "£200", calculator: true },
-  ],
-  R2: [
-    { q: "On a map, the scale is 1 cm : 5 km. Two towns are 6 cm apart on the map. What is the actual distance in km?", a: "30", type: "number", calculator: true, diagram: "scale-map-towns" },
-    { q: "A model car is made at scale 1:50. The real car is 4 metres long. How long is the model in cm?", a: "8", type: "number", calculator: true },
-    { q: "A map has scale 1:25000. Two points are 8 cm apart on the map. What is the real distance in km?", a: "2", type: "number", calculator: true },
-    { q: "A plan is drawn at scale 1:200. A room is 6 cm long on the plan. What is the actual length in metres?", a: "12", type: "number", calculator: true },
-    { q: "The scale on a map is 1 cm : 2 km. What is this as a ratio?", type: "mcq", options: ["1:200", "1:2000", "1:20000", "1:200000"], a: "1:200000", calculator: false },
-  ],
-  R1: [
-    { q: "Convert 2.5 km to metres", a: "2500", type: "number", calculator: false },
-    { q: "Convert 450 cm to metres", a: "4.5", type: "number", calculator: false },
-    { q: "How many grams in 3.2 kg?", type: "mcq", options: ["32", "320", "3200", "32000"], a: "3200", calculator: false },
-    { q: "Convert 180 minutes to hours", a: "3", type: "number", calculator: false },
-  ],
-  R5: [
-    { q: "For every 3 red sweets there are 5 blue sweets. If there are 12 red sweets, how many blue?", a: "20", type: "number", calculator: false },
-    { q: "The ratio of boys to girls is 2:3. There are 10 boys. How many girls?", a: "15", type: "number", calculator: false },
-    { q: "For every £2 Tom saves, Amy saves £5. Tom saves £8. How much does Amy save?", a: "20", type: "number", calculator: false },
-    { q: "Purple paint is made with red and blue in ratio 3:7. I use 9 litres of red. How much blue?", type: "mcq", options: ["7 litres", "14 litres", "21 litres", "28 litres"], a: "21 litres", calculator: false },
-  ],
-  R6: [
-    { q: "Write 15 ÷ 20 as a ratio in simplest form", a: "3:4", type: "text", calculator: false },
-    { q: "The ratio 2:5 means dividing in the proportion:", type: "mcq", options: ["2 ÷ 5", "2 out of 5", "2 out of 7", "5 out of 7"], a: "2 out of 7", calculator: false },
-    { q: "Express the ratio 1:4 as a fraction (smaller part)", a: "1/5", type: "text", calculator: false },
-    { q: "Write 12:18 as a division", a: "12 ÷ 18 or 2 ÷ 3", type: "text", calculator: false },
-  ],
-  R7: [
-    { q: "5 pens cost £3. How much do 8 pens cost?", a: "4.80", type: "number", calculator: true },
-    { q: "3 workers take 12 days to complete a job. How long would 4 workers take?", a: "9", type: "number", calculator: false, hint: "Inverse proportion" },
-    { q: "If 4 apples cost £1.20, how much do 10 apples cost?", a: "3", type: "number", calculator: true },
-    { q: "y is directly proportional to x. When x = 4, y = 20. Find y when x = 7.", a: "35", type: "number", calculator: false },
-  ],
-  R8: [
-    { q: "In a ratio 2:3, what fraction is the first part?", a: "2/5", type: "text", calculator: false },
-    { q: "The ratio of flour to sugar is 3:1. What fraction of the mixture is flour?", a: "3/4", type: "text", calculator: false },
-    { q: "A line goes through (0,0) and (2,6). What is the ratio x:y?", a: "1:3", type: "text", calculator: false },
-    { q: "The ratio a:b = 4:5. Write a as a fraction of b.", a: "4/5", type: "text", calculator: false },
-  ],
-  R11: [
-    { q: "A TV was £400, now £340. What is the percentage decrease?", a: "15", type: "number", calculator: true },
-    { q: "Population grew from 5000 to 6500. Find the percentage increase.", a: "30", type: "number", calculator: true },
-    { q: "Which is better value: 20% off £50, or £12 off £50?", type: "mcq", options: ["20% off", "£12 off", "Same"], a: "£12 off", calculator: true },
-    { q: "Shop A sells item for £80 (was £100). Shop B sells same item for £85 (was £110). Which has bigger % discount?", type: "mcq", options: ["Shop A", "Shop B", "Same"], a: "Shop B", calculator: true },
-  ],
-  R14: [
-    { q: "Speed = distance ÷ time. Find speed if distance = 150km and time = 3 hours.", a: "50", type: "number", calculator: false },
-    { q: "Density = mass ÷ volume. Find density when mass = 240g and volume = 30cm³.", a: "8", type: "number", calculator: false },
-    { q: "What are the units of speed if distance is in miles and time is in hours?", type: "mcq", options: ["miles", "hours", "mph", "m/s"], a: "mph", calculator: false },
-    { q: "A car travels 180 miles in 3 hours. What is its average speed?", a: "60", type: "number", calculator: false },
-  ],
-
-  // Geometry
-  G1: [
-    { q: "What is the name of a 7-sided polygon?", type: "mcq", options: ["Hexagon", "Heptagon", "Octagon", "Nonagon"], a: "Heptagon", calculator: false },
-    { q: "How many vertices does a cube have?", a: "8", type: "number", calculator: false },
-    { q: "What type of angle is 135°?", type: "mcq", options: ["Acute", "Right", "Obtuse", "Reflex"], a: "Obtuse", calculator: false },
-    { q: "A line from center to edge of a circle is called a:", type: "mcq", options: ["Diameter", "Chord", "Radius", "Tangent"], a: "Radius", calculator: false },
-  ],
-  G2: [
-    { q: "To construct a 60° angle, you need:", type: "mcq", options: ["Protractor only", "Compass and ruler", "Ruler only", "Set square only"], a: "Compass and ruler", calculator: false },
-    { q: "An angle bisector divides an angle into:", type: "mcq", options: ["Three equal parts", "Two equal parts", "Unequal parts", "Four parts"], a: "Two equal parts", calculator: false },
-    { q: "A perpendicular bisector of a line segment:", type: "mcq", options: ["Goes through one end", "Cuts at 45°", "Cuts at 90° through the midpoint", "Is parallel to it"], a: "Cuts at 90° through the midpoint", calculator: false },
-    { q: "The locus of points equidistant from two fixed points is:", type: "mcq", options: ["A circle", "A straight line", "Two parallel lines", "An arc"], a: "A straight line", calculator: false },
-  ],
-  G3: [
-    { q: "Angles on a straight line sum to how many degrees?", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
-    { q: "Angles around a point sum to how many degrees?", a: "360", type: "number", calculator: false },
-    { q: "Two angles on a straight line are x and 115°. Find x.", a: "65", type: "number", calculator: false },
-    { q: "Vertically opposite angles are:", type: "mcq", options: ["Always equal", "Add to 90°", "Add to 180°", "Add to 360°"], a: "Always equal", calculator: false },
-  ],
-  G4: [
-    { q: "Two parallel lines are cut by a transversal. One angle is 70°. What is the corresponding angle?", a: "70", type: "number", diagram: "parallel", calculator: false },
-    { q: "Alternate angles are:", type: "mcq", options: ["Always equal", "Add to 90°", "Add to 180°", "Never equal"], a: "Always equal", calculator: false },
-    { q: "Co-interior (allied) angles add up to:", type: "mcq", options: ["90°", "180°", "270°", "360°"], a: "180°", calculator: false },
-    { q: "Angle x and angle y are co-interior. If x = 115°, find y.", a: "65", type: "number", calculator: false },
-  ],
-  G5: [
-    { q: "Find the exterior angle of a regular hexagon", a: "60", type: "number", calculator: false },
-    { q: "Find the sum of interior angles of a pentagon", a: "540", type: "number", calculator: false },
-    { q: "What is the interior angle of a regular hexagon?", type: "mcq", options: ["90°", "108°", "120°", "135°"], a: "120°", calculator: false },
-    { q: "A regular polygon has exterior angles of 40°. How many sides does it have?", a: "9", type: "number", calculator: false },
-  ],
-  G6: [
-    { q: "Which quadrilateral has all sides equal and all angles 90°?", type: "mcq", options: ["Rectangle", "Rhombus", "Square", "Parallelogram"], a: "Square", calculator: false },
-    { q: "A rhombus has how many lines of symmetry?", a: "2", type: "number", calculator: false },
-    { q: "Which quadrilateral has exactly one pair of parallel sides?", type: "mcq", options: ["Rectangle", "Parallelogram", "Trapezium", "Kite"], a: "Trapezium", calculator: false },
-    { q: "The diagonals of a rectangle:", type: "mcq", options: ["Are perpendicular", "Are equal length", "Bisect the angles", "Are different lengths"], a: "Are equal length", calculator: false },
-  ],
-  G8: [
-    { q: "Describe the translation from (2, 3) to (5, 7) as a column vector", a: "(3, 4)", type: "text", calculator: false },
-    { q: "A shape is translated by vector (−2, 5). Point (4, 1) moves to:", type: "mcq", options: ["(2, 6)", "(6, 6)", "(2, −4)", "(6, −4)"], a: "(2, 6)", calculator: false },
-    { q: "What is the column vector for 3 left and 2 up?", a: "(-3, 2)", type: "text", calculator: false },
-    { q: "Point A(1, 4) is translated by (5, −3). Find the new coordinates.", a: "(6, 1)", type: "text", calculator: false },
-  ],
-  G9: [
-    { q: "A shape is rotated 90° clockwise about the origin. Point (2, 0) moves to:", type: "mcq", options: ["(0, 2)", "(0, −2)", "(−2, 0)", "(2, 0)"], a: "(0, −2)", calculator: false },
-    { q: "Reflecting in the line y = x swaps:", type: "mcq", options: ["x with -x", "y with -y", "x with y", "Nothing changes"], a: "x with y", calculator: false },
-    { q: "A shape is reflected in the x-axis. Point (3, 5) maps to:", type: "mcq", options: ["(−3, 5)", "(3, −5)", "(−3, −5)", "(5, 3)"], a: "(3, −5)", calculator: false },
-    { q: "What single transformation is the same as two reflections in parallel lines?", type: "mcq", options: ["Rotation", "Translation", "Enlargement", "Reflection"], a: "Translation", calculator: false },
-  ],
-  G11: [
-    { q: "A tangent to a circle meets the radius at:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
-    { q: "An arc is part of a:", type: "mcq", options: ["Diameter", "Radius", "Circumference", "Chord"], a: "Circumference", calculator: false },
-    { q: "A chord divides a circle into:", type: "mcq", options: ["Two semicircles", "A segment and major arc", "Two segments", "A sector"], a: "Two segments", calculator: false },
-    { q: "The angle in a semicircle is:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
-  ],
-  G13: [
-    { q: "A plan view shows a shape from:", type: "mcq", options: ["The front", "The side", "Above", "Below"], a: "Above", calculator: false },
-    { q: "How many faces does a triangular prism have?", a: "5", type: "number", calculator: false },
-    { q: "The front elevation of a cylinder looks like:", type: "mcq", options: ["A circle", "A rectangle", "A triangle", "An oval"], a: "A rectangle", calculator: false },
-    { q: "A cube has how many edges?", a: "12", type: "number", calculator: false },
-  ],
-  G14: [
-    { q: "Find the area of a triangle with base 8cm and height 5cm", a: "20", type: "number", calculator: false },
-    { q: "A triangle has area 24cm² and height 6cm. Find the base.", a: "8", type: "number", calculator: false },
-    { q: "Find the area of a parallelogram with base 12cm and height 7cm", a: "84", type: "number", calculator: false },
-    { q: "A trapezium has parallel sides 6cm and 10cm, and height 4cm. Find the area.", a: "32", type: "number", calculator: false },
-  ],
-  G15: [
-    { q: "Find the area of a circle with radius 5 cm. Give your answer to 1 d.p.", a: "78.5", type: "number", hint: "Use π = 3.14", calculator: true },
-    { q: "Find the circumference of a circle with diameter 10cm (to 1 d.p.)", a: "31.4", type: "number", calculator: true },
-    { q: "The formula for circumference is:", type: "mcq", options: ["πr", "2πr", "πr²", "2πr²"], a: "2πr", calculator: false },
-    { q: "A circle has circumference 20π cm. Find the radius.", a: "10", type: "number", calculator: false },
-  ],
-  G16: [
-    { q: "Find the area of this sector. Give your answer in terms of π.", a: "24π", type: "text", diagram: "sector-60-degrees", calculator: false, hint: "Area = (θ/360) × πr²" },
-    { q: "Find the arc length of this sector. Give your answer in terms of π.", a: "4π", type: "text", diagram: "sector-60-degrees", calculator: false, hint: "Arc length = (θ/360) × 2πr" },
-    { q: "A sector has angle 90° and radius 8cm. Find the area in terms of π.", a: "16π", type: "text", calculator: false },
-    { q: "The formula for arc length is:", type: "mcq", options: ["(θ/360) × πr²", "(θ/360) × 2πr", "(θ/180) × πr", "θ × r"], a: "(θ/360) × 2πr", calculator: false },
-  ],
-  G17: [
-    { q: "Find the volume of this cone. Give your answer in terms of π.", a: "100π", type: "text", diagram: "cone-diagram", calculator: false, hint: "Volume = (1/3)πr²h" },
-    { q: "Find the curved surface area of this cone. Give your answer in terms of π.", a: "65π", type: "text", diagram: "cone-diagram", calculator: false, hint: "Curved SA = πrl where l is slant height" },
-    { q: "The formula for volume of a cone is:", type: "mcq", options: ["πr²h", "(1/2)πr²h", "(1/3)πr²h", "(2/3)πr²h"], a: "(1/3)πr²h", calculator: false },
-  ],
-  G19: [
-    { q: "Find the value of x in this right-angled triangle. Give your answer to 1 decimal place.", a: "19.6", type: "number", diagram: "pythagoras-triangle", calculator: true, hint: "Use Pythagoras: x² + 24² = 31²" },
-    { q: "Find the hypotenuse of a right-angled triangle with sides 3 cm and 4 cm", a: "5", type: "number", diagram: "pythagoras", calculator: false },
-    { q: "A right triangle has hypotenuse 13 and one side 5. Find the other side.", a: "12", type: "number", calculator: true },
-    { q: "In Pythagoras' theorem a² + b² = c², c is:", type: "mcq", options: ["Any side", "The shortest side", "The hypotenuse", "The base"], a: "The hypotenuse", calculator: false },
-  ],
-  G20: [
-    { q: "In a right-angled triangle, the opposite side is 4 and the adjacent is 3. Find tan(θ) as a fraction.", a: "4/3", type: "text", diagram: "triangle", calculator: false },
-    { q: "SOH CAH TOA: sin(θ) = ", type: "mcq", options: ["O/A", "A/H", "O/H", "H/O"], a: "O/H", calculator: false },
-    { q: "Find sin(30°)", type: "mcq", options: ["1/2", "√2/2", "√3/2", "1"], a: "1/2", calculator: false },
-    { q: "In a right-angled triangle, the hypotenuse is 10 and the adjacent is 8. Find cos(θ) as a decimal.", a: "0.8", type: "number", calculator: false },
-  ],
-  
-  // Probability
-  P1: [
-    { q: "A coin is flipped 20 times. Heads appears 12 times. What is the experimental probability of heads as a decimal?", a: "0.6", type: "number", calculator: false },
-    { q: "A dice is rolled 50 times. Which table best records the outcomes?", type: "mcq", options: ["List of all 50 numbers", "Tally chart with frequency", "Bar chart", "Pie chart"], a: "Tally chart with frequency", calculator: false },
-    { q: "In an experiment, a spinner lands on red 15 times out of 60 spins. What is the relative frequency of red?", a: "0.25", type: "number", calculator: false },
-    { q: "Why do we record experimental outcomes in a table?", type: "mcq", options: ["It looks neat", "To spot patterns and calculate probabilities", "The teacher said so", "It's faster"], a: "To spot patterns and calculate probabilities", calculator: false },
-  ],
-  P2: [
-    { q: "A dice has faces 1,1,1,2,2,3. What is P(rolling a 1)?", type: "mcq", options: ["1/6", "1/3", "1/2", "2/3"], a: "1/2", calculator: false },
-    { q: "For a fair spinner with 5 equal sections, P(any section) = ", a: "0.2", type: "number", calculator: false },
-    { q: "A coin is fair. What is P(heads)?", type: "mcq", options: ["0.25", "0.5", "0.75", "1"], a: "0.5", calculator: false },
-    { q: "Which would make an experiment unfair?", type: "mcq", options: ["Using a normal dice", "Flipping a coin", "Using a weighted dice", "Drawing from a shuffled deck"], a: "Using a weighted dice", calculator: false },
-  ],
-  P3: [
-    { q: "A spinner lands on blue 18 times in 60 spins. What is the relative frequency of blue?", a: "0.3", type: "number", calculator: false },
-    { q: "After 100 trials, an event occurred 35 times. Estimate the probability.", a: "0.35", type: "number", calculator: false },
-    { q: "Relative frequency = ", type: "mcq", options: ["Total trials ÷ successes", "Successes ÷ total trials", "Successes × total trials", "Total - successes"], a: "Successes ÷ total trials", calculator: false },
-    { q: "As the number of trials increases, relative frequency gets closer to:", type: "mcq", options: ["Zero", "One", "Theoretical probability", "Infinity"], a: "Theoretical probability", calculator: false },
-  ],
-  P4: [
-    { q: "The probability of rain is 0.3. What is the probability of no rain?", a: "0.7", type: "text", calculator: false },
-    { q: "P(A) = 0.45. What is P(not A)?", type: "mcq", options: ["0.45", "0.55", "0.65", "1.45"], a: "0.55", calculator: false },
-    { q: "P(winning) = 1/5. Find P(not winning) as a fraction.", a: "4/5", type: "text", calculator: false },
-    { q: "Events A and B are mutually exclusive. P(A) = 0.3, P(B) = 0.4. Find P(A or B).", a: "0.7", type: "number", calculator: false },
-  ],
-  P5: [
-    { q: "An event is certain to happen. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "2"], a: "1", calculator: false },
-    { q: "An event is impossible. Its probability is:", type: "mcq", options: ["0", "0.5", "1", "-1"], a: "0", calculator: false },
-    { q: "P(event) = 0.75. Describe this likelihood:", type: "mcq", options: ["Impossible", "Unlikely", "Evens", "Likely"], a: "Likely", calculator: false },
-    { q: "Put in order from least to most likely:", type: "order", items: ["P=0.8", "P=0.2", "P=0.5", "P=0.95"], correctOrder: ["P=0.2", "P=0.5", "P=0.8", "P=0.95"], calculator: false },
-  ],
-  P7: [
-    { q: "Two coins are flipped. List all possible outcomes.", a: "HH, HT, TH, TT", type: "text", calculator: false },
-    { q: "A dice is rolled and a coin is flipped. How many possible outcomes?", a: "12", type: "number", calculator: false },
-    { q: "Two dice are rolled. How many ways can you get a total of 7?", a: "6", type: "number", calculator: false },
-    { q: "From cards A, B, C, how many ways can you pick 2 in order?", type: "mcq", options: ["3", "6", "9", "12"], a: "6", calculator: false },
-  ],
-  P8: [
-    { q: "Using the tree diagram, find the probability of getting two gold cards. Give your answer as a decimal.", a: "0.0025", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "Multiply along the branches: 0.05 × 0.05" },
-    { q: "Using the tree diagram, find P(at least one gold card). Give your answer as a decimal.", a: "0.0975", type: "number", diagram: "tree-diagram-gold", calculator: true, hint: "P(at least one) = 1 - P(none)" },
-    { q: "A bag has 3 red and 2 blue balls. One is picked and replaced, then another is picked. Find P(both red) as a fraction.", a: "9/25", type: "text", calculator: false },
-    { q: "Two coins are flipped. P(both heads) = ", type: "mcq", options: ["1/2", "1/3", "1/4", "1/8"], a: "1/4", calculator: false },
-  ],
-  
-  // Statistics
-  S1: [
-    { q: "Which sampling method picks names from a hat?", type: "mcq", options: ["Systematic", "Random", "Stratified", "Quota"], a: "Random", calculator: false },
-    { q: "A survey only asks people in a shopping centre. This is:", type: "mcq", options: ["Random sampling", "Stratified sampling", "Biased sampling", "Systematic sampling"], a: "Biased sampling", calculator: false },
-    { q: "To get a representative sample of a school, you should:", type: "mcq", options: ["Ask your friends", "Ask one class", "Sample from each year group", "Ask teachers only"], a: "Sample from each year group", calculator: false },
-    { q: "Why might an online survey about internet usage be biased?", type: "mcq", options: ["It's free", "Only internet users respond", "It's anonymous", "It's quick"], a: "Only internet users respond", calculator: false },
-  ],
-  S2: [
-    { q: "The pie chart shows votes in an election. Amy received 162°. If 180 people voted in total, how many voted for Amy?", a: "81", type: "number", diagram: "pie-chart-talent", calculator: true, hint: "162° out of 360° represents what fraction?" },
-    { q: "What fraction of the total votes did Amy receive? Give your answer in simplest form.", a: "9/20", type: "text", diagram: "pie-chart-talent", calculator: false },
-    { q: "Reading a pie chart: 90° represents what fraction of the total?", type: "mcq", options: ["1/2", "1/3", "1/4", "1/5"], a: "1/4", calculator: false },
-    { q: "In a pie chart, 45 people are represented by 90°. How many degrees represent 60 people?", a: "120", type: "number", calculator: false },
-  ],
-  S3: [
-    { q: "In a pie chart, how many degrees represent the whole?", a: "360", type: "number", calculator: false },
-    { q: "25% of data in a pie chart is represented by:", type: "mcq", options: ["25°", "45°", "90°", "180°"], a: "90°", calculator: false },
-    { q: "40 people out of 120 chose 'red'. What angle represents 'red' on a pie chart?", a: "120", type: "number", calculator: false },
-    { q: "A pie chart sector is 72°. What percentage of the total is this?", a: "20", type: "number", calculator: false },
-  ],
-  S4: [
-    { q: "On a distance-time graph, a steeper line means:", type: "mcq", options: ["Slower speed", "Faster speed", "Stopped", "Going backwards"], a: "Faster speed", calculator: false },
-    { q: "A horizontal line on a distance-time graph means:", type: "mcq", options: ["Moving fast", "Moving slowly", "Stationary", "Accelerating"], a: "Stationary", calculator: false },
-    { q: "The gradient of a distance-time graph gives:", type: "mcq", options: ["Distance", "Time", "Speed", "Acceleration"], a: "Speed", calculator: false },
-    { q: "On a graph, the rate of change is found by:", type: "mcq", options: ["Reading the y-axis", "Reading the x-axis", "Drawing a tangent and finding its gradient", "Adding coordinates"], a: "Drawing a tangent and finding its gradient", calculator: false },
-  ],
-  S5: [
-    { q: "Find the mean of: 4, 7, 9, 12, 8", a: "8", type: "number", calculator: true },
-    { q: "Find the median of: 3, 7, 2, 9, 5", a: "5", type: "number", calculator: false },
-    { q: "Find the range of: 4, 8, 2, 11, 5", a: "9", type: "number", calculator: false },
-    { q: "The mode is:", type: "mcq", options: ["The middle value", "The most common value", "The average", "The difference"], a: "The most common value", calculator: false },
-  ],
-
-  // Algebra with diagrams
-  A9: [
-    { q: "Points A, B and C lie on a straight line. Find the gradient of the line.", a: "-2", type: "number", diagram: "linear-graph-abc", calculator: false, hint: "Use gradient = change in y ÷ change in x" },
-    { q: "Find the y-intercept of the line through A, B and C.", a: "-1", type: "number", diagram: "linear-graph-abc", calculator: false },
-    { q: "A straight line has gradient 3 and passes through (0, 2). Find its equation.", a: "y = 3x + 2", type: "text", calculator: false },
-    { q: "What is the gradient of y = 5x - 3?", type: "mcq", options: ["5", "-3", "3", "-5"], a: "5", calculator: false },
-  ],
-  A26: [
-    { q: "A circle has centre O at the origin. Point (0, 6) lies on the circle. What is the equation of the circle?", a: "x² + y² = 36", type: "text", diagram: "circle-equation", calculator: false },
-    { q: "The point (3, 4) lies on a circle centred at the origin. Find the radius.", a: "5", type: "number", calculator: false, hint: "Use r² = x² + y²" },
-    { q: "Which point lies on the circle x² + y² = 25?", type: "mcq", options: ["(3, 3)", "(4, 3)", "(3, 4)", "(4, 4)"], a: "(3, 4)", calculator: false },
-    { q: "A circle has equation x² + y² = 100. What is its radius?", a: "10", type: "number", calculator: false },
-  ],
-
-  // Geometry with diagrams
-  G7: [
-    { q: "Describe fully the single transformation that maps shape A onto shape B.", a: "Rotation 180° about the origin", type: "text", diagram: "transformation-grid", calculator: false },
-    { q: "Which transformation keeps the shape the same size?", type: "mcq", options: ["Enlargement", "Rotation", "Stretch", "Scale factor 2"], a: "Rotation", calculator: false },
-    { q: "A shape is reflected in the y-axis. Point (3, 5) maps to:", type: "mcq", options: ["(-3, 5)", "(3, -5)", "(-3, -5)", "(5, 3)"], a: "(-3, 5)", calculator: false },
-    { q: "A shape is rotated 90° clockwise about the origin. Point (2, 3) maps to:", type: "mcq", options: ["(3, -2)", "(-3, 2)", "(3, 2)", "(-2, -3)"], a: "(3, -2)", calculator: false },
-  ],
-
-  // Probability with diagrams
-  P6: [
-    { q: "In a group of 30 students, 18 study German (G), 15 study Latin (L), and 8 study both. How many study neither?", a: "5", type: "number", diagram: "venn-diagram-gl", calculator: false, hint: "Use: n(G∪L) = n(G) + n(L) - n(G∩L)" },
-    { q: "Using the Venn diagram context: Find the number who study German only.", a: "10", type: "number", diagram: "venn-diagram-gl", calculator: false },
-    { q: "In a Venn diagram, the intersection shows:", type: "mcq", options: ["Neither A nor B", "A or B", "A and B", "Only A"], a: "A and B", calculator: false },
-    { q: "50 people were surveyed. 32 like tea, 28 like coffee, 15 like both. How many like neither?", a: "5", type: "number", calculator: false },
-  ],
-
-  // ========== HIGHER TIER OBJECTIVES ==========
-
-  // Number - Higher
-  N9: [
-    { q: "Simplify: 8^(2/3)", a: "4", type: "number", calculator: false, hint: "8^(2/3) = (³√8)² = 2² = 4" },
-    { q: "Simplify: 27^(-1/3)", a: "1/3", type: "text", calculator: false },
-    { q: "What is 16^(3/4)?", type: "mcq", options: ["8", "12", "64", "4"], a: "8", calculator: false },
-    { q: "Simplify: 5^(-2)", a: "1/25", type: "text", calculator: false },
-  ],
-
-  // Algebra - Higher
-  A8: [
-    { q: "Is 2(x + 3) = 2x + 6 an equation or identity?", type: "mcq", options: ["Equation", "Identity"], a: "Identity", calculator: false },
-    { q: "Which is an identity?", type: "mcq", options: ["x² = 9", "x² - 9 = (x+3)(x-3)", "x² = x + 6", "2x = 10"], a: "x² - 9 = (x+3)(x-3)", calculator: false },
-    { q: "An identity is true for:", type: "mcq", options: ["One value of x", "Two values of x", "All values of x", "No values of x"], a: "All values of x", calculator: false },
-    { q: "Which of these is an identity?", type: "mcq", options: ["2x + 1 = 7", "(x + 1)² ≡ x² + 2x + 1", "x² = 9", "3x - 2 = x + 4"], a: "(x + 1)² ≡ x² + 2x + 1", calculator: false },
-  ],
-  A10: [
-    { q: "Prove that (n+1)² - n² is always odd", a: "= 2n + 1, which is always odd", type: "text", calculator: false },
-    { q: "The sum of any two consecutive integers is:", type: "mcq", options: ["Always even", "Always odd", "Sometimes even", "A multiple of 4"], a: "Always odd", calculator: false },
-    { q: "If n is even, what is n² + n?", type: "mcq", options: ["Always even", "Always odd", "Could be either"], a: "Always even", calculator: false },
-    { q: "Prove the sum of 3 consecutive integers is divisible by 3", a: "n + (n+1) + (n+2) = 3n + 3 = 3(n+1)", type: "text", calculator: false },
-  ],
-  A11: [
-    { q: "If f(x) = 2x + 3, find f⁻¹(x)", a: "(x - 3)/2", type: "text", calculator: false },
-    { q: "The inverse of 'multiply by 4 then add 5' is:", type: "mcq", options: ["Subtract 5 then divide by 4", "Divide by 4 then subtract 5", "Add 5 then multiply by 4", "Subtract 4 then divide by 5"], a: "Subtract 5 then divide by 4", calculator: false },
-    { q: "If f(x) = x² for x ≥ 0, find f⁻¹(25)", a: "5", type: "number", calculator: false },
-    { q: "If g(x) = 3x - 1, what is g⁻¹(8)?", a: "3", type: "number", calculator: false },
-  ],
-  A12: [
-    { q: "f(x) = 2x + 1, g(x) = x². Find fg(3)", a: "19", type: "number", calculator: false, hint: "fg(3) = f(g(3)) = f(9) = 19" },
-    { q: "f(x) = x + 3, g(x) = 2x. Find gf(5)", a: "16", type: "number", calculator: false },
-    { q: "f(x) = x², g(x) = x + 1. What is fg(x)?", type: "mcq", options: ["x² + 1", "(x + 1)²", "x² + x", "2x²"], a: "(x + 1)²", calculator: false },
-    { q: "f(x) = 3x, g(x) = x - 2. Find gf(4) - fg(4)", a: "4", type: "number", calculator: false },
-  ],
-  A16: [
-    { q: "Where does y = x³ cross the y-axis?", a: "(0, 0)", type: "text", calculator: false },
-    { q: "The graph y = x³ - 8 crosses the x-axis at:", type: "mcq", options: ["x = 0", "x = 2", "x = 8", "x = -2"], a: "x = 2", calculator: false },
-    { q: "How many turning points does a cubic graph have at most?", type: "mcq", options: ["0", "1", "2", "3"], a: "2", calculator: false },
-    { q: "Sketch y = x³ passes through which quadrants?", type: "mcq", options: ["1 and 3", "2 and 4", "1 and 2", "All four"], a: "1 and 3", calculator: false },
-  ],
-  A20: [
-    { q: "Using xₙ₊₁ = (xₙ + 5/xₙ)/2 with x₀ = 2, find x₁", a: "2.25", type: "number", calculator: true },
-    { q: "The iteration xₙ₊₁ = 3 + 1/xₙ with x₀ = 3 gives x₁ =", type: "mcq", options: ["3.33", "3.5", "4", "3.25"], a: "3.33", calculator: true },
-    { q: "What does iteration help us find?", type: "mcq", options: ["Exact solutions", "Approximate solutions", "Factors", "Graphs"], a: "Approximate solutions", calculator: false },
-    { q: "Using xₙ₊₁ = √(10 - xₙ) with x₀ = 3, find x₂ to 2dp", a: "2.83", type: "number", calculator: true },
-  ],
-  A22: [
-    { q: "Solve: 3x - 7 > 5", a: "x > 4", type: "text", calculator: false },
-    { q: "Solve: 2x + 1 ≤ 9", a: "x ≤ 4", type: "text", calculator: false },
-    { q: "If -3 < x ≤ 2 and x is an integer, list all values", a: "-2, -1, 0, 1, 2", type: "text", calculator: false },
-    { q: "Solve: 4 < 2x + 6 < 12", a: "-1 < x < 3", type: "text", calculator: false },
-  ],
-  A25: [
-    { q: "Find the nth term of: 2, 6, 12, 20, 30, ...", a: "n² + n", type: "text", calculator: false, hint: "Second difference = 2, so starts with n²" },
-    { q: "The second difference of a quadratic sequence is:", type: "mcq", options: ["Always 0", "Always constant", "Always 2", "Variable"], a: "Always constant", calculator: false },
-    { q: "Find the nth term of: 1, 4, 9, 16, 25, ...", a: "n²", type: "text", calculator: false },
-    { q: "Find the 10th term of the sequence with nth term n² + 3n", a: "130", type: "number", calculator: false },
-  ],
-
-  // Ratio - Higher
-  R13: [
-    { q: "y is directly proportional to x². When x = 2, y = 12. Find y when x = 5.", a: "75", type: "number", calculator: false },
-    { q: "y is inversely proportional to x. When x = 4, y = 6. Find y when x = 8.", a: "3", type: "number", calculator: false },
-    { q: "If A ∝ r², and A = 50 when r = 5, find A when r = 7.", a: "98", type: "number", calculator: false },
-    { q: "P is inversely proportional to √Q. P = 8 when Q = 9. Find P when Q = 16.", a: "6", type: "number", calculator: false },
-  ],
-  R15: [
-    { q: "Two similar shapes have lengths in ratio 2:3. What is the ratio of their areas?", a: "4:9", type: "text", calculator: false },
-    { q: "Two similar solids have surface areas in ratio 4:9. What is the ratio of their volumes?", a: "8:27", type: "text", calculator: false },
-    { q: "A model is 1:50 scale. The real car is 4m long. The model's surface area is 0.032m². What is the real car's surface area?", a: "80", type: "number", calculator: true },
-    { q: "Similar cones have volumes 64cm³ and 27cm³. The larger has height 12cm. Find the smaller's height.", a: "9", type: "number", calculator: false },
-  ],
-  R16: [
-    { q: "£5000 is invested at 3% compound interest per year. Find the value after 2 years.", a: "5304.50", type: "number", calculator: true },
-    { q: "A car depreciates by 15% per year. It cost £12000. Find its value after 3 years (to nearest £).", a: "7370", type: "number", calculator: true },
-    { q: "A population of 10000 grows by 5% each year. After how many years will it exceed 12000?", type: "mcq", options: ["3", "4", "5", "6"], a: "4", calculator: true },
-    { q: "The formula for compound interest is:", type: "mcq", options: ["P(1 + r)ⁿ", "P + Prn", "P × r × n", "P/(1 + r)ⁿ"], a: "P(1 + r)ⁿ", calculator: false },
-  ],
-
-  // Geometry - Higher
-  G10: [
-    { q: "A shape is enlarged from 12cm to 8cm. What is the scale factor?", a: "2/3", type: "text", calculator: false },
-    { q: "Scale factor -2 means:", type: "mcq", options: ["Enlarge by 2", "Reduce by half", "Enlarge by 2 and rotate 180°", "Reflect and double"], a: "Enlarge by 2 and rotate 180°", calculator: false },
-    { q: "A shape is enlarged SF 3 from centre (1, 2). Point (3, 4) maps to:", a: "(7, 8)", type: "text", calculator: false },
-    { q: "Two similar triangles have sides 6cm and 9cm. What is the scale factor?", a: "3/2", type: "text", calculator: false },
-  ],
-  G12: [
-    { q: "Angle in a semicircle is always:", type: "mcq", options: ["45°", "60°", "90°", "180°"], a: "90°", calculator: false },
-    { q: "Angles in the same segment are:", type: "mcq", options: ["Supplementary", "Equal", "Complementary", "Different"], a: "Equal", calculator: false },
-    { q: "The angle at the centre is _____ the angle at the circumference", type: "mcq", options: ["Half", "Equal to", "Twice", "Three times"], a: "Twice", calculator: false },
-    { q: "A tangent meets a radius at:", type: "mcq", options: ["45°", "60°", "90°", "Any angle"], a: "90°", calculator: false },
-  ],
-  G18: [
-    { q: "Which congruence rule needs two sides and the included angle?", type: "mcq", options: ["SSS", "SAS", "ASA", "RHS"], a: "SAS", calculator: false },
-    { q: "Two triangles have sides 3, 4, 5 and 3, 4, 5. They are congruent by:", type: "mcq", options: ["SSS", "SAS", "ASA", "AAS"], a: "SSS", calculator: false },
-    { q: "RHS applies only to:", type: "mcq", options: ["All triangles", "Isosceles triangles", "Right-angled triangles", "Equilateral triangles"], a: "Right-angled triangles", calculator: false },
-    { q: "If △ABC ≅ △DEF by SAS, which angle must be between the two sides?", type: "mcq", options: ["Any angle", "The largest angle", "The included angle", "The smallest angle"], a: "The included angle", calculator: false },
-  ],
-  G21: [
-    { q: "What is sin 30°?", a: "1/2", type: "text", calculator: false },
-    { q: "What is cos 60°?", a: "1/2", type: "text", calculator: false },
-    { q: "What is tan 45°?", a: "1", type: "number", calculator: false },
-    { q: "sin 90° = ", type: "mcq", options: ["0", "1/2", "√2/2", "1"], a: "1", calculator: false },
-  ],
-  G22: [
-    { q: "In triangle ABC, a = 8cm, angle A = 40°, angle B = 60°. Find b (to 1dp).", a: "10.8", type: "number", calculator: true, hint: "Use sine rule: a/sinA = b/sinB" },
-    { q: "The sine rule is used when you know:", type: "mcq", options: ["Three sides", "Two sides and included angle", "A side and opposite angle", "All angles"], a: "A side and opposite angle", calculator: false },
-    { q: "In sine rule, a/sin A = ", type: "mcq", options: ["b/sin B", "b × sin B", "sin B/b", "a × sin A"], a: "b/sin B", calculator: false },
-    { q: "Find angle B if a = 10, b = 15, angle A = 30°", a: "48.6", type: "number", calculator: true },
-  ],
-  G23: [
-    { q: "Find the area of a triangle with sides 7cm and 9cm and included angle 50°", a: "24.1", type: "number", calculator: true, hint: "Area = ½ab sin C" },
-    { q: "Area = ½ab sin C requires:", type: "mcq", options: ["Three sides", "Two sides and included angle", "Two angles and a side", "All angles"], a: "Two sides and included angle", calculator: false },
-    { q: "A triangle has sides 8cm and 6cm with included angle 90°. Find the area.", a: "24", type: "number", calculator: false },
-    { q: "Find the area: a = 12, b = 10, C = 30°", a: "30", type: "number", calculator: false, hint: "sin 30° = 0.5" },
-  ],
-  G24: [
-    { q: "If a = (3, 4), find |a| (the magnitude)", a: "5", type: "number", calculator: false },
-    { q: "If a = (2, 5) and b = (3, -1), find a + b", a: "(5, 4)", type: "text", calculator: false },
-    { q: "If a = (4, 2), find 3a", a: "(12, 6)", type: "text", calculator: false },
-    { q: "Find the magnitude of vector (5, 12)", a: "13", type: "number", calculator: false },
-  ],
-  G25: [
-    { q: "If a = (1, 3) and b = (2, -1), find 2a + b", a: "(4, 5)", type: "text", calculator: false },
-    { q: "If a = (3, 1) and b = (-1, 4), find a - b", a: "(4, -3)", type: "text", calculator: false },
-    { q: "OA = a, OB = b. Express AB in terms of a and b.", a: "b - a", type: "text", calculator: false },
-    { q: "If M is midpoint of AB, OM = ", type: "mcq", options: ["a + b", "(a + b)/2", "a - b", "2(a + b)"], a: "(a + b)/2", calculator: false },
-  ],
-
-  // Probability - Higher
-  P9: [
-    { q: "A bag has 4 red and 3 blue balls. Two are drawn without replacement. Find P(both red) as a fraction.", a: "2/7", type: "text", calculator: false },
-    { q: "From 5 cards (1,2,3,4,5), two are picked without replacement. Find P(both even).", a: "1/10", type: "text", calculator: false },
-    { q: "A box has 6 red and 4 blue. Two are taken without replacement. Find P(different colours).", a: "8/15", type: "text", calculator: false },
-    { q: "Without replacement changes probabilities because:", type: "mcq", options: ["Total stays same", "Total decreases", "Probabilities stay same", "Events become independent"], a: "Total decreases", calculator: false },
-  ],
-
-  // Statistics - Higher
-  S6: [
-    { q: "Frequency density = ", type: "mcq", options: ["Frequency × class width", "Frequency ÷ class width", "Class width ÷ frequency", "Frequency + class width"], a: "Frequency ÷ class width", calculator: false },
-    { q: "A histogram bar has width 10 and height (FD) 3. What is the frequency?", a: "30", type: "number", calculator: false },
-    { q: "Class 10-20 has frequency 24. What is the frequency density?", a: "2.4", type: "number", calculator: false },
-    { q: "In a histogram, the area of a bar represents:", type: "mcq", options: ["Class width", "Frequency density", "Frequency", "Midpoint"], a: "Frequency", calculator: false },
-  ],
 };
 
-// Higher tier question bank - harder versions of shared objectives for grades 4-9
-// These replace the foundation questions when the student is on Higher tier
+// Higher tier question bank - to be rewritten
 const higherQuestionBank = {
-  // Number - Higher versions (grades 4-9 difficulty)
-  N1: [
-    { q: "Order from smallest to largest:", type: "order", items: ["3.2 × 10⁻²", "0.03[r]", "0.032", "3.02 × 10⁻²"], correctOrder: ["3.2 × 10⁻²", "0.032", "3.02 × 10⁻²", "0.03[r]"], calculator: false },
-    { q: "Which is largest?", type: "mcq", options: ["0.45[r]6[r]", "0.456", "0.4[r]5[r]6[r]", "0.46"], a: "0.4[r]5[r]6[r]", calculator: false },
-    { q: "Order from smallest to largest:", type: "order", items: ["√0.16", "0.39", "2/5", "0.4[r]"], correctOrder: ["√0.16", "0.39", "2/5", "0.4[r]"], calculator: false },
-    { q: "Order these from smallest to largest:", type: "order", items: ["-0.35", "-3/8", "-0.3[r]", "-0.38"], correctOrder: ["-3/8", "-0.38", "-0.35", "-0.3[r]"], calculator: false },
-    { q: "Put in order from largest to smallest:", type: "order", items: ["7.2 × 10⁻³", "0.072", "7.02 × 10⁻²", "0.007[r]"], correctOrder: ["7.02 × 10⁻²", "0.072", "0.007[r]", "7.2 × 10⁻³"], calculator: false },
-  ],
-  N2: [
-    { q: "Calculate: (-8)² ÷ (-2)³", a: "-8", type: "number", calculator: false },
-    { q: "Work out: 3.6 × 0.25 ÷ 0.09", a: "10", type: "number", calculator: false },
-    { q: "Calculate: -2.4 × (-3.5) + (-1.2)²", a: "9.84", type: "number", calculator: true },
-    { q: "What is (-5)³ ÷ (-5)²?", type: "mcq", options: ["-25", "-5", "5", "25"], a: "-5", calculator: false },
-    { q: "Calculate: 0.125 × 0.8 ÷ 0.04", a: "2.5", type: "number", calculator: false },
-  ],
-  N3: [
-    { q: "What is the reciprocal of 0.25?", type: "mcq", options: ["0.25", "0.75", "4", "-0.25"], a: "4", calculator: false },
-    { q: "What is 24 × 15 ÷ 15 × 3 ÷ 3?", type: "mcq", options: ["24", "72", "8", "360"], a: "24", calculator: false },
-    { q: "What is 2³ + 4 × (5 - 2)² ÷ 6?", type: "mcq", options: ["14", "12", "18", "16"], a: "14", calculator: false },
-    { q: "Which is the reciprocal of 2/3?", type: "mcq", options: ["-2/3", "3/2", "2/3", "-3/2"], a: "3/2", calculator: false },
-    { q: "What is √(16 + 9) × 2 - 3²?", type: "mcq", options: ["1", "3", "-1", "7"], a: "1", calculator: false },
-  ],
-  N4: [
-    { q: "I calculated (2.5)³ = 15.625. Which check confirms this?", type: "mcq", options: ["15.625 ÷ 2.5", "∛15.625", "15.625 × 3", "2.5 × 3"], a: "∛15.625", calculator: false },
-    { q: "Estimate 48.7 × 21.3 by rounding to 1 s.f.", type: "mcq", options: ["900", "1000", "1100", "950"], a: "1000", calculator: false, hint: "Round 48.7 to 50, round 21.3 to 20" },
-    { q: "Which inverse operation checks that √324 = 18?", type: "mcq", options: ["324 ÷ 18", "18²", "18 × 2", "√18"], a: "18²", calculator: false },
-    { q: "I calculated 4.8 ÷ 0.12 = 40. Which calculation verifies this?", type: "mcq", options: ["40 × 0.12", "4.8 × 0.12", "40 - 0.12", "4.8 + 40"], a: "40 × 0.12", calculator: false },
-  ],
-  N5: [
-    { q: "Work out: 2³ + 4² × 3 - 24 ÷ (6 - 2)", a: "50", type: "number", calculator: false },
-    { q: "Calculate: (3² × 2³) ÷ (√36)", a: "12", type: "number", calculator: false },
-    { q: "What is 5 × 2³ - 4² ÷ 2?", type: "mcq", options: ["32", "36", "40", "24"], a: "32", calculator: false },
-    { q: "Calculate: ((8 + 4)² - 6²) ÷ (3² + 3)", a: "9", type: "number", calculator: false },
-    { q: "Work out: 2⁴ - 3 × (5 - 2)² + 1", a: "-10", type: "number", calculator: false },
-  ],
-  N6: [
-    { q: "Calculate: √(3² + 4²)", a: "5", type: "number", calculator: false },
-    { q: "What is 4⁻² as a fraction?", a: "1/16", type: "text", calculator: false },
-    { q: "Calculate: 27^(1/3) × 16^(1/4)", a: "6", type: "number", calculator: false },
-    { q: "Which is equivalent to 8^(2/3)?", type: "mcq", options: ["2", "4", "6", "16"], a: "4", calculator: false },
-    { q: "Calculate: 5⁰ + 5¹ + 5⁻¹", a: "6.2", type: "number", calculator: false },
-    { q: "Put in order from smallest to largest:", type: "order", items: ["√50", "3²", "2⁴", "∛125"], correctOrder: ["∛125", "√50", "3²", "2⁴"], calculator: false },
-  ],
-  N7: [
-    { q: "Find ∛(-64)", a: "-4", type: "number", calculator: false },
-    { q: "Calculate: 4³ - 3⁴", a: "-17", type: "number", calculator: false },
-    { q: "Which value of x satisfies x³ = -125?", type: "mcq", options: ["-5", "5", "-25", "25"], a: "-5", calculator: false },
-    { q: "Work out: ∛1000 × ∛8", a: "20", type: "number", calculator: false },
-    { q: "Calculate: ∛(27/8)", a: "1.5", type: "number", calculator: false },
-  ],
-  N8: [
-    { q: "Find the HCF of 126 and 168 using prime factorisation", a: "42", type: "number", calculator: false },
-    { q: "Two buses leave together. One returns every 18 minutes, one every 24 minutes. When do they next leave together?", a: "72", type: "number", calculator: false, hint: "Answer in minutes" },
-    { q: "The HCF of two numbers is 14. Their LCM is 168. One number is 56. What is the other?", a: "42", type: "number", calculator: false },
-    { q: "Express 360 as a product of prime factors", a: "2³ × 3² × 5", type: "text", calculator: false },
-    { q: "Find the LCM of 15, 20 and 25", a: "300", type: "number", calculator: false },
-  ],
-  N10: [
-    { q: "Write 0.2[r]7[r] as a fraction", a: "3/11", type: "text", calculator: false },
-    { q: "Convert 0.1[r]8[r] to a fraction in simplest form", a: "2/11", type: "text", calculator: false },
-    { q: "Which fraction equals 0.8[r]3[r]?", type: "mcq", options: ["83/99", "83/100", "5/6", "83/90"], a: "5/6", calculator: false },
-    { q: "Express 0.41[r] as a fraction", a: "37/90", type: "text", calculator: false },
-    { q: "Match each recurring decimal to its fraction:", type: "match", leftItems: ["0.1[r]", "0.0[r]9[r]", "0.2[r]", "0.1[r]2[r]"], rightItems: ["1/9", "2/9", "4/33", "1/11"], correctMatches: { "0": 0, "1": 3, "2": 1, "3": 2 }, calculator: false },
-  ],
-  N11: [
-    { q: "Express 45 seconds as a fraction of 2 minutes in simplest form", a: "3/8", type: "text", calculator: false },
-    { q: "A is 20% of B. Express A as a fraction of B.", a: "1/5", type: "text", calculator: false },
-    { q: "Express 750ml as a fraction of 2 litres", a: "3/8", type: "text", calculator: false },
-    { q: "What fraction of 2.5 hours is 45 minutes?", type: "mcq", options: ["3/10", "9/25", "3/8", "18/25"], a: "3/10", calculator: false },
-  ],
-  N12: [
-    { q: "Increase £240 by 15%, then decrease by 10%. What is the final amount?", a: "248.40", type: "number", calculator: true },
-    { q: "After a 12% increase, a price is £336. What was the original price?", a: "300", type: "number", calculator: true },
-    { q: "Find 2/5 of 3/4 of 200", a: "60", type: "number", calculator: false },
-    { q: "A jacket costs £85 after a 15% reduction. What was the original price?", a: "100", type: "number", calculator: true },
-    { q: "Calculate: 3/8 × 2/3 + 1/4", a: "1/2", type: "text", calculator: false },
-  ],
-  N13: [
-    { q: "Convert 0.075 km² to m²", a: "75000", type: "number", calculator: true },
-    { q: "Which is larger: 2500 cm³ or 0.025 m³?", type: "mcq", options: ["2500 cm³", "0.025 m³", "They are equal", "Cannot compare"], a: "0.025 m³", calculator: false },
-    { q: "Convert 4.5 × 10⁻³ km to mm", a: "4500", type: "number", calculator: false },
-    { q: "A tank holds 0.35 m³ of water. How many litres is this?", a: "350", type: "number", calculator: false },
-  ],
-  N14: [
-    { q: "Estimate: (4.92 × 10⁴) × (3.1 × 10⁻²)", a: "1500", type: "number", hint: "Round to 1 s.f.", calculator: false },
-    { q: "Estimate: √(98.7) × 4.1²", a: "160", type: "number", hint: "Round suitably", calculator: false },
-    { q: "The circumference of a circle is 47.3 cm. Estimate the diameter.", a: "15", type: "number", hint: "Use π ≈ 3", calculator: false },
-    { q: "Estimate: 0.49 × 803 ÷ 0.21", a: "2000", type: "number", hint: "Round to 1 s.f.", calculator: false },
-  ],
-  N15: [
-    { q: "Round 0.004567 to 2 significant figures", a: "0.0046", type: "text", calculator: false },
-    { q: "A calculation gives 0.0049876. What is this to 3 s.f.?", a: "0.00499", type: "text", calculator: false },
-    { q: "What is the greatest value that rounds to 4500 to 2 s.f.?", type: "mcq", options: ["4549", "4549.9...", "4500", "4450"], a: "4549.9...", calculator: false },
-    { q: "Round 3456.789 to 4 significant figures", a: "3457", type: "text", calculator: false },
-    { q: "The answer to a calculation is 1.999876. Round to 3 significant figures.", a: "2.00", type: "text", calculator: false },
-  ],
-
-  // Algebra - Higher versions (grades 4-9 difficulty)
-  A1: [
-    { q: "Simplify: 3a²b × 4ab³", a: "12a³b⁴", type: "text", calculator: false },
-    { q: "Simplify: (2x³y²)³", a: "8x⁹y⁶", type: "text", calculator: false },
-    { q: "Which is equivalent to 15p⁴q³ ÷ 3pq²?", type: "mcq", options: ["5p³q", "5p⁴q", "12p³q", "5p³q²"], a: "5p³q", calculator: false },
-    { q: "Simplify: 4x⁻²y³ × 2xy⁻¹", a: "8y²/x", type: "text", calculator: false },
-    { q: "Simplify: (3a²)⁻² × 27a⁴", a: "3", type: "text", calculator: false },
-  ],
-  A2: [
-    { q: "Expand and simplify: (3x + 2)(2x - 5)", a: "6x² - 11x - 10", type: "text", calculator: false },
-    { q: "Expand: (x + 4)² - (x - 2)²", a: "12x + 12", type: "text", calculator: false },
-    { q: "Which is the expansion of (2x - 3)²?", type: "mcq", options: ["4x² - 9", "4x² - 6x + 9", "4x² - 12x + 9", "4x² + 12x + 9"], a: "4x² - 12x + 9", calculator: false },
-    { q: "Expand and simplify: (x + 3)(x - 3)(x + 1)", a: "x³ + x² - 9x - 9", type: "text", calculator: false },
-    { q: "Expand: (2a + b)(a - 3b)", a: "2a² - 5ab - 3b²", type: "text", calculator: false },
-  ],
-  A3: [
-    { q: "Factorise: 6x² - 15xy", a: "3x(2x - 5y)", type: "text", calculator: false },
-    { q: "Factorise completely: 12a³b - 18a²b² + 6ab", a: "6ab(2a² - 3ab + 1)", type: "text", calculator: false },
-    { q: "Which is the fully factorised form of 8p²q - 12pq²?", type: "mcq", options: ["4pq(2p - 3q)", "2pq(4p - 6q)", "4p(2pq - 3q²)", "pq(8p - 12q)"], a: "4pq(2p - 3q)", calculator: false },
-    { q: "Factorise: 3x³y² - 6x²y³ + 9xy²", a: "3xy²(x² - 2xy + 3)", type: "text", calculator: false },
-  ],
-  A4: [
-    { q: "Factorise: x² - 11x + 28", a: "(x - 4)(x - 7)", type: "text", calculator: false },
-    { q: "Factorise: 2x² + 7x - 15", a: "(2x - 3)(x + 5)", type: "text", calculator: false },
-    { q: "Which is the factorisation of 3x² - 10x - 8?", type: "mcq", options: ["(3x + 2)(x - 4)", "(3x - 2)(x + 4)", "(3x + 4)(x - 2)", "(3x - 4)(x + 2)"], a: "(3x + 2)(x - 4)", calculator: false },
-    { q: "Factorise: 6x² - 7x - 20", a: "(2x - 5)(3x + 4)", type: "text", calculator: false },
-    { q: "Factorise: 4x² - 25", a: "(2x + 5)(2x - 5)", type: "text", calculator: false },
-  ],
-  A5: [
-    { q: "Solve: 5(2x - 3) = 3(x + 4) + 1", a: "4", type: "number", calculator: false },
-    { q: "Solve: (x + 5)/3 = (2x - 1)/4", a: "23", type: "number", calculator: false },
-    { q: "Solve: 4 - 3(2x - 1) = 2(5 - x)", a: "-0.75", type: "number", calculator: false },
-    { q: "Which value satisfies 3(2x + 1) - 4(x - 2) = 17?", type: "mcq", options: ["2", "3", "4", "5"], a: "3", calculator: false },
-    { q: "Solve: (3x + 2)/5 - (x - 1)/3 = 2", a: "5.5", type: "number", calculator: true },
-  ],
-  A7: [
-    { q: "Make t the subject: v = u + at", a: "t = (v - u)/a", type: "text", calculator: false },
-    { q: "Make r the subject: A = πr²", a: "r = √(A/π)", type: "text", calculator: false },
-    { q: "Which is x in terms of y when 2x + 3y = 5x - 2?", type: "mcq", options: ["x = (3y + 2)/3", "x = (3y - 2)/3", "x = y + 2", "x = 3y + 2"], a: "x = (3y + 2)/3", calculator: false },
-    { q: "Make a the subject: v² = u² + 2as", a: "a = (v² - u²)/(2s)", type: "text", calculator: false },
-    { q: "Make x the subject: y = (3x + 2)/(x - 1)", a: "x = (y + 2)/(y - 3)", type: "text", calculator: false },
-  ],
-  A13: [
-    { q: "Find the nth term: 5, 11, 17, 23, 29, ...", a: "6n - 1", type: "text", calculator: false },
-    { q: "The nth term is 4n² - 3. What is the 10th term?", a: "397", type: "number", calculator: false },
-    { q: "A sequence has nth term n² + 2n. Which term equals 48?", type: "mcq", options: ["5th", "6th", "7th", "8th"], a: "6th", calculator: false },
-    { q: "Find the nth term: 1, 4, 9, 16, 25, ...", a: "n²", type: "text", calculator: false },
-    { q: "The nth term is 2n² + n. What is term 5 minus term 3?", a: "34", type: "number", calculator: false },
-  ],
-  A14: [
-    { q: "A line passes through (2, 5) and (6, 13). Find its equation.", a: "y = 2x + 1", type: "text", calculator: false },
-    { q: "Find the equation of a line parallel to y = 3x - 2 through (1, 7)", a: "y = 3x + 4", type: "text", calculator: false },
-    { q: "Which line is perpendicular to y = 2x + 1?", type: "mcq", options: ["y = 2x - 3", "y = -2x + 1", "y = -0.5x + 3", "y = 0.5x - 1"], a: "y = -0.5x + 3", calculator: false },
-    { q: "Find where y = 3x - 5 and y = x + 3 intersect", a: "(4, 7)", type: "text", calculator: false },
-    { q: "Find the equation of the perpendicular bisector of (2, 4) and (6, 8)", a: "y = -x + 11", type: "text", calculator: false },
-  ],
-  A15: [
-    { q: "Solve: 3x - 2y = 13 and 2x + y = 4", a: "x = 3, y = -2", type: "text", calculator: false },
-    { q: "Solve: 4x + 3y = 17 and 5x - 2y = 4", a: "x = 2, y = 3", type: "text", calculator: false },
-    { q: "Which pair solves x + 2y = 8 and 3x - y = 3?", type: "mcq", options: ["(2, 3)", "(3, 2)", "(1, 3.5)", "(4, 2)"], a: "(2, 3)", calculator: false },
-    { q: "The sum of two numbers is 15. Their difference is 3. Find both.", a: "9 and 6", type: "text", calculator: false },
-  ],
-  A17: [
-    { q: "Solve: 2x² - 5x - 3 = 0", a: "x = 3 or x = -0.5", type: "text", calculator: false },
-    { q: "Use the quadratic formula: x² + 4x - 2 = 0 (2 d.p.)", a: "x = 0.45 or x = -4.45", type: "text", calculator: true },
-    { q: "Which are the solutions to x² - 5x + 6 = 0?", type: "mcq", options: ["x = 2 and x = 3", "x = -2 and x = -3", "x = 1 and x = 6", "x = -1 and x = -6"], a: "x = 2 and x = 3", calculator: false },
-    { q: "Solve by completing the square: x² + 6x + 5 = 0", a: "x = -1 or x = -5", type: "text", calculator: false },
-  ],
-  A18: [
-    { q: "Solve: x² + 3x = 10 (give both solutions)", a: "x = 2 and x = -5", type: "text", calculator: false },
-    { q: "Solve 2x² + 5x - 3 = 0 using the quadratic formula", type: "mcq", options: ["x = 0.5 and x = -3", "x = -0.5 and x = 3", "x = 1 and x = -1.5", "x = 3 and x = -0.5"], a: "x = 0.5 and x = -3", calculator: true },
-    { q: "Use the quadratic formula: 3x² - 2x - 5 = 0 (2 d.p.)", a: "x = 1.67 or x = -1", type: "text", calculator: true },
-    { q: "Solve by completing the square: x² - 8x + 12 = 0", a: "x = 2 or x = 6", type: "text", calculator: false },
-  ],
-  A21: [
-    { q: "Solve: 3x + 7 ≤ 2x + 12", a: "x ≤ 5", type: "text", calculator: false },
-    { q: "Solve: -2 < 3x + 4 ≤ 13", a: "-2 < x ≤ 3", type: "text", calculator: false },
-    { q: "Which inequality has solution x > 3?", type: "mcq", options: ["2x - 5 > 1", "3x + 2 < 11", "4x - 7 < 5", "5 - x < 2"], a: "2x - 5 > 1", calculator: false },
-    { q: "List the integers n satisfying -3 < 2n ≤ 6", a: "-1, 0, 1, 2, 3", type: "text", calculator: false },
-    { q: "Solve: 5 - 2x ≥ x - 4", a: "x ≤ 3", type: "text", calculator: false },
-  ],
-  A23: [
-    { q: "y is directly proportional to x². When x = 3, y = 36. Find y when x = 5.", a: "100", type: "number", calculator: false },
-    { q: "y is inversely proportional to x. When x = 4, y = 6. Find x when y = 8.", a: "3", type: "number", calculator: false },
-    { q: "If y ∝ x³ and y = 16 when x = 2, what is y when x = 3?", type: "mcq", options: ["36", "48", "54", "72"], a: "54", calculator: false },
-    { q: "F is inversely proportional to d². If F = 100 when d = 2, find F when d = 5.", a: "16", type: "number", calculator: false },
-  ],
-  A24: [
-    { q: "Sketch the graph y = x² - 4x + 3. What are the x-intercepts?", a: "x = 1 and x = 3", type: "text", calculator: false },
-    { q: "For y = (x - 2)(x + 4), what are the coordinates of the minimum?", a: "(-1, -9)", type: "text", calculator: false },
-    { q: "The graph y = x² + bx + c has minimum at (3, -4). Find b and c.", a: "b = -6, c = 5", type: "text", calculator: false },
-    { q: "Which is the turning point of y = x² - 8x + 12?", type: "mcq", options: ["(4, -4)", "(4, 4)", "(-4, -4)", "(-4, 4)"], a: "(4, -4)", calculator: false },
-  ],
-
-  // Ratio, Proportion and Rates of Change - Higher versions
-  R1: [
-    { q: "Express 450g to 1.2kg as a ratio in simplest form", a: "3:8", type: "text", calculator: false },
-    { q: "A map has scale 1:25000. A lake is 3.5 cm on the map. What is its real length in metres?", a: "875", type: "number", calculator: true },
-    { q: "Divide £540 in the ratio 4:5:3", a: "180, 225, 135", type: "text", calculator: false },
-    { q: "The ratio x:y = 5:3. If x + y = 72, what is x - y?", type: "mcq", options: ["12", "15", "18", "21"], a: "18", calculator: false },
-  ],
-  R2: [
-    { q: "A recipe uses 250g flour for 15 biscuits. How much for 24 biscuits?", a: "400", type: "number", calculator: true },
-    { q: "8 workers complete a job in 12 days. How many days for 6 workers?", a: "16", type: "number", calculator: false },
-    { q: "y is inversely proportional to x. If y = 12 when x = 5, find y when x = 15.", a: "4", type: "number", calculator: false },
-    { q: "Which statement is true for inverse proportion?", type: "mcq", options: ["xy = constant", "x/y = constant", "x + y = constant", "x² = y"], a: "xy = constant", calculator: false },
-  ],
-  R3: [
-    { q: "Express 3/8 as a percentage", a: "37.5%", type: "text", calculator: false },
-    { q: "Write 0.0375 as a percentage", a: "3.75%", type: "text", calculator: false },
-    { q: "Which is the smallest?", type: "mcq", options: ["0.37", "38%", "3/8", "0.375"], a: "0.37", calculator: false },
-    { q: "Express 7/40 as a percentage", a: "17.5%", type: "text", calculator: false },
-  ],
-  R4: [
-    { q: "A car depreciates by 15% each year. After 3 years the value is £12,282.50. What was the original price?", a: "20000", type: "number", calculator: true },
-    { q: "Compound interest: £5000 at 3.5% for 4 years. Find the final amount (2 d.p.)", a: "5737.62", type: "number", calculator: true },
-    { q: "A price increases by 20% then decreases by 20%. What is the overall percentage change?", type: "mcq", options: ["0%", "-4%", "+4%", "-2%"], a: "-4%", calculator: false },
-    { q: "An investment grows from £2400 to £2880 in 2 years with compound interest. Find the annual rate.", a: "9.5%", type: "text", calculator: true },
-  ],
-  R5: [
-    { q: "A shop increases prices by 12%. Later it has a 15% sale. What is the overall change?", a: "-4.8%", type: "text", calculator: true },
-    { q: "After a 25% decrease, a coat costs £63. What was the original price?", a: "84", type: "number", calculator: false },
-    { q: "VAT is 20%. A price including VAT is £84. What was the price before VAT?", a: "70", type: "number", calculator: false },
-    { q: "Which calculation finds the original if 15% was added to get £276?", type: "mcq", options: ["276 × 0.85", "276 ÷ 1.15", "276 × 1.15", "276 ÷ 0.85"], a: "276 ÷ 1.15", calculator: false },
-  ],
-  R6: [
-    { q: "A car travels 195 miles using 15 litres of petrol. How many litres for 273 miles?", a: "21", type: "number", calculator: true },
-    { q: "5 identical pipes fill a tank in 4 hours. How long for 8 pipes?", a: "2.5", type: "number", calculator: false },
-    { q: "A car uses fuel at 7.5 litres per 100km. How far on 45 litres?", a: "600", type: "number", calculator: true },
-    { q: "Which represents inverse proportion?", type: "mcq", options: ["y = 2x", "y = 12/x", "y = x + 5", "y = x²"], a: "y = 12/x", calculator: false },
-  ],
-  R7: [
-    { q: "Calculate: 3/8 × 4/9 + 1/6", a: "1/3", type: "text", calculator: false },
-    { q: "Calculate: (2/3)² ÷ 4/9", a: "1", type: "text", calculator: false },
-    { q: "Work out: 2⅓ × 1⅘", a: "4⅕", type: "text", calculator: false },
-    { q: "Which equals 5/6 ÷ 2/3?", type: "mcq", options: ["5/9", "10/9", "1¼", "10/18"], a: "1¼", calculator: false },
-  ],
-  R8: [
-    { q: "A car travels 234km in 2 hours 36 minutes. Find the average speed in km/h.", a: "90", type: "number", calculator: true },
-    { q: "Convert 25 m/s to km/h", a: "90", type: "number", calculator: false },
-    { q: "A train travels at 144 km/h. How many metres does it travel in 5 seconds?", a: "200", type: "number", calculator: false },
-    { q: "Which is the fastest?", type: "mcq", options: ["20 m/s", "70 km/h", "1.2 km/min", "4000 m/min"], a: "1.2 km/min", calculator: false },
-  ],
-  R9: [
-    { q: "A model car is scale 1:24. The real car is 4.8m long. How long is the model in cm?", a: "20", type: "number", calculator: false },
-    { q: "On a 1:50000 map, a path is 8.4cm. What is the real distance in km?", a: "4.2", type: "number", calculator: true },
-    { q: "A model plane uses scale 1:72. Its wingspan is 15cm. What is the real wingspan in metres?", a: "10.8", type: "number", calculator: true },
-    { q: "A map distance of 3cm represents 12km. What is the scale?", type: "mcq", options: ["1:4000", "1:40000", "1:400000", "1:4000000"], a: "1:400000", calculator: false },
-  ],
-  R10: [
-    { q: "The density of gold is 19.3 g/cm³. Find the mass of 15 cm³ of gold.", a: "289.5", type: "number", calculator: true },
-    { q: "A block has density 2.7 g/cm³ and mass 810g. Find its volume.", a: "300", type: "number", calculator: true },
-    { q: "Pressure = Force/Area. A force of 450N acts on 0.03m². Find the pressure in N/m².", a: "15000", type: "number", calculator: true },
-    { q: "Which material is densest?", type: "mcq", options: ["Mass 240g, Vol 80cm³", "Mass 175g, Vol 50cm³", "Mass 320g, Vol 100cm³", "Mass 280g, Vol 70cm³"], a: "Mass 280g, Vol 70cm³", calculator: true },
-  ],
-  R11: [
-    { q: "A gradient of a hill is 1:8. Express this as a percentage.", a: "12.5%", type: "text", calculator: false },
-    { q: "A ramp rises 1.5m over a horizontal distance of 12m. What is the gradient?", a: "1/8", type: "text", calculator: false },
-    { q: "The gradient of a line between (2, 5) and (8, 17) is:", type: "mcq", options: ["1/2", "2", "6", "12"], a: "2", calculator: false },
-    { q: "A ski slope has gradient 0.35. What angle does it make with horizontal? (1 d.p.)", a: "19.3", type: "number", calculator: true, hint: "Use tan" },
-  ],
-  R12: [
-    { q: "A population of 15000 decreases by 4% each year. What is the population after 5 years?", a: "12245", type: "number", calculator: true },
-    { q: "£8000 depreciates by 12% per year. After how many complete years is it first below £5000?", a: "4", type: "number", calculator: true },
-    { q: "A bacteria colony triples every hour. Starting with 500, how many after 4 hours?", a: "40500", type: "number", calculator: true },
-    { q: "An investment of £P grows to £P(1.045)⁵. What annual interest rate is this?", type: "mcq", options: ["4%", "4.5%", "5%", "45%"], a: "4.5%", calculator: false },
-  ],
-  R14: [
-    { q: "A machine produces 720 items in 6 hours. What is the rate per minute?", a: "2", type: "number", calculator: false },
-    { q: "Water flows at 8 litres per minute. How long to fill a 300 litre tank?", a: "37.5", type: "number", calculator: true, hint: "Answer in minutes" },
-    { q: "A printer prints 24 pages per minute. How many seconds per page?", a: "2.5", type: "number", calculator: false },
-    { q: "Which is the best rate?", type: "mcq", options: ["£3.60 for 450g", "£4.50 for 600g", "£5.40 for 750g", "£2.80 for 350g"], a: "£4.50 for 600g", calculator: true },
-  ],
-
-  // Geometry and Measures - Higher versions
-  G1: [
-    { q: "A regular polygon has exterior angle 24°. How many sides?", a: "15", type: "number", calculator: false },
-    { q: "Find angle x in a polygon where angles are x, 2x, 3x, 4x, 5x and the sum is 540°", a: "36", type: "number", calculator: false },
-    { q: "The interior angle of a regular polygon is 156°. How many sides?", type: "mcq", options: ["12", "15", "18", "20"], a: "15", calculator: false },
-    { q: "In a hexagon, 5 angles are each 130°. Find the sixth angle.", a: "70", type: "number", calculator: false },
-  ],
-  G2: [
-    { q: "Draw the net of a triangular prism. How many faces does it have?", a: "5", type: "number", calculator: false },
-    { q: "A net shows 6 identical squares. What 3D shape is formed?", type: "mcq", options: ["Cuboid", "Cube", "Hexagonal prism", "Tetrahedron"], a: "Cube", calculator: false },
-    { q: "How many edges does a pentagonal pyramid have?", a: "10", type: "number", calculator: false },
-    { q: "A shape has 8 vertices and 12 edges. How many faces? (Use Euler's formula)", a: "6", type: "number", calculator: false },
-  ],
-  G3: [
-    { q: "Calculate the area of a trapezium with parallel sides 8cm and 12cm, height 5cm", a: "50", type: "number", calculator: false },
-    { q: "A parallelogram has area 84cm² and base 12cm. Find the perpendicular height.", a: "7", type: "number", calculator: false },
-    { q: "Find the area of a triangle with vertices at (0,0), (6,0) and (4,5)", a: "15", type: "number", calculator: false },
-    { q: "A semicircle has diameter 14cm. What is its area? (Use π = 22/7)", type: "mcq", options: ["77cm²", "154cm²", "308cm²", "44cm²"], a: "77cm²", calculator: false },
-  ],
-  G4: [
-    { q: "A rectangle has perimeter 34cm and width 7cm. Find the length.", a: "10", type: "number", calculator: false },
-    { q: "An equilateral triangle and a square have the same perimeter. The triangle has sides 8cm. Find the square's side.", a: "6", type: "number", calculator: false },
-    { q: "A semicircular path has diameter 28m. Find its perimeter (π = 22/7)", a: "72", type: "number", calculator: false },
-    { q: "The circumference of a circle is 44cm. What is its radius? (π = 22/7)", type: "mcq", options: ["7cm", "14cm", "21cm", "22cm"], a: "7cm", calculator: false },
-  ],
-  G5: [
-    { q: "A cylinder has radius 5cm and height 12cm. Find its volume (π = 3.14)", a: "942", type: "number", calculator: true },
-    { q: "A cone has base radius 6cm and height 10cm. Find its volume (π = 3.14)", a: "376.8", type: "number", calculator: true },
-    { q: "A hemisphere has radius 9cm. Find its volume (2 d.p., π = 3.14)", a: "1526.04", type: "number", calculator: true },
-    { q: "A cylinder and cone have equal bases and heights. The cylinder volume is 300cm³. What is the cone's?", type: "mcq", options: ["100cm³", "150cm³", "200cm³", "900cm³"], a: "100cm³", calculator: false },
-  ],
-  G6: [
-    { q: "The plan view of a shape shows a circle. The front elevation is a triangle. What is the shape?", type: "mcq", options: ["Cylinder", "Cone", "Sphere", "Hemisphere"], a: "Cone", calculator: false },
-    { q: "A triangular prism: what shape is its plan view looking from above the triangular face?", a: "triangle", type: "text", calculator: false },
-    { q: "From above, a shape looks like a square. From the front, it's a rectangle 5cm by 3cm. What's the shape?", a: "cuboid", type: "text", calculator: false },
-    { q: "A shape's three elevations are all circles. What is it?", type: "mcq", options: ["Cylinder", "Cone", "Sphere", "Hemisphere"], a: "Sphere", calculator: false },
-  ],
-  G7: [
-    { q: "A shape is enlarged by scale factor 3. Its original area was 12cm². What is the new area?", a: "108", type: "number", calculator: false },
-    { q: "Two similar triangles have sides 6cm and 15cm. If the small one has area 18cm², find the larger's area.", a: "112.5", type: "number", calculator: true },
-    { q: "Two similar solids have heights 4cm and 12cm. The small one has volume 32cm³. Find the large one's volume.", a: "864", type: "number", calculator: false },
-    { q: "If lengths are scaled by factor k, volumes are scaled by:", type: "mcq", options: ["k", "k²", "k³", "3k"], a: "k³", calculator: false },
-  ],
-  G8: [
-    { q: "Find the area of a triangle with sides 5cm, 12cm and 13cm", a: "30", type: "number", calculator: false, hint: "Check if it's a right-angled triangle" },
-    { q: "Using a = ½ab sin C, find the area: a = 8cm, b = 11cm, C = 60°", a: "38.1", type: "number", calculator: true },
-    { q: "A triangle has area 24cm², base 8cm and included angle 30°. Find the other side.", a: "12", type: "number", calculator: false },
-    { q: "Which formula gives triangle area with two sides and included angle?", type: "mcq", options: ["½ × base × height", "½ab cos C", "½ab sin C", "a² + b² - 2ab cos C"], a: "½ab sin C", calculator: false },
-  ],
-  G9: [
-    { q: "A sector has arc length 15cm and radius 6cm. Find the angle in degrees (1 d.p.)", a: "143.2", type: "number", calculator: true },
-    { q: "Find the area of a sector with radius 8cm and angle 135°", a: "75.4", type: "number", calculator: true, hint: "Use π = 3.14" },
-    { q: "An arc of a circle is 1/5 of the circumference. What is the sector angle?", a: "72", type: "number", calculator: false },
-    { q: "Which formula gives arc length?", type: "mcq", options: ["πr²θ/360", "2πr", "θ/360 × 2πr", "πr²"], a: "θ/360 × 2πr", calculator: false },
-  ],
-  G11: [
-    { q: "The diagonal of a rectangle is 13cm and width is 5cm. Find the length.", a: "12", type: "number", calculator: false },
-    { q: "A ladder 10m long leans against a wall with its foot 6m from the wall. How high up the wall does it reach?", a: "8", type: "number", calculator: false },
-    { q: "Find the length of a diagonal of a 1m cube (2 d.p.)", a: "1.73", type: "number", calculator: true },
-    { q: "In a right triangle, one leg is 7cm, hypotenuse is 25cm. Find the other leg.", type: "mcq", options: ["18cm", "24cm", "26cm", "32cm"], a: "24cm", calculator: false },
-  ],
-  G13: [
-    { q: "A point moves from (2, 3) by vector (−4, 5). What are its new coordinates?", a: "(-2, 8)", type: "text", calculator: false },
-    { q: "Find the translation vector from A(1, 4) to B(7, −2)", a: "(6, -6)", type: "text", calculator: false },
-    { q: "Rotate point (3, 1) 90° clockwise about the origin. What are the new coordinates?", a: "(1, -3)", type: "text", calculator: false },
-    { q: "Triangle ABC with A(1,1), B(3,1), C(2,4) is reflected in y = x. What are B's new coordinates?", type: "mcq", options: ["(1, 3)", "(3, 1)", "(-3, 1)", "(1, -3)"], a: "(1, 3)", calculator: false },
-  ],
-  G14: [
-    { q: "Describe the single transformation that maps A(2, 3) to A'(6, 9)", a: "Enlargement scale factor 3 centre origin", type: "text", calculator: false },
-    { q: "A shape at (1,2), (3,2), (2,4) is enlarged SF 2 centre (1,2). Where does (3,2) map to?", a: "(5, 2)", type: "text", calculator: false },
-    { q: "What transformation maps y = f(x) to y = f(x) + 3?", type: "mcq", options: ["Translate 3 right", "Translate 3 up", "Stretch by 3", "Translate 3 left"], a: "Translate 3 up", calculator: false },
-    { q: "Describe the transformation y = f(x) → y = f(2x)", a: "Horizontal stretch scale factor 0.5", type: "text", calculator: false },
-  ],
-  G15: [
-    { q: "A cuboid is 5cm × 4cm × 3cm. Find the surface area.", a: "94", type: "number", calculator: false },
-    { q: "A cylinder has radius 7cm and height 10cm. Find the curved surface area (π = 22/7)", a: "440", type: "number", calculator: false },
-    { q: "A cone has base radius 6cm and slant height 10cm. Find total surface area (π = 3.14)", a: "301.44", type: "number", calculator: true },
-    { q: "A sphere has surface area 616cm². Find its radius (π = 22/7)", type: "mcq", options: ["5cm", "7cm", "14cm", "49cm"], a: "7cm", calculator: false },
-  ],
-  G19: [
-    { q: "A bearing of 045° is equivalent to which direction?", type: "mcq", options: ["NE", "NW", "SE", "SW"], a: "NE", calculator: false },
-    { q: "The bearing of B from A is 118°. What is the bearing of A from B?", a: "298", type: "number", calculator: false },
-    { q: "From P, Q is on bearing 250°. What is the bearing of P from Q?", a: "070", type: "text", calculator: false },
-    { q: "A ship sails on bearing 320° for 80km. How far north has it travelled? (1 d.p.)", a: "61.3", type: "number", calculator: true },
-  ],
-  G20: [
-    { q: "The scale on a map is 1:50000. What real distance does 8cm represent in km?", a: "4", type: "number", calculator: false },
-    { q: "A model is made at 1:200 scale. The real building is 36m tall. How tall is the model in cm?", a: "18", type: "number", calculator: false },
-    { q: "Two maps of the same area use scales 1:25000 and 1:50000. A park is 4cm² on the larger map. What's its area on the smaller?", a: "1", type: "number", calculator: false },
-    { q: "A 1:10000 map shows a lake 12cm². What is the real area in m²?", type: "mcq", options: ["1.2 million m²", "120000 m²", "12000 m²", "1200 m²"], a: "1.2 million m²", calculator: false },
-  ],
-
-  // Probability - Higher versions
-  P1: [
-    { q: "Events A and B are mutually exclusive. P(A) = 0.35, P(B) = 0.28. Find P(A or B).", a: "0.63", type: "number", calculator: false },
-    { q: "P(A) = 0.6, P(not A and not B) = 0.15. If A and B are mutually exclusive, find P(B).", a: "0.25", type: "number", calculator: false },
-    { q: "A bag has red, blue and green beads. P(red) = 2/5, P(blue) = 1/3. Find P(green).", a: "4/15", type: "text", calculator: false },
-    { q: "Which events must be mutually exclusive?", type: "mcq", options: ["Rolling even & prime on a die", "Getting heads & tails on one flip", "Drawing red & drawing a 5", "Rain & being Tuesday"], a: "Getting heads & tails on one flip", calculator: false },
-  ],
-  P2: [
-    { q: "A spinner has P(3) = x, P(other) = 3x. Find x.", a: "0.25", type: "number", calculator: false },
-    { q: "A bag has 12 balls. 5 red, 3 blue, rest green. Find P(not blue).", a: "3/4", type: "text", calculator: false },
-    { q: "In 200 trials, heads appears 118 times. Estimate P(heads).", a: "0.59", type: "number", calculator: false },
-    { q: "P(A) = 0.45. After 2000 trials, how many times do you expect A?", type: "mcq", options: ["45", "450", "900", "4500"], a: "900", calculator: false },
-  ],
-  P3: [
-    { q: "Two fair dice are rolled. Find P(sum = 8).", a: "5/36", type: "text", calculator: false },
-    { q: "A coin and die are thrown. Find P(heads and even).", a: "1/4", type: "text", calculator: false },
-    { q: "3 coins are flipped. Find P(at least 2 heads).", a: "1/2", type: "text", calculator: false },
-    { q: "Two dice are rolled. What is P(both show prime)?", type: "mcq", options: ["1/4", "9/36", "1/3", "4/9"], a: "1/4", calculator: false },
-  ],
-  P4: [
-    { q: "Cards: P(A|B) = 0.4, P(B) = 0.3. Find P(A and B).", a: "0.12", type: "number", calculator: false },
-    { q: "Bag has 5 red, 3 blue. Two drawn without replacement. P(both red)?", a: "5/14", type: "text", calculator: false },
-    { q: "10 counters: 6 black, 4 white. Two drawn without replacement. P(different colours)?", a: "8/15", type: "text", calculator: false },
-    { q: "If P(A) = 0.6, P(B|A) = 0.5, what is P(A and B)?", type: "mcq", options: ["0.3", "0.5", "0.8", "1.1"], a: "0.3", calculator: false },
-  ],
-  P5: [
-    { q: "A bag has 8 red, 12 blue balls. 200 draws with replacement. Expected red draws?", a: "80", type: "number", calculator: false },
-    { q: "P(win) = 0.15. In 400 games, expected wins?", a: "60", type: "number", calculator: false },
-    { q: "A die is biased: P(6) = 0.2. In 250 rolls, how many 6s expected?", a: "50", type: "number", calculator: false },
-    { q: "Expected frequency = 35 in 140 trials. What is the probability?", type: "mcq", options: ["0.15", "0.25", "0.35", "4"], a: "0.25", calculator: false },
-  ],
-  P6: [
-    { q: "In a tree diagram, P(A) = 0.4, P(B|A) = 0.6, P(B|not A) = 0.3. Find P(B).", a: "0.42", type: "number", calculator: true },
-    { q: "Using tree: 60% girls, 40% boys. 70% of girls pass, 55% of boys pass. P(pass)?", a: "0.64", type: "number", calculator: true },
-    { q: "Bag: 3R, 2B. Pick two without replacement. P(same colour)?", a: "2/5", type: "text", calculator: false },
-    { q: "First branch: P(A) = 0.7. If A then P(B) = 0.3, otherwise P(B) = 0.6. Find P(not B).", type: "mcq", options: ["0.51", "0.49", "0.39", "0.57"], a: "0.49", calculator: true },
-  ],
-  P7: [
-    { q: "Sets: n(A) = 25, n(B) = 18, n(A∩B) = 7, n(ξ) = 50. Find n(A∪B)", a: "36", type: "number", calculator: false },
-    { q: "P(A) = 0.5, P(B) = 0.4, P(A∩B) = 0.15. Find P(A∪B)", a: "0.75", type: "number", calculator: false },
-    { q: "In a Venn diagram, 40 in A only, 25 in B only, 15 in both. P(A|A∪B)?", a: "11/16", type: "text", calculator: false },
-    { q: "If A⊂B and P(B) = 0.6, what is P(A∪B)?", type: "mcq", options: ["P(A)", "0.6", "P(A) + 0.6", "Cannot tell"], a: "0.6", calculator: false },
-  ],
-
-  // Statistics - Higher versions
-  S1: [
-    { q: "Data: 3, 5, 7, 8, 8, 10, 12, 15, 18, 22. Find the interquartile range.", a: "10", type: "number", calculator: false },
-    { q: "For grouped data with frequencies 5, 12, 18, 10, 5 and midpoints 25, 35, 45, 55, 65: estimate the mean.", a: "44", type: "number", calculator: true },
-    { q: "A data set has median 45, LQ 32, UQ 58. What is the IQR?", a: "26", type: "number", calculator: false },
-    { q: "Which measure is best for skewed data?", type: "mcq", options: ["Mean", "Median", "Mode", "Range"], a: "Median", calculator: false },
-  ],
-  S2: [
-    { q: "From a box plot: min=12, LQ=18, median=25, UQ=34, max=45. What is the range?", a: "33", type: "number", calculator: false },
-    { q: "A histogram shows bars of heights 2, 5, 8, 4 with class widths 5, 5, 10, 10. Find total frequency.", a: "150", type: "number", calculator: false },
-    { q: "On a cumulative frequency graph, reading at median position gives?", type: "mcq", options: ["Mode", "Mean", "Median", "Range"], a: "Median", calculator: false },
-    { q: "Data is positively skewed. Which is true?", type: "mcq", options: ["Mean < Median", "Mean > Median", "Mean = Median", "Median > Mode"], a: "Mean > Median", calculator: false },
-  ],
-  S3: [
-    { q: "A scatter graph shows r = -0.85. Describe the correlation.", a: "strong negative", type: "text", calculator: false },
-    { q: "Line of best fit: y = 2.5x + 12. Predict y when x = 8.", a: "32", type: "number", calculator: false },
-    { q: "Given PMCC = 0.92 for hours studied vs marks. Is it reliable to predict marks for 20 hours if data ranged 2-8 hours?", type: "mcq", options: ["Yes, correlation is strong", "No, it's extrapolation", "Yes, linear relationship", "No, it's interpolation"], a: "No, it's extrapolation", calculator: false },
-    { q: "Which r value shows strongest correlation?", type: "mcq", options: ["-0.75", "0.68", "-0.89", "0.45"], a: "-0.89", calculator: false },
-  ],
-  S4: [
-    { q: "Time series: values 120, 128, 124, 136, 130, 142. Calculate 3-point moving averages.", a: "124, 129.3, 130, 136", type: "text", calculator: true },
-    { q: "A 4-point moving average removes what type of variation?", type: "mcq", options: ["Trend", "Seasonal (quarterly)", "Random", "Cyclical"], a: "Seasonal (quarterly)", calculator: false },
-    { q: "Trend equation: y = 250 + 8x where x = quarter number. Seasonal effect for Q1 = -15. Predict Q5.", a: "275", type: "number", calculator: false },
-    { q: "Why use moving averages?", type: "mcq", options: ["Find mode", "Smooth data to show trend", "Calculate range", "Find median"], a: "Smooth data to show trend", calculator: false },
-  ],
-  S5: [
-    { q: "A stratified sample of 60 from 300 students (180 boys, 120 girls). How many girls?", a: "24", type: "number", calculator: false },
-    { q: "Sample 50 from population: Y7=320, Y8=280, Y9=240, Y10=160. How many from Y9?", a: "12", type: "number", calculator: true },
-    { q: "Which sampling method gives each member equal chance?", type: "mcq", options: ["Convenience", "Stratified", "Simple random", "Quota"], a: "Simple random", calculator: false },
-    { q: "A survey uses every 10th person on a list. What sampling method is this?", type: "mcq", options: ["Random", "Stratified", "Systematic", "Quota"], a: "Systematic", calculator: false },
-  ],
 };
 
 // Helper function to get appropriate question bank based on tier
@@ -2730,14 +1648,11 @@ const higherQuestionBank = {
 // Falls back to questionBank if no higher version exists
 const getQuestionBankForTier = (tier) => {
   if (tier === 'higher') {
-    // Create a merged bank: higher questions for shared objectives, regular for higher-only
     return new Proxy({}, {
       get(target, code) {
-        // If higher version exists, use it
         if (higherQuestionBank[code] && higherQuestionBank[code].length > 0) {
           return higherQuestionBank[code];
         }
-        // Fall back to regular question bank
         return questionBank[code] || [];
       }
     });
@@ -2745,518 +1660,12 @@ const getQuestionBankForTier = (tier) => {
   return questionBank;
 };
 
-// Exam-style questions - harder, multi-step problems for mastery
+// Exam-style questions - to be rewritten
 const examQuestions = {
-  // ========== FOUNDATION EXAM QUESTIONS - AQA Style with Real-Life Contexts ==========
-
-  // Number
-  N1: [
-    { q: "A shop sells four sizes of juice bottles. The prices per litre are: Small £0.7[r], Medium £0.77, Large £0.707, Family £0.7[r]0[r]7[r]. Which bottle gives the best value for money? Show your working.", a: "Large (0.707) is cheapest per litre", type: "text", calculator: false, marks: 3 },
-  ],
-  N2: [
-    { q: "A submarine is at -45 metres. It rises 18 metres, then dives 3 times that distance. What is its final depth?", a: "-81", type: "number", calculator: false, marks: 3 },
-  ],
-  N3: [
-    { q: "Maya buys 4 books at £8 each and gets a £5 discount. She pays with a £50 note. Show how she can check her change of £23 is correct using inverse operations.", a: "23 + (4 × 8) - 5 = 50 ✓", type: "text", calculator: false, marks: 3 },
-  ],
-  N4: [
-    { q: "Tom calculated that 847 cakes shared equally among 7 charity stalls gives 121 cakes each. Use an inverse operation to check if he is correct.", a: "121 × 7 = 847, so correct", type: "text", calculator: false, marks: 2 },
-  ],
-  N5: [
-    { q: "A phone plan costs £12 base fee plus £4 for each GB of data, squared, divided by 2. Emma uses 3GB. Calculate her total bill.", a: "£30", type: "number", calculator: false, marks: 3 },
-  ],
-  N6: [
-    { q: "A square garden has area 144 m². What is the perimeter of the garden?", a: "48", type: "number", calculator: false, marks: 3 },
-  ],
-  N7: [
-    { q: "A storage container is a cube with volume 64 m³. Crates that are 2m × 2m × 2m need to be stacked inside. What is the maximum number of crates that can fit?", a: "8", type: "number", calculator: false, marks: 3 },
-  ],
-  N8: [
-    { q: "Two bus routes start together at 9am. Route A runs every 12 minutes, Route B every 18 minutes. When will they next leave together? How many times do they leave together before 12pm?", a: "9:36am, 5 times", type: "text", calculator: false, marks: 4 },
-  ],
-  N10: [
-    { q: "A recipe uses 0.36[r] kg of flour per batch of cookies. Write this as a fraction in its simplest form.", a: "11/30", type: "text", calculator: false, marks: 3 },
-  ],
-  N11: [
-    { q: "In a school of 32 students, 12 chose to study French. Express the number who did NOT choose French as a fraction of the total, in simplest form.", a: "5/8", type: "text", calculator: false, marks: 2 },
-  ],
-  N12: [
-    { q: "In a closing down sale, a clothes shop reduces all prices by 15%. Sarah buys a jacket that now costs £68. What was the original price?", a: "80", type: "number", calculator: true, marks: 3 },
-  ],
-  N13: [
-    { q: "A living room is 4.5m by 3m. Carpet costs £12.50 per m². How much will it cost to carpet the room? Give your answer to the nearest penny.", a: "168.75", type: "number", calculator: true, marks: 3 },
-  ],
-  N14: [
-    { q: "A builder estimates costs for materials: 58.3m of timber at £4.90 per metre, divided between 0.52 of his workers. Estimate the cost per worker. Show your rounding.", a: "£1000", type: "number", calculator: false, marks: 3 },
-  ],
-  N15: [
-    { q: "A scientist measures a bacteria sample as 4.7 × 10⁻³ mm. Write this measurement to 2 significant figures.", a: "0.0047", type: "text", calculator: false, marks: 2 },
-  ],
-  N16: [
-    { q: "A farmer measures a rectangular field as 12m by 8m, both to the nearest metre. Calculate the lower bound of the area of the field.", a: "86.25", type: "number", calculator: true, marks: 3 },
-  ],
-
-  // Algebra
-  A1: [
-    { q: "A plumber charges a £30 call-out fee plus £n per hour. Write an expression for the total cost of a job lasting h hours.", a: "30 + nh", type: "text", calculator: false, marks: 2 },
-  ],
-  A2: [
-    { q: "A ball is thrown upwards. Its height h metres after t seconds is given by h = 20t - 5t². Find the height after 3 seconds.", a: "15", type: "number", calculator: false, marks: 3 },
-  ],
-  A3: [
-    { q: "State whether each is an expression, equation, formula or identity: (a) The cost of x apples at 40p each: 40x (b) 40x = 200 (c) C = 40x (d) 2(20x) ≡ 40x", a: "expression, equation, formula, identity", type: "text", calculator: false, marks: 4 },
-  ],
-  A4: [
-    { q: "The area of a rectangular pool is (2x + 3)(x - 4) m². An extra 5x m² is added for decking. Write and simplify the total area.", a: "2x² + 2x - 12", type: "text", calculator: false, marks: 3 },
-  ],
-  A5: [
-    { q: "A cylindrical water tank has volume V = πr²h. The radius is 3m and height is 7m. Find the volume, giving your answer in terms of π.", a: "63π", type: "text", calculator: false, marks: 2 },
-  ],
-  A6: [
-    { q: "The formula for velocity is v = u + at. A driving instructor needs to find the time taken. Make t the subject.", a: "t = (v - u)/a", type: "text", calculator: false, marks: 2 },
-  ],
-  A7: [
-    { q: "A taxi fare is calculated as: start with the number of miles, multiply by 4, subtract 5, then divide by 3. If the fare is £5, how many miles was the journey?", a: "5", type: "number", calculator: false, marks: 3 },
-  ],
-  A9: [
-    { q: "A zipline runs from point A(2, 7) on a platform to point B(6, -1) on the ground. Find the equation of the zipline in the form y = mx + c.", a: "y = -2x + 11", type: "text", calculator: false, marks: 3 },
-  ],
-  A13: [
-    { q: "Two mobile phone masts are at coordinates A(2, 8) and B(10, 4). A signal booster is placed exactly halfway between them. Find its coordinates and the distance between the masts.", a: "Midpoint (6, 6), Distance ≈ 8.94km", type: "text", calculator: true, marks: 4 },
-  ],
-  A14: [
-    { q: "A train travels from station P at (1, 5) to station Q at (4, 14). Find the equation of the railway line in the form y = mx + c.", a: "y = 3x + 2", type: "text", calculator: false, marks: 3 },
-  ],
-  A15: [
-    { q: "The equation y = (x-3)(x+1) represents a parabola. Find the coordinates of its turning point.", a: "(1, -4)", type: "text", calculator: false, marks: 3 },
-  ],
-  A17: [
-    { q: "Cinema tickets cost £x. The Smith family buys 3 adult and 2 child tickets. Child tickets are half price. They pay £36. Write and solve an equation to find the adult ticket price.", a: "3x + 2(x/2) = 36, x = 9", type: "text", calculator: false, marks: 3 },
-  ],
-  A18: [
-    { q: "A rectangular photo has width x cm and length (x + 2) cm. The area is 15 cm². Form and solve an equation to find the dimensions.", a: "x² + 2x - 15 = 0, width = 3cm, length = 5cm", type: "text", calculator: false, marks: 4 },
-  ],
-  A19: [
-    { q: "At a café, 3 coffees and 2 teas cost £13. 2 coffees and 1 tea cost £8. Find the cost of one coffee and one tea.", a: "Coffee £3, Tea £2", type: "text", calculator: false, marks: 4 },
-  ],
-  A21: [
-    { q: "A theme park ride has a height restriction. You must be at least 120cm but under 200cm. Write this as an inequality using h for height.", a: "120 ≤ h < 200", type: "text", calculator: false, marks: 2 },
-  ],
-  A23: [
-    { q: "Seats in a theatre follow the pattern: Row 1 has 15 seats, Row 2 has 19 seats, Row 3 has 23 seats. Is there a row with exactly 99 seats? Explain your answer.", a: "Yes, row 22 (nth term = 4n + 11, when 4n + 11 = 99, n = 22)", type: "text", calculator: false, marks: 3 },
-  ],
-  A24: [
-    { q: "The number of rabbits on a farm follows a Fibonacci-like pattern: 2, 5, 7, 12, 19, ... How many rabbits will there be in the next two months?", a: "31, 50", type: "text", calculator: false, marks: 2 },
-  ],
-  A26: [
-    { q: "A circular fountain is centred at the origin of a park map. A bench at point (5, 12) is on the edge of the fountain. Find the equation of the fountain's boundary.", a: "x² + y² = 169", type: "text", calculator: false, marks: 3 },
-  ],
-
-  // Ratio, Proportion and Rates of Change
-  R1: [
-    { q: "A recipe needs 1.2 kg of flour. How many grams is this? If flour costs 80p per 500g bag, how much will the flour for this recipe cost?", a: "1200g, £1.92", type: "text", calculator: true, marks: 3 },
-  ],
-  R2: [
-    { q: "On a map with scale 1:50000, a lake measures 3.2 cm². What is the actual area of the lake in km²?", a: "0.8", type: "number", calculator: true, marks: 3 },
-  ],
-  R3: [
-    { q: "Emma earns £2400 per month. She spends 2/5 on rent and 1/6 on bills. How much money does she have left for other expenses?", a: "1040", type: "number", calculator: true, marks: 4 },
-  ],
-  R4: [
-    { q: "Three friends win £270 in a raffle. They agree to share it in the ratio 2:3:4 based on how many tickets each bought. How much does each person receive?", a: "£60, £90, £120", type: "text", calculator: true, marks: 3 },
-  ],
-  R5: [
-    { q: "At an animal shelter, the ratio of cats to dogs is 3:5. There are 40 animals in total. How many cats are there?", a: "15", type: "number", calculator: false, marks: 3 },
-  ],
-  R6: [
-    { q: "A bag of pick 'n' mix contains sweets in the ratio red:blue:green = 2:5:3. What fraction of the sweets are blue?", a: "1/2", type: "text", calculator: false, marks: 2 },
-  ],
-  R7: [
-    { q: "It takes 6 decorators 8 days to paint a hotel. The hotel needs to open sooner. How long would it take 4 decorators working at the same rate?", a: "12", type: "number", calculator: false, marks: 3 },
-  ],
-  R8: [
-    { q: "In a concrete mix, the ratio of cement to sand is 3:4. Express the amount of cement as a fraction of the total mixture.", a: "3/7", type: "text", calculator: false, marks: 2 },
-  ],
-  R9: [
-    { q: "In a driving test, 18 out of 30 candidates passed. Express this as a percentage.", a: "60", type: "number", calculator: true, marks: 2 },
-  ],
-  R10: [
-    { q: "A house increases in value by 8% in Year 1, then decreases by 5% in Year 2. It is now worth £308,880. What was its original value?", a: "301000", type: "number", calculator: true, marks: 4 },
-  ],
-  R11: [
-    { q: "A television was £450. In the Black Friday sale it is reduced to £360. Calculate the percentage decrease.", a: "20", type: "number", calculator: true, marks: 2 },
-  ],
-  R12: [
-    { q: "After two successive 10% price reductions, a sofa costs £162. What was the original price?", a: "200", type: "number", calculator: true, marks: 3 },
-  ],
-  R14: [
-    { q: "A delivery driver travels 180km in 2 hours 15 minutes. Calculate the average speed in km/h.", a: "80", type: "number", calculator: true, marks: 3 },
-  ],
-
-  // Geometry and Measures
-  G1: [
-    { q: "A storage box has 6 faces, 12 edges and 8 vertices. All faces are identical squares. Name the shape and state its order of rotational symmetry.", a: "Cube, order 4 (about face axis)", type: "text", calculator: false, marks: 2 },
-  ],
-  G2: [
-    { q: "A garden designer needs to place a fountain exactly halfway between two trees. Describe how to find this point using only a rope and pegs.", a: "Draw arcs from both trees with same radius (rope), place fountain where arcs cross", type: "text", calculator: false, marks: 3 },
-  ],
-  G3: [
-    { q: "Three roads meet at a roundabout. The angles between two pairs of roads are 127° and 85°. Find the angle between the third pair of roads.", a: "148", type: "number", calculator: false, marks: 2 },
-  ],
-  G4: [
-    { q: "A railway line crosses a road. The angle between the railway and one side of the road is 65°. Find all four angles at the crossing.", a: "65°, 65°, 115°, 115°", type: "text", calculator: false, marks: 3 },
-  ],
-  G5: [
-    { q: "A garden patio is in the shape of a regular polygon. Each interior angle is 156°. How many sides does the patio have?", a: "15", type: "number", calculator: true, marks: 3 },
-  ],
-  G6: [
-    { q: "A chocolate box is rhombus-shaped. Give two geometric properties of a rhombus that a rectangular box would not have.", a: "All sides equal length, diagonals cross at right angles", type: "text", calculator: false, marks: 2 },
-  ],
-  G7: [
-    { q: "An architect makes a scale model where everything is twice the size. The real doorway is at position (1,1) to (3,1) to (2,3). Give the coordinates on the model.", a: "(2,2), (6,2), (4,6)", type: "text", calculator: false, marks: 3 },
-  ],
-  G8: [
-    { q: "In a computer game, a character moves from position P(2, 5) by vector (4, -3). What are the coordinates of the new position?", a: "(6, 2)", type: "text", calculator: false, marks: 2 },
-  ],
-  G9: [
-    { q: "A logo consists of a triangle with vertices at (1, 1), (3, 1), (2, 4). It is reflected in the line y = x. Give the coordinates of the reflected triangle.", a: "(1, 1), (1, 3), (4, 2)", type: "text", calculator: false, marks: 3 },
-  ],
-  G11: [
-    { q: "A circular table has radius 10cm. A straight crack runs 8cm from the centre. How long is the crack?", a: "12", type: "number", calculator: true, marks: 3 },
-  ],
-  G13: [
-    { q: "A grain silo consists of a cylinder (radius 3m, height 6m) with a conical roof (height 4m). Calculate the total volume in terms of π.", a: "66π", type: "text", calculator: false, marks: 4 },
-  ],
-  G14: [
-    { q: "A triangular flower bed has corners at coordinates (1,2), (5,2) and (3,6) on a garden plan. Each unit represents 1 metre. Calculate the area of the flower bed.", a: "8", type: "number", calculator: false, marks: 3 },
-  ],
-  G15: [
-    { q: "A circular pond has a circumference of 31.4m. A gardener wants to cover it with a net. Calculate the area of net needed, to 1 decimal place.", a: "78.5", type: "number", calculator: true, marks: 3 },
-  ],
-  G16: [
-    { q: "A pizza slice is a sector with radius 15cm and arc length (crust) of 12cm. Calculate the angle of the slice to the nearest degree.", a: "46", type: "number", calculator: true, marks: 3 },
-  ],
-  G17: [
-    { q: "An ice cream cone has radius 3cm and height 10cm. Calculate the total surface area (cone plus circular top) in terms of π.", a: "9π + 3π√109", type: "text", calculator: false, marks: 4 },
-  ],
-  G19: [
-    { q: "A 5-metre ladder leans against a wall with its foot 1.5m from the base. Health and safety requires it to reach at least 4.5m high. Does this ladder meet the requirement?", a: "Yes, reaches 4.77m", type: "text", calculator: true, marks: 3 },
-  ],
-  G20: [
-    { q: "A surveyor stands 50m from a church tower. The angle of elevation to the top is 32°. Calculate the height of the tower to 1 decimal place.", a: "31.2", type: "number", calculator: true, marks: 3 },
-  ],
-
-  // Probability
-  P1: [
-    { q: "A quality control spinner was tested 200 times. Results: Pass 82, Minor fault 68, Major fault 50. Calculate the relative frequency of a minor fault.", a: "0.34", type: "number", calculator: true, marks: 2 },
-  ],
-  P2: [
-    { q: "A sweet bag contains 3 strawberry and 7 cola sweets. Amy says 'I have a 50% chance of picking strawberry because there are two flavours.' Explain why Amy is wrong.", a: "There are different numbers of each flavour, so probabilities are 3/10 and 7/10", type: "text", calculator: false, marks: 2 },
-  ],
-  P3: [
-    { q: "A factory tests dice by rolling each one 150 times. One die landed on 6 exactly 30 times. Calculate the relative frequency and compare it to what you would expect for a fair die.", a: "RF = 0.2, expected = 1/6 ≈ 0.167, so slightly biased", type: "text", calculator: true, marks: 3 },
-  ],
-  P4: [
-    { q: "The probability it rains on any day is 0.4. The probability of heavy traffic is 0.3. If these are independent, find the probability of both rain and heavy traffic.", a: "0.12", type: "number", calculator: true, marks: 2 },
-  ],
-  P5: [
-    { q: "Weather forecast: P(rain) = 0.3, P(wind) = 0.6. These events are independent. Find the probability that it is both rainy and windy.", a: "0.18", type: "number", calculator: true, marks: 2 },
-  ],
-  P6: [
-    { q: "In a class of 30 students: 20 like pizza, 18 like burgers, 5 like neither. How many students like both pizza and burgers?", a: "13", type: "number", calculator: false, marks: 3 },
-  ],
-  P7: [
-    { q: "A restaurant offers a meal deal: flip 3 coins and get a discount based on heads. List all possible outcomes and find P(exactly 2 heads).", a: "HHH, HHT, HTH, THH, HTT, THT, TTH, TTT; P = 3/8", type: "text", calculator: false, marks: 4 },
-  ],
-  P8: [
-    { q: "A lucky dip contains 4 red prizes and 6 blue prizes. Two children each take a prize without looking. Find P(both get red).", a: "2/15", type: "text", calculator: false, marks: 3 },
-  ],
-
-  // Statistics
-  S1: [
-    { q: "A school has 600 Year 7, 550 Year 8, and 450 Year 9 students. A survey needs a stratified sample of 80 students. How many Year 8 students should be included?", a: "28", type: "number", calculator: true, marks: 3 },
-  ],
-  S2: [
-    { q: "In a survey about favourite sports, the 'Football' sector of a pie chart is 108°. If 60 people were surveyed, how many chose football?", a: "18", type: "number", calculator: true, marks: 2 },
-  ],
-  S3: [
-    { q: "Students voted for a school trip: Theme Park 30, Zoo 15, Beach 25, Museum 10. Draw a pie chart by calculating the angle for each destination.", a: "Theme Park 135°, Zoo 67.5°, Beach 112.5°, Museum 45°", type: "text", calculator: true, marks: 4 },
-  ],
-  S4: [
-    { q: "A delivery van travels 60km in the first hour, stops for 30 minutes, then travels 40km in 30 minutes. Calculate the average speed for the whole journey.", a: "50", type: "number", calculator: true, marks: 3 },
-  ],
-  S5: [
-    { q: "Five friends compare their weekly screen time. The mean is 12 hours. Four of them use 8, 10, 14, and 15 hours. Find the fifth person's screen time.", a: "13", type: "number", calculator: true, marks: 3 },
-  ],
-  // Higher tier exam questions
-  N9: [
-    { q: "Simplify fully: (16^(3/4) × 8^(-2/3)) ÷ 4^(1/2)", a: "2", type: "number", calculator: false, marks: 4 },
-  ],
-  A8: [
-    { q: "Show that (x + 2)² - (x - 2)² ≡ 8x", a: "LHS = x² + 4x + 4 - (x² - 4x + 4) = 8x", type: "text", calculator: false, marks: 3 },
-  ],
-  A10: [
-    { q: "Prove algebraically that the sum of the squares of any two consecutive odd numbers is always 2 more than a multiple of 8.", a: "(2n+1)² + (2n+3)² = 8n² + 16n + 10 = 8(n² + 2n + 1) + 2", type: "text", calculator: false, marks: 4 },
-  ],
-  A11: [
-    { q: "f(x) = (3x + 2)/(x - 1). Find f⁻¹(x) and state any values of x for which f⁻¹(x) is undefined.", a: "f⁻¹(x) = (x + 2)/(x - 3), undefined when x = 3", type: "text", calculator: false, marks: 4 },
-  ],
-  A12: [
-    { q: "f(x) = 2x - 1, g(x) = x² + 3. Find x when fg(x) = gf(x).", a: "x = 1 or x = -1", type: "text", calculator: false, marks: 4 },
-  ],
-  A16: [
-    { q: "The curve y = x³ - 6x² + 9x passes through the origin. Find the coordinates of the other points where it crosses the x-axis.", a: "(3, 0)", type: "text", calculator: false, marks: 3 },
-  ],
-  A20: [
-    { q: "Use iteration with xₙ₊₁ = ³√(20 - 3xₙ) and x₀ = 2 to find x₃ to 3 decimal places.", a: "2.366", type: "number", calculator: true, marks: 3 },
-  ],
-  A22: [
-    { q: "Find the integer values of n that satisfy -3 < 2n - 5 ≤ 7.", a: "2, 3, 4, 5, 6", type: "text", calculator: false, marks: 3 },
-  ],
-  A25: [
-    { q: "The nth term of a sequence is an² + bn + c. The first three terms are 4, 10, 18. Find a, b and c.", a: "a = 1, b = 3, c = 0", type: "text", calculator: false, marks: 4 },
-  ],
-  R13: [
-    { q: "The force F between two magnets is inversely proportional to d². When d = 2, F = 20. Find F when d = 4.", a: "5", type: "number", calculator: false, marks: 3 },
-  ],
-  R15: [
-    { q: "Two similar cones have surface areas 36π cm² and 100π cm². The smaller cone has volume 48π cm³. Find the volume of the larger cone.", a: "222.2π", type: "text", calculator: true, marks: 4 },
-  ],
-  R16: [
-    { q: "£8000 is invested at 2.5% compound interest. After how many complete years will the investment first exceed £9000?", a: "5", type: "number", calculator: true, marks: 3 },
-  ],
-  G10: [
-    { q: "Triangle ABC is enlarged by scale factor -2, centre P(1, 1). A(3, 2) maps to A'. Find the coordinates of A'.", a: "(-3, -1)", type: "text", calculator: false, marks: 3 },
-  ],
-  G12: [
-    { q: "In a circle, AB is a diameter. C is a point on the circumference. Angle CAB = 35°. Find angle ACB.", a: "90", type: "number", calculator: false, marks: 2 },
-  ],
-  G18: [
-    { q: "Prove triangles ABC and DEC are congruent given: AC = DC, BC = EC, and angle ACB = angle DCE.", a: "SAS: AC = DC, angle ACB = angle DCE, BC = EC", type: "text", calculator: false, marks: 3 },
-  ],
-  G21: [
-    { q: "Find the exact value of (sin 60° × cos 30°) + (cos 60° × sin 30°)", a: "1", type: "number", calculator: false, marks: 3 },
-  ],
-  G22: [
-    { q: "In triangle ABC, BC = 8cm, angle ABC = 72°, angle ACB = 53°. Find AC.", a: "8.5", type: "number", calculator: true, marks: 3 },
-  ],
-  G23: [
-    { q: "Find the area of triangle PQR where PQ = 11cm, QR = 8cm and angle PQR = 67°.", a: "40.5", type: "number", calculator: true, marks: 3 },
-  ],
-  G24: [
-    { q: "Vectors a = (3, -2) and b = (1, 4). Find |2a - b| giving your answer in surd form.", a: "√89", type: "text", calculator: false, marks: 3 },
-  ],
-  G25: [
-    { q: "In triangle OAB, OA = a and OB = b. M is the midpoint of AB. Express OM in terms of a and b.", a: "½(a + b)", type: "text", calculator: false, marks: 3 },
-  ],
-  P9: [
-    { q: "A bag contains 5 red and 3 blue counters. Two counters are taken without replacement. Find the probability they are different colours.", a: "15/28", type: "text", calculator: false, marks: 4 },
-  ],
-  S6: [
-    { q: "A histogram shows heights. The bar for 150-160cm has frequency density 2.4. If 36 people are in this class, what is the frequency density for 160-180cm if it contains 30 people?", a: "1.5", type: "number", calculator: true, marks: 3 },
-  ],
 };
 
-// Higher tier exam questions - harder multi-step problems for grades 4-9
-// These replace the foundation exam questions when tier is set to Higher
+// Higher tier exam questions - to be rewritten
 const higherExamQuestions = {
-  // Number - Higher exam style (multi-step, unstructured)
-  N1: [
-    { q: "Four different protein powders show their concentration as: Brand A: 2.3 × 10⁻² g/ml, Brand B: √0.05 g/ml, Brand C: 0.02[r]3[r] g/ml, Brand D: 1/45 g/ml. Arrange from lowest to highest concentration. Show all working.", a: "2.3 × 10⁻², 0.02[r]3[r], 1/45, √0.05", type: "text", calculator: true, marks: 4 },
-  ],
-  N2: [
-    { q: "A physics student calculates (-2)³ × (-3)² ÷ (-6) and claims the answer is -12. Show that the student is wrong and find the correct answer.", a: "-8 × 9 ÷ (-6) = -72 ÷ (-6) = 12", type: "text", calculator: false, marks: 3 },
-  ],
-  N3: [
-    { q: "A puzzle states: (√64 + 3²) × (1/2)⁻² - 5³ ÷ 25 = 63. Verify this is correct by showing all working.", a: "(8 + 9) × 4 - 125 ÷ 25 = 17 × 4 - 5 = 68 - 5 = 63", type: "text", calculator: false, marks: 4 },
-  ],
-  N5: [
-    { q: "A code uses the calculation (2³ + 4²) × 3 - √144 ÷ 2 to generate a number. Show that this number is 66.", a: "(8 + 16) × 3 - 12 ÷ 2 = 24 × 3 - 6 = 72 - 6 = 66", type: "text", calculator: false, marks: 3 },
-  ],
-  N6: [
-    { q: "A computer uses powers of 5 for encryption. Given that 5^x = 125 and 5^y = 1/25, find the value of 5^(2x + y) to decode the message.", a: "125", type: "number", calculator: false, marks: 4 },
-  ],
-  N7: [
-    { q: "An artist creates a wooden cube sculpture with volume 343 cm³. She wants to make a second cube where the surface area equals the first cube's volume numerically. Find the side length of the second cube to 2 d.p.", a: "7.56", type: "number", calculator: true, marks: 4 },
-  ],
-  N8: [
-    { q: "Two lighthouse beams flash at intervals. Beam A flashes every A = 2³ × 3 × 5 seconds and Beam B flashes every B = 2 × 3² × 7 seconds. Find (a) how often they flash together (HCF), (b) when they next flash together (LCM). Verify that HCF × LCM = A × B.", a: "HCF = 6, LCM = 2520", type: "text", calculator: false, marks: 5 },
-  ],
-  N10: [
-    { q: "A student measures a chemical reaction rate as 0.4[r]5[r] ml per second. Prove algebraically that this equals exactly 5/11 ml per second.", a: "Let x = 0.454545... Then 100x = 45.454545... So 99x = 45, x = 45/99 = 5/11", type: "text", calculator: false, marks: 4 },
-  ],
-  N11: [
-    { q: "In a clothing sale, all prices are reduced by 15%. Emma buys a dress for £68. The shop originally priced all items so they would cost a whole number of pounds. Express the original price as a fraction of £100.", a: "4/5", type: "text", calculator: false, marks: 3 },
-  ],
-  N12: [
-    { q: "A new car loses 18% of its value in year 1 and 15% in year 2. The salesperson claims total depreciation is 33%. Show this is incorrect and find the actual percentage decrease.", a: "30.3%", type: "number", calculator: true, marks: 4 },
-  ],
-  N14: [
-    { q: "A factory needs to quickly estimate (4.8² × √99) ÷ 0.49 for quality control. Without a calculator, estimate this value showing your rounding. State whether your answer is an overestimate or underestimate.", a: "≈ 500, underestimate", type: "text", calculator: false, marks: 4 },
-  ],
-  N15: [
-    { q: "A precision engineering firm measures components as 8.745 mm × 3.92 mm = 34.2804 mm². Using bounds (measurements to 3 d.p. and 2 d.p. respectively), find the greatest and least actual values. Round each to 3 s.f.", a: "Greatest: 34.4, Least: 34.1", type: "text", calculator: true, marks: 4 },
-  ],
-
-  // Algebra - Higher exam style
-  A1: [
-    { q: "In a physics formula, the expression (27x⁶y³)^(2/3) ÷ (9x²y)^(1/2) appears. Simplify this fully.", a: "3x³y/√y or 3x³√y", type: "text", calculator: false, marks: 4 },
-  ],
-  A2: [
-    { q: "A box has dimensions (2x + 3), (x - 4), and (x + 1) cm. Expand and simplify to find the volume. Hence factorise 2x³ - x² - 13x - 12.", a: "2x³ - x² - 13x - 12 = (2x + 3)(x - 4)(x + 1)", type: "text", calculator: false, marks: 5 },
-  ],
-  A3: [
-    { q: "The volume of water in a tank over time is modelled by 2x³ - 8x² - 10x litres. Factorise this completely to find when the tank is empty.", a: "2x(x - 5)(x + 1)", type: "text", calculator: false, marks: 3 },
-  ],
-  A4: [
-    { q: "The profit P of a business is modelled by 6P² - P - 15 = 0 (in thousands of pounds). Solve by factorising to find the break-even points.", a: "P = 5/3 or P = -3/2", type: "text", calculator: false, marks: 4 },
-  ],
-  A5: [
-    { q: "A recipe requires (3x - 2)/4 cups of flour minus (x + 5)/6 cups already in the mix to equal 2 cups total. Solve for x, giving your answer as a fraction.", a: "x = 46/7", type: "text", calculator: false, marks: 4 },
-  ],
-  A7: [
-    { q: "A speed-distance formula is y = (2x + a)/(x - b) where x is speed. Make x the subject to find what speed is needed for a given journey time y.", a: "x = (a + by)/(y - 2)", type: "text", calculator: false, marks: 4 },
-  ],
-  A13: [
-    { q: "The number of tiles in each row of a triangular mosaic pattern follows: 5, 12, 23, 38, ... Find the nth term formula and determine which row contains exactly 173 tiles.", a: "2n² + 3n, 8th term", type: "text", calculator: false, marks: 5 },
-  ],
-  A14: [
-    { q: "A zip wire runs from point A(2, 5) to point B(6, -3) on a coordinate grid (units in metres). A support post must be placed perpendicular to the wire at its midpoint. Find the equation of the line along which the support must be placed.", a: "y = ½x + 1", type: "text", calculator: false, marks: 5 },
-  ],
-  A15: [
-    { q: "A drone follows the path y = x² - 4x + 5 and a laser beam follows y = 2x - 3 (units in metres). Solve simultaneously to find where they intersect. Interpret your answer geometrically.", a: "x = 2, y = 1 (one solution - line is tangent to curve)", type: "text", calculator: false, marks: 5 },
-  ],
-  A17: [
-    { q: "A projectile's height follows h = x² - 6x - 3 where h is height and x is horizontal distance. Find when h = 0 by completing the square. Give exact answers in surd form.", a: "x = 3 ± 2√3", type: "text", calculator: false, marks: 4 },
-  ],
-  A21: [
-    { q: "A parabolic bridge arch is modelled by x² + 4x + k = 0. For the arch to touch the ground at two distinct points, find the range of values of k.", a: "k < 4", type: "text", calculator: false, marks: 3 },
-  ],
-  A23: [
-    { q: "The brightness of a light y is inversely proportional to the square root of distance x. At 16 metres, brightness is 5 units. Find (a) brightness at 4 metres, (b) distance when brightness is 2 units.", a: "y = 10, x = 100", type: "text", calculator: false, marks: 5 },
-  ],
-  A24: [
-    { q: "A football is kicked upwards. Its height h metres after t seconds is h = 20t - 5t². Find (a) the maximum height reached, (b) when it returns to ground level.", a: "20m at t = 2s, returns at t = 4s", type: "text", calculator: false, marks: 5 },
-  ],
-
-  // Ratio - Higher exam style
-  R1: [
-    { q: "Three friends Ann, Ben and Carl split a restaurant bill of £180. Ann pays twice as much as Ben because she ordered more. Carl pays £30 less than Ann as he only had a starter. Work out how much each person pays.", a: "Ann £84, Ben £42, Carl £54", type: "text", calculator: false, marks: 4 },
-  ],
-  R2: [
-    { q: "A construction company has 12 workers who can build a wall in 8 days. After 3 days of work, 4 workers are moved to another urgent project. How many more days will it take the remaining workers to complete the wall?", a: "7.5 days", type: "number", calculator: true, marks: 4 },
-  ],
-  R3: [
-    { q: "A department store reduces all prices by 20% for Black Friday. The following week, remaining stock has a further 15% reduction. Work out the overall percentage reduction from the original price.", a: "32%", type: "number", calculator: false, marks: 3 },
-  ],
-  R4: [
-    { q: "Grandparents invest £5000 for their grandchild at r% compound interest per year. After 2 years it is worth £5408. Find the interest rate r.", a: "4%", type: "number", calculator: true, marks: 4 },
-  ],
-  R5: [
-    { q: "A house price increased by 12% one year then decreased by 12% the next year. The house is now worth £295,680. What was the original price before both changes?", a: "300", type: "number", calculator: true, marks: 4 },
-  ],
-  R7: [
-    { q: "In a chemistry equation, the concentration ratio (2x²/3y) ÷ (4x/9y²) appears. Simplify this fully.", a: "3xy/2", type: "text", calculator: false, marks: 3 },
-  ],
-  R8: [
-    { q: "An express train travels 240km between two cities at an average speed of v km/h. If the train travelled 20 km/h faster, the journey would take 30 minutes less. Find v.", a: "80", type: "number", calculator: true, marks: 5 },
-  ],
-  R9: [
-    { q: "An architect builds a scale model of a building at 1:50 scale. The model has a surface area of 0.8 m². Find the actual surface area of the real building in m².", a: "2000", type: "number", calculator: false, marks: 3 },
-  ],
-  R10: [
-    { q: "A jeweller melts down a solid gold sphere with radius 3 cm to make a ring. Gold has density 19.3 g/cm³. Find the mass of gold available to the nearest gram.", a: "2186", type: "number", calculator: true, marks: 4 },
-  ],
-  R11: [
-    { q: "A mountain road has a gradient of 1:12. A cyclist travels 650m along the road. How many metres has the cyclist climbed vertically? Give your answer to 1 d.p.", a: "54.2", type: "number", calculator: true, marks: 3 },
-  ],
-  R12: [
-    { q: "In a laboratory experiment, bacteria double every 20 minutes. Starting with 500 bacteria, after how many complete hours will there be more than 1 million bacteria?", a: "4", type: "number", calculator: true, marks: 4 },
-  ],
-  R14: [
-    { q: "A swimming pool can be filled by Pipe A alone in 6 hours, or by Pipe B alone in 4 hours. The pool manager wants to fill it as quickly as possible using both pipes. How long will this take?", a: "2.4 hours or 2h 24min", type: "text", calculator: true, marks: 4 },
-  ],
-
-  // Geometry - Higher exam style
-  G1: [
-    { q: "A decorative tile is in the shape of a regular polygon. Each interior angle measures 140°. Find the number of sides the tile has and the sum of its interior angles.", a: "9 sides, 1260°", type: "text", calculator: false, marks: 4 },
-  ],
-  G3: [
-    { q: "A flower bed is in the shape of a trapezium with parallel sides 8m and 12m. The gardener calculates the area is 50m². Find the width of the flower bed (perpendicular distance between parallel sides).", a: "5", type: "number", calculator: false, marks: 3 },
-  ],
-  G4: [
-    { q: "A designer creates a logo using a semicircle that has the same perimeter as a square of side 7cm. Find the radius of the semicircle to 2 d.p.", a: "5.47", type: "number", calculator: true, marks: 4 },
-  ],
-  G5: [
-    { q: "An ice cream company sells cones and tubs. A cone and cylindrical tub have the same base radius and height. The tub holds 300π cm³ of ice cream. How much does the cone hold?", a: "100π", type: "text", calculator: false, marks: 3 },
-  ],
-  G7: [
-    { q: "Two similar triangular road signs have areas 20cm² and 45cm² on a design drawing. The smaller sign has perimeter 16cm in the drawing. Find the perimeter of the larger sign in the drawing.", a: "24", type: "number", calculator: true, marks: 4 },
-  ],
-  G8: [
-    { q: "A surveyor measures a triangular plot of land. Side AB = 80m, angle BAC = 52°, and the area is 2000m². Find the length of side BC.", a: "6.35", type: "number", calculator: true, marks: 4 },
-  ],
-  G9: [
-    { q: "A pizza slice (sector) has radius 12cm and curved edge (arc) length 15cm. Find (a) the angle of the slice in radians, (b) the area of the slice.", a: "1.25 radians, 90 cm²", type: "text", calculator: true, marks: 4 },
-  ],
-  G11: [
-    { q: "A storage box has internal dimensions 3cm by 4cm by 12cm. What is the longest straight rod that could fit inside the box diagonally?", a: "13", type: "number", calculator: false, marks: 4 },
-  ],
-  G13: [
-    { q: "On a coordinate grid representing a garden, a statue at point P(4, 2) is rotated 90° anticlockwise about the fountain at Q(1, 1). Find the new coordinates of the statue.", a: "(2, 4)", type: "text", calculator: false, marks: 3 },
-  ],
-  G14: [
-    { q: "A sound wave y = f(x) is transformed to y = 2f(x - 3) + 1 by audio software. Describe fully the single transformation applied to the wave.", a: "Stretch scale factor 2 parallel to y-axis, translation (3, 1)", type: "text", calculator: false, marks: 4 },
-  ],
-  G15: [
-    { q: "A water storage tank consists of a hemisphere of radius 6cm on top of a cylinder of radius 6cm and height 10cm. Find the total surface area to be painted.", a: "180π or 565.5 cm²", type: "text", calculator: true, marks: 5 },
-  ],
-  G19: [
-    { q: "From a point 50m from a building, a surveyor measures the angle of elevation to the roof as 62° and to a second-floor window as 38°. Find the height of the window above ground.", a: "39.1", type: "number", calculator: true, marks: 4 },
-  ],
-  G20: [
-    { q: "On a 1:25000 Ordnance Survey map, a lake covers 6.4 cm². A conservation team needs to know the actual area. Find the real area of the lake in km².", a: "0.4", type: "number", calculator: true, marks: 3 },
-  ],
-
-  // Probability - Higher exam style
-  P1: [
-    { q: "In a factory, machine A breaking down (probability 0.3) is independent of machine B breaking down (probability 0.5). Find the probability that neither machine breaks down.", a: "0.35", type: "number", calculator: false, marks: 3 },
-  ],
-  P2: [
-    { q: "A loaded die used in a board game has P(6) = x. All other faces are equally likely. If P(not rolling 6) = 0.8, find x and find P(rolling an even number).", a: "x = 0.2, P(even) = 0.52", type: "text", calculator: false, marks: 4 },
-  ],
-  P3: [
-    { q: "A game involves throwing two dice and multiplying the scores. To win a prize, the product must be a perfect square. Find the probability of winning.", a: "8/36 or 2/9", type: "text", calculator: false, marks: 4 },
-  ],
-  P4: [
-    { q: "A bag contains 4 red and 6 blue sweets. Tom takes two sweets without looking. Find P(same colour) and P(at least one red sweet).", a: "P(same) = 7/15, P(≥1 red) = 2/3", type: "text", calculator: false, marks: 5 },
-  ],
-  P5: [
-    { q: "At a charity stall, you roll a die. Roll 6: win £10. Roll odd: win £2. Otherwise: lose £3. Is this a fair game? Find the expected profit per game.", a: "£0.50", type: "text", calculator: false, marks: 4 },
-  ],
-  P6: [
-    { q: "A magic trick uses two boxes. Box A: 3 red, 5 blue cards. Box B: 4 red, 2 blue cards. A card is taken from A and placed in B, then a card is drawn from B. Find P(red from B).", a: "19/56", type: "text", calculator: false, marks: 5 },
-  ],
-  P7: [
-    { q: "In a year group, 15 students study French, 12 study Spanish, and 5 study both languages. A student studying at least one language is chosen at random. Find P(studies French only | studies at least one language).", a: "10/22 or 5/11", type: "text", calculator: false, marks: 4 },
-  ],
-
-  // Statistics - Higher exam style
-  S1: [
-    { q: "Nine students score 12, 15, 18, 21, 24, 27, 30, 33, 36 in a test. The mean is 24. One student's score is removed from the data and the new mean is 25. Which score was removed?", a: "15", type: "number", calculator: true, marks: 4 },
-  ],
-  S2: [
-    { q: "Two Year 11 classes took the same maths test. Class A: median 62, IQR 15. Class B: median 58, IQR 24. Compare the performance of the two classes.", a: "Class A higher average and more consistent (smaller IQR)", type: "text", calculator: false, marks: 3 },
-  ],
-  S3: [
-    { q: "A study of revision time (x hours) and exam mark (y%) gives the regression line y = 2.3x + 15. Interpret what the gradient and y-intercept tell us about the relationship.", a: "Each extra hour gives 2.3 more marks; 15 is the mark with 0 hours study", type: "text", calculator: false, marks: 3 },
-  ],
-  S4: [
-    { q: "A shop analyses ice cream sales with seasonal variation: Q1: -15, Q2: +20, Q3: +25, Q4: -30 (units from trend). The trend line predicts 180 units for Q3 of year 3. Find the actual predicted sales.", a: "205", type: "number", calculator: false, marks: 3 },
-  ],
-  S5: [
-    { q: "A electronics factory produces 40% of components on machine A and 60% on machine B. Defect rates are 2% (A) and 5% (B). A faulty component is found. Find the probability it came from machine A.", a: "8/38 or 4/19", type: "text", calculator: false, marks: 5 },
-  ],
 };
 
 // Helper function to get appropriate exam questions based on tier
@@ -4305,324 +2714,127 @@ const isDue = (progress) => {
   return Date.now() >= progress.nextDue;
 };
 
-const isMastered = (progress) => progress?.examPassed === true && (progress?.quickCorrect ?? 0) >= 4;
+const isMastered = (progress) => (progress?.quickCorrect ?? 0) >= 5;
 
 // Build session queue with FSRS-based spaced repetition + discriminative interleaving
 const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation') => {
   const now = Date.now();
-  const fsrsData = loadFsrsData();
-
-  // Get the appropriate question bank based on tier
   const qBank = getQuestionBankForTier(tier);
 
-  // Session structure configuration
-  const SESSION_STRUCTURE = {
-    warmUp: 1,      // Easy questions to build confidence
-    challenge: count - 2, // Main learning (interleaved)
-    coolDown: 1,    // End on success
+  // Shuffle helper (Fisher-Yates)
+  const shuffle = (arr) => {
+    const s = [...arr];
+    for (let i = s.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [s[i], s[j]] = [s[j], s[i]];
+    }
+    return s;
   };
 
-  // Collect all available questions with FSRS data
-  const allQuestions = [];
+  // ── Step 1: Collect one candidate per objective (the NEXT question they need) ──
+  const candidates = [];
 
   allObjectives.forEach(obj => {
     const objProg = progress[obj.code];
-
-    // Skip objectives in cooldown
-    if (objProg?.skipUntilSession && objProg.skipUntilSession > sessionCount) {
-      return;
-    }
-
     const questions = qBank[obj.code] || [];
-    questions.forEach((q, idx) => {
-      const questionId = getQuestionId(obj.code, idx, q);
-      const card = fsrsData.questionCards[questionId] || fsrsInitCard(questionId);
+    if (questions.length === 0) return; // No questions written yet
 
-      // Calculate retrievability (how likely they'll remember)
-      const elapsedDays = card.lastReview
-        ? (now - card.lastReview) / (1000 * 60 * 60 * 24)
-        : 0;
-      const retrievability = card.lastReview
-        ? fsrsRetrievability(elapsedDays, card.stability)
-        : 0;
+    // Skip fully mastered objectives (all 5 correct)
+    const qc = objProg?.quickCorrect ?? 0;
+    if (qc >= 5) return;
 
-      // Due score: lower = more urgent (0 = overdue, 1 = just reviewed)
-      const dueScore = card.nextReview <= now
-        ? Math.max(0, retrievability)
-        : 1 + (card.nextReview - now) / (1000 * 60 * 60 * 24 * 7); // Future cards score >1
+    // Skip objectives in session cooldown
+    if (objProg?.skipUntilSession && objProg.skipUntilSession >= sessionCount) return;
 
-      allQuestions.push({
+    // Skip objectives practiced in the last 2 hours
+    if (objProg?.lastPracticed && (now - objProg.lastPracticed) < 2 * 60 * 60 * 1000) return;
+
+    // Sequential progression: the student gets question[quickCorrect]
+    const questionIdx = Math.min(qc, questions.length - 1);
+    const q = questions[questionIdx];
+    const questionId = getQuestionId(obj.code, questionIdx, q);
+
+    candidates.push({
+      objective: obj,
+      question: q,
+      questionIndex: questionIdx,
+      questionId,
+      level: qc,
+      topic: obj.topic,
+    });
+  });
+
+  // ── Step 2: Fallback — if cooldowns filtered out too many, relax the 2-hour filter ──
+  if (candidates.length < count) {
+    allObjectives.forEach(obj => {
+      const objProg = progress[obj.code];
+      const questions = qBank[obj.code] || [];
+      if (questions.length === 0) return;
+      const qc = objProg?.quickCorrect ?? 0;
+      if (qc >= 5) return;
+      if (objProg?.skipUntilSession && objProg.skipUntilSession >= sessionCount) return;
+      if (candidates.some(c => c.objective.code === obj.code)) return; // Already in pool
+
+      const questionIdx = Math.min(qc, questions.length - 1);
+      const q = questions[questionIdx];
+      candidates.push({
         objective: obj,
         question: q,
-        questionIndex: idx,
-        questionId,
-        card,
-        dueScore,
-        retrievability,
-        difficulty: card.difficulty,
-        state: card.state,
-        isExamReady: (objProg?.quickCorrect ?? 0) >= 4 && !objProg?.examPassed,
-        isMastered: objProg?.examPassed === true,
+        questionIndex: questionIdx,
+        questionId: getQuestionId(obj.code, questionIdx, q),
+        level: qc,
+        topic: obj.topic,
       });
     });
-  });
-
-  // Filter out recently answered questions (robust cross-session/cross-day filter)
-  const recentQuestionIds = new Set(loadRecentQuestions());
-
-  let availableQuestions = allQuestions.filter(q => {
-    // If this question was answered recently, skip it
-    if (recentQuestionIds.has(q.questionId)) return false;
-    return true;
-  });
-
-  // Fallback: if too few questions remain after filtering, clear recent history
-  // This prevents getting stuck when the student has cycled through most questions
-  if (availableQuestions.length < count) {
-    saveRecentQuestions([]); // Reset — they've seen everything, start fresh
-    availableQuestions = allQuestions; // Use full pool
   }
 
-  // Helper for randomized sorting (breaks ties randomly for variety)
-  const randomizedSort = (arr, scoreFn) => {
-    return [...arr].sort((a, b) => {
-      const scoreA = scoreFn(a);
-      const scoreB = scoreFn(b);
-      // If scores are very close (within 0.01), randomize
-      if (Math.abs(scoreA - scoreB) < 0.01) {
-        return Math.random() - 0.5;
-      }
-      return scoreA - scoreB;
-    });
-  };
-
-  // Shuffle array helper (Fisher-Yates)
-  const shuffleArray = (arr) => {
-    const shuffled = [...arr];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
-  // Group questions by topic for balanced selection
-  const questionsByTopic = {};
-  availableQuestions.forEach(q => {
-    const topic = q.objective?.topic || 'Unknown';
-    if (!questionsByTopic[topic]) questionsByTopic[topic] = [];
-    questionsByTopic[topic].push(q);
+  // ── Step 3: Pick `count` questions, balanced across topics ──
+  // Group by topic then round-robin pick from least-used topic
+  const byTopic = {};
+  candidates.forEach(c => {
+    if (!byTopic[c.topic]) byTopic[c.topic] = [];
+    byTopic[c.topic].push(c);
   });
-  const topicNames = Object.keys(questionsByTopic);
+  // Shuffle within each topic for variety
+  Object.keys(byTopic).forEach(t => { byTopic[t] = shuffle(byTopic[t]); });
 
-  // Separate into buckets with randomized sorting for variety
-  const dueCards = randomizedSort(
-    availableQuestions.filter(q => q.dueScore <= 1),
-    q => q.dueScore
-  );
-  const newCards = shuffleArray(availableQuestions.filter(q => q.state === 'new' && q.dueScore > 1));
-  const examReadyCards = shuffleArray(availableQuestions.filter(q => q.isExamReady));
-  const easyCards = shuffleArray(availableQuestions.filter(q => q.difficulty < 0.4 && q.retrievability > 0.8));
-
-  // Build session with structure
   const queue = [];
-  const objectiveCount = {}; // Track how many times each objective appears
-  const usedQuestionIds = new Set();
-  const MAX_PER_OBJECTIVE = 1; // Maximum times same objective can appear in one session
-
-  const addToQueue = (questionData, phase) => {
-    if (!questionData?.objective?.code) return false;
-    if (usedQuestionIds.has(questionData.questionId)) return false;
-
-    // Limit same objective appearing multiple times
-    const objCode = questionData.objective.code;
-    const currentCount = objectiveCount[objCode] || 0;
-    if (currentCount >= MAX_PER_OBJECTIVE) return false;
-
-    usedQuestionIds.add(questionData.questionId);
-    objectiveCount[objCode] = currentCount + 1;
-    queue.push({ ...questionData, sessionPhase: phase });
-    return true;
-  };
-
-  // Helper to check if objective can be added
-  const canAddObjective = (objCode) => {
-    return (objectiveCount[objCode] || 0) < MAX_PER_OBJECTIVE;
-  };
-
-  // Track topic usage for balanced distribution
+  const usedObjectives = new Set();
   const topicCount = {};
-  const getTopicCount = (topic) => topicCount[topic] || 0;
-  const incrementTopicCount = (topic) => {
-    topicCount[topic] = (topicCount[topic] || 0) + 1;
-  };
 
-  // Find the least-used topic among candidates
-  const getLeastUsedTopicCandidate = (candidates) => {
-    let minCount = Infinity;
-    let bestIdx = -1;
-
-    for (let i = 0; i < candidates.length; i++) {
-      const c = candidates[i];
-      if (!c?.objective?.code ||
-          usedQuestionIds.has(c.questionId) ||
-          !canAddObjective(c.objective.code)) {
-        continue;
-      }
-
-      const topic = c.objective.topic;
-      const count = getTopicCount(topic);
-
-      if (count < minCount) {
-        minCount = count;
-        bestIdx = i;
+  while (queue.length < count) {
+    // Find the topic with the least questions added so far that still has candidates
+    let bestTopic = null;
+    let bestCount = Infinity;
+    for (const [topic, arr] of Object.entries(byTopic)) {
+      const available = arr.filter(c => !usedObjectives.has(c.objective.code));
+      if (available.length === 0) continue;
+      const tc = topicCount[topic] || 0;
+      if (tc < bestCount) {
+        bestCount = tc;
+        bestTopic = topic;
       }
     }
 
-    return bestIdx;
-  };
+    if (!bestTopic) break; // No more candidates available
 
-  // Helper to apply discriminative interleaving with topic balancing
-  const addWithInterleaving = (candidates, phase, maxCount) => {
-    let added = 0;
-    const candidatesCopy = [...candidates];
+    // Pick first available from this topic
+    const topicCandidates = byTopic[bestTopic];
+    const nextIdx = topicCandidates.findIndex(c => !usedObjectives.has(c.objective.code));
+    if (nextIdx === -1) break;
 
-    while (added < maxCount && candidatesCopy.length > 0) {
-      // Pick candidate from the least-used topic for better variety
-      const nextIdx = getLeastUsedTopicCandidate(candidatesCopy);
-
-      if (nextIdx === -1) break; // No more valid candidates
-
-      const next = candidatesCopy.splice(nextIdx, 1)[0];
-
-      if (addToQueue(next, phase)) {
-        added++;
-        incrementTopicCount(next.objective.topic);
-
-        // Try to add a confusable pair immediately after (interleaving)
-        if (added < maxCount && next.objective?.code && confusablePairs[next.objective.code]) {
-          const confusableCodes = confusablePairs[next.objective.code];
-          const confusableIdx = candidatesCopy.findIndex(c =>
-            c?.objective?.code &&
-            confusableCodes.includes(c.objective.code) &&
-            !usedQuestionIds.has(c.questionId) &&
-            canAddObjective(c.objective.code)
-          );
-          if (confusableIdx !== -1) {
-            const confusable = candidatesCopy.splice(confusableIdx, 1)[0];
-            if (addToQueue(confusable, phase)) {
-              added++;
-              incrementTopicCount(confusable.objective.topic);
-            }
-          }
-        }
-      }
-    }
-    return added;
-  };
-
-  // Phase 1: Warm-up (easy questions from different objectives, randomized for variety)
-  const warmUpCandidates = easyCards.length > 0
-    ? easyCards
-    : shuffleArray(availableQuestions.filter(q => q.difficulty < 0.5));
-
-  // Use topic balancing for warm-up too
-  addWithInterleaving(warmUpCandidates, 'warmup', SESSION_STRUCTURE.warmUp);
-
-  // Phase 2: Challenge (interleaved due cards, exam-ready, and new)
-  const challengeTarget = SESSION_STRUCTURE.challenge;
-
-  // GUARANTEED: At least 1 never-practised objective per session (if any exist)
-  const neverPractisedCards = shuffleArray(availableQuestions.filter(q => {
-    const prog = progress[q.objective?.code];
-    return !prog || (!prog.quickCorrect && !prog.examPassed && !prog.lastPracticed);
-  }));
-  if (neverPractisedCards.length > 0) {
-    addWithInterleaving(
-      neverPractisedCards.filter(q => !usedQuestionIds.has(q.questionId)),
-      'challenge',
-      1
-    );
+    const next = topicCandidates.splice(nextIdx, 1)[0];
+    usedObjectives.add(next.objective.code);
+    topicCount[next.topic] = (topicCount[next.topic] || 0) + 1;
+    queue.push(next);
   }
 
-  // Prioritize exam-ready (up to 1, reduced from 2 to leave room for variety)
-  addWithInterleaving(
-    examReadyCards.filter(q => !usedQuestionIds.has(q.questionId)),
-    'challenge',
-    Math.min(1, challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp))
-  );
-
-  // Add due cards with interleaving
-  const remainingChallenge = challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp);
-  const dueTarget = Math.ceil(remainingChallenge * 0.5);
-  addWithInterleaving(
-    dueCards.filter(q => !usedQuestionIds.has(q.questionId)),
-    'challenge',
-    dueTarget
-  );
-
-  // Fill with new cards
-  const newTarget = challengeTarget - (queue.length - SESSION_STRUCTURE.warmUp);
-  addWithInterleaving(
-    newCards.filter(q => !usedQuestionIds.has(q.questionId)).sort(() => Math.random() - 0.5),
-    'challenge',
-    newTarget
-  );
-
-  // Phase 3: Cool-down (end on an easy success from a different objective/topic)
-  const coolDownCandidates = shuffleArray(
-    availableQuestions.filter(q =>
-      !usedQuestionIds.has(q.questionId) &&
-      q.difficulty < 0.4 &&
-      q?.objective?.code &&
-      canAddObjective(q.objective.code)
-    )
-  );
-
-  // Use topic balancing for cool-down
-  addWithInterleaving(coolDownCandidates, 'cooldown', SESSION_STRUCTURE.coolDown);
-
-  // If no cool-down was added, fall back to any unused question
-  if (queue.filter(q => q.sessionPhase === 'cooldown').length === 0) {
-    const fallback = shuffleArray(availableQuestions.filter(q =>
-      !usedQuestionIds.has(q.questionId) &&
-      q?.objective?.code &&
-      canAddObjective(q.objective.code)
-    ));
-    if (fallback.length > 0) {
-      addToQueue(fallback[0], 'cooldown');
-      incrementTopicCount(fallback[0].objective.topic);
-    }
-  }
-
-  // Fill any remaining slots with topic-balanced questions
-  const remainingSlots = count - queue.length;
-  if (remainingSlots > 0) {
-    const unused = shuffleArray(
-      availableQuestions.filter(q =>
-        !usedQuestionIds.has(q.questionId) &&
-        q?.objective?.code &&
-        canAddObjective(q.objective.code)
-      )
-    );
-    addWithInterleaving(unused, 'challenge', remainingSlots);
-  }
-
-  // Reorder to ensure warm-up first, cool-down last
-  const warmUp = queue.filter(q => q.sessionPhase === 'warmup');
-  const challenge = queue.filter(q => q.sessionPhase === 'challenge');
-  const coolDown = queue.filter(q => q.sessionPhase === 'cooldown');
-
-  // Return queue items with objective and question data
-  const orderedQueue = [...warmUp, ...challenge, ...coolDown];
-  return orderedQueue.map(q => ({
+  // Shuffle the final queue so topics are interleaved, not grouped
+  return shuffle(queue).map(q => ({
     objective: q.objective,
     question: q.question,
     questionId: q.questionId,
     questionIndex: q.questionIndex,
-    sessionPhase: q.sessionPhase,
-    dueScore: q.dueScore,
-    retrievability: q.retrievability,
   }));
 };
 
@@ -4630,41 +2842,16 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 const getQuestion = (objective, progressData, tier = 'foundation') => {
   const prog = progressData?.[objective.code];
   const quickCorrect = prog?.quickCorrect ?? 0;
-  const examPassed = prog?.examPassed ?? false;
 
   // Get the appropriate question bank for this tier
   const qBank = getQuestionBankForTier(tier);
-
-  // If already mastered, return a quick question for review
-  if (examPassed) {
-    const questions = qBank[objective.code];
-    if (questions && questions.length > 0) {
-      const q = questions[Math.floor(Math.random() * questions.length)];
-      return { ...q, objective, questionType: 'review' };
-    }
-  }
-
-  // If ready for exam (4 quick questions done), serve exam question
-  if (quickCorrect >= 4 && !examPassed) {
-    const examBank = getExamQuestionsForTier(tier);
-    const exams = examBank[objective.code];
-    if (exams && exams.length > 0) {
-      const q = exams[Math.floor(Math.random() * exams.length)];
-      return { ...q, objective, questionType: 'exam', isExamQuestion: true };
-    }
-    // Fallback to a harder quick question if no exam question available
-    const questions = qBank[objective.code];
-    if (questions && questions.length > 0) {
-      const q = questions[Math.floor(Math.random() * questions.length)];
-      return { ...q, objective, questionType: 'exam', isExamQuestion: true };
-    }
-  }
-
-  // Otherwise, serve a quick question
   const questions = qBank[objective.code];
   if (questions && questions.length > 0) {
-    const q = questions[Math.floor(Math.random() * questions.length)];
-    return { ...q, objective, questionType: 'quick' };
+    // Sequential progression: pick the question at the student's current level
+    const questionIndex = Math.min(quickCorrect, questions.length - 1);
+    const q = questions[questionIndex];
+    const questionType = quickCorrect >= 5 ? 'review' : 'quick';
+    return { ...q, objective, questionType };
   }
 
   // Fallback: generic question
@@ -4939,7 +3126,7 @@ What is the student's answer?`
   const dueCount = allObjectives?.filter(o => isDue(progress[o.code]) && !isMastered(progress[o.code])).length ?? 0;
   const cooldownCount = allObjectives?.filter(o => {
     const prog = progress[o.code];
-    return prog?.skipUntilSession && prog.skipUntilSession > sessionCount;
+    return prog?.skipUntilSession && prog.skipUntilSession >= sessionCount;
   }).length ?? 0;
   
   // Get the appropriate question bank based on tier
@@ -5015,22 +3202,7 @@ What is the student's answer?`
         // Use the specific question selected by buildSessionQueue
         const objProg = progress[item.objective?.code];
         const quickCorrect = objProg?.quickCorrect ?? 0;
-        const examPassed = objProg?.examPassed ?? false;
-
-        // Determine question type based on progress
-        let questionType = 'quick';
-        if (examPassed) {
-          questionType = 'review';
-        } else if (quickCorrect >= 4) {
-          // Check if there's an exam question available (tier-aware)
-          const examBank = getExamQuestionsForTier(tier);
-          const exams = examBank[item.objective?.code];
-          if (exams && exams.length > 0) {
-            const examQ = exams[Math.floor(Math.random() * exams.length)];
-            return { ...examQ, objective: item.objective, questionType: 'exam', isExamQuestion: true, _fsrsQuestionId: item.questionId };
-          }
-          questionType = 'exam';
-        }
+        const questionType = quickCorrect >= 5 ? 'review' : 'quick';
 
         return {
           ...(item.question || {}),
@@ -5220,34 +3392,19 @@ What is the student's answer?`
     if (!isScaffoldQuestion) {
       const prog = progress[code] || {};
       const oldQuickCorrect = prog.quickCorrect ?? 0;
-      const wasExamPassed = prog.examPassed ?? false;
-      const wasMastered = wasExamPassed && oldQuickCorrect >= 4;
-      const isExamQuestion = current.isExamQuestion || current.questionType === 'exam';
-      
+      const wasMastered = oldQuickCorrect >= 5;
+
       let newQuickCorrect = oldQuickCorrect;
-      let newExamPassed = wasExamPassed;
-      
+
       if (correct) {
-        if (isExamQuestion) {
-          // Exam question answered correctly - mastery achieved!
-          newExamPassed = true;
-        } else {
-          // Quick question answered correctly
-          newQuickCorrect = Math.min(oldQuickCorrect + 1, 4);
-        }
+        // Correct: advance to next question (max 5 = mastered)
+        newQuickCorrect = Math.min(oldQuickCorrect + 1, 5);
       } else {
-        // Wrong answer
-        if (isExamQuestion) {
-          // Failed exam - need to redo some quick questions
-          newQuickCorrect = Math.max(0, oldQuickCorrect - 2); // Lose 2 quick questions
-          newExamPassed = false;
-        } else {
-          // Failed quick question - lose progress
-          newQuickCorrect = Math.max(0, oldQuickCorrect - 1);
-        }
+        // Wrong: drop back one level (can't go below 0)
+        newQuickCorrect = Math.max(0, oldQuickCorrect - 1);
       }
-      
-      const nowMastered = newExamPassed && newQuickCorrect >= 4;
+
+      const nowMastered = newQuickCorrect >= 5;
       
       // Track mastery gained
       if (correct && nowMastered && !wasMastered) {
@@ -5260,21 +3417,17 @@ What is the student's answer?`
           [code]: {
             ...prev[code],
             quickCorrect: newQuickCorrect,
-            examPassed: newExamPassed,
             lastPracticed: Date.now(),
             nextDue: getNextDueTime(newQuickCorrect, correct),
             // Skip objective for a few sessions so the student sees variety
-            // Correct: skip proportional to progress (higher mastery = longer break)
-            // Wrong: skip 3 sessions to give time to revise via other topics
             skipUntilSession: correct
               ? sessionCount + (
-                  (newExamPassed && newQuickCorrect >= 4) ? 8 : // Mastered — long break
-                  newQuickCorrect >= 4 ? 3 : // Exam ready
-                  newQuickCorrect >= 2 ? 2 : // Making progress
-                  1                           // Just started — short break
+                  newQuickCorrect >= 5 ? 10 : // Mastered — long break
+                  newQuickCorrect >= 4 ? 3 :  // Nearly there
+                  newQuickCorrect >= 2 ? 2 :  // Making progress
+                  1                            // Just started
                 )
               : sessionCount + 3,
-            // Track when objective was mastered
             masteredAt: (nowMastered && !wasMastered) ? Date.now() : prev[code]?.masteredAt,
           }
         };
@@ -5287,11 +3440,9 @@ What is the student's answer?`
         correct,
         question: current.q,
         topic: current.objective.topic,
-        questionType: isExamQuestion ? 'exam' : 'quick',
+        questionType: 'quick',
         oldQuickCorrect,
         newQuickCorrect,
-        wasExamPassed,
-        newExamPassed,
         newMastery: correct && nowMastered && !wasMastered
       }]);
 
@@ -5480,7 +3631,7 @@ What is the student's answer?`
           topic: obj?.topic || 'Unknown',
           level,
           quickCorrect: prog?.quickCorrect ?? 0,
-          examPassed: prog?.examPassed ?? false,
+          mastered: (prog?.quickCorrect ?? 0) >= 5,
           correctInSession: correctForCode,
           totalInSession: resultsForCode.length,
         };
@@ -5743,14 +3894,12 @@ What is the student's answer?`
         <div className="max-w-lg mx-auto content-container">
           {/* Question card */}
           {current && (
-            <div className={`glass-panel-dark rounded-3xl shadow-glass overflow-hidden relative ${
-              current.isExamQuestion ? 'border-amber-500/50 ring-2 ring-amber-500/20' : ''
-            }`}>
+            <div className="glass-panel-dark rounded-3xl shadow-glass overflow-hidden relative">
 
               {/* Combined header bar: Exit · Topic · Progress · Score */}
               <div
                 className="px-3 py-2 flex items-center gap-2 question-card-header"
-                style={{ backgroundColor: current.isExamQuestion ? 'rgba(245, 158, 11, 0.2)' : TOPIC_HEX[current.objective.topic] + '20' }}
+                style={{ backgroundColor: TOPIC_HEX[current.objective.topic] + '20' }}
               >
                 {/* Exit button */}
                 <button
@@ -5763,7 +3912,7 @@ What is the student's answer?`
                 {/* Topic code badge */}
                 <span
                   className="px-2 py-0.5 rounded-md text-xs font-bold text-white shrink-0"
-                  style={{ backgroundColor: current.isExamQuestion ? '#f59e0b' : TOPIC_HEX[current.objective.topic] }}
+                  style={{ backgroundColor: TOPIC_HEX[current.objective.topic] }}
                 >
                   {current.prerequisiteCode || current.objective.code}
                 </span>
@@ -6625,12 +4774,13 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
     const mastered = topicObjectives.filter(o => isMastered(progress[o.code])).length;
     const examReady = topicObjectives.filter(o => {
       const prog = progress[o.code];
-      return (prog?.quickCorrect ?? 0) >= 4 && !prog?.examPassed;
+      const qc = prog?.quickCorrect ?? 0;
+      return qc >= 4 && qc < 5;
     }).length;
     const learning = topicObjectives.filter(o => {
       const prog = progress[o.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
-      return quickCorrect > 0 && quickCorrect < 4 && !prog?.examPassed;
+      return quickCorrect > 0 && quickCorrect < 4;
     }).length;
     topicStats[topic] = {
       total: topicObjectives.length,
@@ -6667,12 +4817,13 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   const masteredCount = allObjectives?.filter(o => isMastered(progress[o.code])).length ?? 0;
   const examReadyCount = allObjectives?.filter(o => {
     const prog = progress[o.code];
-    return (prog?.quickCorrect ?? 0) >= 4 && !prog?.examPassed;
+    const qc = prog?.quickCorrect ?? 0;
+    return qc >= 4 && qc < 5;
   }).length ?? 0;
   const learningCount = allObjectives?.filter(o => {
     const prog = progress[o.code];
     const quickCorrect = prog?.quickCorrect ?? 0;
-    return quickCorrect > 0 && quickCorrect < 4 && !prog?.examPassed;
+    return quickCorrect > 0 && quickCorrect < 4;
   }).length ?? 0;
   
   // Weighted readiness: mastered = 100%, exam ready = 80%, learning = 40%, not started = 0%
@@ -6946,10 +5097,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     
     // Count mastered objectives
     const allObjectives = OBJECTIVES.filter(o => !o.higher || settings?.includeHigherTier);
-    const masteredCount = allObjectives.filter(o => {
-      const prog = progress[o.code];
-      return prog?.examPassed && (prog?.quickCorrect ?? 0) >= 4;
-    }).length;
+    const masteredCount = allObjectives.filter(o => isMastered(progress[o.code])).length;
     
     // Generate summary text
     const lines = [
@@ -8556,9 +6704,8 @@ function AppContent() {
     return allObjectives.map(obj => {
       const prog = progress[obj.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
-      const examPassed = prog?.examPassed ?? false;
       const lastPracticed = prog?.lastPracticed ?? 0;
-      const neverPractised = !prog || (!quickCorrect && !examPassed && !lastPracticed);
+      const neverPractised = !prog || (!quickCorrect && !lastPracticed);
       const daysSince = lastPracticed ? Math.floor((Date.now() - lastPracticed) / (1000 * 60 * 60 * 24)) : 999;
 
       // Never-practised objectives get a massive boost
@@ -8568,10 +6715,10 @@ function AppContent() {
 
       // Weight: lower progress = higher weight, longer time since practice = higher weight
       let progressWeight;
-      if (examPassed) {
+      if (quickCorrect >= 5) {
         progressWeight = 1; // Mastered - low priority
       } else if (quickCorrect >= 4) {
-        progressWeight = 3; // Exam ready - medium priority
+        progressWeight = 3; // Nearly there - medium priority
       } else {
         progressWeight = Math.max(5 - quickCorrect, 2); // Learning - higher priority
       }
@@ -8966,7 +7113,7 @@ function AppContent() {
                 >
                   <Check className="w-3 h-3 text-white" strokeWidth={3} />
                 </div>
-                <span>Exam ready</span>
+                <span>Nearly there</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -9258,7 +7405,7 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   if (!current) return null;
 
   const topicColor = TOPIC_HEX[current.topic] || '#A78BFA';
-  const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Exam ready', 'Mastered!'];
+  const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Nearly there', 'Mastered!'];
   const levelLabel = levelLabels[current.level] || 'Learning';
   const progressPct = (current.level / 5) * 100;
   const isLast = currentIndex >= objectives.length - 1;
