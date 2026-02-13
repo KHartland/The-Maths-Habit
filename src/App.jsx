@@ -1669,9 +1669,9 @@ const questionBank = {
     ],
     // Level 4 (2 marks) — List integers from an inequality
     [
-      { q: "x is an integer such that −3 < x ≤ 2. Write down all the possible values of x.", type: "self", a: "−2, −1, 0, 1, 2" },
-      { q: "x is an integer such that −4 < x ≤ 1. Write down all the possible values of x.", type: "self", a: "−3, −2, −1, 0, 1" },
-      { q: "x is an integer such that −5 < x ≤ 0. Write down all the possible values of x.", type: "self", a: "−4, −3, −2, −1, 0" },
+      { q: "x is an integer such that −3 < x ≤ 2. Write down all the possible values of x.", a: "−2, −1, 0, 1, 2" },
+      { q: "x is an integer such that −4 < x ≤ 1. Write down all the possible values of x.", a: "−3, −2, −1, 0, 1" },
+      { q: "x is an integer such that −5 < x ≤ 0. Write down all the possible values of x.", a: "−4, −3, −2, −1, 0" },
     ],
   ],
 
@@ -1724,9 +1724,9 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — List all factors
     [
-      { q: "Write down all the factors of 28.", type: "self", a: "1, 2, 4, 7, 14, 28" },
-      { q: "Write down all the factors of 32.", type: "self", a: "1, 2, 4, 8, 16, 32" },
-      { q: "Write down all the factors of 40.", type: "self", a: "1, 2, 4, 5, 8, 10, 20, 40" },
+      { q: "Write down all the factors of 28.", a: "1, 2, 4, 7, 14, 28" },
+      { q: "Write down all the factors of 32.", a: "1, 2, 4, 8, 16, 32" },
+      { q: "Write down all the factors of 40.", a: "1, 2, 4, 5, 8, 10, 20, 40" },
     ],
     // Level 2 (2 marks) — Find the LCM
     [
@@ -1736,15 +1736,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Prime factorisation in index form
     [
-      { q: "Write 60 as a product of its prime factors. Give your answer in index form.", type: "self", a: "2² × 3 × 5" },
-      { q: "Write 84 as a product of its prime factors. Give your answer in index form.", type: "self", a: "2² × 3 × 7" },
-      { q: "Write 72 as a product of its prime factors. Give your answer in index form.", type: "self", a: "2³ × 3²" },
+      { q: "Write 60 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 5", "2 × 3² × 5", "2² × 5 × 7", "3 × 4 × 5"], a: "2² × 3 × 5" },
+      { q: "Write 84 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 7", "2 × 3 × 14", "2² × 3² × 7", "4 × 3 × 7"], a: "2² × 3 × 7" },
+      { q: "Write 72 as a product of its prime factors.", type: "mcq", options: ["2³ × 3²", "2² × 3³", "2³ × 9", "8 × 3²"], a: "2³ × 3²" },
     ],
     // Level 4 (3 marks) — LCM word problem
     [
       { q: "Lights A and B flash at different intervals. Light A flashes every 12 seconds. Light B flashes every 15 seconds. They both flash at the same time. After how many seconds will they next flash together?", a: "60" },
       { q: "Bus A and Bus B leave the station at the same time. Bus A leaves every 15 minutes. Bus B leaves every 20 minutes. After how many minutes will they next leave at the same time?", a: "60" },
-      { q: "Two alarms are set to beep. Alarm P beeps every 10 minutes. Alarm Q beeps every 25 minutes. They both beep at 9:00 am. At what time will they next beep together?", type: "self", a: "9:50 am (LCM of 10 and 25 = 50 minutes)" },
+      { q: "Two alarms are set to beep. Alarm P beeps every 10 minutes. Alarm Q beeps every 25 minutes. They both beep at 9:00 am. At what time will they next beep together?", a: "50" },
     ],
   ],
 
@@ -1767,21 +1767,21 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Simplify using index laws (multiplication)
     [
-      { q: "Simplify: y⁵ × y³", type: "self", a: "y⁸" },
-      { q: "Simplify: w⁶ × w²", type: "self", a: "w⁸" },
-      { q: "Simplify: p⁷ ÷ p²", type: "self", a: "p⁵" },
+      { q: "Simplify: y⁵ × y³", type: "mcq", options: ["y⁸", "y¹⁵", "y²", "2y⁸"], a: "y⁸" },
+      { q: "Simplify: w⁶ × w²", type: "mcq", options: ["w⁸", "w¹²", "w⁴", "2w⁸"], a: "w⁸" },
+      { q: "Simplify: p⁷ ÷ p²", type: "mcq", options: ["p⁵", "p⁹", "p¹⁴", "2p⁵"], a: "p⁵" },
     ],
     // Level 3 (2 marks) — Simplify power of a power
     [
-      { q: "Simplify (2⁴)³. Give your answer as a power of 2.", type: "self", a: "2¹²" },
-      { q: "Simplify (3²)⁴. Give your answer as a power of 3.", type: "self", a: "3⁸" },
-      { q: "Simplify (5³)². Give your answer as a power of 5.", type: "self", a: "5⁶" },
+      { q: "Simplify (2⁴)³. Give your answer as a power of 2.", type: "mcq", options: ["2¹²", "2⁷", "2⁶⁴", "6¹²"], a: "2¹²" },
+      { q: "Simplify (3²)⁴. Give your answer as a power of 3.", type: "mcq", options: ["3⁸", "3⁶", "3¹⁶", "9⁸"], a: "3⁸" },
+      { q: "Simplify (5³)². Give your answer as a power of 5.", type: "mcq", options: ["5⁶", "5⁵", "5⁹", "25⁶"], a: "5⁶" },
     ],
     // Level 4 (3 marks) — Show a calculation gives a special number
     [
-      { q: "Show that 3⁴ − 2⁶ is a prime number.", type: "self", a: "3⁴ = 81, 2⁶ = 64, 81 − 64 = 17. 17 is prime." },
-      { q: "Show that 5³ − 10² is a square number.", type: "self", a: "5³ = 125, 10² = 100, 125 − 100 = 25 = 5². Yes, 25 is a square number." },
-      { q: "Show that 10² − 8² is a square number.", type: "self", a: "10² = 100, 8² = 64, 100 − 64 = 36 = 6². Yes, 36 is a square number." },
+      { q: "Work out 3⁴ − 2⁶", type: "mcq", options: ["17", "49", "13", "23"], a: "17" },
+      { q: "Work out 5³ − 10²", type: "mcq", options: ["25", "15", "35", "20"], a: "25" },
+      { q: "Work out 10² − 8²", type: "mcq", options: ["36", "64", "18", "44"], a: "36" },
     ],
   ],
 
@@ -1809,15 +1809,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Fraction reduction word problem
     [
-      { q: "A jacket usually costs £60. In a sale, the price is reduced by ¼. Calculate the sale price of the jacket.", a: "45" },
+      { q: "A jacket is in a sale with 15% off. The sale price is now £68. Work out the original price of the jacket.", a: "80" },
       { q: "A sofa usually costs £800. In a sale, the price is reduced by ⅕. Calculate the sale price of the sofa.", a: "640" },
       { q: "A lawnmower usually costs £240. In a sale, the price is reduced by ⅓. Calculate the sale price.", a: "160" },
     ],
     // Level 4 (4 marks) — Compare two shops (VAT and discounts)
     [
-      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off. Which shop is cheaper, and by how much?", type: "self", a: "Shop A: £400 × 1.2 = £480. Shop B: £500 × 0.85 = £425. Shop B is cheaper by £55." },
-      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off. Which shop is cheaper, and by how much?", type: "self", a: "Shop X: £240 × 1.2 = £288. Shop Y: £350 × 0.8 = £280. Shop Y is cheaper by £8." },
-      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off. Which shop is cheaper, and by how much?", type: "self", a: "Alpha: £300 × 1.2 = £360. Beta: £450 × 0.7 = £315. Shop Beta is cheaper by £45." },
+      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off. Which shop is cheaper?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B" },
+      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off. Which shop is cheaper?", type: "mcq", options: ["Shop X", "Shop Y"], a: "Shop Y" },
+      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off. Which shop is cheaper?", type: "mcq", options: ["Shop Alpha", "Shop Beta"], a: "Shop Beta" },
     ],
   ],
 
@@ -1846,9 +1846,9 @@ const questionBank = {
     ],
     // Level 3 (2 marks) — Error intervals
     [
-      { q: "A number n is rounded to the nearest whole number. The result is 8. Write down the error interval for n.", type: "self", a: "7.5 ≤ n < 8.5" },
-      { q: "A number y is rounded to the nearest whole number. The result is 12. Write down the error interval for y.", type: "self", a: "11.5 ≤ y < 12.5" },
-      { q: "A number w is rounded to the nearest whole number. The result is 20. Write down the error interval for w.", type: "self", a: "19.5 ≤ w < 20.5" },
+      { q: "A number n is rounded to the nearest whole number. The result is 8. Write down the error interval for n.", type: "mcq", options: ["7.5 ≤ n < 8.5", "7 ≤ n < 9", "7.5 < n ≤ 8.5", "8 ≤ n < 9"], a: "7.5 ≤ n < 8.5" },
+      { q: "A number y is rounded to the nearest whole number. The result is 12. Write down the error interval for y.", type: "mcq", options: ["11.5 ≤ y < 12.5", "11 ≤ y < 13", "11.5 < y ≤ 12.5", "12 ≤ y < 13"], a: "11.5 ≤ y < 12.5" },
+      { q: "A number w is rounded to the nearest whole number. The result is 20. Write down the error interval for w.", type: "mcq", options: ["19.5 ≤ w < 20.5", "19 ≤ w < 21", "19.5 < w ≤ 20.5", "20 ≤ w < 21"], a: "19.5 ≤ w < 20.5" },
     ],
     // Level 4 (3 marks) — Upper and lower bounds
     [
@@ -1871,9 +1871,9 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — Collect like terms (two variables)
     [
-      { q: "Simplify: 4x + 3y − x + 2y", type: "self", a: "3x + 5y" },
-      { q: "Simplify: 6a + 5b − 2a + b", type: "self", a: "4a + 6b" },
-      { q: "Simplify: 9k − 4m + 2k − m", type: "self", a: "11k − 5m" },
+      { q: "Simplify: 4x + 3y − x + 2y", a: "3x+5y" },
+      { q: "Simplify: 6a + 5b − 2a + b", a: "4a+6b" },
+      { q: "Simplify: 9k − 4m + 2k − m", a: "11k-5m" },
     ],
     // Level 2 (2 marks) — Simplify multiplication
     [
@@ -1883,15 +1883,15 @@ const questionBank = {
     ],
     // Level 3 (2 marks) — Simplify repeated multiplication (powers)
     [
-      { q: "Simplify: m × m × m", type: "self", a: "m³" },
-      { q: "Simplify: p × p × p × p", type: "self", a: "p⁴" },
-      { q: "Simplify: r × r × r", type: "self", a: "r³" },
+      { q: "Simplify: m × m × m", type: "mcq", options: ["m³", "3m", "m + m + m", "m⁴"], a: "m³" },
+      { q: "Simplify: p × p × p × p", type: "mcq", options: ["p⁴", "4p", "p + p + p + p", "p³"], a: "p⁴" },
+      { q: "Simplify: r × r × r", type: "mcq", options: ["r³", "3r", "r + r + r", "r⁴"], a: "r³" },
     ],
     // Level 4 (3 marks) — Factorise fully
     [
-      { q: "Factorise fully: 6x + 18", type: "self", a: "6(x + 3)" },
-      { q: "Factorise fully: 8x + 20", type: "self", a: "4(2x + 5)" },
-      { q: "Factorise fully: 10w − 15", type: "self", a: "5(2w − 3)" },
+      { q: "Factorise fully: 6x + 18", type: "mcq", options: ["6(x + 3)", "3(2x + 6)", "2(3x + 9)", "6(x + 18)"], a: "6(x + 3)" },
+      { q: "Factorise fully: 8x + 20", type: "mcq", options: ["4(2x + 5)", "2(4x + 10)", "8(x + 12)", "4(2x + 20)"], a: "4(2x + 5)" },
+      { q: "Factorise fully: 10w − 15", type: "mcq", options: ["5(2w − 3)", "5(2w + 3)", "10(w − 5)", "2(5w − 15)"], a: "5(2w − 3)" },
     ],
   ],
 
@@ -1956,7 +1956,7 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Equation with brackets
     [
-      { q: "Solve: 5(x + 2) = 35", a: "5" },
+      { q: "3 adults and 2 children go to the cinema. Adult tickets cost £x. Child tickets are half price. The total bill is £36. Find x.", a: "9" },
       { q: "Solve: 3(x + 4) = 27", a: "5" },
       { q: "Solve: 4(x − 3) = 16", a: "7" },
     ],
@@ -1974,33 +1974,33 @@ const questionBank = {
   'A21': [
     // Level 0 (1 mark) — Identify the y-intercept from an equation
     [
-      { q: "Write down the coordinates of the y-intercept for the line y = 3x + 5.", type: "self", a: "(0, 5)" },
-      { q: "Write down the coordinates of the y-intercept for the line y = 2x − 4.", type: "self", a: "(0, −4)" },
-      { q: "Write down the coordinates of the y-intercept for the line y = x − 7.", type: "self", a: "(0, −7)" },
+      { q: "Write down the coordinates of the y-intercept for the line y = 3x + 5.", a: "(0,5)" },
+      { q: "Write down the coordinates of the y-intercept for the line y = 2x − 4.", a: "(0,-4)" },
+      { q: "Write down the coordinates of the y-intercept for the line y = x − 7.", a: "(0,-7)" },
     ],
     // Level 1 (2 marks) — Complete a table of values
     [
-      { q: "Complete the table of values for y = 2x + 1.\nx: −1, 0, 1, 2\ny: ?, 1, ?, 5\nFind the two missing values of y.", type: "self", a: "When x = −1, y = −1. When x = 1, y = 3." },
-      { q: "Complete the table of values for y = 3x − 2.\nx: −1, 0, 1, 2\ny: ?, −2, ?, 4\nFind the two missing values of y.", type: "self", a: "When x = −1, y = −5. When x = 1, y = 1." },
-      { q: "Complete the table of values for y = 4x + 2.\nx: −1, 0, 1, 2\ny: ?, 2, ?, 10\nFind the two missing values of y.", type: "self", a: "When x = −1, y = −2. When x = 1, y = 6." },
+      { q: "Complete the table of values for y = 2x + 1.\nx: −1, 0, 1, 2\ny: ?, 1, ?, 5\nFind the two missing values of y.", a: "-1, 3" },
+      { q: "Complete the table of values for y = 3x − 2.\nx: −1, 0, 1, 2\ny: ?, −2, ?, 4\nFind the two missing values of y.", a: "-5, 1" },
+      { q: "Complete the table of values for y = 4x + 2.\nx: −1, 0, 1, 2\ny: ?, 2, ?, 10\nFind the two missing values of y.", a: "-2, 6" },
     ],
     // Level 2 (2 marks) — Describe/sketch a simple horizontal or vertical line
     [
-      { q: "Describe the graph of y = 2 on a coordinate grid.", type: "self", a: "A horizontal line passing through (0, 2)." },
-      { q: "Describe the graph of x = 3 on a coordinate grid.", type: "self", a: "A vertical line passing through (3, 0)." },
-      { q: "Describe the graph of y = −3 on a coordinate grid.", type: "self", a: "A horizontal line passing through (0, −3)." },
+      { q: "Describe the graph of y = 2 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, 2)", "A vertical line through (2, 0)", "A diagonal line through (0, 2)", "A curve through (0, 2)"], a: "A horizontal line through (0, 2)" },
+      { q: "Describe the graph of x = 3 on a coordinate grid.", type: "mcq", options: ["A vertical line through (3, 0)", "A horizontal line through (0, 3)", "A diagonal line through (3, 0)", "A curve through (3, 0)"], a: "A vertical line through (3, 0)" },
+      { q: "Describe the graph of y = −3 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, −3)", "A vertical line through (−3, 0)", "A diagonal line through (0, −3)", "A curve through (0, −3)"], a: "A horizontal line through (0, −3)" },
     ],
     // Level 3 (3 marks) — Find the gradient from two points
     [
-      { q: "A line passes through (0, 4) and (2, 10). Find the gradient of the line.", a: "3", hint: "Gradient = change in y ÷ change in x = (10 − 4) ÷ (2 − 0)" },
+      { q: "A line passes through A(2, 7) and B(6, −1). Find the gradient of the line.", a: "-2", hint: "Gradient = change in y ÷ change in x = (−1 − 7) ÷ (6 − 2)" },
       { q: "A line passes through (0, 2) and (3, 11). Find the gradient of the line.", a: "3", hint: "Gradient = change in y ÷ change in x = (11 − 2) ÷ (3 − 0)" },
       { q: "A line passes through (0, 5) and (4, 13). Find the gradient of the line.", a: "2", hint: "Gradient = change in y ÷ change in x = (13 − 5) ÷ (4 − 0)" },
     ],
     // Level 4 (3 marks) — Check if a point lies on a line (show working)
     [
-      { q: "Does the point (5, 23) lie on the line y = 4x + 3? You must show your working.", type: "self", a: "When x = 5: y = 4(5) + 3 = 23. Yes, (5, 23) lies on the line." },
-      { q: "Does the point (4, 19) lie on the line y = 5x − 1? You must show your working.", type: "self", a: "When x = 4: y = 5(4) − 1 = 19. Yes, (4, 19) lies on the line." },
-      { q: "Does the point (3, 16) lie on the line y = 6x − 2? You must show your working.", type: "self", a: "When x = 3: y = 6(3) − 2 = 16. Yes, (3, 16) lies on the line." },
+      { q: "Does the point (5, 23) lie on the line y = 4x + 3?", a: "Yes" },
+      { q: "Does the point (4, 19) lie on the line y = 5x − 1?", a: "Yes" },
+      { q: "Does the point (3, 16) lie on the line y = 6x − 2?", a: "Yes" },
     ],
   ],
 
@@ -2047,15 +2047,15 @@ const questionBank = {
   'R4': [
     // Level 0 (1 mark) — Simplify a ratio
     [
-      { q: "Simplify the ratio 15:25", type: "self", a: "3:5" },
-      { q: "Simplify the ratio 18:42", type: "self", a: "3:7" },
-      { q: "Simplify the ratio 24:36", type: "self", a: "2:3" },
+      { q: "Simplify the ratio 15:25", a: "3:5" },
+      { q: "Simplify the ratio 18:42", a: "3:7" },
+      { q: "Simplify the ratio 24:36", a: "2:3" },
     ],
     // Level 1 (2 marks) — Divide an amount in a given ratio
     [
-      { q: "Divide £60 in the ratio 2:3", type: "self", a: "£24 and £36" },
-      { q: "Divide £80 in the ratio 3:5", type: "self", a: "£30 and £50" },
-      { q: "Divide £120 in the ratio 1:5", type: "self", a: "£20 and £100" },
+      { q: "Divide £60 in the ratio 2:3. What are the two amounts?", type: "mcq", options: ["£20 and £40", "£24 and £36", "£30 and £30", "£25 and £35"], a: "£24 and £36" },
+      { q: "Divide £80 in the ratio 3:5. What are the two amounts?", type: "mcq", options: ["£30 and £50", "£32 and £48", "£40 and £40", "£24 and £56"], a: "£30 and £50" },
+      { q: "Divide £120 in the ratio 1:5. What are the two amounts?", type: "mcq", options: ["£24 and £96", "£30 and £90", "£20 and £100", "£60 and £60"], a: "£20 and £100" },
     ],
     // Level 2 (2 marks) — Find a missing quantity from a ratio
     [
@@ -2065,15 +2065,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Simplify a ratio with different units
     [
-      { q: "Write the ratio 400 g : 2 kg in its simplest form.", type: "self", a: "1:5 (convert to 400 g : 2000 g first)" },
-      { q: "Write the ratio 600 ml : 3 litres in its simplest form.", type: "self", a: "1:5 (convert to 600 ml : 3000 ml first)" },
-      { q: "Write the ratio 500 m : 4 km in its simplest form.", type: "self", a: "1:8 (convert to 500 m : 4000 m first)" },
+      { q: "Write the ratio 400 g : 2 kg in its simplest form.", a: "1:5" },
+      { q: "Write the ratio 600 ml : 3 litres in its simplest form.", a: "1:5" },
+      { q: "Write the ratio 500 m : 4 km in its simplest form.", a: "1:8" },
     ],
     // Level 4 (4 marks) — Combine two ratios into a three-part ratio
     [
-      { q: "x:y = 3:4 and y:z = 2:5. Find the ratio x:y:z in its simplest form.", type: "self", a: "x:y:z = 3:4:10 (make y equal: multiply second ratio by 2)" },
-      { q: "a:b = 2:3 and b:c = 6:7. Find the ratio a:b:c in its simplest form.", type: "self", a: "a:b:c = 4:6:7 (make b equal: multiply first ratio by 2)" },
-      { q: "p:q = 4:5 and q:r = 10:13. Find the ratio p:q:r in its simplest form.", type: "self", a: "p:q:r = 8:10:13 (make q equal: multiply first ratio by 2)" },
+      { q: "x:y = 3:4 and y:z = 2:5. Find the ratio x:y:z in its simplest form.", a: "3:4:10" },
+      { q: "a:b = 2:3 and b:c = 6:7. Find the ratio a:b:c in its simplest form.", a: "4:6:7" },
+      { q: "p:q = 4:5 and q:r = 10:13. Find the ratio p:q:r in its simplest form.", a: "8:10:13" },
     ],
   ],
 
@@ -2108,9 +2108,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Best value comparison
     [
-      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "self", a: "Shop A: £1.80 ÷ 1.2 = £1.50/kg. Shop B: £0.80 ÷ 0.5 = £1.60/kg. Shop A is better value." },
-      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "self", a: "Shop X: £2.10 ÷ 1.5 = £1.40/kg. Shop Y: £0.60 ÷ 0.4 = £1.50/kg. Shop X is better value." },
-      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "self", a: "Alpha: £1.40 ÷ 2 = £0.70/kg. Beta: £0.60 ÷ 0.75 = £0.80/kg. Shop Alpha is better value." },
+      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value"], a: "Shop A" },
+      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value"], a: "Shop X" },
+      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value"], a: "Shop Alpha" },
     ],
   ],
 
@@ -2125,11 +2125,11 @@ const questionBank = {
       { q: "Write down the mathematical name of a polygon with 8 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Decagon"], a: "Octagon" },
       { q: "Write down the mathematical name of a polygon with 6 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Heptagon"], a: "Hexagon" },
     ],
-    // Level 1 (2 marks) — Work out a missing angle [DIAGRAM NEEDED]
+    // Level 1 (2 marks) — Work out a missing angle
     [
-      { q: "[Diagram needed] Work out the size of angle x.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the size of angle x.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the size of angle x.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "Two angles on a straight line are x° and 115°. Work out the value of x.", a: "65" },
+      { q: "Three angles meet at a point: 140°, 85°, and x°. Work out the value of x.", a: "135" },
+      { q: "Two angles are vertically opposite. One is 132°. What is the size of angle x?", a: "132" },
     ],
     // Level 2 (2 marks) — Isosceles triangle angles
     [
@@ -2145,9 +2145,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Multi-step angle problem [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Find the value of y in this diagram. Give reasons for your answer.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Find the value of w in this diagram. Give reasons for your answer.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Find the value of z in this diagram. Give reasons for your answer.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "Two parallel lines are cut by a transversal. One angle is 72°. Find the alternate angle y.", a: "72" },
+      { q: "Two parallel lines are cut by a transversal. One angle is 118°. Find the co-interior angle w.", a: "62" },
+      { q: "Two parallel lines are cut by two transversals forming a triangle. The alternate angle is 55° and the angle on the straight line gives 48°. Find angle z inside the triangle.", a: "77" },
     ],
   ],
 
@@ -2158,15 +2158,15 @@ const questionBank = {
   'G12': [
     // Level 0 (2 marks) — Area of a rectangle/square
     [
-      { q: "Work out the area of a rectangle with length 8 cm and width 5 cm.", a: "40" },
+      { q: "A rectangular field is 12 m long and 8 m wide. Work out the area of the field.", a: "96" },
       { q: "Work out the area of a rectangle with length 12 cm and width 4 cm.", a: "48" },
-      { q: "Work out the area of a square with a side length of 9 cm.", a: "81" },
+      { q: "A square garden has a side length of 12 m. Work out the area of the garden.", a: "144" },
     ],
     // Level 1 (2 marks) — Area of a triangle [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Work out the area of this triangle.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the area of this triangle.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the area of this triangle.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "A triangle has a base of 8 cm and a perpendicular height of 5 cm. Work out the area.", a: "20" },
+      { q: "A triangle has a base of 12 cm and a perpendicular height of 7 cm. Work out the area.", a: "42" },
+      { q: "A triangle has a base of 10 cm and a perpendicular height of 6 cm. Work out the area.", a: "30" },
     ],
     // Level 2 (3 marks) — Area/circumference of a circle
     [
@@ -2182,9 +2182,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Compound shape [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] The diagram shows a compound shape made from two rectangles. Work out the total perimeter.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] The diagram shows a compound shape made from two rectangles. Work out the total perimeter.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] The diagram shows a compound shape made from two rectangles. Work out the total area.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "An L-shaped compound shape is made from two rectangles. The outer dimensions are 10 cm × 5 cm, with a 4 cm × 3 cm rectangle removed from the top-right corner. Work out the total perimeter.", a: "34" },
+      { q: "A T-shaped compound shape is made from two rectangles. The top rectangle is 12 cm × 3 cm. The bottom rectangle is 4 cm × 7 cm, centred below the top. Work out the total perimeter.", a: "40" },
+      { q: "A compound shape is made from two rectangles: one 8 cm × 3 cm and one 5 cm × 4 cm joined along one edge. Work out the total area.", a: "44" },
     ],
   ],
 
@@ -2195,15 +2195,15 @@ const questionBank = {
   'G20': [
     // Level 0 (2 marks) — Find hypotenuse [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Calculate the length of the hypotenuse x.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Calculate the length of the hypotenuse x.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Calculate the length of the hypotenuse x.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "A right-angled triangle has shorter sides of 3 cm and 4 cm. Calculate the length of the hypotenuse.", a: "5" },
+      { q: "A right-angled triangle has shorter sides of 5 cm and 12 cm. Calculate the length of the hypotenuse.", a: "13" },
+      { q: "A right-angled triangle has shorter sides of 8 cm and 15 cm. Calculate the length of the hypotenuse.", a: "17" },
     ],
     // Level 1 (3 marks) — Find a shorter side [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Find the length of the missing side y. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Find the length of the missing side y. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Find the length of the missing side y. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6" },
+      { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4" },
+      { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3" },
     ],
     // Level 2 (3 marks) — Pythagoras word problem
     [
@@ -2213,15 +2213,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Trigonometry: find a side [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Use trigonometry to find the length of side BC.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Use trigonometry to find the length of side QR.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Use trigonometry to find the length of side XY.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "In a right-angled triangle, angle A = 35° and the hypotenuse AB = 12 cm. Find the length of BC (opposite to angle A). Give your answer to 1 d.p.", a: "6.9" },
+      { q: "In a right-angled triangle, angle P = 42° and the adjacent side PQ = 8 cm. Find the length of QR (opposite to angle P). Give your answer to 1 d.p.", a: "7.2" },
+      { q: "In a right-angled triangle, angle X = 28° and the hypotenuse XZ = 15 cm. Find the length of XY (adjacent to angle X). Give your answer to 1 d.p.", a: "13.2" },
     ],
     // Level 4 (4 marks) — Trigonometry: find an angle [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Work out the size of angle θ. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the size of angle x. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
-      { q: "[Diagram needed] Work out the size of angle α. Give your answer to 1 decimal place.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 8 cm. Work out the angle θ. Give your answer to 1 d.p.", a: "32.0" },
+      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 11 cm. Work out angle x. Give your answer to 1 d.p.", a: "39.5" },
+      { q: "In a right-angled triangle, the adjacent side is 9 cm and the hypotenuse is 14 cm. Work out angle α. Give your answer to 1 d.p.", a: "50.0" },
     ],
   ],
 
@@ -2232,21 +2232,21 @@ const questionBank = {
   'P1': [
     // Level 0 (1 mark) — Mark a probability on a scale
     [
-      { q: "On a probability scale from 0 to 1, where would you mark the probability that a fair coin lands on Heads?", type: "self", a: "0.5 (halfway along the scale)" },
-      { q: "On a probability scale from 0 to 1, where would you mark the probability that a fair 6-sided die lands on a 7?", type: "self", a: "0 (impossible event — at the very start of the scale)" },
-      { q: "On a probability scale from 0 to 1, where would you mark the probability of an event that is certain?", type: "self", a: "1 (at the very end of the scale)" },
+      { q: "What is the probability that a fair coin lands on Heads? Give your answer as a decimal.", a: "0.5" },
+      { q: "What is the probability that a fair 6-sided die lands on a 7?", a: "0" },
+      { q: "What is the probability of an event that is certain?", a: "1" },
     ],
     // Level 1 (2 marks) — Write down a simple probability as a fraction
     [
-      { q: "A bag contains 5 red counters, 3 blue counters, and 2 green counters. A counter is chosen at random. Write down the probability it is blue.", type: "self", a: "3/10" },
-      { q: "A box contains 8 red pens, 4 blue pens, and 3 black pens. One is chosen at random. What is the probability it is red?", type: "self", a: "8/15" },
-      { q: "A jar has 12 white marbles and 8 purple marbles. One is picked at random. What is the probability it is purple?", type: "self", a: "8/20 = 2/5" },
+      { q: "A bag contains 5 red counters, 3 blue counters, and 2 green counters. A counter is chosen at random. Write down the probability it is blue.", a: "3/10" },
+      { q: "A box contains 8 red pens, 4 blue pens, and 3 black pens. One is chosen at random. What is the probability it is red?", a: "8/15" },
+      { q: "A jar has 12 white marbles and 8 purple marbles. One is picked at random. What is the probability it is purple?", a: "2/5" },
     ],
     // Level 2 (2 marks) — Complementary probability
     [
       { q: "The probability that it rains tomorrow is 0.15. What is the probability that it does not rain tomorrow?", a: "0.85" },
       { q: "The probability of a train being late is 0.23. What is the probability the train is on time?", a: "0.77" },
-      { q: "The probability that a goalie saves a penalty is 2/7. What is the probability they do not save it?", type: "self", a: "5/7" },
+      { q: "The probability that a goalie saves a penalty is 2/7. What is the probability they do not save it?", a: "5/7" },
     ],
     // Level 3 (3 marks) — Expected outcomes
     [
@@ -2269,23 +2269,23 @@ const questionBank = {
   'P7': [
     // Level 0 (2 marks) — List all outcomes
     [
-      { q: "List all the possible outcomes when a fair coin is flipped and a fair 4-sided spinner (1, 2, 3, 4) is spun.", type: "self", a: "H1, H2, H3, H4, T1, T2, T3, T4 (8 outcomes)" },
+      { q: "A fair coin is flipped and a fair 4-sided spinner (1, 2, 3, 4) is spun. How many possible outcomes are there in total?", a: "8" },
     ],
     // Level 1 (3 marks) — Frequency tree [DIAGRAM NEEDED]
     [
-      { q: "[Diagram needed] Complete the frequency tree for 100 students.", type: "self", a: "[To be completed when diagram is added]" },
+      { q: "100 students are surveyed: 60 are boys and 40 are girls. Of the boys, 45 pass a test. Of the girls, 28 pass. How many girls failed the test?", a: "12" },
     ],
     // Level 2 (4 marks) — Draw a tree diagram (with replacement)
     [
-      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Draw a tree diagram showing all outcomes and their probabilities.", type: "self", a: "First pick: P(B)=7/10, P(W)=3/10. Second pick (same, with replacement): P(B)=7/10, P(W)=3/10. Four outcomes: BB, BW, WB, WW." },
+      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. How many different outcomes are there?", a: "4" },
     ],
     // Level 3 (3 marks) — Calculate probability from tree diagram
     [
-      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Find the probability of picking two black discs.", type: "self", a: "P(BB) = 7/10 × 7/10 = 49/100" },
+      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Find the probability of picking two black discs.", a: "49/100" },
     ],
     // Level 4 (4 marks) — Without replacement probability
     [
-      { q: "There are 5 red and 3 yellow sweets in a bowl. Two sweets are picked without replacement. Work out the probability that both sweets are the same colour.", type: "self", a: "P(RR) = 5/8 × 4/7 = 20/56. P(YY) = 3/8 × 2/7 = 6/56. P(same) = 26/56 = 13/28." },
+      { q: "There are 5 red and 3 yellow sweets in a bowl. Two sweets are picked without replacement. Work out the probability that both sweets are the same colour.", a: "13/28" },
     ],
   ],
 
@@ -2293,15 +2293,15 @@ const questionBank = {
   'S2': [
     // Level 0 (2 marks) — Read a pictogram
     [
-      { q: "The pictogram shows the number of goals scored by a team in four months. How many goals were scored in November?", type: "self", a: "[Diagram needed] Read the pictogram key and count symbols for November." },
-      { q: "The pictogram shows the number of cars sold in a week. How many cars were sold on Tuesday?", type: "self", a: "[Diagram needed] Read the pictogram key and count symbols for Tuesday." },
-      { q: "The pictogram shows the number of coffee cups sold. How many coffees were sold in the afternoon?", type: "self", a: "[Diagram needed] Read the pictogram key and count symbols for the afternoon." },
+      { q: "In a pictogram, each symbol represents 4 goals. November has 3 and a half symbols. How many goals were scored in November?", a: "14", diagram: "football-pictogram" },
+      { q: "In a pictogram, each symbol represents 5 cars. Tuesday has 4 symbols. How many cars were sold on Tuesday?", a: "20" },
+      { q: "In a pictogram, each symbol represents 10 cups of coffee. The afternoon has 3 and a half symbols. How many coffees were sold in the afternoon?", a: "35" },
     ],
     // Level 1 (2 marks) — Complete a bar chart from a tally chart
     [
-      { q: "Use the tally chart to complete the bar chart for the favourite colours of 20 students.", type: "self", a: "[Diagram needed] Draw bars matching the tally frequencies for each colour." },
-      { q: "Complete the bar chart for shoe sizes.", type: "self", a: "[Diagram needed] Draw bars matching the given shoe-size frequencies." },
-      { q: "Complete the bar chart for favourite pets.", type: "self", a: "[Diagram needed] Draw bars matching the given pet frequencies." },
+      { q: "A tally chart shows: Red = 6, Blue = 5, Green = 4, Yellow = 3, Purple = 2. How many students were surveyed in total?", a: "20" },
+      { q: "A tally chart shows shoe sizes: Size 5 = 3, Size 6 = 7, Size 7 = 5, Size 8 = 4, Size 9 = 1. What is the modal shoe size?", a: "6" },
+      { q: "A tally chart shows favourite pets: Dog = 8, Cat = 6, Fish = 3, Rabbit = 2, Hamster = 1. How many more students chose Dog than Cat?", a: "2" },
     ],
     // Level 2 (3 marks) — Calculate pie chart angle
     [
@@ -2311,15 +2311,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Interpret a scatter graph
     [
-      { q: "The scatter graph shows the relationship between hours studied and exam scores. Describe the relationship shown.", type: "self", a: "[Diagram needed] Positive correlation — as hours studied increases, exam scores tend to increase." },
-      { q: "A scatter graph shows the age of a car and its value. Describe the relationship shown.", type: "self", a: "[Diagram needed] Negative correlation — as the age of the car increases, its value tends to decrease." },
-      { q: "A scatter graph shows the temperature and ice cream sales. Draw a line of best fit on the scatter graph.", type: "self", a: "[Diagram needed] Positive correlation — draw a straight line through the middle of the data points." },
+      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", diagram: "scatter-graph" },
+      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Negative correlation" },
+      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation" },
     ],
     // Level 4 (4 marks) — Stem-and-leaf / dual bar chart comparison
     [
-      { q: "A back-to-back stem-and-leaf diagram shows the heights of plants in two different rooms. Compare the median height of plants in Room A with Room B.", type: "self", a: "[Diagram needed] Find the median for each room by locating the middle value, then compare." },
-      { q: "A stem-and-leaf diagram shows the ages of people at a club. Find the range and the median age.", type: "self", a: "[Diagram needed] Range = largest − smallest. Median = middle value when data is in order." },
-      { q: "A dual bar chart shows the sales of \"Bread\" and \"Milk\" over 3 days. On which day was the difference between Bread and Milk sales the greatest?", type: "self", a: "[Diagram needed] Compare the bar heights for Bread and Milk on each day; identify the day with the largest gap." },
+      { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18" },
+      { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23" },
+      { q: "Sales data: Mon — Bread 30, Milk 45. Tue — Bread 50, Milk 35. Wed — Bread 20, Milk 55. On which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday" },
     ],
   ],
 
@@ -2345,15 +2345,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Mode / median from a frequency table
     [
-      { q: "The table shows the number of pets owned by 20 families. Work out the mode and the total number of pets.", type: "self", a: "[Diagram needed] Mode = most frequent number of pets. Total = sum of (pets × frequency)." },
-      { q: "The table shows the scores in a quiz. Work out the mode and the median score.", type: "self", a: "[Diagram needed] Mode = most frequent score. Median = middle value when all scores are listed in order." },
-      { q: "The table shows the number of goals scored in 15 matches. Work out the mean number of goals per match.", type: "self", a: "[Diagram needed] Mean = total goals ÷ 15." },
+      { q: "Pets owned by 20 families — 0 pets: 4 families, 1 pet: 7, 2 pets: 5, 3 pets: 3, 4 pets: 1. What is the total number of pets owned?", a: "30" },
+      { q: "Quiz scores — Score 1: 2 students, Score 2: 5, Score 3: 8, Score 4: 3, Score 5: 2. What is the mode?", a: "3" },
+      { q: "Goals per match — 0 goals: 3 matches, 1 goal: 5, 2 goals: 4, 3 goals: 3. Work out the mean goals per match. Give your answer to 2 d.p.", a: "1.47" },
     ],
     // Level 4 (4 marks) — Estimated mean from grouped frequency table
     [
-      { q: "Calculate an estimate for the mean from this grouped frequency table.", type: "self", a: "[Diagram needed] Use midpoints × frequencies, then divide by total frequency." },
-      { q: "Calculate an estimate for the mean from this grouped frequency table.", type: "self", a: "[Diagram needed] Use midpoints × frequencies, then divide by total frequency." },
-      { q: "Calculate an estimate for the mean from this grouped frequency table.", type: "self", a: "[Diagram needed] Use midpoints × frequencies, then divide by total frequency." },
+      { q: "Grouped data — Weight (kg): 0–10 (freq 4), 10–20 (freq 8), 20–30 (freq 6), 30–40 (freq 2). Calculate an estimate for the mean weight.", a: "18" },
+      { q: "Grouped data — Time (min): 0–5 (freq 3), 5–10 (freq 7), 10–15 (freq 8), 15–20 (freq 2). Calculate an estimate for the mean time.", a: "9.75" },
+      { q: "Grouped data — Distance (km): 0–4 (freq 5), 4–8 (freq 9), 8–12 (freq 4), 12–16 (freq 2). Calculate an estimate for the mean distance.", a: "6.6" },
     ],
   ],
 
@@ -2367,7 +2367,7 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — Square root of a mixed number (N5)
     [
-      { q: "Find the square root of 2 1/4", a: "1.5" },
+      { q: "A square garden has an area of 144 m². Find the length of one side.", a: "12" },
       { q: "Find the square root of 1 7/9", a: "4/3" },
       { q: "Find the square root of 6 1/4", a: "2.5" },
     ],
@@ -2379,15 +2379,15 @@ const questionBank = {
     ],
     // Level 3 (2 marks) — Standard form (N16)
     [
-      { q: "Write 0.000045 in standard form.", type: "self", a: "4.5 × 10⁻⁵" },
-      { q: "Write 0.00072 in standard form.", type: "self", a: "7.2 × 10⁻⁴" },
-      { q: "Write 0.0000081 in standard form.", type: "self", a: "8.1 × 10⁻⁶" },
+      { q: "Write 0.000045 in standard form.", type: "mcq", options: ["4.5 × 10⁻⁵", "45 × 10⁻⁶", "4.5 × 10⁻⁴", "0.45 × 10⁻⁴"], a: "4.5 × 10⁻⁵" },
+      { q: "Write 0.00072 in standard form.", type: "mcq", options: ["72 × 10⁻⁵", "7.2 × 10⁻⁴", "7.2 × 10⁻³", "0.72 × 10⁻³"], a: "7.2 × 10⁻⁴" },
+      { q: "Write 0.0000081 in standard form.", type: "mcq", options: ["8.1 × 10⁻⁷", "8.1 × 10⁻⁶", "81 × 10⁻⁷", "0.81 × 10⁻⁵"], a: "8.1 × 10⁻⁶" },
     ],
     // Level 4 (3 marks) — Mixed number arithmetic (N9)
     [
-      { q: "Work out 2 1/3 × 1 2/5. Give your answer as a mixed number.", type: "self", a: "3 4/15" },
-      { q: "Work out 1 3/4 × 2 2/3. Give your answer as a mixed number.", type: "self", a: "4 2/3" },
-      { q: "Work out 3 1/2 ÷ 1 1/4. Give your answer as a mixed number.", type: "self", a: "2 4/5" },
+      { q: "Work out 2 1/3 × 1 2/5. Give your answer as a mixed number.", a: "3 4/15" },
+      { q: "Work out 1 3/4 × 2 2/3. Give your answer as a mixed number.", a: "4 2/3" },
+      { q: "Work out 3 1/2 ÷ 1 1/4. Give your answer as a mixed number.", a: "2 4/5" },
     ],
   ],
 
@@ -2407,21 +2407,21 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Interpret distance-time graph (A23)
     [
-      { q: "The diagram shows a distance–time graph. How long did the person stop for?", type: "self", a: "[Diagram needed] Read the horizontal section of the graph." },
-      { q: "How long did the person stop for in this journey?", type: "self", a: "[Diagram needed] Read the horizontal section of the graph." },
-      { q: "Calculate the speed during the first 2 hours of the journey.", type: "self", a: "[Diagram needed] Speed = distance ÷ time from the graph." },
+      { q: "A person walks for 20 minutes covering 2 km, then stops from 20 min to 35 min, then walks again. How many minutes did they stop for?", a: "15", diagram: "distance-time-1" },
+      { q: "A cyclist rides for 1 hour, then rests from 1 hour to 1.5 hours, then rides again. How many minutes did they rest for?", a: "30", diagram: "distance-time-2" },
+      { q: "A car travels 30 km in the first 2 hours of a journey. What was its speed in km/h?", a: "15", diagram: "distance-time-3" },
     ],
     // Level 3 (3 marks) — Expand double brackets (A7)
     [
-      { q: "Multiply out and simplify (x + 3)(x + 5)", type: "self", a: "x² + 8x + 15" },
-      { q: "Multiply out and simplify (x + 2)(x + 6)", type: "self", a: "x² + 8x + 12" },
-      { q: "Multiply out and simplify (x − 4)(x + 5)", type: "self", a: "x² + x − 20" },
+      { q: "Multiply out and simplify (x + 3)(x + 5)", a: "x² + 8x + 15" },
+      { q: "Multiply out and simplify (x + 2)(x + 6)", a: "x² + 8x + 12" },
+      { q: "Multiply out and simplify (x − 3)(x + 1)", a: "x² − 2x − 3" },
     ],
     // Level 4 (4 marks) — Complete table and draw graph (A22)
     [
-      { q: "Complete the table and draw the graph of y = x² − 3.", type: "self", a: "[Diagram needed] Plot points from the completed table and draw a smooth parabola." },
-      { q: "Complete the table and draw the graph of y = x² − 4.", type: "self", a: "[Diagram needed] Plot points from the completed table and draw a smooth parabola." },
-      { q: "Complete the table and draw the graph of y = x² + 1.", type: "self", a: "[Diagram needed] Plot points from the completed table and draw a smooth parabola." },
+      { q: "The graph shows y = x² − 3. What are the coordinates of the turning point?", a: "(0, -3)", diagram: "plot-a-graph" },
+      { q: "For y = x² − 4, what is the value of y when x = −3?", a: "5" },
+      { q: "For y = x² + 1, what is the value of y when x = 0?", a: "1" },
     ],
   ],
 
@@ -2429,9 +2429,9 @@ const questionBank = {
   'R2': [
     // Level 0 (2 marks) — Decimal to percentage and fraction (R9)
     [
-      { q: "Write 0.45 as a percentage and a fraction in its simplest form.", type: "self", a: "45% and 9/20" },
-      { q: "Write 0.65 as a percentage and a fraction in its simplest form.", type: "self", a: "65% and 13/20" },
-      { q: "Write 0.12 as a percentage and a fraction in its simplest form.", type: "self", a: "12% and 3/25" },
+      { q: "Write 0.45 as a fraction in its simplest form.", a: "9/20" },
+      { q: "Write 0.65 as a fraction in its simplest form.", a: "13/20" },
+      { q: "Write 0.12 as a fraction in its simplest form.", a: "3/25" },
     ],
     // Level 1 (3 marks) — Map scales (R12)
     [
@@ -2463,15 +2463,15 @@ const questionBank = {
   'G2': [
     // Level 0 (2 marks) — Reflect/rotate shape (G7)
     [
-      { q: "Reflect the shape in the line y = x.", type: "self", a: "[Diagram needed] Swap x and y coordinates for each vertex." },
-      { q: "Reflect the shape in the line y = x.", type: "self", a: "[Diagram needed] Swap x and y coordinates for each vertex." },
-      { q: "Rotate the shape 90° clockwise about the origin (0, 0).", type: "self", a: "[Diagram needed] (x, y) → (y, −x) for each vertex." },
+      { q: "The point (3, 7) is reflected in the line y = x. What are the coordinates of the image?", a: "(7, 3)", diagram: "transformation" },
+      { q: "The point (2, 5) is reflected in the line y = x. What are the coordinates of the image?", a: "(5, 2)" },
+      { q: "The point (3, 1) is rotated 90° clockwise about the origin. What are the coordinates of the image?", a: "(1, -3)" },
     ],
     // Level 1 (3 marks) — Area of trapezium (G13)
     [
       { q: "Calculate the area of a trapezium with parallel sides 6 cm and 10 cm, and a height of 5 cm.", a: "40" },
-      { q: "Calculate the area of the trapezium.", type: "self", a: "[Diagram needed] Area = ½(a + b) × h" },
-      { q: "Calculate the area of the trapezium.", type: "self", a: "[Diagram needed] Area = ½(a + b) × h" },
+      { q: "A trapezium has parallel sides 5 cm and 9 cm, and a height of 4 cm. Calculate the area.", a: "28" },
+      { q: "A trapezium has parallel sides 7 cm and 11 cm, and a height of 6 cm. Calculate the area.", a: "54" },
     ],
     // Level 2 (2 marks) — Plans and elevations (G11)
     [
@@ -2481,15 +2481,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
-      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", type: "self", a: "(1, 10)" },
-      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", type: "self", a: "(6, 5)" },
-      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", type: "self", a: "(15, −10)" },
+      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", a: "(1, 10)" },
+      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", a: "(6, 5)" },
+      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", a: "(15, −10)" },
     ],
     // Level 4 (4 marks) — Volume in terms of π (G18)
     [
-      { q: "A cylinder has radius 3 cm and height 10 cm. Calculate the volume. Give your answer in terms of π.", type: "self", a: "90π cm³" },
-      { q: "Calculate the volume. Give your answer in terms of π.", type: "self", a: "[Diagram needed] V = πr²h" },
-      { q: "Calculate the volume. Give your answer in terms of π.", type: "self", a: "[Diagram needed] V = πr²h or ⅓πr²h" },
+      { q: "A cylindrical tank has radius 3 m and height 7 m. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "63π" },
+      { q: "A cylinder has radius 5 cm and height 8 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "200π" },
+      { q: "A cone has radius 5 cm and height 12 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "100π" },
     ],
   ],
 
@@ -2499,7 +2499,7 @@ const questionBank = {
     [
       { q: "Two fair coins are flipped. Write down the probability of getting two Heads.", a: "1/4" },
       { q: "A fair coin is flipped and a fair 6-sided die is rolled. Write down the probability of getting a Tail and a 6.", a: "1/12" },
-      { q: "List all outcomes for two 4-sided spinners, both numbered 1 to 4. How many outcomes are there?", type: "self", a: "16 outcomes (4 × 4). List: (1,1), (1,2), … (4,4)." },
+      { q: "Two 4-sided spinners, both numbered 1 to 4, are spun. How many possible outcomes are there?", a: "16" },
     ],
     // Level 1 (3 marks) — Without replacement probability (P6)
     [
@@ -2509,17 +2509,17 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Data collection / sampling (S1)
     [
-      { q: "Design a data collection sheet to find out people's favourite type of music.", type: "self", a: "Table with columns: Music Type, Tally, Frequency. Rows for genres like Pop, Rock, Classical, R&B, Other." },
+      { q: "Which of these is the best way to collect data about people's favourite type of music?", type: "mcq", options: ["A tally chart with categories for each music genre", "Ask people to write a paragraph about their music taste", "Record the number of songs people listen to per day", "Count the number of music shops in your town"], a: "A tally chart with categories for each music genre" },
     ],
     // Level 3 (3 marks) — Scatter graphs (S6)
     [
-      { q: "The scatter graph shows the number of umbrellas sold vs rainfall. Estimate the number of umbrellas sold when rainfall is 15 mm.", type: "self", a: "[Diagram needed] Use line of best fit to read off the value at 15 mm." },
-      { q: "Use a line of best fit to estimate the weight of a person who is 170 cm tall.", type: "self", a: "[Diagram needed] Read from line of best fit at 170 cm." },
-      { q: "Identify the type of correlation shown in the graph.", type: "self", a: "[Diagram needed] State positive, negative, or no correlation." },
+      { q: "Data shows: 5mm rain → 15 umbrellas, 10mm → 30, 20mm → 60. If the pattern continues, estimate umbrella sales when rainfall is 15 mm.", a: "45" },
+      { q: "Data: 160cm → 60kg, 170cm → 68kg, 180cm → 76kg. Using this pattern, estimate the weight of a person who is 175 cm tall.", a: "72" },
+      { q: "As the number of hours of sunshine increases, the number of visitors to a beach also increases. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation" },
     ],
     // Level 4 (4 marks) — Compare distributions (S5)
     [
-      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Make two comparisons between the results of Class A and Class B.", type: "self", a: "Class B has a higher median (72 vs 65), so on average Class B performed better. Class A has a smaller range (20 vs 35), so Class A's results were more consistent." },
+      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)" },
     ],
   ],
 
@@ -3617,16 +3617,13 @@ const getBuildingBlock = (objectiveCode) => {
 const generateDiagram = (type) => {
   // Image-based diagrams (AQA exam style)
   const imageDiagrams = {
-    'cone-diagram': 'cone-diagram.png',
-    'pythagoras-triangle': 'pythagoras-triangle.png',
-    'transformation-grid': 'transformation-grid.png',
-    'linear-graph-abc': 'linear-graph-abc.png',
-    'circle-equation': 'circle-equation.png',
-    'venn-diagram-gl': 'venn-diagram-gl.png',
-    'tree-diagram-gold': 'tree-diagram-gold.png',
-    'pie-chart-talent': 'pie-chart-talent.png',
-    'sector-60-degrees': 'sector-60-degrees.png',
-    'scale-map-towns': 'scale-map-towns.png',
+    'distance-time-1': 'distane time graph 1.png',
+    'distance-time-2': 'distance time graph 2.png',
+    'distance-time-3': 'distance time graph 3.png',
+    'plot-a-graph': 'Plot a graph.png',
+    'transformation': 'transformation.png',
+    'football-pictogram': 'football pictogram.png',
+    'scatter-graph': 'Scatter graph.png',
   };
 
   // Check for image-based diagram first
@@ -3822,11 +3819,12 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
     return { ...q, objective, questionType };
   }
 
-  // Fallback: generic question
+  // Fallback: generic question (should never trigger with full coverage)
   return {
-    q: objective.title,
-    a: null, // Self-assessed
-    type: "self",
+    q: `True or false: "${objective.title}" is a GCSE maths topic.`,
+    a: "True",
+    type: "mcq",
+    options: ["True", "False"],
     objective,
     questionType: 'quick',
   };
