@@ -189,5 +189,78 @@ create trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 
 -- =============================================
+-- 7. SCHOOLS TABLE (for school leaderboards)
+-- =============================================
+create table if not exists public.schools (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  town text not null default '',
+  created_by uuid references auth.users on delete set null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  unique(name, town)
+);
+
+create index if not exists idx_schools_name on public.schools(name);
+
+-- To add the town column to an existing schools table, run:
+-- ALTER TABLE public.schools ADD COLUMN IF NOT EXISTS town text NOT NULL DEFAULT '';
+-- ALTER TABLE public.schools DROP CONSTRAINT IF EXISTS schools_name_key;
+-- ALTER TABLE public.schools ADD CONSTRAINT schools_name_town_key UNIQUE (name, town);
+
+alter table public.schools enable row level security;
+
+create policy "Anyone can view schools" on public.schools
+  for select using (true);
+create policy "Authenticated users can create schools" on public.schools
+  for insert with check (auth.uid() = created_by);
+
+-- 8. SCHOOL MEMBERS TABLE (one school per user)
+create table if not exists public.school_members (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users on delete cascade not null unique,
+  school_id uuid references public.schools on delete cascade not null,
+  joined_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+create index if not exists idx_school_members_school on public.school_members(school_id);
+
+alter table public.school_members enable row level security;
+
+create policy "Users can view members of their school" on public.school_members
+  for select using (
+    school_id in (select school_id from public.school_members where user_id = auth.uid())
+  );
+create policy "Users can join a school" on public.school_members
+  for insert with check (auth.uid() = user_id);
+create policy "Users can leave a school" on public.school_members
+  for delete using (auth.uid() = user_id);
+
+-- =============================================
+-- FUNCTION: School leaderboard (bypasses RLS on daily_activity)
+-- =============================================
+create or replace function get_school_leaderboard(p_school_id uuid)
+returns table (
+  user_id uuid,
+  display_name text,
+  total_correct bigint
+)
+language sql
+security definer
+set search_path = public
+as $$
+  select
+    sm.user_id,
+    coalesce(p.display_name, 'Unknown') as display_name,
+    coalesce(sum(da.correct_answers), 0) as total_correct
+  from school_members sm
+  join profiles p on p.id = sm.user_id
+  left join daily_activity da on da.user_id = sm.user_id
+  where sm.school_id = p_school_id
+  group by sm.user_id, p.display_name
+  order by total_correct desc, display_name asc
+  limit 50;
+$$;
+
+-- =============================================
 -- DONE! Your database is ready.
 -- =============================================

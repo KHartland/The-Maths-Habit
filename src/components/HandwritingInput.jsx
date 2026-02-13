@@ -50,8 +50,8 @@ const HandwritingInput = ({
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = '#374151';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 4;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
@@ -155,8 +155,8 @@ const HandwritingInput = ({
     // Debounce - wait 500ms after last stroke
     recognitionTimeoutRef.current = setTimeout(async () => {
       if (!mathpixAppId || !mathpixAppKey) {
-        // Fallback: just show that we captured strokes
-        setRecognizedText(`[${strokesToRecognize.length} strokes captured]`);
+        console.warn('Mathpix keys missing:', { appId: !!mathpixAppId, appKey: !!mathpixAppKey });
+        setError('Handwriting recognition not configured');
         return;
       }
 
@@ -164,9 +164,17 @@ const HandwritingInput = ({
       setError('');
 
       try {
-        // Convert canvas to base64 image
+        // Convert canvas to base64 image with white background
+        // (canvas is transparent by default — Mathpix needs solid background)
         const canvas = canvasRef.current;
-        const imageData = canvas.toDataURL('image/png');
+        const exportCanvas = document.createElement('canvas');
+        exportCanvas.width = canvas.width;
+        exportCanvas.height = canvas.height;
+        const exportCtx = exportCanvas.getContext('2d');
+        exportCtx.fillStyle = '#FFFFFF';
+        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+        exportCtx.drawImage(canvas, 0, 0);
+        const imageData = exportCanvas.toDataURL('image/png');
 
         // Send image to Mathpix text endpoint
         const response = await fetch('https://api.mathpix.com/v3/text', {
@@ -207,6 +215,18 @@ const HandwritingInput = ({
             .replace(/\$/g, '')
             // Convert fractions
             .replace(/\\frac\s*\{([^}]+)\}\s*\{([^}]+)\}/g, '$1/$2')
+            // Convert inequality symbols
+            .replace(/\\leqslant/g, '≤')
+            .replace(/\\geqslant/g, '≥')
+            .replace(/\\leq/g, '≤')
+            .replace(/\\geq/g, '≥')
+            .replace(/\\le\b/g, '≤')
+            .replace(/\\ge\b/g, '≥')
+            .replace(/\\lt\b/g, '<')
+            .replace(/\\gt\b/g, '>')
+            .replace(/\\neq/g, '≠')
+            .replace(/\\ne\b/g, '≠')
+            .replace(/\\approx/g, '≈')
             // Convert common symbols
             .replace(/\\cdot/g, '×')
             .replace(/\\times/g, '×')
@@ -266,8 +286,6 @@ const HandwritingInput = ({
       {/* Header */}
       <div className="px-3 py-1.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between handwriting-header">
         <div className="flex items-center gap-1.5 text-gray-600">
-          <Pencil className="w-3.5 h-3.5" />
-          <span className="text-xs font-medium">Write your answer</span>
         </div>
         <div className="flex items-center gap-0.5">
           <button
@@ -310,12 +328,7 @@ const HandwritingInput = ({
           className="absolute inset-0 touch-none"
         />
 
-        {/* Placeholder */}
-        {strokes.length === 0 && !isDrawing && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-gray-400 text-lg">{placeholder}</span>
-          </div>
-        )}
+        {/* Placeholder removed — grid overlay is sufficient */}
       </div>
 
       {/* Recognition result */}

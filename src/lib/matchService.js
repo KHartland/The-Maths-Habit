@@ -23,29 +23,45 @@ export const createMatch = async (hostId, hostName, settings = {}) => {
   let attempts = 0;
 
   while (attempts < 10) {
-    const { data, error } = await supabase
-      .from('matches')
-      .insert({
-        code,
-        host_id: hostId,
-        host_name: hostName,
-        question_count: questionCount,
-        tier,
-        topics,
-        status: 'waiting'
-      })
-      .select()
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('matches')
+        .insert({
+          code,
+          host_id: hostId,
+          host_name: hostName,
+          question_count: questionCount,
+          tier,
+          topics,
+          status: 'waiting'
+        })
+        .select()
+        .single();
 
-    if (error?.code === '23505') {
-      // Duplicate code, try again
-      code = generateCode();
-      attempts++;
-      continue;
+      if (error?.code === '23505') {
+        // Duplicate code, try again
+        code = generateCode();
+        attempts++;
+        continue;
+      }
+
+      if (error) {
+        console.error('Match create error:', error);
+        throw new Error(error.message || 'Failed to create match. Check that the matches table exists in Supabase.');
+      }
+
+      if (!data) {
+        throw new Error('Match was not created. This may be a database permissions issue — check RLS policies.');
+      }
+
+      return data;
+    } catch (err) {
+      if (err.message?.includes('Failed to') || err.message?.includes('Match was not') || err.message?.includes('permissions')) {
+        throw err;
+      }
+      console.error('Match create exception:', err);
+      throw new Error(err.message || 'Unexpected error creating match');
     }
-
-    if (error) throw error;
-    return data;
   }
 
   throw new Error('Failed to generate unique match code');
