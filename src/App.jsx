@@ -2524,9 +2524,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Compare distributions (S5)
     [
-      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)", worked: ["Compare medians to see average performance", "Class B median (72) > Class A median (65)", "Class B performed better on average"] },
-      { q: "Team X scored a mean of 3.2 goals per match with a range of 6. Team Y scored a mean of 2.8 goals per match with a range of 2. Which team was more consistent?", type: "mcq", options: ["Team X (smaller range)", "Team Y (smaller range)", "Both the same"], a: "Team Y (smaller range)", worked: ["Smaller range means more consistent (less spread)", "Team Y range (2) < Team X range (6)", "Team Y was more consistent"] },
-      { q: "Group P has a median height of 165 cm and range of 12 cm. Group Q has a median height of 162 cm and range of 25 cm. Which group has the greater spread of heights?", type: "mcq", options: ["Group P (larger range)", "Group Q (larger range)", "Both the same"], a: "Group Q (larger range)", worked: ["Range measures spread of data", "Group Q range (25) > Group P range (12)", "Group Q has greater spread"] },
+      { q: "A bag contains red, blue, green and yellow counters. P(red) = 0.35, P(blue) = 0.2, P(green) = 0.15. There are 60 counters in the bag. How many yellow counters are there?", a: "18", worked: ["P(yellow) = 1 − 0.35 − 0.2 − 0.15 = 0.3", "Number of yellow = 0.3 × 60 = 18"] },
+      { q: "A spinner has sections labelled A, B, C and D. P(A) = 3x, P(B) = x, P(C) = 2x and P(D) = 0.1. Work out P(A).", a: "0.45", worked: ["All probabilities sum to 1: 3x + x + 2x + 0.1 = 1", "6x = 0.9", "x = 0.15", "P(A) = 3 × 0.15 = 0.45"] },
+      { q: "A biased dice has P(1) = 0.1, P(2) = 0.1, P(3) = 0.15, P(4) = 0.25, P(5) = 0.2. The dice is rolled 200 times. How many times would you expect to get a 6?", a: "40", worked: ["P(6) = 1 − (0.1 + 0.1 + 0.15 + 0.25 + 0.2) = 1 − 0.8 = 0.2", "Expected 6s = 0.2 × 200 = 40"] },
     ],
   ],
 
