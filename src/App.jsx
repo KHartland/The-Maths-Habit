@@ -2540,21 +2540,15 @@ const questionBank = {
 };
 
 // Share question banks for combined objectives
-questionBank['N3'] = questionBank['N2'];
 questionBank['N7'] = questionBank['N6'];
 questionBank['N15'] = questionBank['N14'];
 questionBank['A4'] = questionBank['A1'];
 questionBank['A18'] = questionBank['A17'];
-questionBank['R5'] = questionBank['R4'];
-questionBank['R6'] = questionBank['R4'];
-questionBank['R11'] = questionBank['R10'];
 questionBank['G3'] = questionBank['G1'];
 questionBank['G4'] = questionBank['G1'];
 questionBank['G16'] = questionBank['G12'];
 questionBank['G17'] = questionBank['G12'];
 questionBank['G21'] = questionBank['G20'];
-questionBank['P2'] = questionBank['P1'];
-questionBank['P3'] = questionBank['P1'];
 questionBank['P8'] = questionBank['P7'];
 questionBank['S4'] = questionBank['S2'];
 
@@ -2612,6 +2606,312 @@ questionBank['P6'] = questionBank['P4'];
 questionBank['S1'] = questionBank['P4'];
 questionBank['S5'] = questionBank['P4'];
 questionBank['S6'] = questionBank['P4'];
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL TOPIC-SPECIFIC QUESTIONS — pushed into existing banks
+// ═══════════════════════════════════════════════════════════════
+
+// 1. Time Calculations → N2 (added to existing BIDMAS bank)
+questionBank['N2'][0].push(
+  { q: "How many minutes are there in 2.5 hours?", a: "150" },
+  { q: "How many minutes are there in 3.5 hours?", a: "210" },
+);
+questionBank['N2'][1].push(
+  { q: "A film starts at 18:45 and lasts for 110 minutes. At what time does the film end?", a: "20:35" },
+  { q: "A concert starts at 19:15 and lasts for 140 minutes. At what time does it end?", a: "21:35" },
+);
+questionBank['N2'][2].push(
+  { q: "Work out the time difference between 08:35 and 14:20.", type: "mcq", options: ["5 hours 45 minutes", "5 hours 15 minutes", "6 hours 15 minutes", "6 hours 45 minutes"], a: "5 hours 45 minutes" },
+  { q: "Work out the time difference between 07:45 and 15:10.", type: "mcq", options: ["7 hours 25 minutes", "7 hours 35 minutes", "8 hours 25 minutes", "6 hours 25 minutes"], a: "7 hours 25 minutes" },
+);
+questionBank['N2'][3].push(
+  { q: "A train journey takes 3 hours and 15 minutes. The train arrives at 13:05. What time did it depart?", a: "09:50" },
+  { q: "A bus journey takes 2 hours and 50 minutes. It arrives at 16:20. What time did it depart?", a: "13:30" },
+);
+questionBank['N2'][4].push(
+  { q: "A clock loses 4 minutes every 24 hours. The clock is set correctly at 09:00 on Monday. What time will it show at 09:00 on the following Friday?", a: "08:44" },
+  { q: "A watch gains 3 minutes every 24 hours. It is set correctly at 10:00 on Sunday. What time will it show at 10:00 on the following Thursday?", a: "10:12" },
+);
+questionBank['N3'] = questionBank['N2'];
+
+// 2. Write as a Ratio → R4 (added to existing Ratio bank)
+questionBank['R4'][0].push(
+  { q: "In a bag, there are 3 red marbles and 7 blue marbles. Write the ratio of red to blue marbles.", a: "3:7" },
+  { q: "A box has 5 blue pens and 8 black pens. Write the ratio of blue to black.", a: "5:8" },
+);
+questionBank['R4'][1].push(
+  { q: "Write the ratio 15:25 in its simplest form.", a: "3:5" },
+  { q: "Write the ratio 18:42 in its simplest form.", a: "3:7" },
+);
+questionBank['R4'][2].push(
+  { q: "A class has 30 students. 12 are boys and the rest are girls. Write the ratio of boys to girls in its simplest form.", a: "2:3" },
+  { q: "A group of 40 people contains 15 children and the rest are adults. Write the ratio of children to adults in its simplest form.", a: "3:5" },
+);
+questionBank['R4'][3].push(
+  { q: "Write the ratio 400 ml to 1.2 litres in its simplest form.", a: "1:3" },
+  { q: "Write the ratio 500 g to 2.5 kg in its simplest form.", a: "1:5" },
+);
+questionBank['R4'][4].push(
+  { q: "The ratio of x:y is 2:3 and y:z is 4:5. Find the ratio x:y:z.", a: "8:12:15" },
+  { q: "The ratio of a:b is 3:4 and b:c is 2:7. Find the ratio a:b:c.", a: "3:4:14" },
+);
+questionBank['R5'] = questionBank['R4'];
+questionBank['R6'] = questionBank['R4'];
+
+// 3. Substitution → A2 (added to existing Substitution bank)
+questionBank['A2'][0].push(
+  { q: "Given x = 4, work out the value of 3x + 5.", a: "17" },
+  { q: "Given x = 7, work out the value of 4x − 3.", a: "25" },
+);
+questionBank['A2'][1].push(
+  { q: "Given a = 10 and b = 3, work out the value of 2a − 4b.", a: "8" },
+  { q: "Given a = 8 and b = 5, work out the value of 3a − 2b.", a: "14" },
+);
+questionBank['A2'][2].push(
+  { q: "Given p = −5, work out the value of p² + 10.", a: "35" },
+  { q: "Given y = −4, work out the value of y² + 5.", a: "21" },
+);
+questionBank['A2'][3].push(
+  { q: "Use the formula v² = u² + 2as. Find v² when u = 3, a = 9.8, and s = 10.", a: "205", calculator: true },
+  { q: "Use the formula v = u + at. Find v when u = 12, a = 3, and t = 6.", a: "30" },
+);
+questionBank['A2'][4].push(
+  { q: "Given x = 2 and y = −3, work out the value of (4x − y) ÷ (x + y).", a: "-11" },
+  { q: "Given m = 4 and n = −2, work out the value of (m + 2n) ÷ (m − n).", a: "0" },
+);
+
+// 4. Metric Unit Conversions → R1 (added to existing Units bank)
+questionBank['R1'][0].push(
+  { q: "Change 4.5 metres into centimetres.", a: "450" },
+  { q: "Change 7.2 metres into centimetres.", a: "720" },
+);
+questionBank['R1'][1].push(
+  { q: "Change 850 grams into kilograms.", a: "0.85" },
+  { q: "Change 450 grams into kilograms.", a: "0.45" },
+);
+questionBank['R1'][2].push(
+  { q: "A bottle contains 1.75 litres of water. 300 ml is poured out. How much water is left? Give your answer in litres.", a: "1.45" },
+  { q: "A jug has 2.5 litres of juice. 450 ml is drunk. How much is left? Give your answer in litres.", a: "2.05" },
+);
+questionBank['R1'][3].push(
+  { q: "Convert 36 km/h into metres per second (m/s).", a: "10", calculator: true },
+  { q: "Convert 54 km/h into metres per second (m/s).", a: "15", calculator: true },
+);
+questionBank['R1'][4].push(
+  { q: "The area of a floor is 12 m². Convert this area into cm².", a: "120000" },
+  { q: "A garden has an area of 25 m². Convert this into cm².", a: "250000" },
+);
+
+// 5. Find Probability → P1 (added to existing Probability bank)
+questionBank['P1'][0].push(
+  { q: "A fair coin is flipped. What is the probability it lands on Tails?", a: "1/2" },
+  { q: "A fair 6-sided die is rolled. What is the probability of rolling a 4?", a: "1/6" },
+);
+questionBank['P1'][1].push(
+  { q: "A bag contains 4 red, 3 blue, and 5 green counters. One is picked at random. What is the probability it is blue? Give your answer as a fraction in its simplest form.", a: "1/4" },
+  { q: "A bowl has 10 apples, 6 pears, and 4 plums. One is picked at random. What is the probability of picking a pear? Give your answer as a fraction in its simplest form.", a: "3/10" },
+);
+questionBank['P1'][2].push(
+  { q: "The probability that it will rain tomorrow is 0.25. What is the probability it will NOT rain?", a: "0.75" },
+  { q: "The probability of winning a game is 0.38. What is the probability of NOT winning?", a: "0.62" },
+);
+questionBank['P1'][3].push(
+  { q: "A spinner has colours Red, Blue, and Green. P(Red) = 0.4 and P(Blue) = 0.35. Work out P(Green).", a: "0.25" },
+  { q: "A spinner has colours Gold, Silver, and Bronze. P(Gold) = 0.1 and P(Silver) = 0.55. Work out P(Bronze).", a: "0.35" },
+);
+questionBank['P1'][4].push(
+  { q: "A biased die is thrown 200 times. The probability of landing on a 6 is 0.15. How many times would you expect to land on a 6?", a: "30" },
+  { q: "The probability of a train being late is 0.12. Out of 500 trains, how many would you expect to be late?", a: "60" },
+);
+questionBank['P2'] = questionBank['P1'];
+questionBank['P3'] = questionBank['P1'];
+
+// 6. Fraction of an Amount → N12 (added to existing Fraction/% bank)
+questionBank['N12'][0].push(
+  { q: "Work out 1/4 of £28.", a: "7" },
+  { q: "Work out 1/5 of £45.", a: "9" },
+);
+questionBank['N12'][1].push(
+  { q: "Work out 2/5 of 60 kg.", a: "24" },
+  { q: "Work out 3/8 of 64 kg.", a: "24" },
+);
+questionBank['N12'][2].push(
+  { q: "Which is larger: 3/4 of 40 or 2/3 of 48?", type: "mcq", options: ["3/4 of 40", "2/3 of 48"], a: "2/3 of 48" },
+  { q: "Which is larger: 2/5 of 50 or 1/4 of 84?", type: "mcq", options: ["2/5 of 50", "1/4 of 84"], a: "1/4 of 84" },
+);
+questionBank['N12'][3].push(
+  { q: "In a school of 600 students, 7/10 walk to school. How many students do NOT walk to school?", a: "180" },
+  { q: "800 people are at a match. 3/10 are away fans. How many are home fans?", a: "560" },
+);
+questionBank['N12'][4].push(
+  { q: "A coat originally costs £120. It is reduced by 1/3 in a sale. After two weeks, the sale price is reduced by a further 10%. What is the final price?", a: "72" },
+  { q: "A bike originally costs £200. It is reduced by 1/4 in a sale. Then it is reduced by a further 20%. What is the final price?", a: "120" },
+);
+
+// 7. Types of Number → N4 (added to existing Factors/Primes bank)
+questionBank['N4'][0].push(
+  { q: "List the first five square numbers.", a: "1, 4, 9, 16, 25" },
+  { q: "List the first three cube numbers.", a: "1, 8, 27" },
+);
+questionBank['N4'][1].push(
+  { q: "Which of these is a prime number: 9, 15, 21, 23, 27?", type: "mcq", options: ["9", "15", "21", "23", "27"], a: "23" },
+  { q: "Which of these is a square number: 7, 14, 25, 30, 40?", type: "mcq", options: ["7", "14", "25", "30", "40"], a: "25" },
+);
+questionBank['N4'][2].push(
+  { q: "Work out the value of 2³ + √81.", a: "17" },
+  { q: "Work out the value of 3² + 2³.", a: "17" },
+);
+questionBank['N4'][3].push(
+  { q: "Find the highest common factor (HCF) of 36 and 48.", a: "12" },
+  { q: "Find a prime number between 20 and 30.", type: "mcq", options: ["21", "23", "25", "27"], a: "23" },
+);
+questionBank['N4'][4].push(
+  { q: "'The sum of any two prime numbers is always even.' Give a counter-example to show this is false.", type: "mcq", options: ["2 + 3 = 5", "3 + 5 = 8", "7 + 11 = 18", "2 + 2 = 4"], a: "2 + 3 = 5" },
+  { q: "Find a number greater than 1 that is both a square number and a cube number.", type: "mcq", options: ["8", "16", "36", "64"], a: "64" },
+);
+
+// 8. Direct Proportion → R10 (added to existing Proportion bank)
+questionBank['R10'][0].push(
+  { q: "5 apples cost £2.00. Work out the cost of 1 apple.", a: "0.40" },
+  { q: "4 cakes cost £6.00. Work out the cost of 1 cake.", a: "1.50" },
+);
+questionBank['R10'][1].push(
+  { q: "3 pens cost £1.20. Work out the cost of 10 pens.", a: "4", calculator: true },
+  { q: "2 books cost £14. Work out the cost of 5 books.", a: "35" },
+);
+questionBank['R10'][2].push(
+  { q: "A recipe for 4 people uses 200 g of flour. How much flour is needed for 6 people?", a: "300" },
+  { q: "A recipe for 2 people uses 150 g of pasta. How much pasta is needed for 5 people?", a: "375" },
+);
+questionBank['R10'][3].push(
+  { q: "y is directly proportional to x. When x = 10, y = 25. Find y when x = 4.", a: "10" },
+  { q: "y is directly proportional to x. When x = 5, y = 15. Find y when x = 12.", a: "36" },
+);
+questionBank['R10'][4].push(
+  { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop A", calculator: true },
+  { q: "Shop A sells 300 g of cheese for £2.40. Shop B sells 450 g for £3.15. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true },
+);
+questionBank['R11'] = questionBank['R10'];
+
+// ═══════════════════════════════════════════════════════════════
+// NEW STANDALONE QUESTION BANKS — override aliases with dedicated banks
+// ═══════════════════════════════════════════════════════════════
+
+// 9. Fractions, Decimals, Percentages → N10 (was aliased to N5)
+questionBank['N10'] = [
+  // Level 0 — Decimal to fraction
+  [
+    { q: "Write 0.7 as a fraction.", a: "7/10" },
+    { q: "Write 0.9 as a fraction.", a: "9/10" },
+  ],
+  // Level 1 — Fraction to percentage
+  [
+    { q: "Write 3/5 as a percentage.", a: "60%" },
+    { q: "Write 4/5 as a percentage.", a: "80%" },
+  ],
+  // Level 2 — Compare decimal and fraction
+  [
+    { q: "Which is larger: 0.65 or 5/8?", type: "mcq", options: ["0.65", "5/8"], a: "0.65" },
+    { q: "Which is larger: 0.72 or 3/4?", type: "mcq", options: ["0.72", "3/4"], a: "3/4" },
+  ],
+  // Level 3 — Decimal to simplified fraction
+  [
+    { q: "Write 0.08 as a fraction in its simplest form.", a: "2/25" },
+    { q: "Write 0.06 as a fraction in its simplest form.", a: "3/50" },
+  ],
+  // Level 4 — Order FDP values
+  [
+    { q: "Arrange in ascending order: 0.42, 2/5, 45%, 3/7", type: "order", items: ["0.42", "2/5", "45%", "3/7"], correctOrder: ["2/5", "0.42", "3/7", "45%"], a: "2/5, 0.42, 3/7, 45%" },
+    { q: "Arrange in ascending order: 0.31, 1/3, 30%, 2/7", type: "order", items: ["0.31", "1/3", "30%", "2/7"], correctOrder: ["2/7", "30%", "0.31", "1/3"], a: "2/7, 30%, 0.31, 1/3" },
+  ],
+];
+
+// 10. Calculations with Money → N13 (was aliased to N5)
+questionBank['N13'] = [
+  // Level 0 — Change from a purchase
+  [
+    { q: "Sam buys a coffee for £2.80 and a sandwich for £3.50. How much change does he get from £10?", a: "3.70" },
+    { q: "Jo buys a magazine for £3.20 and a drink for £1.95. How much change from £20?", a: "14.85" },
+  ],
+  // Level 1 — Unit cost
+  [
+    { q: "A pack of 6 pens costs £4.50. Work out the cost of one pen.", a: "0.75" },
+    { q: "A box of 12 eggs costs £3.60. Work out the cost of one egg.", a: "0.30" },
+  ],
+  // Level 2 — Earnings calculation
+  [
+    { q: "Sarah earns £9.20 per hour. Last week she worked 15 hours. How much did she earn?", a: "138", calculator: true },
+    { q: "Tom earns £10.50 per hour. He works 12 hours. How much is his total pay?", a: "126", calculator: true },
+  ],
+  // Level 3 — Multi-buy offer
+  [
+    { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90" },
+    { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40" },
+  ],
+  // Level 4 — Tiered pricing
+  [
+    { q: "Gas costs 18p per unit for the first 100 units, and 12p per unit for any additional units. Calculate the total cost in £ for using 250 units.", a: "36", calculator: true },
+    { q: "Electricity costs 22p per unit for the first 50 units, then 15p per unit after that. Calculate the total cost in £ for 120 units.", a: "21.50", calculator: true },
+  ],
+];
+
+// 11. Like Terms → A4 (was aliased to A1)
+questionBank['A4'] = [
+  // Level 0 — Repeated addition to multiplication
+  [
+    { q: "Simplify: x + x + x + x", a: "4x" },
+    { q: "Simplify: y + y + y", a: "3y" },
+  ],
+  // Level 1 — Collect like terms (two variables)
+  [
+    { q: "Simplify: 5a + 3b + 2a − b", a: "7a + 2b" },
+    { q: "Simplify: 8c + 4d − 3c + 2d", a: "5c + 6d" },
+  ],
+  // Level 2 — Collect like terms with powers
+  [
+    { q: "Simplify: 4x² + 3x − 2x² + 5x", a: "2x² + 8x" },
+    { q: "Simplify: 5p² − 2p + p² + 7p", a: "6p² + 5p" },
+  ],
+  // Level 3 — Collect constants and terms
+  [
+    { q: "Simplify: 10 − 3y + 2 − 4y", a: "12 - 7y" },
+    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a" },
+  ],
+  // Level 4 — Perimeter expression
+  [
+    { q: "An equilateral triangle has side length 2x + 3. Write an expression for the perimeter in its simplest form.", a: "6x + 9" },
+    { q: "A rectangle has sides (3x − 1) and (x + 4). Write an expression for the perimeter in its simplest form.", a: "8x + 6" },
+  ],
+];
+
+// 12. Write as a Fraction or Percentage → R9 (was aliased to R2)
+questionBank['R9'] = [
+  // Level 0 — Fraction of a whole (unit conversion style)
+  [
+    { q: "What fraction of 1 hour is 15 minutes?", a: "1/4" },
+    { q: "What fraction of 1 metre is 25 centimetres?", a: "1/4" },
+  ],
+  // Level 1 — Write as a percentage
+  [
+    { q: "Write 15 out of 20 as a percentage.", a: "75%" },
+    { q: "Write 7 out of 25 as a percentage.", a: "28%" },
+  ],
+  // Level 2 — Fraction to percentage from context
+  [
+    { q: "In a box of 50 pens, 18 are black. What percentage of the pens are black?", a: "36%" },
+    { q: "12 out of 60 students are left-handed. What percentage is this?", a: "20%" },
+  ],
+  // Level 3 — Fraction with unit conversion
+  [
+    { q: "Write 450 g as a fraction of 2 kg. Give your answer in its simplest form.", a: "9/40" },
+    { q: "Write 75 cm as a fraction of 3 m. Give your answer in its simplest form.", a: "1/4" },
+  ],
+  // Level 4 — Ratio to percentage
+  [
+    { q: "In a garden, the ratio of flowers to weeds is 7:3. What percentage of the plants are weeds?", a: "30%" },
+    { q: "The ratio of cats to dogs is 1:4. What percentage of the animals are cats?", a: "20%" },
+  ],
+];
 
 // Map every objective code to the primary code that owns its question bank
 // (derived from reference equality — aliases share the same array object)
