@@ -1208,8 +1208,6 @@ const runMigration = (progress, questionBank) => {
   }
 };
 
-// AI features unlock after this many questions answered
-const AI_UNLOCK_THRESHOLD = 15;
 
 // Quick Fire unlocks after 5 objectives mastered OR 3-day streak
 const QUICKFIRE_MASTERY_THRESHOLD = 5;
@@ -1247,10 +1245,6 @@ const PRACTICE_TIPS = {
   sessionComplete: {
     id: 'sessionComplete',
     text: 'Come back tomorrow to build your streak! Consistent daily practice is the fastest way to improve.',
-  },
-  aiCoach: {
-    id: 'aiCoach',
-    text: 'Answer 15 questions total to unlock your AI Coach — a personal tutor that analyses your mistakes!',
   },
   secondSession: {
     id: 'secondSession',
@@ -1370,7 +1364,6 @@ const saveTotalQuestions = (count) => {
   } catch {}
 };
 
-const isAIUnlocked = (totalQuestions) => totalQuestions >= AI_UNLOCK_THRESHOLD;
 
 // Daily activity tracking
 const loadDailyActivity = () => {
@@ -1980,9 +1973,9 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — Complete a table of values
     [
-      { q: "Complete the table of values for y = 2x + 1.\nx: −1, 0, 1, 2\ny: ?, 1, ?, 5\nFind the two missing values of y.", a: "-1, 3" },
-      { q: "Complete the table of values for y = 3x − 2.\nx: −1, 0, 1, 2\ny: ?, −2, ?, 4\nFind the two missing values of y.", a: "-5, 1" },
-      { q: "Complete the table of values for y = 4x + 2.\nx: −1, 0, 1, 2\ny: ?, 2, ?, 10\nFind the two missing values of y.", a: "-2, 6" },
+      { q: "Complete the table of values for y = 2x + 1. Write the two missing values of y.", a: "-1, 3", diagram: "table:y=2x+1|-1,0,1,2|?,1,?,5" },
+      { q: "Complete the table of values for y = 3x − 2. Write the two missing values of y.", a: "-5, 1", diagram: "table:y=3x-2|-1,0,1,2|?,-2,?,4" },
+      { q: "Complete the table of values for y = 4x + 2. Write the two missing values of y.", a: "-2, 6", diagram: "table:y=4x+2|-1,0,1,2|?,2,?,10" },
     ],
     // Level 2 (2 marks) — Describe/sketch a simple horizontal or vertical line
     [
@@ -2135,7 +2128,7 @@ const questionBank = {
     [
       { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", hint: "Base angles are equal: (180 − 40) ÷ 2" },
       { q: "PQR is an isosceles triangle. PQ = PR. Angle P = 50°. Work out the size of angle Q.", a: "65", hint: "Base angles are equal: (180 − 50) ÷ 2" },
-      { q: "XYZ is an isosceles triangle. XY = XZ. Angle Y = 70°. Work out the size of angle X.", a: "40", hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40" },
+      { q: "Find the size of angle YXZ.", a: "40", hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40", diagram: "isosceles-triangle" },
     ],
     // Level 3 (3 marks) — Interior/exterior angle of a regular polygon
     [
@@ -2170,9 +2163,9 @@ const questionBank = {
     ],
     // Level 2 (3 marks) — Area/circumference of a circle
     [
-      { q: "Calculate the area of a circle with a radius of 5 cm. Give your answer to 1 decimal place.", a: "78.5", hint: "Area = π × r² = π × 25" },
-      { q: "Calculate the area of a circle with a radius of 8 cm. Give your answer to 1 decimal place.", a: "201.1", hint: "Area = π × r² = π × 64" },
-      { q: "Calculate the circumference of a circle with a diameter of 14 cm. Give your answer to 1 decimal place.", a: "44.0", hint: "Circumference = π × d = π × 14" },
+      { q: "Calculate the area of a circle with a radius of 5 cm. Give your answer to 1 decimal place.", a: "78.5", hint: "Area = π × r² = π × 25", calculator: true },
+      { q: "Calculate the area of a circle with a radius of 8 cm. Give your answer to 1 decimal place.", a: "201.1", hint: "Area = π × r² = π × 64", calculator: true },
+      { q: "Calculate the circumference of a circle with a diameter of 14 cm. Give your answer to 1 decimal place.", a: "44.0", hint: "Circumference = π × d = π × 14", calculator: true },
     ],
     // Level 3 (3 marks) — Surface area / volume of a cuboid
     [
@@ -2201,7 +2194,7 @@ const questionBank = {
     ],
     // Level 1 (3 marks) — Find a shorter side [DIAGRAM NEEDED]
     [
-      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6", calculator: true },
+      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6", calculator: true, diagram: "pythagoras-shorter" },
       { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4", calculator: true },
       { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3", calculator: true },
     ],
@@ -2419,7 +2412,7 @@ const questionBank = {
     [
       { q: "A person walks for 20 minutes covering 2 km, then stops from 20 min to 35 min, then walks again. How many minutes did they stop for?", a: "15", diagram: "distance-time-1" },
       { q: "A cyclist rides for 1 hour, then rests from 1 hour to 1.5 hours, then rides again. How many minutes did they rest for?", a: "30", diagram: "distance-time-2" },
-      { q: "A car travels 30 km in the first 2 hours of a journey. What was its speed in km/h?", a: "15", diagram: "distance-time-3" },
+      { q: "How long was the car stationary for? Give your answer in hours.", a: "3", diagram: "distance-time-3" },
     ],
     // Level 3 (3 marks) — Expand double brackets (A7)
     [
@@ -2485,9 +2478,9 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Plans and elevations (G11)
     [
-      { q: "State the plan view of a cylinder.", a: "circle" },
-      { q: "State the plan view of a sphere.", a: "circle" },
-      { q: "State the front elevation of a cone.", a: "triangle" },
+      { q: "What 2D shape would you see if you looked directly down at a cylinder from above?", a: "circle" },
+      { q: "What 2D shape would you see if you looked directly down at a sphere from above?", a: "circle" },
+      { q: "What 2D shape would you see if you looked at a cone from the front?", a: "triangle" },
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
@@ -3971,64 +3964,7 @@ const answersEquivalent = (userAnswer, correctAnswer) => {
 
 // ==================== LLM-POWERED ERROR DIAGNOSIS ====================
 
-// AI tutor diagnosis using Claude API
-const diagnoseErrorWithAI = async (question, userAnswer, objective, correctAnswer) => {
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        messages: [
-          {
-            role: "user",
-            content: `You are a friendly GCSE maths tutor helping a student who just got a question wrong.
-
-Question: ${question.q}
-Student's answer: ${userAnswer}
-Correct answer: ${correctAnswer}
-Topic: ${objective.topic} (${objective.code}: ${objective.title || ''})
-
-Analyze their specific mistake and respond in this exact JSON format:
-{
-  "diagnosis": "One sentence explaining what specific mistake they made (e.g., 'You calculated left-to-right instead of following BIDMAS - multiplication should come before addition.')",
-  "tip": "One practical tip to fix this (e.g., 'Try circling all the × and ÷ signs first, then do those before + and -')",
-  "encouragement": "A brief encouraging word (e.g., 'This is a really common mistake - you're nearly there!')"
-}
-
-Be specific about THEIR error, not generic. If you can identify exactly what they did wrong, explain it. Keep it supportive and age-appropriate for a 14-16 year old.`
-          }
-        ],
-      })
-    });
-
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
-    
-    // Parse JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
-      return {
-        hasDiagnosis: true,
-        diagnosis: parsed.diagnosis,
-        tip: parsed.tip,
-        encouragement: parsed.encouragement,
-        isAI: true,
-      };
-    }
-  } catch (error) {
-    console.log('AI diagnosis unavailable, using fallback:', error);
-  }
-  
-  // Fallback to quick pattern detection if AI fails
-  return quickDiagnosis(question, userAnswer, correctAnswer);
-};
-
-// Fast fallback diagnosis (no API call)
+// Quick diagnosis for wrong answers (pattern matching)
 const quickDiagnosis = (question, userAnswer, correctAnswer) => {
   const userNum = parseFloat(userAnswer);
   const correctNum = parseFloat(correctAnswer);
@@ -4100,6 +4036,8 @@ const generateDiagram = (type) => {
     'tea-coffee': 'tea-coffee.png',
     'dual-bar-chart': 'dual bar chart.png',
     'spinners': 'spinners.png',
+    'isosceles-triangle': 'Isoceles triangle missing angle.png',
+    'pythagoras-shorter': 'pythagoras shorter side.png',
   };
 
   // Check for image-based diagram first
@@ -4131,6 +4069,20 @@ const generateDiagram = (type) => {
       <text x="40" y="110" fill="#7c3aed" font-size="14">θ</text>
     </svg>`,
   };
+  // Table-of-values diagrams (AQA style)
+  if (type && type.startsWith('table:')) {
+    const data = type.slice(6); // e.g. "y=2x+1|-1,0,1,2|?,1,?,5"
+    const [equation, xVals, yVals] = data.split('|');
+    const xs = xVals.split(',');
+    const ys = yVals.split(',');
+    const cells = xs.map((x, i) => `<td style="border:2px solid #64748b;padding:8px 14px;text-align:center;font-weight:${ys[i] === '?' ? 'bold' : 'normal'};color:${ys[i] === '?' ? '#a78bfa' : '#e2e8f0'};font-size:1.1em">${ys[i]}</td>`).join('');
+    const xCells = xs.map(x => `<td style="border:2px solid #64748b;padding:8px 14px;text-align:center;color:#e2e8f0;font-size:1.1em">${x}</td>`).join('');
+    return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
+      <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">x</td>${xCells}</tr>
+      <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">y</td>${cells}</tr>
+    </table>`;
+  }
+
   return svgDiagrams[type] || null;
 };
 
@@ -4352,16 +4304,13 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
 
   // Scaffolding state
   const [failureCounts, setFailureCounts] = useState({}); // Track consecutive failures per objective
-  const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // AI diagnosis of error
-  const [isAnalyzing, setIsAnalyzing] = useState(false); // AI is analyzing the error
+  const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // Diagnosis of error
 
   // Calculator state
   const [showCalculator, setShowCalculator] = useState(false);
-  
-  // AI unlock state - AI features phase in after 15 questions
+
+  // Question tracking
   const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(() => loadTotalQuestions());
-  const [showAIUnlockNotification, setShowAIUnlockNotification] = useState(false);
-  const aiUnlocked = isAIUnlocked(totalQuestionsAnswered);
   
   // Math keyboard state
   const [showMathKeyboard, setShowMathKeyboard] = useState(false);
@@ -4713,40 +4662,15 @@ What is the student's answer?`
     setTotalQuestionsAnswered(newTotal);
     saveTotalQuestions(newTotal);
 
-    // Show AI coach tip on first session
-    if (newTotal === 1) {
-      setTimeout(() => showTip('aiCoach'), 1500);
-    }
-
-    // Check if AI just got unlocked
-    if (newTotal === AI_UNLOCK_THRESHOLD) {
-      setTimeout(() => setShowAIUnlockNotification(true), 500);
-    }
-    
     const code = current.objective.code;
     
     // === SCAFFOLDING LOGIC (disabled in Quick Fire and Exam modes) ===
     const scaffoldingEnabled = practiceMode !== 'quickfire' && practiceMode !== 'exam';
 
     if (!correct && scaffoldingEnabled) {
-      // Start with quick fallback diagnosis immediately (always available)
+      // Quick diagnosis for wrong answers
       const quickDiag = quickDiagnosis(current, userAnswer, current.a);
       setCurrentDiagnosis(quickDiag);
-      
-      // Only run AI diagnosis if unlocked (after 15 questions)
-      if (isAIUnlocked(newTotal)) {
-        setIsAnalyzing(true);
-        diagnoseErrorWithAI(current, userAnswer, current.objective, current.a)
-          .then(aiDiagnosis => {
-            if (aiDiagnosis.hasDiagnosis) {
-              setCurrentDiagnosis(aiDiagnosis);
-            }
-            setIsAnalyzing(false);
-          })
-          .catch(() => {
-            setIsAnalyzing(false);
-          });
-      }
       
       // Track failure count for this objective
       const newFailureCount = (failureCounts[code] || 0) + 1;
@@ -5236,10 +5160,10 @@ What is the student's answer?`
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       <LandscapePrompt />
-      <div className="ambient-glow" />
-      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" />
-      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" />
-      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" />
+      <div className="ambient-glow" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
 
       <div className="pt-2 pb-0 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
@@ -5810,53 +5734,20 @@ What is the student's answer?`
                           )}
                         </div>
 
-                        {/* AI Analyzing Indicator - only when AI is unlocked */}
-                        {!isCorrect && isAnalyzing && aiUnlocked && !currentDiagnosis?.isAI && (
-                          <div className="p-4 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30 rounded-xl animate-pulse">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                                <span className="text-xl animate-spin">🤖</span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-purple-300">AI Coach is analyzing your answer...</h4>
-                                <p className="text-sm text-purple-400">Finding what went wrong</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Error Diagnosis - different style for AI vs pattern matching */}
+                        {/* Error Diagnosis */}
                         {!isCorrect && currentDiagnosis?.hasDiagnosis && (
-                          <div className={`p-4 rounded-xl ${
-                            currentDiagnosis.isAI
-                              ? 'bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30'
-                              : 'bg-amber-500/10 border border-amber-500/30'
-                          }`}>
+                          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                             <div className="flex items-start gap-3">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                                currentDiagnosis.isAI ? 'bg-purple-500/20' : 'bg-amber-500/20'
-                              }`}>
-                                <span className="text-xl">🤖</span>
+                              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-500/20">
+                                <span className="text-xl">💡</span>
                               </div>
                               <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className={`font-semibold ${currentDiagnosis.isAI ? 'text-purple-300' : 'text-amber-300'}`}>
-                                    What went wrong?
-                                  </h4>
-                                  {currentDiagnosis.isAI && (
-                                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-500/30 text-purple-300 rounded-full font-medium">
-                                      AI Coach
-                                    </span>
-                                  )}
-                                </div>
-                                <p className={`text-sm mb-2 ${currentDiagnosis.isAI ? 'text-purple-200/80' : 'text-amber-200/80'}`}>
+                                <h4 className="font-semibold text-amber-300 mb-1">
+                                  What went wrong?
+                                </h4>
+                                <p className="text-sm mb-2 text-amber-200/80">
                                   {currentDiagnosis.diagnosis}
                                 </p>
-                                {currentDiagnosis.encouragement && currentDiagnosis.isAI && (
-                                  <p className="text-xs text-purple-400 mt-2 italic">
-                                    {currentDiagnosis.encouragement}
-                                  </p>
-                                )}
                               </div>
                             </div>
                           </div>
@@ -5922,55 +5813,6 @@ What is the student's answer?`
         </div>
       </div>
       
-      {/* AI Coach Unlock Notification */}
-      {showAIUnlockNotification && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl animate-bounce-in">
-            {/* Header with gradient */}
-            <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-8 text-center relative overflow-hidden">
-              <div className="relative">
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                  <span className="text-5xl">🤖</span>
-                </div>
-                <h2 className="text-white text-2xl font-bold mb-2">AI Coach Unlocked!</h2>
-                <p className="text-violet-100">You've earned a personal tutor</p>
-              </div>
-            </div>
-            
-            {/* Content */}
-            <div className="p-6 space-y-4">
-              <p className="text-slate-600 text-center">
-                After {AI_UNLOCK_THRESHOLD} questions, you've unlocked <strong>AI-powered features</strong>:
-              </p>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl">
-                  <span className="text-2xl">🔍</span>
-                  <div>
-                    <p className="font-semibold text-purple-900">Smart Error Analysis</p>
-                    <p className="text-xs text-purple-600">AI identifies exactly where you went wrong</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3 p-3 bg-indigo-50 rounded-xl">
-                  <span className="text-2xl">💬</span>
-                  <div>
-                    <p className="font-semibold text-indigo-900">Personalised Feedback</p>
-                    <p className="text-xs text-indigo-600">Encouragement tailored to your mistakes</p>
-                  </div>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => setShowAIUnlockNotification(false)}
-                className="w-full py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-xl hover:from-violet-600 hover:to-purple-600 transition-all shadow-lg mt-4"
-              >
-                Let's Go!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
