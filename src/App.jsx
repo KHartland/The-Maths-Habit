@@ -2514,9 +2514,9 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
-      { q: "a = [vec:3,2] and b = [vec:-1,4]. Work out a + 2b. Give your answer as x, y.", a: "1, 10", worked: ["First find 2b: 2 × (−1, 4) = (−2, 8)", "Then add: a + 2b = (3, 2) + (−2, 8)", "= (3−2, 2+8) = (1, 10)"] },
-      { q: "a = [vec:4,1] and b = [vec:-2,3]. Work out 2a + b. Give your answer as x, y.", a: "6, 5", worked: ["First find 2a: 2 × (4, 1) = (8, 2)", "Then add: 2a + b = (8, 2) + (−2, 3)", "= (8−2, 2+3) = (6, 5)"] },
-      { q: "c = [vec:5,-2] and d = [vec:0,4]. Work out 3c − d. Give your answer as x, y.", a: "15, -10", worked: ["First find 3c: 3 × (5, −2) = (15, −6)", "Then subtract: 3c − d = (15, −6) − (0, 4)", "= (15, −6−4) = (15, −10)"] },
+      { q: "a = [vec:3,2] and b = [vec:-1,4]. Work out a + 2b. Give your answer as x, y.", a: "1, 10", worked: ["First find 2b: 2 × [vec:-1,4] = [vec:-2,8]", "Then add: a + 2b = [vec:3,2] + [vec:-2,8]", "= [vec:1,10]"] },
+      { q: "a = [vec:4,1] and b = [vec:-2,3]. Work out 2a + b. Give your answer as x, y.", a: "6, 5", worked: ["First find 2a: 2 × [vec:4,1] = [vec:8,2]", "Then add: 2a + b = [vec:8,2] + [vec:-2,3]", "= [vec:6,5]"] },
+      { q: "c = [vec:5,-2] and d = [vec:0,4]. Work out 3c − d. Give your answer as x, y.", a: "15, -10", worked: ["First find 3c: 3 × [vec:5,-2] = [vec:15,-6]", "Then subtract: 3c − d = [vec:15,-6] − [vec:0,4]", "= [vec:15,-10]"] },
     ],
     // Level 4 (4 marks) — Volume in terms of π (G18)
     [
@@ -3323,7 +3323,7 @@ questionBank['G2'][0].push(
   { q: "What is the name of the transformation that creates a mirror image of a shape?", type: "mcq", options: ["Reflection", "Rotation", "Translation", "Enlargement"], a: "Reflection", worked: ["A mirror image is created by reflection"] },
 );
 questionBank['G2'][1].push(
-  { q: "A point at (4, 2) is translated by the vector [vec:3,-2]. What are its new coordinates?", a: "7, 0", worked: ["Add the vector components to the point", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
+  { q: "A point at (4, 2) is translated by the vector [vec:3,-2]. What are its new coordinates?", a: "7, 0", worked: ["Add the vector [vec:3,-2] to the point (4, 2)", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
 );
 questionBank['G2'][2].push(
   { q: "The point (2, 3) is rotated 90° clockwise about the origin. What are the new coordinates?", type: "mcq", options: ["(3, −2)", "(−3, 2)", "(−2, −3)", "(−2, 3)"], a: "(3, −2)", worked: ["90° clockwise rotation: (x, y) → (y, −x)", "(2, 3) → (3, −2)"] },
@@ -5793,7 +5793,7 @@ What is the student's answer?`
                               <div className="text-sm text-blue-200/80 space-y-2">
                                 {current.worked.map((step, i) => (
                                   <p key={i} className={i === current.worked.length - 1 ? 'font-semibold text-blue-300' : ''}>
-                                    {step}
+                                    {renderRecurring(step)}
                                   </p>
                                 ))}
                               </div>
