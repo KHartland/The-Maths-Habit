@@ -4583,7 +4583,6 @@ What is the student's answer?`
     // Reset scaffolding state
     setFailureCounts({});
     setCurrentDiagnosis(null);
-    setIsAnalyzing(false);
 
     // Reset FSRS cognitive science state
     setQuestionStartTime(Date.now());
@@ -4678,8 +4677,7 @@ What is the student's answer?`
     } else if (correct) {
       // Reset failure count on success
       setCurrentDiagnosis(null);
-      setIsAnalyzing(false);
-      setFailureCounts(prev => ({ ...prev, [code]: 0 }));
+        setFailureCounts(prev => ({ ...prev, [code]: 0 }));
     }
     
     // Update progress and track mastery
@@ -4789,7 +4787,6 @@ What is the student's answer?`
     setUserAnswer('');
     setIsCorrect(null);
     setCurrentDiagnosis(null);
-    setIsAnalyzing(false);
     setShowMathKeyboard(false);
     setCapturedImage(null);
     setShowCalculator(false);
