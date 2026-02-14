@@ -2302,9 +2302,9 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — Complete a bar chart from a tally chart
     [
-      { q: "A tally chart shows: Red = 6, Blue = 5, Green = 4, Yellow = 3, Purple = 2. How many students were surveyed in total?", a: "20", worked: ["Add all frequencies: 6 + 5 + 4 + 3 + 2", "= 20 students"] },
-      { q: "A tally chart shows shoe sizes: Size 5 = 3, Size 6 = 7, Size 7 = 5, Size 8 = 4, Size 9 = 1. What is the modal shoe size?", a: "6", worked: ["The mode is the value with highest frequency", "Size 6 has frequency 7 (highest)", "Modal size = 6"] },
-      { q: "A tally chart shows favourite pets: Dog = 8, Cat = 6, Fish = 3, Rabbit = 2, Hamster = 1. How many more students chose Dog than Cat?", a: "2", worked: ["Dog frequency = 8", "Cat frequency = 6", "Difference = 8 − 6 = 2"] },
+      { q: "How many students were surveyed in total?", a: "20", worked: ["Add all frequencies: 6 + 5 + 4 + 3 + 2", "= 20 students"], diagram: "tally:Red:6,Blue:5,Green:4,Yellow:3,Purple:2" },
+      { q: "What is the modal shoe size?", a: "6", worked: ["The mode is the value with highest frequency", "Size 6 has frequency 7 (highest)", "Modal size = 6"], diagram: "tally:Size 5:3,Size 6:7,Size 7:5,Size 8:4,Size 9:1|Shoe size" },
+      { q: "How many more students chose Dog than Cat?", a: "2", worked: ["Dog frequency = 8", "Cat frequency = 6", "Difference = 8 − 6 = 2"], diagram: "tally:Dog:8,Cat:6,Fish:3,Rabbit:2,Hamster:1|Pet" },
     ],
     // Level 2 (3 marks) — Calculate pie chart angle
     [
@@ -4080,6 +4080,36 @@ const generateDiagram = (type) => {
     return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
       <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">x</td>${xCells}</tr>
       <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">y</td>${cells}</tr>
+    </table>`;
+  }
+
+  // Tally chart diagrams (AQA style)
+  if (type && type.startsWith('tally:')) {
+    const raw = type.slice(6); // e.g. "Red:6,Blue:5,Green:4|Colour"
+    const parts = raw.split('|');
+    const data = parts[0];
+    const headerLabel = parts[1] || 'Colour';
+    const items = data.split(',').map(item => {
+      const [label, count] = item.split(':');
+      const n = parseInt(count);
+      let tally = '';
+      const groups = Math.floor(n / 5);
+      const remainder = n % 5;
+      for (let g = 0; g < groups; g++) tally += '<span style="text-decoration:line-through;letter-spacing:2px">||||</span> ';
+      for (let r = 0; r < remainder; r++) tally += '|';
+      return { label: label.trim(), count: n, tally: tally.trim() };
+    });
+    const rows = items.map(item => `<tr>
+      <td style="border:2px solid #64748b;padding:8px 14px;color:#e2e8f0;font-size:1.05em">${item.label}</td>
+      <td style="border:2px solid #64748b;padding:8px 14px;color:#e2e8f0;font-size:1.1em;font-family:monospace;letter-spacing:1px">${item.tally}</td>
+      <td style="border:2px solid #64748b;padding:8px 14px;text-align:center;color:#e2e8f0;font-size:1.05em">${item.count}</td>
+    </tr>`).join('');
+    return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
+      <tr>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">${headerLabel}</th>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">Tally</th>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">Frequency</th>
+      </tr>${rows}
     </table>`;
   }
 
