@@ -2201,27 +2201,27 @@ const questionBank = {
     ],
     // Level 1 (3 marks) — Find a shorter side [DIAGRAM NEEDED]
     [
-      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6" },
-      { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4" },
-      { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3" },
+      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6", calculator: true },
+      { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4", calculator: true },
+      { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3", calculator: true },
     ],
     // Level 2 (3 marks) — Pythagoras word problem
     [
-      { q: "A rectangular gate is 1.2 m wide and 2 m high. A wooden brace runs diagonally across the gate. How long is the brace? Give your answer to 1 decimal place.", a: "2.3", hint: "d² = 1.2² + 2² = 1.44 + 4 = 5.44" },
-      { q: "A TV screen is a rectangle. The height is 30 cm and the width is 50 cm. Find the diagonal length of the screen. Give your answer to 1 decimal place.", a: "58.3", hint: "d² = 30² + 50² = 900 + 2500 = 3400" },
+      { q: "A rectangular gate is 1.2 m wide and 2 m high. A wooden brace runs diagonally across the gate. How long is the brace? Give your answer to 1 decimal place.", a: "2.3", hint: "d² = 1.2² + 2² = 1.44 + 4 = 5.44", calculator: true },
+      { q: "A TV screen is a rectangle. The height is 30 cm and the width is 50 cm. Find the diagonal length of the screen. Give your answer to 1 decimal place.", a: "58.3", hint: "d² = 30² + 50² = 900 + 2500 = 3400", calculator: true },
       { q: "A ship travels 40 km North and then 30 km East. How far is the ship from its starting point?", a: "50", hint: "d² = 40² + 30² = 1600 + 900 = 2500" },
     ],
     // Level 3 (3 marks) — Trigonometry: find a side [DIAGRAM NEEDED]
     [
-      { q: "In a right-angled triangle, angle A = 35° and the hypotenuse AB = 12 cm. Find the length of BC (opposite to angle A). Give your answer to 1 d.p.", a: "6.9" },
-      { q: "In a right-angled triangle, angle P = 42° and the adjacent side PQ = 8 cm. Find the length of QR (opposite to angle P). Give your answer to 1 d.p.", a: "7.2" },
-      { q: "In a right-angled triangle, angle X = 28° and the hypotenuse XZ = 15 cm. Find the length of XY (adjacent to angle X). Give your answer to 1 d.p.", a: "13.2" },
+      { q: "In a right-angled triangle, angle A = 35° and the hypotenuse AB = 12 cm. Find the length of BC (opposite to angle A). Give your answer to 1 d.p.", a: "6.9", calculator: true },
+      { q: "In a right-angled triangle, angle P = 42° and the adjacent side PQ = 8 cm. Find the length of QR (opposite to angle P). Give your answer to 1 d.p.", a: "7.2", calculator: true },
+      { q: "In a right-angled triangle, angle X = 28° and the hypotenuse XZ = 15 cm. Find the length of XY (adjacent to angle X). Give your answer to 1 d.p.", a: "13.2", calculator: true },
     ],
     // Level 4 (4 marks) — Trigonometry: find an angle [DIAGRAM NEEDED]
     [
-      { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 8 cm. Work out the angle θ. Give your answer to 1 d.p.", a: "32.0" },
-      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 11 cm. Work out angle x. Give your answer to 1 d.p.", a: "39.5" },
-      { q: "In a right-angled triangle, the adjacent side is 9 cm and the hypotenuse is 14 cm. Work out angle α. Give your answer to 1 d.p.", a: "50.0" },
+      { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 8 cm. Work out the angle θ. Give your answer to 1 d.p.", a: "32.0", calculator: true },
+      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 11 cm. Work out angle x. Give your answer to 1 d.p.", a: "39.5", calculator: true },
+      { q: "In a right-angled triangle, the adjacent side is 9 cm and the hypotenuse is 14 cm. Work out angle α. Give your answer to 1 d.p.", a: "50.0", calculator: true },
     ],
   ],
 
@@ -2912,6 +2912,524 @@ questionBank['R9'] = [
     { q: "The ratio of cats to dogs is 1:4. What percentage of the animals are cats?", a: "20%" },
   ],
 ];
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL VARIANTS — Round 2
+// ═══════════════════════════════════════════════════════════════
+
+// Time Calculations → N2
+questionBank['N2'][0].push(
+  { q: "How many minutes are in 3 hours and 15 minutes?", a: "195" },
+);
+questionBank['N2'][1].push(
+  { q: "A bus departs at 14:35 and arrives at 16:10. How long did the journey take?", type: "mcq", options: ["55 minutes", "1 hour 25 minutes", "1 hour 35 minutes", "2 hours 25 minutes"], a: "1 hour 35 minutes" },
+);
+questionBank['N2'][2].push(
+  { q: "A film lasts 135 minutes. If it starts at 19:40, what time does it finish?", a: "21:55" },
+);
+questionBank['N2'][3].push(
+  { q: "A train travels at a constant speed and covers 150 miles in 2 hours and 30 minutes. What is its speed in mph?", a: "60", calculator: true },
+);
+questionBank['N2'][4].push(
+  { q: "A clock loses 3 minutes every 24 hours. If it is set correctly at 09:00 on Monday, what time will it show at 21:00 on Wednesday?", a: "20:53" },
+);
+
+// Write as a Ratio → R4
+questionBank['R4'][0].push(
+  { q: "There are 8 red pens and 12 blue pens in a box. Write the ratio of red pens to blue pens in its simplest form.", a: "2:3" },
+);
+questionBank['R4'][1].push(
+  { q: "In a bag of sweets, for every 3 lemon sweets there are 5 orange sweets. If there are 15 lemon sweets, how many orange sweets are there?", a: "25" },
+);
+questionBank['R4'][2].push(
+  { q: "Divide £240 in the ratio 3:5. Work out the larger share.", a: "150" },
+);
+questionBank['R4'][3].push(
+  { q: "The ratio of boys to girls in a school is 4:7. There are 120 more girls than boys. How many students are there in total?", a: "440" },
+);
+questionBank['R4'][4].push(
+  { q: "A:B = 5:3 and B:C = 6:7. Find the ratio A:B:C in its simplest form.", a: "10:6:7" },
+);
+
+// FDP → N10
+questionBank['N10'][0].push(
+  { q: "Write 3/4 as a percentage.", a: "75%" },
+);
+questionBank['N10'][1].push(
+  { q: "Write 0.65 as a fraction in its simplest form.", a: "13/20" },
+);
+questionBank['N10'][2].push(
+  { q: "Which is larger: 0.7 or 5/8? You must show your working.", type: "mcq", options: ["0.7", "5/8"], a: "0.7" },
+);
+questionBank['N10'][3].push(
+  { q: "Work out 35% of £180.", a: "63" },
+);
+questionBank['N10'][4].push(
+  { q: "A coat is reduced by 20% in a sale to a price of £64. What was the original price?", a: "80" },
+);
+
+// Substitution → A2
+questionBank['A2'][0].push(
+  { q: "If x = 5, find the value of 3x + 7.", a: "22" },
+);
+questionBank['A2'][1].push(
+  { q: "If a = 4 and b = −3, work out the value of 2a − b.", a: "11" },
+);
+questionBank['A2'][2].push(
+  { q: "Evaluate p² + 5q when p = −6 and q = 2.", a: "46" },
+);
+questionBank['A2'][3].push(
+  { q: "Given v = u + at, find v when u = 10, a = −2, and t = 4.", a: "2" },
+);
+questionBank['A2'][4].push(
+  { q: "If x = 3 and y = 0.5, find the value of (x² − 4y) ÷ (x + 2y).", a: "1.75" },
+);
+
+// Metric Unit Conversions → R1
+questionBank['R1'][0].push(
+  { q: "Convert 4.5 kilograms into grams.", a: "4500" },
+);
+questionBank['R1'][1].push(
+  { q: "A race is 5000 metres long. How many kilometres is this?", a: "5" },
+);
+questionBank['R1'][2].push(
+  { q: "Change 0.8 litres into millilitres.", a: "800" },
+);
+questionBank['R1'][3].push(
+  { q: "A square has an area of 9 m². What is its area in cm²?", a: "90000" },
+);
+questionBank['R1'][4].push(
+  { q: "Convert a speed of 72 km/h into metres per second (m/s).", a: "20", calculator: true },
+);
+
+// Calculations with Money → N13
+questionBank['N13'][0].push(
+  { q: "Sarah buys a sandwich for £3.45 and a drink for £1.20. How much change does she get from £10?", a: "5.35" },
+);
+questionBank['N13'][1].push(
+  { q: "A pack of 6 cans of cola costs £4.50. How much does one can cost?", a: "0.75" },
+);
+questionBank['N13'][2].push(
+  { q: "Gas costs 15p per unit. A family uses 800 units. How much is the total bill in pounds?", a: "120" },
+);
+questionBank['N13'][3].push(
+  { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true },
+);
+questionBank['N13'][4].push(
+  { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240" },
+);
+
+// Find Probability → P1
+questionBank['P1'][0].push(
+  { q: "A fair 6-sided die is rolled. What is the probability of rolling a number greater than 4?", a: "1/3" },
+);
+questionBank['P1'][1].push(
+  { q: "A bag contains 5 red, 3 blue, and 2 green marbles. One is picked at random. What is the probability it is not blue?", a: "7/10" },
+);
+questionBank['P1'][2].push(
+  { q: "The probability that a train is late is 0.15. What is the probability the train is on time?", a: "0.85" },
+);
+questionBank['P1'][3].push(
+  { q: "A spinner has the colours Red, Blue, and Yellow. P(Red) = 0.4 and P(Blue) = 0.25. Find P(Yellow).", a: "0.35" },
+);
+questionBank['P1'][4].push(
+  { q: "A biased coin is flipped 200 times. The probability of Heads is 0.6. How many times would you expect it to land on Tails?", a: "80" },
+);
+
+// Like Terms → A4
+questionBank['A4'][0].push(
+  { q: "Simplify: a + a + a + b + b", a: "3a + 2b" },
+);
+questionBank['A4'][1].push(
+  { q: "Simplify: 5x + 3y − 2x + 4y", a: "3x + 7y" },
+);
+questionBank['A4'][2].push(
+  { q: "Simplify: 4p² + 5p − p² + 2p", a: "3p² + 7p" },
+);
+questionBank['A4'][3].push(
+  { q: "Expand and simplify: 3(x + 4) + 2(x − 1)", a: "5x + 10" },
+);
+questionBank['A4'][4].push(
+  { q: "Simplify: 10ab − 3a + 2ba + 7a", a: "12ab + 4a" },
+);
+
+// Types of Number → N4
+questionBank['N4'][0].push(
+  { q: "What is the value of 4³?", a: "64" },
+);
+questionBank['N4'][1].push(
+  { q: "Which of the following are prime numbers: 7, 9, 13, 15, 21?", type: "mcq", options: ["7 and 13", "7, 9 and 13", "7, 13 and 21", "9, 13 and 15"], a: "7 and 13" },
+);
+questionBank['N4'][2].push(
+  { q: "Work out the value of √144 + ³√27.", a: "15" },
+);
+questionBank['N4'][3].push(
+  { q: "Express 90 as a product of its prime factors.", type: "mcq", options: ["2 × 3² × 5", "2 × 3 × 15", "2² × 3 × 5", "2 × 9 × 5"], a: "2 × 3² × 5" },
+);
+questionBank['N4'][4].push(
+  { q: "Find the Highest Common Factor (HCF) of 48 and 72.", a: "24" },
+);
+
+// Direct Proportion → R10
+questionBank['R10'][0].push(
+  { q: "If 3 oranges cost £1.50, how much would 8 oranges cost?", a: "4" },
+);
+questionBank['R10'][1].push(
+  { q: "A recipe for 6 people uses 240 g of butter. How much butter is needed for 10 people?", a: "400" },
+);
+questionBank['R10'][2].push(
+  { q: "5 workers take 6 hours to paint a fence. How long would it take 3 workers?", a: "10" },
+);
+questionBank['R10'][3].push(
+  { q: "y is directly proportional to x. When x = 4, y = 20. Find y when x = 9.", a: "45" },
+);
+questionBank['R10'][4].push(
+  { q: "y is directly proportional to x². When x = 2, y = 12. Find y when x = 5.", a: "75" },
+);
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL VARIANTS — Round 3
+// ═══════════════════════════════════════════════════════════════
+
+// N1: Place Value & Ordering
+questionBank['N1'][0].push(
+  { q: "Write the number 'five thousand, three hundred and eight' in figures.", a: "5308" },
+);
+questionBank['N1'][1].push(
+  { q: "Write down the value of the 7 in the number 47,205.", a: "7000" },
+);
+questionBank['N1'][2].push(
+  { q: "Arrange these decimals in order of size, starting with the smallest: 0.5, 0.05, 0.55, 0.505", type: "order", items: ["0.5", "0.05", "0.55", "0.505"], correctOrder: ["0.05", "0.5", "0.505", "0.55"], a: "0.05, 0.5, 0.505, 0.55" },
+);
+questionBank['N1'][3].push(
+  { q: "Find the number halfway between 3.8 and 4.5.", a: "4.15" },
+);
+questionBank['N1'][4].push(
+  { q: "Use the digits 5, 2, 8, and 1 once each to make the smallest possible even number.", a: "1258" },
+);
+
+// N5: Fractions & Decimals
+questionBank['N5'][0].push(
+  { q: "Write 3/5 as a decimal.", a: "0.6" },
+);
+questionBank['N5'][1].push(
+  { q: "Write 0.8 as a fraction in its simplest form.", a: "4/5" },
+);
+questionBank['N5'][2].push(
+  { q: "Work out 5/9 − 1/3. Give your answer as a fraction.", a: "2/9" },
+);
+questionBank['N5'][3].push(
+  { q: "Work out 2 1/2 + 1 3/4. Give your answer as a mixed number.", a: "4 1/4" },
+);
+questionBank['N5'][4].push(
+  { q: "A bottle holds 750 ml. A glass holds 2/5 of the bottle. How many ml are in the glass?", a: "300" },
+);
+
+// N6: Powers, Roots & Index Laws
+questionBank['N6'][0].push(
+  { q: "Work out the value of 5².", a: "25" },
+);
+questionBank['N6'][1].push(
+  { q: "Find the value of √121.", a: "11" },
+);
+questionBank['N6'][2].push(
+  { q: "Work out the value of 2³ × 3².", a: "72" },
+);
+questionBank['N6'][3].push(
+  { q: "Simplify y⁷ ÷ y³. Give your answer using index notation.", type: "mcq", options: ["y⁴", "y¹⁰", "y²¹", "y³"], a: "y⁴" },
+);
+questionBank['N6'][4].push(
+  { q: "Find the value of ³√27 + √64.", a: "11" },
+);
+
+// N10: FDP
+questionBank['N10'][0].push(
+  { q: "Write 1/4 as a percentage.", a: "25%" },
+);
+questionBank['N10'][1].push(
+  { q: "Write 35% as a decimal.", a: "0.35" },
+);
+questionBank['N10'][2].push(
+  { q: "Work out 20% of £150.", a: "30" },
+);
+questionBank['N10'][3].push(
+  { q: "Which is larger: 0.4 or 3/8?", type: "mcq", options: ["0.4", "3/8"], a: "0.4" },
+);
+questionBank['N10'][4].push(
+  { q: "In a sale, a coat is reduced by 15%. The original price was £80. Work out the sale price.", a: "68" },
+);
+
+// N13: Calculations with Money
+questionBank['N13'][0].push(
+  { q: "Change £4.50 into pence.", a: "450" },
+);
+questionBank['N13'][1].push(
+  { q: "3 bars of chocolate cost £2.40. How much does 1 bar cost?", a: "0.80" },
+);
+questionBank['N13'][2].push(
+  { q: "I buy a magazine for £3.95 and a drink for £1.20. How much change do I get from £10?", a: "4.85" },
+);
+questionBank['N13'][3].push(
+  { q: "A pack of 9 toilet rolls costs £4.23. A pack of 4 costs £1.96. Which pack is better value?", type: "mcq", options: ["Pack of 9", "Pack of 4"], a: "Pack of 9", calculator: true },
+);
+questionBank['N13'][4].push(
+  { q: "£500 is invested at 2% simple interest per year for 3 years. Work out the total interest earned.", a: "30" },
+);
+
+// N14: Rounding & Estimation
+questionBank['N14'][0].push(
+  { q: "Round 4,562 to the nearest hundred.", a: "4600" },
+);
+questionBank['N14'][1].push(
+  { q: "Round 7.82 to 1 decimal place.", a: "7.8" },
+);
+questionBank['N14'][2].push(
+  { q: "Round 0.0456 to 2 significant figures.", a: "0.046" },
+);
+questionBank['N14'][3].push(
+  { q: "Estimate the value of (48.7 × 2.1) ÷ 0.49.", a: "200", hint: "Round each value to 1 s.f. first: (50 × 2) ÷ 0.5" },
+);
+questionBank['N14'][4].push(
+  { q: "A length L is rounded to 15 cm to the nearest cm. Write down the error interval for L.", type: "mcq", options: ["14.5 ≤ L < 15.5", "14 ≤ L < 16", "14.5 < L ≤ 15.5", "15 ≤ L < 16"], a: "14.5 ≤ L < 15.5" },
+);
+
+// A1: Algebraic Notation
+questionBank['A1'][0].push(
+  { q: "Simplify: c + c + c + c", a: "4c" },
+);
+questionBank['A1'][1].push(
+  { q: "Simplify: 3 × a × b", a: "3ab" },
+);
+questionBank['A1'][2].push(
+  { q: "Simplify: x² + x²", a: "2x²" },
+);
+questionBank['A1'][3].push(
+  { q: "Write an expression for the total cost of x apples at 20p each and y pears at 30p each. Give your answer in pence.", a: "20x + 30y" },
+);
+questionBank['A1'][4].push(
+  { q: "Simplify: 10w ÷ 2", a: "5w" },
+);
+
+// A3: Expanding & Factorising
+questionBank['A3'][0].push(
+  { q: "Expand: 2(x + 5)", a: "2x + 10" },
+);
+questionBank['A3'][1].push(
+  { q: "Factorise: 3y − 12", a: "3(y - 4)" },
+);
+questionBank['A3'][2].push(
+  { q: "Expand: x(x − 4)", a: "x² - 4x" },
+);
+questionBank['A3'][3].push(
+  { q: "Expand and simplify: 3(x + 2) + 2(x − 1)", a: "5x + 4" },
+);
+questionBank['A3'][4].push(
+  { q: "Factorise fully: 10p² + 15p", a: "5p(2p + 3)" },
+);
+
+// A4: Like Terms
+questionBank['A4'][0].push(
+  { q: "Simplify: 5a + 2a − a", a: "6a" },
+);
+questionBank['A4'][1].push(
+  { q: "Simplify: 3x + 4y + 2x − y", a: "5x + 3y" },
+);
+questionBank['A4'][2].push(
+  { q: "Simplify: 7x² − 2x + 3x²", a: "10x² - 2x" },
+);
+questionBank['A4'][3].push(
+  { q: "Simplify: 10 − 4p + 3 − p", a: "13 - 5p" },
+);
+questionBank['A4'][4].push(
+  { q: "Simplify: xy + 2yx + a", a: "3xy + a" },
+);
+
+// A17: Solve Linear Equations
+questionBank['A17'][0].push(
+  { q: "Solve: x + 5 = 12", a: "7" },
+);
+questionBank['A17'][1].push(
+  { q: "Solve: 4y = 20", a: "5" },
+);
+questionBank['A17'][2].push(
+  { q: "Solve: 3n − 2 = 13", a: "5" },
+);
+questionBank['A17'][3].push(
+  { q: "Solve: 2(x + 4) = 18", a: "5" },
+);
+questionBank['A17'][4].push(
+  { q: "Solve: 5x − 3 = 2x + 9", a: "4" },
+);
+
+// A21: Straight-Line Graphs
+questionBank['A21'][0].push(
+  { q: "Write down the coordinates of the y-intercept for the line y = x − 3.", a: "(0,-3)" },
+);
+questionBank['A21'][1].push(
+  { q: "Using the equation y = 2x − 1, find the value of y when x = 3.", a: "5" },
+);
+questionBank['A21'][2].push(
+  { q: "What type of line does the equation y = 3 represent on a coordinate grid?", type: "mcq", options: ["A horizontal line through (0, 3)", "A vertical line through (3, 0)", "A diagonal line through (0, 3)", "A curve through (0, 3)"], a: "A horizontal line through (0, 3)" },
+);
+questionBank['A21'][3].push(
+  { q: "What is the gradient of the line y = 4x − 2?", a: "4" },
+);
+questionBank['A21'][4].push(
+  { q: "State the equation of a line parallel to y = 5x + 3 that passes through (0, −1).", a: "y = 5x - 1" },
+);
+
+// G1: Angle Facts & Shape Properties
+questionBank['G1'][0].push(
+  { q: "What is the mathematical name for a 4-sided shape?", type: "mcq", options: ["Quadrilateral", "Pentagon", "Triangle", "Hexagon"], a: "Quadrilateral" },
+);
+questionBank['G1'][1].push(
+  { q: "Two angles on a straight line are x° and 130°. Work out the value of x.", a: "50" },
+);
+questionBank['G1'][2].push(
+  { q: "A triangle has angles of 40° and 70°. Work out the size of the third angle.", a: "70" },
+);
+questionBank['G1'][3].push(
+  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", hint: "Interior angle = (n − 2) × 180 ÷ n" },
+);
+questionBank['G1'][4].push(
+  { q: "Two angles are vertically opposite. One is 72°. What is the size of the other angle?", a: "72" },
+);
+
+// G2: Transformations
+questionBank['G2'][0].push(
+  { q: "What is the name of the transformation that creates a mirror image of a shape?", type: "mcq", options: ["Reflection", "Rotation", "Translation", "Enlargement"], a: "Reflection" },
+);
+questionBank['G2'][1].push(
+  { q: "A point at (4, 2) is translated by the vector (3, −2). What are its new coordinates?", a: "7, 0" },
+);
+questionBank['G2'][2].push(
+  { q: "The point (2, 3) is rotated 90° clockwise about the origin. What are the new coordinates?", type: "mcq", options: ["(3, −2)", "(−3, 2)", "(−2, −3)", "(−2, 3)"], a: "(3, −2)" },
+);
+questionBank['G2'][3].push(
+  { q: "A triangle has sides 3 cm, 4 cm, and 5 cm. It is enlarged by scale factor 2. What is the perimeter of the enlarged triangle?", a: "24" },
+);
+questionBank['G2'][4].push(
+  { q: "Shape A is the same shape as Shape B but twice the size. What type of transformation maps A to B?", type: "mcq", options: ["Enlargement", "Translation", "Rotation", "Reflection"], a: "Enlargement" },
+);
+
+// G12: Perimeter, Area & Volume
+questionBank['G12'][0].push(
+  { q: "Find the perimeter of a square with side length 5 cm.", a: "20" },
+);
+questionBank['G12'][1].push(
+  { q: "Work out the area of a rectangle with base 8 cm and height 3 cm.", a: "24" },
+);
+questionBank['G12'][2].push(
+  { q: "Find the area of a triangle with base 6 cm and vertical height 4 cm.", a: "12" },
+);
+questionBank['G12'][3].push(
+  { q: "Calculate the volume of a cuboid with dimensions 2 cm by 3 cm by 10 cm.", a: "60" },
+);
+questionBank['G12'][4].push(
+  { q: "Calculate the area of a circle with radius 5 cm. Give your answer to 1 decimal place.", a: "78.5", calculator: true, hint: "Area = π × r²" },
+);
+
+// G20: Pythagoras & Trigonometry
+questionBank['G20'][0].push(
+  { q: "In a right-angled triangle, what is the name of the longest side?", type: "mcq", options: ["Hypotenuse", "Adjacent", "Opposite", "Base"], a: "Hypotenuse" },
+);
+questionBank['G20'][1].push(
+  { q: "Use Pythagoras' theorem to find the hypotenuse c when a = 3 and b = 4.", a: "5" },
+);
+questionBank['G20'][2].push(
+  { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 5 cm. Find the missing side.", a: "12", calculator: true },
+);
+questionBank['G20'][3].push(
+  { q: "In a right-angled triangle, the angle is 30° and the hypotenuse is 10 cm. Use sin to find the length of the opposite side.", a: "5", calculator: true },
+);
+questionBank['G20'][4].push(
+  { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 12 cm. Use tan⁻¹ to find the angle. Give your answer to 1 d.p.", a: "22.6", calculator: true },
+);
+
+// P4: Relative Frequency
+questionBank['P4'][0].push(
+  { q: "A coin is flipped 50 times and lands on heads 20 times. Write the relative frequency of heads as a decimal.", a: "0.4" },
+);
+questionBank['P4'][1].push(
+  { q: "If the probability of an event is 0.3, how many times would you expect it to happen in 100 trials?", a: "30" },
+);
+questionBank['P4'][2].push(
+  { q: "A spinner is spun 50 times and lands on Green 15 times. Estimate the probability of landing on Green.", a: "0.3" },
+);
+questionBank['P4'][3].push(
+  { q: "Why does relative frequency become a better estimate of probability as more trials are done?", type: "mcq", options: ["It gets closer to the theoretical probability", "It always equals the theoretical probability", "It gets further from the theoretical probability", "It stays the same"], a: "It gets closer to the theoretical probability" },
+);
+questionBank['P4'][4].push(
+  { q: "A die is rolled 300 times. Landing on a 6 has a relative frequency of 0.2. How many times was a 6 rolled?", a: "60" },
+);
+
+// P7: Tree Diagrams & Enumeration
+questionBank['P7'][0].push(
+  { q: "A coin is flipped and a 3-sided spinner (1, 2, 3) is spun. How many possible outcomes are there?", a: "6" },
+);
+questionBank['P7'][1].push(
+  { q: "A bag has 3 red and 2 blue counters. One counter is picked at random. What is the probability it is red?", a: "3/5" },
+);
+questionBank['P7'][2].push(
+  { q: "A fair coin is flipped twice. What is the probability of getting two Heads?", a: "0.25" },
+);
+questionBank['P7'][3].push(
+  { q: "Two events are independent. P(A) = 0.5 and P(B) = 0.2. Find P(A and B).", a: "0.1" },
+);
+questionBank['P7'][4].push(
+  { q: "A bag has 4 red and 3 blue marbles. Two are picked without replacement. Find the probability both are red.", a: "2/7" },
+);
+
+// R2: Percentage Change & Growth/Decay
+questionBank['R2'][0].push(
+  { q: "Increase £40 by 10%.", a: "44" },
+);
+questionBank['R2'][1].push(
+  { q: "Decrease 60 kg by 20%.", a: "48" },
+);
+questionBank['R2'][2].push(
+  { q: "A house price increases from £200,000 to £220,000. Calculate the percentage increase.", a: "10" },
+);
+questionBank['R2'][3].push(
+  { q: "Use a multiplier to increase £450 by 3.5%.", a: "465.75", calculator: true },
+);
+questionBank['R2'][4].push(
+  { q: "£1000 is invested at 4% compound interest per year for 2 years. Work out the final amount.", a: "1081.60", calculator: true },
+);
+
+// S2: Tables & Charts
+questionBank['S2'][0].push(
+  { q: "A bar chart shows 12 students chose football, 8 chose tennis, and 5 chose swimming. How many more students chose football than swimming?", a: "7" },
+);
+questionBank['S2'][1].push(
+  { q: "The following data shows the colours of 10 cars: Red, Blue, Red, Green, Blue, Red, Blue, Red, Green, Blue. How many cars are red?", a: "4" },
+);
+questionBank['S2'][2].push(
+  { q: "In a pictogram, each symbol represents 4 people. How many symbols are needed to show 14 people?", a: "3.5" },
+);
+questionBank['S2'][3].push(
+  { q: "40 people were asked their favourite sport. 10 said tennis. Calculate the angle for tennis in a pie chart.", a: "90" },
+);
+questionBank['S2'][4].push(
+  { q: "A dual bar chart compares boys and girls. The boys' bar shows 45 and the girls' bar shows 30. How many more boys than girls are there?", a: "15", diagram: "dual-bar-chart" },
+);
+
+// S3: Averages & Range
+questionBank['S3'][0].push(
+  { q: "Find the mode of: 2, 3, 2, 5, 6.", a: "2" },
+);
+questionBank['S3'][1].push(
+  { q: "Find the range of: 10, 15, 8, 20, 12.", a: "12" },
+);
+questionBank['S3'][2].push(
+  { q: "Find the median of: 5, 8, 3, 2, 10.", a: "5" },
+);
+questionBank['S3'][3].push(
+  { q: "Calculate the mean of: 4, 7, 9, 10.", a: "7.5" },
+);
+questionBank['S3'][4].push(
+  { q: "The mean of five numbers is 10. Four of the numbers are 7, 12, 8, and 14. Find the fifth number.", a: "9" },
+);
 
 // Map every objective code to the primary code that owns its question bank
 // (derived from reference equality — aliases share the same array object)
