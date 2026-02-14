@@ -2195,9 +2195,9 @@ const questionBank = {
   'G20': [
     // Level 0 (2 marks) — Find hypotenuse [DIAGRAM NEEDED]
     [
-      { q: "A right-angled triangle has shorter sides of 3 cm and 4 cm. Calculate the length of the hypotenuse.", a: "5" },
-      { q: "A right-angled triangle has shorter sides of 5 cm and 12 cm. Calculate the length of the hypotenuse.", a: "13" },
-      { q: "A right-angled triangle has shorter sides of 8 cm and 15 cm. Calculate the length of the hypotenuse.", a: "17" },
+      { q: "Find the length of x.", a: "5", diagram: "pythagoras" },
+      { q: "Find the length of x.", a: "13", diagram: "pythagoras-2" },
+      { q: "Find the length of x.", a: "17", diagram: "pythagoras-3" },
     ],
     // Level 1 (3 marks) — Find a shorter side [DIAGRAM NEEDED]
     [
@@ -3276,6 +3276,9 @@ const generateDiagram = (type) => {
     'transformation': 'transformation.png',
     'football-pictogram': 'football pictogram.png',
     'scatter-graph': 'Scatter graph.png',
+    'pythagoras': 'Pythagoras.png',
+    'pythagoras-2': 'pythagoras 2.png',
+    'pythagoras-3': 'Pythagoras 3.png',
   };
 
   // Check for image-based diagram first
@@ -3373,18 +3376,24 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     const questions = qBank[obj.code] || [];
     if (questions.length === 0) return;
 
-    const qc = objProg?.quickCorrect ?? 0;
+    // Use the highest quickCorrect across all codes sharing this question bank
+    // This handles legacy data where aliases may have different progress levels
+    const primary = questionBankPrimary[obj.code] || obj.code;
+    const bankGroup = questionBankGroups[primary] || [obj.code];
+    const qc = Math.max(0, ...bankGroup.map(c => progress[c]?.quickCorrect ?? 0));
     if (qc >= 5) return; // Mastered — skip
 
-    // Skip objectives still in cooldown
-    if (objProg?.skipUntilSession && objProg.skipUntilSession > sessionCount) return;
+    // Skip if ANY code in the bank group is still in cooldown
+    const maxSkip = Math.max(0, ...bankGroup.map(c => progress[c]?.skipUntilSession ?? 0));
+    if (maxSkip > sessionCount) return;
 
     const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
 
     // Priority: never-practiced objectives first, then least-recently-practiced
-    const neverPracticed = !objProg || objProg.quickCorrect === undefined;
-    const lastPracticed = objProg?.lastPracticed || 0;
+    const anyPracticed = bankGroup.some(c => progress[c]?.quickCorrect !== undefined);
+    const neverPracticed = !anyPracticed;
+    const lastPracticed = Math.max(0, ...bankGroup.map(c => progress[c]?.lastPracticed ?? 0));
 
     candidates.push({
       objective: obj,
@@ -3951,26 +3960,37 @@ What is the student's answer?`
     }
 
     setProgress(prev => {
-      const updated = {
-        ...prev,
-        [code]: {
-          ...prev[code],
-          quickCorrect: newQuickCorrect,
-          lastPracticed: Date.now(),
-          nextDue: getNextDueTime(newQuickCorrect, correct),
-          // Correct: skip a few sessions before revisiting
-          // Wrong: reappear within 5 sessions with a shadow question
-          skipUntilSession: correct
-            ? sessionCount + (
-                newQuickCorrect >= 5 ? 10 : // Mastered — long break
-                newQuickCorrect >= 4 ? 3 :  // Nearly there
-                newQuickCorrect >= 2 ? 2 :  // Making progress
-                1                            // Just started
-              )
-            : 0, // Wrong — no cooldown, will reappear naturally within a few sessions
-          masteredAt: (nowMastered && !wasMastered) ? Date.now() : prev[code]?.masteredAt,
-        }
-      };
+      const updated = { ...prev };
+      const now = Date.now();
+      const skipUntil = correct
+        ? sessionCount + (
+            newQuickCorrect >= 5 ? 10 : // Mastered — long break
+            newQuickCorrect >= 4 ? 3 :  // Nearly there
+            newQuickCorrect >= 2 ? 2 :  // Making progress
+            1                            // Just started
+          )
+        : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
+
+      // Sync progress across ALL codes sharing the same question bank
+      // This prevents aliased objectives from repeating the same questions
+      const primaryCode = questionBankPrimary[code] || code;
+      const bankGroupCodes = questionBankGroups[primaryCode] || [code];
+
+      bankGroupCodes.forEach(groupCode => {
+        const groupProg = prev[groupCode] || {};
+        const groupQC = groupProg.quickCorrect ?? 0;
+        // Use max of existing and new quickCorrect — never regress any code
+        const syncedQC = Math.max(groupQC, newQuickCorrect);
+        updated[groupCode] = {
+          ...groupProg,
+          quickCorrect: syncedQC,
+          lastPracticed: now,
+          nextDue: getNextDueTime(syncedQC, correct),
+          skipUntilSession: skipUntil,
+          masteredAt: (syncedQC >= 5 && groupQC < 5) ? now : groupProg.masteredAt,
+        };
+      });
+
       saveProgress(updated);
       return updated;
     });
