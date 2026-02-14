@@ -2270,22 +2270,32 @@ const questionBank = {
     // Level 0 (2 marks) — List all outcomes
     [
       { q: "A fair coin is flipped and a fair 4-sided spinner (1, 2, 3, 4) is spun. How many possible outcomes are there in total?", a: "8" },
+      { q: "A fair coin is flipped and a fair 6-sided die is rolled. How many possible outcomes are there in total?", a: "12" },
+      { q: "Two fair 3-sided spinners (1, 2, 3) are each spun once. How many possible outcomes are there in total?", a: "9" },
     ],
     // Level 1 (3 marks) — Frequency tree [DIAGRAM NEEDED]
     [
       { q: "100 students are surveyed: 60 are boys and 40 are girls. Of the boys, 45 pass a test. Of the girls, 28 pass. How many girls failed the test?", a: "12" },
+      { q: "80 people are surveyed: 50 are adults and 30 are children. Of the adults, 35 prefer tea. Of the children, 10 prefer tea. How many adults preferred coffee?", a: "15" },
+      { q: "120 employees are surveyed: 70 work full-time and 50 work part-time. Of the full-time workers, 55 drive to work. Of the part-time workers, 20 drive. How many part-time workers do not drive?", a: "30" },
     ],
     // Level 2 (4 marks) — Draw a tree diagram (with replacement)
     [
       { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. How many different outcomes are there?", a: "4" },
+      { q: "A box contains 8 balls: 5 red and 3 blue. A ball is picked, replaced, and then another is picked. What is the probability of picking at least one red ball?", a: "55/64" },
+      { q: "A jar contains 6 green and 4 yellow sweets. A sweet is picked, replaced, and another is picked. What is the probability of picking two yellow sweets?", a: "4/25" },
     ],
     // Level 3 (3 marks) — Calculate probability from tree diagram
     [
       { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Find the probability of picking two black discs.", a: "49/100" },
+      { q: "A bag contains 8 marbles: 5 red and 3 green. A marble is picked, replaced, and another is picked. Find the probability of picking one red and one green (in any order).", a: "15/32" },
+      { q: "A spinner has P(Win) = 0.3 and P(Lose) = 0.7. It is spun twice. Find the probability of winning both times.", a: "0.09" },
     ],
     // Level 4 (4 marks) — Without replacement probability
     [
       { q: "There are 5 red and 3 yellow sweets in a bowl. Two sweets are picked without replacement. Work out the probability that both sweets are the same colour.", a: "13/28" },
+      { q: "A bag has 6 blue and 4 green counters. Two counters are taken without replacement. Work out the probability that they are different colours.", a: "8/15" },
+      { q: "A box has 7 milk chocolates and 3 dark chocolates. Two are taken without replacement. Work out the probability that both are milk chocolate.", a: "7/15" },
     ],
   ],
 
@@ -2463,7 +2473,7 @@ const questionBank = {
   'G2': [
     // Level 0 (2 marks) — Reflect/rotate shape (G7)
     [
-      { q: "The point (3, 7) is reflected in the line y = x. What are the coordinates of the image?", a: "(7, 3)", diagram: "transformation" },
+      { q: "The point (3, 7) is reflected in the line y = x. What are the coordinates of the image?", a: "(7, 3)" },
       { q: "The point (2, 5) is reflected in the line y = x. What are the coordinates of the image?", a: "(5, 2)" },
       { q: "The point (3, 1) is rotated 90° clockwise about the origin. What are the coordinates of the image?", a: "(1, -3)" },
     ],
@@ -2510,6 +2520,8 @@ const questionBank = {
     // Level 2 (2 marks) — Data collection / sampling (S1)
     [
       { q: "Which of these is the best way to collect data about people's favourite type of music?", type: "mcq", options: ["A tally chart with categories for each music genre", "Ask people to write a paragraph about their music taste", "Record the number of songs people listen to per day", "Count the number of music shops in your town"], a: "A tally chart with categories for each music genre" },
+      { q: "A school wants to find out students' favourite school lunch. Which method would give the most reliable results?", type: "mcq", options: ["A questionnaire given to a random sample of 50 students", "Asking 5 friends at lunchtime", "Counting how many meals are left over each day", "Asking the head teacher to guess"], a: "A questionnaire given to a random sample of 50 students" },
+      { q: "Tom wants to find out how often people exercise. Which of these is the best question for a survey?", type: "mcq", options: ["How many times per week do you exercise? (0, 1–2, 3–4, 5+)", "Do you exercise? (Yes/No)", "Why don't you exercise more?", "Exercise is important, don't you agree?"], a: "How many times per week do you exercise? (0, 1–2, 3–4, 5+)" },
     ],
     // Level 3 (3 marks) — Scatter graphs (S6)
     [
@@ -2520,6 +2532,8 @@ const questionBank = {
     // Level 4 (4 marks) — Compare distributions (S5)
     [
       { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)" },
+      { q: "Team X scored a mean of 3.2 goals per match with a range of 6. Team Y scored a mean of 2.8 goals per match with a range of 2. Which team was more consistent?", type: "mcq", options: ["Team X (smaller range)", "Team Y (smaller range)", "Both the same"], a: "Team Y (smaller range)" },
+      { q: "Group P has a median height of 165 cm and range of 12 cm. Group Q has a median height of 162 cm and range of 25 cm. Which group has the greater spread of heights?", type: "mcq", options: ["Group P (larger range)", "Group Q (larger range)", "Both the same"], a: "Group Q (larger range)" },
     ],
   ],
 
@@ -2831,370 +2845,6 @@ const prerequisites = {
   S5: 'N12',  // Mean calculation needs fractions/percentages
 };
 
-// ==================== 60-SECOND MINI-LESSONS ====================
-// Each lesson has: title, keyPoints (3-4 bullet points), example, commonMistakes, quickTip
-
-const miniLessons = {
-  N2: {
-    title: "Negative Numbers",
-    duration: 60,
-    keyPoints: [
-      "Negative × Negative = Positive (−3 × −2 = +6)",
-      "Negative × Positive = Negative (−3 × 2 = −6)",
-      "Subtracting a negative is the same as adding (5 − (−3) = 5 + 3 = 8)",
-      "On a number line, negatives are LEFT of zero"
-    ],
-    example: {
-      problem: "Calculate: −4 × −5",
-      steps: ["Both numbers are negative", "Negative × Negative = Positive", "4 × 5 = 20", "Answer: +20"],
-      answer: "20"
-    },
-    commonMistakes: [
-      "Forgetting that two negatives make a positive",
-      "Confusing subtraction with negative numbers"
-    ],
-    quickTip: "🎯 Remember: SAME signs = Positive, DIFFERENT signs = Negative",
-    practiceQ: { q: "What is −6 × −3?", a: "18", type: "number" }
-  },
-  
-  N6: {
-    title: "Squares, Cubes & Roots",
-    duration: 60,
-    keyPoints: [
-      "Square: multiply a number by itself (5² = 5 × 5 = 25)",
-      "Cube: multiply a number by itself three times (2³ = 2 × 2 × 2 = 8)",
-      "Square root: what number × itself gives this? (√25 = 5)",
-      "Learn these: 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144"
-    ],
-    example: {
-      problem: "Find √81 + 2³",
-      steps: ["√81 = 9 (because 9 × 9 = 81)", "2³ = 2 × 2 × 2 = 8", "9 + 8 = 17"],
-      answer: "17"
-    },
-    commonMistakes: [
-      "Thinking √16 = 8 (it's 4, because 4×4=16)",
-      "Confusing 3² (=9) with 2³ (=8)"
-    ],
-    quickTip: "🎯 Square root UNDOES squaring: √(5²) = √25 = 5",
-    practiceQ: { q: "What is 4² + √49?", a: "23", type: "number" }
-  },
-  
-  N12: {
-    title: "Percentages of Amounts",
-    duration: 60,
-    keyPoints: [
-      "10% = divide by 10 (10% of 80 = 8)",
-      "1% = divide by 100 (1% of 200 = 2)",
-      "50% = half, 25% = quarter",
-      "To find any %, find 10% or 1% first, then multiply"
-    ],
-    example: {
-      problem: "Find 15% of £80",
-      steps: ["10% of £80 = £8", "5% = half of 10% = £4", "15% = 10% + 5% = £8 + £4 = £12"],
-      answer: "£12"
-    },
-    commonMistakes: [
-      "Multiplying by 15 instead of 0.15",
-      "Forgetting to move the decimal point"
-    ],
-    quickTip: "🎯 15% = 0.15 as a decimal. Always divide the percentage by 100!",
-    practiceQ: { q: "What is 20% of 60?", a: "12", type: "number" }
-  },
-  
-  N15: {
-    title: "Rounding Numbers",
-    duration: 60,
-    keyPoints: [
-      "Look at the digit AFTER the place you're rounding to",
-      "If it's 5 or more, round UP",
-      "If it's 4 or less, round DOWN",
-      "1 d.p. = one digit after decimal, 2 d.p. = two digits"
-    ],
-    example: {
-      problem: "Round 3.847 to 2 decimal places",
-      steps: ["Look at 2nd decimal place: 4", "Look at NEXT digit: 7", "7 ≥ 5, so round UP", "3.847 → 3.85"],
-      answer: "3.85"
-    },
-    commonMistakes: [
-      "Looking at the wrong digit",
-      "Rounding 3.45 to 3.4 (should be 3.5 - the 5 rounds up!)"
-    ],
-    quickTip: "🎯 Circle the digit you're rounding, underline the next one, then decide!",
-    practiceQ: { q: "Round 7.863 to 1 decimal place", a: "7.9", type: "text" }
-  },
-  
-  A4: {
-    title: "Expanding Brackets",
-    duration: 60,
-    keyPoints: [
-      "Multiply EVERYTHING inside the bracket by the number outside",
-      "2(x + 3) means 2 × x AND 2 × 3",
-      "Watch out for negative signs: −2(x − 1) = −2x + 2",
-      "Two brackets: use FOIL (First, Outside, Inside, Last)"
-    ],
-    example: {
-      problem: "Expand: 3(2x + 5)",
-      steps: ["3 × 2x = 6x", "3 × 5 = 15", "Put together: 6x + 15"],
-      answer: "6x + 15"
-    },
-    commonMistakes: [
-      "Only multiplying the first term: 3(2x + 5) ≠ 6x + 5",
-      "Sign errors with negatives"
-    ],
-    quickTip: "🎯 Draw arrows from the outside number to EACH term inside!",
-    practiceQ: { q: "Expand: 4(x + 2)", a: "4x + 8", type: "text" }
-  },
-  
-  A17: {
-    title: "Solving Linear Equations",
-    duration: 60,
-    keyPoints: [
-      "Goal: get x on its own on one side",
-      "Whatever you do to one side, do to the other",
-      "Undo operations in reverse order (SADMEP - opposite of BIDMAS)",
-      "Addition undoes subtraction, multiplication undoes division"
-    ],
-    example: {
-      problem: "Solve: 3x + 7 = 22",
-      steps: ["Subtract 7 from both sides: 3x = 15", "Divide both sides by 3: x = 5", "Check: 3(5) + 7 = 15 + 7 = 22 ✓"],
-      answer: "x = 5"
-    },
-    commonMistakes: [
-      "Subtracting from only one side",
-      "Dividing only the number, not the whole side"
-    ],
-    quickTip: "🎯 Always check your answer by substituting back into the original!",
-    practiceQ: { q: "Solve: 2x + 4 = 12", a: "4", type: "number" }
-  },
-  
-  A23: {
-    title: "Linear Sequences",
-    duration: 60,
-    keyPoints: [
-      "Find the common difference (what's added each time)",
-      "nth term = dn + (a - d) where d = difference, a = first term",
-      "Or: nth term = difference × n + zero term",
-      "The zero term is what comes BEFORE the first term"
-    ],
-    example: {
-      problem: "Find the nth term: 3, 7, 11, 15, ...",
-      steps: ["Difference = 4 (add 4 each time)", "Zero term = 3 - 4 = -1", "nth term = 4n + (-1) = 4n - 1", "Check: n=1: 4(1)-1=3 ✓"],
-      answer: "4n - 1"
-    },
-    commonMistakes: [
-      "Using the first term instead of zero term",
-      "Getting the sign wrong on the constant"
-    ],
-    quickTip: "🎯 The number in front of n is ALWAYS the common difference!",
-    practiceQ: { q: "Find the 5th term: 2, 5, 8, 11, ...", a: "14", type: "number" }
-  },
-  
-  R10: {
-    title: "Percentage Change",
-    duration: 60,
-    keyPoints: [
-      "Formula: (Change ÷ Original) × 100",
-      "Change = New value − Original value",
-      "Always divide by the ORIGINAL, not the new value",
-      "Positive = increase, Negative = decrease"
-    ],
-    example: {
-      problem: "Price rises from £80 to £92. Find % increase.",
-      steps: ["Change = £92 - £80 = £12", "% change = (12 ÷ 80) × 100", "= 0.15 × 100 = 15%"],
-      answer: "15%"
-    },
-    commonMistakes: [
-      "Dividing by the new value instead of original",
-      "Forgetting to multiply by 100"
-    ],
-    quickTip: "🎯 Original goes on the BOTTOM of the fraction!",
-    practiceQ: { q: "Price drops from £50 to £40. What's the % decrease?", a: "20", type: "number" }
-  },
-  
-  G3: {
-    title: "Angle Facts",
-    duration: 60,
-    keyPoints: [
-      "Angles on a straight line = 180°",
-      "Angles around a point = 360°",
-      "Vertically opposite angles are EQUAL",
-      "Angles in a triangle = 180°"
-    ],
-    example: {
-      problem: "Two angles on a straight line are x and 130°. Find x.",
-      steps: ["Angles on straight line = 180°", "x + 130° = 180°", "x = 180° - 130° = 50°"],
-      answer: "50°"
-    },
-    commonMistakes: [
-      "Using 360° for a straight line (it's 180°!)",
-      "Forgetting that 'vertically opposite' means equal"
-    ],
-    quickTip: "🎯 Straight line = 180° (half turn), Full turn = 360°",
-    practiceQ: { q: "Angles on a straight line: 65° and x°. Find x.", a: "115", type: "number" }
-  },
-  
-  G19: {
-    title: "Pythagoras' Theorem",
-    duration: 60,
-    keyPoints: [
-      "Only works in RIGHT-ANGLED triangles",
-      "a² + b² = c² (c is always the HYPOTENUSE - longest side)",
-      "To find hypotenuse: √(a² + b²)",
-      "To find shorter side: √(c² - a²)"
-    ],
-    example: {
-      problem: "Find the hypotenuse when a = 3, b = 4",
-      steps: ["c² = a² + b²", "c² = 3² + 4² = 9 + 16 = 25", "c = √25 = 5"],
-      answer: "5"
-    },
-    commonMistakes: [
-      "Adding without squaring: 3 + 4 = 7 ✗",
-      "Forgetting to square root at the end"
-    ],
-    quickTip: "🎯 Remember 3-4-5 and 5-12-13 - these are common Pythagorean triples!",
-    practiceQ: { q: "Find c when a = 6 and b = 8", a: "10", type: "number" }
-  },
-  
-  G20: {
-    title: "Basic Trigonometry (SOH CAH TOA)",
-    duration: 60,
-    keyPoints: [
-      "SOH: sin θ = Opposite / Hypotenuse",
-      "CAH: cos θ = Adjacent / Hypotenuse",
-      "TOA: tan θ = Opposite / Adjacent",
-      "Label sides from the angle you're using (not the right angle!)"
-    ],
-    example: {
-      problem: "Find sin θ if opposite = 3, hypotenuse = 5",
-      steps: ["SOH: sin θ = Opposite / Hypotenuse", "sin θ = 3/5", "sin θ = 0.6"],
-      answer: "0.6 or 3/5"
-    },
-    commonMistakes: [
-      "Labeling sides from the wrong angle",
-      "Using the wrong ratio (e.g., tan when you need sin)"
-    ],
-    quickTip: "🎯 SOH CAH TOA - say it out loud! Some Old Hag Caught A Hippie Tripping On Acid 😄",
-    practiceQ: { q: "If opposite = 4 and adjacent = 3, what is tan θ as a fraction?", a: "4/3", type: "text" }
-  },
-  
-  N5: {
-    title: "Order of Operations (BIDMAS)",
-    duration: 60,
-    keyPoints: [
-      "B - Brackets first ()",
-      "I - Indices (powers) second",
-      "DM - Division & Multiplication (left to right)",
-      "AS - Addition & Subtraction (left to right)"
-    ],
-    example: {
-      problem: "Calculate: 3 + 4 × 2",
-      steps: ["No brackets or indices", "Do multiplication first: 4 × 2 = 8", "Then addition: 3 + 8 = 11", "NOT (3+4) × 2 = 14!"],
-      answer: "11"
-    },
-    commonMistakes: [
-      "Going left to right instead of following BIDMAS",
-      "Forgetting that × and ÷ come before + and −"
-    ],
-    quickTip: "🎯 Circle all × and ÷ first, do those, THEN do + and −",
-    practiceQ: { q: "Calculate: 10 - 2 × 3", a: "4", type: "number" }
-  },
-  
-  N8: {
-    title: "HCF and LCM",
-    duration: 60,
-    keyPoints: [
-      "HCF = Highest Common Factor (biggest number that divides BOTH)",
-      "LCM = Lowest Common Multiple (smallest number BOTH divide into)",
-      "Use prime factorisation for big numbers",
-      "HCF: multiply common primes. LCM: multiply ALL primes (highest powers)"
-    ],
-    example: {
-      problem: "Find HCF and LCM of 12 and 18",
-      steps: ["12 = 2² × 3", "18 = 2 × 3²", "HCF = 2 × 3 = 6 (common primes, lowest powers)", "LCM = 2² × 3² = 36 (all primes, highest powers)"],
-      answer: "HCF = 6, LCM = 36"
-    },
-    commonMistakes: [
-      "Mixing up HCF and LCM",
-      "Finding factors when you need multiples"
-    ],
-    quickTip: "🎯 HCF is smaller (factor), LCM is bigger (multiple). HCF × LCM = product of the two numbers!",
-    practiceQ: { q: "What is the HCF of 16 and 24?", a: "8", type: "number" }
-  },
-};
-
-// Error patterns that suggest specific prerequisite weaknesses
-const errorToPrerequisite = {
-  // Sign errors suggest negative number issues
-  signError: 'N2',
-  // Factor of 10 errors suggest percentage/decimal issues
-  factorOf10: 'N12',
-  // BIDMAS errors
-  leftToRight: 'N5',
-  // Pythagoras errors
-  noSquare: 'G19',
-  noRoot: 'N6',
-  // Equation solving errors
-  wrongOperation: 'A17',
-};
-
-// Building block questions - simpler versions to build foundation
-const buildingBlocks = {
-  A17: [
-    { q: "Solve: x + 5 = 12", a: "7", type: "number", scaffold: true, hint: "Subtract 5 from both sides" },
-    { q: "Solve: 2x = 10", a: "5", type: "number", scaffold: true, hint: "Divide both sides by 2" },
-    { q: "If x + 3 = 8, what is x?", a: "5", type: "number", scaffold: true },
-  ],
-  A4: [
-    { q: "Expand: 2(x + 3)", a: "2x + 6", type: "text", scaffold: true, hint: "Multiply 2 by each term inside" },
-    { q: "Simplify: 3x + 2x", a: "5x", type: "text", scaffold: true },
-  ],
-  A23: [
-    { q: "What is the next number: 2, 4, 6, 8, ...", a: "10", type: "number", scaffold: true },
-    { q: "Find the pattern: 5, 10, 15, 20, ... What's added each time?", a: "5", type: "number", scaffold: true },
-  ],
-  N2: [
-    { q: "What is −3 × −4?", a: "12", type: "number", scaffold: true, hint: "Negative × Negative = Positive" },
-    { q: "What is −10 + 6?", a: "-4", type: "number", scaffold: true },
-    { q: "What is 5 − (−3)?", a: "8", type: "number", scaffold: true, hint: "Subtracting a negative = adding" },
-  ],
-  N5: [
-    { q: "Calculate: 2 + 3 × 4", a: "14", type: "number", scaffold: true, hint: "Multiplication before addition" },
-    { q: "Calculate: 20 ÷ 4 + 1", a: "6", type: "number", scaffold: true },
-  ],
-  N6: [
-    { q: "What is 5²?", a: "25", type: "number", scaffold: true, hint: "5 × 5" },
-    { q: "What is √36?", a: "6", type: "number", scaffold: true, hint: "What number times itself = 36?" },
-    { q: "Calculate: 3²", a: "9", type: "number", scaffold: true },
-  ],
-  N8: [
-    { q: "What is the HCF of 8 and 12?", a: "4", type: "number", scaffold: true },
-    { q: "What is the LCM of 3 and 4?", a: "12", type: "number", scaffold: true },
-  ],
-  N12: [
-    { q: "What is 10% of 50?", a: "5", type: "number", scaffold: true, hint: "Divide by 10" },
-    { q: "What is 50% of 20?", a: "10", type: "number", scaffold: true, hint: "Half of the number" },
-    { q: "Find 25% of 40", a: "10", type: "number", scaffold: true, hint: "Quarter of the number" },
-  ],
-  N15: [
-    { q: "Round 3.7 to the nearest whole number", a: "4", type: "number", scaffold: true },
-    { q: "Round 12.34 to 1 decimal place", a: "12.3", type: "text", scaffold: true },
-  ],
-  R10: [
-    { q: "A price goes from £10 to £12. What is the increase?", a: "2", type: "number", scaffold: true },
-    { q: "If something costs £20 and increases by £5, what's the new price?", a: "25", type: "number", scaffold: true },
-  ],
-  G3: [
-    { q: "If one angle on a straight line is 60°, what is the other?", a: "120", type: "number", scaffold: true, hint: "Angles on a straight line = 180°" },
-    { q: "Two angles add up to 90°. One is 30°. What's the other?", a: "60", type: "number", scaffold: true },
-  ],
-  G19: [
-    { q: "In a right triangle, if a = 3 and b = 4, what is a² + b²?", a: "25", type: "number", scaffold: true, hint: "Calculate 9 + 16" },
-  ],
-  G20: [
-    { q: "In SOH CAH TOA, what does the 'O' stand for?", a: "Opposite", type: "text", scaffold: true },
-    { q: "If opposite = 6 and hypotenuse = 10, what is sin θ as a decimal?", a: "0.6", type: "text", scaffold: true },
-  ],
-};
 
 // ==================== FORGIVING ANSWER CHECKER ====================
 
@@ -3584,34 +3234,6 @@ const quickDiagnosis = (question, userAnswer, correctAnswer) => {
   };
 };
 
-// Function to get a building block question
-const getBuildingBlock = (objectiveCode) => {
-  // First check for direct prerequisite
-  const prereqCode = prerequisites[objectiveCode];
-  
-  if (prereqCode && buildingBlocks[prereqCode]) {
-    const blocks = buildingBlocks[prereqCode];
-    const block = blocks[Math.floor(Math.random() * blocks.length)];
-    return {
-      ...block,
-      prerequisiteFor: objectiveCode,
-      prerequisiteCode: prereqCode,
-    };
-  }
-  
-  // Check if there are building blocks for this objective directly
-  if (buildingBlocks[objectiveCode]) {
-    const blocks = buildingBlocks[objectiveCode];
-    const block = blocks[Math.floor(Math.random() * blocks.length)];
-    return {
-      ...block,
-      prerequisiteFor: objectiveCode,
-      prerequisiteCode: objectiveCode,
-    };
-  }
-  
-  return null;
-};
 
 // Generate diagram HTML - uses PNG images for AQA-style diagrams
 const generateDiagram = (type) => {
@@ -3683,8 +3305,8 @@ const isMastered = (progress) => (progress?.quickCorrect ?? 0) >= 5;
 
 // Build session queue with FSRS-based spaced repetition + discriminative interleaving
 const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation') => {
-  const now = Date.now();
   const qBank = getQuestionBankForTier(tier);
+  const recentQuestions = new Set(loadRecentQuestions());
 
   // Shuffle helper (Fisher-Yates)
   const shuffle = (arr) => {
@@ -3696,79 +3318,79 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     return s;
   };
 
-  // ── Step 1: Collect one candidate per objective (the NEXT question they need) ──
+  // Pick a variant that hasn't been recently answered (falls back to random if all are recent)
+  const pickFreshVariant = (variants, objCode, questionIdx) => {
+    if (!Array.isArray(variants) || variants.length <= 1) return pickVariant(variants);
+
+    // Try to find a variant NOT in recent questions
+    const fresh = variants.filter(v => {
+      const id = getQuestionId(objCode, questionIdx, v);
+      return !recentQuestions.has(id);
+    });
+
+    if (fresh.length > 0) {
+      return fresh[Math.floor(Math.random() * fresh.length)];
+    }
+    // All variants are recent — just pick randomly
+    return variants[Math.floor(Math.random() * variants.length)];
+  };
+
+  // ── Step 1: Collect all eligible objectives ──
   const candidates = [];
 
   allObjectives.forEach(obj => {
     const objProg = progress[obj.code];
     const questions = qBank[obj.code] || [];
-    if (questions.length === 0) return; // No questions written yet
+    if (questions.length === 0) return;
 
-    // Skip fully mastered objectives (all 5 correct)
     const qc = objProg?.quickCorrect ?? 0;
-    if (qc >= 5) return;
+    if (qc >= 5) return; // Mastered — skip
 
-    // Skip objectives in session cooldown
-    if (objProg?.skipUntilSession && objProg.skipUntilSession >= sessionCount) return;
+    // Skip objectives still in cooldown
+    if (objProg?.skipUntilSession && objProg.skipUntilSession > sessionCount) return;
 
-    // Skip objectives practiced in the last 2 hours
-    if (objProg?.lastPracticed && (now - objProg.lastPracticed) < 2 * 60 * 60 * 1000) return;
-
-    // Sequential progression: the student gets question[quickCorrect], with random variant
     const questionIdx = Math.min(qc, questions.length - 1);
-    const q = pickVariant(questions[questionIdx]);
-    const questionId = getQuestionId(obj.code, questionIdx, q);
+    const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
+
+    // Priority: never-practiced objectives first, then least-recently-practiced
+    const neverPracticed = !objProg || objProg.quickCorrect === undefined;
+    const lastPracticed = objProg?.lastPracticed || 0;
 
     candidates.push({
       objective: obj,
       question: q,
       questionIndex: questionIdx,
-      questionId,
+      questionId: getQuestionId(obj.code, questionIdx, q),
       level: qc,
       topic: obj.topic,
+      neverPracticed,
+      lastPracticed,
     });
   });
 
-  // ── Step 2: Fallback — if cooldowns filtered out too many, relax the 2-hour filter ──
-  if (candidates.length < count) {
-    allObjectives.forEach(obj => {
-      const objProg = progress[obj.code];
-      const questions = qBank[obj.code] || [];
-      if (questions.length === 0) return;
-      const qc = objProg?.quickCorrect ?? 0;
-      if (qc >= 5) return;
-      if (objProg?.skipUntilSession && objProg.skipUntilSession >= sessionCount) return;
-      if (candidates.some(c => c.objective.code === obj.code)) return; // Already in pool
-
-      const questionIdx = Math.min(qc, questions.length - 1);
-      const q = pickVariant(questions[questionIdx]);
-      candidates.push({
-        objective: obj,
-        question: q,
-        questionIndex: questionIdx,
-        questionId: getQuestionId(obj.code, questionIdx, q),
-        level: qc,
-        topic: obj.topic,
-      });
-    });
-  }
-
-  // ── Step 3: Pick `count` questions, balanced across topics ──
-  // Group by topic then round-robin pick from least-used topic
+  // ── Step 2: Sort within each topic — unseen objectives first, then oldest-practiced ──
   const byTopic = {};
   candidates.forEach(c => {
     if (!byTopic[c.topic]) byTopic[c.topic] = [];
     byTopic[c.topic].push(c);
   });
-  // Shuffle within each topic for variety
-  Object.keys(byTopic).forEach(t => { byTopic[t] = shuffle(byTopic[t]); });
 
+  Object.keys(byTopic).forEach(t => {
+    // Separate into never-practiced and already-practiced
+    const unseen = shuffle(byTopic[t].filter(c => c.neverPracticed));
+    const seen = byTopic[t]
+      .filter(c => !c.neverPracticed)
+      .sort((a, b) => a.lastPracticed - b.lastPracticed); // oldest first
+    // Unseen objectives get priority, then oldest-practiced
+    byTopic[t] = [...unseen, ...seen];
+  });
+
+  // ── Step 3: Round-robin across topics, picking from the front (prioritised) ──
   const queue = [];
   const usedObjectives = new Set();
   const topicCount = {};
 
   while (queue.length < count) {
-    // Find the topic with the least questions added so far that still has candidates
     let bestTopic = null;
     let bestCount = Infinity;
     for (const [topic, arr] of Object.entries(byTopic)) {
@@ -3781,9 +3403,9 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
       }
     }
 
-    if (!bestTopic) break; // No more candidates available
+    if (!bestTopic) break;
 
-    // Pick first available from this topic
+    // Pick FIRST available (unseen/oldest gets priority thanks to sorting)
     const topicCandidates = byTopic[bestTopic];
     const nextIdx = topicCandidates.findIndex(c => !usedObjectives.has(c.objective.code));
     if (nextIdx === -1) break;
@@ -3794,7 +3416,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     queue.push(next);
   }
 
-  // Shuffle the final queue so topics are interleaved, not grouped
+  // Shuffle the final queue so topics are interleaved
   return shuffle(queue).map(q => ({
     objective: q.objective,
     question: q.question,
@@ -3868,19 +3490,10 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   // Scaffolding state
   const [failureCounts, setFailureCounts] = useState({}); // Track consecutive failures per objective
   const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // AI diagnosis of error
-  const [isScaffoldQuestion, setIsScaffoldQuestion] = useState(false); // Is current question a building block?
-  const [scaffoldInfo, setScaffoldInfo] = useState(null); // Info about the scaffold question
   const [isAnalyzing, setIsAnalyzing] = useState(false); // AI is analyzing the error
-  
+
   // Calculator state
   const [showCalculator, setShowCalculator] = useState(false);
-
-  // Mini-lesson state
-  const [showMiniLesson, setShowMiniLesson] = useState(false);
-  const [currentMiniLesson, setCurrentMiniLesson] = useState(null);
-  const [miniLessonTimer, setMiniLessonTimer] = useState(60);
-  const [miniLessonComplete, setMiniLessonComplete] = useState(false);
-  const miniLessonTimerRef = useRef(null);
   
   // AI unlock state - AI features phase in after 15 questions
   const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(() => loadTotalQuestions());
@@ -3988,44 +3601,6 @@ What is the student's answer?`
     setUserAnswer('');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
-    }
-  };
-  
-  // Start a mini-lesson for a specific prerequisite
-  const startMiniLesson = (prereqCode) => {
-    const lesson = miniLessons[prereqCode];
-    if (!lesson) return;
-    
-    setCurrentMiniLesson({ ...lesson, code: prereqCode });
-    setShowMiniLesson(true);
-    setMiniLessonTimer(lesson.duration || 60);
-    setMiniLessonComplete(false);
-    
-    // Start countdown timer
-    if (miniLessonTimerRef.current) clearInterval(miniLessonTimerRef.current);
-    miniLessonTimerRef.current = setInterval(() => {
-      setMiniLessonTimer(prev => {
-        if (prev <= 1) {
-          setMiniLessonComplete(true);
-          clearInterval(miniLessonTimerRef.current);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-  
-  // Close mini-lesson and continue
-  const closeMiniLesson = (startBuildingBlock = false) => {
-    if (miniLessonTimerRef.current) clearInterval(miniLessonTimerRef.current);
-    setShowMiniLesson(false);
-    setCurrentMiniLesson(null);
-    setMiniLessonTimer(60);
-    setMiniLessonComplete(false);
-    
-    // If user wants to try a building block question
-    if (startBuildingBlock && scaffoldInfo) {
-      // The scaffoldInfo is already set, nextQuestion will handle it
     }
   };
   
@@ -4196,16 +3771,7 @@ What is the student's answer?`
     // Reset scaffolding state
     setFailureCounts({});
     setCurrentDiagnosis(null);
-    setIsScaffoldQuestion(false);
-    setScaffoldInfo(null);
     setIsAnalyzing(false);
-    
-    // Reset mini-lesson state
-    setShowMiniLesson(false);
-    setCurrentMiniLesson(null);
-    setMiniLessonTimer(60);
-    setMiniLessonComplete(false);
-    if (miniLessonTimerRef.current) clearInterval(miniLessonTimerRef.current);
 
     // Reset FSRS cognitive science state
     setQuestionStartTime(Date.now());
@@ -4298,8 +3864,8 @@ What is the student's answer?`
     
     // === SCAFFOLDING LOGIC (disabled in Quick Fire and Exam modes) ===
     const scaffoldingEnabled = practiceMode !== 'quickfire' && practiceMode !== 'exam';
-    
-    if (!correct && !isScaffoldQuestion && scaffoldingEnabled) {
+
+    if (!correct && scaffoldingEnabled) {
       // Start with quick fallback diagnosis immediately (always available)
       const quickDiag = quickDiagnosis(current, userAnswer, current.a);
       setCurrentDiagnosis(quickDiag);
@@ -4322,84 +3888,59 @@ What is the student's answer?`
       // Track failure count for this objective
       const newFailureCount = (failureCounts[code] || 0) + 1;
       setFailureCounts(prev => ({ ...prev, [code]: newFailureCount }));
-      
-      // IMMEDIATELY detect skill gap and prepare mini-lesson
-      const detectedGap = detectSkillGap(current, userAnswer, current.a, current.objective);
-      const prereqCode = detectedGap || prerequisites[code];
-      
-      if (prereqCode && miniLessons[prereqCode]) {
-        // Prepare building block for after the mini-lesson
-        const buildingBlock = getBuildingBlock(code);
-        if (buildingBlock) {
-          setScaffoldInfo({
-            buildingBlock,
-            originalObjective: current.objective,
-            prereqCode: prereqCode,
-            reason: `Let's strengthen your ${miniLessons[prereqCode]?.title || 'foundation'} skills first.`
-          });
-        }
-      }
     } else if (correct) {
       // Reset failure count on success
       setCurrentDiagnosis(null);
       setIsAnalyzing(false);
-      if (!isScaffoldQuestion) {
-        setFailureCounts(prev => ({ ...prev, [code]: 0 }));
-      }
+      setFailureCounts(prev => ({ ...prev, [code]: 0 }));
     }
     
-    // If scaffold question answered correctly, clear scaffold info
-    if (isScaffoldQuestion && correct) {
-      setScaffoldInfo(null);
-      setIsScaffoldQuestion(false);
+    // Update progress and track mastery
+    const prog = progress[code] || {};
+    const oldQuickCorrect = prog.quickCorrect ?? 0;
+    const wasMastered = oldQuickCorrect >= 5;
+
+    let newQuickCorrect = oldQuickCorrect;
+
+    if (correct) {
+      // Correct: advance to next level (max 5 = mastered)
+      newQuickCorrect = Math.min(oldQuickCorrect + 1, 5);
+    } else {
+      // Wrong: stay at same level — student gets a shadow question next time
+      newQuickCorrect = oldQuickCorrect;
     }
-    
-    // Update progress and track mastery (skip for scaffold questions)
-    if (!isScaffoldQuestion) {
-      const prog = progress[code] || {};
-      const oldQuickCorrect = prog.quickCorrect ?? 0;
-      const wasMastered = oldQuickCorrect >= 5;
 
-      let newQuickCorrect = oldQuickCorrect;
+    const nowMastered = newQuickCorrect >= 5;
 
-      if (correct) {
-        // Correct: advance to next question (max 5 = mastered)
-        newQuickCorrect = Math.min(oldQuickCorrect + 1, 5);
-      } else {
-        // Wrong: drop back one level (can't go below 0)
-        newQuickCorrect = Math.max(0, oldQuickCorrect - 1);
-      }
+    // Track mastery gained
+    if (correct && nowMastered && !wasMastered) {
+      setMasteryGained(prev => prev + 1);
+    }
 
-      const nowMastered = newQuickCorrect >= 5;
-      
-      // Track mastery gained
-      if (correct && nowMastered && !wasMastered) {
-        setMasteryGained(prev => prev + 1);
-      }
-      
-      setProgress(prev => {
-        const updated = {
-          ...prev,
-          [code]: {
-            ...prev[code],
-            quickCorrect: newQuickCorrect,
-            lastPracticed: Date.now(),
-            nextDue: getNextDueTime(newQuickCorrect, correct),
-            // Skip objective for a few sessions so the student sees variety
-            skipUntilSession: correct
-              ? sessionCount + (
-                  newQuickCorrect >= 5 ? 10 : // Mastered — long break
-                  newQuickCorrect >= 4 ? 3 :  // Nearly there
-                  newQuickCorrect >= 2 ? 2 :  // Making progress
-                  1                            // Just started
-                )
-              : sessionCount + 3,
-            masteredAt: (nowMastered && !wasMastered) ? Date.now() : prev[code]?.masteredAt,
-          }
-        };
-        saveProgress(updated);
-        return updated;
-      });
+    setProgress(prev => {
+      const updated = {
+        ...prev,
+        [code]: {
+          ...prev[code],
+          quickCorrect: newQuickCorrect,
+          lastPracticed: Date.now(),
+          nextDue: getNextDueTime(newQuickCorrect, correct),
+          // Correct: skip a few sessions before revisiting
+          // Wrong: reappear within 5 sessions with a shadow question
+          skipUntilSession: correct
+            ? sessionCount + (
+                newQuickCorrect >= 5 ? 10 : // Mastered — long break
+                newQuickCorrect >= 4 ? 3 :  // Nearly there
+                newQuickCorrect >= 2 ? 2 :  // Making progress
+                1                            // Just started
+              )
+            : 0, // Wrong — no cooldown, will reappear naturally within a few sessions
+          masteredAt: (nowMastered && !wasMastered) ? Date.now() : prev[code]?.masteredAt,
+        }
+      };
+      saveProgress(updated);
+      return updated;
+    });
       
       setSessionResults(prev => [...prev, {
         code,
@@ -4442,7 +3983,6 @@ What is the student's answer?`
       const recentList = loadRecentQuestions();
       recentList.push(questionId);
       saveRecentQuestions(recentList);
-    }
   };
 
   // Next question
@@ -4462,42 +4002,10 @@ What is the student's answer?`
     setUserConfidence(null);
     setShowConfidenceRating(false);
     setShowDelayedFeedback(false);
-    
-    // Clear mini-lesson if open
-    if (showMiniLesson) {
-      closeMiniLesson(false);
-    }
-    
+
     // Clear Quick Fire timer
     if (timerRef.current) clearInterval(timerRef.current);
-    
-    // Check if we need to insert a building block question
-    if (scaffoldInfo && !isScaffoldQuestion) {
-      // Insert building block before continuing
-      const buildingBlockQ = {
-        ...scaffoldInfo.buildingBlock,
-        objective: scaffoldInfo.originalObjective,
-        isScaffold: true,
-      };
-      
-      // Insert at current position + 1
-      setSessionQueue(prev => {
-        const newQueue = [...prev];
-        newQueue.splice(currentIndex + 1, 0, buildingBlockQ);
-        return newQueue;
-      });
-      
-      setIsScaffoldQuestion(true);
-      setCurrentIndex(prev => prev + 1);
-      return;
-    }
-    
-    // Clear scaffold state when moving past it
-    if (isScaffoldQuestion) {
-      setIsScaffoldQuestion(false);
-      setScaffoldInfo(null);
-    }
-    
+
     if (currentIndex < sessionQueue.length - 1) {
       setCurrentIndex(prev => prev + 1);
       // Restart timer for Quick Fire mode
@@ -5536,120 +5044,6 @@ What is the student's answer?`
           )}
         </div>
       </div>
-      
-      {/* Mini-Lesson Modal */}
-      {showMiniLesson && currentMiniLesson && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-void/95 backdrop-blur-xl rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-white/10">
-            {/* Header */}
-            <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-6 rounded-t-3xl">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-violet-200 text-sm font-medium">🔧 Skill Tool</p>
-                  <h2 className="text-white text-2xl font-bold">The {currentMiniLesson.title} Tool</h2>
-                </div>
-                <div className="flex items-center gap-3">
-                  {/* Timer */}
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-xl ${
-                    miniLessonTimer > 30 ? 'bg-white/20 text-white' :
-                    miniLessonTimer > 10 ? 'bg-amber-400 text-amber-900' :
-                    'bg-red-400 text-red-900 animate-pulse'
-                  }`}>
-                    {miniLessonTimer}s
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Content */}
-            <div className="p-6 space-y-6">
-              {/* Key Points */}
-              <div className="bg-violet/10 border border-violet/20 rounded-xl p-4">
-                <h3 className="font-bold text-violet-light mb-3 flex items-center gap-2">
-                  <span>📌</span> Key Points
-                </h3>
-                <ul className="space-y-2">
-                  {currentMiniLesson.keyPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-white/80">
-                      <span className="w-6 h-6 bg-violet/30 rounded-full flex items-center justify-center text-sm font-bold text-violet-light flex-shrink-0">
-                        {i + 1}
-                      </span>
-                      <span className="text-sm">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Worked Example */}
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4">
-                <h3 className="font-bold text-emerald-400 mb-3 flex items-center gap-2">
-                  <span>✏️</span> Worked Example
-                </h3>
-                <div className="bg-white/5 rounded-lg p-4 mb-3">
-                  <p className="font-semibold text-white/90 mb-2">{currentMiniLesson.example.problem}</p>
-                  <div className="space-y-1">
-                    {currentMiniLesson.example.steps.map((step, i) => (
-                      <p key={i} className={`text-sm ${
-                        i === currentMiniLesson.example.steps.length - 1
-                          ? 'font-bold text-emerald-400'
-                          : 'text-white/60'
-                      }`}>
-                        {step}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Common Mistakes */}
-              <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
-                <h3 className="font-bold text-red-400 mb-3 flex items-center gap-2">
-                  <span>⚠️</span> Common Mistakes to Avoid
-                </h3>
-                <ul className="space-y-2">
-                  {currentMiniLesson.commonMistakes.map((mistake, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-white/70">
-                      <span className="text-red-400">✗</span>
-                      <span>{mistake}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-
-              {/* Action Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-white/10">
-                {miniLessonComplete ? (
-                  <>
-                    <button
-                      onClick={() => closeMiniLesson(true)}
-                      className="flex-1 py-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold rounded-xl hover:from-emerald-600 hover:to-teal-600 transition-all shadow-lg flex items-center justify-center gap-2"
-                    >
-                      <span>🎯</span> Try a Practice Question
-                    </button>
-                    <button
-                      onClick={() => closeMiniLesson(false)}
-                      className="px-6 py-4 bg-white/10 text-white/70 font-medium rounded-xl hover:bg-white/20 transition-all"
-                    >
-                      Continue
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex-1 text-center">
-                    <p className="text-white/50 text-sm mb-2">Take a moment to read through the lesson...</p>
-                    <button
-                      onClick={() => { setMiniLessonTimer(0); setMiniLessonComplete(true); }}
-                      className="text-violet-light hover:text-white text-sm font-medium"
-                    >
-                      I've finished reading ↓
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       
       {/* AI Coach Unlock Notification */}
       {showAIUnlockNotification && (
