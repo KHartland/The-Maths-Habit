@@ -2613,6 +2613,36 @@ questionBank['S1'] = questionBank['P4'];
 questionBank['S5'] = questionBank['P4'];
 questionBank['S6'] = questionBank['P4'];
 
+// Map every objective code to the primary code that owns its question bank
+// (derived from reference equality — aliases share the same array object)
+const questionBankPrimary = {};
+const _seenBanks = new Map();
+Object.keys(questionBank).forEach(code => {
+  const bank = questionBank[code];
+  if (_seenBanks.has(bank)) {
+    questionBankPrimary[code] = _seenBanks.get(bank);
+  } else {
+    _seenBanks.set(bank, code);
+    questionBankPrimary[code] = code;
+  }
+});
+
+// Reverse map: primary code → all codes sharing that question bank
+const questionBankGroups = {};
+Object.entries(questionBankPrimary).forEach(([code, primary]) => {
+  if (!questionBankGroups[primary]) questionBankGroups[primary] = [];
+  questionBankGroups[primary].push(code);
+});
+
+// Friendly labels for mixed question banks (shown in celebration screen)
+const questionBankLabel = {
+  'N5': 'Mixed Number Practice',
+  'A3': 'Mixed Algebra Practice',
+  'R2': 'Mixed Ratio Practice',
+  'G2': 'Mixed Geometry Practice',
+  'P4': 'Mixed Probability & Statistics',
+};
+
 // Higher tier question bank - to be rewritten
 const higherQuestionBank = {
 };
@@ -3411,7 +3441,10 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     if (nextIdx === -1) break;
 
     const next = topicCandidates.splice(nextIdx, 1)[0];
-    usedObjectives.add(next.objective.code);
+    // Block all codes sharing the same question bank to avoid duplicate question types
+    const primary = questionBankPrimary[next.objective.code] || next.objective.code;
+    const bankGroup = questionBankGroups[primary] || [next.objective.code];
+    bankGroup.forEach(c => usedObjectives.add(c));
     topicCount[next.topic] = (topicCount[next.topic] || 0) + 1;
     queue.push(next);
   }
@@ -4089,19 +4122,22 @@ What is the student's answer?`
       setAchievements(newAchievements);
       
       // Extract practiced objective codes with full data for celebration
-      const allResults = [...sessionResults, { correct: isCorrect, code: current.prerequisiteCode || current.objective.code, topic: current.objective.topic }];
+      const allResults = [...sessionResults, { correct: isCorrect, code: current.objective.code, topic: current.objective.topic }];
       const practicedCodes = [...new Set(allResults.map(r => r.code))];
 
-      // Build rich data for each practiced objective
+      // Build rich data for each practiced objective, mapping to primary bank labels
       const practicedObjectives = practicedCodes.map(code => {
         const obj = allObjectives.find(o => o.code === code);
+        const primary = questionBankPrimary[code] || code;
         const prog = progress[code];
         const level = getUnderstandingLevel(prog);
         const resultsForCode = allResults.filter(r => r.code === code);
         const correctForCode = resultsForCode.filter(r => r.correct).length;
+        // Use friendly bank label for mixed banks, otherwise use primary's description
+        const displayTitle = questionBankLabel[primary] || descriptions[primary] || obj?.title || code;
         return {
-          code,
-          title: obj?.title || code,
+          code: primary !== code ? primary : code,
+          title: displayTitle,
           topic: obj?.topic || 'Unknown',
           level,
           quickCorrect: prog?.quickCorrect ?? 0,
@@ -4388,7 +4424,7 @@ What is the student's answer?`
                   className="px-2 py-0.5 rounded-md text-xs font-bold text-white shrink-0"
                   style={{ backgroundColor: TOPIC_HEX[current.objective.topic] }}
                 >
-                  {current.prerequisiteCode || current.objective.code}
+                  {current.objective.code}
                 </span>
 
                 {/* Topic name */}
