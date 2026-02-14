@@ -1,4 +1,4 @@
-# The Maths Habit - Visual Style Guide
+# Square One Maths - Visual Style Guide
 
 ## Overview
 

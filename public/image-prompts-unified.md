@@ -1,4 +1,4 @@
-# The Maths Habit - Unified Image Prompts
+# Square One Maths - Unified Image Prompts
 
 All prompts follow the Visual Style Guide. Use these with AI image generators (Midjourney, DALL-E, Ideogram, etc.)
 

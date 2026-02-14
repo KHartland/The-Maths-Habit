@@ -1,5 +1,5 @@
 -- =============================================
--- THE MATHS HABIT - SUPABASE DATABASE SETUP
+-- SQUARE ONE MATHS - SUPABASE DATABASE SETUP
 -- =============================================
 -- Run this SQL in your Supabase SQL Editor:
 -- Dashboard → SQL Editor → New Query → Paste & Run
