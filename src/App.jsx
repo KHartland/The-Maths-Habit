@@ -4540,12 +4540,12 @@ What is the student's answer?`
         questionsWithData = queue.map(item => {
           // If the selected question is MCQ, use it; otherwise pick an MCQ from the objective
           if (item.question?.type === 'mcq') {
-            return { ...item.question, objective: item.objective, questionType: 'quick', _fsrsQuestionId: item.questionId };
+            return { ...item.question, objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1, _fsrsQuestionId: item.questionId };
           }
           // Fallback: pick a random MCQ from the objective
           const mcqQuestions = qBank[item.objective?.code]?.filter(q => q.type === 'mcq') || [];
           const mcq = mcqQuestions[Math.floor(Math.random() * mcqQuestions.length)];
-          return { ...(mcq || {}), objective: item.objective, questionType: 'quick' };
+          return { ...(mcq || {}), objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1 };
         });
       }
     } else {
@@ -4561,6 +4561,7 @@ What is the student's answer?`
           ...(item.question || {}),
           objective: item.objective,
           questionType,
+          difficultyLevel: (item.questionIndex ?? 0) + 1,
           _fsrsQuestionId: item.questionId
         };
       });
