@@ -8044,8 +8044,8 @@ function AppContent() {
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
 
       {/* Hero Heatmap Card - Glassmorphism */}
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="glass-panel rounded-3xl p-6 md:p-10 shadow-glass card-hover">
+      <div className="max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
 
           {/* Header with stats */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -8122,11 +8122,13 @@ function AppContent() {
           )}
 
           {/* THE HEATMAP - Hero Element */}
-          <div className="flex justify-center py-4">
+          <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cols}, minmax(28px, 36px))`,
-              gap: 6
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+              gap: window.innerWidth < 480 ? 3 : 6,
+              width: '100%',
+              maxWidth: `${cols * 36 + (cols - 1) * 6}px`
             }}>
               {allObjectives.map((obj) => {
                 const level = getLevel(obj.code);
