@@ -2276,7 +2276,7 @@ const questionBank = {
     // Level 1 (3 marks) — Frequency tree [DIAGRAM NEEDED]
     [
       { q: "100 students are surveyed: 60 are boys and 40 are girls. Of the boys, 45 pass a test. Of the girls, 28 pass. How many girls failed the test?", a: "12" },
-      { q: "80 people are surveyed: 50 are adults and 30 are children. Of the adults, 35 prefer tea. Of the children, 10 prefer tea. How many adults preferred coffee?", a: "15" },
+      { q: "80 people are surveyed: 50 are male and 30 are female. Of the males, 35 prefer tea. Of the females, 10 prefer tea. How many males preferred coffee?", a: "15", diagram: "tea-coffee" },
       { q: "120 employees are surveyed: 70 work full-time and 50 work part-time. Of the full-time workers, 55 drive to work. Of the part-time workers, 20 drive. How many part-time workers do not drive?", a: "30" },
     ],
     // Level 2 (4 marks) — Draw a tree diagram (with replacement)
@@ -2329,7 +2329,7 @@ const questionBank = {
     [
       { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18" },
       { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23" },
-      { q: "Sales data: Mon — Bread 30, Milk 45. Tue — Bread 50, Milk 35. Wed — Bread 20, Milk 55. On which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday" },
+      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday", diagram: "dual-bar-chart" },
     ],
   ],
 
@@ -2509,7 +2509,7 @@ const questionBank = {
     [
       { q: "Two fair coins are flipped. Write down the probability of getting two Heads.", a: "1/4" },
       { q: "A fair coin is flipped and a fair 6-sided die is rolled. Write down the probability of getting a Tail and a 6.", a: "1/12" },
-      { q: "Two 4-sided spinners, both numbered 1 to 4, are spun. How many possible outcomes are there?", a: "16" },
+      { q: "Two 4-sided spinners, both numbered 1 to 4, are spun. How many possible outcomes are there?", a: "16", diagram: "spinners" },
     ],
     // Level 1 (3 marks) — Without replacement probability (P6)
     [
@@ -3279,6 +3279,9 @@ const generateDiagram = (type) => {
     'pythagoras': 'Pythagoras.png',
     'pythagoras-2': 'pythagoras 2.png',
     'pythagoras-3': 'Pythagoras 3.png',
+    'tea-coffee': 'tea-coffee.png',
+    'dual-bar-chart': 'dual bar chart.png',
+    'spinners': 'spinners.png',
   };
 
   // Check for image-based diagram first
@@ -4562,11 +4565,11 @@ What is the student's answer?`
                             onClick={() => { setUserAnswer(option); }}
                             className={`w-full p-4 rounded-xl border-2 text-left font-medium transition-all ${
                               userAnswer === option
-                                ? 'border-violet bg-violet/20 text-primary-text'
-                                : 'border-white/20 hover:border-white/40 bg-white/5 text-primary-text'
+                                ? 'border-violet bg-violet/20 text-white'
+                                : 'border-white/20 hover:border-white/40 bg-white/5 text-white'
                             }`}
                           >
-                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/10 text-secondary-text text-sm font-bold mr-3">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-white/15 text-white/70 text-sm font-bold mr-3">
                               {['A', 'B', 'C', 'D'][i]}
                             </span>
                             {renderRecurring(option)}
