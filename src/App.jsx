@@ -4314,7 +4314,6 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   });
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
   const [masteryGained, setMasteryGained] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [practiceMode, setPracticeMode] = useState('standard'); // 'standard', 'quickfire', or 'exam'
   const [timeLeft, setTimeLeft] = useState(null);
@@ -4606,7 +4605,6 @@ What is the student's answer?`
     setUserAnswer('');
     setMasteryGained(0);
     setAchievements([]);
-    setShowConfetti(false);
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
@@ -4987,43 +4985,6 @@ What is the student's answer?`
         <div className="ambient-glow" />
         <div className="orb-purple w-64 h-64 -top-32 -right-32 opacity-70 fixed pointer-events-none" />
         <div className="orb-cyan w-48 h-48 bottom-20 -left-20 opacity-60 fixed pointer-events-none" />
-        {/* Confetti Animation */}
-        {showConfetti && (
-          <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-            <style>{`
-              @keyframes confettiFall {
-                0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-                100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-              }
-              @keyframes confettiSway {
-                0%, 100% { margin-left: 0; }
-                50% { margin-left: 30px; }
-              }
-            `}</style>
-            {[...Array(60)].map((_, i) => {
-              const colors = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
-              const shapes = ['rounded-full', 'rounded-sm', 'rounded-none'];
-              const size = 8 + Math.random() * 8;
-              return (
-                <div
-                  key={i}
-                  className={shapes[Math.floor(Math.random() * shapes.length)]}
-                  style={{
-                    position: 'absolute',
-                    left: `${Math.random() * 100}%`,
-                    top: '-20px',
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-                    animation: `confettiFall ${2 + Math.random() * 3}s ease-out forwards, confettiSway ${1 + Math.random()}s ease-in-out infinite`,
-                    animationDelay: `${Math.random() * 2}s`,
-                  }}
-                />
-              );
-            })}
-          </div>
-        )}
-
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-28 px-4 relative z-10 page-content">
           <div className="max-w-md mx-auto content-container">
@@ -8509,6 +8470,20 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   const levelLabel = levelLabels[current.level] || 'Learning';
   const progressPct = (current.level / 5) * 100;
   const isLast = currentIndex >= objectives.length - 1;
+  const isMastered = current.level >= 5;
+
+  // Generate tile confetti pieces for mastery celebration
+  const tileConfetti = isMastered ? [...Array(50)].map((_, i) => {
+    const allTopicColors = ['#A78BFA', '#38E6A2', '#67E8F9', '#F59E0B', '#EC4899', '#3B82F6', '#EF4444', '#14B8A6'];
+    const color = allTopicColors[Math.floor(Math.random() * allTopicColors.length)];
+    const size = 10 + Math.random() * 16;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 2.5;
+    const duration = 2.5 + Math.random() * 2;
+    const rotation = Math.random() * 360;
+    const opacity = 0.6 + Math.random() * 0.4;
+    return { color, size, left, delay, duration, rotation, opacity, key: `${currentIndex}-${i}` };
+  }) : [];
 
   return (
     <div
@@ -8520,6 +8495,45 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         flexDirection: 'column',
       }}
     >
+      {/* Tile confetti for mastery */}
+      {isMastered && (
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 61 }}>
+          <style>{`
+            @keyframes tileFall {
+              0% { transform: translateY(-30px) rotate(var(--rot)) scale(0.3); opacity: 0; }
+              10% { opacity: var(--op); transform: translateY(0) rotate(var(--rot)) scale(1); }
+              90% { opacity: var(--op); }
+              100% { transform: translateY(calc(100vh + 30px)) rotate(calc(var(--rot) + 360deg)) scale(0.8); opacity: 0; }
+            }
+            @keyframes tileSway {
+              0%, 100% { margin-left: 0; }
+              25% { margin-left: 20px; }
+              75% { margin-left: -20px; }
+            }
+          `}</style>
+          {tileConfetti.map(t => (
+            <div
+              key={t.key}
+              style={{
+                position: 'absolute',
+                left: `${t.left}%`,
+                top: '-30px',
+                width: `${t.size}px`,
+                height: `${t.size}px`,
+                borderRadius: Math.random() > 0.3 ? 4 : '50%',
+                backgroundColor: t.color,
+                border: `1px solid rgba(255,255,255,0.3)`,
+                boxShadow: `0 0 6px ${t.color}80`,
+                '--rot': `${t.rotation}deg`,
+                '--op': t.opacity,
+                animation: `tileFall ${t.duration}s ease-out forwards, tileSway ${1.5 + Math.random()}s ease-in-out infinite`,
+                animationDelay: `${t.delay}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Animated card */}
       <div
         key={current.code}
@@ -8528,19 +8542,26 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
           width: 'min(85vw, 340px)',
           aspectRatio: '1',
           borderRadius: 24,
-          background: `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
-          border: `3px solid ${topicColor}`,
-          boxShadow: `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
+          background: isMastered
+            ? `linear-gradient(135deg, #FFD70040, ${topicColor}30, #FFD70020)`
+            : `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
+          border: isMastered ? '3px solid #FFD700' : `3px solid ${topicColor}`,
+          boxShadow: isMastered
+            ? `0 0 50px #FFD70060, 0 0 100px ${topicColor}40, 0 0 150px #FFD70020`
+            : `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           padding: '2rem', position: 'relative', overflow: 'hidden',
+          zIndex: 62,
         }}
       >
         {/* White glow pulse */}
         <div className="celebration-glow" style={{
           position: 'absolute', inset: -8, borderRadius: 32,
-          border: '2px solid rgba(255,255,255,0.6)',
-          boxShadow: '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
+          border: isMastered ? '2px solid rgba(255,215,0,0.7)' : '2px solid rgba(255,255,255,0.6)',
+          boxShadow: isMastered
+            ? '0 0 40px rgba(255,215,0,0.4), inset 0 0 40px rgba(255,215,0,0.15)'
+            : '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
           pointerEvents: 'none',
         }} />
 
@@ -8567,18 +8588,20 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         <div style={{ width: '80%', height: 12, borderRadius: 6, background: 'rgba(255,255,255,0.15)', overflow: 'hidden', marginBottom: '0.5rem' }}>
           <div className="celebration-progress-fill" style={{
             height: '100%', width: `${progressPct}%`, borderRadius: 6,
-            background: `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
-            boxShadow: `0 0 12px ${topicColor}80`,
+            background: isMastered
+              ? `linear-gradient(90deg, #FFD700, ${topicColor})`
+              : `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
+            boxShadow: isMastered ? `0 0 16px #FFD70080` : `0 0 12px ${topicColor}80`,
           }} />
         </div>
 
-        <span style={{ color: current.level >= 5 ? '#FFD700' : 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: current.level >= 5 ? 700 : 500 }}>
-          {current.level >= 5 ? '⭐ ' : ''}{levelLabel}
+        <span style={{ color: isMastered ? '#FFD700' : 'rgba(255,255,255,0.7)', fontSize: isMastered ? '1.1rem' : '0.9rem', fontWeight: isMastered ? 700 : 500 }}>
+          {isMastered ? '⭐ Mastered!' : levelLabel}
         </span>
       </div>
 
       {/* Dots */}
-      <div style={{ position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+      <div style={{ position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8, zIndex: 62 }}>
         {objectives.map((_, i) => (
           <div key={i} style={{
             width: i === currentIndex ? 24 : 8, height: 8, borderRadius: 4,
@@ -8588,7 +8611,7 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         ))}
       </div>
 
-      <p style={{ position: 'fixed', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>
+      <p style={{ position: 'fixed', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', zIndex: 62 }}>
         {isLast ? 'Tap to finish' : 'Tap to continue'}
       </p>
     </div>
