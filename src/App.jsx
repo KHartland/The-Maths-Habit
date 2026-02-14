@@ -108,8 +108,38 @@ const Rec = ({ children, dots = 'ends' }) => {
 // Helper to render recurring text in questions (parses special syntax)
 // Use: renderRecurring("Order: 0.7[r], 0.77, 0.707, 0.7[r]0[r]7[r]")
 // [r] marks the preceding digit as recurring
+const renderColumnVector = (x, y) => (
+  <span key={`vec-${x}-${y}`} style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', margin: '0 2px' }}>
+    <span style={{ fontSize: '1.8em', fontWeight: 200, lineHeight: 1 }}>(</span>
+    <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', padding: '0 3px', lineHeight: 1.3, fontSize: '0.9em' }}>
+      <span>{x}</span>
+      <span>{y}</span>
+    </span>
+    <span style={{ fontSize: '1.8em', fontWeight: 200, lineHeight: 1 }}>)</span>
+  </span>
+);
+
 const renderRecurring = (text) => {
   if (!text || typeof text !== 'string') return text;
+
+  // Pattern: [vec:x,y] renders as a column vector
+  // Process column vectors first
+  const vecPattern = /\[vec:([\-\d]+),([\-\d]+)\]/g;
+  if (vecPattern.test(text)) {
+    const segments = [];
+    let lastIdx = 0;
+    vecPattern.lastIndex = 0;
+    let match;
+    while ((match = vecPattern.exec(text)) !== null) {
+      if (match.index > lastIdx) {
+        segments.push(text.slice(lastIdx, match.index));
+      }
+      segments.push(renderColumnVector(match[1], match[2]));
+      lastIdx = match.index + match[0].length;
+    }
+    if (lastIdx < text.length) segments.push(text.slice(lastIdx));
+    return <span style={{ lineHeight: '1.8' }}>{segments}</span>;
+  }
 
   // Pattern: digit followed by [r] means that digit is recurring
   const parts = [];
@@ -2484,9 +2514,9 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
-      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", a: "(1, 10)", worked: ["First find 2b: 2b = (−2, 8)", "Then add: a + 2b = (3, 2) + (−2, 8)", "= (3−2, 2+8) = (1, 10)"] },
-      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", a: "(6, 5)", worked: ["First find 2a: 2a = (8, 2)", "Then add: 2a + b = (8, 2) + (−2, 3)", "= (8−2, 2+3) = (6, 5)"] },
-      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", a: "(15, −10)", worked: ["First find 3c: 3c = (15, −6)", "Then subtract: 3c − d = (15, −6) − (0, 4)", "= (15, −6−4) = (15, −10)"] },
+      { q: "a = [vec:3,2] and b = [vec:-1,4]. Work out a + 2b. Give your answer as x, y.", a: "1, 10", worked: ["First find 2b: 2 × (−1, 4) = (−2, 8)", "Then add: a + 2b = (3, 2) + (−2, 8)", "= (3−2, 2+8) = (1, 10)"] },
+      { q: "a = [vec:4,1] and b = [vec:-2,3]. Work out 2a + b. Give your answer as x, y.", a: "6, 5", worked: ["First find 2a: 2 × (4, 1) = (8, 2)", "Then add: 2a + b = (8, 2) + (−2, 3)", "= (8−2, 2+3) = (6, 5)"] },
+      { q: "c = [vec:5,-2] and d = [vec:0,4]. Work out 3c − d. Give your answer as x, y.", a: "15, -10", worked: ["First find 3c: 3 × (5, −2) = (15, −6)", "Then subtract: 3c − d = (15, −6) − (0, 4)", "= (15, −6−4) = (15, −10)"] },
     ],
     // Level 4 (4 marks) — Volume in terms of π (G18)
     [
@@ -3293,7 +3323,7 @@ questionBank['G2'][0].push(
   { q: "What is the name of the transformation that creates a mirror image of a shape?", type: "mcq", options: ["Reflection", "Rotation", "Translation", "Enlargement"], a: "Reflection", worked: ["A mirror image is created by reflection"] },
 );
 questionBank['G2'][1].push(
-  { q: "A point at (4, 2) is translated by the vector (3, −2). What are its new coordinates?", a: "7, 0", worked: ["Add the vector components to the point", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
+  { q: "A point at (4, 2) is translated by the vector [vec:3,-2]. What are its new coordinates?", a: "7, 0", worked: ["Add the vector components to the point", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
 );
 questionBank['G2'][2].push(
   { q: "The point (2, 3) is rotated 90° clockwise about the origin. What are the new coordinates?", type: "mcq", options: ["(3, −2)", "(−3, 2)", "(−2, −3)", "(−2, 3)"], a: "(3, −2)", worked: ["90° clockwise rotation: (x, y) → (y, −x)", "(2, 3) → (3, −2)"] },
