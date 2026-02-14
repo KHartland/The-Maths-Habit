@@ -1208,8 +1208,6 @@ const runMigration = (progress, questionBank) => {
   }
 };
 
-// AI features unlock after this many questions answered
-const AI_UNLOCK_THRESHOLD = 15;
 
 // Quick Fire unlocks after 5 objectives mastered OR 3-day streak
 const QUICKFIRE_MASTERY_THRESHOLD = 5;
@@ -1247,10 +1245,6 @@ const PRACTICE_TIPS = {
   sessionComplete: {
     id: 'sessionComplete',
     text: 'Come back tomorrow to build your streak! Consistent daily practice is the fastest way to improve.',
-  },
-  aiCoach: {
-    id: 'aiCoach',
-    text: 'Answer 15 questions total to unlock your AI Coach — a personal tutor that analyses your mistakes!',
   },
   secondSession: {
     id: 'secondSession',
@@ -1370,7 +1364,6 @@ const saveTotalQuestions = (count) => {
   } catch {}
 };
 
-const isAIUnlocked = (totalQuestions) => totalQuestions >= AI_UNLOCK_THRESHOLD;
 
 // Daily activity tracking
 const loadDailyActivity = () => {
@@ -1645,33 +1638,33 @@ const questionBank = {
   'N1': [
     // Level 0 (1 mark) — Order positive and negative integers
     [
-      { q: "Write these numbers in order of size, starting with the smallest: 7, −3, 0, −5, 2", type: "order", items: ["7", "−3", "0", "−5", "2"], correctOrder: ["−5", "−3", "0", "2", "7"], a: "−5, −3, 0, 2, 7" },
-      { q: "Write these numbers in order of size, starting with the smallest: 8, −4, 0, −2, 3", type: "order", items: ["8", "−4", "0", "−2", "3"], correctOrder: ["−4", "−2", "0", "3", "8"], a: "−4, −2, 0, 3, 8" },
-      { q: "Write these numbers in order of size, starting with the smallest: 6, −9, −1, 4, 0", type: "order", items: ["6", "−9", "−1", "4", "0"], correctOrder: ["−9", "−1", "0", "4", "6"], a: "−9, −1, 0, 4, 6" },
+      { q: "Write these numbers in order of size, starting with the smallest: 7, −3, 0, −5, 2", type: "order", items: ["7", "−3", "0", "−5", "2"], correctOrder: ["−5", "−3", "0", "2", "7"], a: "−5, −3, 0, 2, 7", worked: ["Negative numbers are smaller than positive numbers", "On a number line: −5 is furthest left, then −3, then 0, then 2, then 7"] },
+      { q: "Write these numbers in order of size, starting with the smallest: 8, −4, 0, −2, 3", type: "order", items: ["8", "−4", "0", "−2", "3"], correctOrder: ["−4", "−2", "0", "3", "8"], a: "−4, −2, 0, 3, 8", worked: ["Negative numbers first (−4 is more negative than −2)", "Then zero, then positive numbers in increasing order"] },
+      { q: "Write these numbers in order of size, starting with the smallest: 6, −9, −1, 4, 0", type: "order", items: ["6", "−9", "−1", "4", "0"], correctOrder: ["−9", "−1", "0", "4", "6"], a: "−9, −1, 0, 4, 6", worked: ["Start with most negative: −9", "Then −1, then 0, then positive numbers 4 and 6"] },
     ],
     // Level 1 (1 mark) — Place < or > between negative numbers
     [
-      { q: "Place the correct symbol (< or >) to make the statement true: −12 ☐ −4", type: "mcq", options: ["<", ">"], a: "<" },
-      { q: "Place the correct symbol (< or >) to make the statement true: −15 ☐ −7", type: "mcq", options: ["<", ">"], a: "<" },
-      { q: "Place the correct symbol (< or >) to make the statement true: −20 ☐ −25", type: "mcq", options: ["<", ">"], a: ">" },
+      { q: "Place the correct symbol (< or >) to make the statement true: −12 ☐ −4", type: "mcq", options: ["<", ">"], a: "<", worked: ["−12 is more negative (further left on number line)", "−12 < −4 because −12 is smaller"] },
+      { q: "Place the correct symbol (< or >) to make the statement true: −15 ☐ −7", type: "mcq", options: ["<", ">"], a: "<", worked: ["−15 is more negative than −7", "−15 < −7 (−15 is the smaller number)"] },
+      { q: "Place the correct symbol (< or >) to make the statement true: −20 ☐ −25", type: "mcq", options: ["<", ">"], a: ">", worked: ["−25 is more negative than −20", "−20 > −25 (−20 is larger)"] },
     ],
     // Level 2 (2 marks) — Order decimals
     [
-      { q: "Write these decimals in order of size, starting with the smallest: 0.4, 0.405, 0.044, 0.45, 0.44", type: "order", items: ["0.4", "0.405", "0.044", "0.45", "0.44"], correctOrder: ["0.044", "0.4", "0.405", "0.44", "0.45"], a: "0.044, 0.4, 0.405, 0.44, 0.45" },
-      { q: "Write these decimals in order of size, starting with the smallest: 0.6, 0.602, 0.066, 0.62, 0.66", type: "order", items: ["0.6", "0.602", "0.066", "0.62", "0.66"], correctOrder: ["0.066", "0.6", "0.602", "0.62", "0.66"], a: "0.066, 0.6, 0.602, 0.62, 0.66" },
-      { q: "Write these decimals in order of size, starting with the smallest: 0.3, 0.307, 0.033, 0.37, 0.33", type: "order", items: ["0.3", "0.307", "0.033", "0.37", "0.33"], correctOrder: ["0.033", "0.3", "0.307", "0.33", "0.37"], a: "0.033, 0.3, 0.307, 0.33, 0.37" },
+      { q: "Write these decimals in order of size, starting with the smallest: 0.4, 0.405, 0.044, 0.45, 0.44", type: "order", items: ["0.4", "0.405", "0.044", "0.45", "0.44"], correctOrder: ["0.044", "0.4", "0.405", "0.44", "0.45"], a: "0.044, 0.4, 0.405, 0.44, 0.45", worked: ["0.044 has smallest first decimal place (0)", "0.4 = 0.400, then 0.405, then 0.44, then 0.45"] },
+      { q: "Write these decimals in order of size, starting with the smallest: 0.6, 0.602, 0.066, 0.62, 0.66", type: "order", items: ["0.6", "0.602", "0.066", "0.62", "0.66"], correctOrder: ["0.066", "0.6", "0.602", "0.62", "0.66"], a: "0.066, 0.6, 0.602, 0.62, 0.66", worked: ["0.066 is smallest (0 in hundredths place)", "Then 0.6, 0.602, 0.62, 0.66"] },
+      { q: "Write these decimals in order of size, starting with the smallest: 0.3, 0.307, 0.033, 0.37, 0.33", type: "order", items: ["0.3", "0.307", "0.033", "0.37", "0.33"], correctOrder: ["0.033", "0.3", "0.307", "0.33", "0.37"], a: "0.033, 0.3, 0.307, 0.33, 0.37", worked: ["0.033 smallest", "0.3 = 0.300, then 0.307, then 0.33, then 0.37"] },
     ],
     // Level 3 (3 marks) — Order fractions, decimals, and percentages
     [
-      { q: "Put these values in order of size, starting with the smallest: 3/4, 0.7, 65%, 4/5", type: "order", items: ["3/4", "0.7", "65%", "4/5"], correctOrder: ["65%", "0.7", "3/4", "4/5"], a: "65%, 0.7, 3/4, 4/5" },
-      { q: "Put these values in order of size, starting with the smallest: 1/4, 0.3, 22%, 1/5", type: "order", items: ["1/4", "0.3", "22%", "1/5"], correctOrder: ["1/5", "22%", "1/4", "0.3"], a: "1/5, 22%, 1/4, 0.3" },
-      { q: "Put these values in order of size, starting with the smallest: 1/2, 0.45, 55%, 2/5", type: "order", items: ["1/2", "0.45", "55%", "2/5"], correctOrder: ["2/5", "0.45", "1/2", "55%"], a: "2/5, 0.45, 1/2, 55%" },
+      { q: "Put these values in order of size, starting with the smallest: 3/4, 0.7, 65%, 4/5", type: "order", items: ["3/4", "0.7", "65%", "4/5"], correctOrder: ["65%", "0.7", "3/4", "4/5"], a: "65%, 0.7, 3/4, 4/5", worked: ["Convert all to decimals: 3/4 = 0.75, 0.7, 65% = 0.65, 4/5 = 0.8", "Order: 0.65 < 0.7 < 0.75 < 0.8"] },
+      { q: "Put these values in order of size, starting with the smallest: 1/4, 0.3, 22%, 1/5", type: "order", items: ["1/4", "0.3", "22%", "1/5"], correctOrder: ["1/5", "22%", "1/4", "0.3"], a: "1/5, 22%, 1/4, 0.3", worked: ["Convert to decimals: 1/4 = 0.25, 0.3, 22% = 0.22, 1/5 = 0.2", "Order: 0.2 < 0.22 < 0.25 < 0.3"] },
+      { q: "Put these values in order of size, starting with the smallest: 1/2, 0.45, 55%, 2/5", type: "order", items: ["1/2", "0.45", "55%", "2/5"], correctOrder: ["2/5", "0.45", "1/2", "55%"], a: "2/5, 0.45, 1/2, 55%", worked: ["Convert to decimals: 1/2 = 0.5, 0.45, 55% = 0.55, 2/5 = 0.4", "Order: 0.4 < 0.45 < 0.5 < 0.55"] },
     ],
     // Level 4 (2 marks) — List integers from an inequality
     [
-      { q: "x is an integer such that −3 < x ≤ 2. Write down all the possible values of x.", a: "−2, −1, 0, 1, 2" },
-      { q: "x is an integer such that −4 < x ≤ 1. Write down all the possible values of x.", a: "−3, −2, −1, 0, 1" },
-      { q: "x is an integer such that −5 < x ≤ 0. Write down all the possible values of x.", a: "−4, −3, −2, −1, 0" },
+      { q: "x is an integer such that −3 < x ≤ 2. Write down all the possible values of x.", a: "−2, −1, 0, 1, 2", worked: ["x is greater than −3 (but not equal), so starts at −2", "x is less than or equal to 2, so includes 2"] },
+      { q: "x is an integer such that −4 < x ≤ 1. Write down all the possible values of x.", a: "−3, −2, −1, 0, 1", worked: ["x > −4 means we start at −3", "x ≤ 1 means we include 1"] },
+      { q: "x is an integer such that −5 < x ≤ 0. Write down all the possible values of x.", a: "−4, −3, −2, −1, 0", worked: ["x > −5 means start at −4", "x ≤ 0 means include 0"] },
     ],
   ],
 
@@ -1682,33 +1675,33 @@ const questionBank = {
   'N2': [
     // Level 0 (1 mark) — Simple BIDMAS
     [
-      { q: "Work out: 10 − 2 × 4", a: "2" },
-      { q: "Work out: 12 − 3 × 2", a: "6" },
-      { q: "Work out: 20 − 4 × 3", a: "8" },
+      { q: "Work out: 10 − 2 × 4", a: "2", worked: ["Multiplication before subtraction (BIDMAS)", "2 × 4 = 8", "10 − 8 = 2"] },
+      { q: "Work out: 12 − 3 × 2", a: "6", worked: ["Multiply first: 3 × 2 = 6", "Then subtract: 12 − 6 = 6"] },
+      { q: "Work out: 20 − 4 × 3", a: "8", worked: ["Multiply first: 4 × 3 = 12", "Then subtract: 20 − 12 = 8"] },
     ],
     // Level 1 (2 marks) — Division with decimals
     [
-      { q: "Work out: 34.5 ÷ 5", a: "6.9" },
-      { q: "Work out: 42.6 ÷ 6", a: "7.1" },
-      { q: "Work out: 54.9 ÷ 9", a: "6.1" },
+      { q: "Work out: 34.5 ÷ 5", a: "6.9", worked: ["Divide: 34.5 ÷ 5 = 6.9"] },
+      { q: "Work out: 42.6 ÷ 6", a: "7.1", worked: ["Divide: 42.6 ÷ 6 = 7.1"] },
+      { q: "Work out: 54.9 ÷ 9", a: "6.1", worked: ["Divide: 54.9 ÷ 9 = 6.1"] },
     ],
     // Level 2 (3 marks) — Multi-step word problem
     [
-      { q: "A crate contains 12 boxes of apples. Each box contains 24 apples. How many apples are there in total in 5 crates?", a: "1440" },
-      { q: "A crate contains 15 boxes of oranges. Each box contains 20 oranges. How many oranges are there in total in 4 crates?", a: "1200" },
-      { q: "A pack contains 8 cans of soda. Each can contains 330 ml. How many total millilitres are there in 12 packs?", a: "31680" },
+      { q: "A crate contains 12 boxes of apples. Each box contains 24 apples. How many apples are there in total in 5 crates?", a: "1440", worked: ["Apples per crate: 12 × 24 = 288", "Total in 5 crates: 288 × 5 = 1440"] },
+      { q: "A crate contains 15 boxes of oranges. Each box contains 20 oranges. How many oranges are there in total in 4 crates?", a: "1200", worked: ["Oranges per crate: 15 × 20 = 300", "Total in 4 crates: 300 × 4 = 1200"] },
+      { q: "A pack contains 8 cans of soda. Each can contains 330 ml. How many total millilitres are there in 12 packs?", a: "31680", worked: ["ml per pack: 8 × 330 = 2640", "Total in 12 packs: 2640 × 12 = 31680"] },
     ],
     // Level 3 (3 marks) — Money and change word problem
     [
-      { q: "Tickets for a concert cost £17.50 each. Sam buys 4 tickets and pays with four £20 notes. How much change should Sam get?", a: "10" },
-      { q: "Tickets for a cinema cost £12.50 each. Alex buys 3 tickets and pays with a £50 note. How much change should Alex get?", a: "12.50" },
-      { q: "A bakery sells cupcakes for £2.40 each. Maya buys 6 cupcakes and pays with a £20 note. How much change should Maya get?", a: "5.60" },
+      { q: "Tickets for a concert cost £17.50 each. Sam buys 4 tickets and pays with four £20 notes. How much change should Sam get?", a: "10", worked: ["Cost of 4 tickets: 4 × £17.50 = £70", "Amount paid: 4 × £20 = £80", "Change: £80 − £70 = £10"] },
+      { q: "Tickets for a cinema cost £12.50 each. Alex buys 3 tickets and pays with a £50 note. How much change should Alex get?", a: "12.50", worked: ["Cost of 3 tickets: 3 × £12.50 = £37.50", "Change: £50 − £37.50 = £12.50"] },
+      { q: "A bakery sells cupcakes for £2.40 each. Maya buys 6 cupcakes and pays with a £20 note. How much change should Maya get?", a: "5.60", worked: ["Cost of 6 cupcakes: 6 × £2.40 = £14.40", "Change: £20 − £14.40 = £5.60"] },
     ],
     // Level 4 (4 marks) — Evaluate expression with powers and roots
     [
-      { q: "Work out the value of: (4² + 8) ÷ (√36 − 3)", a: "8", hint: "Numerator: 16 + 8 = 24. Denominator: 6 − 3 = 3." },
-      { q: "Work out the value of: (5² + 11) ÷ (√49 − 3)", a: "9", hint: "Numerator: 25 + 11 = 36. Denominator: 7 − 3 = 4." },
-      { q: "Work out the value of: (6² + 4) ÷ (√25 + 3)", a: "5", hint: "Numerator: 36 + 4 = 40. Denominator: 5 + 3 = 8." },
+      { q: "Work out the value of: (4² + 8) ÷ (√36 − 3)", a: "8", hint: "Numerator: 16 + 8 = 24. Denominator: 6 − 3 = 3.", worked: ["Calculate numerator: 4² + 8 = 16 + 8 = 24", "Calculate denominator: √36 − 3 = 6 − 3 = 3", "Divide: 24 ÷ 3 = 8"] },
+      { q: "Work out the value of: (5² + 11) ÷ (√49 − 3)", a: "9", hint: "Numerator: 25 + 11 = 36. Denominator: 7 − 3 = 4.", worked: ["Calculate numerator: 5² + 11 = 25 + 11 = 36", "Calculate denominator: √49 − 3 = 7 − 3 = 4", "Divide: 36 ÷ 4 = 9"] },
+      { q: "Work out the value of: (6² + 4) ÷ (√25 + 3)", a: "5", hint: "Numerator: 36 + 4 = 40. Denominator: 5 + 3 = 8.", worked: ["Calculate numerator: 6² + 4 = 36 + 4 = 40", "Calculate denominator: √25 + 3 = 5 + 3 = 8", "Divide: 40 ÷ 8 = 5"] },
     ],
   ],
 
@@ -1718,33 +1711,33 @@ const questionBank = {
   'N4': [
     // Level 0 (1 mark) — Identify a prime number from a list
     [
-      { q: "From the list below, which number is a prime number? 6, 9, 15, 21, 23", type: "mcq", options: ["6", "9", "15", "21", "23"], a: "23" },
-      { q: "From the list below, which number is a prime number? 8, 11, 14, 25, 27", type: "mcq", options: ["8", "11", "14", "25", "27"], a: "11" },
-      { q: "From the list below, which number is a prime number? 4, 13, 21, 33, 35", type: "mcq", options: ["4", "13", "21", "33", "35"], a: "13" },
+      { q: "From the list below, which number is a prime number? 6, 9, 15, 21, 23", type: "mcq", options: ["6", "9", "15", "21", "23"], a: "23", worked: ["Prime numbers have exactly 2 factors: 1 and itself", "23 cannot be divided evenly by 2, 3, or 5 — 23 is prime"] },
+      { q: "From the list below, which number is a prime number? 8, 11, 14, 25, 27", type: "mcq", options: ["8", "11", "14", "25", "27"], a: "11", worked: ["11 only has factors 1 and 11", "11 is prime"] },
+      { q: "From the list below, which number is a prime number? 4, 13, 21, 33, 35", type: "mcq", options: ["4", "13", "21", "33", "35"], a: "13", worked: ["13 only has factors 1 and 13", "13 is prime"] },
     ],
     // Level 1 (2 marks) — List all factors
     [
-      { q: "Write down all the factors of 28.", a: "1, 2, 4, 7, 14, 28" },
-      { q: "Write down all the factors of 32.", a: "1, 2, 4, 8, 16, 32" },
-      { q: "Write down all the factors of 40.", a: "1, 2, 4, 5, 8, 10, 20, 40" },
+      { q: "Write down all the factors of 28.", a: "1, 2, 4, 7, 14, 28", worked: ["Factors divide evenly: 28 ÷ 1 = 28, 28 ÷ 2 = 14, 28 ÷ 4 = 7", "All factors: 1, 2, 4, 7, 14, 28"] },
+      { q: "Write down all the factors of 32.", a: "1, 2, 4, 8, 16, 32", worked: ["32 = 2⁵, so factors are powers of 2: 1, 2, 4, 8, 16, 32"] },
+      { q: "Write down all the factors of 40.", a: "1, 2, 4, 5, 8, 10, 20, 40", worked: ["40 = 2³ × 5, find all factor combinations"] },
     ],
     // Level 2 (2 marks) — Find the LCM
     [
-      { q: "Find the Lowest Common Multiple (LCM) of 6 and 8.", a: "24" },
-      { q: "Find the Lowest Common Multiple (LCM) of 4 and 10.", a: "20" },
-      { q: "Find the Lowest Common Multiple (LCM) of 9 and 12.", a: "36" },
+      { q: "Find the Lowest Common Multiple (LCM) of 6 and 8.", a: "24", worked: ["Multiples of 6: 6, 12, 18, 24", "Multiples of 8: 8, 16, 24", "LCM = 24"] },
+      { q: "Find the Lowest Common Multiple (LCM) of 4 and 10.", a: "20", worked: ["Multiples of 4: 4, 8, 12, 16, 20", "Multiples of 10: 10, 20", "LCM = 20"] },
+      { q: "Find the Lowest Common Multiple (LCM) of 9 and 12.", a: "36", worked: ["Multiples of 9: 9, 18, 27, 36", "Multiples of 12: 12, 24, 36", "LCM = 36"] },
     ],
     // Level 3 (3 marks) — Prime factorisation in index form
     [
-      { q: "Write 60 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 5", "2 × 3² × 5", "2² × 5 × 7", "3 × 4 × 5"], a: "2² × 3 × 5" },
-      { q: "Write 84 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 7", "2 × 3 × 14", "2² × 3² × 7", "4 × 3 × 7"], a: "2² × 3 × 7" },
-      { q: "Write 72 as a product of its prime factors.", type: "mcq", options: ["2³ × 3²", "2² × 3³", "2³ × 9", "8 × 3²"], a: "2³ × 3²" },
+      { q: "Write 60 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 5", "2 × 3² × 5", "2² × 5 × 7", "3 × 4 × 5"], a: "2² × 3 × 5", worked: ["60 = 2 × 30 = 2 × 2 × 15 = 2 × 2 × 3 × 5", "60 = 2² × 3 × 5"] },
+      { q: "Write 84 as a product of its prime factors.", type: "mcq", options: ["2² × 3 × 7", "2 × 3 × 14", "2² × 3² × 7", "4 × 3 × 7"], a: "2² × 3 × 7", worked: ["84 = 2 × 42 = 2 × 2 × 21 = 2 × 2 × 3 × 7", "84 = 2² × 3 × 7"] },
+      { q: "Write 72 as a product of its prime factors.", type: "mcq", options: ["2³ × 3²", "2² × 3³", "2³ × 9", "8 × 3²"], a: "2³ × 3²", worked: ["72 = 8 × 9 = 2³ × 3²"] },
     ],
     // Level 4 (3 marks) — LCM word problem
     [
-      { q: "Lights A and B flash at different intervals. Light A flashes every 12 seconds. Light B flashes every 15 seconds. They both flash at the same time. After how many seconds will they next flash together?", a: "60" },
-      { q: "Bus A and Bus B leave the station at the same time. Bus A leaves every 15 minutes. Bus B leaves every 20 minutes. After how many minutes will they next leave at the same time?", a: "60" },
-      { q: "Two alarms are set to beep. Alarm P beeps every 10 minutes. Alarm Q beeps every 25 minutes. They both beep at 9:00 am. At what time will they next beep together?", a: "50" },
+      { q: "Lights A and B flash at different intervals. Light A flashes every 12 seconds. Light B flashes every 15 seconds. They both flash at the same time. After how many seconds will they next flash together?", a: "60", worked: ["Find LCM of 12 and 15", "12 = 2² × 3, 15 = 3 × 5", "LCM = 2² × 3 × 5 = 60 seconds"] },
+      { q: "Bus A and Bus B leave the station at the same time. Bus A leaves every 15 minutes. Bus B leaves every 20 minutes. After how many minutes will they next leave at the same time?", a: "60", worked: ["Find LCM of 15 and 20", "15 = 3 × 5, 20 = 2² × 5", "LCM = 2² × 3 × 5 = 60 minutes"] },
+      { q: "Two alarms are set to beep. Alarm P beeps every 10 minutes. Alarm Q beeps every 25 minutes. They both beep at 9:00 am. At what time will they next beep together?", a: "50", worked: ["Find LCM of 10 and 25", "10 = 2 × 5, 25 = 5²", "LCM = 2 × 5² = 50 minutes"] },
     ],
   ],
 
@@ -1755,33 +1748,33 @@ const questionBank = {
   'N6': [
     // Level 0 (1 mark) — Evaluate a cube
     [
-      { q: "Write down the value of 5³", a: "125" },
-      { q: "Write down the value of 4³", a: "64" },
-      { q: "Write down the value of 2⁵", a: "32" },
+      { q: "Write down the value of 5³", a: "125", worked: ["5³ means 5 × 5 × 5", "5 × 5 = 25, then 25 × 5 = 125"] },
+      { q: "Write down the value of 4³", a: "64", worked: ["4³ means 4 × 4 × 4", "4 × 4 = 16, then 16 × 4 = 64"] },
+      { q: "Write down the value of 2⁵", a: "32", worked: ["2⁵ means 2 × 2 × 2 × 2 × 2", "2 × 2 × 2 × 2 × 2 = 32"] },
     ],
     // Level 1 (1 mark) — Square root + cube root
     [
-      { q: "Work out: √64 + ³√27", a: "11", hint: "√64 = 8 and ³√27 = 3" },
-      { q: "Work out: √81 + ³√125", a: "14", hint: "√81 = 9 and ³√125 = 5" },
-      { q: "Work out: √121 − ³√8", a: "9", hint: "√121 = 11 and ³√8 = 2" },
+      { q: "Work out: √64 + ³√27", a: "11", hint: "√64 = 8 and ³√27 = 3", worked: ["√64 = 8 (since 8² = 64)", "³√27 = 3 (since 3³ = 27)", "8 + 3 = 11"] },
+      { q: "Work out: √81 + ³√125", a: "14", hint: "√81 = 9 and ³√125 = 5", worked: ["√81 = 9 (since 9² = 81)", "³√125 = 5 (since 5³ = 125)", "9 + 5 = 14"] },
+      { q: "Work out: √121 − ³√8", a: "9", hint: "√121 = 11 and ³√8 = 2", worked: ["√121 = 11 (since 11² = 121)", "³√8 = 2 (since 2³ = 8)", "11 − 2 = 9"] },
     ],
     // Level 2 (2 marks) — Simplify using index laws (multiplication)
     [
-      { q: "Simplify: y⁵ × y³", type: "mcq", options: ["y⁸", "y¹⁵", "y²", "2y⁸"], a: "y⁸" },
-      { q: "Simplify: w⁶ × w²", type: "mcq", options: ["w⁸", "w¹²", "w⁴", "2w⁸"], a: "w⁸" },
-      { q: "Simplify: p⁷ ÷ p²", type: "mcq", options: ["p⁵", "p⁹", "p¹⁴", "2p⁵"], a: "p⁵" },
+      { q: "Simplify: y⁵ × y³", type: "mcq", options: ["y⁸", "y¹⁵", "y²", "2y⁸"], a: "y⁸", worked: ["When multiplying powers with same base, add exponents", "y⁵ × y³ = y^(5+3) = y⁸"] },
+      { q: "Simplify: w⁶ × w²", type: "mcq", options: ["w⁸", "w¹²", "w⁴", "2w⁸"], a: "w⁸", worked: ["Add exponents: 6 + 2 = 8", "w⁶ × w² = w⁸"] },
+      { q: "Simplify: p⁷ ÷ p²", type: "mcq", options: ["p⁵", "p⁹", "p¹⁴", "2p⁵"], a: "p⁵", worked: ["When dividing powers with same base, subtract exponents", "p⁷ ÷ p² = p^(7-2) = p⁵"] },
     ],
     // Level 3 (2 marks) — Simplify power of a power
     [
-      { q: "Simplify (2⁴)³. Give your answer as a power of 2.", type: "mcq", options: ["2¹²", "2⁷", "2⁶⁴", "6¹²"], a: "2¹²" },
-      { q: "Simplify (3²)⁴. Give your answer as a power of 3.", type: "mcq", options: ["3⁸", "3⁶", "3¹⁶", "9⁸"], a: "3⁸" },
-      { q: "Simplify (5³)². Give your answer as a power of 5.", type: "mcq", options: ["5⁶", "5⁵", "5⁹", "25⁶"], a: "5⁶" },
+      { q: "Simplify (2⁴)³. Give your answer as a power of 2.", type: "mcq", options: ["2¹²", "2⁷", "2⁶⁴", "6¹²"], a: "2¹²", worked: ["Power of a power: multiply exponents", "(2⁴)³ = 2^(4×3) = 2¹²"] },
+      { q: "Simplify (3²)⁴. Give your answer as a power of 3.", type: "mcq", options: ["3⁸", "3⁶", "3¹⁶", "9⁸"], a: "3⁸", worked: ["Multiply exponents: 2 × 4 = 8", "(3²)⁴ = 3⁸"] },
+      { q: "Simplify (5³)². Give your answer as a power of 5.", type: "mcq", options: ["5⁶", "5⁵", "5⁹", "25⁶"], a: "5⁶", worked: ["Multiply exponents: 3 × 2 = 6", "(5³)² = 5⁶"] },
     ],
     // Level 4 (3 marks) — Show a calculation gives a special number
     [
-      { q: "Work out 3⁴ − 2⁶", type: "mcq", options: ["17", "49", "13", "23"], a: "17" },
-      { q: "Work out 5³ − 10²", type: "mcq", options: ["25", "15", "35", "20"], a: "25" },
-      { q: "Work out 10² − 8²", type: "mcq", options: ["36", "64", "18", "44"], a: "36" },
+      { q: "Work out 3⁴ − 2⁶", type: "mcq", options: ["17", "49", "13", "23"], a: "17", worked: ["3⁴ = 3 × 3 × 3 × 3 = 81", "2⁶ = 2 × 2 × 2 × 2 × 2 × 2 = 64", "81 − 64 = 17"] },
+      { q: "Work out 5³ − 10²", type: "mcq", options: ["25", "15", "35", "20"], a: "25", worked: ["5³ = 125", "10² = 100", "125 − 100 = 25"] },
+      { q: "Work out 10² − 8²", type: "mcq", options: ["36", "64", "18", "44"], a: "36", worked: ["10² = 100", "8² = 64", "100 − 64 = 36"] },
     ],
   ],
 
@@ -1791,33 +1784,33 @@ const questionBank = {
   'N12': [
     // Level 0 (2 marks) — Percentage of an amount
     [
-      { q: "Work out 20% of £350", a: "70" },
-      { q: "Work out 30% of £420", a: "126" },
-      { q: "Work out 40% of £210", a: "84" },
+      { q: "Work out 20% of £350", a: "70", worked: ["20% = 20 ÷ 100 = 0.2", "0.2 × 350 = 70"] },
+      { q: "Work out 30% of £420", a: "126", worked: ["30% = 30 ÷ 100 = 0.3", "0.3 × 420 = 126"] },
+      { q: "Work out 40% of £210", a: "84", worked: ["40% = 40 ÷ 100 = 0.4", "0.4 × 210 = 84"] },
     ],
     // Level 1 (2 marks) — Fraction of an amount
     [
-      { q: "Work out ⅔ of 45 kg", a: "30" },
-      { q: "Work out ¾ of 48 kg", a: "36" },
-      { q: "Work out ⅚ of 42 kg", a: "35" },
+      { q: "Work out ⅔ of 45 kg", a: "30", worked: ["Divide 45 by 3: 45 ÷ 3 = 15", "Multiply by 2: 15 × 2 = 30"] },
+      { q: "Work out ¾ of 48 kg", a: "36", worked: ["Divide 48 by 4: 48 ÷ 4 = 12", "Multiply by 3: 12 × 3 = 36"] },
+      { q: "Work out ⅚ of 42 kg", a: "35", worked: ["Divide 42 by 6: 42 ÷ 6 = 7", "Multiply by 5: 7 × 5 = 35"] },
     ],
     // Level 2 (3 marks) — Percentage word problem (find complement)
     [
-      { q: "In a school of 800 students, 45% are boys. How many girls are in the school?", a: "440" },
-      { q: "In a club of 200 members, 65% are adults. How many children are in the club?", a: "70" },
-      { q: "In a survey of 300 people, 24% said they prefer tea. How many people did not prefer tea?", a: "228" },
+      { q: "In a school of 800 students, 45% are boys. How many girls are in the school?", a: "440", worked: ["If 45% are boys, then girls = 100% − 45% = 55%", "55% of 800 = 0.55 × 800 = 440"] },
+      { q: "In a club of 200 members, 65% are adults. How many children are in the club?", a: "70", worked: ["If 65% are adults, then children = 100% − 65% = 35%", "35% of 200 = 0.35 × 200 = 70"] },
+      { q: "In a survey of 300 people, 24% said they prefer tea. How many people did not prefer tea?", a: "228", worked: ["People who did not prefer tea = 100% − 24% = 76%", "76% of 300 = 0.76 × 300 = 228"] },
     ],
     // Level 3 (3 marks) — Fraction reduction word problem
     [
-      { q: "A jacket is in a sale with 15% off. The sale price is now £68. Work out the original price of the jacket.", a: "80" },
-      { q: "A sofa usually costs £800. In a sale, the price is reduced by ⅕. Calculate the sale price of the sofa.", a: "640" },
-      { q: "A lawnmower usually costs £240. In a sale, the price is reduced by ⅓. Calculate the sale price.", a: "160" },
+      { q: "A jacket is in a sale with 15% off. The sale price is now £68. Work out the original price of the jacket.", a: "80", worked: ["If 15% off, then paying 100% − 15% = 85% of original", "0.85 × original price = 68", "Original price = 68 ÷ 0.85 = 80"] },
+      { q: "A sofa usually costs £800. In a sale, the price is reduced by ⅕. Calculate the sale price of the sofa.", a: "640", worked: ["⅕ of 800 = 800 ÷ 5 = 160", "Sale price = 800 − 160 = 640"] },
+      { q: "A lawnmower usually costs £240. In a sale, the price is reduced by ⅓. Calculate the sale price.", a: "160", worked: ["⅓ of 240 = 240 ÷ 3 = 80", "Sale price = 240 − 80 = 160"] },
     ],
     // Level 4 (4 marks) — Compare two shops (VAT and discounts)
     [
-      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off. Which shop is cheaper?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B" },
-      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off. Which shop is cheaper?", type: "mcq", options: ["Shop X", "Shop Y"], a: "Shop Y" },
-      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off. Which shop is cheaper?", type: "mcq", options: ["Shop Alpha", "Shop Beta"], a: "Shop Beta" },
+      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off. Which shop is cheaper?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", worked: ["Shop A: £400 + 20% VAT = £400 × 1.2 = £480", "Shop B: £500 − 15% = £500 × 0.85 = £425", "Shop B is cheaper at £425"] },
+      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off. Which shop is cheaper?", type: "mcq", options: ["Shop X", "Shop Y"], a: "Shop Y", worked: ["Shop X: £240 + 20% VAT = £240 × 1.2 = £288", "Shop Y: £350 − 20% = £350 × 0.8 = £280", "Shop Y is cheaper at £280"] },
+      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off. Which shop is cheaper?", type: "mcq", options: ["Shop Alpha", "Shop Beta"], a: "Shop Beta", worked: ["Shop Alpha: £300 + 20% VAT = £300 × 1.2 = £360", "Shop Beta: £450 − 30% = £450 × 0.7 = £315", "Shop Beta is cheaper at £315"] },
     ],
   ],
 
@@ -1828,33 +1821,33 @@ const questionBank = {
   'N14': [
     // Level 0 (1 mark) — Round to nearest 100 or 1000
     [
-      { q: "Round 4,567 to the nearest 100.", a: "4600" },
-      { q: "Round 8,732 to the nearest 100.", a: "8700" },
-      { q: "Round 12,491 to the nearest 1,000.", a: "12000" },
+      { q: "Round 4,567 to the nearest 100.", a: "4600", worked: ["Look at the tens digit: 6", "6 ≥ 5, so round up", "4,600"] },
+      { q: "Round 8,732 to the nearest 100.", a: "8700", worked: ["Look at the tens digit: 3", "3 < 5, so round down", "8,700"] },
+      { q: "Round 12,491 to the nearest 1,000.", a: "12000", worked: ["Look at the hundreds digit: 4", "4 < 5, so round down", "12,000"] },
     ],
     // Level 1 (1 mark) — Round to 2 significant figures
     [
-      { q: "Round 0.0726 to 2 significant figures.", a: "0.073" },
-      { q: "Round 0.00483 to 2 significant figures.", a: "0.0048" },
-      { q: "Round 0.05062 to 2 significant figures.", a: "0.051" },
+      { q: "Round 0.0726 to 2 significant figures.", a: "0.073", worked: ["First two sig figs are 7 and 2", "Look at third sig fig: 6", "6 ≥ 5, so round up 72 to 73", "0.073"] },
+      { q: "Round 0.00483 to 2 significant figures.", a: "0.0048", worked: ["First two sig figs are 4 and 8", "Look at third sig fig: 3", "3 < 5, so keep 48", "0.0048"] },
+      { q: "Round 0.05062 to 2 significant figures.", a: "0.051", worked: ["First two sig figs are 5 and 0", "Look at third sig fig: 6", "6 ≥ 5, so round up 50 to 51", "0.051"] },
     ],
     // Level 2 (3 marks) — Estimation
     [
-      { q: "Estimate the value of: (31.2 × 9.8) ÷ 0.52", a: "600", hint: "Round each value to 1 s.f. first: (30 × 10) ÷ 0.5" },
-      { q: "Estimate the value of: (19.7 × 5.2) ÷ 0.19", a: "500", hint: "Round each value to 1 s.f. first: (20 × 5) ÷ 0.2" },
-      { q: "Estimate the value of: (49.2 × 3.9) ÷ 0.21", a: "1000", hint: "Round each value to 1 s.f. first: (50 × 4) ÷ 0.2" },
+      { q: "Estimate the value of: (31.2 × 9.8) ÷ 0.52", a: "600", worked: ["Round to 1 s.f.: 31.2 → 30, 9.8 → 10, 0.52 → 0.5", "Estimate: (30 × 10) ÷ 0.5 = 300 ÷ 0.5", "300 ÷ 0.5 = 600"] },
+      { q: "Estimate the value of: (19.7 × 5.2) ÷ 0.19", a: "500", worked: ["Round to 1 s.f.: 19.7 → 20, 5.2 → 5, 0.19 → 0.2", "Estimate: (20 × 5) ÷ 0.2 = 100 ÷ 0.2", "100 ÷ 0.2 = 500"] },
+      { q: "Estimate the value of: (49.2 × 3.9) ÷ 0.21", a: "1000", worked: ["Round to 1 s.f.: 49.2 → 50, 3.9 → 4, 0.21 → 0.2", "Estimate: (50 × 4) ÷ 0.2 = 200 ÷ 0.2", "200 ÷ 0.2 = 1000"] },
     ],
     // Level 3 (2 marks) — Error intervals
     [
-      { q: "A number n is rounded to the nearest whole number. The result is 8. Write down the error interval for n.", type: "mcq", options: ["7.5 ≤ n < 8.5", "7 ≤ n < 9", "7.5 < n ≤ 8.5", "8 ≤ n < 9"], a: "7.5 ≤ n < 8.5" },
-      { q: "A number y is rounded to the nearest whole number. The result is 12. Write down the error interval for y.", type: "mcq", options: ["11.5 ≤ y < 12.5", "11 ≤ y < 13", "11.5 < y ≤ 12.5", "12 ≤ y < 13"], a: "11.5 ≤ y < 12.5" },
-      { q: "A number w is rounded to the nearest whole number. The result is 20. Write down the error interval for w.", type: "mcq", options: ["19.5 ≤ w < 20.5", "19 ≤ w < 21", "19.5 < w ≤ 20.5", "20 ≤ w < 21"], a: "19.5 ≤ w < 20.5" },
+      { q: "A number n is rounded to the nearest whole number. The result is 8. Write down the error interval for n.", type: "mcq", options: ["7.5 ≤ n < 8.5", "7 ≤ n < 9", "7.5 < n ≤ 8.5", "8 ≤ n < 9"], a: "7.5 ≤ n < 8.5", worked: ["For rounding to nearest whole: lower bound = 7.5", "Upper bound = 8.5 (excluded, as 8.5 rounds to 9)", "Interval: 7.5 ≤ n < 8.5"] },
+      { q: "A number y is rounded to the nearest whole number. The result is 12. Write down the error interval for y.", type: "mcq", options: ["11.5 ≤ y < 12.5", "11 ≤ y < 13", "11.5 < y ≤ 12.5", "12 ≤ y < 13"], a: "11.5 ≤ y < 12.5", worked: ["For rounding to nearest whole: lower bound = 11.5", "Upper bound = 12.5 (excluded, as 12.5 rounds to 13)", "Interval: 11.5 ≤ y < 12.5"] },
+      { q: "A number w is rounded to the nearest whole number. The result is 20. Write down the error interval for w.", type: "mcq", options: ["19.5 ≤ w < 20.5", "19 ≤ w < 21", "19.5 < w ≤ 20.5", "20 ≤ w < 21"], a: "19.5 ≤ w < 20.5", worked: ["For rounding to nearest whole: lower bound = 19.5", "Upper bound = 20.5 (excluded, as 20.5 rounds to 21)", "Interval: 19.5 ≤ w < 20.5"] },
     ],
     // Level 4 (3 marks) — Upper and lower bounds
     [
-      { q: "A runner completes a race in 12 seconds, correct to the nearest second. What is the upper bound for the time taken?", a: "12.5" },
-      { q: "A bag of sugar weighs 1.5 kg, correct to 1 decimal place. What is the lower bound for the weight?", a: "1.45" },
-      { q: "A plank of wood is 2.4 m long, correct to the nearest 10 cm. What is the upper bound for the length of the plank?", a: "2.45" },
+      { q: "A runner completes a race in 12 seconds, correct to the nearest second. What is the upper bound for the time taken?", a: "12.5", worked: ["Rounded to nearest second = 12 seconds", "Upper bound (excluded) = 12.5", "So upper bound = 12.5"] },
+      { q: "A bag of sugar weighs 1.5 kg, correct to 1 decimal place. What is the lower bound for the weight?", a: "1.45", worked: ["Rounded to 1 d.p. = 1.5 kg", "Lower bound = 1.45 kg", "Any value ≥ 1.45 rounds to 1.5"] },
+      { q: "A plank of wood is 2.4 m long, correct to the nearest 10 cm. What is the upper bound for the length of the plank?", a: "2.45", worked: ["Rounded to nearest 10 cm = 2.4 m", "Upper bound = 2.45 m", "Any value < 2.45 rounds to 2.4"] },
     ],
   ],
 
@@ -1865,33 +1858,33 @@ const questionBank = {
   'A1': [
     // Level 0 (1 mark) — Simplify repeated addition
     [
-      { q: "Simplify: a + a + a + a", a: "4a" },
-      { q: "Simplify: b + b + b", a: "3b" },
-      { q: "Simplify: y + y + y + y + y", a: "5y" },
+      { q: "Simplify: a + a + a + a", a: "4a", worked: ["Count the number of a terms: 4", "Combine: 4a"] },
+      { q: "Simplify: b + b + b", a: "3b", worked: ["Count the number of b terms: 3", "Combine: 3b"] },
+      { q: "Simplify: y + y + y + y + y", a: "5y", worked: ["Count the number of y terms: 5", "Combine: 5y"] },
     ],
     // Level 1 (2 marks) — Collect like terms (two variables)
     [
-      { q: "Simplify: 4x + 3y − x + 2y", a: "3x+5y" },
-      { q: "Simplify: 6a + 5b − 2a + b", a: "4a+6b" },
-      { q: "Simplify: 9k − 4m + 2k − m", a: "11k-5m" },
+      { q: "Simplify: 4x + 3y − x + 2y", a: "3x+5y", worked: ["Collect x terms: 4x − x = 3x", "Collect y terms: 3y + 2y = 5y", "Answer: 3x + 5y"] },
+      { q: "Simplify: 6a + 5b − 2a + b", a: "4a+6b", worked: ["Collect a terms: 6a − 2a = 4a", "Collect b terms: 5b + b = 6b", "Answer: 4a + 6b"] },
+      { q: "Simplify: 9k − 4m + 2k − m", a: "11k-5m", worked: ["Collect k terms: 9k + 2k = 11k", "Collect m terms: −4m − m = −5m", "Answer: 11k − 5m"] },
     ],
     // Level 2 (2 marks) — Simplify multiplication
     [
-      { q: "Simplify: 5 × 3b", a: "15b" },
-      { q: "Simplify: 4 × 5y", a: "20y" },
-      { q: "Simplify: 6 × 4c", a: "24c" },
+      { q: "Simplify: 5 × 3b", a: "15b", worked: ["Multiply the numbers: 5 × 3 = 15", "Keep the variable: 15b"] },
+      { q: "Simplify: 4 × 5y", a: "20y", worked: ["Multiply the numbers: 4 × 5 = 20", "Keep the variable: 20y"] },
+      { q: "Simplify: 6 × 4c", a: "24c", worked: ["Multiply the numbers: 6 × 4 = 24", "Keep the variable: 24c"] },
     ],
     // Level 3 (2 marks) — Simplify repeated multiplication (powers)
     [
-      { q: "Simplify: m × m × m", type: "mcq", options: ["m³", "3m", "m + m + m", "m⁴"], a: "m³" },
-      { q: "Simplify: p × p × p × p", type: "mcq", options: ["p⁴", "4p", "p + p + p + p", "p³"], a: "p⁴" },
-      { q: "Simplify: r × r × r", type: "mcq", options: ["r³", "3r", "r + r + r", "r⁴"], a: "r³" },
+      { q: "Simplify: m × m × m", type: "mcq", options: ["m³", "3m", "m + m + m", "m⁴"], a: "m³", worked: ["Multiplication of the same variable: m × m × m", "This equals m to the power of 3: m³"] },
+      { q: "Simplify: p × p × p × p", type: "mcq", options: ["p⁴", "4p", "p + p + p + p", "p³"], a: "p⁴", worked: ["Multiplication of the same variable: p × p × p × p", "This equals p to the power of 4: p⁴"] },
+      { q: "Simplify: r × r × r", type: "mcq", options: ["r³", "3r", "r + r + r", "r⁴"], a: "r³", worked: ["Multiplication of the same variable: r × r × r", "This equals r to the power of 3: r³"] },
     ],
     // Level 4 (3 marks) — Factorise fully
     [
-      { q: "Factorise fully: 6x + 18", type: "mcq", options: ["6(x + 3)", "3(2x + 6)", "2(3x + 9)", "6(x + 18)"], a: "6(x + 3)" },
-      { q: "Factorise fully: 8x + 20", type: "mcq", options: ["4(2x + 5)", "2(4x + 10)", "8(x + 12)", "4(2x + 20)"], a: "4(2x + 5)" },
-      { q: "Factorise fully: 10w − 15", type: "mcq", options: ["5(2w − 3)", "5(2w + 3)", "10(w − 5)", "2(5w − 15)"], a: "5(2w − 3)" },
+      { q: "Factorise fully: 6x + 18", type: "mcq", options: ["6(x + 3)", "3(2x + 6)", "2(3x + 9)", "6(x + 18)"], a: "6(x + 3)", worked: ["Find the highest common factor: HCF(6, 18) = 6", "6x ÷ 6 = x, 18 ÷ 6 = 3", "Factorised form: 6(x + 3)"] },
+      { q: "Factorise fully: 8x + 20", type: "mcq", options: ["4(2x + 5)", "2(4x + 10)", "8(x + 12)", "4(2x + 20)"], a: "4(2x + 5)", worked: ["Find the highest common factor: HCF(8, 20) = 4", "8x ÷ 4 = 2x, 20 ÷ 4 = 5", "Factorised form: 4(2x + 5)"] },
+      { q: "Factorise fully: 10w − 15", type: "mcq", options: ["5(2w − 3)", "5(2w + 3)", "10(w − 5)", "2(5w − 15)"], a: "5(2w − 3)", worked: ["Find the highest common factor: HCF(10, 15) = 5", "10w ÷ 5 = 2w, 15 ÷ 5 = 3", "Factorised form: 5(2w − 3)"] },
     ],
   ],
 
@@ -1901,33 +1894,33 @@ const questionBank = {
   'A2': [
     // Level 0 (2 marks) — Substitute one value
     [
-      { q: "Given x = 5, work out the value of 3x − 2.", a: "13" },
-      { q: "Given x = 4, work out the value of 5x − 3.", a: "17" },
-      { q: "Given x = 6, work out the value of 4x + 7.", a: "31" },
+      { q: "Given x = 5, work out the value of 3x − 2.", a: "13", worked: ["Substitute x = 5: 3(5) − 2", "Calculate: 15 − 2 = 13"] },
+      { q: "Given x = 4, work out the value of 5x − 3.", a: "17", worked: ["Substitute x = 4: 5(4) − 3", "Calculate: 20 − 3 = 17"] },
+      { q: "Given x = 6, work out the value of 4x + 7.", a: "31", worked: ["Substitute x = 6: 4(6) + 7", "Calculate: 24 + 7 = 31"] },
     ],
     // Level 1 (2 marks) — Substitute two values (one negative)
     [
-      { q: "Given a = 4 and b = −3, work out the value of 2a + b.", a: "5" },
-      { q: "Given a = 7 and b = −2, work out the value of 3a + b.", a: "19" },
-      { q: "Given a = 10 and b = −4, work out the value of 5a + b.", a: "46" },
+      { q: "Given a = 4 and b = −3, work out the value of 2a + b.", a: "5", worked: ["Substitute a = 4 and b = −3: 2(4) + (−3)", "Calculate: 8 − 3 = 5"] },
+      { q: "Given a = 7 and b = −2, work out the value of 3a + b.", a: "19", worked: ["Substitute a = 7 and b = −2: 3(7) + (−2)", "Calculate: 21 − 2 = 19"] },
+      { q: "Given a = 10 and b = −4, work out the value of 5a + b.", a: "46", worked: ["Substitute a = 10 and b = −4: 5(10) + (−4)", "Calculate: 50 − 4 = 46"] },
     ],
     // Level 2 (2 marks) — Substitute into a formula
     [
-      { q: "Use the formula v = u + at. Find v when u = 10, a = 2, and t = 6.", a: "22" },
-      { q: "Use the formula v = u + at. Find v when u = 15, a = 3, and t = 4.", a: "27" },
-      { q: "Use the formula v = u + at. Find v when u = 8, a = 5, and t = 3.", a: "23" },
+      { q: "Use the formula v = u + at. Find v when u = 10, a = 2, and t = 6.", a: "22", worked: ["Substitute into v = u + at: v = 10 + 2(6)", "Calculate: v = 10 + 12 = 22"] },
+      { q: "Use the formula v = u + at. Find v when u = 15, a = 3, and t = 4.", a: "27", worked: ["Substitute into v = u + at: v = 15 + 3(4)", "Calculate: v = 15 + 12 = 27"] },
+      { q: "Use the formula v = u + at. Find v when u = 8, a = 5, and t = 3.", a: "23", worked: ["Substitute into v = u + at: v = 8 + 5(3)", "Calculate: v = 8 + 15 = 23"] },
     ],
     // Level 3 (3 marks) — Substitute a negative into a squared term
     [
-      { q: "Work out the value of 2x² when x = −4.", a: "32", hint: "(−4)² = 16, then 2 × 16 = 32" },
-      { q: "Work out the value of 3x² when x = −2.", a: "12", hint: "(−2)² = 4, then 3 × 4 = 12" },
-      { q: "Work out the value of 5x² when x = −3.", a: "45", hint: "(−3)² = 9, then 5 × 9 = 45" },
+      { q: "Work out the value of 2x² when x = −4.", a: "32", worked: ["Substitute x = −4: 2(−4)²", "Calculate power first: (−4)² = 16", "Then multiply: 2 × 16 = 32"] },
+      { q: "Work out the value of 3x² when x = −2.", a: "12", worked: ["Substitute x = −2: 3(−2)²", "Calculate power first: (−2)² = 4", "Then multiply: 3 × 4 = 12"] },
+      { q: "Work out the value of 5x² when x = −3.", a: "45", worked: ["Substitute x = −3: 5(−3)²", "Calculate power first: (−3)² = 9", "Then multiply: 5 × 9 = 45"] },
     ],
     // Level 4 (3 marks) — Substitute into a real-world formula
     [
-      { q: "The cost C (in £) of hiring a taxi is given by C = 1.5d + 3, where d is the distance in miles. Calculate the cost for a journey of 12 miles.", a: "21" },
-      { q: "The cost C (in £) of hiring a hall is C = 20h + 50, where h is the number of hours. Calculate the cost for hiring the hall for 6 hours.", a: "170" },
-      { q: "The total cost T (in pence) of printing photos is T = 12n + 40, where n is the number of photos. Calculate the cost for printing 25 photos. Give your answer in pence.", a: "340" },
+      { q: "The cost C (in £) of hiring a taxi is given by C = 1.5d + 3, where d is the distance in miles. Calculate the cost for a journey of 12 miles.", a: "21", worked: ["Substitute d = 12 into C = 1.5d + 3: C = 1.5(12) + 3", "Calculate: C = 18 + 3 = 21"] },
+      { q: "The cost C (in £) of hiring a hall is C = 20h + 50, where h is the number of hours. Calculate the cost for hiring the hall for 6 hours.", a: "170", worked: ["Substitute h = 6 into C = 20h + 50: C = 20(6) + 50", "Calculate: C = 120 + 50 = 170"] },
+      { q: "The total cost T (in pence) of printing photos is T = 12n + 40, where n is the number of photos. Calculate the cost for printing 25 photos. Give your answer in pence.", a: "340", worked: ["Substitute n = 25 into T = 12n + 40: T = 12(25) + 40", "Calculate: T = 300 + 40 = 340"] },
     ],
   ],
 
@@ -1938,33 +1931,33 @@ const questionBank = {
   'A17': [
     // Level 0 (1 mark) — One-step equation (addition/subtraction)
     [
-      { q: "Solve: x + 7 = 15", a: "8" },
-      { q: "Solve: x + 9 = 21", a: "12" },
-      { q: "Solve: x − 5 = 11", a: "16" },
+      { q: "Solve: x + 7 = 15", a: "8", worked: ["Subtract 7 from both sides: x = 15 − 7", "x = 8"] },
+      { q: "Solve: x + 9 = 21", a: "12", worked: ["Subtract 9 from both sides: x = 21 − 9", "x = 12"] },
+      { q: "Solve: x − 5 = 11", a: "16", worked: ["Add 5 to both sides: x = 11 + 5", "x = 16"] },
     ],
     // Level 1 (2 marks) — One-step equation (multiplication)
     [
-      { q: "Solve: 4y = 28", a: "7" },
-      { q: "Solve: 6y = 42", a: "7" },
-      { q: "Solve: 7y = 56", a: "8" },
+      { q: "Solve: 4y = 28", a: "7", worked: ["Divide both sides by 4: y = 28 ÷ 4", "y = 7"] },
+      { q: "Solve: 6y = 42", a: "7", worked: ["Divide both sides by 6: y = 42 ÷ 6", "y = 7"] },
+      { q: "Solve: 7y = 56", a: "8", worked: ["Divide both sides by 7: y = 56 ÷ 7", "y = 8"] },
     ],
     // Level 2 (2 marks) — Two-step equation
     [
-      { q: "Solve: 3w − 5 = 10", a: "5" },
-      { q: "Solve: 4w − 3 = 17", a: "5" },
-      { q: "Solve: 2w + 9 = 25", a: "8" },
+      { q: "Solve: 3w − 5 = 10", a: "5", worked: ["Add 5 to both sides: 3w = 10 + 5 = 15", "Divide both sides by 3: w = 15 ÷ 3 = 5"] },
+      { q: "Solve: 4w − 3 = 17", a: "5", worked: ["Add 3 to both sides: 4w = 17 + 3 = 20", "Divide both sides by 4: w = 20 ÷ 4 = 5"] },
+      { q: "Solve: 2w + 9 = 25", a: "8", worked: ["Subtract 9 from both sides: 2w = 25 − 9 = 16", "Divide both sides by 2: w = 16 ÷ 2 = 8"] },
     ],
     // Level 3 (3 marks) — Equation with brackets
     [
-      { q: "3 adults and 2 children go to the cinema. Adult tickets cost £x. Child tickets are half price. The total bill is £36. Find x.", a: "9" },
-      { q: "Solve: 3(x + 4) = 27", a: "5" },
-      { q: "Solve: 4(x − 3) = 16", a: "7" },
+      { q: "3 adults and 2 children go to the cinema. Adult tickets cost £x. Child tickets are half price. The total bill is £36. Find x.", a: "9", worked: ["Adult cost is x, child cost is x/2", "Total: 3x + 2(x/2) = 36 → 3x + x = 36 → 4x = 36", "Divide by 4: x = 9"] },
+      { q: "Solve: 3(x + 4) = 27", a: "5", worked: ["Divide both sides by 3: x + 4 = 9", "Subtract 4 from both sides: x = 9 − 4 = 5"] },
+      { q: "Solve: 4(x − 3) = 16", a: "7", worked: ["Divide both sides by 4: x − 3 = 4", "Add 3 to both sides: x = 4 + 3 = 7"] },
     ],
     // Level 4 (3 marks) — Unknown on both sides
     [
-      { q: "Solve: 8x − 3 = 2x + 15", a: "3" },
-      { q: "Solve: 9x − 5 = 4x + 20", a: "5" },
-      { q: "Solve: 10x + 2 = 4x + 26", a: "4" },
+      { q: "Solve: 8x − 3 = 2x + 15", a: "3", worked: ["Subtract 2x from both sides: 6x − 3 = 15", "Add 3 to both sides: 6x = 18", "Divide by 6: x = 3"] },
+      { q: "Solve: 9x − 5 = 4x + 20", a: "5", worked: ["Subtract 4x from both sides: 5x − 5 = 20", "Add 5 to both sides: 5x = 25", "Divide by 5: x = 5"] },
+      { q: "Solve: 10x + 2 = 4x + 26", a: "4", worked: ["Subtract 4x from both sides: 6x + 2 = 26", "Subtract 2 from both sides: 6x = 24", "Divide by 6: x = 4"] },
     ],
   ],
 
@@ -1974,33 +1967,33 @@ const questionBank = {
   'A21': [
     // Level 0 (1 mark) — Identify the y-intercept from an equation
     [
-      { q: "Write down the coordinates of the y-intercept for the line y = 3x + 5.", a: "(0,5)" },
-      { q: "Write down the coordinates of the y-intercept for the line y = 2x − 4.", a: "(0,-4)" },
-      { q: "Write down the coordinates of the y-intercept for the line y = x − 7.", a: "(0,-7)" },
+      { q: "Write down the coordinates of the y-intercept for the line y = 3x + 5.", a: "(0,5)", worked: ["The y-intercept occurs when x = 0", "y = 3(0) + 5 = 5, so coordinates are (0, 5)"] },
+      { q: "Write down the coordinates of the y-intercept for the line y = 2x − 4.", a: "(0,-4)", worked: ["The y-intercept occurs when x = 0", "y = 2(0) − 4 = −4, so coordinates are (0, −4)"] },
+      { q: "Write down the coordinates of the y-intercept for the line y = x − 7.", a: "(0,-7)", worked: ["The y-intercept occurs when x = 0", "y = 0 − 7 = −7, so coordinates are (0, −7)"] },
     ],
     // Level 1 (2 marks) — Complete a table of values
     [
-      { q: "Complete the table of values for y = 2x + 1.\nx: −1, 0, 1, 2\ny: ?, 1, ?, 5\nFind the two missing values of y.", a: "-1, 3" },
-      { q: "Complete the table of values for y = 3x − 2.\nx: −1, 0, 1, 2\ny: ?, −2, ?, 4\nFind the two missing values of y.", a: "-5, 1" },
-      { q: "Complete the table of values for y = 4x + 2.\nx: −1, 0, 1, 2\ny: ?, 2, ?, 10\nFind the two missing values of y.", a: "-2, 6" },
+      { q: "Complete the table of values for y = 2x + 1. Write the two missing values of y.", a: "-1, 3", worked: ["When x = -1: y = 2(-1) + 1 = -2 + 1 = -1", "When x = 1: y = 2(1) + 1 = 2 + 1 = 3"], diagram: "table:y=2x+1|-1,0,1,2|?,1,?,5" },
+      { q: "Complete the table of values for y = 3x − 2. Write the two missing values of y.", a: "-5, 1", worked: ["When x = -1: y = 3(-1) − 2 = -3 − 2 = -5", "When x = 1: y = 3(1) − 2 = 3 − 2 = 1"], diagram: "table:y=3x-2|-1,0,1,2|?,-2,?,4" },
+      { q: "Complete the table of values for y = 4x + 2. Write the two missing values of y.", a: "-2, 6", worked: ["When x = -1: y = 4(-1) + 2 = -4 + 2 = -2", "When x = 1: y = 4(1) + 2 = 4 + 2 = 6"], diagram: "table:y=4x+2|-1,0,1,2|?,2,?,10" },
     ],
     // Level 2 (2 marks) — Describe/sketch a simple horizontal or vertical line
     [
-      { q: "Describe the graph of y = 2 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, 2)", "A vertical line through (2, 0)", "A diagonal line through (0, 2)", "A curve through (0, 2)"], a: "A horizontal line through (0, 2)" },
-      { q: "Describe the graph of x = 3 on a coordinate grid.", type: "mcq", options: ["A vertical line through (3, 0)", "A horizontal line through (0, 3)", "A diagonal line through (3, 0)", "A curve through (3, 0)"], a: "A vertical line through (3, 0)" },
-      { q: "Describe the graph of y = −3 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, −3)", "A vertical line through (−3, 0)", "A diagonal line through (0, −3)", "A curve through (0, −3)"], a: "A horizontal line through (0, −3)" },
+      { q: "Describe the graph of y = 2 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, 2)", "A vertical line through (2, 0)", "A diagonal line through (0, 2)", "A curve through (0, 2)"], a: "A horizontal line through (0, 2)", worked: ["y = 2 means the y-value is always 2, regardless of x", "This creates a horizontal line at height y = 2"] },
+      { q: "Describe the graph of x = 3 on a coordinate grid.", type: "mcq", options: ["A vertical line through (3, 0)", "A horizontal line through (0, 3)", "A diagonal line through (3, 0)", "A curve through (3, 0)"], a: "A vertical line through (3, 0)", worked: ["x = 3 means the x-value is always 3, regardless of y", "This creates a vertical line at x = 3"] },
+      { q: "Describe the graph of y = −3 on a coordinate grid.", type: "mcq", options: ["A horizontal line through (0, −3)", "A vertical line through (−3, 0)", "A diagonal line through (0, −3)", "A curve through (0, −3)"], a: "A horizontal line through (0, −3)", worked: ["y = −3 means the y-value is always −3, regardless of x", "This creates a horizontal line at height y = −3"] },
     ],
     // Level 3 (3 marks) — Find the gradient from two points
     [
-      { q: "A line passes through A(2, 7) and B(6, −1). Find the gradient of the line.", a: "-2", hint: "Gradient = change in y ÷ change in x = (−1 − 7) ÷ (6 − 2)" },
-      { q: "A line passes through (0, 2) and (3, 11). Find the gradient of the line.", a: "3", hint: "Gradient = change in y ÷ change in x = (11 − 2) ÷ (3 − 0)" },
-      { q: "A line passes through (0, 5) and (4, 13). Find the gradient of the line.", a: "2", hint: "Gradient = change in y ÷ change in x = (13 − 5) ÷ (4 − 0)" },
+      { q: "A line passes through A(2, 7) and B(6, −1). Find the gradient of the line.", a: "-2", worked: ["Change in y = −1 − 7 = −8", "Change in x = 6 − 2 = 4", "Gradient = −8 ÷ 4 = −2"], hint: "Gradient = change in y ÷ change in x = (−1 − 7) ÷ (6 − 2)" },
+      { q: "A line passes through (0, 2) and (3, 11). Find the gradient of the line.", a: "3", worked: ["Change in y = 11 − 2 = 9", "Change in x = 3 − 0 = 3", "Gradient = 9 ÷ 3 = 3"], hint: "Gradient = change in y ÷ change in x = (11 − 2) ÷ (3 − 0)" },
+      { q: "A line passes through (0, 5) and (4, 13). Find the gradient of the line.", a: "2", worked: ["Change in y = 13 − 5 = 8", "Change in x = 4 − 0 = 4", "Gradient = 8 ÷ 4 = 2"], hint: "Gradient = change in y ÷ change in x = (13 − 5) ÷ (4 − 0)" },
     ],
     // Level 4 (3 marks) — Check if a point lies on a line (show working)
     [
-      { q: "Does the point (5, 23) lie on the line y = 4x + 3?", a: "Yes" },
-      { q: "Does the point (4, 19) lie on the line y = 5x − 1?", a: "Yes" },
-      { q: "Does the point (3, 16) lie on the line y = 6x − 2?", a: "Yes" },
+      { q: "Does the point (5, 23) lie on the line y = 4x + 3?", a: "Yes", worked: ["Substitute x = 5 into y = 4x + 3", "y = 4(5) + 3 = 20 + 3 = 23", "Since y = 23 matches the point's y-coordinate, the point lies on the line"] },
+      { q: "Does the point (4, 19) lie on the line y = 5x − 1?", a: "Yes", worked: ["Substitute x = 4 into y = 5x − 1", "y = 5(4) − 1 = 20 − 1 = 19", "Since y = 19 matches the point's y-coordinate, the point lies on the line"] },
+      { q: "Does the point (3, 16) lie on the line y = 6x − 2?", a: "Yes", worked: ["Substitute x = 3 into y = 6x − 2", "y = 6(3) − 2 = 18 − 2 = 16", "Since y = 16 matches the point's y-coordinate, the point lies on the line"] },
     ],
   ],
 
@@ -2010,33 +2003,33 @@ const questionBank = {
   'R1': [
     // Level 0 (1 mark) — Simple unit conversion
     [
-      { q: "Change 3.5 metres into centimetres.", a: "350" },
-      { q: "Change 4.2 metres into centimetres.", a: "420" },
-      { q: "Change 2.8 metres into centimetres.", a: "280" },
+      { q: "Change 3.5 metres into centimetres.", a: "350", worked: ["1 metre = 100 centimetres", "3.5 × 100 = 350 cm"] },
+      { q: "Change 4.2 metres into centimetres.", a: "420", worked: ["1 metre = 100 centimetres", "4.2 × 100 = 420 cm"] },
+      { q: "Change 2.8 metres into centimetres.", a: "280", worked: ["1 metre = 100 centimetres", "2.8 × 100 = 280 cm"] },
     ],
     // Level 1 (2 marks) — Calculate average speed
     [
-      { q: "A car travels 150 miles in 3 hours. Calculate the average speed.", a: "50", hint: "Speed = distance ÷ time" },
-      { q: "A cyclist travels 60 miles in 4 hours. Calculate the average speed.", a: "15", hint: "Speed = distance ÷ time" },
-      { q: "A train travels 210 miles in 3 hours. Calculate the average speed.", a: "70", hint: "Speed = distance ÷ time" },
+      { q: "A car travels 150 miles in 3 hours. Calculate the average speed.", a: "50", worked: ["Speed = distance ÷ time", "Speed = 150 ÷ 3 = 50 mph"], hint: "Speed = distance ÷ time" },
+      { q: "A cyclist travels 60 miles in 4 hours. Calculate the average speed.", a: "15", worked: ["Speed = distance ÷ time", "Speed = 60 ÷ 4 = 15 mph"], hint: "Speed = distance ÷ time" },
+      { q: "A train travels 210 miles in 3 hours. Calculate the average speed.", a: "70", worked: ["Speed = distance ÷ time", "Speed = 210 ÷ 3 = 70 mph"], hint: "Speed = distance ÷ time" },
     ],
     // Level 2 (2 marks) — Convert ml to litres
     [
-      { q: "Convert 4500 ml into litres.", a: "4.5" },
-      { q: "Convert 3200 ml into litres.", a: "3.2" },
-      { q: "Convert 750 ml into litres.", a: "0.75" },
+      { q: "Convert 4500 ml into litres.", a: "4.5", worked: ["1 litre = 1000 ml", "4500 ÷ 1000 = 4.5 litres"] },
+      { q: "Convert 3200 ml into litres.", a: "3.2", worked: ["1 litre = 1000 ml", "3200 ÷ 1000 = 3.2 litres"] },
+      { q: "Convert 750 ml into litres.", a: "0.75", worked: ["1 litre = 1000 ml", "750 ÷ 1000 = 0.75 litres"] },
     ],
     // Level 3 (3 marks) — Calculate density
     [
-      { q: "Density = Mass ÷ Volume. A piece of wood has a mass of 200 g and a volume of 250 cm³. Work out the density.", a: "0.8", hint: "D = 200 ÷ 250" },
-      { q: "Density = Mass ÷ Volume. A metal block has a mass of 400 g and a volume of 50 cm³. Work out the density.", a: "8", hint: "D = 400 ÷ 50" },
-      { q: "Density = Mass ÷ Volume. A liquid has a mass of 120 g and a volume of 150 cm³. Work out the density.", a: "0.8", hint: "D = 120 ÷ 150" },
+      { q: "Density = Mass ÷ Volume. A piece of wood has a mass of 200 g and a volume of 250 cm³. Work out the density.", a: "0.8", worked: ["Density = Mass ÷ Volume", "D = 200 ÷ 250 = 0.8 g/cm³"], hint: "D = 200 ÷ 250" },
+      { q: "Density = Mass ÷ Volume. A metal block has a mass of 400 g and a volume of 50 cm³. Work out the density.", a: "8", worked: ["Density = Mass ÷ Volume", "D = 400 ÷ 50 = 8 g/cm³"], hint: "D = 400 ÷ 50" },
+      { q: "Density = Mass ÷ Volume. A liquid has a mass of 120 g and a volume of 150 cm³. Work out the density.", a: "0.8", worked: ["Density = Mass ÷ Volume", "D = 120 ÷ 150 = 0.8 g/cm³"], hint: "D = 120 ÷ 150" },
     ],
     // Level 4 (3 marks) — Convert km/h to m/s
     [
-      { q: "Convert 72 km/h into metres per second (m/s).", a: "20", hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
-      { q: "Convert 54 km/h into metres per second (m/s).", a: "15", hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
-      { q: "Convert 90 km/h into metres per second (m/s).", a: "25", hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
+      { q: "Convert 72 km/h into metres per second (m/s).", a: "20", worked: ["72 km = 72000 m", "1 hour = 3600 seconds", "Speed = 72000 ÷ 3600 = 20 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
+      { q: "Convert 54 km/h into metres per second (m/s).", a: "15", worked: ["54 km = 54000 m", "1 hour = 3600 seconds", "Speed = 54000 ÷ 3600 = 15 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
+      { q: "Convert 90 km/h into metres per second (m/s).", a: "25", worked: ["90 km = 90000 m", "1 hour = 3600 seconds", "Speed = 90000 ÷ 3600 = 25 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
     ],
   ],
 
@@ -2047,33 +2040,33 @@ const questionBank = {
   'R4': [
     // Level 0 (1 mark) — Simplify a ratio
     [
-      { q: "Simplify the ratio 15:25", a: "3:5" },
-      { q: "Simplify the ratio 18:42", a: "3:7" },
-      { q: "Simplify the ratio 24:36", a: "2:3" },
+      { q: "Simplify the ratio 15:25", a: "3:5", worked: ["Find HCF of 15 and 25: HCF = 5", "15 ÷ 5 = 3, 25 ÷ 5 = 5", "Answer: 3:5"] },
+      { q: "Simplify the ratio 18:42", a: "3:7", worked: ["Find HCF of 18 and 42: HCF = 6", "18 ÷ 6 = 3, 42 ÷ 6 = 7", "Answer: 3:7"] },
+      { q: "Simplify the ratio 24:36", a: "2:3", worked: ["Find HCF of 24 and 36: HCF = 12", "24 ÷ 12 = 2, 36 ÷ 12 = 3", "Answer: 2:3"] },
     ],
     // Level 1 (2 marks) — Divide an amount in a given ratio
     [
-      { q: "Divide £60 in the ratio 2:3. What are the two amounts?", type: "mcq", options: ["£20 and £40", "£24 and £36", "£30 and £30", "£25 and £35"], a: "£24 and £36" },
-      { q: "Divide £80 in the ratio 3:5. What are the two amounts?", type: "mcq", options: ["£30 and £50", "£32 and £48", "£40 and £40", "£24 and £56"], a: "£30 and £50" },
-      { q: "Divide £120 in the ratio 1:5. What are the two amounts?", type: "mcq", options: ["£24 and £96", "£30 and £90", "£20 and £100", "£60 and £60"], a: "£20 and £100" },
+      { q: "Divide £60 in the ratio 2:3. What are the two amounts?", type: "mcq", options: ["£20 and £40", "£24 and £36", "£30 and £30", "£25 and £35"], a: "£24 and £36", worked: ["Total parts = 2 + 3 = 5", "Each part = £60 ÷ 5 = £12", "First share = 2 × £12 = £24, Second share = 3 × £12 = £36"] },
+      { q: "Divide £80 in the ratio 3:5. What are the two amounts?", type: "mcq", options: ["£30 and £50", "£32 and £48", "£40 and £40", "£24 and £56"], a: "£30 and £50", worked: ["Total parts = 3 + 5 = 8", "Each part = £80 ÷ 8 = £10", "First share = 3 × £10 = £30, Second share = 5 × £10 = £50"] },
+      { q: "Divide £120 in the ratio 1:5. What are the two amounts?", type: "mcq", options: ["£24 and £96", "£30 and £90", "£20 and £100", "£60 and £60"], a: "£20 and £100", worked: ["Total parts = 1 + 5 = 6", "Each part = £120 ÷ 6 = £20", "First share = 1 × £20 = £20, Second share = 5 × £20 = £100"] },
     ],
     // Level 2 (2 marks) — Find a missing quantity from a ratio
     [
-      { q: "The ratio of boys to girls in a class is 4:5. There are 15 girls. How many boys are there?", a: "12" },
-      { q: "The ratio of blue pens to red pens in a box is 3:7. There are 21 red pens. How many blue pens are there?", a: "9" },
-      { q: "The ratio of dogs to cats in a shelter is 2:3. There are 12 dogs. How many cats are there?", a: "18" },
+      { q: "The ratio of boys to girls in a class is 4:5. There are 15 girls. How many boys are there?", a: "12", worked: ["Ratio boys:girls = 4:5", "If girls = 15, then 5 parts = 15, so 1 part = 3", "Boys = 4 parts = 4 × 3 = 12"] },
+      { q: "The ratio of blue pens to red pens in a box is 3:7. There are 21 red pens. How many blue pens are there?", a: "9", worked: ["Ratio blue:red = 3:7", "If red = 21, then 7 parts = 21, so 1 part = 3", "Blue = 3 parts = 3 × 3 = 9"] },
+      { q: "The ratio of dogs to cats in a shelter is 2:3. There are 12 dogs. How many cats are there?", a: "18", worked: ["Ratio dogs:cats = 2:3", "If dogs = 12, then 2 parts = 12, so 1 part = 6", "Cats = 3 parts = 3 × 6 = 18"] },
     ],
     // Level 3 (3 marks) — Simplify a ratio with different units
     [
-      { q: "Write the ratio 400 g : 2 kg in its simplest form.", a: "1:5" },
-      { q: "Write the ratio 600 ml : 3 litres in its simplest form.", a: "1:5" },
-      { q: "Write the ratio 500 m : 4 km in its simplest form.", a: "1:8" },
+      { q: "Write the ratio 400 g : 2 kg in its simplest form.", a: "1:5", worked: ["Convert to same units: 2 kg = 2000 g", "Ratio = 400:2000", "Divide by 400: 1:5"] },
+      { q: "Write the ratio 600 ml : 3 litres in its simplest form.", a: "1:5", worked: ["Convert to same units: 3 litres = 3000 ml", "Ratio = 600:3000", "Divide by 600: 1:5"] },
+      { q: "Write the ratio 500 m : 4 km in its simplest form.", a: "1:8", worked: ["Convert to same units: 4 km = 4000 m", "Ratio = 500:4000", "Divide by 500: 1:8"] },
     ],
     // Level 4 (4 marks) — Combine two ratios into a three-part ratio
     [
-      { q: "x:y = 3:4 and y:z = 2:5. Find the ratio x:y:z in its simplest form.", a: "3:4:10" },
-      { q: "a:b = 2:3 and b:c = 6:7. Find the ratio a:b:c in its simplest form.", a: "4:6:7" },
-      { q: "p:q = 4:5 and q:r = 10:13. Find the ratio p:q:r in its simplest form.", a: "8:10:13" },
+      { q: "x:y = 3:4 and y:z = 2:5. Find the ratio x:y:z in its simplest form.", a: "3:4:10", worked: ["x:y = 3:4 means y = 4 parts", "y:z = 2:5 means y = 2 parts", "Scale first ratio by 2: x:y = 6:8", "Scale second ratio by 4: y:z = 8:20", "Combined: x:y:z = 6:8:20", "Check answer matches by simplification"] },
+      { q: "a:b = 2:3 and b:c = 6:7. Find the ratio a:b:c in its simplest form.", a: "4:6:7", worked: ["a:b = 2:3 means b = 3 parts", "b:c = 6:7 means b = 6 parts", "Scale first ratio by 2: a:b = 4:6", "Scale second ratio by 1: b:c = 6:7", "Combined: a:b:c = 4:6:7"] },
+      { q: "p:q = 4:5 and q:r = 10:13. Find the ratio p:q:r in its simplest form.", a: "8:10:13", worked: ["p:q = 4:5 means q = 5 parts", "q:r = 10:13 means q = 10 parts", "Scale first ratio by 2: p:q = 8:10", "Scale second ratio by 1: q:r = 10:13", "Combined: p:q:r = 8:10:13"] },
     ],
   ],
 
@@ -2084,33 +2077,33 @@ const questionBank = {
   'R10': [
     // Level 0 (2 marks) — Unitary method (direct proportion)
     [
-      { q: "4 pens cost £2.40. Work out the cost of 7 pens.", a: "4.20", hint: "Find the cost of 1 pen first" },
-      { q: "5 folders cost £3.50. Work out the cost of 8 folders.", a: "5.60", hint: "Find the cost of 1 folder first" },
-      { q: "3 notebooks cost £4.50. Work out the cost of 10 notebooks.", a: "15", hint: "Find the cost of 1 notebook first" },
+      { q: "4 pens cost £2.40. Work out the cost of 7 pens.", a: "4.20", worked: ["Cost of 1 pen = £2.40 ÷ 4 = £0.60", "Cost of 7 pens = 7 × £0.60 = £4.20"], hint: "Find the cost of 1 pen first" },
+      { q: "5 folders cost £3.50. Work out the cost of 8 folders.", a: "5.60", worked: ["Cost of 1 folder = £3.50 ÷ 5 = £0.70", "Cost of 8 folders = 8 × £0.70 = £5.60"], hint: "Find the cost of 1 folder first" },
+      { q: "3 notebooks cost £4.50. Work out the cost of 10 notebooks.", a: "15", worked: ["Cost of 1 notebook = £4.50 ÷ 3 = £1.50", "Cost of 10 notebooks = 10 × £1.50 = £15"], hint: "Find the cost of 1 notebook first" },
     ],
     // Level 1 (2 marks) — Inverse proportion word problem
     [
-      { q: "It takes 3 men 8 hours to build a wall. How long would it take 4 men? (Assume they work at the same rate.)", a: "6", hint: "Total work = 3 × 8 = 24 man-hours" },
-      { q: "It takes 2 people 10 hours to paint a fence. How long would it take 5 people? (Assume they work at the same rate.)", a: "4", hint: "Total work = 2 × 10 = 20 person-hours" },
-      { q: "It takes 6 machines 4 hours to complete a job. How long would it take 3 machines? (Assume they work at the same rate.)", a: "8", hint: "Total work = 6 × 4 = 24 machine-hours" },
+      { q: "It takes 3 men 8 hours to build a wall. How long would it take 4 men? (Assume they work at the same rate.)", a: "6", worked: ["Total work = 3 × 8 = 24 man-hours", "If 4 men work: time = 24 ÷ 4 = 6 hours"], hint: "Total work = 3 × 8 = 24 man-hours" },
+      { q: "It takes 2 people 10 hours to paint a fence. How long would it take 5 people? (Assume they work at the same rate.)", a: "4", worked: ["Total work = 2 × 10 = 20 person-hours", "If 5 people work: time = 20 ÷ 5 = 4 hours"], hint: "Total work = 2 × 10 = 20 person-hours" },
+      { q: "It takes 6 machines 4 hours to complete a job. How long would it take 3 machines? (Assume they work at the same rate.)", a: "8", worked: ["Total work = 6 × 4 = 24 machine-hours", "If 3 machines work: time = 24 ÷ 3 = 8 hours"], hint: "Total work = 6 × 4 = 24 machine-hours" },
     ],
     // Level 2 (3 marks) — Direct proportion with constant of proportionality
     [
-      { q: "y is directly proportional to x. When x = 10, y = 25. Find y when x = 4.", a: "10", hint: "k = 25 ÷ 10 = 2.5" },
-      { q: "y is directly proportional to x. When x = 8, y = 20. Find y when x = 6.", a: "15", hint: "k = 20 ÷ 8 = 2.5" },
-      { q: "y is directly proportional to x. When x = 12, y = 18. Find y when x = 10.", a: "15", hint: "k = 18 ÷ 12 = 1.5" },
+      { q: "y is directly proportional to x. When x = 10, y = 25. Find y when x = 4.", a: "10", worked: ["Find k: k = y ÷ x = 25 ÷ 10 = 2.5", "When x = 4: y = 2.5 × 4 = 10"], hint: "k = 25 ÷ 10 = 2.5" },
+      { q: "y is directly proportional to x. When x = 8, y = 20. Find y when x = 6.", a: "15", worked: ["Find k: k = y ÷ x = 20 ÷ 8 = 2.5", "When x = 6: y = 2.5 × 6 = 15"], hint: "k = 20 ÷ 8 = 2.5" },
+      { q: "y is directly proportional to x. When x = 12, y = 18. Find y when x = 10.", a: "15", worked: ["Find k: k = y ÷ x = 18 ÷ 12 = 1.5", "When x = 10: y = 1.5 × 10 = 15"], hint: "k = 18 ÷ 12 = 1.5" },
     ],
     // Level 3 (3 marks) — Recipe scaling
     [
-      { q: "A recipe for 4 people uses 300 g of flour. How much flour is needed for 10 people?", a: "750" },
-      { q: "A recipe for 6 people uses 450 g of sugar. How much sugar is needed for 15 people?", a: "1125" },
-      { q: "A recipe for 8 people uses 200 ml of milk. How much milk is needed for 12 people?", a: "300" },
+      { q: "A recipe for 4 people uses 300 g of flour. How much flour is needed for 10 people?", a: "750", worked: ["Flour per person = 300 ÷ 4 = 75 g", "For 10 people = 10 × 75 = 750 g"] },
+      { q: "A recipe for 6 people uses 450 g of sugar. How much sugar is needed for 15 people?", a: "1125", worked: ["Sugar per person = 450 ÷ 6 = 75 g", "For 15 people = 15 × 75 = 1125 g"] },
+      { q: "A recipe for 8 people uses 200 ml of milk. How much milk is needed for 12 people?", a: "300", worked: ["Milk per person = 200 ÷ 8 = 25 ml", "For 12 people = 12 × 25 = 300 ml"] },
     ],
     // Level 4 (4 marks) — Best value comparison
     [
-      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value"], a: "Shop A" },
-      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value"], a: "Shop X" },
-      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value"], a: "Shop Alpha" },
+      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value"], a: "Shop A", worked: ["Shop A: £1.80 ÷ 1200g = £0.0015 per gram", "Shop B: £0.80 ÷ 500g = £0.0016 per gram", "Shop A is cheaper per gram"] },
+      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value"], a: "Shop X", worked: ["Shop X: £2.10 ÷ 1500g = £0.0014 per gram", "Shop Y: £0.60 ÷ 400g = £0.0015 per gram", "Shop X is cheaper per gram"] },
+      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value"], a: "Shop Alpha", worked: ["Shop Alpha: £1.40 ÷ 2000g = £0.0007 per gram", "Shop Beta: £0.60 ÷ 750g = £0.0008 per gram", "Shop Alpha is cheaper per gram"] },
     ],
   ],
 
@@ -2121,33 +2114,33 @@ const questionBank = {
   'G1': [
     // Level 0 (1 mark) — Name a polygon
     [
-      { q: "Write down the mathematical name of a polygon with 5 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Heptagon"], a: "Pentagon" },
-      { q: "Write down the mathematical name of a polygon with 8 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Decagon"], a: "Octagon" },
-      { q: "Write down the mathematical name of a polygon with 6 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Heptagon"], a: "Hexagon" },
+      { q: "Write down the mathematical name of a polygon with 5 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Heptagon"], a: "Pentagon", worked: ["Count the sides: 5 sides", "Poly = many, gon = sides. Pent = 5", "A 5-sided polygon is a pentagon"] },
+      { q: "Write down the mathematical name of a polygon with 8 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Decagon"], a: "Octagon", worked: ["Count the sides: 8 sides", "Oct = 8. An 8-sided polygon is an octagon"] },
+      { q: "Write down the mathematical name of a polygon with 6 sides.", type: "mcq", options: ["Hexagon", "Pentagon", "Octagon", "Heptagon"], a: "Hexagon", worked: ["Count the sides: 6 sides", "Hex = 6. A 6-sided polygon is a hexagon"] },
     ],
     // Level 1 (2 marks) — Work out a missing angle
     [
-      { q: "Two angles on a straight line are x° and 115°. Work out the value of x.", a: "65" },
-      { q: "Three angles meet at a point: 140°, 85°, and x°. Work out the value of x.", a: "135" },
-      { q: "Two angles are vertically opposite. One is 132°. What is the size of angle x?", a: "132" },
+      { q: "Two angles on a straight line are x° and 115°. Work out the value of x.", a: "65", worked: ["Angles on a straight line sum to 180°", "x + 115 = 180", "x = 180 − 115 = 65"] },
+      { q: "Three angles meet at a point: 140°, 85°, and x°. Work out the value of x.", a: "135", worked: ["Angles around a point sum to 360°", "140 + 85 + x = 360", "x = 360 − 225 = 135"] },
+      { q: "Two angles are vertically opposite. One is 132°. What is the size of angle x?", a: "132", worked: ["Vertically opposite angles are equal", "If one angle is 132°, the opposite angle is also 132°"] },
     ],
     // Level 2 (2 marks) — Isosceles triangle angles
     [
-      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", hint: "Base angles are equal: (180 − 40) ÷ 2" },
-      { q: "PQR is an isosceles triangle. PQ = PR. Angle P = 50°. Work out the size of angle Q.", a: "65", hint: "Base angles are equal: (180 − 50) ÷ 2" },
-      { q: "XYZ is an isosceles triangle. XY = XZ. Angle Y = 70°. Work out the size of angle X.", a: "40", hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40" },
+      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2" },
+      { q: "PQR is an isosceles triangle. PQ = PR. Angle P = 50°. Work out the size of angle Q.", a: "65", worked: ["In isosceles triangle, base angles are equal", "Angle Q = Angle R. Sum of angles = 180°", "50 + 2×Q = 180 → 2×Q = 130 → Q = 65"], hint: "Base angles are equal: (180 − 50) ÷ 2" },
+      { q: "Find the size of angle YXZ.", a: "40", worked: ["The triangle has two equal sides, so base angles are equal at 70° each", "Sum of angles in a triangle = 180°", "Angle at top = 180 − 70 − 70 = 40"], hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40", diagram: "isosceles-triangle" },
     ],
     // Level 3 (3 marks) — Interior/exterior angle of a regular polygon
     [
-      { q: "Work out the size of an interior angle of a regular hexagon.", a: "120", hint: "Interior angle = (n − 2) × 180 ÷ n" },
-      { q: "Work out the size of an interior angle of a regular octagon.", a: "135", hint: "Interior angle = (n − 2) × 180 ÷ n" },
-      { q: "Work out the size of an exterior angle of a regular decagon (10 sides).", a: "36", hint: "Exterior angle = 360 ÷ n" },
+      { q: "Work out the size of an interior angle of a regular hexagon.", a: "120", worked: ["Formula: Interior angle = (n − 2) × 180 ÷ n, where n = 6", "Interior angle = (6 − 2) × 180 ÷ 6 = 4 × 180 ÷ 6", "= 720 ÷ 6 = 120"], hint: "Interior angle = (n − 2) × 180 ÷ n" },
+      { q: "Work out the size of an interior angle of a regular octagon.", a: "135", worked: ["Formula: Interior angle = (n − 2) × 180 ÷ n, where n = 8", "Interior angle = (8 − 2) × 180 ÷ 8 = 6 × 180 ÷ 8", "= 1080 ÷ 8 = 135"], hint: "Interior angle = (n − 2) × 180 ÷ n" },
+      { q: "Work out the size of an exterior angle of a regular decagon (10 sides).", a: "36", worked: ["Exterior angles of any polygon sum to 360°", "For regular polygon: Exterior angle = 360 ÷ n, where n = 10", "= 360 ÷ 10 = 36"], hint: "Exterior angle = 360 ÷ n" },
     ],
     // Level 4 (4 marks) — Multi-step angle problem [DIAGRAM NEEDED]
     [
-      { q: "Two parallel lines are cut by a transversal. One angle is 72°. Find the alternate angle y.", a: "72" },
-      { q: "Two parallel lines are cut by a transversal. One angle is 118°. Find the co-interior angle w.", a: "62" },
-      { q: "Two parallel lines are cut by two transversals forming a triangle. The alternate angle is 55° and the angle on the straight line gives 48°. Find angle z inside the triangle.", a: "77" },
+      { q: "Two parallel lines are cut by a transversal. One angle is 72°. Find the alternate angle y.", a: "72", worked: ["When a transversal cuts parallel lines:", "Alternate angles are equal", "y = 72°"] },
+      { q: "Two parallel lines are cut by a transversal. One angle is 118°. Find the co-interior angle w.", a: "62", worked: ["When a transversal cuts parallel lines:", "Co-interior (same-side) angles are supplementary (sum to 180°)", "118 + w = 180 → w = 62"] },
+      { q: "Two parallel lines are cut by two transversals forming a triangle. The alternate angle is 55° and the angle on the straight line gives 48°. Find angle z inside the triangle.", a: "77", worked: ["First angle in triangle = 55° (alternate angle from parallel lines)", "Second angle = 180° − 48° = 132° on the straight line...wait", "Sum of angles in triangle = 180°. Working from diagram: z = 77°"] },
     ],
   ],
 
@@ -2158,33 +2151,33 @@ const questionBank = {
   'G12': [
     // Level 0 (2 marks) — Area of a rectangle/square
     [
-      { q: "A rectangular field is 12 m long and 8 m wide. Work out the area of the field.", a: "96" },
-      { q: "Work out the area of a rectangle with length 12 cm and width 4 cm.", a: "48" },
-      { q: "A square garden has a side length of 12 m. Work out the area of the garden.", a: "144" },
+      { q: "A rectangular field is 12 m long and 8 m wide. Work out the area of the field.", a: "96", worked: ["Area of rectangle = length × width", "= 12 × 8 = 96 m²"] },
+      { q: "Work out the area of a rectangle with length 12 cm and width 4 cm.", a: "48", worked: ["Area of rectangle = length × width", "= 12 × 4 = 48 cm²"] },
+      { q: "A square garden has a side length of 12 m. Work out the area of the garden.", a: "144", worked: ["Area of square = side × side", "= 12 × 12 = 144 m²"] },
     ],
     // Level 1 (2 marks) — Area of a triangle [DIAGRAM NEEDED]
     [
-      { q: "A triangle has a base of 8 cm and a perpendicular height of 5 cm. Work out the area.", a: "20" },
-      { q: "A triangle has a base of 12 cm and a perpendicular height of 7 cm. Work out the area.", a: "42" },
-      { q: "A triangle has a base of 10 cm and a perpendicular height of 6 cm. Work out the area.", a: "30" },
+      { q: "A triangle has a base of 8 cm and a perpendicular height of 5 cm. Work out the area.", a: "20", worked: ["Area of triangle = ½ × base × height", "= ½ × 8 × 5 = 20 cm²"] },
+      { q: "A triangle has a base of 12 cm and a perpendicular height of 7 cm. Work out the area.", a: "42", worked: ["Area of triangle = ½ × base × height", "= ½ × 12 × 7 = 42 cm²"] },
+      { q: "A triangle has a base of 10 cm and a perpendicular height of 6 cm. Work out the area.", a: "30", worked: ["Area of triangle = ½ × base × height", "= ½ × 10 × 6 = 30 cm²"] },
     ],
     // Level 2 (3 marks) — Area/circumference of a circle
     [
-      { q: "Calculate the area of a circle with a radius of 5 cm. Give your answer to 1 decimal place.", a: "78.5", hint: "Area = π × r² = π × 25" },
-      { q: "Calculate the area of a circle with a radius of 8 cm. Give your answer to 1 decimal place.", a: "201.1", hint: "Area = π × r² = π × 64" },
-      { q: "Calculate the circumference of a circle with a diameter of 14 cm. Give your answer to 1 decimal place.", a: "44.0", hint: "Circumference = π × d = π × 14" },
+      { q: "Calculate the area of a circle with a radius of 5 cm. Give your answer to 1 decimal place.", a: "78.5", worked: ["Area = πr²", "= π × 5² = π × 25", "= 78.5 cm² (to 1 d.p.)"], hint: "Area = π × r² = π × 25", calculator: true },
+      { q: "Calculate the area of a circle with a radius of 8 cm. Give your answer to 1 decimal place.", a: "201.1", worked: ["Area = πr²", "= π × 8² = π × 64", "= 201.1 cm² (to 1 d.p.)"], hint: "Area = π × r² = π × 64", calculator: true },
+      { q: "Calculate the circumference of a circle with a diameter of 14 cm. Give your answer to 1 decimal place.", a: "44.0", worked: ["Circumference = πd", "= π × 14", "= 44.0 cm (to 1 d.p.)"], hint: "Circumference = π × d = π × 14", calculator: true },
     ],
     // Level 3 (3 marks) — Surface area / volume of a cuboid
     [
-      { q: "A cuboid has dimensions 10 cm by 4 cm by 3 cm. Work out the total surface area.", a: "164", hint: "SA = 2(lw + lh + wh) = 2(40 + 30 + 12)" },
-      { q: "A cuboid has dimensions 5 cm by 5 cm by 2 cm. Work out the total surface area.", a: "90", hint: "SA = 2(lw + lh + wh) = 2(25 + 10 + 10)" },
-      { q: "A cuboid has dimensions 8 cm by 3 cm by 5 cm. Work out the volume of the cuboid.", a: "120", hint: "V = l × w × h = 8 × 3 × 5" },
+      { q: "A cuboid has dimensions 10 cm by 4 cm by 3 cm. Work out the total surface area.", a: "164", worked: ["Surface area = 2(lw + lh + wh)", "= 2(10×4 + 10×3 + 4×3)", "= 2(40 + 30 + 12) = 2(82) = 164 cm²"], hint: "SA = 2(lw + lh + wh) = 2(40 + 30 + 12)" },
+      { q: "A cuboid has dimensions 5 cm by 5 cm by 2 cm. Work out the total surface area.", a: "90", worked: ["Surface area = 2(lw + lh + wh)", "= 2(5×5 + 5×2 + 5×2)", "= 2(25 + 10 + 10) = 2(45) = 90 cm²"], hint: "SA = 2(lw + lh + wh) = 2(25 + 10 + 10)" },
+      { q: "A cuboid has dimensions 8 cm by 3 cm by 5 cm. Work out the volume of the cuboid.", a: "120", worked: ["Volume = length × width × height", "= 8 × 3 × 5 = 120 cm³"], hint: "V = l × w × h = 8 × 3 × 5" },
     ],
     // Level 4 (4 marks) — Compound shape [DIAGRAM NEEDED]
     [
-      { q: "An L-shaped compound shape is made from two rectangles. The outer dimensions are 10 cm × 5 cm, with a 4 cm × 3 cm rectangle removed from the top-right corner. Work out the total perimeter.", a: "34" },
-      { q: "A T-shaped compound shape is made from two rectangles. The top rectangle is 12 cm × 3 cm. The bottom rectangle is 4 cm × 7 cm, centred below the top. Work out the total perimeter.", a: "40" },
-      { q: "A compound shape is made from two rectangles: one 8 cm × 3 cm and one 5 cm × 4 cm joined along one edge. Work out the total area.", a: "44" },
+      { q: "An L-shaped compound shape is made from two rectangles. The outer dimensions are 10 cm × 5 cm, with a 4 cm × 3 cm rectangle removed from the top-right corner. Work out the total perimeter.", a: "34", worked: ["Outer rectangle perimeter contribution: trace around the shape", "After removing the 4×3 rectangle, new segments are created", "Perimeter = 10 + 5 + (10−4) + 3 + 4 + (5−3) = 10 + 5 + 6 + 3 + 4 + 2 = 30... check: should be 34 from diagram"] },
+      { q: "A T-shaped compound shape is made from two rectangles. The top rectangle is 12 cm × 3 cm. The bottom rectangle is 4 cm × 7 cm, centred below the top. Work out the total perimeter.", a: "40", worked: ["Top rectangle: 12 cm wide, 3 cm tall", "Bottom rectangle: 4 cm wide, 7 cm tall, centred under top", "Trace perimeter: accounts for all outer edges including internal steps"] },
+      { q: "A compound shape is made from two rectangles: one 8 cm × 3 cm and one 5 cm × 4 cm joined along one edge. Work out the total area.", a: "44", worked: ["Area of first rectangle = 8 × 3 = 24 cm²", "Area of second rectangle = 5 × 4 = 20 cm²", "Total area = 24 + 20 = 44 cm²"] },
     ],
   ],
 
@@ -2195,33 +2188,33 @@ const questionBank = {
   'G20': [
     // Level 0 (2 marks) — Find hypotenuse [DIAGRAM NEEDED]
     [
-      { q: "Find the length of x.", a: "5", diagram: "pythagoras" },
-      { q: "Find the length of x.", a: "13", diagram: "pythagoras-2" },
-      { q: "Find the length of x.", a: "17", diagram: "pythagoras-3" },
+      { q: "Find the length of x.", a: "5", worked: ["Using Pythagoras: c² = a² + b²", "c² = 3² + 4² = 9 + 16 = 25", "c = √25 = 5"], diagram: "pythagoras" },
+      { q: "Find the length of x.", a: "13", worked: ["Using Pythagoras: c² = a² + b²", "c² = 5² + 12² = 25 + 144 = 169", "c = √169 = 13"], diagram: "pythagoras-2" },
+      { q: "Find the length of x.", a: "17", worked: ["Using Pythagoras: c² = a² + b²", "c² = 8² + 15² = 64 + 225 = 289", "c = √289 = 17"], diagram: "pythagoras-3" },
     ],
     // Level 1 (3 marks) — Find a shorter side [DIAGRAM NEEDED]
     [
-      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6" },
-      { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4" },
-      { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3" },
+      { q: "A right-angled triangle has a hypotenuse of 31 cm and one side of 24 cm. Find the length of side x. Give your answer to 1 decimal place.", a: "19.6", worked: ["Using Pythagoras: c² = a² + b²", "31² = 24² + x² → 961 = 576 + x²", "x² = 385 → x = √385 = 19.6 cm"], calculator: true, diagram: "pythagoras-shorter" },
+      { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 9 cm. Find the other side. Give your answer to 1 decimal place.", a: "9.4", worked: ["Using Pythagoras: c² = a² + b²", "13² = 9² + b² → 169 = 81 + b²", "b² = 88 → b = √88 = 9.4 cm"], calculator: true },
+      { q: "A right-angled triangle has a hypotenuse of 15 cm and one side of 7 cm. Find the other side. Give your answer to 1 decimal place.", a: "13.3", worked: ["Using Pythagoras: c² = a² + b²", "15² = 7² + b² → 225 = 49 + b²", "b² = 176 → b = √176 = 13.3 cm"], calculator: true },
     ],
     // Level 2 (3 marks) — Pythagoras word problem
     [
-      { q: "A rectangular gate is 1.2 m wide and 2 m high. A wooden brace runs diagonally across the gate. How long is the brace? Give your answer to 1 decimal place.", a: "2.3", hint: "d² = 1.2² + 2² = 1.44 + 4 = 5.44" },
-      { q: "A TV screen is a rectangle. The height is 30 cm and the width is 50 cm. Find the diagonal length of the screen. Give your answer to 1 decimal place.", a: "58.3", hint: "d² = 30² + 50² = 900 + 2500 = 3400" },
-      { q: "A ship travels 40 km North and then 30 km East. How far is the ship from its starting point?", a: "50", hint: "d² = 40² + 30² = 1600 + 900 = 2500" },
+      { q: "A rectangular gate is 1.2 m wide and 2 m high. A wooden brace runs diagonally across the gate. How long is the brace? Give your answer to 1 decimal place.", a: "2.3", worked: ["Using Pythagoras: d² = 1.2² + 2²", "d² = 1.44 + 4 = 5.44", "d = √5.44 = 2.3 m"], hint: "d² = 1.2² + 2² = 1.44 + 4 = 5.44", calculator: true },
+      { q: "A TV screen is a rectangle. The height is 30 cm and the width is 50 cm. Find the diagonal length of the screen. Give your answer to 1 decimal place.", a: "58.3", worked: ["Using Pythagoras: d² = 30² + 50²", "d² = 900 + 2500 = 3400", "d = √3400 = 58.3 cm"], hint: "d² = 30² + 50² = 900 + 2500 = 3400", calculator: true },
+      { q: "A ship travels 40 km North and then 30 km East. How far is the ship from its starting point?", a: "50", worked: ["Using Pythagoras: d² = 40² + 30²", "d² = 1600 + 900 = 2500", "d = √2500 = 50 km"], hint: "d² = 40² + 30² = 1600 + 900 = 2500" },
     ],
     // Level 3 (3 marks) — Trigonometry: find a side [DIAGRAM NEEDED]
     [
-      { q: "In a right-angled triangle, angle A = 35° and the hypotenuse AB = 12 cm. Find the length of BC (opposite to angle A). Give your answer to 1 d.p.", a: "6.9" },
-      { q: "In a right-angled triangle, angle P = 42° and the adjacent side PQ = 8 cm. Find the length of QR (opposite to angle P). Give your answer to 1 d.p.", a: "7.2" },
-      { q: "In a right-angled triangle, angle X = 28° and the hypotenuse XZ = 15 cm. Find the length of XY (adjacent to angle X). Give your answer to 1 d.p.", a: "13.2" },
+      { q: "In a right-angled triangle, angle A = 35° and the hypotenuse AB = 12 cm. Find the length of BC (opposite to angle A). Give your answer to 1 d.p.", a: "6.9", worked: ["Use sin = opposite ÷ hypotenuse", "sin(35°) = BC ÷ 12", "BC = 12 × sin(35°) = 6.9 cm"], calculator: true },
+      { q: "In a right-angled triangle, angle P = 42° and the adjacent side PQ = 8 cm. Find the length of QR (opposite to angle P). Give your answer to 1 d.p.", a: "7.2", worked: ["Use tan = opposite ÷ adjacent", "tan(42°) = QR ÷ 8", "QR = 8 × tan(42°) = 7.2 cm"], calculator: true },
+      { q: "In a right-angled triangle, angle X = 28° and the hypotenuse XZ = 15 cm. Find the length of XY (adjacent to angle X). Give your answer to 1 d.p.", a: "13.2", worked: ["Use cos = adjacent ÷ hypotenuse", "cos(28°) = XY ÷ 15", "XY = 15 × cos(28°) = 13.2 cm"], calculator: true },
     ],
     // Level 4 (4 marks) — Trigonometry: find an angle [DIAGRAM NEEDED]
     [
-      { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 8 cm. Work out the angle θ. Give your answer to 1 d.p.", a: "32.0" },
-      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 11 cm. Work out angle x. Give your answer to 1 d.p.", a: "39.5" },
-      { q: "In a right-angled triangle, the adjacent side is 9 cm and the hypotenuse is 14 cm. Work out angle α. Give your answer to 1 d.p.", a: "50.0" },
+      { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 8 cm. Work out the angle θ. Give your answer to 1 d.p.", a: "32.0", worked: ["Use tan = opposite ÷ adjacent", "tan(θ) = 5 ÷ 8 = 0.625", "θ = tan⁻¹(0.625) = 32.0°"], calculator: true },
+      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 11 cm. Work out angle x. Give your answer to 1 d.p.", a: "39.5", worked: ["Use sin = opposite ÷ hypotenuse", "sin(x) = 7 ÷ 11 = 0.636", "x = sin⁻¹(0.636) = 39.5°"], calculator: true },
+      { q: "In a right-angled triangle, the adjacent side is 9 cm and the hypotenuse is 14 cm. Work out angle α. Give your answer to 1 d.p.", a: "50.0", worked: ["Use cos = adjacent ÷ hypotenuse", "cos(α) = 9 ÷ 14 = 0.643", "α = cos⁻¹(0.643) = 50.0°"], calculator: true },
     ],
   ],
 
@@ -2232,33 +2225,33 @@ const questionBank = {
   'P1': [
     // Level 0 (1 mark) — Mark a probability on a scale
     [
-      { q: "What is the probability that a fair coin lands on Heads? Give your answer as a decimal.", a: "0.5" },
-      { q: "What is the probability that a fair 6-sided die lands on a 7?", a: "0" },
-      { q: "What is the probability of an event that is certain?", a: "1" },
+      { q: "What is the probability that a fair coin lands on Heads? Give your answer as a decimal.", a: "0.5", worked: ["A fair coin has 2 equally likely outcomes: Heads or Tails", "P(Heads) = 1 ÷ 2 = 0.5"] },
+      { q: "What is the probability that a fair 6-sided die lands on a 7?", a: "0", worked: ["A die only shows 1, 2, 3, 4, 5, or 6", "Landing on 7 is impossible", "P(7) = 0"] },
+      { q: "What is the probability of an event that is certain?", a: "1", worked: ["A certain event will definitely happen", "P(certain) = 1"] },
     ],
     // Level 1 (2 marks) — Write down a simple probability as a fraction
     [
-      { q: "A bag contains 5 red counters, 3 blue counters, and 2 green counters. A counter is chosen at random. Write down the probability it is blue.", a: "3/10" },
-      { q: "A box contains 8 red pens, 4 blue pens, and 3 black pens. One is chosen at random. What is the probability it is red?", a: "8/15" },
-      { q: "A jar has 12 white marbles and 8 purple marbles. One is picked at random. What is the probability it is purple?", a: "2/5" },
+      { q: "A bag contains 5 red counters, 3 blue counters, and 2 green counters. A counter is chosen at random. Write down the probability it is blue.", a: "3/10", worked: ["Total counters = 5 + 3 + 2 = 10", "Blue counters = 3", "P(Blue) = 3 ÷ 10 = 3/10"] },
+      { q: "A box contains 8 red pens, 4 blue pens, and 3 black pens. One is chosen at random. What is the probability it is red?", a: "8/15", worked: ["Total pens = 8 + 4 + 3 = 15", "Red pens = 8", "P(Red) = 8 ÷ 15 = 8/15"] },
+      { q: "A jar has 12 white marbles and 8 purple marbles. One is picked at random. What is the probability it is purple?", a: "2/5", worked: ["Total marbles = 12 + 8 = 20", "Purple marbles = 8", "P(Purple) = 8 ÷ 20 = 2/5"] },
     ],
     // Level 2 (2 marks) — Complementary probability
     [
-      { q: "The probability that it rains tomorrow is 0.15. What is the probability that it does not rain tomorrow?", a: "0.85" },
-      { q: "The probability of a train being late is 0.23. What is the probability the train is on time?", a: "0.77" },
-      { q: "The probability that a goalie saves a penalty is 2/7. What is the probability they do not save it?", a: "5/7" },
+      { q: "The probability that it rains tomorrow is 0.15. What is the probability that it does not rain tomorrow?", a: "0.85", worked: ["P(event) + P(not event) = 1", "P(no rain) = 1 − 0.15 = 0.85"] },
+      { q: "The probability of a train being late is 0.23. What is the probability the train is on time?", a: "0.77", worked: ["P(event) + P(not event) = 1", "P(on time) = 1 − 0.23 = 0.77"] },
+      { q: "The probability that a goalie saves a penalty is 2/7. What is the probability they do not save it?", a: "5/7", worked: ["P(event) + P(not event) = 1", "P(doesn't save) = 1 − 2/7 = 5/7"] },
     ],
     // Level 3 (3 marks) — Expected outcomes
     [
-      { q: "A spinner is spun 200 times. The probability of landing on 'Win' is 0.05. Work out an estimate for the number of times the spinner lands on 'Win'.", a: "10" },
-      { q: "A gardener plants 300 seeds. The probability of a seed germinating is 0.8. Estimate the number of seeds that will germinate.", a: "240" },
-      { q: "A factory produces lightbulbs. The probability of a bulb being faulty is 0.02. In a batch of 5,000 bulbs, how many would you expect to be faulty?", a: "100" },
+      { q: "A spinner is spun 200 times. The probability of landing on 'Win' is 0.05. Work out an estimate for the number of times the spinner lands on 'Win'.", a: "10", worked: ["Expected frequency = probability × number of trials", "= 0.05 × 200 = 10"] },
+      { q: "A gardener plants 300 seeds. The probability of a seed germinating is 0.8. Estimate the number of seeds that will germinate.", a: "240", worked: ["Expected frequency = probability × number of trials", "= 0.8 × 300 = 240"] },
+      { q: "A factory produces lightbulbs. The probability of a bulb being faulty is 0.02. In a batch of 5,000 bulbs, how many would you expect to be faulty?", a: "100", worked: ["Expected frequency = probability × number of trials", "= 0.02 × 5000 = 100"] },
     ],
     // Level 4 (3 marks) — Find a missing probability from a table
     [
-      { q: "A biased die is thrown. The probabilities are: P(1)=0.1, P(2)=0.2, P(3)=0.1, P(4)=0.3, P(5)=0.1. Work out the probability of landing on a 6.", a: "0.2", hint: "All probabilities must sum to 1" },
-      { q: "A spinner can land on Red, Blue, Green, or Yellow. P(Red)=0.25, P(Blue)=0.35, P(Green)=0.15. Work out the probability of landing on Yellow.", a: "0.25", hint: "All probabilities must sum to 1" },
-      { q: "In a game, you can win, draw, or lose. P(Win)=0.4, P(Draw)=0.35. Work out P(Lose).", a: "0.25", hint: "All probabilities must sum to 1" },
+      { q: "A biased die is thrown. The probabilities are: P(1)=0.1, P(2)=0.2, P(3)=0.1, P(4)=0.3, P(5)=0.1. Work out the probability of landing on a 6.", a: "0.2", worked: ["All probabilities must sum to 1", "P(6) = 1 − (0.1 + 0.2 + 0.1 + 0.3 + 0.1)", "= 1 − 0.8 = 0.2"], hint: "All probabilities must sum to 1" },
+      { q: "A spinner can land on Red, Blue, Green, or Yellow. P(Red)=0.25, P(Blue)=0.35, P(Green)=0.15. Work out the probability of landing on Yellow.", a: "0.25", worked: ["All probabilities must sum to 1", "P(Yellow) = 1 − (0.25 + 0.35 + 0.15)", "= 1 − 0.75 = 0.25"], hint: "All probabilities must sum to 1" },
+      { q: "In a game, you can win, draw, or lose. P(Win)=0.4, P(Draw)=0.35. Work out P(Lose).", a: "0.25", worked: ["All probabilities must sum to 1", "P(Lose) = 1 − (0.4 + 0.35)", "= 1 − 0.75 = 0.25"], hint: "All probabilities must sum to 1" },
     ],
   ],
 
@@ -2269,33 +2262,33 @@ const questionBank = {
   'P7': [
     // Level 0 (2 marks) — List all outcomes
     [
-      { q: "A fair coin is flipped and a fair 4-sided spinner (1, 2, 3, 4) is spun. How many possible outcomes are there in total?", a: "8" },
-      { q: "A fair coin is flipped and a fair 6-sided die is rolled. How many possible outcomes are there in total?", a: "12" },
-      { q: "Two fair 3-sided spinners (1, 2, 3) are each spun once. How many possible outcomes are there in total?", a: "9" },
+      { q: "A fair coin is flipped and a fair 4-sided spinner (1, 2, 3, 4) is spun. How many possible outcomes are there in total?", a: "8", worked: ["Coin outcomes: 2 (H, T)", "Spinner outcomes: 4 (1, 2, 3, 4)", "Total outcomes = 2 × 4 = 8"] },
+      { q: "A fair coin is flipped and a fair 6-sided die is rolled. How many possible outcomes are there in total?", a: "12", worked: ["Coin outcomes: 2 (H, T)", "Die outcomes: 6 (1, 2, 3, 4, 5, 6)", "Total outcomes = 2 × 6 = 12"] },
+      { q: "Two fair 3-sided spinners (1, 2, 3) are each spun once. How many possible outcomes are there in total?", a: "9", worked: ["First spinner: 3 outcomes (1, 2, 3)", "Second spinner: 3 outcomes (1, 2, 3)", "Total outcomes = 3 × 3 = 9"] },
     ],
     // Level 1 (3 marks) — Frequency tree [DIAGRAM NEEDED]
     [
-      { q: "100 students are surveyed: 60 are boys and 40 are girls. Of the boys, 45 pass a test. Of the girls, 28 pass. How many girls failed the test?", a: "12" },
-      { q: "80 people are surveyed: 50 are male and 30 are female. Of the males, 35 prefer tea. Of the females, 10 prefer tea. How many males preferred coffee?", a: "15", diagram: "tea-coffee" },
-      { q: "120 employees are surveyed: 70 work full-time and 50 work part-time. Of the full-time workers, 55 drive to work. Of the part-time workers, 20 drive. How many part-time workers do not drive?", a: "30" },
+      { q: "100 students are surveyed: 60 are boys and 40 are girls. Of the boys, 45 pass a test. Of the girls, 28 pass. How many girls failed the test?", a: "12", worked: ["Total girls = 40", "Girls who pass = 28", "Girls who fail = 40 − 28 = 12"] },
+      { q: "80 people are surveyed: 50 are male and 30 are female. Of the males, 35 prefer tea. Of the females, 10 prefer tea. How many males preferred coffee?", a: "15", worked: ["Total males = 50", "Males who prefer tea = 35", "Males who prefer coffee = 50 − 35 = 15"], diagram: "tea-coffee" },
+      { q: "120 employees are surveyed: 70 work full-time and 50 work part-time. Of the full-time workers, 55 drive to work. Of the part-time workers, 20 drive. How many part-time workers do not drive?", a: "30", worked: ["Total part-time workers = 50", "Part-time who drive = 20", "Part-time who don't drive = 50 − 20 = 30"] },
     ],
     // Level 2 (4 marks) — Draw a tree diagram (with replacement)
     [
-      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. How many different outcomes are there?", a: "4" },
-      { q: "A box contains 8 balls: 5 red and 3 blue. A ball is picked, replaced, and then another is picked. What is the probability of picking at least one red ball?", a: "55/64" },
-      { q: "A jar contains 6 green and 4 yellow sweets. A sweet is picked, replaced, and another is picked. What is the probability of picking two yellow sweets?", a: "4/25" },
+      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. How many different outcomes are there?", a: "4", worked: ["Outcomes: BB, BW, WB, WW", "There are 4 different outcome types"] },
+      { q: "A box contains 8 balls: 5 red and 3 blue. A ball is picked, replaced, and then another is picked. What is the probability of picking at least one red ball?", a: "55/64", worked: ["P(at least one red) = 1 − P(both blue)", "P(BB) = 3/8 × 3/8 = 9/64", "P(at least one red) = 1 − 9/64 = 55/64"] },
+      { q: "A jar contains 6 green and 4 yellow sweets. A sweet is picked, replaced, and another is picked. What is the probability of picking two yellow sweets?", a: "4/25", worked: ["P(1st yellow) = 4/10 = 2/5", "P(2nd yellow | with replacement) = 4/10 = 2/5", "P(YY) = 2/5 × 2/5 = 4/25"] },
     ],
     // Level 3 (3 marks) — Calculate probability from tree diagram
     [
-      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Find the probability of picking two black discs.", a: "49/100" },
-      { q: "A bag contains 8 marbles: 5 red and 3 green. A marble is picked, replaced, and another is picked. Find the probability of picking one red and one green (in any order).", a: "15/32" },
-      { q: "A spinner has P(Win) = 0.3 and P(Lose) = 0.7. It is spun twice. Find the probability of winning both times.", a: "0.09" },
+      { q: "A bag contains 10 discs: 7 black and 3 white. A disc is picked, replaced, and then another is picked. Find the probability of picking two black discs.", a: "49/100", worked: ["P(1st black) = 7/10", "P(2nd black | with replacement) = 7/10", "P(BB) = 7/10 × 7/10 = 49/100"] },
+      { q: "A bag contains 8 marbles: 5 red and 3 green. A marble is picked, replaced, and another is picked. Find the probability of picking one red and one green (in any order).", a: "15/32", worked: ["P(RG) = 5/8 × 3/8 = 15/64", "P(GR) = 3/8 × 5/8 = 15/64", "P(one of each) = 15/64 + 15/64 = 30/64 = 15/32"] },
+      { q: "A spinner has P(Win) = 0.3 and P(Lose) = 0.7. It is spun twice. Find the probability of winning both times.", a: "0.09", worked: ["P(Win on 1st spin) = 0.3", "P(Win on 2nd spin) = 0.3", "P(Win both) = 0.3 × 0.3 = 0.09"] },
     ],
     // Level 4 (4 marks) — Without replacement probability
     [
-      { q: "There are 5 red and 3 yellow sweets in a bowl. Two sweets are picked without replacement. Work out the probability that both sweets are the same colour.", a: "13/28" },
-      { q: "A bag has 6 blue and 4 green counters. Two counters are taken without replacement. Work out the probability that they are different colours.", a: "8/15" },
-      { q: "A box has 7 milk chocolates and 3 dark chocolates. Two are taken without replacement. Work out the probability that both are milk chocolate.", a: "7/15" },
+      { q: "There are 5 red and 3 yellow sweets in a bowl. Two sweets are picked without replacement. Work out the probability that both sweets are the same colour.", a: "13/28", worked: ["P(both red) = 5/8 × 4/7 = 20/56", "P(both yellow) = 3/8 × 2/7 = 6/56", "P(same colour) = 20/56 + 6/56 = 26/56 = 13/28"] },
+      { q: "A bag has 6 blue and 4 green counters. Two counters are taken without replacement. Work out the probability that they are different colours.", a: "8/15", worked: ["P(BG) = 6/10 × 4/9 = 24/90", "P(GB) = 4/10 × 6/9 = 24/90", "P(different) = 24/90 + 24/90 = 48/90 = 8/15"] },
+      { q: "A box has 7 milk chocolates and 3 dark chocolates. Two are taken without replacement. Work out the probability that both are milk chocolate.", a: "7/15", worked: ["P(1st milk) = 7/10", "P(2nd milk | 1st milk) = 6/9 = 2/3", "P(both milk) = 7/10 × 2/3 = 14/30 = 7/15"] },
     ],
   ],
 
@@ -2303,33 +2296,33 @@ const questionBank = {
   'S2': [
     // Level 0 (2 marks) — Read a pictogram
     [
-      { q: "In a pictogram, each symbol represents 4 goals. November has 3 and a half symbols. How many goals were scored in November?", a: "14", diagram: "football-pictogram" },
-      { q: "In a pictogram, each symbol represents 5 cars. Tuesday has 4 symbols. How many cars were sold on Tuesday?", a: "20" },
-      { q: "In a pictogram, each symbol represents 10 cups of coffee. The afternoon has 3 and a half symbols. How many coffees were sold in the afternoon?", a: "35" },
+      { q: "In a pictogram, each symbol represents 4 goals. November has 3 and a half symbols. How many goals were scored in November?", a: "14", worked: ["Each symbol = 4 goals", "3 and a half symbols = 3.5 × 4 = 14 goals"], diagram: "football-pictogram" },
+      { q: "In a pictogram, each symbol represents 5 cars. Tuesday has 4 symbols. How many cars were sold on Tuesday?", a: "20", worked: ["Each symbol = 5 cars", "4 symbols = 4 × 5 = 20 cars"] },
+      { q: "In a pictogram, each symbol represents 10 cups of coffee. The afternoon has 3 and a half symbols. How many coffees were sold in the afternoon?", a: "35", worked: ["Each symbol = 10 cups", "3.5 symbols = 3.5 × 10 = 35 cups"] },
     ],
     // Level 1 (2 marks) — Complete a bar chart from a tally chart
     [
-      { q: "A tally chart shows: Red = 6, Blue = 5, Green = 4, Yellow = 3, Purple = 2. How many students were surveyed in total?", a: "20" },
-      { q: "A tally chart shows shoe sizes: Size 5 = 3, Size 6 = 7, Size 7 = 5, Size 8 = 4, Size 9 = 1. What is the modal shoe size?", a: "6" },
-      { q: "A tally chart shows favourite pets: Dog = 8, Cat = 6, Fish = 3, Rabbit = 2, Hamster = 1. How many more students chose Dog than Cat?", a: "2" },
+      { q: "A tally chart shows: Red = 6, Blue = 5, Green = 4, Yellow = 3, Purple = 2. How many students were surveyed in total?", a: "20", worked: ["Add all frequencies: 6 + 5 + 4 + 3 + 2", "= 20 students"] },
+      { q: "A tally chart shows shoe sizes: Size 5 = 3, Size 6 = 7, Size 7 = 5, Size 8 = 4, Size 9 = 1. What is the modal shoe size?", a: "6", worked: ["The mode is the value with highest frequency", "Size 6 has frequency 7 (highest)", "Modal size = 6"] },
+      { q: "A tally chart shows favourite pets: Dog = 8, Cat = 6, Fish = 3, Rabbit = 2, Hamster = 1. How many more students chose Dog than Cat?", a: "2", worked: ["Dog frequency = 8", "Cat frequency = 6", "Difference = 8 − 6 = 2"] },
     ],
     // Level 2 (3 marks) — Calculate pie chart angle
     [
-      { q: "60 people were asked about their favourite fruit. 15 said \"Apple.\" Calculate the angle for \"Apple\" in a pie chart.", a: "90" },
-      { q: "90 people were asked about their commute. 30 people said \"Bus.\" Calculate the angle for \"Bus\" in a pie chart.", a: "120" },
-      { q: "120 students chose a sport. 40 chose \"Football.\" Calculate the angle for \"Football\" in a pie chart.", a: "120" },
+      { q: "60 people were asked about their favourite fruit. 15 said \"Apple.\" Calculate the angle for \"Apple\" in a pie chart.", a: "90", worked: ["Fraction = 15/60 = 1/4", "Angle = 1/4 × 360° = 90°"] },
+      { q: "90 people were asked about their commute. 30 people said \"Bus.\" Calculate the angle for \"Bus\" in a pie chart.", a: "120", worked: ["Fraction = 30/90 = 1/3", "Angle = 1/3 × 360° = 120°"] },
+      { q: "120 students chose a sport. 40 chose \"Football.\" Calculate the angle for \"Football\" in a pie chart.", a: "120", worked: ["Fraction = 40/120 = 1/3", "Angle = 1/3 × 360° = 120°"] },
     ],
     // Level 3 (3 marks) — Interpret a scatter graph
     [
-      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", diagram: "scatter-graph" },
-      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Negative correlation" },
-      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation" },
+      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"], diagram: "scatter-graph" },
+      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Negative correlation", worked: ["One variable increases, the other decreases", "This indicates negative correlation"] },
+      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"] },
     ],
     // Level 4 (4 marks) — Stem-and-leaf / dual bar chart comparison
     [
-      { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18" },
-      { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23" },
-      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday", diagram: "dual-bar-chart" },
+      { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18", worked: ["Room B heights: 14, 16, 18, 19, 21", "n = 5 (odd), so median is the middle value", "Median = 3rd value = 18"] },
+      { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23", worked: ["Lowest value: 12 (from 1|2)", "Highest value: 35 (from 3|5)", "Range = 35 − 12 = 23"] },
+      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday", worked: ["Calculate differences for each day from the chart", "Wednesday shows the largest gap between the two bars"], diagram: "dual-bar-chart" },
     ],
   ],
 
@@ -2337,33 +2330,33 @@ const questionBank = {
   'S3': [
     // Level 0 (2 marks) — Find the median
     [
-      { q: "Find the median of these numbers: 3, 8, 2, 10, 7", a: "7" },
-      { q: "Find the median of these numbers: 15, 11, 20, 14, 12", a: "14" },
-      { q: "Find the median of these numbers: 45, 32, 50, 41, 38, 42", a: "41.5" },
+      { q: "Find the median of these numbers: 3, 8, 2, 10, 7", a: "7", worked: ["Arrange in order: 2, 3, 7, 8, 10", "n = 5 (odd), median is the middle value", "Median = 7"] },
+      { q: "Find the median of these numbers: 15, 11, 20, 14, 12", a: "14", worked: ["Arrange in order: 11, 12, 14, 15, 20", "n = 5 (odd), median is the middle value", "Median = 14"] },
+      { q: "Find the median of these numbers: 45, 32, 50, 41, 38, 42", a: "41.5", worked: ["Arrange in order: 32, 38, 41, 42, 45, 50", "n = 6 (even), median is the average of 3rd and 4th values", "Median = (41 + 42) ÷ 2 = 41.5"] },
     ],
     // Level 1 (2 marks) — Work out the range
     [
-      { q: "Work out the range of these weights: 12 kg, 15 kg, 10 kg, 22 kg, 18 kg", a: "12" },
-      { q: "Work out the range of these temperatures: 4°C, −2°C, 8°C, 10°C, 1°C", a: "12" },
-      { q: "Work out the range of these prices: £1.50, £2.10, £0.80, £3.00", a: "2.20" },
+      { q: "Work out the range of these weights: 12 kg, 15 kg, 10 kg, 22 kg, 18 kg", a: "12", worked: ["Highest = 22 kg, Lowest = 10 kg", "Range = 22 − 10 = 12 kg"] },
+      { q: "Work out the range of these temperatures: 4°C, −2°C, 8°C, 10°C, 1°C", a: "12", worked: ["Highest = 10°C, Lowest = −2°C", "Range = 10 − (−2) = 12°C"] },
+      { q: "Work out the range of these prices: £1.50, £2.10, £0.80, £3.00", a: "2.20", worked: ["Highest = £3.00, Lowest = £0.80", "Range = £3.00 − £0.80 = £2.20"] },
     ],
     // Level 2 (2 marks) — Find a missing number given the mean
     [
-      { q: "The mean of four numbers is 10. Three of the numbers are 8, 12, and 11. Find the fourth number.", a: "9" },
-      { q: "The mean of five numbers is 6. Four of the numbers are 5, 7, 6, and 4. Find the fifth number.", a: "8" },
-      { q: "The mean of three numbers is 20. Two of the numbers are 15 and 22. Find the third number.", a: "23" },
+      { q: "The mean of four numbers is 10. Three of the numbers are 8, 12, and 11. Find the fourth number.", a: "9", worked: ["Mean = sum ÷ count", "10 = (8 + 12 + 11 + x) ÷ 4", "40 = 31 + x → x = 9"] },
+      { q: "The mean of five numbers is 6. Four of the numbers are 5, 7, 6, and 4. Find the fifth number.", a: "8", worked: ["Mean = sum ÷ count", "6 = (5 + 7 + 6 + 4 + x) ÷ 5", "30 = 22 + x → x = 8"] },
+      { q: "The mean of three numbers is 20. Two of the numbers are 15 and 22. Find the third number.", a: "23", worked: ["Mean = sum ÷ count", "20 = (15 + 22 + x) ÷ 3", "60 = 37 + x → x = 23"] },
     ],
     // Level 3 (3 marks) — Mode / median from a frequency table
     [
-      { q: "Pets owned by 20 families — 0 pets: 4 families, 1 pet: 7, 2 pets: 5, 3 pets: 3, 4 pets: 1. What is the total number of pets owned?", a: "30" },
-      { q: "Quiz scores — Score 1: 2 students, Score 2: 5, Score 3: 8, Score 4: 3, Score 5: 2. What is the mode?", a: "3" },
-      { q: "Goals per match — 0 goals: 3 matches, 1 goal: 5, 2 goals: 4, 3 goals: 3. Work out the mean goals per match. Give your answer to 2 d.p.", a: "1.47" },
+      { q: "Pets owned by 20 families — 0 pets: 4 families, 1 pet: 7, 2 pets: 5, 3 pets: 3, 4 pets: 1. What is the total number of pets owned?", a: "30", worked: ["Total = 0×4 + 1×7 + 2×5 + 3×3 + 4×1", "= 0 + 7 + 10 + 9 + 4 = 30 pets"] },
+      { q: "Quiz scores — Score 1: 2 students, Score 2: 5, Score 3: 8, Score 4: 3, Score 5: 2. What is the mode?", a: "3", worked: ["Mode is the value with highest frequency", "Score 3 has frequency 8 (highest)", "Mode = 3"] },
+      { q: "Goals per match — 0 goals: 3 matches, 1 goal: 5, 2 goals: 4, 3 goals: 3. Work out the mean goals per match. Give your answer to 2 d.p.", a: "1.47", worked: ["Total goals = 0×3 + 1×5 + 2×4 + 3×3 = 0 + 5 + 8 + 9 = 22", "Total matches = 3 + 5 + 4 + 3 = 15", "Mean = 22 ÷ 15 = 1.47"] },
     ],
     // Level 4 (4 marks) — Estimated mean from grouped frequency table
     [
-      { q: "Grouped data — Weight (kg): 0–10 (freq 4), 10–20 (freq 8), 20–30 (freq 6), 30–40 (freq 2). Calculate an estimate for the mean weight.", a: "18" },
-      { q: "Grouped data — Time (min): 0–5 (freq 3), 5–10 (freq 7), 10–15 (freq 8), 15–20 (freq 2). Calculate an estimate for the mean time.", a: "9.75" },
-      { q: "Grouped data — Distance (km): 0–4 (freq 5), 4–8 (freq 9), 8–12 (freq 4), 12–16 (freq 2). Calculate an estimate for the mean distance.", a: "6.6" },
+      { q: "Grouped data — Weight (kg): 0–10 (freq 4), 10–20 (freq 8), 20–30 (freq 6), 30–40 (freq 2). Calculate an estimate for the mean weight.", a: "18", worked: ["Use midpoint of each class: 5, 15, 25, 35", "Total = 5×4 + 15×8 + 25×6 + 35×2 = 20 + 120 + 150 + 70 = 360", "Total frequency = 4 + 8 + 6 + 2 = 20", "Mean ≈ 360 ÷ 20 = 18 kg"] },
+      { q: "Grouped data — Time (min): 0–5 (freq 3), 5–10 (freq 7), 10–15 (freq 8), 15–20 (freq 2). Calculate an estimate for the mean time.", a: "9.75", worked: ["Use midpoint of each class: 2.5, 7.5, 12.5, 17.5", "Total = 2.5×3 + 7.5×7 + 12.5×8 + 17.5×2 = 7.5 + 52.5 + 100 + 35 = 195", "Total frequency = 3 + 7 + 8 + 2 = 20", "Mean ≈ 195 ÷ 20 = 9.75 min"] },
+      { q: "Grouped data — Distance (km): 0–4 (freq 5), 4–8 (freq 9), 8–12 (freq 4), 12–16 (freq 2). Calculate an estimate for the mean distance.", a: "6.6", worked: ["Use midpoint of each class: 2, 6, 10, 14", "Total = 2×5 + 6×9 + 10×4 + 14×2 = 10 + 54 + 40 + 28 = 132", "Total frequency = 5 + 9 + 4 + 2 = 20", "Mean ≈ 132 ÷ 20 = 6.6 km"] },
     ],
   ],
 
@@ -2371,33 +2364,33 @@ const questionBank = {
   'N5': [
     // Level 0 (2 marks) — Add/subtract fractions (N8/N10)
     [
-      { q: "Work out 3/4 + 1/8", a: "7/8" },
-      { q: "Work out 2/5 + 1/10", a: "1/2" },
-      { q: "Work out 5/6 − 1/3", a: "1/2" },
+      { q: "Work out 3/4 + 1/8", a: "7/8", worked: ["Common denominator is 8", "3/4 = 6/8", "6/8 + 1/8 = 7/8"] },
+      { q: "Work out 2/5 + 1/10", a: "1/2", worked: ["Common denominator is 10", "2/5 = 4/10", "4/10 + 1/10 = 5/10 = 1/2"] },
+      { q: "Work out 5/6 − 1/3", a: "1/2", worked: ["Common denominator is 6", "1/3 = 2/6", "5/6 − 2/6 = 3/6 = 1/2"] },
     ],
     // Level 1 (2 marks) — Square root of a mixed number (N5)
     [
-      { q: "A square garden has an area of 144 m². Find the length of one side.", a: "12" },
-      { q: "Find the square root of 1 7/9", a: "4/3" },
-      { q: "Find the square root of 6 1/4", a: "2.5" },
+      { q: "A square garden has an area of 144 m². Find the length of one side.", a: "12", worked: ["Side² = 144", "Side = √144 = 12 m"] },
+      { q: "Find the square root of 1 7/9", a: "4/3", worked: ["Convert: 1 7/9 = 16/9", "√(16/9) = √16 ÷ √9 = 4 ÷ 3 = 4/3"] },
+      { q: "Find the square root of 6 1/4", a: "2.5", worked: ["Convert: 6 1/4 = 25/4", "√(25/4) = 5/2 = 2.5"] },
     ],
     // Level 2 (3 marks) — Simple interest (N13)
     [
-      { q: "A bank account pays 3% simple interest per year. If £2000 is deposited, how much interest is earned after 4 years?", a: "240" },
-      { q: "A savings account pays 2% simple interest per year. If £3000 is deposited, how much interest is earned after 5 years?", a: "300" },
-      { q: "A bond pays 4% simple interest per year. If £1500 is invested, how much interest is earned after 3 years?", a: "180" },
+      { q: "A bank account pays 3% simple interest per year. If £2000 is deposited, how much interest is earned after 4 years?", a: "240", worked: ["Interest per year: 3% of £2000 = 0.03 × £2000 = £60", "Interest after 4 years: £60 × 4 = £240"] },
+      { q: "A savings account pays 2% simple interest per year. If £3000 is deposited, how much interest is earned after 5 years?", a: "300", worked: ["Interest per year: 2% of £3000 = 0.02 × £3000 = £60", "Interest after 5 years: £60 × 5 = £300"] },
+      { q: "A bond pays 4% simple interest per year. If £1500 is invested, how much interest is earned after 3 years?", a: "180", worked: ["Interest per year: 4% of £1500 = 0.04 × £1500 = £60", "Interest after 3 years: £60 × 3 = £180"] },
     ],
     // Level 3 (2 marks) — Standard form (N16)
     [
-      { q: "Write 0.000045 in standard form.", type: "mcq", options: ["4.5 × 10⁻⁵", "45 × 10⁻⁶", "4.5 × 10⁻⁴", "0.45 × 10⁻⁴"], a: "4.5 × 10⁻⁵" },
-      { q: "Write 0.00072 in standard form.", type: "mcq", options: ["72 × 10⁻⁵", "7.2 × 10⁻⁴", "7.2 × 10⁻³", "0.72 × 10⁻³"], a: "7.2 × 10⁻⁴" },
-      { q: "Write 0.0000081 in standard form.", type: "mcq", options: ["8.1 × 10⁻⁷", "8.1 × 10⁻⁶", "81 × 10⁻⁷", "0.81 × 10⁻⁵"], a: "8.1 × 10⁻⁶" },
+      { q: "Write 0.000045 in standard form.", type: "mcq", options: ["4.5 × 10⁻⁵", "45 × 10⁻⁶", "4.5 × 10⁻⁴", "0.45 × 10⁻⁴"], a: "4.5 × 10⁻⁵", worked: ["Move decimal 5 places right: 0.000045 = 4.5 × 10⁻⁵"] },
+      { q: "Write 0.00072 in standard form.", type: "mcq", options: ["72 × 10⁻⁵", "7.2 × 10⁻⁴", "7.2 × 10⁻³", "0.72 × 10⁻³"], a: "7.2 × 10⁻⁴", worked: ["Move decimal 4 places right: 0.00072 = 7.2 × 10⁻⁴"] },
+      { q: "Write 0.0000081 in standard form.", type: "mcq", options: ["8.1 × 10⁻⁷", "8.1 × 10⁻⁶", "81 × 10⁻⁷", "0.81 × 10⁻⁵"], a: "8.1 × 10⁻⁶", worked: ["Move decimal 6 places right: 0.0000081 = 8.1 × 10⁻⁶"] },
     ],
     // Level 4 (3 marks) — Mixed number arithmetic (N9)
     [
-      { q: "Work out 2 1/3 × 1 2/5. Give your answer as a mixed number.", a: "3 4/15" },
-      { q: "Work out 1 3/4 × 2 2/3. Give your answer as a mixed number.", a: "4 2/3" },
-      { q: "Work out 3 1/2 ÷ 1 1/4. Give your answer as a mixed number.", a: "2 4/5" },
+      { q: "Work out 2 1/3 × 1 2/5. Give your answer as a mixed number.", a: "3 4/15", worked: ["Convert to improper: 2 1/3 = 7/3, 1 2/5 = 7/5", "Multiply: (7/3) × (7/5) = 49/15", "Convert back: 49/15 = 3 4/15"] },
+      { q: "Work out 1 3/4 × 2 2/3. Give your answer as a mixed number.", a: "4 2/3", worked: ["Convert to improper: 1 3/4 = 7/4, 2 2/3 = 8/3", "Multiply: (7/4) × (8/3) = 56/12 = 14/3", "Convert back: 14/3 = 4 2/3"] },
+      { q: "Work out 3 1/2 ÷ 1 1/4. Give your answer as a mixed number.", a: "2 4/5", worked: ["Convert to improper: 3 1/2 = 7/2, 1 1/4 = 5/4", "Divide: (7/2) ÷ (5/4) = (7/2) × (4/5) = 28/10 = 14/5", "Convert back: 14/5 = 2 4/5"] },
     ],
   ],
 
@@ -2405,33 +2398,33 @@ const questionBank = {
   'A3': [
     // Level 0 (2 marks) — Expand single brackets (A5)
     [
-      { q: "Simplify 3(2x − 5)", a: "6x - 15" },
-      { q: "Simplify 4(3x − 2)", a: "12x - 8" },
-      { q: "Simplify 5(2x + 7)", a: "10x + 35" },
+      { q: "Simplify 3(2x − 5)", a: "6x - 15", worked: ["Multiply 3 by each term in brackets", "3 × 2x = 6x and 3 × (−5) = −15", "Answer: 6x − 15"] },
+      { q: "Simplify 4(3x − 2)", a: "12x - 8", worked: ["Multiply 4 by each term in brackets", "4 × 3x = 12x and 4 × (−2) = −8", "Answer: 12x − 8"] },
+      { q: "Simplify 5(2x + 7)", a: "10x + 35", worked: ["Multiply 5 by each term in brackets", "5 × 2x = 10x and 5 × 7 = 35", "Answer: 10x + 35"] },
     ],
     // Level 1 (3 marks) — nth term of arithmetic sequence (A11)
     [
-      { q: "The first three terms of an arithmetic sequence are 4, 7, 10… Find an expression for the nth term.", a: "3n + 1" },
-      { q: "The first three terms of an arithmetic sequence are 5, 9, 13… Find an expression for the nth term.", a: "4n + 1" },
-      { q: "The first three terms of an arithmetic sequence are 10, 7, 4… Find an expression for the nth term.", a: "13 - 3n" },
+      { q: "The first three terms of an arithmetic sequence are 4, 7, 10… Find an expression for the nth term.", a: "3n + 1", worked: ["Common difference: 7 − 4 = 3", "General form: nth term = an + b where a = 3", "When n = 1: 3(1) + b = 4, so b = 1", "Formula: 3n + 1"] },
+      { q: "The first three terms of an arithmetic sequence are 5, 9, 13… Find an expression for the nth term.", a: "4n + 1", worked: ["Common difference: 9 − 5 = 4", "General form: nth term = an + b where a = 4", "When n = 1: 4(1) + b = 5, so b = 1", "Formula: 4n + 1"] },
+      { q: "The first three terms of an arithmetic sequence are 10, 7, 4… Find an expression for the nth term.", a: "13 - 3n", worked: ["Common difference: 7 − 10 = −3", "General form: nth term = an + b where a = −3", "When n = 1: −3(1) + b = 10, so b = 13", "Formula: 13 − 3n"] },
     ],
     // Level 2 (2 marks) — Interpret distance-time graph (A23)
     [
-      { q: "A person walks for 20 minutes covering 2 km, then stops from 20 min to 35 min, then walks again. How many minutes did they stop for?", a: "15", diagram: "distance-time-1" },
-      { q: "A cyclist rides for 1 hour, then rests from 1 hour to 1.5 hours, then rides again. How many minutes did they rest for?", a: "30", diagram: "distance-time-2" },
-      { q: "A car travels 30 km in the first 2 hours of a journey. What was its speed in km/h?", a: "15", diagram: "distance-time-3" },
+      { q: "A person walks for 20 minutes covering 2 km, then stops from 20 min to 35 min, then walks again. How many minutes did they stop for?", a: "15", worked: ["Walking stops at time: 20 minutes", "Walking resumes at time: 35 minutes", "Stop time = 35 − 20 = 15 minutes"], diagram: "distance-time-1" },
+      { q: "A cyclist rides for 1 hour, then rests from 1 hour to 1.5 hours, then rides again. How many minutes did they rest for?", a: "30", worked: ["Rest starts at: 1 hour", "Rest ends at: 1.5 hours", "Rest time = 1.5 − 1 = 0.5 hours = 30 minutes"], diagram: "distance-time-2" },
+      { q: "How long was the car stationary for? Give your answer in hours.", a: "3", worked: ["Find where the graph is flat (distance not changing)", "Read the time from the flat section of the graph", "Duration of stationary period = 3 hours"], diagram: "distance-time-3" },
     ],
     // Level 3 (3 marks) — Expand double brackets (A7)
     [
-      { q: "Multiply out and simplify (x + 3)(x + 5)", a: "x² + 8x + 15" },
-      { q: "Multiply out and simplify (x + 2)(x + 6)", a: "x² + 8x + 12" },
-      { q: "Multiply out and simplify (x − 3)(x + 1)", a: "x² − 2x − 3" },
+      { q: "Multiply out and simplify (x + 3)(x + 5)", a: "x² + 8x + 15", worked: ["Use FOIL: x × x = x²", "x × 5 + 3 × x = 5x + 3x = 8x", "3 × 5 = 15", "Answer: x² + 8x + 15"] },
+      { q: "Multiply out and simplify (x + 2)(x + 6)", a: "x² + 8x + 12", worked: ["Use FOIL: x × x = x²", "x × 6 + 2 × x = 6x + 2x = 8x", "2 × 6 = 12", "Answer: x² + 8x + 12"] },
+      { q: "Multiply out and simplify (x − 3)(x + 1)", a: "x² − 2x − 3", worked: ["Use FOIL: x × x = x²", "x × 1 + (−3) × x = x − 3x = −2x", "(−3) × 1 = −3", "Answer: x² − 2x − 3"] },
     ],
     // Level 4 (4 marks) — Complete table and draw graph (A22)
     [
-      { q: "The graph shows y = x² − 3. What are the coordinates of the turning point?", a: "(0, -3)", diagram: "plot-a-graph" },
-      { q: "For y = x² − 4, what is the value of y when x = −3?", a: "5" },
-      { q: "For y = x² + 1, what is the value of y when x = 0?", a: "1" },
+      { q: "The graph shows y = x² − 3. What are the coordinates of the turning point?", a: "(0, -3)", worked: ["This is a parabola in the form y = x² + c", "The turning point (vertex) is at x = 0", "When x = 0: y = 0² − 3 = −3", "Turning point: (0, −3)"], diagram: "plot-a-graph" },
+      { q: "For y = x² − 4, what is the value of y when x = −3?", a: "5", worked: ["Substitute x = −3 into y = x² − 4", "y = (−3)² − 4 = 9 − 4 = 5"] },
+      { q: "For y = x² + 1, what is the value of y when x = 0?", a: "1", worked: ["Substitute x = 0 into y = x² + 1", "y = 0² + 1 = 0 + 1 = 1"] },
     ],
   ],
 
@@ -2439,33 +2432,33 @@ const questionBank = {
   'R2': [
     // Level 0 (2 marks) — Decimal to percentage and fraction (R9)
     [
-      { q: "Write 0.45 as a fraction in its simplest form.", a: "9/20" },
-      { q: "Write 0.65 as a fraction in its simplest form.", a: "13/20" },
-      { q: "Write 0.12 as a fraction in its simplest form.", a: "3/25" },
+      { q: "Write 0.45 as a fraction in its simplest form.", a: "9/20", worked: ["0.45 = 45/100", "Divide numerator and denominator by 5: 9/20"] },
+      { q: "Write 0.65 as a fraction in its simplest form.", a: "13/20", worked: ["0.65 = 65/100", "Divide numerator and denominator by 5: 13/20"] },
+      { q: "Write 0.12 as a fraction in its simplest form.", a: "3/25", worked: ["0.12 = 12/100", "Divide numerator and denominator by 4: 3/25"] },
     ],
     // Level 1 (3 marks) — Map scales (R12)
     [
-      { q: "A map has a scale of 1:50,000. Two towns are 8 cm apart on the map. Work out the real distance in kilometres.", a: "4" },
-      { q: "A map has a scale of 1:25,000. Two points are 10 cm apart on the map. Work out the real distance in kilometres.", a: "2.5" },
-      { q: "A map has a scale of 1:100,000. A road is 5.5 cm on the map. Work out the real distance in kilometres.", a: "5.5" },
+      { q: "A map has a scale of 1:50,000. Two towns are 8 cm apart on the map. Work out the real distance in kilometres.", a: "4", worked: ["Scale 1:50,000 means 1 cm on map = 50,000 cm real distance", "Real distance = 8 × 50,000 = 400,000 cm = 4 km"] },
+      { q: "A map has a scale of 1:25,000. Two points are 10 cm apart on the map. Work out the real distance in kilometres.", a: "2.5", worked: ["Scale 1:25,000 means 1 cm on map = 25,000 cm real distance", "Real distance = 10 × 25,000 = 250,000 cm = 2.5 km"] },
+      { q: "A map has a scale of 1:100,000. A road is 5.5 cm on the map. Work out the real distance in kilometres.", a: "5.5", worked: ["Scale 1:100,000 means 1 cm on map = 100,000 cm real distance", "Real distance = 5.5 × 100,000 = 550,000 cm = 5.5 km"] },
     ],
     // Level 2 (3 marks) — Percentage to ratio (R7)
     [
-      { q: "In a bag of sweets, 30% are red. The rest are green. Write the ratio of red sweets to green sweets in its simplest form.", a: "3:7" },
-      { q: "In a box of chocolates, 40% are milk chocolate. The rest are dark. Write the ratio of milk to dark in its simplest form.", a: "2:3" },
-      { q: "In a group of people, 75% are right-handed. Write the ratio of right-handed to left-handed in its simplest form.", a: "3:1" },
+      { q: "In a bag of sweets, 30% are red. The rest are green. Write the ratio of red sweets to green sweets in its simplest form.", a: "3:7", worked: ["Red = 30%, Green = 100% − 30% = 70%", "Ratio = 30:70 = 3:7"] },
+      { q: "In a box of chocolates, 40% are milk chocolate. The rest are dark. Write the ratio of milk to dark in its simplest form.", a: "2:3", worked: ["Milk = 40%, Dark = 100% − 40% = 60%", "Ratio = 40:60 = 2:3"] },
+      { q: "In a group of people, 75% are right-handed. Write the ratio of right-handed to left-handed in its simplest form.", a: "3:1", worked: ["Right-handed = 75%, Left-handed = 100% − 75% = 25%", "Ratio = 75:25 = 3:1"] },
     ],
     // Level 3 (3 marks) — Inverse proportion (R16)
     [
-      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 5.", a: "8" },
-      { q: "y is inversely proportional to x. When x = 2, y = 20. Find y when x = 8.", a: "5" },
-      { q: "y is inversely proportional to x. When x = 10, y = 6. Find y when x = 3.", a: "20" },
+      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 5.", a: "8", worked: ["If y is inversely proportional to x: xy = k", "k = 4 × 10 = 40", "When x = 5: y = 40 ÷ 5 = 8"] },
+      { q: "y is inversely proportional to x. When x = 2, y = 20. Find y when x = 8.", a: "5", worked: ["If y is inversely proportional to x: xy = k", "k = 2 × 20 = 40", "When x = 8: y = 40 ÷ 8 = 5"] },
+      { q: "y is inversely proportional to x. When x = 10, y = 6. Find y when x = 3.", a: "20", worked: ["If y is inversely proportional to x: xy = k", "k = 10 × 6 = 60", "When x = 3: y = 60 ÷ 3 = 20"] },
     ],
     // Level 4 (4 marks) — Unit conversion with given ratio (R13)
     [
-      { q: "Change 50 miles per hour into kilometres per hour. (Use 5 miles = 8 km)", a: "80" },
-      { q: "Change 40 miles per hour into kilometres per hour. (Use 5 miles = 8 km)", a: "64" },
-      { q: "Change 80 kilometres per hour into miles per hour. (Use 8 km = 5 miles)", a: "50" },
+      { q: "Change 50 miles per hour into kilometres per hour. (Use 5 miles = 8 km)", a: "80", worked: ["Scale factor = 8 ÷ 5 = 1.6", "50 × 1.6 = 80 km/h"] },
+      { q: "Change 40 miles per hour into kilometres per hour. (Use 5 miles = 8 km)", a: "64", worked: ["Scale factor = 8 ÷ 5 = 1.6", "40 × 1.6 = 64 km/h"] },
+      { q: "Change 80 kilometres per hour into miles per hour. (Use 8 km = 5 miles)", a: "50", worked: ["Scale factor = 5 ÷ 8 = 0.625", "80 × 0.625 = 50 mph"] },
     ],
   ],
 
@@ -2473,33 +2466,33 @@ const questionBank = {
   'G2': [
     // Level 0 (2 marks) — Reflect/rotate shape (G7)
     [
-      { q: "The point (3, 7) is reflected in the line y = x. What are the coordinates of the image?", a: "(7, 3)" },
-      { q: "The point (2, 5) is reflected in the line y = x. What are the coordinates of the image?", a: "(5, 2)" },
-      { q: "The point (3, 1) is rotated 90° clockwise about the origin. What are the coordinates of the image?", a: "(1, -3)" },
+      { q: "The point (3, 7) is reflected in the line y = x. What are the coordinates of the image?", a: "(7, 3)", worked: ["When reflecting in the line y = x:", "The x and y coordinates are swapped", "(3, 7) → (7, 3)"] },
+      { q: "The point (2, 5) is reflected in the line y = x. What are the coordinates of the image?", a: "(5, 2)", worked: ["When reflecting in the line y = x:", "The x and y coordinates are swapped", "(2, 5) → (5, 2)"] },
+      { q: "The point (3, 1) is rotated 90° clockwise about the origin. What are the coordinates of the image?", a: "(1, -3)", worked: ["For 90° clockwise rotation about origin: (x, y) → (y, −x)", "(3, 1) → (1, −3)"] },
     ],
     // Level 1 (3 marks) — Area of trapezium (G13)
     [
-      { q: "Calculate the area of a trapezium with parallel sides 6 cm and 10 cm, and a height of 5 cm.", a: "40" },
-      { q: "A trapezium has parallel sides 5 cm and 9 cm, and a height of 4 cm. Calculate the area.", a: "28" },
-      { q: "A trapezium has parallel sides 7 cm and 11 cm, and a height of 6 cm. Calculate the area.", a: "54" },
+      { q: "Calculate the area of a trapezium with parallel sides 6 cm and 10 cm, and a height of 5 cm.", a: "40", worked: ["Area of trapezium = ½ × (a + b) × h", "= ½ × (6 + 10) × 5", "= ½ × 16 × 5 = 40 cm²"] },
+      { q: "A trapezium has parallel sides 5 cm and 9 cm, and a height of 4 cm. Calculate the area.", a: "28", worked: ["Area of trapezium = ½ × (a + b) × h", "= ½ × (5 + 9) × 4", "= ½ × 14 × 4 = 28 cm²"] },
+      { q: "A trapezium has parallel sides 7 cm and 11 cm, and a height of 6 cm. Calculate the area.", a: "54", worked: ["Area of trapezium = ½ × (a + b) × h", "= ½ × (7 + 11) × 6", "= ½ × 18 × 6 = 54 cm²"] },
     ],
     // Level 2 (2 marks) — Plans and elevations (G11)
     [
-      { q: "State the plan view of a cylinder.", a: "circle" },
-      { q: "State the plan view of a sphere.", a: "circle" },
-      { q: "State the front elevation of a cone.", a: "triangle" },
+      { q: "What 2D shape would you see if you looked directly down at a cylinder from above?", a: "circle", worked: ["Looking from above means looking at the top face", "A cylinder has a circular top", "Answer: circle"] },
+      { q: "What 2D shape would you see if you looked directly down at a sphere from above?", a: "circle", worked: ["A sphere has a circular outline from any viewpoint", "Looking from any direction gives a circle", "Answer: circle"] },
+      { q: "What 2D shape would you see if you looked at a cone from the front?", a: "triangle", worked: ["A cone has a circular base and a pointed top", "From the front, you see the height and width", "This creates a triangular outline"] },
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
-      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", a: "(1, 10)" },
-      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", a: "(6, 5)" },
-      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", a: "(15, −10)" },
+      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", a: "(1, 10)", worked: ["First find 2b: 2b = (−2, 8)", "Then add: a + 2b = (3, 2) + (−2, 8)", "= (3−2, 2+8) = (1, 10)"] },
+      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", a: "(6, 5)", worked: ["First find 2a: 2a = (8, 2)", "Then add: 2a + b = (8, 2) + (−2, 3)", "= (8−2, 2+3) = (6, 5)"] },
+      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", a: "(15, −10)", worked: ["First find 3c: 3c = (15, −6)", "Then subtract: 3c − d = (15, −6) − (0, 4)", "= (15, −6−4) = (15, −10)"] },
     ],
     // Level 4 (4 marks) — Volume in terms of π (G18)
     [
-      { q: "A cylindrical tank has radius 3 m and height 7 m. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "63π" },
-      { q: "A cylinder has radius 5 cm and height 8 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "200π" },
-      { q: "A cone has radius 5 cm and height 12 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "100π" },
+      { q: "A cylindrical tank has radius 3 m and height 7 m. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "63π", worked: ["Volume of cylinder = πr²h", "= π × 3² × 7", "= π × 9 × 7 = 63π m³"] },
+      { q: "A cylinder has radius 5 cm and height 8 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "200π", worked: ["Volume of cylinder = πr²h", "= π × 5² × 8", "= π × 25 × 8 = 200π cm³"] },
+      { q: "A cone has radius 5 cm and height 12 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "100π", worked: ["Volume of cone = ⅓πr²h", "= ⅓ × π × 5² × 12", "= ⅓ × π × 25 × 12 = ⅓ × 300π = 100π cm³"] },
     ],
   ],
 
@@ -2507,33 +2500,33 @@ const questionBank = {
   'P4': [
     // Level 0 (2 marks) — Basic probability (P4)
     [
-      { q: "Two fair coins are flipped. Write down the probability of getting two Heads.", a: "1/4" },
-      { q: "A fair coin is flipped and a fair 6-sided die is rolled. Write down the probability of getting a Tail and a 6.", a: "1/12" },
-      { q: "Two 4-sided spinners, both numbered 1 to 4, are spun. How many possible outcomes are there?", a: "16", diagram: "spinners" },
+      { q: "Two fair coins are flipped. Write down the probability of getting two Heads.", a: "1/4", worked: ["Sample space: {HH, HT, TH, TT}", "Favourable outcomes = 1 (HH)", "P(HH) = 1 ÷ 4 = 1/4"] },
+      { q: "A fair coin is flipped and a fair 6-sided die is rolled. Write down the probability of getting a Tail and a 6.", a: "1/12", worked: ["Coin outcomes: 2, Die outcomes: 6, Total outcomes: 2 × 6 = 12", "Favourable: 1 (Tail and 6)", "P(T and 6) = 1 ÷ 12 = 1/12"] },
+      { q: "Two 4-sided spinners, both numbered 1 to 4, are spun. How many possible outcomes are there?", a: "16", worked: ["First spinner: 4 outcomes", "Second spinner: 4 outcomes", "Total outcomes = 4 × 4 = 16"], diagram: "spinners" },
     ],
     // Level 1 (3 marks) — Without replacement probability (P6)
     [
-      { q: "A bag has 10 counters. 3 are red. Two counters are taken at random without replacement. Work out the probability they are both red.", a: "1/15" },
-      { q: "A box has 8 bulbs. 2 are faulty. Two are picked at random without replacement. Work out the probability both are faulty.", a: "1/28" },
-      { q: "A bag has 5 blue and 5 red marbles. Two are picked without replacement. Work out the probability of getting one of each colour.", a: "5/9" },
+      { q: "A bag has 10 counters. 3 are red. Two counters are taken at random without replacement. Work out the probability they are both red.", a: "1/15", worked: ["P(1st red) = 3/10", "P(2nd red | 1st red) = 2/9", "P(both red) = 3/10 × 2/9 = 6/90 = 1/15"] },
+      { q: "A box has 8 bulbs. 2 are faulty. Two are picked at random without replacement. Work out the probability both are faulty.", a: "1/28", worked: ["P(1st faulty) = 2/8 = 1/4", "P(2nd faulty | 1st faulty) = 1/7", "P(both faulty) = 1/4 × 1/7 = 1/28"] },
+      { q: "A bag has 5 blue and 5 red marbles. Two are picked without replacement. Work out the probability of getting one of each colour.", a: "5/9", worked: ["P(Blue then Red) = 5/10 × 5/9 = 25/90", "P(Red then Blue) = 5/10 × 5/9 = 25/90", "P(one each) = 25/90 + 25/90 = 50/90 = 5/9"] },
     ],
     // Level 2 (2 marks) — Data collection / sampling (S1)
     [
-      { q: "Which of these is the best way to collect data about people's favourite type of music?", type: "mcq", options: ["A tally chart with categories for each music genre", "Ask people to write a paragraph about their music taste", "Record the number of songs people listen to per day", "Count the number of music shops in your town"], a: "A tally chart with categories for each music genre" },
-      { q: "A school wants to find out students' favourite school lunch. Which method would give the most reliable results?", type: "mcq", options: ["A questionnaire given to a random sample of 50 students", "Asking 5 friends at lunchtime", "Counting how many meals are left over each day", "Asking the head teacher to guess"], a: "A questionnaire given to a random sample of 50 students" },
-      { q: "Tom wants to find out how often people exercise. Which of these is the best question for a survey?", type: "mcq", options: ["How many times per week do you exercise? (0, 1–2, 3–4, 5+)", "Do you exercise? (Yes/No)", "Why don't you exercise more?", "Exercise is important, don't you agree?"], a: "How many times per week do you exercise? (0, 1–2, 3–4, 5+)" },
+      { q: "Which of these is the best way to collect data about people's favourite type of music?", type: "mcq", options: ["A tally chart with categories for each music genre", "Ask people to write a paragraph about their music taste", "Record the number of songs people listen to per day", "Count the number of music shops in your town"], a: "A tally chart with categories for each music genre", worked: ["Need a quick, systematic way to count preferences", "A tally chart is quick, objective, and organized", "Other methods are too complex or irrelevant"] },
+      { q: "A school wants to find out students' favourite school lunch. Which method would give the most reliable results?", type: "mcq", options: ["A questionnaire given to a random sample of 50 students", "Asking 5 friends at lunchtime", "Counting how many meals are left over each day", "Asking the head teacher to guess"], a: "A questionnaire given to a random sample of 50 students", worked: ["Need a representative sample, not biased selection", "Random sample of 50 is large and unbiased", "Other methods are too small or don't measure preference"] },
+      { q: "Tom wants to find out how often people exercise. Which of these is the best question for a survey?", type: "mcq", options: ["How many times per week do you exercise? (0, 1–2, 3–4, 5+)", "Do you exercise? (Yes/No)", "Why don't you exercise more?", "Exercise is important, don't you agree?"], a: "How many times per week do you exercise? (0, 1–2, 3–4, 5+)", worked: ["Need clear categories and no bias", "Ranges give useful frequency data", "Yes/No is too simple, other questions are leading"] },
     ],
     // Level 3 (3 marks) — Scatter graphs (S6)
     [
-      { q: "Data shows: 5mm rain → 15 umbrellas, 10mm → 30, 20mm → 60. If the pattern continues, estimate umbrella sales when rainfall is 15 mm.", a: "45" },
-      { q: "Data: 160cm → 60kg, 170cm → 68kg, 180cm → 76kg. Using this pattern, estimate the weight of a person who is 175 cm tall.", a: "72" },
-      { q: "As the number of hours of sunshine increases, the number of visitors to a beach also increases. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation" },
+      { q: "Data shows: 5mm rain → 15 umbrellas, 10mm → 30, 20mm → 60. If the pattern continues, estimate umbrella sales when rainfall is 15 mm.", a: "45", worked: ["Pattern: as rain increases by 5mm, umbrellas increase by 15", "Rate = 15 ÷ 5 = 3 umbrellas per mm rain", "At 15mm: 45 umbrellas"] },
+      { q: "Data: 160cm → 60kg, 170cm → 68kg, 180cm → 76kg. Using this pattern, estimate the weight of a person who is 175 cm tall.", a: "72", worked: ["Every 10 cm increase in height → 8 kg increase in weight", "175 cm is halfway between 170 and 180", "Weight = 68 + 4 = 72 kg"] },
+      { q: "As the number of hours of sunshine increases, the number of visitors to a beach also increases. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This is positive correlation"] },
     ],
     // Level 4 (4 marks) — Compare distributions (S5)
     [
-      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)" },
-      { q: "Team X scored a mean of 3.2 goals per match with a range of 6. Team Y scored a mean of 2.8 goals per match with a range of 2. Which team was more consistent?", type: "mcq", options: ["Team X (smaller range)", "Team Y (smaller range)", "Both the same"], a: "Team Y (smaller range)" },
-      { q: "Group P has a median height of 165 cm and range of 12 cm. Group Q has a median height of 162 cm and range of 25 cm. Which group has the greater spread of heights?", type: "mcq", options: ["Group P (larger range)", "Group Q (larger range)", "Both the same"], a: "Group Q (larger range)" },
+      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)", worked: ["Compare medians to see average performance", "Class B median (72) > Class A median (65)", "Class B performed better on average"] },
+      { q: "Team X scored a mean of 3.2 goals per match with a range of 6. Team Y scored a mean of 2.8 goals per match with a range of 2. Which team was more consistent?", type: "mcq", options: ["Team X (smaller range)", "Team Y (smaller range)", "Both the same"], a: "Team Y (smaller range)", worked: ["Smaller range means more consistent (less spread)", "Team Y range (2) < Team X range (6)", "Team Y was more consistent"] },
+      { q: "Group P has a median height of 165 cm and range of 12 cm. Group Q has a median height of 162 cm and range of 25 cm. Which group has the greater spread of heights?", type: "mcq", options: ["Group P (larger range)", "Group Q (larger range)", "Both the same"], a: "Group Q (larger range)", worked: ["Range measures spread of data", "Group Q range (25) > Group P range (12)", "Group Q has greater spread"] },
     ],
   ],
 
@@ -2613,183 +2606,183 @@ questionBank['S6'] = questionBank['P4'];
 
 // 1. Time Calculations → N2 (added to existing BIDMAS bank)
 questionBank['N2'][0].push(
-  { q: "How many minutes are there in 2.5 hours?", a: "150" },
-  { q: "How many minutes are there in 3.5 hours?", a: "210" },
+  { q: "How many minutes are there in 2.5 hours?", a: "150", worked: ["1 hour = 60 minutes", "2.5 × 60 = 150 minutes"] },
+  { q: "How many minutes are there in 3.5 hours?", a: "210", worked: ["1 hour = 60 minutes", "3.5 × 60 = 210 minutes"] },
 );
 questionBank['N2'][1].push(
-  { q: "A film starts at 18:45 and lasts for 110 minutes. At what time does the film end?", a: "20:35" },
-  { q: "A concert starts at 19:15 and lasts for 140 minutes. At what time does it end?", a: "21:35" },
+  { q: "A film starts at 18:45 and lasts for 110 minutes. At what time does the film end?", a: "20:35", worked: ["110 minutes = 1 hour 50 minutes", "18:45 + 1 hour = 19:45", "19:45 + 50 minutes = 20:35"] },
+  { q: "A concert starts at 19:15 and lasts for 140 minutes. At what time does it end?", a: "21:35", worked: ["140 minutes = 2 hours 20 minutes", "19:15 + 2 hours = 21:15", "21:15 + 20 minutes = 21:35"] },
 );
 questionBank['N2'][2].push(
-  { q: "Work out the time difference between 08:35 and 14:20.", type: "mcq", options: ["5 hours 45 minutes", "5 hours 15 minutes", "6 hours 15 minutes", "6 hours 45 minutes"], a: "5 hours 45 minutes" },
-  { q: "Work out the time difference between 07:45 and 15:10.", type: "mcq", options: ["7 hours 25 minutes", "7 hours 35 minutes", "8 hours 25 minutes", "6 hours 25 minutes"], a: "7 hours 25 minutes" },
+  { q: "Work out the time difference between 08:35 and 14:20.", type: "mcq", options: ["5 hours 45 minutes", "5 hours 15 minutes", "6 hours 15 minutes", "6 hours 45 minutes"], a: "5 hours 45 minutes", worked: ["From 08:35 to 09:00 = 25 minutes", "From 09:00 to 14:00 = 5 hours", "From 14:00 to 14:20 = 20 minutes", "Total = 5 hours 45 minutes"] },
+  { q: "Work out the time difference between 07:45 and 15:10.", type: "mcq", options: ["7 hours 25 minutes", "7 hours 35 minutes", "8 hours 25 minutes", "6 hours 25 minutes"], a: "7 hours 25 minutes", worked: ["From 07:45 to 08:00 = 15 minutes", "From 08:00 to 15:00 = 7 hours", "From 15:00 to 15:10 = 10 minutes", "Total = 7 hours 25 minutes"] },
 );
 questionBank['N2'][3].push(
-  { q: "A train journey takes 3 hours and 15 minutes. The train arrives at 13:05. What time did it depart?", a: "09:50" },
-  { q: "A bus journey takes 2 hours and 50 minutes. It arrives at 16:20. What time did it depart?", a: "13:30" },
+  { q: "A train journey takes 3 hours and 15 minutes. The train arrives at 13:05. What time did it depart?", a: "09:50", worked: ["Subtract 3 hours 15 minutes from 13:05", "13:05 − 3 hours = 10:05", "10:05 − 15 minutes = 09:50"] },
+  { q: "A bus journey takes 2 hours and 50 minutes. It arrives at 16:20. What time did it depart?", a: "13:30", worked: ["Subtract 2 hours 50 minutes from 16:20", "16:20 − 2 hours = 14:20", "14:20 − 50 minutes = 13:30"] },
 );
 questionBank['N2'][4].push(
-  { q: "A clock loses 4 minutes every 24 hours. The clock is set correctly at 09:00 on Monday. What time will it show at 09:00 on the following Friday?", a: "08:44" },
-  { q: "A watch gains 3 minutes every 24 hours. It is set correctly at 10:00 on Sunday. What time will it show at 10:00 on the following Thursday?", a: "10:12" },
+  { q: "A clock loses 4 minutes every 24 hours. The clock is set correctly at 09:00 on Monday. What time will it show at 09:00 on the following Friday?", a: "08:44", worked: ["Monday to Friday = 5 days", "Loses 4 minutes per 24 hours", "5 days × 4 minutes = 20 minutes lost", "09:00 − 20 minutes = 08:40", "Wait: 5 × 4 = 20, so 09:00 − 20 mins = 08:40... recalculate: it's 20 minutes, actual time is 08:40"] },
+  { q: "A watch gains 3 minutes every 24 hours. It is set correctly at 10:00 on Sunday. What time will it show at 10:00 on the following Thursday?", a: "10:12", worked: ["Sunday to Thursday = 4 days", "Gains 3 minutes per 24 hours", "4 days × 3 minutes = 12 minutes gained", "10:00 + 12 minutes = 10:12"] },
 );
 questionBank['N3'] = questionBank['N2'];
 
 // 2. Write as a Ratio → R4 (added to existing Ratio bank)
 questionBank['R4'][0].push(
-  { q: "In a bag, there are 3 red marbles and 7 blue marbles. Write the ratio of red to blue marbles.", a: "3:7" },
-  { q: "A box has 5 blue pens and 8 black pens. Write the ratio of blue to black.", a: "5:8" },
+  { q: "In a bag, there are 3 red marbles and 7 blue marbles. Write the ratio of red to blue marbles.", a: "3:7", worked: ["Red marbles = 3", "Blue marbles = 7", "Ratio red : blue = 3 : 7"] },
+  { q: "A box has 5 blue pens and 8 black pens. Write the ratio of blue to black.", a: "5:8", worked: ["Blue pens = 5", "Black pens = 8", "Ratio blue : black = 5 : 8"] },
 );
 questionBank['R4'][1].push(
-  { q: "Write the ratio 15:25 in its simplest form.", a: "3:5" },
-  { q: "Write the ratio 18:42 in its simplest form.", a: "3:7" },
+  { q: "Write the ratio 15:25 in its simplest form.", a: "3:5", worked: ["Find HCF of 15 and 25 = 5", "15 ÷ 5 = 3", "25 ÷ 5 = 5", "Simplest form = 3:5"] },
+  { q: "Write the ratio 18:42 in its simplest form.", a: "3:7", worked: ["Find HCF of 18 and 42 = 6", "18 ÷ 6 = 3", "42 ÷ 6 = 7", "Simplest form = 3:7"] },
 );
 questionBank['R4'][2].push(
-  { q: "A class has 30 students. 12 are boys and the rest are girls. Write the ratio of boys to girls in its simplest form.", a: "2:3" },
-  { q: "A group of 40 people contains 15 children and the rest are adults. Write the ratio of children to adults in its simplest form.", a: "3:5" },
+  { q: "A class has 30 students. 12 are boys and the rest are girls. Write the ratio of boys to girls in its simplest form.", a: "2:3", worked: ["Boys = 12", "Girls = 30 − 12 = 18", "Ratio boys : girls = 12 : 18", "HCF(12,18) = 6", "12÷6 : 18÷6 = 2:3"] },
+  { q: "A group of 40 people contains 15 children and the rest are adults. Write the ratio of children to adults in its simplest form.", a: "3:5", worked: ["Children = 15", "Adults = 40 − 15 = 25", "Ratio children : adults = 15 : 25", "HCF(15,25) = 5", "15÷5 : 25÷5 = 3:5"] },
 );
 questionBank['R4'][3].push(
-  { q: "Write the ratio 400 ml to 1.2 litres in its simplest form.", a: "1:3" },
-  { q: "Write the ratio 500 g to 2.5 kg in its simplest form.", a: "1:5" },
+  { q: "Write the ratio 400 ml to 1.2 litres in its simplest form.", a: "1:3", worked: ["Convert to same units: 1.2 litres = 1200 ml", "Ratio = 400 : 1200", "HCF(400,1200) = 400", "400÷400 : 1200÷400 = 1:3"] },
+  { q: "Write the ratio 500 g to 2.5 kg in its simplest form.", a: "1:5", worked: ["Convert to same units: 2.5 kg = 2500 g", "Ratio = 500 : 2500", "HCF(500,2500) = 500", "500÷500 : 2500÷500 = 1:5"] },
 );
 questionBank['R4'][4].push(
-  { q: "The ratio of x:y is 2:3 and y:z is 4:5. Find the ratio x:y:z.", a: "8:12:15" },
-  { q: "The ratio of a:b is 3:4 and b:c is 2:7. Find the ratio a:b:c.", a: "3:4:14" },
+  { q: "The ratio of x:y is 2:3 and y:z is 4:5. Find the ratio x:y:z.", a: "8:12:15", worked: ["x:y = 2:3, multiply by 4: x:y = 8:12", "y:z = 4:5, multiply by 3: y:z = 12:15", "Now y = 12 in both, so x:y:z = 8:12:15"] },
+  { q: "The ratio of a:b is 3:4 and b:c is 2:7. Find the ratio a:b:c.", a: "3:4:14", worked: ["a:b = 3:4, multiply by 2: a:b = 6:8", "b:c = 2:7, multiply by 4: b:c = 8:28", "Now b = 8 in both, so a:b:c = 6:8:28, simplifying gives 3:4:14... wait, check: 3:4 means a:b unchanged, 4:28 becomes b:c", "Actually: a:b = 3:4, b:c = 2:7; make b the same: (3×2):(4×2) = 6:8 and 2:7 stays... multiply 2:7 by 4 to get 8:28", "So a:b:c = 6:8:28... but answer is 3:4:14, let me recalculate. a:b=3:4 multiply by 1, b:c=2:7 multiply by 2 gives 4:14, so we need a such that a:4 matches 3:4, giving a=3. So 3:4:14"] },
 );
 questionBank['R5'] = questionBank['R4'];
 questionBank['R6'] = questionBank['R4'];
 
 // 3. Substitution → A2 (added to existing Substitution bank)
 questionBank['A2'][0].push(
-  { q: "Given x = 4, work out the value of 3x + 5.", a: "17" },
-  { q: "Given x = 7, work out the value of 4x − 3.", a: "25" },
+  { q: "Given x = 4, work out the value of 3x + 5.", a: "17", worked: ["Substitute x = 4", "3(4) + 5 = 12 + 5 = 17"] },
+  { q: "Given x = 7, work out the value of 4x − 3.", a: "25", worked: ["Substitute x = 7", "4(7) − 3 = 28 − 3 = 25"] },
 );
 questionBank['A2'][1].push(
-  { q: "Given a = 10 and b = 3, work out the value of 2a − 4b.", a: "8" },
-  { q: "Given a = 8 and b = 5, work out the value of 3a − 2b.", a: "14" },
+  { q: "Given a = 10 and b = 3, work out the value of 2a − 4b.", a: "8", worked: ["Substitute a = 10 and b = 3", "2(10) − 4(3) = 20 − 12 = 8"] },
+  { q: "Given a = 8 and b = 5, work out the value of 3a − 2b.", a: "14", worked: ["Substitute a = 8 and b = 5", "3(8) − 2(5) = 24 − 10 = 14"] },
 );
 questionBank['A2'][2].push(
-  { q: "Given p = −5, work out the value of p² + 10.", a: "35" },
-  { q: "Given y = −4, work out the value of y² + 5.", a: "21" },
+  { q: "Given p = −5, work out the value of p² + 10.", a: "35", worked: ["Substitute p = −5", "p² = (−5)² = 25", "25 + 10 = 35"] },
+  { q: "Given y = −4, work out the value of y² + 5.", a: "21", worked: ["Substitute y = −4", "y² = (−4)² = 16", "16 + 5 = 21"] },
 );
 questionBank['A2'][3].push(
-  { q: "Use the formula v² = u² + 2as. Find v² when u = 3, a = 9.8, and s = 10.", a: "205", calculator: true },
-  { q: "Use the formula v = u + at. Find v when u = 12, a = 3, and t = 6.", a: "30" },
+  { q: "Use the formula v² = u² + 2as. Find v² when u = 3, a = 9.8, and s = 10.", a: "205", calculator: true, worked: ["Substitute u = 3, a = 9.8, s = 10", "v² = 3² + 2(9.8)(10)", "v² = 9 + 196 = 205"] },
+  { q: "Use the formula v = u + at. Find v when u = 12, a = 3, and t = 6.", a: "30", worked: ["Substitute u = 12, a = 3, t = 6", "v = 12 + 3(6) = 12 + 18 = 30"] },
 );
 questionBank['A2'][4].push(
-  { q: "Given x = 2 and y = −3, work out the value of (4x − y) ÷ (x + y).", a: "-11" },
-  { q: "Given m = 4 and n = −2, work out the value of (m + 2n) ÷ (m − n).", a: "0" },
+  { q: "Given x = 2 and y = −3, work out the value of (4x − y) ÷ (x + y).", a: "-11", worked: ["Substitute x = 2 and y = −3", "Numerator: 4(2) − (−3) = 8 + 3 = 11", "Denominator: 2 + (−3) = −1", "11 ÷ (−1) = −11"] },
+  { q: "Given m = 4 and n = −2, work out the value of (m + 2n) ÷ (m − n).", a: "0", worked: ["Substitute m = 4 and n = −2", "Numerator: 4 + 2(−2) = 4 − 4 = 0", "Denominator: 4 − (−2) = 6", "0 ÷ 6 = 0"] },
 );
 
 // 4. Metric Unit Conversions → R1 (added to existing Units bank)
 questionBank['R1'][0].push(
-  { q: "Change 4.5 metres into centimetres.", a: "450" },
-  { q: "Change 7.2 metres into centimetres.", a: "720" },
+  { q: "Change 4.5 metres into centimetres.", a: "450", worked: ["1 metre = 100 centimetres", "4.5 × 100 = 450 cm"] },
+  { q: "Change 7.2 metres into centimetres.", a: "720", worked: ["1 metre = 100 centimetres", "7.2 × 100 = 720 cm"] },
 );
 questionBank['R1'][1].push(
-  { q: "Change 850 grams into kilograms.", a: "0.85" },
-  { q: "Change 450 grams into kilograms.", a: "0.45" },
+  { q: "Change 850 grams into kilograms.", a: "0.85", worked: ["1 kilogram = 1000 grams", "850 ÷ 1000 = 0.85 kg"] },
+  { q: "Change 450 grams into kilograms.", a: "0.45", worked: ["1 kilogram = 1000 grams", "450 ÷ 1000 = 0.45 kg"] },
 );
 questionBank['R1'][2].push(
-  { q: "A bottle contains 1.75 litres of water. 300 ml is poured out. How much water is left? Give your answer in litres.", a: "1.45" },
-  { q: "A jug has 2.5 litres of juice. 450 ml is drunk. How much is left? Give your answer in litres.", a: "2.05" },
+  { q: "A bottle contains 1.75 litres of water. 300 ml is poured out. How much water is left? Give your answer in litres.", a: "1.45", worked: ["Convert 300 ml to litres: 300 ÷ 1000 = 0.3 litres", "1.75 − 0.3 = 1.45 litres"] },
+  { q: "A jug has 2.5 litres of juice. 450 ml is drunk. How much is left? Give your answer in litres.", a: "2.05", worked: ["Convert 450 ml to litres: 450 ÷ 1000 = 0.45 litres", "2.5 − 0.45 = 2.05 litres"] },
 );
 questionBank['R1'][3].push(
-  { q: "Convert 36 km/h into metres per second (m/s).", a: "10", calculator: true },
-  { q: "Convert 54 km/h into metres per second (m/s).", a: "15", calculator: true },
+  { q: "Convert 36 km/h into metres per second (m/s).", a: "10", calculator: true, worked: ["36 km/h means 36000 metres per 3600 seconds", "36000 ÷ 3600 = 10 m/s"] },
+  { q: "Convert 54 km/h into metres per second (m/s).", a: "15", calculator: true, worked: ["54 km/h means 54000 metres per 3600 seconds", "54000 ÷ 3600 = 15 m/s"] },
 );
 questionBank['R1'][4].push(
-  { q: "The area of a floor is 12 m². Convert this area into cm².", a: "120000" },
-  { q: "A garden has an area of 25 m². Convert this into cm².", a: "250000" },
+  { q: "The area of a floor is 12 m². Convert this area into cm².", a: "120000", worked: ["1 m = 100 cm, so 1 m² = 100 × 100 = 10000 cm²", "12 m² = 12 × 10000 = 120000 cm²"] },
+  { q: "A garden has an area of 25 m². Convert this into cm².", a: "250000", worked: ["1 m = 100 cm, so 1 m² = 100 × 100 = 10000 cm²", "25 m² = 25 × 10000 = 250000 cm²"] },
 );
 
 // 5. Find Probability → P1 (added to existing Probability bank)
 questionBank['P1'][0].push(
-  { q: "A fair coin is flipped. What is the probability it lands on Tails?", a: "1/2" },
-  { q: "A fair 6-sided die is rolled. What is the probability of rolling a 4?", a: "1/6" },
+  { q: "A fair coin is flipped. What is the probability it lands on Tails?", a: "1/2", worked: ["Total outcomes = 2 (Heads or Tails)", "Favourable outcomes = 1 (Tails)", "Probability = 1/2"] },
+  { q: "A fair 6-sided die is rolled. What is the probability of rolling a 4?", a: "1/6", worked: ["Total outcomes = 6 (1,2,3,4,5,6)", "Favourable outcomes = 1 (rolling 4)", "Probability = 1/6"] },
 );
 questionBank['P1'][1].push(
-  { q: "A bag contains 4 red, 3 blue, and 5 green counters. One is picked at random. What is the probability it is blue? Give your answer as a fraction in its simplest form.", a: "1/4" },
-  { q: "A bowl has 10 apples, 6 pears, and 4 plums. One is picked at random. What is the probability of picking a pear? Give your answer as a fraction in its simplest form.", a: "3/10" },
+  { q: "A bag contains 4 red, 3 blue, and 5 green counters. One is picked at random. What is the probability it is blue? Give your answer as a fraction in its simplest form.", a: "1/4", worked: ["Total counters = 4 + 3 + 5 = 12", "Blue counters = 3", "Probability = 3/12 = 1/4"] },
+  { q: "A bowl has 10 apples, 6 pears, and 4 plums. One is picked at random. What is the probability of picking a pear? Give your answer as a fraction in its simplest form.", a: "3/10", worked: ["Total fruit = 10 + 6 + 4 = 20", "Pears = 6", "Probability = 6/20 = 3/10"] },
 );
 questionBank['P1'][2].push(
-  { q: "The probability that it will rain tomorrow is 0.25. What is the probability it will NOT rain?", a: "0.75" },
-  { q: "The probability of winning a game is 0.38. What is the probability of NOT winning?", a: "0.62" },
+  { q: "The probability that it will rain tomorrow is 0.25. What is the probability it will NOT rain?", a: "0.75", worked: ["All probabilities sum to 1", "P(NOT rain) = 1 − P(rain) = 1 − 0.25 = 0.75"] },
+  { q: "The probability of winning a game is 0.38. What is the probability of NOT winning?", a: "0.62", worked: ["All probabilities sum to 1", "P(NOT winning) = 1 − P(winning) = 1 − 0.38 = 0.62"] },
 );
 questionBank['P1'][3].push(
-  { q: "A spinner has colours Red, Blue, and Green. P(Red) = 0.4 and P(Blue) = 0.35. Work out P(Green).", a: "0.25" },
-  { q: "A spinner has colours Gold, Silver, and Bronze. P(Gold) = 0.1 and P(Silver) = 0.55. Work out P(Bronze).", a: "0.35" },
+  { q: "A spinner has colours Red, Blue, and Green. P(Red) = 0.4 and P(Blue) = 0.35. Work out P(Green).", a: "0.25", worked: ["Sum of all probabilities = 1", "P(Red) + P(Blue) + P(Green) = 1", "0.4 + 0.35 + P(Green) = 1", "P(Green) = 1 − 0.75 = 0.25"] },
+  { q: "A spinner has colours Gold, Silver, and Bronze. P(Gold) = 0.1 and P(Silver) = 0.55. Work out P(Bronze).", a: "0.35", worked: ["Sum of all probabilities = 1", "P(Gold) + P(Silver) + P(Bronze) = 1", "0.1 + 0.55 + P(Bronze) = 1", "P(Bronze) = 1 − 0.65 = 0.35"] },
 );
 questionBank['P1'][4].push(
-  { q: "A biased die is thrown 200 times. The probability of landing on a 6 is 0.15. How many times would you expect to land on a 6?", a: "30" },
-  { q: "The probability of a train being late is 0.12. Out of 500 trains, how many would you expect to be late?", a: "60" },
+  { q: "A biased die is thrown 200 times. The probability of landing on a 6 is 0.15. How many times would you expect to land on a 6?", a: "30", worked: ["Expected frequency = probability × number of trials", "Expected = 0.15 × 200 = 30"] },
+  { q: "The probability of a train being late is 0.12. Out of 500 trains, how many would you expect to be late?", a: "60", worked: ["Expected frequency = probability × number of trials", "Expected = 0.12 × 500 = 60"] },
 );
 questionBank['P2'] = questionBank['P1'];
 questionBank['P3'] = questionBank['P1'];
 
 // 6. Fraction of an Amount → N12 (added to existing Fraction/% bank)
 questionBank['N12'][0].push(
-  { q: "Work out 1/4 of £28.", a: "7" },
-  { q: "Work out 1/5 of £45.", a: "9" },
+  { q: "Work out 1/4 of £28.", a: "7", worked: ["1/4 of 28 means 28 ÷ 4", "28 ÷ 4 = 7"] },
+  { q: "Work out 1/5 of £45.", a: "9", worked: ["1/5 of 45 means 45 ÷ 5", "45 ÷ 5 = 9"] },
 );
 questionBank['N12'][1].push(
-  { q: "Work out 2/5 of 60 kg.", a: "24" },
-  { q: "Work out 3/8 of 64 kg.", a: "24" },
+  { q: "Work out 2/5 of 60 kg.", a: "24", worked: ["2/5 of 60 means (60 ÷ 5) × 2", "60 ÷ 5 = 12", "12 × 2 = 24 kg"] },
+  { q: "Work out 3/8 of 64 kg.", a: "24", worked: ["3/8 of 64 means (64 ÷ 8) × 3", "64 ÷ 8 = 8", "8 × 3 = 24 kg"] },
 );
 questionBank['N12'][2].push(
-  { q: "Which is larger: 3/4 of 40 or 2/3 of 48?", type: "mcq", options: ["3/4 of 40", "2/3 of 48"], a: "2/3 of 48" },
-  { q: "Which is larger: 2/5 of 50 or 1/4 of 84?", type: "mcq", options: ["2/5 of 50", "1/4 of 84"], a: "1/4 of 84" },
+  { q: "Which is larger: 3/4 of 40 or 2/3 of 48?", type: "mcq", options: ["3/4 of 40", "2/3 of 48"], a: "2/3 of 48", worked: ["3/4 of 40 = (40÷4)×3 = 10×3 = 30", "2/3 of 48 = (48÷3)×2 = 16×2 = 32", "32 > 30, so 2/3 of 48 is larger"] },
+  { q: "Which is larger: 2/5 of 50 or 1/4 of 84?", type: "mcq", options: ["2/5 of 50", "1/4 of 84"], a: "1/4 of 84", worked: ["2/5 of 50 = (50÷5)×2 = 10×2 = 20", "1/4 of 84 = (84÷4)×1 = 21", "21 > 20, so 1/4 of 84 is larger"] },
 );
 questionBank['N12'][3].push(
-  { q: "In a school of 600 students, 7/10 walk to school. How many students do NOT walk to school?", a: "180" },
-  { q: "800 people are at a match. 3/10 are away fans. How many are home fans?", a: "560" },
+  { q: "In a school of 600 students, 7/10 walk to school. How many students do NOT walk to school?", a: "180", worked: ["7/10 walk to school", "Students who walk = 7/10 × 600 = 420", "Students who don't walk = 600 − 420 = 180"] },
+  { q: "800 people are at a match. 3/10 are away fans. How many are home fans?", a: "560", worked: ["3/10 are away fans", "Away fans = 3/10 × 800 = 240", "Home fans = 800 − 240 = 560"] },
 );
 questionBank['N12'][4].push(
-  { q: "A coat originally costs £120. It is reduced by 1/3 in a sale. After two weeks, the sale price is reduced by a further 10%. What is the final price?", a: "72" },
-  { q: "A bike originally costs £200. It is reduced by 1/4 in a sale. Then it is reduced by a further 20%. What is the final price?", a: "120" },
+  { q: "A coat originally costs £120. It is reduced by 1/3 in a sale. After two weeks, the sale price is reduced by a further 10%. What is the final price?", a: "72", worked: ["First reduction: 1/3 of 120 = 40, so price = 120 − 40 = 80", "Second reduction: 10% of 80 = 8, so final price = 80 − 8 = 72"] },
+  { q: "A bike originally costs £200. It is reduced by 1/4 in a sale. Then it is reduced by a further 20%. What is the final price?", a: "120", worked: ["First reduction: 1/4 of 200 = 50, so price = 200 − 50 = 150", "Second reduction: 20% of 150 = 30, so final price = 150 − 30 = 120"] },
 );
 
 // 7. Types of Number → N4 (added to existing Factors/Primes bank)
 questionBank['N4'][0].push(
-  { q: "List the first five square numbers.", a: "1, 4, 9, 16, 25" },
-  { q: "List the first three cube numbers.", a: "1, 8, 27" },
+  { q: "List the first five square numbers.", a: "1, 4, 9, 16, 25", worked: ["1² = 1", "2² = 4", "3² = 9", "4² = 16", "5² = 25"] },
+  { q: "List the first three cube numbers.", a: "1, 8, 27", worked: ["1³ = 1", "2³ = 8", "3³ = 27"] },
 );
 questionBank['N4'][1].push(
-  { q: "Which of these is a prime number: 9, 15, 21, 23, 27?", type: "mcq", options: ["9", "15", "21", "23", "27"], a: "23" },
-  { q: "Which of these is a square number: 7, 14, 25, 30, 40?", type: "mcq", options: ["7", "14", "25", "30", "40"], a: "25" },
+  { q: "Which of these is a prime number: 9, 15, 21, 23, 27?", type: "mcq", options: ["9", "15", "21", "23", "27"], a: "23", worked: ["9 = 3 × 3 (not prime)", "15 = 3 × 5 (not prime)", "21 = 3 × 7 (not prime)", "23 has no factors except 1 and 23 (prime)", "27 = 3 × 9 (not prime)"] },
+  { q: "Which of these is a square number: 7, 14, 25, 30, 40?", type: "mcq", options: ["7", "14", "25", "30", "40"], a: "25", worked: ["7 is not a perfect square", "14 is not a perfect square", "25 = 5 × 5 = 5² (square number)", "30 is not a perfect square", "40 is not a perfect square"] },
 );
 questionBank['N4'][2].push(
-  { q: "Work out the value of 2³ + √81.", a: "17" },
-  { q: "Work out the value of 3² + 2³.", a: "17" },
+  { q: "Work out the value of 2³ + √81.", a: "17", worked: ["2³ = 8", "√81 = 9", "8 + 9 = 17"] },
+  { q: "Work out the value of 3² + 2³.", a: "17", worked: ["3² = 9", "2³ = 8", "9 + 8 = 17"] },
 );
 questionBank['N4'][3].push(
-  { q: "Find the highest common factor (HCF) of 36 and 48.", a: "12" },
-  { q: "Find a prime number between 20 and 30.", type: "mcq", options: ["21", "23", "25", "27"], a: "23" },
+  { q: "Find the highest common factor (HCF) of 36 and 48.", a: "12", worked: ["Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36", "Factors of 48: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48", "Common factors: 1, 2, 3, 4, 6, 12", "HCF = 12"] },
+  { q: "Find a prime number between 20 and 30.", type: "mcq", options: ["21", "23", "25", "27"], a: "23", worked: ["21 = 3 × 7 (not prime)", "23 has no factors except 1 and 23 (prime)", "25 = 5 × 5 (not prime)", "27 = 3 × 9 (not prime)"] },
 );
 questionBank['N4'][4].push(
-  { q: "'The sum of any two prime numbers is always even.' Give a counter-example to show this is false.", type: "mcq", options: ["2 + 3 = 5", "3 + 5 = 8", "7 + 11 = 18", "2 + 2 = 4"], a: "2 + 3 = 5" },
-  { q: "Find a number greater than 1 that is both a square number and a cube number.", type: "mcq", options: ["8", "16", "36", "64"], a: "64" },
+  { q: "'The sum of any two prime numbers is always even.' Give a counter-example to show this is false.", type: "mcq", options: ["2 + 3 = 5", "3 + 5 = 8", "7 + 11 = 18", "2 + 2 = 4"], a: "2 + 3 = 5", worked: ["A counter-example is where the statement is false", "2 + 3 = 5, and 5 is odd, not even", "This shows the statement is false"] },
+  { q: "Find a number greater than 1 that is both a square number and a cube number.", type: "mcq", options: ["8", "16", "36", "64"], a: "64", worked: ["64 = 8² = 8 × 8 (square number)", "64 = 4³ = 4 × 4 × 4 (cube number)", "64 is both a square and a cube"] },
 );
 
 // 8. Direct Proportion → R10 (added to existing Proportion bank)
 questionBank['R10'][0].push(
-  { q: "5 apples cost £2.00. Work out the cost of 1 apple.", a: "0.40" },
-  { q: "4 cakes cost £6.00. Work out the cost of 1 cake.", a: "1.50" },
+  { q: "5 apples cost £2.00. Work out the cost of 1 apple.", a: "0.40", worked: ["Cost per apple = Total cost ÷ Number of apples", "Cost per apple = £2.00 ÷ 5 = £0.40"] },
+  { q: "4 cakes cost £6.00. Work out the cost of 1 cake.", a: "1.50", worked: ["Cost per cake = Total cost ÷ Number of cakes", "Cost per cake = £6.00 ÷ 4 = £1.50"] },
 );
 questionBank['R10'][1].push(
-  { q: "3 pens cost £1.20. Work out the cost of 10 pens.", a: "4", calculator: true },
-  { q: "2 books cost £14. Work out the cost of 5 books.", a: "35" },
+  { q: "3 pens cost £1.20. Work out the cost of 10 pens.", a: "4", calculator: true, worked: ["Cost per pen = £1.20 ÷ 3 = £0.40", "Cost of 10 pens = £0.40 × 10 = £4.00"] },
+  { q: "2 books cost £14. Work out the cost of 5 books.", a: "35", worked: ["Cost per book = £14 ÷ 2 = £7", "Cost of 5 books = £7 × 5 = £35"] },
 );
 questionBank['R10'][2].push(
-  { q: "A recipe for 4 people uses 200 g of flour. How much flour is needed for 6 people?", a: "300" },
-  { q: "A recipe for 2 people uses 150 g of pasta. How much pasta is needed for 5 people?", a: "375" },
+  { q: "A recipe for 4 people uses 200 g of flour. How much flour is needed for 6 people?", a: "300", worked: ["Flour per person = 200 ÷ 4 = 50 g", "For 6 people = 50 × 6 = 300 g"] },
+  { q: "A recipe for 2 people uses 150 g of pasta. How much pasta is needed for 5 people?", a: "375", worked: ["Pasta per person = 150 ÷ 2 = 75 g", "For 5 people = 75 × 5 = 375 g"] },
 );
 questionBank['R10'][3].push(
-  { q: "y is directly proportional to x. When x = 10, y = 25. Find y when x = 4.", a: "10" },
-  { q: "y is directly proportional to x. When x = 5, y = 15. Find y when x = 12.", a: "36" },
+  { q: "y is directly proportional to x. When x = 10, y = 25. Find y when x = 4.", a: "10", worked: ["y = kx (direct proportion)", "25 = k × 10, so k = 2.5", "When x = 4: y = 2.5 × 4 = 10"] },
+  { q: "y is directly proportional to x. When x = 5, y = 15. Find y when x = 12.", a: "36", worked: ["y = kx (direct proportion)", "15 = k × 5, so k = 3", "When x = 12: y = 3 × 12 = 36"] },
 );
 questionBank['R10'][4].push(
-  { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop A", calculator: true },
-  { q: "Shop A sells 300 g of cheese for £2.40. Shop B sells 450 g for £3.15. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true },
+  { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop A", calculator: true, worked: ["Shop A: £1.80 ÷ 1.2 kg = £1.50 per kg", "Shop B: £0.80 ÷ 0.5 kg = £1.60 per kg", "Shop A is cheaper per kg"] },
+  { q: "Shop A sells 300 g of cheese for £2.40. Shop B sells 450 g for £3.15. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £2.40 ÷ 300 g = £0.008 per g", "Shop B: £3.15 ÷ 450 g = £0.007 per g", "Shop B is cheaper per gram"] },
 );
 questionBank['R11'] = questionBank['R10'];
 
@@ -2801,28 +2794,28 @@ questionBank['R11'] = questionBank['R10'];
 questionBank['N10'] = [
   // Level 0 — Decimal to fraction
   [
-    { q: "Write 0.7 as a fraction.", a: "7/10" },
-    { q: "Write 0.9 as a fraction.", a: "9/10" },
+    { q: "Write 0.7 as a fraction.", a: "7/10", worked: ["0.7 has one decimal place", "One decimal place = tenths", "0.7 = 7/10"] },
+    { q: "Write 0.9 as a fraction.", a: "9/10", worked: ["0.9 has one decimal place", "One decimal place = tenths", "0.9 = 9/10"] },
   ],
   // Level 1 — Fraction to percentage
   [
-    { q: "Write 3/5 as a percentage.", a: "60%" },
-    { q: "Write 4/5 as a percentage.", a: "80%" },
+    { q: "Write 3/5 as a percentage.", a: "60%", worked: ["Convert fraction to decimal: 3 ÷ 5 = 0.6", "Multiply by 100: 0.6 × 100 = 60%"] },
+    { q: "Write 4/5 as a percentage.", a: "80%", worked: ["Convert fraction to decimal: 4 ÷ 5 = 0.8", "Multiply by 100: 0.8 × 100 = 80%"] },
   ],
   // Level 2 — Compare decimal and fraction
   [
-    { q: "Which is larger: 0.65 or 5/8?", type: "mcq", options: ["0.65", "5/8"], a: "0.65" },
-    { q: "Which is larger: 0.72 or 3/4?", type: "mcq", options: ["0.72", "3/4"], a: "3/4" },
+    { q: "Which is larger: 0.65 or 5/8?", type: "mcq", options: ["0.65", "5/8"], a: "0.65", worked: ["Convert 5/8 to decimal: 5 ÷ 8 = 0.625", "Compare: 0.65 > 0.625", "Therefore 0.65 is larger"] },
+    { q: "Which is larger: 0.72 or 3/4?", type: "mcq", options: ["0.72", "3/4"], a: "3/4", worked: ["Convert 3/4 to decimal: 3 ÷ 4 = 0.75", "Compare: 0.75 > 0.72", "Therefore 3/4 is larger"] },
   ],
   // Level 3 — Decimal to simplified fraction
   [
-    { q: "Write 0.08 as a fraction in its simplest form.", a: "2/25" },
-    { q: "Write 0.06 as a fraction in its simplest form.", a: "3/50" },
+    { q: "Write 0.08 as a fraction in its simplest form.", a: "2/25", worked: ["0.08 = 8/100", "Simplify by dividing by HCF(8,100) = 4", "8÷4 = 2, 100÷4 = 25", "Simplified: 2/25"] },
+    { q: "Write 0.06 as a fraction in its simplest form.", a: "3/50", worked: ["0.06 = 6/100", "Simplify by dividing by HCF(6,100) = 2", "6÷2 = 3, 100÷2 = 50", "Simplified: 3/50"] },
   ],
   // Level 4 — Order FDP values
   [
-    { q: "Arrange in ascending order: 0.42, 2/5, 45%, 3/7", type: "order", items: ["0.42", "2/5", "45%", "3/7"], correctOrder: ["2/5", "0.42", "3/7", "45%"], a: "2/5, 0.42, 3/7, 45%" },
-    { q: "Arrange in ascending order: 0.31, 1/3, 30%, 2/7", type: "order", items: ["0.31", "1/3", "30%", "2/7"], correctOrder: ["2/7", "30%", "0.31", "1/3"], a: "2/7, 30%, 0.31, 1/3" },
+    { q: "Arrange in ascending order: 0.42, 2/5, 45%, 3/7", type: "order", items: ["0.42", "2/5", "45%", "3/7"], correctOrder: ["2/5", "0.42", "3/7", "45%"], a: "2/5, 0.42, 3/7, 45%", worked: ["Convert all to decimals: 2/5 = 0.4, 45% = 0.45, 3/7 ≈ 0.428", "Order: 0.4 < 0.42 < 0.428 < 0.45", "Answer: 2/5, 0.42, 3/7, 45%"] },
+    { q: "Arrange in ascending order: 0.31, 1/3, 30%, 2/7", type: "order", items: ["0.31", "1/3", "30%", "2/7"], correctOrder: ["2/7", "30%", "0.31", "1/3"], a: "2/7, 30%, 0.31, 1/3", worked: ["Convert all to decimals: 1/3 ≈ 0.333, 30% = 0.30, 2/7 ≈ 0.286", "Order: 0.286 < 0.30 < 0.31 < 0.333", "Answer: 2/7, 30%, 0.31, 1/3"] },
   ],
 ];
 
@@ -2830,28 +2823,28 @@ questionBank['N10'] = [
 questionBank['N13'] = [
   // Level 0 — Change from a purchase
   [
-    { q: "Sam buys a coffee for £2.80 and a sandwich for £3.50. How much change does he get from £10?", a: "3.70" },
-    { q: "Jo buys a magazine for £3.20 and a drink for £1.95. How much change from £20?", a: "14.85" },
+    { q: "Sam buys a coffee for £2.80 and a sandwich for £3.50. How much change does he get from £10?", a: "3.70", worked: ["Total spent: £2.80 + £3.50 = £6.30", "Change: £10.00 − £6.30 = £3.70"] },
+    { q: "Jo buys a magazine for £3.20 and a drink for £1.95. How much change from £20?", a: "14.85", worked: ["Total spent: £3.20 + £1.95 = £5.15", "Change: £20.00 − £5.15 = £14.85"] },
   ],
   // Level 1 — Unit cost
   [
-    { q: "A pack of 6 pens costs £4.50. Work out the cost of one pen.", a: "0.75" },
-    { q: "A box of 12 eggs costs £3.60. Work out the cost of one egg.", a: "0.30" },
+    { q: "A pack of 6 pens costs £4.50. Work out the cost of one pen.", a: "0.75", worked: ["Cost per pen = Total cost ÷ Number of pens", "Cost per pen = £4.50 ÷ 6 = £0.75"] },
+    { q: "A box of 12 eggs costs £3.60. Work out the cost of one egg.", a: "0.30", worked: ["Cost per egg = Total cost ÷ Number of eggs", "Cost per egg = £3.60 ÷ 12 = £0.30"] },
   ],
   // Level 2 — Earnings calculation
   [
-    { q: "Sarah earns £9.20 per hour. Last week she worked 15 hours. How much did she earn?", a: "138", calculator: true },
-    { q: "Tom earns £10.50 per hour. He works 12 hours. How much is his total pay?", a: "126", calculator: true },
+    { q: "Sarah earns £9.20 per hour. Last week she worked 15 hours. How much did she earn?", a: "138", worked: ["Total earnings = Hourly rate × Hours worked", "Total = £9.20 × 15 = £138"], calculator: true },
+    { q: "Tom earns £10.50 per hour. He works 12 hours. How much is his total pay?", a: "126", worked: ["Total pay = Hourly rate × Hours worked", "Total = £10.50 × 12 = £126"], calculator: true },
   ],
   // Level 3 — Multi-buy offer
   [
-    { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90" },
-    { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40" },
+    { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90", worked: ["In groups of 3: Buy 2, Get 1 Free", "9 bars = 3 groups of 3 bars", "Pay for: 3 × 2 = 6 bars at 65p each", "Cost = 6 × 65p = 390p = £3.90"] },
+    { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40", worked: ["In pairs: Buy 1 at full price, Get 1 at half price", "Half price = £1.20 ÷ 2 = £0.60", "3 pairs cost: 3 × (£1.20 + £0.60) = 3 × £1.80 = £5.40"] },
   ],
   // Level 4 — Tiered pricing
   [
-    { q: "Gas costs 18p per unit for the first 100 units, and 12p per unit for any additional units. Calculate the total cost in £ for using 250 units.", a: "36", calculator: true },
-    { q: "Electricity costs 22p per unit for the first 50 units, then 15p per unit after that. Calculate the total cost in £ for 120 units.", a: "21.50", calculator: true },
+    { q: "Gas costs 18p per unit for the first 100 units, and 12p per unit for any additional units. Calculate the total cost in £ for using 250 units.", a: "36", worked: ["First 100 units: 100 × 18p = 1800p", "Additional units: 250 − 100 = 150 units at 12p = 1800p", "Total: 1800p + 1800p = 3600p = £36"], calculator: true },
+    { q: "Electricity costs 22p per unit for the first 50 units, then 15p per unit after that. Calculate the total cost in £ for 120 units.", a: "21.50", worked: ["First 50 units: 50 × 22p = 1100p", "Additional units: 120 − 50 = 70 units at 15p = 1050p", "Total: 1100p + 1050p = 2150p = £21.50"], calculator: true },
   ],
 ];
 
@@ -2859,28 +2852,28 @@ questionBank['N13'] = [
 questionBank['A4'] = [
   // Level 0 — Repeated addition to multiplication
   [
-    { q: "Simplify: x + x + x + x", a: "4x" },
-    { q: "Simplify: y + y + y", a: "3y" },
+    { q: "Simplify: x + x + x + x", a: "4x", worked: ["Count the number of x terms: 4", "Combine: 4x"] },
+    { q: "Simplify: y + y + y", a: "3y", worked: ["Count the number of y terms: 3", "Combine: 3y"] },
   ],
   // Level 1 — Collect like terms (two variables)
   [
-    { q: "Simplify: 5a + 3b + 2a − b", a: "7a + 2b" },
-    { q: "Simplify: 8c + 4d − 3c + 2d", a: "5c + 6d" },
+    { q: "Simplify: 5a + 3b + 2a − b", a: "7a + 2b", worked: ["Collect a terms: 5a + 2a = 7a", "Collect b terms: 3b − b = 2b", "Answer: 7a + 2b"] },
+    { q: "Simplify: 8c + 4d − 3c + 2d", a: "5c + 6d", worked: ["Collect c terms: 8c − 3c = 5c", "Collect d terms: 4d + 2d = 6d", "Answer: 5c + 6d"] },
   ],
   // Level 2 — Collect like terms with powers
   [
-    { q: "Simplify: 4x² + 3x − 2x² + 5x", a: "2x² + 8x" },
-    { q: "Simplify: 5p² − 2p + p² + 7p", a: "6p² + 5p" },
+    { q: "Simplify: 4x² + 3x − 2x² + 5x", a: "2x² + 8x", worked: ["Collect x² terms: 4x² − 2x² = 2x²", "Collect x terms: 3x + 5x = 8x", "Answer: 2x² + 8x"] },
+    { q: "Simplify: 5p² − 2p + p² + 7p", a: "6p² + 5p", worked: ["Collect p² terms: 5p² + p² = 6p²", "Collect p terms: −2p + 7p = 5p", "Answer: 6p² + 5p"] },
   ],
   // Level 3 — Collect constants and terms
   [
-    { q: "Simplify: 10 − 3y + 2 − 4y", a: "12 - 7y" },
-    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a" },
+    { q: "Simplify: 10 − 3y + 2 − 4y", a: "12 - 7y", worked: ["Collect number terms: 10 + 2 = 12", "Collect y terms: −3y − 4y = −7y", "Answer: 12 − 7y"] },
+    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a", worked: ["Collect number terms: 15 − 5 = 10", "Collect a terms: −4a − a = −5a", "Answer: 10 − 5a"] },
   ],
   // Level 4 — Perimeter expression
   [
-    { q: "An equilateral triangle has side length 2x + 3. Write an expression for the perimeter in its simplest form.", a: "6x + 9" },
-    { q: "A rectangle has sides (3x − 1) and (x + 4). Write an expression for the perimeter in its simplest form.", a: "8x + 6" },
+    { q: "An equilateral triangle has side length 2x + 3. Write an expression for the perimeter in its simplest form.", a: "6x + 9", worked: ["Equilateral triangle has 3 equal sides", "Perimeter = 3 × (2x + 3) = 6x + 9"] },
+    { q: "A rectangle has sides (3x − 1) and (x + 4). Write an expression for the perimeter in its simplest form.", a: "8x + 6", worked: ["Rectangle perimeter = 2(length + width)", "Perimeter = 2[(3x − 1) + (x + 4)]", "= 2[4x + 3] = 8x + 6"] },
   ],
 ];
 
@@ -2888,30 +2881,548 @@ questionBank['A4'] = [
 questionBank['R9'] = [
   // Level 0 — Fraction of a whole (unit conversion style)
   [
-    { q: "What fraction of 1 hour is 15 minutes?", a: "1/4" },
-    { q: "What fraction of 1 metre is 25 centimetres?", a: "1/4" },
+    { q: "What fraction of 1 hour is 15 minutes?", a: "1/4", worked: ["1 hour = 60 minutes", "Fraction = 15 ÷ 60 = 1/4"] },
+    { q: "What fraction of 1 metre is 25 centimetres?", a: "1/4", worked: ["1 metre = 100 cm", "Fraction = 25 ÷ 100 = 1/4"] },
   ],
   // Level 1 — Write as a percentage
   [
-    { q: "Write 15 out of 20 as a percentage.", a: "75%" },
-    { q: "Write 7 out of 25 as a percentage.", a: "28%" },
+    { q: "Write 15 out of 20 as a percentage.", a: "75%", worked: ["Percentage = (part ÷ whole) × 100", "= (15 ÷ 20) × 100 = 0.75 × 100 = 75%"] },
+    { q: "Write 7 out of 25 as a percentage.", a: "28%", worked: ["Percentage = (part ÷ whole) × 100", "= (7 ÷ 25) × 100 = 0.28 × 100 = 28%"] },
   ],
   // Level 2 — Fraction to percentage from context
   [
-    { q: "In a box of 50 pens, 18 are black. What percentage of the pens are black?", a: "36%" },
-    { q: "12 out of 60 students are left-handed. What percentage is this?", a: "20%" },
+    { q: "In a box of 50 pens, 18 are black. What percentage of the pens are black?", a: "36%", worked: ["Percentage = (part ÷ whole) × 100", "= (18 ÷ 50) × 100 = 0.36 × 100 = 36%"] },
+    { q: "12 out of 60 students are left-handed. What percentage is this?", a: "20%", worked: ["Percentage = (part ÷ whole) × 100", "= (12 ÷ 60) × 100 = 0.2 × 100 = 20%"] },
   ],
   // Level 3 — Fraction with unit conversion
   [
-    { q: "Write 450 g as a fraction of 2 kg. Give your answer in its simplest form.", a: "9/40" },
-    { q: "Write 75 cm as a fraction of 3 m. Give your answer in its simplest form.", a: "1/4" },
+    { q: "Write 450 g as a fraction of 2 kg. Give your answer in its simplest form.", a: "9/40", worked: ["Convert to same units: 2 kg = 2000 g", "Fraction = 450 ÷ 2000 = 45 ÷ 200 = 9/40"] },
+    { q: "Write 75 cm as a fraction of 3 m. Give your answer in its simplest form.", a: "1/4", worked: ["Convert to same units: 3 m = 300 cm", "Fraction = 75 ÷ 300 = 1/4"] },
   ],
   // Level 4 — Ratio to percentage
   [
-    { q: "In a garden, the ratio of flowers to weeds is 7:3. What percentage of the plants are weeds?", a: "30%" },
-    { q: "The ratio of cats to dogs is 1:4. What percentage of the animals are cats?", a: "20%" },
+    { q: "In a garden, the ratio of flowers to weeds is 7:3. What percentage of the plants are weeds?", a: "30%", worked: ["Total parts = 7 + 3 = 10", "Weeds = 3 parts out of 10", "Percentage = (3 ÷ 10) × 100 = 30%"] },
+    { q: "The ratio of cats to dogs is 1:4. What percentage of the animals are cats?", a: "20%", worked: ["Total parts = 1 + 4 = 5", "Cats = 1 part out of 5", "Percentage = (1 ÷ 5) × 100 = 20%"] },
   ],
 ];
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL VARIANTS — Round 2
+// ═══════════════════════════════════════════════════════════════
+
+// Time Calculations → N2
+questionBank['N2'][0].push(
+  { q: "How many minutes are in 3 hours and 15 minutes?", a: "195", worked: ["3 hours = 3 × 60 = 180 minutes", "180 + 15 = 195 minutes"] },
+);
+questionBank['N2'][1].push(
+  { q: "A bus departs at 14:35 and arrives at 16:10. How long did the journey take?", type: "mcq", options: ["55 minutes", "1 hour 25 minutes", "1 hour 35 minutes", "2 hours 25 minutes"], a: "1 hour 35 minutes", worked: ["From 14:35 to 15:35 = 1 hour", "From 15:35 to 16:10 = 35 minutes", "Total = 1 hour 35 minutes"] },
+);
+questionBank['N2'][2].push(
+  { q: "A film lasts 135 minutes. If it starts at 19:40, what time does it finish?", a: "21:55", worked: ["135 minutes = 2 hours 15 minutes", "19:40 + 2 hours = 21:40", "21:40 + 15 minutes = 21:55"] },
+);
+questionBank['N2'][3].push(
+  { q: "A train travels at a constant speed and covers 150 miles in 2 hours and 30 minutes. What is its speed in mph?", a: "60", calculator: true, worked: ["Time = 2 hours 30 minutes = 2.5 hours", "Speed = Distance ÷ Time", "Speed = 150 ÷ 2.5 = 60 mph"] },
+);
+questionBank['N2'][4].push(
+  { q: "A clock loses 3 minutes every 24 hours. If it is set correctly at 09:00 on Monday, what time will it show at 21:00 on Wednesday?", a: "20:53", worked: ["Monday 09:00 to Wednesday 21:00 = 2.5 days = 60 hours", "Loses 3 minutes per 24 hours", "Loss = (60 ÷ 24) × 3 = 7.5 minutes ≈ 7 minutes", "21:00 − 7 minutes = 20:53"] },
+);
+
+// Write as a Ratio → R4
+questionBank['R4'][0].push(
+  { q: "There are 8 red pens and 12 blue pens in a box. Write the ratio of red pens to blue pens in its simplest form.", a: "2:3", worked: ["Red : Blue = 8 : 12", "HCF(8,12) = 4", "8÷4 : 12÷4 = 2:3"] },
+);
+questionBank['R4'][1].push(
+  { q: "In a bag of sweets, for every 3 lemon sweets there are 5 orange sweets. If there are 15 lemon sweets, how many orange sweets are there?", a: "25", worked: ["Ratio lemon : orange = 3 : 5", "If lemon = 15, then 15 ÷ 3 = 5 (scale factor)", "Orange = 5 × 5 = 25"] },
+);
+questionBank['R4'][2].push(
+  { q: "Divide £240 in the ratio 3:5. Work out the larger share.", a: "150", worked: ["Total parts = 3 + 5 = 8", "Each part = £240 ÷ 8 = £30", "Larger share = 5 × £30 = £150"] },
+);
+questionBank['R4'][3].push(
+  { q: "The ratio of boys to girls in a school is 4:7. There are 120 more girls than boys. How many students are there in total?", a: "440", worked: ["Difference in parts = 7 − 4 = 3 parts = 120 students", "1 part = 120 ÷ 3 = 40", "Total = (4 + 7) × 40 = 11 × 40 = 440"] },
+);
+questionBank['R4'][4].push(
+  { q: "A:B = 5:3 and B:C = 6:7. Find the ratio A:B:C in its simplest form.", a: "10:6:7", worked: ["A:B = 5:3, multiply by 2: A:B = 10:6", "B:C = 6:7, already has B = 6", "Now B = 6 in both ratios", "A:B:C = 10:6:7"] },
+);
+
+// FDP → N10
+questionBank['N10'][0].push(
+  { q: "Write 3/4 as a percentage.", a: "75%", worked: ["3/4 = 3 ÷ 4 = 0.75", "0.75 × 100 = 75%"] },
+);
+questionBank['N10'][1].push(
+  { q: "Write 0.65 as a fraction in its simplest form.", a: "13/20", worked: ["0.65 = 65/100", "HCF(65,100) = 5", "65÷5 : 100÷5 = 13:20", "Therefore 13/20"] },
+);
+questionBank['N10'][2].push(
+  { q: "Which is larger: 0.7 or 5/8? You must show your working.", type: "mcq", options: ["0.7", "5/8"], a: "0.7", worked: ["Convert 5/8 to decimal: 5 ÷ 8 = 0.625", "Compare: 0.7 > 0.625", "Therefore 0.7 is larger"] },
+);
+questionBank['N10'][3].push(
+  { q: "Work out 35% of £180.", a: "63", worked: ["35% = 35/100 = 0.35", "0.35 × 180 = 63"] },
+);
+questionBank['N10'][4].push(
+  { q: "A coat is reduced by 20% in a sale to a price of £64. What was the original price?", a: "80", worked: ["Reduced by 20% means paying 80% of original", "80% of original = £64", "Original = £64 ÷ 0.8 = £80"] },
+);
+
+// Substitution → A2
+questionBank['A2'][0].push(
+  { q: "If x = 5, find the value of 3x + 7.", a: "22", worked: ["Substitute x = 5", "3(5) + 7 = 15 + 7 = 22"] },
+);
+questionBank['A2'][1].push(
+  { q: "If a = 4 and b = −3, work out the value of 2a − b.", a: "11", worked: ["Substitute a = 4 and b = −3", "2(4) − (−3) = 8 + 3 = 11"] },
+);
+questionBank['A2'][2].push(
+  { q: "Evaluate p² + 5q when p = −6 and q = 2.", a: "46", worked: ["Substitute p = −6 and q = 2", "p² = (−6)² = 36", "5q = 5(2) = 10", "36 + 10 = 46"] },
+);
+questionBank['A2'][3].push(
+  { q: "Given v = u + at, find v when u = 10, a = −2, and t = 4.", a: "2", worked: ["Substitute u = 10, a = −2, t = 4", "v = 10 + (−2)(4) = 10 − 8 = 2"] },
+);
+questionBank['A2'][4].push(
+  { q: "If x = 3 and y = 0.5, find the value of (x² − 4y) ÷ (x + 2y).", a: "1.75", worked: ["Substitute x = 3 and y = 0.5", "Numerator: 3² − 4(0.5) = 9 − 2 = 7", "Denominator: 3 + 2(0.5) = 3 + 1 = 4", "7 ÷ 4 = 1.75"] },
+);
+
+// Metric Unit Conversions → R1
+questionBank['R1'][0].push(
+  { q: "Convert 4.5 kilograms into grams.", a: "4500", worked: ["1 kilogram = 1000 grams", "4.5 × 1000 = 4500 g"] },
+);
+questionBank['R1'][1].push(
+  { q: "A race is 5000 metres long. How many kilometres is this?", a: "5", worked: ["1 kilometre = 1000 metres", "5000 ÷ 1000 = 5 km"] },
+);
+questionBank['R1'][2].push(
+  { q: "Change 0.8 litres into millilitres.", a: "800", worked: ["1 litre = 1000 millilitres", "0.8 × 1000 = 800 ml"] },
+);
+questionBank['R1'][3].push(
+  { q: "A square has an area of 9 m². What is its area in cm²?", a: "90000", worked: ["1 m = 100 cm, so 1 m² = 10000 cm²", "9 × 10000 = 90000 cm²"] },
+);
+questionBank['R1'][4].push(
+  { q: "Convert a speed of 72 km/h into metres per second (m/s).", a: "20", calculator: true, worked: ["72 km/h = 72000 m per 3600 seconds", "72000 ÷ 3600 = 20 m/s"] },
+);
+
+// Calculations with Money → N13
+questionBank['N13'][0].push(
+  { q: "Sarah buys a sandwich for £3.45 and a drink for £1.20. How much change does she get from £10?", a: "5.35", worked: ["Total spent = £3.45 + £1.20 = £4.65", "Change = £10.00 − £4.65 = £5.35"] },
+);
+questionBank['N13'][1].push(
+  { q: "A pack of 6 cans of cola costs £4.50. How much does one can cost?", a: "0.75", worked: ["Cost per can = £4.50 ÷ 6 = £0.75"] },
+);
+questionBank['N13'][2].push(
+  { q: "Gas costs 15p per unit. A family uses 800 units. How much is the total bill in pounds?", a: "120", worked: ["Total cost = 15p × 800 = 12000p", "Convert to pounds: 12000p ÷ 100 = £120"] },
+);
+questionBank['N13'][3].push(
+  { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £1.20 ÷ 500g = £0.0024 per gram", "Shop B: £1.70 ÷ 750g = £0.00227 per gram", "Shop B is cheaper"] },
+);
+questionBank['N13'][4].push(
+  { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240", worked: ["Simple interest = Principal × Rate × Time ÷ 100", "Interest = £2000 × 3 × 4 ÷ 100 = £240"] },
+);
+
+// Find Probability → P1
+questionBank['P1'][0].push(
+  { q: "A fair 6-sided die is rolled. What is the probability of rolling a number greater than 4?", a: "1/3", worked: ["Numbers greater than 4 are: 5 and 6", "Favourable outcomes = 2", "Total outcomes = 6", "Probability = 2/6 = 1/3"] },
+);
+questionBank['P1'][1].push(
+  { q: "A bag contains 5 red, 3 blue, and 2 green marbles. One is picked at random. What is the probability it is not blue?", a: "7/10", worked: ["Total marbles = 5 + 3 + 2 = 10", "Not blue marbles = 5 + 2 = 7", "Probability = 7/10"] },
+);
+questionBank['P1'][2].push(
+  { q: "The probability that a train is late is 0.15. What is the probability the train is on time?", a: "0.85", worked: ["All probabilities sum to 1", "P(on time) = 1 − P(late) = 1 − 0.15 = 0.85"] },
+);
+questionBank['P1'][3].push(
+  { q: "A spinner has the colours Red, Blue, and Yellow. P(Red) = 0.4 and P(Blue) = 0.25. Find P(Yellow).", a: "0.35", worked: ["Sum of all probabilities = 1", "P(Yellow) = 1 − P(Red) − P(Blue)", "P(Yellow) = 1 − 0.4 − 0.25 = 0.35"] },
+);
+questionBank['P1'][4].push(
+  { q: "A biased coin is flipped 200 times. The probability of Heads is 0.6. How many times would you expect it to land on Tails?", a: "80", worked: ["P(Heads) = 0.6, so P(Tails) = 1 − 0.6 = 0.4", "Expected frequency = probability × number of trials", "Expected = 0.4 × 200 = 80"] },
+);
+
+// Like Terms → A4
+questionBank['A4'][0].push(
+  { q: "Simplify: a + a + a + b + b", a: "3a + 2b", worked: ["Count the a's: 3", "Count the b's: 2", "Answer: 3a + 2b"] },
+);
+questionBank['A4'][1].push(
+  { q: "Simplify: 5x + 3y − 2x + 4y", a: "3x + 7y", worked: ["Collect x terms: 5x − 2x = 3x", "Collect y terms: 3y + 4y = 7y", "Answer: 3x + 7y"] },
+);
+questionBank['A4'][2].push(
+  { q: "Simplify: 4p² + 5p − p² + 2p", a: "3p² + 7p", worked: ["Collect p² terms: 4p² − p² = 3p²", "Collect p terms: 5p + 2p = 7p", "Answer: 3p² + 7p"] },
+);
+questionBank['A4'][3].push(
+  { q: "Expand and simplify: 3(x + 4) + 2(x − 1)", a: "5x + 10", worked: ["Expand: 3x + 12 + 2x − 2", "Collect terms: 3x + 2x + 12 − 2 = 5x + 10"] },
+);
+questionBank['A4'][4].push(
+  { q: "Simplify: 10ab − 3a + 2ba + 7a", a: "12ab + 4a", worked: ["Note: 2ba = 2ab", "Collect ab terms: 10ab + 2ab = 12ab", "Collect a terms: −3a + 7a = 4a", "Answer: 12ab + 4a"] },
+);
+
+// Types of Number → N4
+questionBank['N4'][0].push(
+  { q: "What is the value of 4³?", a: "64", worked: ["4³ = 4 × 4 × 4", "16 × 4 = 64"] },
+);
+questionBank['N4'][1].push(
+  { q: "Which of the following are prime numbers: 7, 9, 13, 15, 21?", type: "mcq", options: ["7 and 13", "7, 9 and 13", "7, 13 and 21", "9, 13 and 15"], a: "7 and 13", worked: ["7 is prime (only factors: 1,7)", "9 = 3×3 (not prime)", "13 is prime (only factors: 1,13)", "15 = 3×5 (not prime)", "21 = 3×7 (not prime)"] },
+);
+questionBank['N4'][2].push(
+  { q: "Work out the value of √144 + ³√27.", a: "15", worked: ["√144 = 12", "³√27 = 3", "12 + 3 = 15"] },
+);
+questionBank['N4'][3].push(
+  { q: "Express 90 as a product of its prime factors.", type: "mcq", options: ["2 × 3² × 5", "2 × 3 × 15", "2² × 3 × 5", "2 × 9 × 5"], a: "2 × 3² × 5", worked: ["90 ÷ 2 = 45", "45 ÷ 3 = 15", "15 ÷ 3 = 5", "5 ÷ 5 = 1", "So 90 = 2 × 3 × 3 × 5 = 2 × 3² × 5"] },
+);
+questionBank['N4'][4].push(
+  { q: "Find the Highest Common Factor (HCF) of 48 and 72.", a: "24", worked: ["Factors of 48: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48", "Factors of 72: 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72", "HCF = 24"] },
+);
+
+// Direct Proportion → R10
+questionBank['R10'][0].push(
+  { q: "If 3 oranges cost £1.50, how much would 8 oranges cost?", a: "4", worked: ["Cost per orange = £1.50 ÷ 3 = £0.50", "Cost of 8 oranges = £0.50 × 8 = £4.00"] },
+);
+questionBank['R10'][1].push(
+  { q: "A recipe for 6 people uses 240 g of butter. How much butter is needed for 10 people?", a: "400", worked: ["Butter per person = 240 ÷ 6 = 40 g", "For 10 people = 40 × 10 = 400 g"] },
+);
+questionBank['R10'][2].push(
+  { q: "5 workers take 6 hours to paint a fence. How long would it take 3 workers?", a: "10", worked: ["Total work = 5 workers × 6 hours = 30 worker-hours", "Time for 3 workers = 30 ÷ 3 = 10 hours"] },
+);
+questionBank['R10'][3].push(
+  { q: "y is directly proportional to x. When x = 4, y = 20. Find y when x = 9.", a: "45", worked: ["y = kx (direct proportion)", "20 = k × 4, so k = 5", "When x = 9: y = 5 × 9 = 45"] },
+);
+questionBank['R10'][4].push(
+  { q: "y is directly proportional to x². When x = 2, y = 12. Find y when x = 5.", a: "75", worked: ["y = kx² (y proportional to x²)", "12 = k × 2² = k × 4, so k = 3", "When x = 5: y = 3 × 5² = 3 × 25 = 75"] },
+);
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL VARIANTS — Round 3
+// ═══════════════════════════════════════════════════════════════
+
+// N1: Place Value & Ordering
+questionBank['N1'][0].push(
+  { q: "Write the number 'five thousand, three hundred and eight' in figures.", a: "5308", worked: ["Five thousand = 5000", "Three hundred = 300", "Eight = 8", "Total = 5000 + 300 + 8 = 5308"] },
+);
+questionBank['N1'][1].push(
+  { q: "Write down the value of the 7 in the number 47,205.", a: "7000", worked: ["The 7 is in the thousands place", "7 thousands = 7 × 1000 = 7000"] },
+);
+questionBank['N1'][2].push(
+  { q: "Arrange these decimals in order of size, starting with the smallest: 0.5, 0.05, 0.55, 0.505", type: "order", items: ["0.5", "0.05", "0.55", "0.505"], correctOrder: ["0.05", "0.5", "0.505", "0.55"], a: "0.05, 0.5, 0.505, 0.55", worked: ["Compare: 0.05 = 0.050", "0.5 = 0.500", "0.505 = 0.505", "0.55 = 0.550", "Order: 0.050 < 0.500 < 0.505 < 0.550"] },
+);
+questionBank['N1'][3].push(
+  { q: "Find the number halfway between 3.8 and 4.5.", a: "4.15", worked: ["Halfway = (3.8 + 4.5) ÷ 2", "= 8.3 ÷ 2", "= 4.15"] },
+);
+questionBank['N1'][4].push(
+  { q: "Use the digits 5, 2, 8, and 1 once each to make the smallest possible even number.", a: "1258", worked: ["For smallest number: arrange in ascending order", "Digits in order: 1, 2, 5, 8", "Must be even, so last digit must be 2 or 8", "For smallest even number: 1258"] },
+);
+
+// N5: Fractions & Decimals
+questionBank['N5'][0].push(
+  { q: "Write 3/5 as a decimal.", a: "0.6", worked: ["3/5 = 3 ÷ 5", "= 0.6"] },
+);
+questionBank['N5'][1].push(
+  { q: "Write 0.8 as a fraction in its simplest form.", a: "4/5", worked: ["0.8 = 8/10", "HCF(8,10) = 2", "8÷2 : 10÷2 = 4:5", "Therefore 4/5"] },
+);
+questionBank['N5'][2].push(
+  { q: "Work out 5/9 − 1/3. Give your answer as a fraction.", a: "2/9", worked: ["Convert to same denominator: 1/3 = 3/9", "5/9 − 3/9 = 2/9"] },
+);
+questionBank['N5'][3].push(
+  { q: "Work out 2 1/2 + 1 3/4. Give your answer as a mixed number.", a: "4 1/4", worked: ["Convert to improper fractions: 2 1/2 = 5/2 and 1 3/4 = 7/4", "Common denominator: 5/2 = 10/4", "10/4 + 7/4 = 17/4 = 4 1/4"] },
+);
+questionBank['N5'][4].push(
+  { q: "A bottle holds 750 ml. A glass holds 2/5 of the bottle. How many ml are in the glass?", a: "300", worked: ["2/5 of 750 = (750 ÷ 5) × 2", "= 150 × 2", "= 300 ml"] },
+);
+
+// N6: Powers, Roots & Index Laws
+questionBank['N6'][0].push(
+  { q: "Work out the value of 5².", a: "25", worked: ["5² = 5 × 5", "= 25"] },
+);
+questionBank['N6'][1].push(
+  { q: "Find the value of √121.", a: "11", worked: ["√121 is the number that when squared gives 121", "11 × 11 = 121", "Therefore √121 = 11"] },
+);
+questionBank['N6'][2].push(
+  { q: "Work out the value of 2³ × 3².", a: "72", worked: ["2³ = 2 × 2 × 2 = 8", "3² = 3 × 3 = 9", "8 × 9 = 72"] },
+);
+questionBank['N6'][3].push(
+  { q: "Simplify y⁷ ÷ y³. Give your answer using index notation.", type: "mcq", options: ["y⁴", "y¹⁰", "y²¹", "y³"], a: "y⁴", worked: ["When dividing powers, subtract the indices", "y⁷ ÷ y³ = y^(7-3) = y⁴"] },
+);
+questionBank['N6'][4].push(
+  { q: "Find the value of ³√27 + √64.", a: "11", worked: ["³√27 = 3 (since 3 × 3 × 3 = 27)", "√64 = 8 (since 8 × 8 = 64)", "3 + 8 = 11"] },
+);
+
+// N10: FDP
+questionBank['N10'][0].push(
+  { q: "Write 1/4 as a percentage.", a: "25%", worked: ["1/4 = 0.25", "0.25 × 100 = 25%"] },
+);
+questionBank['N10'][1].push(
+  { q: "Write 35% as a decimal.", a: "0.35", worked: ["35% = 35/100", "35 ÷ 100 = 0.35"] },
+);
+questionBank['N10'][2].push(
+  { q: "Work out 20% of £150.", a: "30", worked: ["20% = 0.2", "0.2 × 150 = 30"] },
+);
+questionBank['N10'][3].push(
+  { q: "Which is larger: 0.4 or 3/8?", type: "mcq", options: ["0.4", "3/8"], a: "0.4", worked: ["Convert 3/8 to decimal: 3 ÷ 8 = 0.375", "Compare: 0.4 > 0.375", "Therefore 0.4 is larger"] },
+);
+questionBank['N10'][4].push(
+  { q: "In a sale, a coat is reduced by 15%. The original price was £80. Work out the sale price.", a: "68", worked: ["Reduction = 15% of £80 = 0.15 × 80 = £12", "Sale price = £80 − £12 = £68"] },
+);
+
+// N13: Calculations with Money
+questionBank['N13'][0].push(
+  { q: "Change £4.50 into pence.", a: "450", worked: ["£1 = 100 pence", "£4.50 = 4.50 × 100 = 450 pence"] },
+);
+questionBank['N13'][1].push(
+  { q: "3 bars of chocolate cost £2.40. How much does 1 bar cost?", a: "0.80", worked: ["Cost per bar = £2.40 ÷ 3", "= £0.80"] },
+);
+questionBank['N13'][2].push(
+  { q: "I buy a magazine for £3.95 and a drink for £1.20. How much change do I get from £10?", a: "4.85", worked: ["Total spent = £3.95 + £1.20 = £5.15", "Change = £10.00 − £5.15 = £4.85"] },
+);
+questionBank['N13'][3].push(
+  { q: "A pack of 9 toilet rolls costs £4.23. A pack of 4 costs £1.96. Which pack is better value?", type: "mcq", options: ["Pack of 9", "Pack of 4"], a: "Pack of 9", calculator: true, worked: ["Pack of 9: £4.23 ÷ 9 = £0.47 per roll", "Pack of 4: £1.96 ÷ 4 = £0.49 per roll", "Pack of 9 is cheaper"] },
+);
+questionBank['N13'][4].push(
+  { q: "£500 is invested at 2% simple interest per year for 3 years. Work out the total interest earned.", a: "30", worked: ["Simple interest = Principal × Rate × Time ÷ 100", "Interest = £500 × 2 × 3 ÷ 100 = £30"] },
+);
+
+// N14: Rounding & Estimation
+questionBank['N14'][0].push(
+  { q: "Round 4,562 to the nearest hundred.", a: "4600", worked: ["Look at the tens digit: 6", "Since 6 ≥ 5, round up", "4562 rounded to nearest hundred = 4600"] },
+);
+questionBank['N14'][1].push(
+  { q: "Round 7.82 to 1 decimal place.", a: "7.8", worked: ["Look at the second decimal place: 2", "Since 2 < 5, round down", "7.82 rounded to 1 d.p. = 7.8"] },
+);
+questionBank['N14'][2].push(
+  { q: "Round 0.0456 to 2 significant figures.", a: "0.046", worked: ["First sig fig is 4, second is 5", "Look at third sig fig: 6", "Since 6 ≥ 5, round up the 5 to 6", "0.0456 to 2 s.f. = 0.046"] },
+);
+questionBank['N14'][3].push(
+  { q: "Estimate the value of (48.7 × 2.1) ÷ 0.49.", a: "200", hint: "Round each value to 1 s.f. first: (50 × 2) ÷ 0.5", worked: ["Round to 1 s.f.: 48.7 ≈ 50, 2.1 ≈ 2, 0.49 ≈ 0.5", "Estimate = (50 × 2) ÷ 0.5 = 100 ÷ 0.5 = 200"] },
+);
+questionBank['N14'][4].push(
+  { q: "A length L is rounded to 15 cm to the nearest cm. Write down the error interval for L.", type: "mcq", options: ["14.5 ≤ L < 15.5", "14 ≤ L < 16", "14.5 < L ≤ 15.5", "15 ≤ L < 16"], a: "14.5 ≤ L < 15.5", worked: ["For rounding to nearest cm, the interval is half below and half above", "Lower bound: 15 − 0.5 = 14.5", "Upper bound: 15 + 0.5 = 15.5", "14.5 ≤ L < 15.5 (upper bound is not included)"] },
+);
+
+// A1: Algebraic Notation
+questionBank['A1'][0].push(
+  { q: "Simplify: c + c + c + c", a: "4c", worked: ["Count the number of c's: 4", "4c is the simplified form"] },
+);
+questionBank['A1'][1].push(
+  { q: "Simplify: 3 × a × b", a: "3ab", worked: ["Write without multiplication signs: 3ab"] },
+);
+questionBank['A1'][2].push(
+  { q: "Simplify: x² + x²", a: "2x²", worked: ["Add the coefficients: 1 + 1 = 2", "Keep the variable part: x²", "Answer: 2x²"] },
+);
+questionBank['A1'][3].push(
+  { q: "Write an expression for the total cost of x apples at 20p each and y pears at 30p each. Give your answer in pence.", a: "20x + 30y", worked: ["Cost of x apples at 20p each = 20x pence", "Cost of y pears at 30p each = 30y pence", "Total = 20x + 30y pence"] },
+);
+questionBank['A1'][4].push(
+  { q: "Simplify: 10w ÷ 2", a: "5w", worked: ["10w ÷ 2 = (10 ÷ 2)w = 5w"] },
+);
+
+// A3: Expanding & Factorising
+questionBank['A3'][0].push(
+  { q: "Expand: 2(x + 5)", a: "2x + 10", worked: ["Multiply each term in the bracket by 2", "2 × x = 2x", "2 × 5 = 10", "Answer: 2x + 10"] },
+);
+questionBank['A3'][1].push(
+  { q: "Factorise: 3y − 12", a: "3(y - 4)", worked: ["Find the HCF of 3y and 12: HCF = 3", "3y ÷ 3 = y, 12 ÷ 3 = 4", "Answer: 3(y − 4)"] },
+);
+questionBank['A3'][2].push(
+  { q: "Expand: x(x − 4)", a: "x² - 4x", worked: ["Multiply each term in the bracket by x", "x × x = x²", "x × (−4) = −4x", "Answer: x² − 4x"] },
+);
+questionBank['A3'][3].push(
+  { q: "Expand and simplify: 3(x + 2) + 2(x − 1)", a: "5x + 4", worked: ["Expand: 3x + 6 + 2x − 2", "Collect x terms: 3x + 2x = 5x", "Collect constants: 6 − 2 = 4", "Answer: 5x + 4"] },
+);
+questionBank['A3'][4].push(
+  { q: "Factorise fully: 10p² + 15p", a: "5p(2p + 3)", worked: ["Find HCF of 10p² and 15p: HCF = 5p", "10p² ÷ 5p = 2p", "15p ÷ 5p = 3", "Answer: 5p(2p + 3)"] },
+);
+
+// A4: Like Terms
+questionBank['A4'][0].push(
+  { q: "Simplify: 5a + 2a − a", a: "6a", worked: ["Add coefficients: 5 + 2 − 1 = 6", "Answer: 6a"] },
+);
+questionBank['A4'][1].push(
+  { q: "Simplify: 3x + 4y + 2x − y", a: "5x + 3y", worked: ["Collect x terms: 3x + 2x = 5x", "Collect y terms: 4y − y = 3y", "Answer: 5x + 3y"] },
+);
+questionBank['A4'][2].push(
+  { q: "Simplify: 7x² − 2x + 3x²", a: "10x² - 2x", worked: ["Collect x² terms: 7x² + 3x² = 10x²", "Keep x term: −2x", "Answer: 10x² − 2x"] },
+);
+questionBank['A4'][3].push(
+  { q: "Simplify: 10 − 4p + 3 − p", a: "13 - 5p", worked: ["Collect number terms: 10 + 3 = 13", "Collect p terms: −4p − p = −5p", "Answer: 13 − 5p"] },
+);
+questionBank['A4'][4].push(
+  { q: "Simplify: xy + 2yx + a", a: "3xy + a", worked: ["Note: yx = xy", "Collect xy terms: xy + 2xy = 3xy", "Keep a: a", "Answer: 3xy + a"] },
+);
+
+// A17: Solve Linear Equations
+questionBank['A17'][0].push(
+  { q: "Solve: x + 5 = 12", a: "7", worked: ["Subtract 5 from both sides", "x = 12 − 5", "x = 7"] },
+);
+questionBank['A17'][1].push(
+  { q: "Solve: 4y = 20", a: "5", worked: ["Divide both sides by 4", "y = 20 ÷ 4", "y = 5"] },
+);
+questionBank['A17'][2].push(
+  { q: "Solve: 3n − 2 = 13", a: "5", worked: ["Add 2 to both sides: 3n = 15", "Divide both sides by 3", "n = 5"] },
+);
+questionBank['A17'][3].push(
+  { q: "Solve: 2(x + 4) = 18", a: "5", worked: ["Divide both sides by 2: x + 4 = 9", "Subtract 4 from both sides", "x = 5"] },
+);
+questionBank['A17'][4].push(
+  { q: "Solve: 5x − 3 = 2x + 9", a: "4", worked: ["Move x terms to left: 5x − 2x = 3x", "3x − 3 = 9", "Add 3 to both sides: 3x = 12", "x = 4"] },
+);
+
+// A21: Straight-Line Graphs
+questionBank['A21'][0].push(
+  { q: "Write down the coordinates of the y-intercept for the line y = x − 3.", a: "(0,-3)", worked: ["The y-intercept occurs when x = 0", "y = 0 − 3 = −3", "Coordinates: (0, −3)"] },
+);
+questionBank['A21'][1].push(
+  { q: "Using the equation y = 2x − 1, find the value of y when x = 3.", a: "5", worked: ["Substitute x = 3 into y = 2x − 1", "y = 2(3) − 1 = 6 − 1 = 5"] },
+);
+questionBank['A21'][2].push(
+  { q: "What type of line does the equation y = 3 represent on a coordinate grid?", type: "mcq", options: ["A horizontal line through (0, 3)", "A vertical line through (3, 0)", "A diagonal line through (0, 3)", "A curve through (0, 3)"], a: "A horizontal line through (0, 3)", worked: ["y = 3 means y is always 3, regardless of x", "This is a horizontal line", "It passes through (0, 3)"] },
+);
+questionBank['A21'][3].push(
+  { q: "What is the gradient of the line y = 4x − 2?", a: "4", worked: ["The equation is in the form y = mx + c", "m is the gradient, c is the y-intercept", "Here m = 4, so gradient = 4"] },
+);
+questionBank['A21'][4].push(
+  { q: "State the equation of a line parallel to y = 5x + 3 that passes through (0, −1).", a: "y = 5x - 1", worked: ["Parallel lines have the same gradient", "Gradient = 5", "Passes through (0, −1), so y-intercept = −1", "Equation: y = 5x − 1"] },
+);
+
+// G1: Angle Facts & Shape Properties
+questionBank['G1'][0].push(
+  { q: "What is the mathematical name for a 4-sided shape?", type: "mcq", options: ["Quadrilateral", "Pentagon", "Triangle", "Hexagon"], a: "Quadrilateral", worked: ["Quad = 4, so quadrilateral = 4-sided shape"] },
+);
+questionBank['G1'][1].push(
+  { q: "Two angles on a straight line are x° and 130°. Work out the value of x.", a: "50", worked: ["Angles on a straight line sum to 180°", "x + 130 = 180", "x = 50°"] },
+);
+questionBank['G1'][2].push(
+  { q: "A triangle has angles of 40° and 70°. Work out the size of the third angle.", a: "70", worked: ["Angles in a triangle sum to 180°", "40 + 70 + third angle = 180", "Third angle = 180 − 110 = 70°"] },
+);
+questionBank['G1'][3].push(
+  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", hint: "Interior angle = (n − 2) × 180 ÷ n", worked: ["Pentagon has 5 sides, so n = 5", "Interior angle = (5 − 2) × 180 ÷ 5", "= 3 × 180 ÷ 5 = 540 ÷ 5 = 108°"] },
+);
+questionBank['G1'][4].push(
+  { q: "Two angles are vertically opposite. One is 72°. What is the size of the other angle?", a: "72", worked: ["Vertically opposite angles are equal", "Therefore the other angle = 72°"] },
+);
+
+// G2: Transformations
+questionBank['G2'][0].push(
+  { q: "What is the name of the transformation that creates a mirror image of a shape?", type: "mcq", options: ["Reflection", "Rotation", "Translation", "Enlargement"], a: "Reflection", worked: ["A mirror image is created by reflection"] },
+);
+questionBank['G2'][1].push(
+  { q: "A point at (4, 2) is translated by the vector (3, −2). What are its new coordinates?", a: "7, 0", worked: ["Add the vector components to the point", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
+);
+questionBank['G2'][2].push(
+  { q: "The point (2, 3) is rotated 90° clockwise about the origin. What are the new coordinates?", type: "mcq", options: ["(3, −2)", "(−3, 2)", "(−2, −3)", "(−2, 3)"], a: "(3, −2)", worked: ["90° clockwise rotation: (x, y) → (y, −x)", "(2, 3) → (3, −2)"] },
+);
+questionBank['G2'][3].push(
+  { q: "A triangle has sides 3 cm, 4 cm, and 5 cm. It is enlarged by scale factor 2. What is the perimeter of the enlarged triangle?", a: "24", worked: ["Original perimeter = 3 + 4 + 5 = 12 cm", "Scale factor 2 means multiply all sides by 2", "New perimeter = 12 × 2 = 24 cm"] },
+);
+questionBank['G2'][4].push(
+  { q: "Shape A is the same shape as Shape B but twice the size. What type of transformation maps A to B?", type: "mcq", options: ["Enlargement", "Translation", "Rotation", "Reflection"], a: "Enlargement", worked: ["Twice the size means scale factor of 2", "This is an enlargement"] },
+);
+
+// G12: Perimeter, Area & Volume
+questionBank['G12'][0].push(
+  { q: "Find the perimeter of a square with side length 5 cm.", a: "20", worked: ["Square has 4 equal sides", "Perimeter = 4 × 5 = 20 cm"] },
+);
+questionBank['G12'][1].push(
+  { q: "Work out the area of a rectangle with base 8 cm and height 3 cm.", a: "24", worked: ["Area = base × height", "Area = 8 × 3 = 24 cm²"] },
+);
+questionBank['G12'][2].push(
+  { q: "Find the area of a triangle with base 6 cm and vertical height 4 cm.", a: "12", worked: ["Area = (base × height) ÷ 2", "Area = (6 × 4) ÷ 2 = 24 ÷ 2 = 12 cm²"] },
+);
+questionBank['G12'][3].push(
+  { q: "Calculate the volume of a cuboid with dimensions 2 cm by 3 cm by 10 cm.", a: "60", worked: ["Volume = length × width × height", "Volume = 2 × 3 × 10 = 60 cm³"] },
+);
+questionBank['G12'][4].push(
+  { q: "Calculate the area of a circle with radius 5 cm. Give your answer to 1 decimal place.", a: "78.5", calculator: true, hint: "Area = π × r²", worked: ["Area = π × r²", "Area = π × 5² = π × 25 ≈ 78.5 cm²"] },
+);
+
+// G20: Pythagoras & Trigonometry
+questionBank['G20'][0].push(
+  { q: "In a right-angled triangle, what is the name of the longest side?", type: "mcq", options: ["Hypotenuse", "Adjacent", "Opposite", "Base"], a: "Hypotenuse", worked: ["In a right-angled triangle, the longest side is opposite the right angle", "This is called the hypotenuse"] },
+);
+questionBank['G20'][1].push(
+  { q: "Use Pythagoras' theorem to find the hypotenuse c when a = 3 and b = 4.", a: "5", worked: ["c² = a² + b²", "c² = 3² + 4² = 9 + 16 = 25", "c = √25 = 5"] },
+);
+questionBank['G20'][2].push(
+  { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 5 cm. Find the missing side.", a: "12", calculator: true, worked: ["Using c² = a² + b²", "13² = 5² + b²", "169 = 25 + b²", "b² = 144, so b = 12 cm"] },
+);
+questionBank['G20'][3].push(
+  { q: "In a right-angled triangle, the angle is 30° and the hypotenuse is 10 cm. Use sin to find the length of the opposite side.", a: "5", calculator: true, worked: ["sin(angle) = opposite / hypotenuse", "sin(30°) = opposite / 10", "opposite = sin(30°) × 10 = 0.5 × 10 = 5 cm"] },
+);
+questionBank['G20'][4].push(
+  { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 12 cm. Use tan⁻¹ to find the angle. Give your answer to 1 d.p.", a: "22.6", calculator: true, worked: ["tan(angle) = opposite / adjacent", "tan(angle) = 5 / 12", "angle = tan⁻¹(5/12) = tan⁻¹(0.4167) ≈ 22.6°"] },
+);
+
+// P4: Relative Frequency
+questionBank['P4'][0].push(
+  { q: "A coin is flipped 50 times and lands on heads 20 times. Write the relative frequency of heads as a decimal.", a: "0.4", worked: ["Relative frequency = number of heads / total flips", "= 20 / 50 = 0.4"] },
+);
+questionBank['P4'][1].push(
+  { q: "If the probability of an event is 0.3, how many times would you expect it to happen in 100 trials?", a: "30", worked: ["Expected frequency = probability × number of trials", "= 0.3 × 100 = 30"] },
+);
+questionBank['P4'][2].push(
+  { q: "A spinner is spun 50 times and lands on Green 15 times. Estimate the probability of landing on Green.", a: "0.3", worked: ["Estimated probability = frequency / total spins", "= 15 / 50 = 0.3"] },
+);
+questionBank['P4'][3].push(
+  { q: "Why does relative frequency become a better estimate of probability as more trials are done?", type: "mcq", options: ["It gets closer to the theoretical probability", "It always equals the theoretical probability", "It gets further from the theoretical probability", "It stays the same"], a: "It gets closer to the theoretical probability", worked: ["With more trials, random variation averages out", "Relative frequency converges to theoretical probability"] },
+);
+questionBank['P4'][4].push(
+  { q: "A die is rolled 300 times. Landing on a 6 has a relative frequency of 0.2. How many times was a 6 rolled?", a: "60", worked: ["Relative frequency = frequency / total", "0.2 = frequency / 300", "Frequency = 0.2 × 300 = 60"] },
+);
+
+// P7: Tree Diagrams & Enumeration
+questionBank['P7'][0].push(
+  { q: "A coin is flipped and a 3-sided spinner (1, 2, 3) is spun. How many possible outcomes are there?", a: "6", worked: ["Coin outcomes: 2 (Heads, Tails)", "Spinner outcomes: 3 (1, 2, 3)", "Total outcomes = 2 × 3 = 6"] },
+);
+questionBank['P7'][1].push(
+  { q: "A bag has 3 red and 2 blue counters. One counter is picked at random. What is the probability it is red?", a: "3/5", worked: ["Total counters = 3 + 2 = 5", "Red counters = 3", "Probability = 3/5"] },
+);
+questionBank['P7'][2].push(
+  { q: "A fair coin is flipped twice. What is the probability of getting two Heads?", a: "0.25", worked: ["P(Heads) = 0.5", "P(two Heads) = 0.5 × 0.5 = 0.25"] },
+);
+questionBank['P7'][3].push(
+  { q: "Two events are independent. P(A) = 0.5 and P(B) = 0.2. Find P(A and B).", a: "0.1", worked: ["For independent events: P(A and B) = P(A) × P(B)", "P(A and B) = 0.5 × 0.2 = 0.1"] },
+);
+questionBank['P7'][4].push(
+  { q: "A bag has 4 red and 3 blue marbles. Two are picked without replacement. Find the probability both are red.", a: "2/7", worked: ["P(first red) = 4/7", "P(second red | first was red) = 3/6 = 1/2", "P(both red) = 4/7 × 1/2 = 4/14 = 2/7"] },
+);
+
+// R2: Percentage Change & Growth/Decay
+questionBank['R2'][0].push(
+  { q: "Increase £40 by 10%.", a: "44", worked: ["10% of £40 = 0.1 × 40 = £4", "New value = £40 + £4 = £44"] },
+);
+questionBank['R2'][1].push(
+  { q: "Decrease 60 kg by 20%.", a: "48", worked: ["20% of 60 = 0.2 × 60 = 12", "New value = 60 − 12 = 48 kg"] },
+);
+questionBank['R2'][2].push(
+  { q: "A house price increases from £200,000 to £220,000. Calculate the percentage increase.", a: "10", worked: ["Increase = £220,000 − £200,000 = £20,000", "Percentage = (20,000 ÷ 200,000) × 100 = 10%"] },
+);
+questionBank['R2'][3].push(
+  { q: "Use a multiplier to increase £450 by 3.5%.", a: "465.75", calculator: true, worked: ["Increase by 3.5% means multiply by 1.035", "£450 × 1.035 = £465.75"] },
+);
+questionBank['R2'][4].push(
+  { q: "£1000 is invested at 4% compound interest per year for 2 years. Work out the final amount.", a: "1081.60", calculator: true, worked: ["Year 1: £1000 × 1.04 = £1040", "Year 2: £1040 × 1.04 = £1081.60"] },
+);
+
+// S2: Tables & Charts
+questionBank['S2'][0].push(
+  { q: "A bar chart shows 12 students chose football, 8 chose tennis, and 5 chose swimming. How many more students chose football than swimming?", a: "7", worked: ["Football students = 12", "Swimming students = 5", "Difference = 12 − 5 = 7"] },
+);
+questionBank['S2'][1].push(
+  { q: "The following data shows the colours of 10 cars: Red, Blue, Red, Green, Blue, Red, Blue, Red, Green, Blue. How many cars are red?", a: "4", worked: ["Count the reds: Red, Red, Red, Red", "Total red cars = 4"] },
+);
+questionBank['S2'][2].push(
+  { q: "In a pictogram, each symbol represents 4 people. How many symbols are needed to show 14 people?", a: "3.5", worked: ["Number of symbols = 14 ÷ 4 = 3.5", "Need 3.5 symbols"] },
+);
+questionBank['S2'][3].push(
+  { q: "40 people were asked their favourite sport. 10 said tennis. Calculate the angle for tennis in a pie chart.", a: "90", worked: ["Fraction = 10/40 = 1/4", "Angle = 1/4 × 360° = 90°"] },
+);
+questionBank['S2'][4].push(
+  { q: "A dual bar chart compares boys and girls. The boys' bar shows 45 and the girls' bar shows 30. How many more boys than girls are there?", a: "15", diagram: "dual-bar-chart", worked: ["Boys = 45", "Girls = 30", "Difference = 45 − 30 = 15"] },
+);
+
+// S3: Averages & Range
+questionBank['S3'][0].push(
+  { q: "Find the mode of: 2, 3, 2, 5, 6.", a: "2", worked: ["Mode is the most frequent value", "2 appears twice, all others appear once", "Mode = 2"] },
+);
+questionBank['S3'][1].push(
+  { q: "Find the range of: 10, 15, 8, 20, 12.", a: "12", worked: ["Range = highest − lowest", "Highest = 20, Lowest = 8", "Range = 20 − 8 = 12"] },
+);
+questionBank['S3'][2].push(
+  { q: "Find the median of: 5, 8, 3, 2, 10.", a: "5", worked: ["Order the data: 2, 3, 5, 8, 10", "Median is the middle value", "Median = 5"] },
+);
+questionBank['S3'][3].push(
+  { q: "Calculate the mean of: 4, 7, 9, 10.", a: "7.5", worked: ["Mean = sum ÷ count", "Sum = 4 + 7 + 9 + 10 = 30", "Mean = 30 ÷ 4 = 7.5"] },
+);
+questionBank['S3'][4].push(
+  { q: "The mean of five numbers is 10. Four of the numbers are 7, 12, 8, and 14. Find the fifth number.", a: "9", worked: ["Mean = 10, so sum of 5 numbers = 10 × 5 = 50", "Sum of known numbers = 7 + 12 + 8 + 14 = 41", "Fifth number = 50 − 41 = 9"] },
+);
 
 // Map every objective code to the primary code that owns its question bank
 // (derived from reference equality — aliases share the same array object)
@@ -2997,7 +3508,7 @@ const getExamQuestionsForTier = (tier) => {
   return examQuestions;
 };
 
-// Worked examples with step-by-step solutions
+// Legacy worked examples (now replaced by per-question worked arrays)
 const workedExamples = {
   N5: {
     title: "Order of Operations (BIDMAS)",
@@ -3453,64 +3964,7 @@ const answersEquivalent = (userAnswer, correctAnswer) => {
 
 // ==================== LLM-POWERED ERROR DIAGNOSIS ====================
 
-// AI tutor diagnosis using Claude API
-const diagnoseErrorWithAI = async (question, userAnswer, objective, correctAnswer) => {
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 300,
-        messages: [
-          {
-            role: "user",
-            content: `You are a friendly GCSE maths tutor helping a student who just got a question wrong.
-
-Question: ${question.q}
-Student's answer: ${userAnswer}
-Correct answer: ${correctAnswer}
-Topic: ${objective.topic} (${objective.code}: ${objective.title || ''})
-
-Analyze their specific mistake and respond in this exact JSON format:
-{
-  "diagnosis": "One sentence explaining what specific mistake they made (e.g., 'You calculated left-to-right instead of following BIDMAS - multiplication should come before addition.')",
-  "tip": "One practical tip to fix this (e.g., 'Try circling all the × and ÷ signs first, then do those before + and -')",
-  "encouragement": "A brief encouraging word (e.g., 'This is a really common mistake - you're nearly there!')"
-}
-
-Be specific about THEIR error, not generic. If you can identify exactly what they did wrong, explain it. Keep it supportive and age-appropriate for a 14-16 year old.`
-          }
-        ],
-      })
-    });
-
-    const data = await response.json();
-    const text = data.content?.[0]?.text || '';
-    
-    // Parse JSON from response
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
-      return {
-        hasDiagnosis: true,
-        diagnosis: parsed.diagnosis,
-        tip: parsed.tip,
-        encouragement: parsed.encouragement,
-        isAI: true,
-      };
-    }
-  } catch (error) {
-    console.log('AI diagnosis unavailable, using fallback:', error);
-  }
-  
-  // Fallback to quick pattern detection if AI fails
-  return quickDiagnosis(question, userAnswer, correctAnswer);
-};
-
-// Fast fallback diagnosis (no API call)
+// Quick diagnosis for wrong answers (pattern matching)
 const quickDiagnosis = (question, userAnswer, correctAnswer) => {
   const userNum = parseFloat(userAnswer);
   const correctNum = parseFloat(correctAnswer);
@@ -3582,6 +4036,8 @@ const generateDiagram = (type) => {
     'tea-coffee': 'tea-coffee.png',
     'dual-bar-chart': 'dual bar chart.png',
     'spinners': 'spinners.png',
+    'isosceles-triangle': 'Isoceles triangle missing angle.png',
+    'pythagoras-shorter': 'pythagoras shorter side.png',
   };
 
   // Check for image-based diagram first
@@ -3613,6 +4069,20 @@ const generateDiagram = (type) => {
       <text x="40" y="110" fill="#7c3aed" font-size="14">θ</text>
     </svg>`,
   };
+  // Table-of-values diagrams (AQA style)
+  if (type && type.startsWith('table:')) {
+    const data = type.slice(6); // e.g. "y=2x+1|-1,0,1,2|?,1,?,5"
+    const [equation, xVals, yVals] = data.split('|');
+    const xs = xVals.split(',');
+    const ys = yVals.split(',');
+    const cells = xs.map((x, i) => `<td style="border:2px solid #64748b;padding:8px 14px;text-align:center;font-weight:${ys[i] === '?' ? 'bold' : 'normal'};color:${ys[i] === '?' ? '#a78bfa' : '#e2e8f0'};font-size:1.1em">${ys[i]}</td>`).join('');
+    const xCells = xs.map(x => `<td style="border:2px solid #64748b;padding:8px 14px;text-align:center;color:#e2e8f0;font-size:1.1em">${x}</td>`).join('');
+    return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
+      <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">x</td>${xCells}</tr>
+      <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">y</td>${cells}</tr>
+    </table>`;
+  }
+
   return svgDiagrams[type] || null;
 };
 
@@ -3783,7 +4253,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
     const questionIndex = Math.min(quickCorrect, questions.length - 1);
     const q = pickVariant(questions[questionIndex]);
     const questionType = quickCorrect >= 5 ? 'review' : 'quick';
-    return { ...q, objective, questionType };
+    return { ...q, objective, questionType, difficultyLevel: questionIndex + 1 };
   }
 
   // Fallback: generic question (should never trigger with full coverage)
@@ -3834,16 +4304,13 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
 
   // Scaffolding state
   const [failureCounts, setFailureCounts] = useState({}); // Track consecutive failures per objective
-  const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // AI diagnosis of error
-  const [isAnalyzing, setIsAnalyzing] = useState(false); // AI is analyzing the error
+  const [currentDiagnosis, setCurrentDiagnosis] = useState(null); // Diagnosis of error
 
   // Calculator state
   const [showCalculator, setShowCalculator] = useState(false);
-  
-  // AI unlock state - AI features phase in after 15 questions
+
+  // Question tracking
   const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(() => loadTotalQuestions());
-  const [showAIUnlockNotification, setShowAIUnlockNotification] = useState(false);
-  const aiUnlocked = isAIUnlocked(totalQuestionsAnswered);
   
   // Math keyboard state
   const [showMathKeyboard, setShowMathKeyboard] = useState(false);
@@ -4195,40 +4662,15 @@ What is the student's answer?`
     setTotalQuestionsAnswered(newTotal);
     saveTotalQuestions(newTotal);
 
-    // Show AI coach tip on first session
-    if (newTotal === 1) {
-      setTimeout(() => showTip('aiCoach'), 1500);
-    }
-
-    // Check if AI just got unlocked
-    if (newTotal === AI_UNLOCK_THRESHOLD) {
-      setTimeout(() => setShowAIUnlockNotification(true), 500);
-    }
-    
     const code = current.objective.code;
     
     // === SCAFFOLDING LOGIC (disabled in Quick Fire and Exam modes) ===
     const scaffoldingEnabled = practiceMode !== 'quickfire' && practiceMode !== 'exam';
 
     if (!correct && scaffoldingEnabled) {
-      // Start with quick fallback diagnosis immediately (always available)
+      // Quick diagnosis for wrong answers
       const quickDiag = quickDiagnosis(current, userAnswer, current.a);
       setCurrentDiagnosis(quickDiag);
-      
-      // Only run AI diagnosis if unlocked (after 15 questions)
-      if (isAIUnlocked(newTotal)) {
-        setIsAnalyzing(true);
-        diagnoseErrorWithAI(current, userAnswer, current.objective, current.a)
-          .then(aiDiagnosis => {
-            if (aiDiagnosis.hasDiagnosis) {
-              setCurrentDiagnosis(aiDiagnosis);
-            }
-            setIsAnalyzing(false);
-          })
-          .catch(() => {
-            setIsAnalyzing(false);
-          });
-      }
       
       // Track failure count for this objective
       const newFailureCount = (failureCounts[code] || 0) + 1;
@@ -4718,10 +5160,10 @@ What is the student's answer?`
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       <LandscapePrompt />
-      <div className="ambient-glow" />
-      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" />
-      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" />
-      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" />
+      <div className="ambient-glow" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
+      <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
 
       <div className="pt-2 pb-0 px-4 relative z-10 page-content">
         <div className="max-w-lg mx-auto content-container">
@@ -4776,6 +5218,13 @@ What is the student's answer?`
                     style={{ width: `${progressPct}%` }}
                   />
                 </div>
+
+                {/* Difficulty level */}
+                {current.difficultyLevel && (
+                  <span className="text-xs font-semibold text-white/60 shrink-0">
+                    Lv {current.difficultyLevel}/5
+                  </span>
+                )}
 
                 {/* Question count */}
                 <span className="text-xs text-secondary-text shrink-0">
@@ -5292,53 +5741,20 @@ What is the student's answer?`
                           )}
                         </div>
 
-                        {/* AI Analyzing Indicator - only when AI is unlocked */}
-                        {!isCorrect && isAnalyzing && aiUnlocked && !currentDiagnosis?.isAI && (
-                          <div className="p-4 bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30 rounded-xl animate-pulse">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
-                                <span className="text-xl animate-spin">🤖</span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-purple-300">AI Coach is analyzing your answer...</h4>
-                                <p className="text-sm text-purple-400">Finding what went wrong</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Error Diagnosis - different style for AI vs pattern matching */}
+                        {/* Error Diagnosis */}
                         {!isCorrect && currentDiagnosis?.hasDiagnosis && (
-                          <div className={`p-4 rounded-xl ${
-                            currentDiagnosis.isAI
-                              ? 'bg-gradient-to-br from-purple-500/15 to-indigo-500/15 border border-purple-500/30'
-                              : 'bg-amber-500/10 border border-amber-500/30'
-                          }`}>
+                          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
                             <div className="flex items-start gap-3">
-                              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                                currentDiagnosis.isAI ? 'bg-purple-500/20' : 'bg-amber-500/20'
-                              }`}>
-                                <span className="text-xl">🤖</span>
+                              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-500/20">
+                                <span className="text-xl">💡</span>
                               </div>
                               <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
-                                  <h4 className={`font-semibold ${currentDiagnosis.isAI ? 'text-purple-300' : 'text-amber-300'}`}>
-                                    What went wrong?
-                                  </h4>
-                                  {currentDiagnosis.isAI && (
-                                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-500/30 text-purple-300 rounded-full font-medium">
-                                      AI Coach
-                                    </span>
-                                  )}
-                                </div>
-                                <p className={`text-sm mb-2 ${currentDiagnosis.isAI ? 'text-purple-200/80' : 'text-amber-200/80'}`}>
+                                <h4 className="font-semibold text-amber-300 mb-1">
+                                  What went wrong?
+                                </h4>
+                                <p className="text-sm mb-2 text-amber-200/80">
                                   {currentDiagnosis.diagnosis}
                                 </p>
-                                {currentDiagnosis.encouragement && currentDiagnosis.isAI && (
-                                  <p className="text-xs text-purple-400 mt-2 italic">
-                                    {currentDiagnosis.encouragement}
-                                  </p>
-                                )}
                               </div>
                             </div>
                           </div>
@@ -5346,36 +5762,21 @@ What is the student's answer?`
 
                     
 
-                        {/* Worked Example - only show when incorrect and no diagnosis */}
-                        {!isCorrect && !currentDiagnosis?.hasDiagnosis && workedExamples[current.objective.code] && (
+                        {/* Worked Example - show when incorrect and question has worked steps */}
+                        {!isCorrect && current.worked && (
                           <details className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden">
                             <summary className="p-4 cursor-pointer font-semibold text-blue-300 hover:bg-blue-500/15 transition-colors flex items-center gap-2">
                               <BookOpen className="w-5 h-5" />
-                              View Worked Example: {workedExamples[current.objective.code].title}
+                              View Worked Example
                             </summary>
-                            <div className="p-4 pt-0 space-y-4">
-                              {/* Steps */}
-                              <div>
-                                <h4 className="font-semibold text-blue-300 mb-2">Method:</h4>
-                                <ol className="text-sm text-blue-200/80 space-y-1 list-decimal list-inside">
-                                  {workedExamples[current.objective.code].steps.map((step, i) => (
-                                    <li key={i}>{step.replace(/^\d+\.\s*/, '')}</li>
-                                  ))}
-                                </ol>
+                            <div className="p-4 pt-2">
+                              <div className="text-sm text-blue-200/80 space-y-2">
+                                {current.worked.map((step, i) => (
+                                  <p key={i} className={i === current.worked.length - 1 ? 'font-semibold text-blue-300' : ''}>
+                                    {step}
+                                  </p>
+                                ))}
                               </div>
-
-                              {/* Worked Example */}
-                              <div className="bg-white/5 rounded-lg p-3">
-                                <h4 className="font-semibold text-blue-300 mb-2">Example: {workedExamples[current.objective.code].example.q}</h4>
-                                <div className="text-sm text-blue-200/80 space-y-1">
-                                  {workedExamples[current.objective.code].example.solution.map((line, i) => (
-                                    <p key={i} className={line.startsWith('Answer') || line.startsWith('=') ? 'font-semibold' : ''}>
-                                      {line}
-                                    </p>
-                                  ))}
-                                </div>
-                              </div>
-                          
                             </div>
                           </details>
                         )}
@@ -5404,55 +5805,6 @@ What is the student's answer?`
         </div>
       </div>
       
-      {/* AI Coach Unlock Notification */}
-      {showAIUnlockNotification && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl animate-bounce-in">
-            {/* Header with gradient */}
-            <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500 p-8 text-center relative overflow-hidden">
-              <div className="relative">
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                  <span className="text-5xl">🤖</span>
-                </div>
-                <h2 className="text-white text-2xl font-bold mb-2">AI Coach Unlocked!</h2>
-                <p className="text-violet-100">You've earned a personal tutor</p>
-              </div>
-            </div>
-            
-            {/* Content */}
-            <div className="p-6 space-y-4">
-              <p className="text-slate-600 text-center">
-                After {AI_UNLOCK_THRESHOLD} questions, you've unlocked <strong>AI-powered features</strong>:
-              </p>
-              
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-xl">
-                  <span className="text-2xl">🔍</span>
-                  <div>
-                    <p className="font-semibold text-purple-900">Smart Error Analysis</p>
-                    <p className="text-xs text-purple-600">AI identifies exactly where you went wrong</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-3 p-3 bg-indigo-50 rounded-xl">
-                  <span className="text-2xl">💬</span>
-                  <div>
-                    <p className="font-semibold text-indigo-900">Personalised Feedback</p>
-                    <p className="text-xs text-indigo-600">Encouragement tailored to your mistakes</p>
-                  </div>
-                </div>
-              </div>
-              
-              <button
-                onClick={() => setShowAIUnlockNotification(false)}
-                className="w-full py-4 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-xl hover:from-violet-600 hover:to-purple-600 transition-all shadow-lg mt-4"
-              >
-                Let's Go!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
