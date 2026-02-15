@@ -104,7 +104,7 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
               } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="text-sm text-gray-500 mb-1">Monthly</div>
-              <div className="text-2xl font-bold">£3.99</div>
+              <div className="text-2xl font-bold text-gray-900">£3.99</div>
               <div className="text-xs text-gray-400">/month</div>
             </button>
             <button
@@ -120,7 +120,7 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
                 Save 37%
               </div>
               <div className="text-sm text-gray-500 mb-1">Yearly</div>
-              <div className="text-2xl font-bold">£29.99</div>
+              <div className="text-2xl font-bold text-gray-900">£29.99</div>
               <div className="text-xs text-gray-400">/year</div>
             </button>
           </div>
