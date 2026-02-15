@@ -6,7 +6,7 @@ export const getAllSchools = async () => {
   const timeout = setTimeout(() => controller.abort(), 8000);
 
   try {
-    const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc`;
+    const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc&limit=10000`;
 
     const response = await fetch(url, {
       headers: {
