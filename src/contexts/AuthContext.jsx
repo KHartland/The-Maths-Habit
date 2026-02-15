@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 const AuthContext = createContext({});
@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [dailyQuestionsUsed, setDailyQuestionsUsed] = useState(0);
+  const signingOutRef = useRef(false);
 
   const FREE_DAILY_LIMIT = 5;
 
@@ -118,7 +119,9 @@ export const AuthProvider = ({ children }) => {
 
   // Sign out
   const signOut = async () => {
-    // Always clear local state immediately
+    // Block the auth listener from re-setting the user
+    signingOutRef.current = true;
+    // Clear local state immediately
     setUser(null);
     setProfile(null);
     setDailyQuestionsUsed(0);
@@ -132,6 +135,7 @@ export const AuthProvider = ({ children }) => {
       const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
       await Promise.race([supabase.auth.signOut(), timeout]);
     } catch {}
+    signingOutRef.current = false;
     return { error: null };
   };
 
@@ -251,6 +255,9 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        // Ignore auth events while signing out — prevents re-login flicker
+        if (signingOutRef.current) return;
+
         setUser(session?.user ?? null);
 
         if (session?.user) {
