@@ -1,9 +1,18 @@
-import { supabase, supabaseUrl, supabaseAnonKey } from './supabase';
+import { supabaseUrl, supabaseAnonKey } from './supabase';
 
-// Helper: get auth token for authenticated requests
-const getAuthToken = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  return session?.access_token || supabaseAnonKey;
+// Helper: get auth token directly from localStorage (bypasses Supabase JS client)
+const getAuthToken = () => {
+  try {
+    const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.access_token) return parsed.access_token;
+    }
+  } catch (e) {
+    console.error('Failed to read auth token:', e);
+  }
+  return supabaseAnonKey;
 };
 
 // Helper: raw fetch to PostgREST with timeout
@@ -85,7 +94,7 @@ export const createSchool = async (schoolName, town, userId) => {
 
   const trimmedName = schoolName.trim();
   const trimmedTown = town.trim();
-  const token = await getAuthToken();
+  const token = getAuthToken();
 
   // Check if it already exists
   const { data: existing } = await restFetch(
@@ -109,7 +118,7 @@ export const createSchool = async (schoolName, town, userId) => {
 // Join a school (leaves current school first)
 export const joinSchool = async (userId, schoolId) => {
   if (!userId || !schoolId) throw new Error('User ID and School ID are required');
-  const token = await getAuthToken();
+  const token = getAuthToken();
 
   // Leave any existing school first
   await leaveSchool(userId);
@@ -128,7 +137,7 @@ export const joinSchool = async (userId, schoolId) => {
 // Leave current school
 export const leaveSchool = async (userId) => {
   if (!userId) throw new Error('User ID is required');
-  const token = await getAuthToken();
+  const token = getAuthToken();
 
   await restFetch(`school_members?user_id=eq.${userId}`, {
     method: 'DELETE',
@@ -139,7 +148,7 @@ export const leaveSchool = async (userId) => {
 // Get user's current school (returns { id, name, town } or null)
 export const getUserSchool = async (userId) => {
   if (!userId) return null;
-  const token = await getAuthToken();
+  const token = getAuthToken();
 
   // Get the user's school_members row
   const { data: members } = await restFetch(
@@ -161,7 +170,7 @@ export const getUserSchool = async (userId) => {
 // Get leaderboard for a school via RPC function
 export const getSchoolLeaderboard = async (schoolId) => {
   if (!schoolId) throw new Error('School ID is required');
-  const token = await getAuthToken();
+  const token = getAuthToken();
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
