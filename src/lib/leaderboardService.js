@@ -2,17 +2,24 @@ import { supabase } from './supabase';
 
 // Fetch all schools for the dropdown picker (with town)
 export const getAllSchools = async () => {
-  const { data, error } = await supabase
-    .from('schools')
-    .select('id, name, town')
-    .order('name', { ascending: true });
+  try {
+    console.log('[Schools] Fetching all schools...');
+    const { data, error } = await supabase
+      .from('schools')
+      .select('id, name, town')
+      .order('name', { ascending: true });
 
-  if (error) {
-    console.error('Error fetching schools:', error);
-    return [];
+    if (error) {
+      console.error('[Schools] Supabase error:', error.message, error.code, error.details);
+      throw new Error(`Supabase: ${error.message} (${error.code})`);
+    }
+
+    console.log('[Schools] Loaded', data?.length || 0, 'schools');
+    return data || [];
+  } catch (err) {
+    console.error('[Schools] getAllSchools threw:', err);
+    throw err; // let the caller see the error
   }
-
-  return data || [];
 };
 
 // Search for schools by name or town (for the school picker)

@@ -6614,14 +6614,21 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     let cancelled = false;
     (async () => {
       try {
+        setSchoolError('');
         const schools = await getAllSchools();
         if (!cancelled) {
           setAllSchoolsList(schools);
           setSchoolsLoaded(true);
+          if (schools.length === 0) {
+            setSchoolError('No schools in database yet');
+          }
         }
       } catch (err) {
         console.error('Failed to load schools:', err);
-        if (!cancelled) setSchoolsLoaded(true); // stop retrying
+        if (!cancelled) {
+          setSchoolError('Failed to load schools: ' + (err.message || 'Unknown error'));
+          setSchoolsLoaded(true);
+        }
       }
     })();
     return () => { cancelled = true; };
@@ -6870,9 +6877,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
                             Loading schools...
                           </div>
+                        ) : schoolError && allSchoolsList.length === 0 ? (
+                          <div className="px-4 py-4 text-center text-sm text-red-400">
+                            {schoolError}
+                          </div>
                         ) : schoolFilter.trim().length < 2 ? (
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Start typing to search schools...
+                            {allSchoolsList.length} schools loaded — start typing to search...
                           </div>
                         ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
