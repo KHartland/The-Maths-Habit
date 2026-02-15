@@ -7258,30 +7258,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 </div>
               </div>
               
-              {/* Export button */}
-              <button
-                onClick={handleExport}
-                className="w-full flex items-center justify-center gap-2 py-3 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-xl transition-colors"
-              >
-                <Download className="w-4 h-4" />
-                Export Progress
-              </button>
-
-              {/* Import button */}
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full flex items-center justify-center gap-2 py-3 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-xl transition-colors"
-              >
-                <Upload className="w-4 h-4" />
-                Import Progress
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleImport}
-                className="hidden"
-              />
 
               {/* Import status */}
               {importStatus && (
