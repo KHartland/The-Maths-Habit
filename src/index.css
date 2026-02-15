@@ -47,6 +47,42 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* ==================== ACCESSIBILITY ==================== */
+
+/* Dyslexia-friendly font */
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
+body.dyslexia-font,
+body.dyslexia-font * {
+  font-family: 'OpenDyslexic', system-ui, sans-serif !important;
+}
+
+/* Font size overrides */
+body.font-large {
+  font-size: 118%;
+}
+body.font-xlarge {
+  font-size: 136%;
+}
+
+/* High contrast */
+body.high-contrast {
+  --bg-void: #000000;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E5E5;
+}
+body.high-contrast .glass-panel,
+body.high-contrast .glass-panel-strong {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+body.high-contrast .text-secondary-text {
+  color: #E5E5E5 !important;
+}
+body.high-contrast .text-primary-text {
+  color: #FFFFFF !important;
+}
+
 /* ==================== RICH BACKGROUND ==================== */
 /* Animated gradient mesh that replaces flat dark background */
 

@@ -7852,6 +7852,17 @@ function AppContent() {
   const [tooltip, setTooltip] = useState({ open: false, x: 0, y: 0, objective: null });
   const [progress, setProgress] = useState(() => loadProgress());
   const [settings, setSettings] = useState(() => loadSettings());
+
+  // Apply accessibility settings to document.body
+  useEffect(() => {
+    const b = document.body;
+    b.classList.toggle('dyslexia-font', !!settings.dyslexiaFont);
+    b.classList.toggle('high-contrast', !!settings.highContrast);
+    b.classList.remove('font-large', 'font-xlarge');
+    if (settings.fontSize === 'large') b.classList.add('font-large');
+    if (settings.fontSize === 'xlarge') b.classList.add('font-xlarge');
+  }, [settings.dyslexiaFont, settings.highContrast, settings.fontSize]);
+
   const [currentPage, setCurrentPage] = useState('home');
   const [recentSessionCodes, setRecentSessionCodes] = useState([]);
   const [sessionToastData, setSessionToastData] = useState(null);
