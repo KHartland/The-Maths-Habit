@@ -7950,21 +7950,24 @@ function AppContent() {
     setCurrentPage('practice'); // Go straight to practice
   };
 
-  // Move to plan selection after successful auth (or skip for returning users)
+  // After auth during onboarding, skip plan for returning users or show it for new ones
   useEffect(() => {
-    if (showOnboarding && onboardingStep === 2 && user) {
-      // Check if returning user (already has a profile/progress)
-      if (profile || Object.keys(progress).length > 0) {
-        // Returning user — skip plan selection, go straight to app
-        setOnboardingComplete();
-        setShowOnboarding(false);
-        setCurrentPage('home');
-      } else {
-        // New user — show plan selection
-        setOnboardingStep(3);
-      }
+    if (!showOnboarding || !user) return;
+    if (onboardingStep !== 2 && onboardingStep !== 3) return;
+
+    // Wait for profile to load before deciding
+    if (authLoading) return;
+
+    // Returning user — has profile or local progress
+    if (profile || Object.keys(progress).length > 0) {
+      setOnboardingComplete();
+      setShowOnboarding(false);
+      setCurrentPage('home');
+    } else if (onboardingStep === 2) {
+      // New user — show plan selection
+      setOnboardingStep(3);
     }
-  }, [user, showOnboarding, onboardingStep, profile]);
+  }, [user, showOnboarding, onboardingStep, profile, authLoading]);
 
   // Multi-step Onboarding Flow - Deep Space Glassmorphism
   if (showOnboarding) {
