@@ -1,5 +1,53 @@
 import { supabase, supabaseUrl, supabaseAnonKey } from './supabase';
 
+// Helper: get auth token for authenticated requests
+const getAuthToken = async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token || supabaseAnonKey;
+};
+
+// Helper: raw fetch to PostgREST with timeout
+const restFetch = async (path, options = {}) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  const token = options.token || supabaseAnonKey;
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || '',
+        ...options.headers,
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      // PGRST116 = no rows found, not a real error for deletes
+      if (response.status === 404 || body.includes('PGRST116')) {
+        return { data: null, notFound: true };
+      }
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+    }
+
+    const text = await response.text();
+    if (!text) return { data: null };
+    return { data: JSON.parse(text) };
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out (8s)');
+    }
+    throw err;
+  }
+};
+
 // Fetch all schools in pages of 1000 (PostgREST default limit)
 export const getAllSchools = async () => {
   const allSchools = [];
@@ -7,80 +55,27 @@ export const getAllSchools = async () => {
   const pageSize = 1000;
 
   while (true) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const { data } = await restFetch(
+      `schools?select=id,name,town&order=name.asc&limit=${pageSize}&offset=${offset}`
+    );
 
-    try {
-      const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc&limit=${pageSize}&offset=${offset}`;
-
-      const response = await fetch(url, {
-        headers: {
-          'apikey': supabaseAnonKey,
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-        },
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (!response.ok) {
-        const body = await response.text();
-        throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
-      }
-
-      const page = await response.json();
-      if (!page || page.length === 0) break;
-
-      allSchools.push(...page);
-      if (page.length < pageSize) break; // last page
-      offset += pageSize;
-    } catch (err) {
-      clearTimeout(timeout);
-      if (err.name === 'AbortError') {
-        throw new Error('Request timed out (8s) — is your Supabase project active?');
-      }
-      throw err;
-    }
+    if (!data || data.length === 0) break;
+    allSchools.push(...data);
+    if (data.length < pageSize) break;
+    offset += pageSize;
   }
 
   return allSchools;
 };
 
-// Search for schools by name or town (for the school picker)
+// Search schools (unused now — client-side filtering instead)
 export const searchSchools = async (query) => {
   if (!query || query.trim().length < 2) return [];
-
   const trimmed = query.trim();
-  try {
-    // Try name search first (most common), then merge with town search
-    const { data, error } = await supabase
-      .from('schools')
-      .select('id, name, town')
-      .or(`name.ilike.%${trimmed}%,town.ilike.%${trimmed}%`)
-      .order('name', { ascending: true })
-      .limit(30);
-
-    if (error) {
-      console.error('Error searching schools:', error.message, error.code);
-      // Fallback: try just name search without .or()
-      const { data: fallbackData, error: fallbackError } = await supabase
-        .from('schools')
-        .select('id, name, town')
-        .ilike('name', `%${trimmed}%`)
-        .order('name', { ascending: true })
-        .limit(30);
-      if (fallbackError) {
-        console.error('Fallback search also failed:', fallbackError.message);
-        return [];
-      }
-      return fallbackData || [];
-    }
-
-    return data || [];
-  } catch (err) {
-    console.error('School search threw:', err);
-    return [];
-  }
+  const { data } = await restFetch(
+    `schools?select=id,name,town&or=(name.ilike.%25${encodeURIComponent(trimmed)}%25,town.ilike.%25${encodeURIComponent(trimmed)}%25)&order=name.asc&limit=30`
+  );
+  return data || [];
 };
 
 // Create a new school (with town)
@@ -90,104 +85,118 @@ export const createSchool = async (schoolName, town, userId) => {
 
   const trimmedName = schoolName.trim();
   const trimmedTown = town.trim();
+  const token = await getAuthToken();
 
-  // Check if it already exists (case-insensitive name + town)
-  const { data: existing } = await supabase
-    .from('schools')
-    .select('id, name, town')
-    .ilike('name', trimmedName)
-    .ilike('town', trimmedTown)
-    .limit(1)
-    .maybeSingle();
+  // Check if it already exists
+  const { data: existing } = await restFetch(
+    `schools?select=id,name,town&name=ilike.${encodeURIComponent(trimmedName)}&town=ilike.${encodeURIComponent(trimmedTown)}&limit=1`,
+    { token }
+  );
 
-  if (existing) return existing;
+  if (existing && existing.length > 0) return existing[0];
 
-  const { data, error } = await supabase
-    .from('schools')
-    .insert({ name: trimmedName, town: trimmedTown, created_by: userId })
-    .select()
-    .single();
+  const { data } = await restFetch('schools?select=*', {
+    method: 'POST',
+    body: JSON.stringify({ name: trimmedName, town: trimmedTown, created_by: userId }),
+    prefer: 'return=representation',
+    token,
+  });
 
-  if (error) {
-    console.error('Error creating school:', error);
-    throw new Error(error.message || 'Failed to create school');
-  }
-
-  return data;
+  if (!data || data.length === 0) throw new Error('Failed to create school');
+  return data[0];
 };
 
 // Join a school (leaves current school first)
 export const joinSchool = async (userId, schoolId) => {
   if (!userId || !schoolId) throw new Error('User ID and School ID are required');
+  const token = await getAuthToken();
 
   // Leave any existing school first
   await leaveSchool(userId);
 
-  const { data, error } = await supabase
-    .from('school_members')
-    .insert({ user_id: userId, school_id: schoolId })
-    .select()
-    .single();
+  const { data } = await restFetch('school_members?select=*', {
+    method: 'POST',
+    body: JSON.stringify({ user_id: userId, school_id: schoolId }),
+    prefer: 'return=representation',
+    token,
+  });
 
-  if (error) {
-    console.error('Error joining school:', error);
-    throw new Error(error.message || 'Failed to join school');
-  }
-
-  return data;
+  if (!data || data.length === 0) throw new Error('Failed to join school');
+  return data[0];
 };
 
 // Leave current school
 export const leaveSchool = async (userId) => {
   if (!userId) throw new Error('User ID is required');
+  const token = await getAuthToken();
 
-  const { error } = await supabase
-    .from('school_members')
-    .delete()
-    .eq('user_id', userId);
-
-  // PGRST116 = no rows found, which is fine
-  if (error && error.code !== 'PGRST116') {
-    console.error('Error leaving school:', error);
-    throw new Error(error.message || 'Failed to leave school');
-  }
+  await restFetch(`school_members?user_id=eq.${userId}`, {
+    method: 'DELETE',
+    token,
+  });
 };
 
 // Get user's current school (returns { id, name, town } or null)
 export const getUserSchool = async (userId) => {
   if (!userId) return null;
+  const token = await getAuthToken();
 
-  const { data, error } = await supabase
-    .from('school_members')
-    .select('school_id, schools(id, name, town)')
-    .eq('user_id', userId)
-    .maybeSingle();
+  // Get the user's school_members row
+  const { data: members } = await restFetch(
+    `school_members?select=school_id&user_id=eq.${userId}&limit=1`,
+    { token }
+  );
 
-  if (error) {
-    console.error('Error fetching user school:', error);
-    return null;
-  }
+  if (!members || members.length === 0) return null;
 
-  return data?.schools || null;
+  // Now fetch the school details
+  const { data: schools } = await restFetch(
+    `schools?select=id,name,town&id=eq.${members[0].school_id}&limit=1`,
+    { token }
+  );
+
+  return schools && schools.length > 0 ? schools[0] : null;
 };
 
 // Get leaderboard for a school via RPC function
 export const getSchoolLeaderboard = async (schoolId) => {
   if (!schoolId) throw new Error('School ID is required');
+  const token = await getAuthToken();
 
-  const { data, error } = await supabase
-    .rpc('get_school_leaderboard', { p_school_id: schoolId });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
 
-  if (error) {
-    console.error('Error fetching leaderboard:', error);
-    throw new Error(error.message || 'Failed to fetch leaderboard');
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_school_leaderboard`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_school_id: schoolId }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+    }
+
+    const data = await response.json();
+    return (data || []).map((entry, index) => ({
+      rank: index + 1,
+      userId: entry.user_id,
+      displayName: entry.display_name,
+      totalCorrect: entry.total_correct,
+    }));
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Leaderboard request timed out');
+    }
+    throw err;
   }
-
-  // Add rank numbers
-  return (data || []).map((entry, index) => ({
-    rank: index + 1,
-    userId: entry.user_id,
-    displayName: entry.display_name,
-    totalCorrect: entry.total_correct
-  }));
 };
