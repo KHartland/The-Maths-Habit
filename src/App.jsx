@@ -8405,7 +8405,7 @@ function AppContent() {
           isSubscribed={isSubscribed}
           onSignIn={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
           onSignUp={() => { setAuthModalMode('signup'); setShowAuthModal(true); }}
-          onSignOut={async () => { await signOut(); window.location.reload(); }}
+          onSignOut={async () => { await signOut(); localStorage.removeItem('maths-habit-onboarding-complete'); window.location.reload(); }}
           onUpgrade={() => setShowUpgradePrompt(true)}
           userSchool={userSchool}
           setUserSchool={setUserSchool}
