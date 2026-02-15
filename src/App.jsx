@@ -6603,31 +6603,34 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   
   // Export weekly summary — use share sheet on mobile, copy fallback
   const handleExportSummary = async () => {
-    const summary = generateWeeklySummary();
-    // Try native share (works on iOS/Android)
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'GCSE Maths Weekly Summary', text: summary });
-        setSummaryStatus('shared');
-        setTimeout(() => setSummaryStatus(''), 2500);
-        return;
-      } catch {}
-    }
-    // Fallback: copy to clipboard
     try {
-      await navigator.clipboard.writeText(summary);
-    } catch {
-      const ta = document.createElement('textarea');
-      ta.value = summary;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-    }
+      const summary = generateWeeklySummary();
+      alert('Summary generated: ' + summary.substring(0, 100) + '...');
+      // Try native share (works on iOS/Android)
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: 'GCSE Maths Weekly Summary', text: summary });
+          setSummaryStatus('shared');
+          setTimeout(() => setSummaryStatus(''), 2500);
+          return;
+        } catch (e) { alert('Share failed: ' + e.message); }
+      }
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(summary);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = summary;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
     setSummaryStatus('copied');
     setTimeout(() => setSummaryStatus(''), 2500);
+    } catch (err) { alert('Export error: ' + err.message); }
   };
 
   // Handle export
