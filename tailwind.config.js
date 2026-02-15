@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // The Maths Habit - Metallic Blue Design System
+        // Square One Maths - Metallic Blue Design System
         'metallic': {
           highlight: '#8BA8D9',
           DEFAULT: '#5B7FC7',

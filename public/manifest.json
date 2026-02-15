@@ -1,6 +1,6 @@
 {
-  "name": "The Maths Habit",
-  "short_name": "Maths Habit",
+  "name": "Square One Maths",
+  "short_name": "Square One",
   "description": "Daily GCSE Maths practice with spaced repetition",
   "start_url": "/",
   "display": "standalone",

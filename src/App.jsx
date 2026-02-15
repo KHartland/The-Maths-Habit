@@ -108,8 +108,38 @@ const Rec = ({ children, dots = 'ends' }) => {
 // Helper to render recurring text in questions (parses special syntax)
 // Use: renderRecurring("Order: 0.7[r], 0.77, 0.707, 0.7[r]0[r]7[r]")
 // [r] marks the preceding digit as recurring
+const renderColumnVector = (x, y) => (
+  <span key={`vec-${x}-${y}`} style={{ display: 'inline-flex', alignItems: 'center', verticalAlign: 'middle', margin: '0 2px' }}>
+    <span style={{ fontSize: '1.8em', fontWeight: 200, lineHeight: 1 }}>(</span>
+    <span style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', padding: '0 3px', lineHeight: 1.3, fontSize: '0.9em' }}>
+      <span>{x}</span>
+      <span>{y}</span>
+    </span>
+    <span style={{ fontSize: '1.8em', fontWeight: 200, lineHeight: 1 }}>)</span>
+  </span>
+);
+
 const renderRecurring = (text) => {
   if (!text || typeof text !== 'string') return text;
+
+  // Pattern: [vec:x,y] renders as a column vector
+  // Process column vectors first
+  const vecPattern = /\[vec:([\-\d]+),([\-\d]+)\]/g;
+  if (vecPattern.test(text)) {
+    const segments = [];
+    let lastIdx = 0;
+    vecPattern.lastIndex = 0;
+    let match;
+    while ((match = vecPattern.exec(text)) !== null) {
+      if (match.index > lastIdx) {
+        segments.push(text.slice(lastIdx, match.index));
+      }
+      segments.push(renderColumnVector(match[1], match[2]));
+      lastIdx = match.index + match[0].length;
+    }
+    if (lastIdx < text.length) segments.push(text.slice(lastIdx));
+    return <span style={{ lineHeight: '1.8' }}>{segments}</span>;
+  }
 
   // Pattern: digit followed by [r] means that digit is recurring
   const parts = [];
@@ -468,226 +498,226 @@ const topics = [
 ];
 
 const descriptions = {
-  // Number
-  N1: 'Order and compare decimals including recurring (e.g. circle the largest: 5.304[r], 5.344, 5.34, 5.3[r]4[r])',
-  N2: 'Add, subtract, multiply and divide with integers, decimals and negatives',
-  N3: 'Use inverse operations and priority of operations (BIDMAS with brackets, powers, roots, reciprocals)',
-  N4: 'Use inverse operations to check answers (e.g. multiplication ↔ division)',
-  N5: 'Apply BIDMAS to calculations with brackets, indices and operations',
-  N6: 'Calculate with powers and roots (e.g. work out d when d = g² − 2h)',
-  N7: 'Recognise cube numbers (e.g. show the 3rd cube number = sum of three primes)',
-  N8: 'Find factors, prime factors, HCF and LCM (e.g. write down all factors of 45)',
-  N9: 'Work with fractional and negative indices (e.g. 8^(2/3), 2^(-3))',
-  N10: 'Convert between decimals, fractions and percentages (e.g. 1.52 as a fraction)',
-  N11: 'Express one quantity as a fraction of another',
-  N12: 'Use fractions and percentages as operators (e.g. work out 10% of 170)',
-  N13: 'Convert between metric units including area and volume',
-  N14: 'Estimate calculations by rounding to 1 significant figure',
-  N15: 'Round to decimal places, significant figures and appropriate accuracy',
-  N16: 'Write error intervals (e.g. 8 cm to nearest cm → 7.5 ⩽ length < 8.5)',
+  // Number (AQA 8300 Section 3.1)
+  N1: 'Order positive and negative integers, decimals and fractions; use the symbols =, ≠, <, >, ≤, ≥',
+  N2: 'Apply the four operations to integers, decimals and simple fractions, both positive and negative',
+  N3: 'Use relationships between operations including inverse operations; use priority of operations (BIDMAS)',
+  N4: 'Use the concepts of prime numbers, factors, multiples, common factors, HCF, LCM and prime factorisation',
+  N5: 'Apply systematic listing strategies including use of the product rule for counting',
+  N6: 'Use positive integer powers and associated real roots (square, cube and higher)',
+  N7: 'Calculate with roots and with integer and fractional indices',
+  N8: 'Calculate exactly with fractions, surds and multiples of π',
+  N9: 'Calculate with and interpret standard form A × 10ⁿ',
+  N10: 'Work interchangeably with terminating decimals and their corresponding fractions',
+  N11: 'Identify and work with fractions in ratio problems',
+  N12: 'Interpret fractions and percentages as operators',
+  N13: 'Use standard units of mass, length, time, money and other measures including compound measures',
+  N14: 'Estimate answers; check calculations using approximation and estimation',
+  N15: 'Round numbers and measures to an appropriate degree of accuracy (decimal places, significant figures)',
+  N16: 'Apply and interpret limits of accuracy including upper and lower bounds',
 
-  // Algebra
-  A1: 'Use and interpret algebraic notation correctly',
-  A2: 'Substitute numerical values into formulae (e.g. d = g² − 2h when g=15, h=63)',
-  A3: 'Understand the difference between expressions, equations and formulae',
-  A4: 'Expand brackets and factorise (e.g. expand 5x(x² + 3), factorise 25a² − b²)',
-  A5: 'Use standard formulae (e.g. Volume of pyramid = ⅓ × base area × height)',
-  A6: 'Rearrange formulae to change the subject (e.g. make n the subject of m = n + k)',
-  A7: 'Model situations algebraically using function machines and interpret solutions',
-  A8: 'Know the difference between equations and identities',
-  A9: 'Simplify algebraic fractions (e.g. simplify (2(x+4)⁵)/((x+4)³) to ax² + bx + c)',
-  A10: 'Construct algebraic proofs (e.g. prove a sum is a multiple of 3)',
-  A11: 'Use inverse operations to solve problems',
-  A12: 'Work with composite and inverse functions (e.g. g(x) = a × bˣ, find g(1))',
-  A13: 'Plot and read coordinates; find midpoints of line segments',
-  A14: 'Find equations of straight lines (y = mx + c) passing through two points',
-  A15: 'Find turning points of quadratics from roots (e.g. x-coord = (a+b)/2)',
-  A16: 'Work with cubic graphs (e.g. where does y = x³ − 1 cross the y-axis?)',
-  A17: 'Solve linear equations including with brackets and fractions',
-  A18: 'Solve quadratics by factorising (e.g. solve x² + 5x + 6 = 0)',
-  A19: 'Solve simultaneous equations (e.g. 7x + 2y = 100 and 3x + 2y = 48)',
-  A20: 'Use iteration to find approximate solutions (e.g. Aₙ₊₁ = 1.02×Aₙ − 100)',
-  A21: 'Set up inequalities from context (e.g. surface area < 650 cm², find largest x)',
-  A22: 'Solve and represent inequalities on number lines and graphs',
-  A23: 'Find nth term of arithmetic sequences (e.g. 6, 13, 20, 27 → nth term)',
-  A24: 'Recognise and continue special sequences (Fibonacci, geometric, etc.)',
-  A25: 'Find the nth term of quadratic sequences',
+  // Algebra (AQA 8300 Section 3.2)
+  A1: 'Use and interpret algebraic notation',
+  A2: 'Substitute numerical values into formulae and expressions',
+  A3: 'Understand and use the concepts of expressions, equations, formulae, identities, inequalities, terms and factors',
+  A4: 'Simplify and manipulate algebraic expressions (collecting like terms, expanding brackets, factorising)',
+  A5: 'Understand and use standard mathematical formulae; rearrange formulae to change the subject',
+  A6: 'Know the difference between an equation and an identity; use algebra to construct arguments and proofs',
+  A7: 'Interpret simple expressions as functions with inputs and outputs; inverse and composite functions',
+  A8: 'Work with coordinates in all four quadrants',
+  A9: 'Plot graphs of straight lines using y = mx + c; find equations of lines through given points',
+  A10: 'Identify and interpret gradients and intercepts of linear functions graphically and algebraically',
+  A11: 'Identify and interpret roots, intercepts and turning points of quadratic functions',
+  A12: 'Recognise, sketch and interpret graphs of linear, quadratic, cubic, reciprocal and exponential functions',
+  A13: 'Sketch translations and reflections of the graph of a given function',
+  A14: 'Plot and interpret graphs of non-standard functions in real contexts',
+  A15: 'Calculate or estimate gradients of graphs and areas under graphs; interpret results in context',
+  A16: 'Recognise and use the equation of a circle with centre at the origin',
+  A17: 'Solve linear equations in one unknown algebraically including with brackets and fractions',
+  A18: 'Solve quadratic equations by factorising, completing the square and using the quadratic formula',
+  A19: 'Solve two simultaneous equations in two variables algebraically',
+  A20: 'Find approximate solutions to equations numerically using iteration',
+  A21: 'Translate simple situations into algebraic expressions or formulae; derive and solve equations',
+  A22: 'Solve linear inequalities in one or two variables; represent the solution set on a number line',
+  A23: 'Generate terms of a sequence from a term-to-term or position-to-term rule',
+  A24: 'Recognise and use sequences of triangular, square and cube numbers, arithmetic progressions, Fibonacci-type sequences, quadratic sequences and geometric progressions',
+  A25: 'Deduce expressions to calculate the nth term of linear and quadratic sequences',
 
-  // Ratio
-  R1: 'Convert between units of measure in different contexts',
-  R2: 'Work with scale factors as fractions (e.g. 12 cm enlarged to 8 cm → SF = 2/3)',
-  R3: 'Calculate a fraction of an amount (e.g. for ⅖ of 240 hours)',
-  R4: 'Use ratio notation including 1:n and reduction to simplest form',
-  R5: 'Work with ratios from relationships (e.g. a = ¾c and 6b = 5c, find a:b:c)',
-  R6: 'Express a division as a ratio and vice versa',
-  R7: 'Solve proportion problems (e.g. cost for 5 months → cost for 2 years)',
-  R8: 'Link ratios to fractions and linear functions',
-  R9: 'Work out percentages of amounts (e.g. work out 60 as a percentage of 20)',
-  R10: 'Calculate percentage change (e.g. salary +6%, bonus −9%, overall change?)',
-  R11: 'Compare quantities using percentages (e.g. which shop is best value for 8 items?)',
-  R12: 'Work backwards from percentage change (reverse percentages)',
-  R13: 'Set up and solve direct and inverse proportion equations (A ∝ B⁴)',
-  R14: 'Use compound units and density (e.g. mass = 2340g, density = 7.5 g/cm³)',
-  R15: 'Apply ratio of lengths, areas and volumes in similar solids',
-  R16: 'Solve compound interest and exponential growth/decay problems',
+  // Ratio, Proportion and Rates of Change (AQA 8300 Section 3.3)
+  R1: 'Change freely between related standard units and compound units (e.g. speed, density, pressure)',
+  R2: 'Use scale factors, scale diagrams and maps',
+  R3: 'Express one quantity as a fraction of another, where the fraction is less than 1 or greater than 1',
+  R4: 'Use ratio notation including reduction to simplest form',
+  R5: 'Divide a given quantity into two parts in a given part:part or part:whole ratio',
+  R6: 'Express a multiplicative relationship between two quantities as a ratio or a fraction',
+  R7: 'Understand and use proportion as equality of ratios',
+  R8: 'Relate ratios to fractions and to linear functions',
+  R9: 'Define percentage as "number of parts per hundred"; interpret percentages and percentage changes',
+  R10: 'Solve problems involving direct and inverse proportion, including graphical and algebraic representations',
+  R11: 'Use compound units such as speed, rates of pay, unit pricing, density and pressure',
+  R12: 'Compare lengths, areas and volumes using ratio notation and scale factors; make links to similarity',
+  R13: 'Understand and construct equations that describe direct and inverse proportion',
+  R14: 'Interpret the gradient of a straight-line graph as a rate of change',
+  R15: 'Interpret the gradient at a point on a curve as the instantaneous rate of change',
+  R16: 'Set up, solve and interpret growth and decay problems, including compound interest',
 
-  // Geometry
-  G1: 'Use geometric terms (e.g. name a triangle with three equal sides; name a chord)',
-  G2: 'Construct triangles, bisectors, perpendiculars and loci with compasses',
-  G3: 'Use angle facts (straight line, point, vertically opposite)',
-  G4: 'Calculate angles in parallel lines (e.g. find angle p when p = 3r)',
-  G5: 'Find interior and exterior angles of polygons',
-  G6: 'Know properties of special quadrilaterals and regular hexagons',
-  G7: 'Identify congruent and similar shapes',
-  G8: 'Describe and use column vectors for translations',
-  G9: 'Perform and describe rotations, reflections and translations',
-  G10: 'Find scale factors as fractions (e.g. square 12 cm → 8 cm, SF = ?)',
-  G11: 'Use circle properties (e.g. tangent perpendicular to radius at point of contact)',
-  G12: 'Apply circle theorems (e.g. angle in semicircle, tangent problems)',
-  G13: 'Interpret plans and elevations; read dimensions from isometric grids',
-  G14: 'Calculate area of triangles and compound shapes on coordinate grids',
-  G15: 'Calculate circumference and area of circles; find net dimensions',
-  G16: 'Find arc length and sector area; area of regular hexagon = (3√3/2)x²',
-  G17: 'Calculate volume of pyramids, prisms and frustums',
-  G18: 'Prove triangles congruent (e.g. prove △ABE ≅ △CDE using SAS)',
-  G19: 'Apply Pythagoras\' theorem (e.g. PQ = QR, PR = 10 cm, find radius)',
-  G20: 'Use trigonometry to find angles (e.g. find angle w given sides 8.3 cm, 6.7 cm)',
-  G21: 'Know exact values of sin, cos and tan for 0°, 30°, 45°, 60°, 90°',
-  G22: 'Apply sine rule to find sides in non-right triangles (angles 56°, 73°, side 24 cm)',
-  G23: 'Use Area = ½ab sin C for triangle area',
-  G24: 'Use vectors: find m, p given a = (m,3), b = (−4,p) and diagram of 2a + b',
-  G25: 'Perform vector addition (e.g. 2a + b) and interpret graphically',
+  // Geometry and Measures (AQA 8300 Section 3.4)
+  G1: 'Use conventional terms and notation: points, lines, vertices, edges, parallel lines, perpendicular lines, right angles, polygons, regular polygons',
+  G2: 'Use the standard ruler and compass constructions; construct given figures and solve loci problems',
+  G3: 'Apply the properties of angles at a point, on a straight line, vertically opposite; use alternate and corresponding angles on parallel lines',
+  G4: 'Derive and apply the properties and definitions of special types of quadrilaterals and triangles',
+  G5: 'Use the basic congruence criteria for triangles (SSS, SAS, ASA, RHS)',
+  G6: 'Apply angle facts, triangle congruence, similarity and properties of quadrilaterals to derive results about angles and sides',
+  G7: 'Identify, describe and construct congruent and similar shapes, including on coordinate axes, by considering rotation, reflection, translation and enlargement',
+  G8: 'Describe the changes and invariance achieved by combinations of rotations, reflections and translations',
+  G9: 'Identify and apply circle definitions and properties, including centre, radius, chord, diameter, circumference, tangent, arc, sector and segment',
+  G10: 'Apply and prove the standard circle theorems concerning angles, radii, tangents and chords',
+  G11: 'Solve geometrical problems on coordinate axes',
+  G12: 'Identify properties of the faces, surfaces, edges and vertices of cubes, cuboids, prisms, cylinders, pyramids, cones and spheres',
+  G13: 'Construct and interpret plans and elevations of 3D shapes',
+  G14: 'Use standard units of measure and related concepts (length, area, volume/capacity, mass, time, money)',
+  G15: 'Measure line segments and angles in geometric figures, including interpreting maps, scale drawings and bearings',
+  G16: 'Know and apply formulae to calculate area of triangles, parallelograms, trapezia; volume of cuboids and other right prisms',
+  G17: 'Know the formulae: circumference = 2πr = πd, area = πr²; calculate perimeters and areas of circles and composite shapes',
+  G18: 'Calculate arc lengths, angles and areas of sectors of circles',
+  G19: 'Apply the concepts of congruence and similarity, including the relationships between lengths, areas and volumes in similar figures',
+  G20: 'Know the formulae for Pythagoras\' theorem (a² + b² = c²) and the trigonometric ratios; apply them to find angles and lengths in right-angled triangles',
+  G21: 'Know the exact values of sin θ and cos θ for θ = 0°, 30°, 45°, 60° and 90°; know exact values of tan θ for θ = 0°, 30°, 45° and 60°',
+  G22: 'Know and apply the sine rule and cosine rule to find unknown lengths and angles',
+  G23: 'Know and apply Area = ½ab sin C to calculate the area, sides or angles of any triangle',
+  G24: 'Describe translations as 2D column vectors',
+  G25: 'Apply addition and subtraction of vectors, multiplication of vectors by a scalar; use vectors to construct geometric arguments and proofs',
 
-  // Probability
-  P1: 'Design and use tables for recording experimental outcomes',
-  P2: 'Understand and apply ideas of fairness and equally likely outcomes',
-  P3: 'Calculate relative frequency from repeated trials (e.g. after 25, 50, 75 trials)',
-  P4: 'Know that probabilities sum to 1 (e.g. P(heads) = 1/64 → how many throws?)',
-  P5: 'Place probabilities on a 0 to 1 scale',
-  P6: 'Use Venn diagrams; convert frequency trees to Venn diagrams',
-  P7: 'Use sample spaces and systematic listing (e.g. list all subject combinations)',
-  P8: 'Complete tree diagrams and find P(both green) from two bags',
-  P9: 'Calculate probability without replacement (e.g. tiles game: win if total = 10)',
+  // Probability (AQA 8300 Section 3.5)
+  P1: 'Record, describe and analyse the frequency of outcomes of probability experiments using tables and frequency trees',
+  P2: 'Apply ideas of randomness, fairness and equally likely events to calculate expected outcomes',
+  P3: 'Relate relative expected frequencies to theoretical probabilities, using the 0–1 probability scale',
+  P4: 'Apply the property that the probabilities of an exhaustive set of mutually exclusive events sum to one',
+  P5: 'Use a probability model to predict the outcomes of future experiments',
+  P6: 'Enumerate sets and combinations of sets systematically, using tables, grids, Venn diagrams and tree diagrams',
+  P7: 'Construct theoretical possibility spaces for single and combined experiments and use these to calculate theoretical probabilities',
+  P8: 'Calculate the probability of independent and dependent combined events, including using tree diagrams',
+  P9: 'Calculate and interpret conditional probabilities through representation using two-way tables, tree diagrams and Venn diagrams',
 
-  // Statistics
-  S1: 'Understand sampling methods and identify bias',
-  S2: 'Read and interpret tables, bar charts and pictograms; spot mistakes in diagrams',
-  S3: 'Construct and interpret pie charts (e.g. calculate angles from frequencies)',
-  S4: 'Draw tangents on graphs to estimate rates of change (e.g. cm/s at t = 10)',
-  S5: 'Calculate mean from grouped data; find combined mean of two groups',
-  S6: 'Draw histograms with unequal class widths using frequency density'
+  // Statistics (AQA 8300 Section 3.6)
+  S1: 'Infer properties of populations or distributions from a sample, whilst knowing the limitations of sampling',
+  S2: 'Interpret and construct tables, charts and diagrams including frequency tables, bar charts, pie charts and pictograms',
+  S3: 'Construct and interpret diagrams for grouped discrete data and continuous data (histograms, cumulative frequency graphs)',
+  S4: 'Interpret, analyse and compare distributions through appropriate measures of central tendency and spread',
+  S5: 'Apply statistics to describe a population',
+  S6: 'Use and interpret scatter graphs; recognise correlation; draw estimated lines of best fit; interpolate and extrapolate trends'
 };
 
 // Revision hints - simple explanations for students when they get questions wrong
 const revisionHints = {
   // Number
-  N1: 'Revise how to compare decimals by looking at each digit from left to right. For recurring decimals, write out several decimal places to compare.',
-  N2: 'Revise the rules for calculating with negative numbers: negative × negative = positive, negative × positive = negative.',
-  N3: 'Revise inverse operations (square ↔ square root, cube ↔ cube root, × ↔ ÷) and reciprocals (reciprocal of n is 1/n). Use BIDMAS for priority.',
-  N4: 'Revise inverse operations - addition undoes subtraction, multiplication undoes division. Use these to check your answers.',
-  N5: 'Revise BIDMAS order: Brackets, Indices, Division/Multiplication (left to right), Addition/Subtraction (left to right).',
-  N6: 'Revise powers (e.g. 3² = 9) and roots (e.g. √16 = 4). Remember: squaring and square rooting are inverse operations.',
-  N7: 'Revise cube numbers: 1³=1, 2³=8, 3³=27, 4³=64, 5³=125. A cube number is a number multiplied by itself three times.',
-  N8: 'Revise finding factors (numbers that divide exactly) and using prime factor trees to find HCF and LCM.',
-  N9: 'Revise index laws: a^(m/n) = ⁿ√(aᵐ) and a^(-n) = 1/aⁿ. For example, 8^(2/3) = ³√(8²) = ³√64 = 4.',
-  N10: 'Revise converting: decimal to fraction (use place value), fraction to decimal (divide), percentage = fraction × 100.',
+  N1: 'Revise ordering: compare decimals digit by digit from left to right. Use place value columns. For fractions, convert to decimals first.',
+  N2: 'Revise the rules for calculating with negative numbers: negative × negative = positive, negative × positive = negative. Use column methods for written calculations.',
+  N3: 'Revise inverse operations (square ↔ square root, cube ↔ cube root, × ↔ ÷) and BIDMAS: Brackets, Indices, Division/Multiplication, Addition/Subtraction.',
+  N4: 'Revise prime numbers (only divisible by 1 and itself), factors (numbers that divide exactly), and prime factor trees for finding HCF and LCM.',
+  N5: 'Revise systematic listing: if there are x ways to do task 1 and y ways to do task 2, there are x × y ways to do both.',
+  N6: 'Revise powers (e.g. 3² = 9, 2³ = 8) and roots (e.g. √16 = 4, ³√27 = 3). Recognise powers of 2, 3, 4, 5.',
+  N7: 'Revise index laws: a^(m/n) = ⁿ√(aᵐ) and a^(-n) = 1/aⁿ. For example, 8^(2/3) = ³√(8²) = ³√64 = 4.',
+  N8: 'Revise calculating exactly with fractions (common denominators for +/−, multiply tops and bottoms for ×). Simplify surds: √12 = 2√3.',
+  N9: 'Revise standard form: A × 10ⁿ where 1 ≤ A < 10. Large numbers have positive n, small numbers have negative n.',
+  N10: 'Revise converting: decimal to fraction (use place value), fraction to decimal (divide top by bottom). For recurring decimals, use algebra.',
   N11: 'Revise writing one quantity as a fraction of another: put the first number on top, the second on the bottom, then simplify.',
   N12: 'Revise finding percentages: 10% = divide by 10, 1% = divide by 100. Build up other percentages from these.',
   N13: 'Revise metric conversions: 1km=1000m, 1m=100cm, 1cm=10mm. For area use squared units, for volume use cubed.',
-  N14: 'Revise rounding to 1 significant figure for estimates. Round each number, then calculate.',
+  N14: 'Revise estimation: round each number to 1 significant figure first, then calculate. Use this to check if your exact answer is reasonable.',
   N15: 'Revise rounding: for decimal places, count digits after the point. For significant figures, count from the first non-zero digit.',
-  N16: 'Revise error intervals: if rounded to nearest unit, the true value is ±0.5 from the rounded value.',
+  N16: 'Revise bounds: if a measurement is rounded to the nearest unit, the lower bound is −0.5 and the upper bound is +0.5 from the rounded value.',
 
   // Algebra
-  A1: 'Revise algebra notation: ab means a×b, a² means a×a, 2a means 2×a.',
+  A1: 'Revise algebra notation: ab means a×b, a² means a×a, 2a means 2×a, a/b means a÷b.',
   A2: 'Revise substitution: replace each letter with its value, then calculate using BIDMAS.',
-  A3: 'Revise: an expression has no equals sign, an equation can be solved, a formula shows a relationship.',
+  A3: 'Revise: an expression has no equals sign, an equation can be solved, a formula shows a relationship, an identity (≡) is true for all values.',
   A4: 'Revise expanding: multiply each term inside the bracket. Factorising: find the common factor and take it outside.',
-  A5: 'Revise standard formulae for area, volume, speed, density etc. Check your formula sheet.',
-  A6: 'Revise rearranging: do the same operation to both sides to isolate the new subject.',
-  A7: 'Revise function machines: follow operations in order for the output, reverse for the input.',
-  A8: 'Revise: an equation is true for specific values, an identity (≡) is true for all values.',
-  A9: 'Revise simplifying algebraic fractions: factorise top and bottom, then cancel common factors.',
-  A10: 'Revise algebraic proof: let n be any integer, 2n is always even, 2n+1 is always odd.',
-  A11: 'Revise inverse operations: work backwards using opposite operations.',
-  A12: 'Revise composite functions: fg(x) means do g first, then f. For inverse functions, swap x and y then rearrange.',
-  A13: 'Revise coordinates: (x, y) where x is across, y is up. Midpoint = average of x-coords and average of y-coords.',
-  A14: 'Revise y = mx + c: m is the gradient (change in y ÷ change in x), c is the y-intercept.',
-  A15: 'Revise: the turning point x-coordinate is halfway between the roots. Substitute to find y.',
-  A16: 'Revise cubic graphs: they have an S-shape. y = x³ passes through the origin.',
+  A5: 'Revise standard formulae and rearranging: do the same operation to both sides to isolate the new subject.',
+  A6: 'Revise: an equation is true for specific values, an identity (≡) is true for all values. For proofs, let n be any integer, 2n is even, 2n+1 is odd.',
+  A7: 'Revise function machines: follow operations in order for the output, reverse for the input. fg(x) means do g first, then f.',
+  A8: 'Revise coordinates: (x, y) where x is across, y is up. All four quadrants: positive and negative values.',
+  A9: 'Revise y = mx + c: m is the gradient (change in y ÷ change in x), c is the y-intercept. Parallel lines have equal gradients.',
+  A10: 'Revise gradients: gradient = change in y ÷ change in x. The y-intercept is where the line crosses the y-axis.',
+  A11: 'Revise: roots are where the graph crosses the x-axis, the turning point is the maximum or minimum. Complete the square to find the turning point.',
+  A12: 'Revise graph shapes: linear = straight line, quadratic = U/∩ shape, cubic = S-shape, reciprocal = two curves, exponential = rapid growth/decay.',
+  A13: 'Revise graph transformations: f(x) + a moves up, f(x + a) moves left, −f(x) reflects in x-axis, f(−x) reflects in y-axis.',
+  A14: 'Revise reading graphs in context: use the axes labels and units. Substitute values to find approximate solutions.',
+  A15: 'Revise: gradient of a curve at a point = gradient of the tangent at that point. Area under a graph can be estimated using triangles and trapezia.',
+  A16: 'Revise the equation of a circle centred at the origin: x² + y² = r². A tangent is perpendicular to the radius at the point of contact.',
   A17: 'Revise solving equations: do the same to both sides to get the unknown on its own.',
-  A18: 'Revise solving quadratics: factorise and set each bracket = 0.',
-  A19: 'Revise simultaneous equations: eliminate one variable by adding/subtracting equations.',
-  A20: 'Revise iteration: substitute your answer back into the formula repeatedly until it settles.',
-  A21: 'Revise setting up inequalities: translate words into symbols (< less than, > greater than, ≤ at most, ≥ at least).',
-  A22: 'Revise inequality notation: open circle for < or >, closed circle for ≤ or ≥.',
-  A23: 'Revise nth term: find the common difference (d), then nth term = dn + (first term - d).',
-  A24: 'Revise special sequences: Fibonacci adds previous two terms, geometric multiplies by a constant.',
-  A25: 'Revise quadratic sequences: find second differences, halve for the n² coefficient, then adjust.',
+  A18: 'Revise solving quadratics: factorise and set each bracket = 0. Or use the quadratic formula: x = (−b ± √(b²−4ac)) / 2a.',
+  A19: 'Revise simultaneous equations: eliminate one variable by adding/subtracting equations, or use substitution.',
+  A20: 'Revise iteration: substitute your answer back into the formula repeatedly until it settles to the required accuracy.',
+  A21: 'Revise translating problems into algebra: define variables, set up equations from the information given, solve and check your answer makes sense in context.',
+  A22: 'Revise inequality notation: open circle for < or >, closed circle for ≤ or ≥. Solve like equations but reverse the sign when multiplying/dividing by a negative.',
+  A23: 'Revise generating sequences: a term-to-term rule tells you how to get from one term to the next. A position-to-term rule gives the nth term directly.',
+  A24: 'Revise special sequences: Fibonacci adds previous two terms, geometric multiplies by a constant, triangular numbers are 1, 3, 6, 10, 15...',
+  A25: 'Revise nth term: for linear, find the common difference (d), then nth term = dn + (first term − d). For quadratic, find second differences.',
 
   // Ratio
-  R1: 'Revise unit conversions by multiplying or dividing by the conversion factor.',
-  R2: 'Revise scale factors: new length ÷ original length. Can be a fraction if shape gets smaller.',
+  R1: 'Revise unit conversions by multiplying or dividing by the conversion factor. For compound units, convert one unit at a time.',
+  R2: 'Revise scale factors: new length ÷ original length. On maps, use the scale to convert between map distance and real distance.',
   R3: 'Revise fractions of amounts: divide by the denominator, multiply by the numerator.',
   R4: 'Revise simplifying ratios: divide all parts by their HCF. For 1:n, divide both by the first number.',
-  R5: 'Revise linking ratios: find a common value to connect them.',
-  R6: 'Revise ratio ↔ fractions: a:b means a/(a+b) and b/(a+b) of the total.',
-  R7: 'Revise proportion: find the value of 1 unit first, then multiply for what you need.',
+  R5: 'Revise sharing in a ratio: add the parts, divide the total by the sum of parts, then multiply by each part.',
+  R6: 'Revise: a multiplicative relationship means one quantity is a multiple or fraction of another. Express as a ratio a:b or fraction a/b.',
+  R7: 'Revise proportion: if quantities are in proportion, their ratio stays the same. Find the value of 1 unit first, then multiply.',
   R8: 'Revise the link: ratio a:b is the same as the fraction a/b and the equation y = (a/b)x.',
-  R9: 'Revise percentage: divide the part by the whole, then multiply by 100.',
-  R10: 'Revise percentage change: (new - original) ÷ original × 100. Positive = increase, negative = decrease.',
-  R11: 'Revise comparing value: find the price per item or per unit for each option.',
-  R12: 'Revise reverse percentages: if price after 20% increase = £120, original = £120 ÷ 1.20.',
-  R13: 'Revise direct proportion (y = kx) and inverse proportion (y = k/x). Find k first.',
-  R14: 'Revise density = mass ÷ volume, speed = distance ÷ time.',
-  R15: 'Revise similar shapes: if lengths are in ratio 1:k, areas are 1:k², volumes are 1:k³.',
-  R16: 'Revise compound interest: multiply by (1 + rate)ⁿ where n is the number of time periods.',
+  R9: 'Revise percentages: "per cent" means "per hundred". To find a percentage of an amount, convert to a decimal and multiply.',
+  R10: 'Revise direct proportion (y = kx, graph is a straight line through origin) and inverse proportion (y = k/x). Find k first.',
+  R11: 'Revise compound units: speed = distance ÷ time, density = mass ÷ volume, pressure = force ÷ area.',
+  R12: 'Revise similar shapes: if lengths are in ratio 1:k, areas are 1:k², volumes are 1:k³.',
+  R13: 'Revise proportion equations: direct (y = kxⁿ) and inverse (y = k/xⁿ). Substitute known values to find k.',
+  R14: 'Revise: the gradient of a straight-line graph represents the rate of change. Steeper = faster rate.',
+  R15: 'Revise: the gradient of a tangent to a curve gives the instantaneous rate of change at that point.',
+  R16: 'Revise compound interest: multiply by (1 + rate)ⁿ where n is the number of time periods. For decay, multiply by (1 − rate)ⁿ.',
 
   // Geometry
-  G1: 'Revise geometric vocabulary: equilateral (3 equal sides), isosceles (2 equal), scalene (none equal).',
-  G2: 'Revise constructions: use compasses for arcs, keep the same compass width for bisectors.',
-  G3: 'Revise angle facts: straight line = 180°, around a point = 360°, vertically opposite angles are equal.',
-  G4: 'Revise parallel line angles: corresponding (F-shape) are equal, alternate (Z-shape) are equal, co-interior (C-shape) add to 180°.',
-  G5: 'Revise polygon angles: exterior angles sum to 360°, interior angle = 180° - exterior angle.',
-  G6: 'Revise quadrilateral properties: parallelogram (opposite sides parallel), rhombus (4 equal sides), etc.',
-  G7: 'Revise congruent (same size and shape) vs similar (same shape, different size).',
-  G8: 'Revise vectors: column vector (x, y) means x right and y up. Add vectors by adding components.',
-  G9: 'Revise transformations: rotation needs centre, angle and direction. Reflection needs mirror line.',
-  G10: 'Revise scale factors: new ÷ old. Enlargement > 1, reduction < 1.',
-  G11: 'Revise circle theorems: tangent meets radius at 90°, angle in semicircle = 90°.',
-  G12: 'Revise circle theorem proofs using isosceles triangles from radii.',
-  G13: 'Revise area formulae: rectangle = l×w, triangle = ½×b×h, parallelogram = b×h.',
-  G14: 'Revise compound shapes: split into simple shapes, find each area, then add or subtract.',
-  G15: 'Revise circle formulae: circumference = πd or 2πr, area = πr².',
-  G16: 'Revise splitting regular polygons into triangles from the centre.',
-  G17: 'Revise volume = area of cross-section × length. Surface area = sum of all faces.',
-  G18: 'Revise congruence conditions: SSS, SAS, ASA, RHS (for right-angled triangles).',
-  G19: 'Revise Pythagoras: a² + b² = c² where c is the hypotenuse (longest side, opposite the right angle).',
-  G20: 'Revise SOHCAHTOA: sin = opposite/hypotenuse, cos = adjacent/hypotenuse, tan = opposite/adjacent.',
-  G21: 'Revise exact values: sin30°=½, cos30°=√3/2, tan30°=1/√3, sin45°=cos45°=1/√2, tan45°=1.',
-  G22: 'Revise sine rule: a/sinA = b/sinB. Cosine rule: a² = b² + c² - 2bc×cosA.',
+  G1: 'Revise geometric vocabulary: equilateral (3 equal sides), isosceles (2 equal), scalene (none equal). Know parallel, perpendicular, vertex, edge.',
+  G2: 'Revise constructions: use compasses for arcs, keep the same compass width for bisectors. Loci: set of points following a rule.',
+  G3: 'Revise angle facts: straight line = 180°, around a point = 360°, vertically opposite are equal. Alternate (Z) angles are equal, corresponding (F) angles are equal.',
+  G4: 'Revise quadrilateral properties: parallelogram (opposite sides parallel and equal), rhombus (4 equal sides), trapezium (one pair parallel).',
+  G5: 'Revise congruence conditions: SSS, SAS, ASA, RHS. Two triangles are congruent if they satisfy any of these.',
+  G6: 'Revise using angle facts and congruence/similarity to prove results. Base angles of an isosceles triangle are equal.',
+  G7: 'Revise congruent (same size and shape) vs similar (same shape, different size). Identify transformations: rotation, reflection, translation, enlargement.',
+  G8: 'Revise combined transformations: describe each transformation in turn. Use column vectors for translations.',
+  G9: 'Revise circle parts: radius (centre to edge), diameter (across through centre), chord (line across), tangent (touches at one point), arc (part of circumference), sector (pizza slice), segment (chord cuts off).',
+  G10: 'Revise circle theorems: angle in semicircle = 90°, tangent meets radius at 90°, angles in same segment are equal, opposite angles in cyclic quadrilateral sum to 180°.',
+  G11: 'Revise coordinate geometry: use coordinates to find midpoints, distances, and gradients. Apply algebraic methods to geometric problems.',
+  G12: 'Revise 3D shapes: know the names, number of faces, edges and vertices of cubes, cuboids, prisms, cylinders, pyramids, cones and spheres.',
+  G13: 'Revise plans and elevations: plan = view from above, front elevation = view from front, side elevation = view from side.',
+  G14: 'Revise standard units: length (mm, cm, m, km), area (cm², m²), volume (cm³, m³, litres), mass (g, kg), time (s, min, hr).',
+  G15: 'Revise measuring angles with a protractor. For bearings: measure clockwise from North, always give 3 figures (e.g. 045°).',
+  G16: 'Revise area formulae: rectangle = l×w, triangle = ½×b×h, parallelogram = b×h, trapezium = ½(a+b)×h. Volume of prism = area of cross-section × length.',
+  G17: 'Revise circle formulae: circumference = πd or 2πr, area = πr². Volume of cylinder = πr²h. Leave answers in terms of π if asked.',
+  G18: 'Revise arc length = (θ/360) × 2πr. Sector area = (θ/360) × πr². θ is the angle of the sector.',
+  G19: 'Revise similarity: if shapes are similar, corresponding lengths are in the same ratio. Area ratio = k², volume ratio = k³.',
+  G20: 'Revise Pythagoras: a² + b² = c² (c is the hypotenuse). SOHCAHTOA: sin = opp/hyp, cos = adj/hyp, tan = opp/adj.',
+  G21: 'Revise exact values: sin30°=½, cos30°=√3/2, tan30°=1/√3, sin45°=cos45°=1/√2, tan45°=1, sin60°=√3/2, cos60°=½, tan60°=√3.',
+  G22: 'Revise sine rule: a/sinA = b/sinB. Cosine rule: a² = b² + c² − 2bc×cosA. Use these for non-right-angled triangles.',
   G23: 'Revise triangle area = ½ × a × b × sin(C) where C is the angle between sides a and b.',
-  G24: 'Revise vector addition: add components. Scalar multiplication: multiply each component.',
-  G25: 'Revise vector proofs: show vectors are parallel (one is a multiple of the other) or equal.',
+  G24: 'Revise column vectors: (x, y) means x right and y up. A negative value means the opposite direction.',
+  G25: 'Revise vector operations: add by adding components, scalar multiplication multiplies each component. Parallel vectors are multiples of each other.',
 
   // Probability
-  P1: 'Revise probability scale: 0 = impossible, 0.5 = even chance, 1 = certain.',
-  P2: 'Revise probability = number of successful outcomes ÷ total number of outcomes.',
-  P3: 'Revise two-way tables: row totals and column totals must match the grand total.',
-  P4: 'Revise: P(event happens) + P(event doesn\'t happen) = 1.',
-  P5: 'Revise Venn diagrams: overlapping region shows elements in both sets.',
-  P6: 'Revise tree diagrams: multiply along branches for AND, add between branches for OR.',
-  P7: 'Revise relative frequency = number of successes ÷ number of trials.',
-  P8: 'Revise dependent events: the second probability changes based on the first outcome.',
-  P9: 'Revise with/without replacement: without replacement changes the denominator for the second pick.',
+  P1: 'Revise recording outcomes: use tables and frequency trees to organise experimental results systematically.',
+  P2: 'Revise theoretical probability = number of favourable outcomes ÷ total number of equally likely outcomes.',
+  P3: 'Revise relative frequency = number of successes ÷ number of trials. As trials increase, relative frequency approaches theoretical probability.',
+  P4: 'Revise: P(event happens) + P(event doesn\'t happen) = 1. All mutually exclusive probabilities sum to 1.',
+  P5: 'Revise probability models: use theoretical probabilities to predict expected outcomes. More trials = closer to expected results.',
+  P6: 'Revise Venn diagrams and tree diagrams: use them to list all possible outcomes systematically.',
+  P7: 'Revise sample spaces: list all possible outcomes for combined events using tables or grids. Count favourable outcomes ÷ total outcomes.',
+  P8: 'Revise combined events: multiply along branches for AND (both events), add between branches for OR (either event).',
+  P9: 'Revise conditional probability: without replacement changes the denominator for the second pick. Use two-way tables or tree diagrams.',
 
   // Statistics
-  S1: 'Revise good questionnaire design: clear questions, no bias, appropriate response options.',
-  S2: 'Revise reading scales carefully and checking units.',
-  S3: 'Revise pie charts: angle = (frequency ÷ total) × 360°.',
-  S4: 'Revise drawing tangents: touch the curve at one point only. Gradient = rate of change.',
-  S5: 'Revise mean from grouped data: use midpoints × frequency, then divide by total frequency.',
-  S6: 'Revise histograms: frequency density = frequency ÷ class width. Area of bar = frequency.'
+  S1: 'Revise sampling: a good sample should be representative of the population. Know the limitations — a sample may not reflect the whole population.',
+  S2: 'Revise reading charts carefully: check the scale, labels and units. Bar charts for categories, pictograms use symbols, line graphs for time series.',
+  S3: 'Revise pie charts: angle = (frequency ÷ total) × 360°. For histograms: frequency density = frequency ÷ class width.',
+  S4: 'Revise averages: mean = total ÷ count, median = middle value, mode = most common. Spread: range = highest − lowest, IQR = Q3 − Q1.',
+  S5: 'Revise using statistics to describe populations: compare averages and spreads to draw conclusions.',
+  S6: 'Revise scatter graphs: positive correlation = both increase, negative = one increases as other decreases. Correlation does not mean causation.'
 };
 
 const levelLabels = ['Not started', '1/5 done', '2/5 done', '3/5 done', '4/5 nearly there!', '✓ Mastered'];
@@ -2127,7 +2157,7 @@ const questionBank = {
     // Level 2 (2 marks) — Isosceles triangle angles
     [
       { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2" },
-      { q: "PQR is an isosceles triangle. PQ = PR. Angle P = 50°. Work out the size of angle Q.", a: "65", worked: ["In isosceles triangle, base angles are equal", "Angle Q = Angle R. Sum of angles = 180°", "50 + 2×Q = 180 → 2×Q = 130 → Q = 65"], hint: "Base angles are equal: (180 − 50) ÷ 2" },
+      { q: "Work out the size of angle Q.", a: "65", worked: ["PQR is isosceles with PQ = PR, so base angles are equal", "Angle Q = Angle R", "50 + 2×Q = 180 → 2×Q = 130 → Q = 65°"], hint: "Base angles are equal: (180 − 50) ÷ 2", diagram: "isosceles-50" },
       { q: "Find the size of angle YXZ.", a: "40", worked: ["The triangle has two equal sides, so base angles are equal at 70° each", "Sum of angles in a triangle = 180°", "Angle at top = 180 − 70 − 70 = 40"], hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40", diagram: "isosceles-triangle" },
     ],
     // Level 3 (3 marks) — Interior/exterior angle of a regular polygon
@@ -2302,9 +2332,9 @@ const questionBank = {
     ],
     // Level 1 (2 marks) — Complete a bar chart from a tally chart
     [
-      { q: "A tally chart shows: Red = 6, Blue = 5, Green = 4, Yellow = 3, Purple = 2. How many students were surveyed in total?", a: "20", worked: ["Add all frequencies: 6 + 5 + 4 + 3 + 2", "= 20 students"] },
-      { q: "A tally chart shows shoe sizes: Size 5 = 3, Size 6 = 7, Size 7 = 5, Size 8 = 4, Size 9 = 1. What is the modal shoe size?", a: "6", worked: ["The mode is the value with highest frequency", "Size 6 has frequency 7 (highest)", "Modal size = 6"] },
-      { q: "A tally chart shows favourite pets: Dog = 8, Cat = 6, Fish = 3, Rabbit = 2, Hamster = 1. How many more students chose Dog than Cat?", a: "2", worked: ["Dog frequency = 8", "Cat frequency = 6", "Difference = 8 − 6 = 2"] },
+      { q: "How many students were surveyed in total?", a: "20", worked: ["Add all frequencies: 6 + 5 + 4 + 3 + 2", "= 20 students"], diagram: "tally:Red:6,Blue:5,Green:4,Yellow:3,Purple:2" },
+      { q: "What is the modal shoe size?", a: "6", worked: ["The mode is the value with highest frequency", "Size 6 has frequency 7 (highest)", "Modal size = 6"], diagram: "tally:Size 5:3,Size 6:7,Size 7:5,Size 8:4,Size 9:1|Shoe size" },
+      { q: "How many more students chose Dog than Cat?", a: "2", worked: ["Dog frequency = 8", "Cat frequency = 6", "Difference = 8 − 6 = 2"], diagram: "tally:Dog:8,Cat:6,Fish:3,Rabbit:2,Hamster:1|Pet" },
     ],
     // Level 2 (3 marks) — Calculate pie chart angle
     [
@@ -2484,9 +2514,9 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
-      { q: "Vectors a = (3, 2) and b = (−1, 4). Work out a + 2b.", a: "(1, 10)", worked: ["First find 2b: 2b = (−2, 8)", "Then add: a + 2b = (3, 2) + (−2, 8)", "= (3−2, 2+8) = (1, 10)"] },
-      { q: "Vectors a = (4, 1) and b = (−2, 3). Work out 2a + b.", a: "(6, 5)", worked: ["First find 2a: 2a = (8, 2)", "Then add: 2a + b = (8, 2) + (−2, 3)", "= (8−2, 2+3) = (6, 5)"] },
-      { q: "Vectors c = (5, −2) and d = (0, 4). Work out 3c − d.", a: "(15, −10)", worked: ["First find 3c: 3c = (15, −6)", "Then subtract: 3c − d = (15, −6) − (0, 4)", "= (15, −6−4) = (15, −10)"] },
+      { q: "a = [vec:3,2] and b = [vec:-1,4]. Work out a + 2b. Give your answer as x, y.", a: "1, 10", worked: ["First find 2b: 2 × [vec:-1,4] = [vec:-2,8]", "Then add: a + 2b = [vec:3,2] + [vec:-2,8]", "= [vec:1,10]"] },
+      { q: "a = [vec:4,1] and b = [vec:-2,3]. Work out 2a + b. Give your answer as x, y.", a: "6, 5", worked: ["First find 2a: 2 × [vec:4,1] = [vec:8,2]", "Then add: 2a + b = [vec:8,2] + [vec:-2,3]", "= [vec:6,5]"] },
+      { q: "c = [vec:5,-2] and d = [vec:0,4]. Work out 3c − d. Give your answer as x, y.", a: "15, -10", worked: ["First find 3c: 3 × [vec:5,-2] = [vec:15,-6]", "Then subtract: 3c − d = [vec:15,-6] − [vec:0,4]", "= [vec:15,-10]"] },
     ],
     // Level 4 (4 marks) — Volume in terms of π (G18)
     [
@@ -2524,9 +2554,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Compare distributions (S5)
     [
-      { q: "Two classes took a test. Class A: Median = 65, Range = 20. Class B: Median = 72, Range = 35. Which class performed better on average?", type: "mcq", options: ["Class A (higher median)", "Class B (higher median)", "Both the same"], a: "Class B (higher median)", worked: ["Compare medians to see average performance", "Class B median (72) > Class A median (65)", "Class B performed better on average"] },
-      { q: "Team X scored a mean of 3.2 goals per match with a range of 6. Team Y scored a mean of 2.8 goals per match with a range of 2. Which team was more consistent?", type: "mcq", options: ["Team X (smaller range)", "Team Y (smaller range)", "Both the same"], a: "Team Y (smaller range)", worked: ["Smaller range means more consistent (less spread)", "Team Y range (2) < Team X range (6)", "Team Y was more consistent"] },
-      { q: "Group P has a median height of 165 cm and range of 12 cm. Group Q has a median height of 162 cm and range of 25 cm. Which group has the greater spread of heights?", type: "mcq", options: ["Group P (larger range)", "Group Q (larger range)", "Both the same"], a: "Group Q (larger range)", worked: ["Range measures spread of data", "Group Q range (25) > Group P range (12)", "Group Q has greater spread"] },
+      { q: "A bag contains red, blue, green and yellow counters. P(red) = 0.35, P(blue) = 0.2, P(green) = 0.15. There are 60 counters in the bag. How many yellow counters are there?", a: "18", worked: ["P(yellow) = 1 − 0.35 − 0.2 − 0.15 = 0.3", "Number of yellow = 0.3 × 60 = 18"] },
+      { q: "A spinner has sections labelled A, B, C and D. P(A) = 3x, P(B) = x, P(C) = 2x and P(D) = 0.1. Work out P(A).", a: "0.45", worked: ["All probabilities sum to 1: 3x + x + 2x + 0.1 = 1", "6x = 0.9", "x = 0.15", "P(A) = 3 × 0.15 = 0.45"] },
+      { q: "A biased dice has P(1) = 0.1, P(2) = 0.1, P(3) = 0.15, P(4) = 0.25, P(5) = 0.2. The dice is rolled 200 times. How many times would you expect to get a 6?", a: "40", worked: ["P(6) = 1 − (0.1 + 0.1 + 0.15 + 0.25 + 0.2) = 1 − 0.8 = 0.2", "Expected 6s = 0.2 × 200 = 40"] },
     ],
   ],
 
@@ -3293,7 +3323,7 @@ questionBank['G2'][0].push(
   { q: "What is the name of the transformation that creates a mirror image of a shape?", type: "mcq", options: ["Reflection", "Rotation", "Translation", "Enlargement"], a: "Reflection", worked: ["A mirror image is created by reflection"] },
 );
 questionBank['G2'][1].push(
-  { q: "A point at (4, 2) is translated by the vector (3, −2). What are its new coordinates?", a: "7, 0", worked: ["Add the vector components to the point", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
+  { q: "A point at (4, 2) is translated by the vector [vec:3,-2]. What are its new coordinates?", a: "7, 0", worked: ["Add the vector [vec:3,-2] to the point (4, 2)", "New x = 4 + 3 = 7", "New y = 2 + (−2) = 0", "New coordinates: (7, 0)"] },
 );
 questionBank['G2'][2].push(
   { q: "The point (2, 3) is rotated 90° clockwise about the origin. What are the new coordinates?", type: "mcq", options: ["(3, −2)", "(−3, 2)", "(−2, −3)", "(−2, 3)"], a: "(3, −2)", worked: ["90° clockwise rotation: (x, y) → (y, −x)", "(2, 3) → (3, −2)"] },
@@ -3422,6 +3452,326 @@ questionBank['S3'][3].push(
 );
 questionBank['S3'][4].push(
   { q: "The mean of five numbers is 10. Four of the numbers are 7, 12, 8, and 14. Find the fifth number.", a: "9", worked: ["Mean = 10, so sum of 5 numbers = 10 × 5 = 50", "Sum of known numbers = 7 + 12 + 8 + 14 = 41", "Fifth number = 50 − 41 = 9"] },
+);
+
+// ═══════════════════════════════════════════════════════════════
+// ADDITIONAL VARIANTS — Round 4 (5th variant per level)
+// ═══════════════════════════════════════════════════════════════
+
+// N1: Ordering & Symbols
+questionBank['N1'][0].push(
+  { q: "Write these numbers in order of size, starting with the smallest: −1, 5, −8, 3, 0", type: "order", items: ["−1", "5", "−8", "3", "0"], correctOrder: ["−8", "−1", "0", "3", "5"], a: "−8, −1, 0, 3, 5", worked: ["Start with the most negative: −8", "Then −1, then 0, then positives 3 and 5"] },
+);
+questionBank['N1'][1].push(
+  { q: "Place the correct symbol (< or >) to make the statement true: −7 ☐ −3", type: "mcq", options: ["<", ">"], a: "<", worked: ["−7 is more negative than −3", "−7 is further left on the number line", "−7 < −3"] },
+);
+questionBank['N1'][2].push(
+  { q: "Write these decimals in order of size, starting with the smallest: 0.7, 0.07, 0.77, 0.707", type: "order", items: ["0.7", "0.07", "0.77", "0.707"], correctOrder: ["0.07", "0.7", "0.707", "0.77"], a: "0.07, 0.7, 0.707, 0.77", worked: ["Compare: 0.07 = 0.070", "0.7 = 0.700", "0.707 = 0.707", "0.77 = 0.770", "Order: 0.070 < 0.700 < 0.707 < 0.770"] },
+);
+questionBank['N1'][3].push(
+  { q: "Put these values in order of size, starting with the smallest: 2/5, 0.45, 35%, 1/3", type: "order", items: ["2/5", "0.45", "35%", "1/3"], correctOrder: ["1/3", "35%", "2/5", "0.45"], a: "1/3, 35%, 2/5, 0.45", worked: ["Convert to decimals: 2/5 = 0.4, 0.45, 35% = 0.35, 1/3 ≈ 0.333", "Order: 0.333 < 0.35 < 0.4 < 0.45"] },
+);
+questionBank['N1'][4].push(
+  { q: "x is an integer such that −2 ≤ x < 3. Write down all the possible values of x.", a: "−2, −1, 0, 1, 2", worked: ["x ≥ −2 means include −2", "x < 3 means up to but not including 3", "Values: −2, −1, 0, 1, 2"] },
+);
+
+// N5: Mixed Number Practice
+questionBank['N5'][0].push(
+  { q: "Work out 1/3 + 1/6", a: "1/2", worked: ["Common denominator is 6", "1/3 = 2/6", "2/6 + 1/6 = 3/6 = 1/2"] },
+);
+questionBank['N5'][1].push(
+  { q: "Find the square root of 2 1/4", a: "1.5", worked: ["Convert: 2 1/4 = 9/4", "√(9/4) = √9 ÷ √4 = 3 ÷ 2 = 1.5"] },
+);
+questionBank['N5'][2].push(
+  { q: "A savings account pays 5% simple interest per year. If £1000 is deposited, how much interest is earned after 3 years?", a: "150", worked: ["Interest per year: 5% of £1000 = 0.05 × £1000 = £50", "Interest after 3 years: £50 × 3 = £150"] },
+);
+questionBank['N5'][3].push(
+  { q: "Write 3,200,000 in standard form.", type: "mcq", options: ["3.2 × 10⁶", "32 × 10⁵", "3.2 × 10⁷", "0.32 × 10⁷"], a: "3.2 × 10⁶", worked: ["Move decimal 6 places left: 3,200,000 = 3.2 × 10⁶"] },
+);
+questionBank['N5'][4].push(
+  { q: "Work out 1 2/3 ÷ 2 1/2. Give your answer as a fraction in its simplest form.", a: "2/3", worked: ["Convert to improper: 1 2/3 = 5/3, 2 1/2 = 5/2", "Divide: (5/3) ÷ (5/2) = (5/3) × (2/5) = 10/15 = 2/3"] },
+);
+
+// N6: Powers, Roots & Index Laws
+questionBank['N6'][0].push(
+  { q: "Work out the value of 3³.", a: "27", worked: ["3³ = 3 × 3 × 3", "= 9 × 3 = 27"] },
+);
+questionBank['N6'][1].push(
+  { q: "Find the value of √196.", a: "14", worked: ["√196 is the number that when squared gives 196", "14 × 14 = 196", "Therefore √196 = 14"] },
+);
+questionBank['N6'][2].push(
+  { q: "Work out the value of 5² − 2³.", a: "17", worked: ["5² = 5 × 5 = 25", "2³ = 2 × 2 × 2 = 8", "25 − 8 = 17"] },
+);
+questionBank['N6'][3].push(
+  { q: "Simplify x⁴ × x³. Give your answer using index notation.", type: "mcq", options: ["x⁷", "x¹²", "x¹", "2x⁷"], a: "x⁷", worked: ["When multiplying powers, add the indices", "x⁴ × x³ = x^(4+3) = x⁷"] },
+);
+questionBank['N6'][4].push(
+  { q: "Evaluate 16^(1/2) + 8^(1/3).", a: "6", worked: ["16^(1/2) = √16 = 4", "8^(1/3) = ³√8 = 2", "4 + 2 = 6"] },
+);
+
+// N14: Rounding & Estimation
+questionBank['N14'][0].push(
+  { q: "Round 3,847 to the nearest thousand.", a: "4000", worked: ["Look at the hundreds digit: 8", "Since 8 ≥ 5, round up", "3,847 rounded to nearest thousand = 4000"] },
+);
+questionBank['N14'][1].push(
+  { q: "Round 12.348 to 2 decimal places.", a: "12.35", worked: ["Look at the third decimal place: 8", "Since 8 ≥ 5, round up", "12.348 rounded to 2 d.p. = 12.35"] },
+);
+questionBank['N14'][2].push(
+  { q: "Round 0.00837 to 1 significant figure.", a: "0.008", worked: ["First significant figure is 8", "Look at the next digit: 3", "Since 3 < 5, round down", "0.00837 to 1 s.f. = 0.008"] },
+);
+questionBank['N14'][3].push(
+  { q: "Estimate the value of (9.8 × 51.2) ÷ 2.03.", a: "250", hint: "Round each value to 1 s.f. first: (10 × 50) ÷ 2", worked: ["Round to 1 s.f.: 9.8 ≈ 10, 51.2 ≈ 50, 2.03 ≈ 2", "Estimate = (10 × 50) ÷ 2 = 500 ÷ 2 = 250"] },
+);
+questionBank['N14'][4].push(
+  { q: "A mass M is rounded to 250 g to the nearest 10 g. Write down the error interval for M.", type: "mcq", options: ["245 ≤ M < 255", "240 ≤ M < 260", "245 < M ≤ 255", "250 ≤ M < 260"], a: "245 ≤ M < 255", worked: ["Rounded to nearest 10g, so half of 10 = 5", "Lower bound: 250 − 5 = 245", "Upper bound: 250 + 5 = 255", "245 ≤ M < 255 (upper bound not included)"] },
+);
+
+// A1: Algebraic Notation
+questionBank['A1'][0].push(
+  { q: "Simplify: d + d + d + d + d", a: "5d", worked: ["Count the number of d's: 5", "5d is the simplified form"] },
+);
+questionBank['A1'][1].push(
+  { q: "Simplify: 2 × p × 4 × q", a: "8pq", worked: ["Multiply the numbers: 2 × 4 = 8", "Write without multiplication signs: 8pq"] },
+);
+questionBank['A1'][2].push(
+  { q: "Simplify: 3y² + 4y²", a: "7y²", worked: ["Add the coefficients: 3 + 4 = 7", "Keep the variable part: y²", "Answer: 7y²"] },
+);
+questionBank['A1'][3].push(
+  { q: "A plumber charges £30 for a call-out plus £20 per hour. Write an expression for the total cost of h hours of work.", a: "30 + 20h", worked: ["Call-out fee = £30 (fixed)", "Hourly rate = £20 per hour = 20h", "Total = 30 + 20h"] },
+);
+questionBank['A1'][4].push(
+  { q: "Simplify: 12y ÷ 4", a: "3y", worked: ["12y ÷ 4 = (12 ÷ 4)y = 3y"] },
+);
+
+// A3: Mixed Algebra Practice
+questionBank['A3'][0].push(
+  { q: "Expand: 3(2y − 4)", a: "6y - 12", worked: ["Multiply each term in the bracket by 3", "3 × 2y = 6y", "3 × (−4) = −12", "Answer: 6y − 12"] },
+);
+questionBank['A3'][1].push(
+  { q: "The first three terms of an arithmetic sequence are 1, 5, 9… Find an expression for the nth term.", a: "4n - 3", worked: ["Common difference: 5 − 1 = 4", "General form: nth term = an + b where a = 4", "When n = 1: 4(1) + b = 1, so b = −3", "Formula: 4n − 3"] },
+);
+questionBank['A3'][2].push(
+  { q: "A person walks at a constant speed. After 10 minutes they have walked 1 km. After 30 minutes they have walked 3 km. What is their speed in km per minute?", a: "0.1", worked: ["Distance change = 3 − 1 = 2 km", "Time change = 30 − 10 = 20 minutes", "Speed = distance ÷ time = 2 ÷ 20 = 0.1 km per minute"] },
+);
+questionBank['A3'][3].push(
+  { q: "Multiply out and simplify (x + 4)(x − 2)", a: "x² + 2x − 8", worked: ["Use FOIL: x × x = x²", "x × (−2) + 4 × x = −2x + 4x = 2x", "4 × (−2) = −8", "Answer: x² + 2x − 8"] },
+);
+questionBank['A3'][4].push(
+  { q: "For y = x² − 2x, what is the value of y when x = 5?", a: "15", worked: ["Substitute x = 5 into y = x² − 2x", "y = 5² − 2(5) = 25 − 10 = 15"] },
+);
+
+// A17: Solve Linear Equations
+questionBank['A17'][0].push(
+  { q: "Solve: x − 8 = 3", a: "11", worked: ["Add 8 to both sides", "x = 3 + 8", "x = 11"] },
+);
+questionBank['A17'][1].push(
+  { q: "Solve: 3y = 27", a: "9", worked: ["Divide both sides by 3", "y = 27 ÷ 3", "y = 9"] },
+);
+questionBank['A17'][2].push(
+  { q: "Solve: 4n + 5 = 29", a: "6", worked: ["Subtract 5 from both sides: 4n = 24", "Divide both sides by 4", "n = 6"] },
+);
+questionBank['A17'][3].push(
+  { q: "Solve: 3(x − 2) = 15", a: "7", worked: ["Divide both sides by 3: x − 2 = 5", "Add 2 to both sides", "x = 7"] },
+);
+questionBank['A17'][4].push(
+  { q: "Solve: 7x + 1 = 3x + 17", a: "4", worked: ["Move x terms to left: 7x − 3x = 4x", "4x + 1 = 17", "Subtract 1: 4x = 16", "x = 4"] },
+);
+
+// A21: Straight-Line Graphs
+questionBank['A21'][0].push(
+  { q: "What is the y-intercept of the line y = 3x + 5?", a: "5", worked: ["In y = mx + c, the y-intercept is c", "Here c = 5", "The y-intercept is 5"] },
+);
+questionBank['A21'][1].push(
+  { q: "Using the equation y = 3x + 1, find the value of y when x = −2.", a: "-5", worked: ["Substitute x = −2 into y = 3x + 1", "y = 3(−2) + 1 = −6 + 1 = −5"] },
+);
+questionBank['A21'][2].push(
+  { q: "What type of line does the equation x = 4 represent on a coordinate grid?", type: "mcq", options: ["A vertical line through (4, 0)", "A horizontal line through (0, 4)", "A diagonal line through (4, 0)", "A curve through (4, 0)"], a: "A vertical line through (4, 0)", worked: ["x = 4 means x is always 4, regardless of y", "This is a vertical line", "It passes through (4, 0)"] },
+);
+questionBank['A21'][3].push(
+  { q: "What is the gradient of the line y = −2x + 7?", a: "-2", worked: ["The equation is in the form y = mx + c", "m is the gradient", "Here m = −2, so gradient = −2"] },
+);
+questionBank['A21'][4].push(
+  { q: "Find the equation of a line with gradient 3 that passes through the point (0, 4).", a: "y = 3x + 4", worked: ["The line passes through (0, 4), so y-intercept = 4", "Gradient = 3", "Using y = mx + c: y = 3x + 4"] },
+);
+
+// R2: Mixed Ratio Practice
+questionBank['R2'][0].push(
+  { q: "Write 0.35 as a fraction in its simplest form.", a: "7/20", worked: ["0.35 = 35/100", "Divide numerator and denominator by 5: 7/20"] },
+);
+questionBank['R2'][1].push(
+  { q: "A map has a scale of 1:200,000. Two cities are 3.5 cm apart on the map. Work out the real distance in kilometres.", a: "7", worked: ["Scale 1:200,000 means 1 cm on map = 200,000 cm real distance", "Real distance = 3.5 × 200,000 = 700,000 cm = 7 km"] },
+);
+questionBank['R2'][2].push(
+  { q: "In a class, 60% of students walk to school. The rest cycle. Write the ratio of walkers to cyclists in its simplest form.", a: "3:2", worked: ["Walkers = 60%, Cyclists = 100% − 60% = 40%", "Ratio = 60:40 = 3:2"] },
+);
+questionBank['R2'][3].push(
+  { q: "y is inversely proportional to x. When x = 3, y = 12. Find y when x = 4.", a: "9", worked: ["If y is inversely proportional to x: xy = k", "k = 3 × 12 = 36", "When x = 4: y = 36 ÷ 4 = 9"] },
+);
+questionBank['R2'][4].push(
+  { q: "Change 30 miles per hour into kilometres per hour. (Use 5 miles = 8 km)", a: "48", worked: ["Scale factor = 8 ÷ 5 = 1.6", "30 × 1.6 = 48 km/h"] },
+);
+
+// G1: Angle Facts & Shape Properties
+questionBank['G1'][0].push(
+  { q: "How many sides does a hexagon have?", type: "mcq", options: ["6", "5", "7", "8"], a: "6", worked: ["Hex = 6, so a hexagon has 6 sides"] },
+);
+questionBank['G1'][1].push(
+  { q: "Two angles on a straight line are x° and 65°. Work out the value of x.", a: "115", worked: ["Angles on a straight line sum to 180°", "x + 65 = 180", "x = 115°"] },
+);
+questionBank['G1'][2].push(
+  { q: "An isosceles triangle has two equal angles of 50°. Work out the third angle.", a: "80", worked: ["Angles in a triangle sum to 180°", "50 + 50 + third angle = 180", "Third angle = 180 − 100 = 80°"] },
+);
+questionBank['G1'][3].push(
+  { q: "Work out the size of one exterior angle of a regular hexagon.", a: "60", worked: ["Exterior angles of any polygon sum to 360°", "Regular hexagon has 6 equal exterior angles", "Each exterior angle = 360° ÷ 6 = 60°"] },
+);
+questionBank['G1'][4].push(
+  { q: "Two angles in a triangle are 35° and 90°. What type of triangle is it?", type: "mcq", options: ["Right-angled triangle", "Equilateral triangle", "Isosceles triangle", "Obtuse triangle"], a: "Right-angled triangle", worked: ["One angle is 90°", "A triangle with a 90° angle is a right-angled triangle", "Third angle = 180 − 35 − 90 = 55°"] },
+);
+
+// G2: Mixed Geometry Practice
+questionBank['G2'][0].push(
+  { q: "The point (4, 6) is reflected in the x-axis. What are the coordinates of the image?", a: "(4, -6)", worked: ["When reflecting in the x-axis:", "The x-coordinate stays the same", "The y-coordinate changes sign", "(4, 6) → (4, −6)"] },
+);
+questionBank['G2'][1].push(
+  { q: "Calculate the area of a trapezium with parallel sides 8 cm and 12 cm, and a height of 3 cm.", a: "30", worked: ["Area of trapezium = ½ × (a + b) × h", "= ½ × (8 + 12) × 3", "= ½ × 20 × 3 = 30 cm²"] },
+);
+questionBank['G2'][2].push(
+  { q: "What 2D shape would you see if you looked at a cylinder from the front?", a: "rectangle", worked: ["Looking at a cylinder from the front shows its height and width", "This creates a rectangular outline", "Answer: rectangle"] },
+);
+questionBank['G2'][3].push(
+  { q: "a = [vec:2,-3] and b = [vec:4,1]. Work out 2a − b. Give your answer as x, y.", a: "0, -7", worked: ["First find 2a: 2 × [vec:2,-3] = [vec:4,-6]", "Then subtract: 2a − b = [vec:4,-6] − [vec:4,1]", "= [vec:0,-7]"] },
+);
+questionBank['G2'][4].push(
+  { q: "A sphere has radius 6 cm. Calculate the volume. Give your answer as a number followed by π (e.g. 50π).", a: "288π", worked: ["Volume of sphere = (4/3)πr³", "= (4/3) × π × 6³", "= (4/3) × π × 216 = 288π cm³"] },
+);
+
+// G12: Perimeter, Area & Volume
+questionBank['G12'][0].push(
+  { q: "Find the perimeter of a rectangle with length 7 cm and width 3 cm.", a: "20", worked: ["Perimeter = 2 × (length + width)", "= 2 × (7 + 3) = 2 × 10 = 20 cm"] },
+);
+questionBank['G12'][1].push(
+  { q: "Work out the area of a square with side length 9 cm.", a: "81", worked: ["Area = side × side", "Area = 9 × 9 = 81 cm²"] },
+);
+questionBank['G12'][2].push(
+  { q: "Find the area of a triangle with base 10 cm and perpendicular height 7 cm.", a: "35", worked: ["Area = (base × height) ÷ 2", "Area = (10 × 7) ÷ 2 = 70 ÷ 2 = 35 cm²"] },
+);
+questionBank['G12'][3].push(
+  { q: "Calculate the volume of a cube with side length 4 cm.", a: "64", worked: ["Volume = side³", "Volume = 4³ = 4 × 4 × 4 = 64 cm³"] },
+);
+questionBank['G12'][4].push(
+  { q: "Calculate the circumference of a circle with diameter 10 cm. Give your answer to 1 decimal place.", a: "31.4", calculator: true, hint: "Circumference = π × d", worked: ["Circumference = π × d", "= π × 10 ≈ 31.4 cm"] },
+);
+
+// G20: Pythagoras & Trigonometry
+questionBank['G20'][0].push(
+  { q: "Which side of a right-angled triangle is always opposite the right angle?", type: "mcq", options: ["The hypotenuse", "The base", "The adjacent", "The perpendicular height"], a: "The hypotenuse", worked: ["The side opposite the right angle is the longest side", "This is always called the hypotenuse"] },
+);
+questionBank['G20'][1].push(
+  { q: "Use Pythagoras' theorem to find the hypotenuse c when a = 5 and b = 12.", a: "13", worked: ["c² = a² + b²", "c² = 5² + 12² = 25 + 144 = 169", "c = √169 = 13"] },
+);
+questionBank['G20'][2].push(
+  { q: "A right-angled triangle has a hypotenuse of 10 cm and one side of 6 cm. Find the missing side.", a: "8", calculator: true, worked: ["Using c² = a² + b²", "10² = 6² + b²", "100 = 36 + b²", "b² = 64, so b = 8 cm"] },
+);
+questionBank['G20'][3].push(
+  { q: "In a right-angled triangle, the angle is 45° and the adjacent side is 8 cm. Use tan to find the length of the opposite side.", a: "8", calculator: true, worked: ["tan(angle) = opposite / adjacent", "tan(45°) = opposite / 8", "opposite = tan(45°) × 8 = 1 × 8 = 8 cm"] },
+);
+questionBank['G20'][4].push(
+  { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 14 cm. Use sin⁻¹ to find the angle.", a: "30", calculator: true, worked: ["sin(angle) = opposite / hypotenuse", "sin(angle) = 7 / 14 = 0.5", "angle = sin⁻¹(0.5) = 30°"] },
+);
+
+// P4: Mixed Probability & Statistics
+questionBank['P4'][0].push(
+  { q: "A fair 6-sided die is rolled and a fair coin is flipped. What is the probability of rolling an even number and getting Heads?", a: "1/4", worked: ["Even numbers on die: 2, 4, 6 → P(even) = 3/6 = 1/2", "P(Heads) = 1/2", "P(even and Heads) = 1/2 × 1/2 = 1/4"] },
+);
+questionBank['P4'][1].push(
+  { q: "A jar has 6 red and 4 green sweets. Two sweets are taken without replacement. Work out the probability that both are green.", a: "2/15", worked: ["P(1st green) = 4/10 = 2/5", "P(2nd green | 1st green) = 3/9 = 1/3", "P(both green) = 2/5 × 1/3 = 2/15"] },
+);
+questionBank['P4'][2].push(
+  { q: "A survey asks 'Do you think school dinners are healthy?' This is a leading question. Write a better question.", type: "mcq", options: ["What do you think about school dinners?", "Don't you agree school dinners are unhealthy?", "School dinners are great, aren't they?", "Why are school dinners so bad?"], a: "What do you think about school dinners?", worked: ["A good survey question should be unbiased", "It should not lead the person to a particular answer", "'What do you think about school dinners?' is neutral and open"] },
+);
+questionBank['P4'][3].push(
+  { q: "As the temperature increases, the number of coats sold decreases. What type of correlation is this?", type: "mcq", options: ["Negative correlation", "Positive correlation", "No correlation"], a: "Negative correlation", worked: ["As one variable increases, the other decreases", "This is negative correlation"] },
+);
+questionBank['P4'][4].push(
+  { q: "A spinner has sections A, B, C. P(A) = 0.5, P(B) = 0.3. The spinner is spun 200 times. How many times would you expect to land on C?", a: "40", worked: ["P(C) = 1 − 0.5 − 0.3 = 0.2", "Expected frequency = P(C) × number of spins", "Expected = 0.2 × 200 = 40"] },
+);
+
+// P7: Tree Diagrams & Enumeration
+questionBank['P7'][0].push(
+  { q: "A 4-sided spinner (1, 2, 3, 4) is spun and a coin is flipped. How many possible outcomes are there?", a: "8", worked: ["Spinner outcomes: 4 (1, 2, 3, 4)", "Coin outcomes: 2 (Heads, Tails)", "Total outcomes = 4 × 2 = 8"] },
+);
+questionBank['P7'][1].push(
+  { q: "A bag has 4 yellow and 6 purple counters. One counter is picked at random. What is the probability it is yellow?", a: "2/5", worked: ["Total counters = 4 + 6 = 10", "Yellow counters = 4", "Probability = 4/10 = 2/5"] },
+);
+questionBank['P7'][2].push(
+  { q: "A fair die is rolled twice. What is the probability of getting a 6 both times?", a: "1/36", worked: ["P(6) = 1/6", "P(two 6s) = 1/6 × 1/6 = 1/36"] },
+);
+questionBank['P7'][3].push(
+  { q: "Two events are independent. P(A) = 0.3 and P(B) = 0.4. Find P(A and B).", a: "0.12", worked: ["For independent events: P(A and B) = P(A) × P(B)", "P(A and B) = 0.3 × 0.4 = 0.12"] },
+);
+questionBank['P7'][4].push(
+  { q: "A bag has 5 red and 3 blue marbles. Two are picked without replacement. Find the probability both are blue.", a: "3/28", worked: ["P(first blue) = 3/8", "P(second blue | first was blue) = 2/7", "P(both blue) = 3/8 × 2/7 = 6/56 = 3/28"] },
+);
+
+// S2: Tables & Charts
+questionBank['S2'][0].push(
+  { q: "A bar chart shows: Pizza 15, Curry 10, Pasta 8, Salad 7. How many people were surveyed in total?", a: "40", worked: ["Total = 15 + 10 + 8 + 7", "= 40 people"] },
+);
+questionBank['S2'][1].push(
+  { q: "The following data shows shoe sizes of 8 students: 5, 7, 6, 5, 8, 5, 7, 6. What is the most common shoe size?", a: "5", worked: ["Count each size: 5 appears 3 times, 6 appears 2 times, 7 appears 2 times, 8 appears 1 time", "Most common (mode) = 5"] },
+);
+questionBank['S2'][2].push(
+  { q: "In a pictogram, each symbol represents 5 items. How many symbols are needed to show 22 items?", a: "4.4", worked: ["Number of symbols = 22 ÷ 5 = 4.4", "Need 4 full symbols and 2/5 of a symbol"] },
+);
+questionBank['S2'][3].push(
+  { q: "60 people were asked their favourite colour. 20 said blue. Calculate the angle for blue in a pie chart.", a: "120", worked: ["Fraction = 20/60 = 1/3", "Angle = 1/3 × 360° = 120°"] },
+);
+questionBank['S2'][4].push(
+  { q: "A frequency table shows: Score 1 (freq 3), Score 2 (freq 7), Score 3 (freq 5), Score 4 (freq 5). How many scores were recorded in total?", a: "20", worked: ["Total frequency = 3 + 7 + 5 + 5", "= 20 scores"] },
+);
+
+// S3: Averages & Range
+questionBank['S3'][0].push(
+  { q: "Find the mode of: 4, 7, 4, 3, 7, 4, 8.", a: "4", worked: ["Mode is the most frequent value", "4 appears 3 times, 7 appears 2 times", "Mode = 4"] },
+);
+questionBank['S3'][1].push(
+  { q: "Find the range of: 3, 15, 7, 22, 9.", a: "19", worked: ["Range = highest − lowest", "Highest = 22, Lowest = 3", "Range = 22 − 3 = 19"] },
+);
+questionBank['S3'][2].push(
+  { q: "Find the median of: 12, 5, 8, 15, 3, 9.", a: "8.5", worked: ["Order the data: 3, 5, 8, 9, 12, 15", "Even number of values, so median is average of middle two", "Middle values: 8 and 9", "Median = (8 + 9) ÷ 2 = 8.5"] },
+);
+questionBank['S3'][3].push(
+  { q: "Calculate the mean of: 6, 3, 11, 8, 2.", a: "6", worked: ["Mean = sum ÷ count", "Sum = 6 + 3 + 11 + 8 + 2 = 30", "Mean = 30 ÷ 5 = 6"] },
+);
+questionBank['S3'][4].push(
+  { q: "The mean of four numbers is 8. Three of the numbers are 5, 10, and 6. Find the fourth number.", a: "11", worked: ["Mean = 8, so sum of 4 numbers = 8 × 4 = 32", "Sum of known numbers = 5 + 10 + 6 = 21", "Fourth number = 32 − 21 = 11"] },
+);
+
+// R9: Write as a Fraction or Percentage (3 more per level)
+questionBank['R9'][0].push(
+  { q: "What fraction of 1 kilogram is 250 grams?", a: "1/4", worked: ["1 kilogram = 1000 grams", "Fraction = 250 ÷ 1000 = 1/4"] },
+  { q: "What fraction of 1 day is 6 hours?", a: "1/4", worked: ["1 day = 24 hours", "Fraction = 6 ÷ 24 = 1/4"] },
+  { q: "What fraction of £1 is 20p?", a: "1/5", worked: ["£1 = 100p", "Fraction = 20 ÷ 100 = 1/5"] },
+);
+questionBank['R9'][1].push(
+  { q: "Write 18 out of 25 as a percentage.", a: "72%", worked: ["Percentage = (part ÷ whole) × 100", "= (18 ÷ 25) × 100 = 0.72 × 100 = 72%"] },
+  { q: "Write 9 out of 20 as a percentage.", a: "45%", worked: ["Percentage = (part ÷ whole) × 100", "= (9 ÷ 20) × 100 = 0.45 × 100 = 45%"] },
+  { q: "Write 3 out of 8 as a percentage.", a: "37.5%", worked: ["Percentage = (part ÷ whole) × 100", "= (3 ÷ 8) × 100 = 0.375 × 100 = 37.5%"] },
+);
+questionBank['R9'][2].push(
+  { q: "In a class of 25 students, 15 are girls. What percentage of the class are girls?", a: "60%", worked: ["Percentage = (part ÷ whole) × 100", "= (15 ÷ 25) × 100 = 0.6 × 100 = 60%"] },
+  { q: "A bag has 40 sweets and 14 are strawberry flavoured. What percentage are strawberry?", a: "35%", worked: ["Percentage = (part ÷ whole) × 100", "= (14 ÷ 40) × 100 = 0.35 × 100 = 35%"] },
+  { q: "Out of 80 cars in a car park, 20 are blue. What percentage of the cars are blue?", a: "25%", worked: ["Percentage = (part ÷ whole) × 100", "= (20 ÷ 80) × 100 = 0.25 × 100 = 25%"] },
+);
+questionBank['R9'][3].push(
+  { q: "Write 300 ml as a fraction of 2 litres. Give your answer in its simplest form.", a: "3/20", worked: ["Convert to same units: 2 litres = 2000 ml", "Fraction = 300 ÷ 2000 = 3/20"] },
+  { q: "Write 40 minutes as a fraction of 2 hours. Give your answer in its simplest form.", a: "1/3", worked: ["Convert to same units: 2 hours = 120 minutes", "Fraction = 40 ÷ 120 = 1/3"] },
+  { q: "Write 800 g as a fraction of 5 kg. Give your answer in its simplest form.", a: "4/25", worked: ["Convert to same units: 5 kg = 5000 g", "Fraction = 800 ÷ 5000 = 8/50 = 4/25"] },
+);
+questionBank['R9'][4].push(
+  { q: "In a school, the ratio of boys to girls is 3:2. What percentage of the students are boys?", a: "60%", worked: ["Total parts = 3 + 2 = 5", "Boys = 3 parts out of 5", "Percentage = (3 ÷ 5) × 100 = 60%"] },
+  { q: "The ratio of passes to fails is 9:1. What percentage of students passed?", a: "90%", worked: ["Total parts = 9 + 1 = 10", "Passes = 9 parts out of 10", "Percentage = (9 ÷ 10) × 100 = 90%"] },
+  { q: "The ratio of red sweets to green sweets is 2:3. What percentage of the sweets are green?", a: "60%", worked: ["Total parts = 2 + 3 = 5", "Green = 3 parts out of 5", "Percentage = (3 ÷ 5) × 100 = 60%"] },
 );
 
 // Map every objective code to the primary code that owns its question bank
@@ -4037,6 +4387,7 @@ const generateDiagram = (type) => {
     'dual-bar-chart': 'dual bar chart.png',
     'spinners': 'spinners.png',
     'isosceles-triangle': 'Isoceles triangle missing angle.png',
+    'isosceles-50': 'Isoceles 50.png',
     'pythagoras-shorter': 'pythagoras shorter side.png',
   };
 
@@ -4080,6 +4431,36 @@ const generateDiagram = (type) => {
     return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
       <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">x</td>${xCells}</tr>
       <tr><td style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1.1em">y</td>${cells}</tr>
+    </table>`;
+  }
+
+  // Tally chart diagrams (AQA style)
+  if (type && type.startsWith('tally:')) {
+    const raw = type.slice(6); // e.g. "Red:6,Blue:5,Green:4|Colour"
+    const parts = raw.split('|');
+    const data = parts[0];
+    const headerLabel = parts[1] || 'Colour';
+    const items = data.split(',').map(item => {
+      const [label, count] = item.split(':');
+      const n = parseInt(count);
+      let tally = '';
+      const groups = Math.floor(n / 5);
+      const remainder = n % 5;
+      for (let g = 0; g < groups; g++) tally += '<span style="text-decoration:line-through;letter-spacing:2px">||||</span> ';
+      for (let r = 0; r < remainder; r++) tally += '|';
+      return { label: label.trim(), count: n, tally: tally.trim() };
+    });
+    const rows = items.map(item => `<tr>
+      <td style="border:2px solid #64748b;padding:8px 14px;color:#e2e8f0;font-size:1.05em">${item.label}</td>
+      <td style="border:2px solid #64748b;padding:8px 14px;color:#e2e8f0;font-size:1.1em;font-family:monospace;letter-spacing:1px">${item.tally}</td>
+      <td style="border:2px solid #64748b;padding:8px 14px;text-align:center;color:#e2e8f0;font-size:1.05em">${item.count}</td>
+    </tr>`).join('');
+    return `<table style="border-collapse:collapse;margin:0 auto;background:#1e293b;border-radius:8px;overflow:hidden">
+      <tr>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">${headerLabel}</th>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">Tally</th>
+        <th style="border:2px solid #64748b;padding:8px 14px;font-weight:bold;color:#94a3b8;font-size:1em">Frequency</th>
+      </tr>${rows}
     </table>`;
   }
 
@@ -4283,7 +4664,6 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   });
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
   const [masteryGained, setMasteryGained] = useState(0);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [practiceMode, setPracticeMode] = useState('standard'); // 'standard', 'quickfire', or 'exam'
   const [timeLeft, setTimeLeft] = useState(null);
@@ -4540,12 +4920,12 @@ What is the student's answer?`
         questionsWithData = queue.map(item => {
           // If the selected question is MCQ, use it; otherwise pick an MCQ from the objective
           if (item.question?.type === 'mcq') {
-            return { ...item.question, objective: item.objective, questionType: 'quick', _fsrsQuestionId: item.questionId };
+            return { ...item.question, objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1, _fsrsQuestionId: item.questionId };
           }
           // Fallback: pick a random MCQ from the objective
           const mcqQuestions = qBank[item.objective?.code]?.filter(q => q.type === 'mcq') || [];
           const mcq = mcqQuestions[Math.floor(Math.random() * mcqQuestions.length)];
-          return { ...(mcq || {}), objective: item.objective, questionType: 'quick' };
+          return { ...(mcq || {}), objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1 };
         });
       }
     } else {
@@ -4561,6 +4941,7 @@ What is the student's answer?`
           ...(item.question || {}),
           objective: item.objective,
           questionType,
+          difficultyLevel: (item.questionIndex ?? 0) + 1,
           _fsrsQuestionId: item.questionId
         };
       });
@@ -4574,7 +4955,6 @@ What is the student's answer?`
     setUserAnswer('');
     setMasteryGained(0);
     setAchievements([]);
-    setShowConfetti(false);
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
@@ -4583,7 +4963,6 @@ What is the student's answer?`
     // Reset scaffolding state
     setFailureCounts({});
     setCurrentDiagnosis(null);
-    setIsAnalyzing(false);
 
     // Reset FSRS cognitive science state
     setQuestionStartTime(Date.now());
@@ -4678,8 +5057,7 @@ What is the student's answer?`
     } else if (correct) {
       // Reset failure count on success
       setCurrentDiagnosis(null);
-      setIsAnalyzing(false);
-      setFailureCounts(prev => ({ ...prev, [code]: 0 }));
+        setFailureCounts(prev => ({ ...prev, [code]: 0 }));
     }
     
     // Update progress and track mastery
@@ -4789,7 +5167,6 @@ What is the student's answer?`
     setUserAnswer('');
     setIsCorrect(null);
     setCurrentDiagnosis(null);
-    setIsAnalyzing(false);
     setShowMathKeyboard(false);
     setCapturedImage(null);
     setShowCalculator(false);
@@ -4958,43 +5335,6 @@ What is the student's answer?`
         <div className="ambient-glow" />
         <div className="orb-purple w-64 h-64 -top-32 -right-32 opacity-70 fixed pointer-events-none" />
         <div className="orb-cyan w-48 h-48 bottom-20 -left-20 opacity-60 fixed pointer-events-none" />
-        {/* Confetti Animation */}
-        {showConfetti && (
-          <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-            <style>{`
-              @keyframes confettiFall {
-                0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-                100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-              }
-              @keyframes confettiSway {
-                0%, 100% { margin-left: 0; }
-                50% { margin-left: 30px; }
-              }
-            `}</style>
-            {[...Array(60)].map((_, i) => {
-              const colors = ['#EF4444', '#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
-              const shapes = ['rounded-full', 'rounded-sm', 'rounded-none'];
-              const size = 8 + Math.random() * 8;
-              return (
-                <div
-                  key={i}
-                  className={shapes[Math.floor(Math.random() * shapes.length)]}
-                  style={{
-                    position: 'absolute',
-                    left: `${Math.random() * 100}%`,
-                    top: '-20px',
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-                    animation: `confettiFall ${2 + Math.random() * 3}s ease-out forwards, confettiSway ${1 + Math.random()}s ease-in-out infinite`,
-                    animationDelay: `${Math.random() * 2}s`,
-                  }}
-                />
-              );
-            })}
-          </div>
-        )}
-
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-28 px-4 relative z-10 page-content">
           <div className="max-w-md mx-auto content-container">
@@ -5773,7 +6113,7 @@ What is the student's answer?`
                               <div className="text-sm text-blue-200/80 space-y-2">
                                 {current.worked.map((step, i) => (
                                   <p key={i} className={i === current.worked.length - 1 ? 'font-semibold text-blue-300' : ''}>
-                                    {step}
+                                    {renderRecurring(step)}
                                   </p>
                                 ))}
                               </div>
@@ -6195,7 +6535,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
         : `GREAT WORK! No struggling topics identified.`,
       ``,
       `---`,
-      `Generated by GCSE Maths Habit Tracker`,
+      `Generated by Square One Maths`,
     ];
     
     return lines.join('\n');
@@ -6222,7 +6562,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `maths-habit-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `square-one-maths-backup-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -6900,7 +7240,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
               <div>
                 <h2 className="font-semibold text-primary-text">About</h2>
-                <p className="text-sm text-secondary-text">The Maths Habit v1.0</p>
+                <p className="text-sm text-secondary-text">Square One Maths v1.0</p>
               </div>
             </div>
             <p className="text-sm text-secondary-text leading-relaxed">
@@ -6953,7 +7293,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                   ))}
                 </div>
               </div>
-              <span className="font-bold text-xl hidden sm:block gradient-text-celebration">The Maths Habit</span>
+              <span className="font-bold text-xl hidden sm:block gradient-text-celebration">Square One Maths</span>
             </button>
 
             {/* Nav links - desktop */}
@@ -7540,7 +7880,7 @@ function AppContent() {
               <AnimatedLogo />
             </div>
 
-            <h1 className="text-4xl font-bold mb-3 tracking-tight gradient-text-celebration">The Maths Habit</h1>
+            <h1 className="text-4xl font-bold mb-3 tracking-tight gradient-text-celebration">Square One Maths</h1>
             <p className="text-xl text-secondary-text mb-10">
               GCSE Maths<br />
               <span className="text-violet-light">Every square counts.</span>
@@ -8024,8 +8364,8 @@ function AppContent() {
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
 
       {/* Hero Heatmap Card - Glassmorphism */}
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="glass-panel rounded-3xl p-6 md:p-10 shadow-glass card-hover">
+      <div className="max-w-4xl mx-auto px-2 sm:px-4">
+        <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
 
           {/* Header with stats */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -8102,11 +8442,13 @@ function AppContent() {
           )}
 
           {/* THE HEATMAP - Hero Element */}
-          <div className="flex justify-center py-4">
+          <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: `repeat(${cols}, minmax(28px, 36px))`,
-              gap: 6
+              gridTemplateColumns: `repeat(${cols}, 1fr)`,
+              gap: window.innerWidth < 480 ? 3 : 6,
+              width: '100%',
+              maxWidth: `${cols * 36 + (cols - 1) * 6}px`
             }}>
               {allObjectives.map((obj) => {
                 const level = getLevel(obj.code);
@@ -8453,7 +8795,7 @@ function LandscapePrompt() {
         Turn your phone sideways
       </h2>
       <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
-        The Maths Habit is designed for landscape mode
+        Square One Maths is designed for landscape mode
       </p>
       <button
         onClick={() => setDismissed(true)}
@@ -8480,6 +8822,20 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   const levelLabel = levelLabels[current.level] || 'Learning';
   const progressPct = (current.level / 5) * 100;
   const isLast = currentIndex >= objectives.length - 1;
+  const isMastered = current.level >= 5;
+
+  // Generate tile confetti pieces for mastery celebration
+  const tileConfetti = isMastered ? [...Array(50)].map((_, i) => {
+    const allTopicColors = ['#A78BFA', '#38E6A2', '#67E8F9', '#F59E0B', '#EC4899', '#3B82F6', '#EF4444', '#14B8A6'];
+    const color = allTopicColors[Math.floor(Math.random() * allTopicColors.length)];
+    const size = 10 + Math.random() * 16;
+    const left = Math.random() * 100;
+    const delay = Math.random() * 2.5;
+    const duration = 2.5 + Math.random() * 2;
+    const rotation = Math.random() * 360;
+    const opacity = 0.6 + Math.random() * 0.4;
+    return { color, size, left, delay, duration, rotation, opacity, key: `${currentIndex}-${i}` };
+  }) : [];
 
   return (
     <div
@@ -8491,6 +8847,45 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         flexDirection: 'column',
       }}
     >
+      {/* Tile confetti for mastery */}
+      {isMastered && (
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 61 }}>
+          <style>{`
+            @keyframes tileFall {
+              0% { transform: translateY(-30px) rotate(var(--rot)) scale(0.3); opacity: 0; }
+              10% { opacity: var(--op); transform: translateY(0) rotate(var(--rot)) scale(1); }
+              90% { opacity: var(--op); }
+              100% { transform: translateY(calc(100vh + 30px)) rotate(calc(var(--rot) + 360deg)) scale(0.8); opacity: 0; }
+            }
+            @keyframes tileSway {
+              0%, 100% { margin-left: 0; }
+              25% { margin-left: 20px; }
+              75% { margin-left: -20px; }
+            }
+          `}</style>
+          {tileConfetti.map(t => (
+            <div
+              key={t.key}
+              style={{
+                position: 'absolute',
+                left: `${t.left}%`,
+                top: '-30px',
+                width: `${t.size}px`,
+                height: `${t.size}px`,
+                borderRadius: Math.random() > 0.3 ? 4 : '50%',
+                backgroundColor: t.color,
+                border: `1px solid rgba(255,255,255,0.3)`,
+                boxShadow: `0 0 6px ${t.color}80`,
+                '--rot': `${t.rotation}deg`,
+                '--op': t.opacity,
+                animation: `tileFall ${t.duration}s ease-out forwards, tileSway ${1.5 + Math.random()}s ease-in-out infinite`,
+                animationDelay: `${t.delay}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Animated card */}
       <div
         key={current.code}
@@ -8499,19 +8894,26 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
           width: 'min(85vw, 340px)',
           aspectRatio: '1',
           borderRadius: 24,
-          background: `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
-          border: `3px solid ${topicColor}`,
-          boxShadow: `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
+          background: isMastered
+            ? `linear-gradient(135deg, #FFD70040, ${topicColor}30, #FFD70020)`
+            : `linear-gradient(135deg, ${topicColor}40, ${topicColor}20)`,
+          border: isMastered ? '3px solid #FFD700' : `3px solid ${topicColor}`,
+          boxShadow: isMastered
+            ? `0 0 50px #FFD70060, 0 0 100px ${topicColor}40, 0 0 150px #FFD70020`
+            : `0 0 40px ${topicColor}60, 0 0 80px ${topicColor}30, 0 0 120px ${topicColor}15`,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
           padding: '2rem', position: 'relative', overflow: 'hidden',
+          zIndex: 62,
         }}
       >
         {/* White glow pulse */}
         <div className="celebration-glow" style={{
           position: 'absolute', inset: -8, borderRadius: 32,
-          border: '2px solid rgba(255,255,255,0.6)',
-          boxShadow: '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
+          border: isMastered ? '2px solid rgba(255,215,0,0.7)' : '2px solid rgba(255,255,255,0.6)',
+          boxShadow: isMastered
+            ? '0 0 40px rgba(255,215,0,0.4), inset 0 0 40px rgba(255,215,0,0.15)'
+            : '0 0 30px rgba(255,255,255,0.3), inset 0 0 30px rgba(255,255,255,0.1)',
           pointerEvents: 'none',
         }} />
 
@@ -8538,18 +8940,20 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         <div style={{ width: '80%', height: 12, borderRadius: 6, background: 'rgba(255,255,255,0.15)', overflow: 'hidden', marginBottom: '0.5rem' }}>
           <div className="celebration-progress-fill" style={{
             height: '100%', width: `${progressPct}%`, borderRadius: 6,
-            background: `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
-            boxShadow: `0 0 12px ${topicColor}80`,
+            background: isMastered
+              ? `linear-gradient(90deg, #FFD700, ${topicColor})`
+              : `linear-gradient(90deg, ${topicColor}, ${topicColor}CC)`,
+            boxShadow: isMastered ? `0 0 16px #FFD70080` : `0 0 12px ${topicColor}80`,
           }} />
         </div>
 
-        <span style={{ color: current.level >= 5 ? '#FFD700' : 'rgba(255,255,255,0.7)', fontSize: '0.9rem', fontWeight: current.level >= 5 ? 700 : 500 }}>
-          {current.level >= 5 ? '⭐ ' : ''}{levelLabel}
+        <span style={{ color: isMastered ? '#FFD700' : 'rgba(255,255,255,0.7)', fontSize: isMastered ? '1.1rem' : '0.9rem', fontWeight: isMastered ? 700 : 500 }}>
+          {isMastered ? '⭐ Mastered!' : levelLabel}
         </span>
       </div>
 
       {/* Dots */}
-      <div style={{ position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+      <div style={{ position: 'fixed', bottom: '3rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8, zIndex: 62 }}>
         {objectives.map((_, i) => (
           <div key={i} style={{
             width: i === currentIndex ? 24 : 8, height: 8, borderRadius: 4,
@@ -8559,7 +8963,7 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
         ))}
       </div>
 
-      <p style={{ position: 'fixed', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>
+      <p style={{ position: 'fixed', bottom: '1.2rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', zIndex: 62 }}>
         {isLast ? 'Tap to finish' : 'Tap to continue'}
       </p>
     </div>

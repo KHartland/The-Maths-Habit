@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Custom maths-themed SVG icons for The Maths Habit app
+// Custom maths-themed SVG icons for Square One Maths app
 // Each icon accepts className for Tailwind styling (like Lucide icons)
 
 // 3D Cube icon for Home tab

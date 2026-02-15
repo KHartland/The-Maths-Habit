@@ -1,4 +1,4 @@
--- 1v1 Match System for The Maths Habit
+-- 1v1 Match System for Square One Maths
 -- Run this in your Supabase SQL Editor
 
 -- Matches table - stores game sessions

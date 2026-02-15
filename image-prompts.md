@@ -1,4 +1,4 @@
-# Image Prompts for The Maths Habit
+# Image Prompts for Square One Maths
 
 67 diagram-dependent questions need images. Below are the prompts grouped by type, with the data you need to create for each image and the answer the question should produce.
 

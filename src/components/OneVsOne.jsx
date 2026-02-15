@@ -103,16 +103,26 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   const generateQuestions = useCallback(() => {
     const questions = [];
     const topics = Object.keys(questionBank);
+    let attempts = 0;
+    const maxAttempts = questionCount * 20; // Safety valve to prevent infinite loop
 
-    while (questions.length < questionCount) {
+    while (questions.length < questionCount && attempts < maxAttempts) {
+      attempts++;
       const topic = topics[Math.floor(Math.random() * topics.length)];
-      const topicQuestions = questionBank[topic];
-      if (topicQuestions && topicQuestions.length > 0) {
-        const q = topicQuestions[Math.floor(Math.random() * topicQuestions.length)];
-        // Avoid duplicates
-        if (!questions.find(existing => existing.q === q.q)) {
-          questions.push({ ...q, topic });
-        }
+      const levels = questionBank[topic];
+      if (!levels || levels.length === 0) continue;
+
+      // Pick a random difficulty level
+      const level = levels[Math.floor(Math.random() * levels.length)];
+      if (!Array.isArray(level) || level.length === 0) continue;
+
+      // Pick a random variant from that level
+      const q = level[Math.floor(Math.random() * level.length)];
+      if (!q || !q.q) continue;
+
+      // Avoid duplicates
+      if (!questions.find(existing => existing.q === q.q)) {
+        questions.push({ ...q, topic });
       }
     }
 
@@ -126,8 +136,9 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
 
     try {
       // Add timeout so spinner doesn't hang forever
+      // 30s to allow for Supabase free-tier cold starts
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 10000)
+        setTimeout(() => reject(new Error('Connection timed out. Please check your internet connection and try again.')), 30000)
       );
 
       const newMatch = await Promise.race([
@@ -157,7 +168,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
 
     try {
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Connection timed out. Please try again.')), 10000)
+        setTimeout(() => reject(new Error('Connection timed out. Please try again.')), 30000)
       );
 
       const joinedMatch = await Promise.race([
