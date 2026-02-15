@@ -6566,10 +6566,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       .slice(0, 3)
       .map(([topic]) => topic);
     
-    // Count mastered objectives
-    const allObjectives = OBJECTIVES.filter(o => !o.higher || settings?.includeHigherTier);
-    const masteredCount = allObjectives.filter(o => isMastered(progress[o.code])).length;
-    
+    // Count mastered objectives from progress object
+    const progressEntries = Object.values(progress || {});
+    const masteredCount = progressEntries.filter(p => isMastered(p)).length;
+    const totalTracked = progressEntries.length;
+
     // Generate summary text
     const lines = [
       `GCSE MATHS WEEKLY SUMMARY`,
@@ -6583,7 +6584,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       `• Current streak: ${dayStreak} days`,
       ``,
       `OVERALL PROGRESS`,
-      `• Objectives mastered: ${masteredCount} of ${allObjectives.length} (${Math.round(masteredCount/allObjectives.length*100)}%)`,
+      `• Objectives mastered: ${masteredCount}${totalTracked > 0 ? ` of ${totalTracked} practised` : ''}`,
       ``,
       `FOCUS AREAS`,
       topTopics.length > 0 
@@ -6603,11 +6604,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   
   // Export weekly summary — use share sheet on mobile, copy fallback
   const handleExportSummary = async () => {
-    alert('HANDLER CALLED');
     try {
-      alert('GENERATING...');
       const summary = generateWeeklySummary();
-      alert('Summary generated: ' + summary.substring(0, 100) + '...');
       // Try native share (works on iOS/Android)
       if (navigator.share) {
         try {
@@ -6615,7 +6613,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           setSummaryStatus('shared');
           setTimeout(() => setSummaryStatus(''), 2500);
           return;
-        } catch (e) { alert('Share failed: ' + e.message); }
+        } catch (e) { /* user cancelled share */ }
       }
       // Fallback: copy to clipboard
       try {
@@ -6632,7 +6630,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       }
     setSummaryStatus('copied');
     setTimeout(() => setSummaryStatus(''), 2500);
-    } catch (err) { alert('Export error: ' + err.message); }
+    } catch (err) { console.error('Export error:', err); }
   };
 
   // Handle export
@@ -7249,7 +7247,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       Plain-English report for parents or teachers
                     </p>
                     <button
-                      onClick={() => { alert('BUTTON CLICKED'); handleExportSummary(); }}
+                      onClick={handleExportSummary}
                       className={`px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors ${
                         summaryStatus ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'
                       }`}
