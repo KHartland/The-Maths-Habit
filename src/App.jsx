@@ -6645,18 +6645,15 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
   // Handle joining a school
   const handleJoinSchool = async (school) => {
-    if (!user) { alert('Not logged in'); return; }
+    if (!user) return;
     setSchoolJoining(true);
     setSchoolError('');
     try {
-      alert(`Joining: user=${user.id}, school=${school.id}`); // DEBUG
       await joinSchool(user.id, school.id);
-      alert('Joined successfully!'); // DEBUG
       setUserSchool(school);
       setSchoolDropdownOpen(false);
       setSchoolFilter('');
     } catch (err) {
-      alert('Join error: ' + err.message); // DEBUG
       setSchoolError(err.message || 'Failed to join school');
     } finally {
       setSchoolJoining(false);
