@@ -6603,7 +6603,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   
   // Export weekly summary — use share sheet on mobile, copy fallback
   const handleExportSummary = async () => {
+    alert('HANDLER CALLED');
     try {
+      alert('GENERATING...');
       const summary = generateWeeklySummary();
       alert('Summary generated: ' + summary.substring(0, 100) + '...');
       // Try native share (works on iOS/Android)
