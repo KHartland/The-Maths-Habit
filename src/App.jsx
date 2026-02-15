@@ -8011,9 +8011,9 @@ function AppContent() {
 
             <button
               onClick={() => setOnboardingStep(2)}
-              className="mt-4 text-sm text-secondary-text hover:text-violet-light transition-colors"
+              className="w-full py-4 mt-3 glass-panel hover:bg-white/10 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
             >
-              Already have an account? <span className="underline">Sign in</span>
+              Sign In
             </button>
 
             {/* Step indicator */}
