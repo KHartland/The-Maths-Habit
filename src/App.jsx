@@ -7433,8 +7433,8 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
 }
 
 // Onboarding Auth Form Component
-function OnboardingAuthForm({ onSuccess }) {
-  const [mode, setMode] = useState('signup'); // 'signin' or 'signup'
+function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
+  const [mode, setMode] = useState(initialMode); // 'signin' or 'signup'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -7859,6 +7859,7 @@ function AppContent() {
   const [showCelebration, setShowCelebration] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingComplete());
   const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Plan Selection
+  const [onboardingAuthMode, setOnboardingAuthMode] = useState('signup');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('signin');
@@ -8003,14 +8004,14 @@ function AppContent() {
             </div>
 
             <button
-              onClick={() => setOnboardingStep(2)}
+              onClick={() => { setOnboardingAuthMode('signup'); setOnboardingStep(2); }}
               className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
             >
               Get Started →
             </button>
 
             <button
-              onClick={() => setOnboardingStep(2)}
+              onClick={() => { setOnboardingAuthMode('signin'); setOnboardingStep(2); }}
               className="w-full py-4 mt-3 glass-panel hover:bg-white/10 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
             >
               Sign In
@@ -8054,15 +8055,18 @@ function AppContent() {
 
             <div className="glass-panel rounded-2xl p-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-primary-text mb-2">Create your account</h2>
+                <h2 className="text-2xl font-bold text-primary-text mb-2">
+                  {onboardingAuthMode === 'signin' ? 'Welcome back' : 'Create your account'}
+                </h2>
                 <p className="text-secondary-text">
-                  Save your progress and sync across devices
+                  {onboardingAuthMode === 'signin' ? 'Sign in to continue' : 'Save your progress and sync across devices'}
                 </p>
               </div>
 
               {/* Embedded Auth Form */}
               <OnboardingAuthForm
                 onSuccess={() => setOnboardingStep(3)}
+                initialMode={onboardingAuthMode}
               />
             </div>
 
