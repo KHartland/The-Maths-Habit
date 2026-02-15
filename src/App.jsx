@@ -7949,13 +7949,21 @@ function AppContent() {
     setCurrentPage('practice'); // Go straight to practice
   };
 
-  // Move to plan selection after successful auth
+  // Move to plan selection after successful auth (or skip for returning users)
   useEffect(() => {
     if (showOnboarding && onboardingStep === 2 && user) {
-      // User just signed in/up, move to plan selection
-      setOnboardingStep(3);
+      // Check if returning user (already has a profile/progress)
+      if (profile || Object.keys(progress).length > 0) {
+        // Returning user — skip plan selection, go straight to app
+        setOnboardingComplete();
+        setShowOnboarding(false);
+        setCurrentPage('home');
+      } else {
+        // New user — show plan selection
+        setOnboardingStep(3);
+      }
     }
-  }, [user, showOnboarding, onboardingStep]);
+  }, [user, showOnboarding, onboardingStep, profile]);
 
   // Multi-step Onboarding Flow - Deep Space Glassmorphism
   if (showOnboarding) {
@@ -7999,6 +8007,13 @@ function AppContent() {
               className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
             >
               Get Started →
+            </button>
+
+            <button
+              onClick={() => setOnboardingStep(2)}
+              className="mt-4 text-sm text-secondary-text hover:text-violet-light transition-colors"
+            >
+              Already have an account? <span className="underline">Sign in</span>
             </button>
 
             {/* Step indicator */}
@@ -8405,7 +8420,7 @@ function AppContent() {
           isSubscribed={isSubscribed}
           onSignIn={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
           onSignUp={() => { setAuthModalMode('signup'); setShowAuthModal(true); }}
-          onSignOut={async () => { await signOut(); window.location.reload(); }}
+          onSignOut={async () => { await signOut(); localStorage.removeItem('maths-habit-onboarding-complete'); window.location.reload(); }}
           onUpgrade={() => setShowUpgradePrompt(true)}
           userSchool={userSchool}
           setUserSchool={setUserSchool}
