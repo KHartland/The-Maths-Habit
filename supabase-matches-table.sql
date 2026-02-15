@@ -1,9 +1,13 @@
 -- ═══════════════════════════════════════════════════════════
--- Square One Maths — 1v1 Battle: matches table
+-- Square One Maths — Full Supabase Setup
 -- Run this in Supabase SQL Editor (Dashboard → SQL Editor)
+-- Safe to re-run: uses IF NOT EXISTS throughout
 -- ═══════════════════════════════════════════════════════════
 
--- 1. Create the table
+
+-- ═══════════════════════════════════════════════════════════
+-- 1. MATCHES (1v1 Battle)
+-- ═══════════════════════════════════════════════════════════
 create table if not exists public.matches (
   id          uuid primary key default gen_random_uuid(),
   code        text unique not null,
@@ -29,36 +33,346 @@ create table if not exists public.matches (
   created_at  timestamptz default now()
 );
 
--- 2. Enable Row Level Security
 alter table public.matches enable row level security;
 
--- 3. RLS policies — authenticated users can do everything
---    (matches are short-lived; stale ones can be cleaned up later)
-create policy "Users can create matches"
-  on public.matches for insert
-  to authenticated
-  with check (true);
+do $$ begin
+  create policy "matches_insert" on public.matches for insert to authenticated with check (true);
+exception when duplicate_object then null;
+end $$;
 
-create policy "Users can view matches they are in"
-  on public.matches for select
-  to authenticated
-  using (true);
+do $$ begin
+  create policy "matches_select" on public.matches for select to authenticated using (true);
+exception when duplicate_object then null;
+end $$;
 
-create policy "Users can update matches they are in"
-  on public.matches for update
-  to authenticated
-  using (host_id = auth.uid() or guest_id = auth.uid());
+do $$ begin
+  create policy "matches_update" on public.matches for update to authenticated
+    using (host_id = auth.uid() or guest_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
 
-create policy "Host can delete their match"
-  on public.matches for delete
-  to authenticated
-  using (host_id = auth.uid());
+do $$ begin
+  create policy "matches_delete" on public.matches for delete to authenticated
+    using (host_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
 
--- 4. Enable Realtime (needed for live score updates)
+-- Enable Realtime for live score updates
 alter publication supabase_realtime add table public.matches;
 
--- 5. Auto-clean stale matches older than 24 hours (optional cron)
--- You can set this up in Supabase Dashboard → Database → Extensions → pg_cron
--- select cron.schedule('clean-stale-matches', '0 * * * *',
---   $$delete from public.matches where created_at < now() - interval '24 hours'$$
--- );
+
+-- ═══════════════════════════════════════════════════════════
+-- 2. SCHOOLS
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.schools (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  town        text,
+  created_by  uuid references auth.users(id),
+  created_at  timestamptz default now()
+);
+
+alter table public.schools enable row level security;
+
+do $$ begin
+  create policy "schools_select" on public.schools for select to authenticated using (true);
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "schools_insert" on public.schools for insert to authenticated with check (true);
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 3. SCHOOL MEMBERS (join table)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.school_members (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null references auth.users(id) on delete cascade,
+  school_id   uuid not null references public.schools(id) on delete cascade,
+  joined_at   timestamptz default now(),
+  unique(user_id)  -- each user can only be in one school
+);
+
+alter table public.school_members enable row level security;
+
+do $$ begin
+  create policy "school_members_select" on public.school_members for select to authenticated using (true);
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "school_members_insert" on public.school_members for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "school_members_delete" on public.school_members for delete to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 4. USER PROGRESS (if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.user_progress (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid not null references auth.users(id) on delete cascade,
+  objective_code  text not null,
+  quick_correct   integer default 0,
+  exam_passed     boolean default false,
+  last_practiced  timestamptz,
+  updated_at      timestamptz default now(),
+  unique(user_id, objective_code)
+);
+
+alter table public.user_progress enable row level security;
+
+do $$ begin
+  create policy "user_progress_select" on public.user_progress for select to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_progress_insert" on public.user_progress for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_progress_update" on public.user_progress for update to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 5. DAILY ACTIVITY (if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.daily_activity (
+  id                 uuid primary key default gen_random_uuid(),
+  user_id            uuid not null references auth.users(id) on delete cascade,
+  date               date not null,
+  questions_answered integer default 0,
+  correct_answers    integer default 0,
+  mastery_gained     integer default 0,
+  updated_at         timestamptz default now(),
+  unique(user_id, date)
+);
+
+alter table public.daily_activity enable row level security;
+
+do $$ begin
+  create policy "daily_activity_select" on public.daily_activity for select to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "daily_activity_insert" on public.daily_activity for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "daily_activity_update" on public.daily_activity for update to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 6. PROFILES (if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.profiles (
+  id                  uuid primary key references auth.users(id) on delete cascade,
+  display_name        text,
+  subscription_status text default 'free',
+  subscription_type   text,
+  promo_code_used     text,
+  created_at          timestamptz default now(),
+  updated_at          timestamptz default now()
+);
+
+alter table public.profiles enable row level security;
+
+do $$ begin
+  create policy "profiles_select" on public.profiles for select to authenticated using (true);
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "profiles_insert" on public.profiles for insert to authenticated
+    with check (id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "profiles_update" on public.profiles for update to authenticated
+    using (id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+-- Auto-create profile on signup
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, display_name)
+  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)))
+  on conflict (id) do nothing;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 7. USER STREAKS (if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.user_streaks (
+  user_id            uuid primary key references auth.users(id) on delete cascade,
+  current_streak     integer default 0,
+  longest_streak     integer default 0,
+  freezes_available  integer default 0,
+  last_activity_date text,
+  streak_data        jsonb default '{}'::jsonb,
+  updated_at         timestamptz default now()
+);
+
+alter table public.user_streaks enable row level security;
+
+do $$ begin
+  create policy "user_streaks_select" on public.user_streaks for select to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_streaks_insert" on public.user_streaks for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_streaks_update" on public.user_streaks for update to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 8. USER SETTINGS (if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.user_settings (
+  user_id               uuid primary key references auth.users(id) on delete cascade,
+  questions_per_session  integer default 7,
+  show_hints            boolean default true,
+  include_higher_tier   boolean default false,
+  daily_goal            integer default 7,
+  weekly_mastery_goal   integer default 3,
+  font_size             text default 'normal',
+  dyslexia_font         boolean default false,
+  high_contrast         boolean default false,
+  updated_at            timestamptz default now()
+);
+
+alter table public.user_settings enable row level security;
+
+do $$ begin
+  create policy "user_settings_select" on public.user_settings for select to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_settings_insert" on public.user_settings for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_settings_update" on public.user_settings for update to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 9. USER FSRS CARDS (spaced repetition — if not already created)
+-- ═══════════════════════════════════════════════════════════
+create table if not exists public.user_fsrs_cards (
+  id          uuid primary key default gen_random_uuid(),
+  user_id     uuid not null references auth.users(id) on delete cascade,
+  question_id text not null,
+  stability   float default 1.0,
+  difficulty  float default 0.5,
+  last_review timestamptz,
+  next_review timestamptz,
+  reps        integer default 0,
+  lapses      integer default 0,
+  state       text default 'new',
+  updated_at  timestamptz default now(),
+  unique(user_id, question_id)
+);
+
+alter table public.user_fsrs_cards enable row level security;
+
+do $$ begin
+  create policy "user_fsrs_cards_select" on public.user_fsrs_cards for select to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_fsrs_cards_insert" on public.user_fsrs_cards for insert to authenticated
+    with check (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "user_fsrs_cards_update" on public.user_fsrs_cards for update to authenticated
+    using (user_id = auth.uid());
+exception when duplicate_object then null;
+end $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 10. SCHOOL LEADERBOARD RPC FUNCTION
+-- Sums quick_correct from user_progress for each school member
+-- ═══════════════════════════════════════════════════════════
+create or replace function public.get_school_leaderboard(p_school_id uuid)
+returns table (
+  user_id       uuid,
+  display_name  text,
+  total_correct bigint
+)
+language sql
+security definer
+stable
+as $$
+  select
+    sm.user_id,
+    coalesce(p.display_name, split_part(u.email, '@', 1)) as display_name,
+    coalesce(sum(up.quick_correct), 0) as total_correct
+  from public.school_members sm
+  join auth.users u on u.id = sm.user_id
+  left join public.profiles p on p.id = sm.user_id
+  left join public.user_progress up on up.user_id = sm.user_id
+  where sm.school_id = p_school_id
+  group by sm.user_id, p.display_name, u.email
+  order by total_correct desc, display_name asc;
+$$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- DONE! All tables, policies, and functions are set up.
+-- ═══════════════════════════════════════════════════════════
