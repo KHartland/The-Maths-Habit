@@ -8065,6 +8065,7 @@ function AppContent() {
 
               {/* Embedded Auth Form */}
               <OnboardingAuthForm
+                key={onboardingAuthMode}
                 onSuccess={() => setOnboardingStep(3)}
                 initialMode={onboardingAuthMode}
               />
