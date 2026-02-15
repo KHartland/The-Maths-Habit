@@ -7063,7 +7063,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               <div className="flex items-center justify-between py-2">
                 <div>
                   <div className="text-sm font-medium text-secondary-text">Include Higher tier</div>
-                  <div className="text-xs text-white/40">Add Higher-only objectives to practice</div>
+                  <div className="text-xs text-secondary-text/70">Add Higher-only objectives to practice</div>
                 </div>
                 <button
                   onClick={() => {
@@ -7072,7 +7072,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     setTier(newVal ? 'higher' : 'foundation');
                   }}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.includeHigherTier ? 'bg-violet' : 'bg-white/20'
+                    settings.includeHigherTier ? 'bg-violet' : 'bg-gray-300'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -7082,7 +7082,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
 
               {/* Daily goal */}
-              <div className="pt-4 border-t border-white/10">
+              <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-secondary-text">Daily question goal</label>
                   <span className="text-sm font-bold text-mint bg-mint/20 px-2 py-1 rounded-lg">
@@ -7142,7 +7142,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   <span>1</span>
                   <span>10</span>
                 </div>
-                <p className="text-xs text-white/40 mt-2">Objectives to master each week</p>
+                <p className="text-xs text-secondary-text/70 mt-2">Objectives to master each week</p>
               </div>
             </div>
           </div>
@@ -7175,7 +7175,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       className={`flex-1 py-2 rounded-lg font-medium transition-all ${option.size} ${
                         (settings.fontSize ?? 'normal') === option.value
                           ? 'bg-violet text-white'
-                          : 'bg-white/10 text-secondary-text hover:bg-white/20'
+                          : 'bg-gray-200 text-secondary-text hover:bg-gray-300'
                       }`}
                     >
                       {option.label}
@@ -7188,12 +7188,12 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               <div className="flex items-center justify-between py-2">
                 <div>
                   <div className="text-sm font-medium text-secondary-text">Dyslexia-friendly font</div>
-                  <div className="text-xs text-white/40">Use OpenDyslexic for easier reading</div>
+                  <div className="text-xs text-secondary-text/70">Use OpenDyslexic for easier reading</div>
                 </div>
                 <button
                   onClick={() => updateSetting('dyslexiaFont', !settings.dyslexiaFont)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.dyslexiaFont ? 'bg-violet' : 'bg-white/20'
+                    settings.dyslexiaFont ? 'bg-violet' : 'bg-gray-300'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -7206,12 +7206,12 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               <div className="flex items-center justify-between py-2">
                 <div>
                   <div className="text-sm font-medium text-secondary-text">High contrast</div>
-                  <div className="text-xs text-white/40">Increase color contrast for visibility</div>
+                  <div className="text-xs text-secondary-text/70">Increase color contrast for visibility</div>
                 </div>
                 <button
                   onClick={() => updateSetting('highContrast', !settings.highContrast)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.highContrast ? 'bg-violet' : 'bg-white/20'
+                    settings.highContrast ? 'bg-violet' : 'bg-gray-300'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
