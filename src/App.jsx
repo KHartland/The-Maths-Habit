@@ -7242,8 +7242,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <span className="text-xl">📋</span>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-blue-900">Weekly Summary</h3>
-                    <p className="text-xs text-blue-700 mb-3">
+                    <h3 className="font-semibold text-primary-text">Weekly Summary</h3>
+                    <p className="text-xs text-secondary-text mb-3">
                       Plain-English report for parents or teachers
                     </p>
                     <button
