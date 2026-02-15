@@ -7247,7 +7247,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       Plain-English report for parents or teachers
                     </p>
                     <button
-                      onClick={handleExportSummary}
+                      onClick={() => { alert('BUTTON CLICKED'); handleExportSummary(); }}
                       className={`px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors ${
                         summaryStatus ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'
                       }`}
