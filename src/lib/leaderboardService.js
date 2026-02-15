@@ -1,24 +1,46 @@
-import { supabase } from './supabase';
+import { supabase, supabaseUrl, supabaseAnonKey } from './supabase';
 
-// Fetch all schools for the dropdown picker (with town)
+// Fetch all schools using raw fetch (bypasses Supabase JS client which hangs)
 export const getAllSchools = async () => {
-  try {
-    console.log('[Schools] Fetching all schools...');
-    const { data, error } = await supabase
-      .from('schools')
-      .select('id, name, town')
-      .order('name', { ascending: true });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000); // 8s timeout
 
-    if (error) {
-      console.error('[Schools] Supabase error:', error.message, error.code, error.details);
-      throw new Error(`Supabase: ${error.message} (${error.code})`);
+  try {
+    // Get current session token if logged in
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token || supabaseAnonKey;
+
+    const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc`;
+    console.log('[Schools] Fetching:', url);
+
+    const response = await fetch(url, {
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.error('[Schools] HTTP', response.status, body);
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
     }
 
+    const data = await response.json();
     console.log('[Schools] Loaded', data?.length || 0, 'schools');
     return data || [];
   } catch (err) {
-    console.error('[Schools] getAllSchools threw:', err);
-    throw err; // let the caller see the error
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      console.error('[Schools] Request timed out after 8s');
+      throw new Error('Request timed out — check Supabase project is active');
+    }
+    console.error('[Schools] getAllSchools error:', err);
+    throw err;
   }
 };
 
