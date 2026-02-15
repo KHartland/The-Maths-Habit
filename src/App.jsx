@@ -7249,14 +7249,23 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <p className="text-xs text-secondary-text mb-3">
                       Plain-English report for parents or teachers
                     </p>
-                    <button
-                      onClick={handleExportSummary}
-                      className={`px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors ${
-                        summaryStatus ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'
-                      }`}
-                    >
-                      {summaryStatus === 'copied' ? '✓ Copied to clipboard!' : summaryStatus === 'shared' ? '✓ Shared!' : '📤 Share Summary'}
-                    </button>
+                    {isSubscribed ? (
+                      <button
+                        onClick={handleExportSummary}
+                        className={`px-4 py-2 text-white text-sm font-medium rounded-lg transition-colors ${
+                          summaryStatus ? 'bg-green-500' : 'bg-blue-500 hover:bg-blue-600'
+                        }`}
+                      >
+                        {summaryStatus === 'copied' ? '✓ Copied to clipboard!' : summaryStatus === 'shared' ? '✓ Shared!' : '📤 Share Summary'}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={onUpgrade}
+                        className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-gray-400 hover:bg-gray-500 transition-colors"
+                      >
+                        🔒 Upgrade to unlock
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
