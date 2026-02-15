@@ -732,7 +732,7 @@ const TOPIC_HEX = {
 };
 
 // Exponential curve — bigger jumps at higher levels so progress is visible
-const INTENSITY = { 0: 0.05, 1: 0.14, 2: 0.28, 3: 0.48, 4: 0.72, 5: 1.0 };
+const INTENSITY = { 0: 0.15, 1: 0.25, 2: 0.38, 3: 0.55, 4: 0.75, 5: 1.0 };
 // At higher levels, blend toward white so tiles don't just get "more saturated"
 const WHITE_BLEND = { 0: 0, 1: 0, 2: 0, 3: 0.08, 4: 0.22, 5: 0.4 };
 
