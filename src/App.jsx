@@ -4648,7 +4648,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -4657,9 +4657,14 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [isCorrect, setIsCorrect] = useState(null);
   const [sessionResults, setSessionResults] = useState([]);
   const [questionCount, setQuestionCount] = useState(() => {
-    // Free users are limited to 5 questions per session
     const requested = settings?.questionsPerSession ?? 5;
-    if (!isSubscribed) return Math.min(requested, FREE_DAILY_LIMIT ?? 5);
+    if (!isSubscribed) {
+      const activity = loadDailyActivity();
+      const todayKey = getTodayKey();
+      const todayQuestions = activity[todayKey]?.questions ?? 0;
+      const remaining = Math.max(0, (FREE_DAILY_LIMIT ?? 5) - todayQuestions);
+      return Math.min(requested, remaining || 1); // at least 1 so UI doesn't break
+    }
     return requested;
   });
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
@@ -4892,6 +4897,22 @@ What is the student's answer?`
 
   // Start session
   const startSession = (mode = practiceMode) => {
+    // Enforce daily limit for free users
+    if (!isSubscribed) {
+      const activity = loadDailyActivity();
+      const todayKey = getTodayKey();
+      const todayQuestions = activity[todayKey]?.questions ?? 0;
+      if (todayQuestions >= FREE_DAILY_LIMIT) {
+        setShowUpgradePrompt(true);
+        return;
+      }
+      // Cap session length to remaining questions
+      const remaining = FREE_DAILY_LIMIT - todayQuestions;
+      if (questionCount > remaining) {
+        setQuestionCount(remaining);
+      }
+    }
+
     let questionsWithData;
 
     if (mode === 'quickfire') {
@@ -5450,6 +5471,12 @@ What is the student's answer?`
     );
   }
 
+  // Check if daily limit reached (for pre-session screen)
+  const preSessionActivity = loadDailyActivity();
+  const preSessionTodayQuestions = preSessionActivity[getTodayKey()]?.questions ?? 0;
+  const dailyLimitReached = !isSubscribed && preSessionTodayQuestions >= FREE_DAILY_LIMIT;
+  const questionsRemainingToday = isSubscribed ? Infinity : Math.max(0, FREE_DAILY_LIMIT - preSessionTodayQuestions);
+
   // Pre-session screen
   if (!sessionStarted) {
     return (
@@ -5469,23 +5496,55 @@ What is the student's answer?`
                 <p className="text-secondary-text mt-1">Build lasting maths skills</p>
               </div>
 
-              {/* Mode buttons */}
-              <div className="space-y-3">
-                <button
-                  onClick={() => { setPracticeMode('standard'); startSession('standard'); }}
-                  className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
-                >
-                  Start Practice
-                </button>
+              {dailyLimitReached ? (
+                <div className="text-center space-y-4">
+                  <div className="glass-panel rounded-xl p-4 border border-violet/30">
+                    <p className="text-primary-text font-semibold mb-1">Daily limit reached</p>
+                    <p className="text-secondary-text text-sm">You've completed your {FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.</p>
+                  </div>
+                  <button
+                    onClick={() => setShowUpgradePrompt(true)}
+                    className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
+                  >
+                    Unlock Unlimited Practice
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage('home')}
+                    className="w-full py-2 text-secondary-text hover:text-primary-text text-sm font-medium transition-colors"
+                  >
+                    Back to Home
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Remaining questions indicator for free users */}
+                  {!isSubscribed && (
+                    <div className="text-center mb-4">
+                      <span className="text-xs px-3 py-1 glass-panel text-violet-light rounded-full">
+                        {questionsRemainingToday} free question{questionsRemainingToday !== 1 ? 's' : ''} remaining today
+                      </span>
+                    </div>
+                  )}
 
-                <button
-                  onClick={() => { setCurrentPage('home'); setShowOneVsOne(true); }}
-                  className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 text-white btn-gradient-violet"
-                >
-                  <Swords className="w-5 h-5" />
-                  1v1 Challenge
-                </button>
-              </div>
+                  {/* Mode buttons */}
+                  <div className="space-y-3">
+                    <button
+                      onClick={() => { setPracticeMode('standard'); startSession('standard'); }}
+                      className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
+                    >
+                      Start Practice
+                    </button>
+
+                    <button
+                      onClick={() => { setCurrentPage('home'); setShowOneVsOne(true); }}
+                      className="w-full py-4 font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 text-white btn-gradient-violet"
+                    >
+                      <Swords className="w-5 h-5" />
+                      1v1 Challenge
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -8285,6 +8344,7 @@ function AppContent() {
         setShowOneVsOne={setShowOneVsOne}
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
+        setShowUpgradePrompt={setShowUpgradePrompt}
       />
     );
   }
