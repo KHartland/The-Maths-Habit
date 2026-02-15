@@ -6617,9 +6617,15 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     }
     setSchoolSearching(true);
     const timer = setTimeout(async () => {
-      const results = await searchSchools(schoolFilter);
-      setSchoolResults(results);
-      setSchoolSearching(false);
+      try {
+        const results = await searchSchools(schoolFilter);
+        setSchoolResults(results);
+      } catch (err) {
+        console.error('School search failed:', err);
+        setSchoolResults([]);
+      } finally {
+        setSchoolSearching(false);
+      }
     }, 300);
     return () => clearTimeout(timer);
   }, [schoolFilter]);

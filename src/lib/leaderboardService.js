@@ -20,19 +20,36 @@ export const searchSchools = async (query) => {
   if (!query || query.trim().length < 2) return [];
 
   const trimmed = query.trim();
-  const { data, error } = await supabase
-    .from('schools')
-    .select('id, name, town')
-    .or(`name.ilike.%${trimmed}%,town.ilike.%${trimmed}%`)
-    .order('name', { ascending: true })
-    .limit(30);
+  try {
+    // Try name search first (most common), then merge with town search
+    const { data, error } = await supabase
+      .from('schools')
+      .select('id, name, town')
+      .or(`name.ilike.%${trimmed}%,town.ilike.%${trimmed}%`)
+      .order('name', { ascending: true })
+      .limit(30);
 
-  if (error) {
-    console.error('Error searching schools:', error);
+    if (error) {
+      console.error('Error searching schools:', error.message, error.code);
+      // Fallback: try just name search without .or()
+      const { data: fallbackData, error: fallbackError } = await supabase
+        .from('schools')
+        .select('id, name, town')
+        .ilike('name', `%${trimmed}%`)
+        .order('name', { ascending: true })
+        .limit(30);
+      if (fallbackError) {
+        console.error('Fallback search also failed:', fallbackError.message);
+        return [];
+      }
+      return fallbackData || [];
+    }
+
+    return data || [];
+  } catch (err) {
+    console.error('School search threw:', err);
     return [];
   }
-
-  return data || [];
 };
 
 // Create a new school (with town)

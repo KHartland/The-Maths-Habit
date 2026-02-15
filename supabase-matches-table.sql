@@ -74,8 +74,14 @@ create table if not exists public.schools (
 
 alter table public.schools enable row level security;
 
+-- Anyone can search schools (including if auth token briefly expires)
 do $$ begin
-  create policy "schools_select" on public.schools for select to authenticated using (true);
+  create policy "schools_select" on public.schools for select using (true);
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create policy "schools_select_anon" on public.schools for select to anon using (true);
 exception when duplicate_object then null;
 end $$;
 
