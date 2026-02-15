@@ -8405,7 +8405,7 @@ function AppContent() {
           isSubscribed={isSubscribed}
           onSignIn={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
           onSignUp={() => { setAuthModalMode('signup'); setShowAuthModal(true); }}
-          onSignOut={signOut}
+          onSignOut={() => { signOut(); setShowOnboarding(true); setOnboardingStep(1); setCurrentPage('home'); }}
           onUpgrade={() => setShowUpgradePrompt(true)}
           userSchool={userSchool}
           setUserSchool={setUserSchool}
