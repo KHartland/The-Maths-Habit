@@ -49,12 +49,12 @@ body {
 
 /* ==================== ACCESSIBILITY ==================== */
 
-/* Dyslexia-friendly font */
-@import url('https://fonts.cdnfonts.com/css/opendyslexic');
-
+/* Dyslexia-friendly font (loaded in index.html) */
 body.dyslexia-font,
 body.dyslexia-font * {
-  font-family: 'OpenDyslexic', system-ui, sans-serif !important;
+  font-family: 'OpenDyslexic', 'OpenDyslexic3', system-ui, sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
 }
 
 /* Font size overrides */
