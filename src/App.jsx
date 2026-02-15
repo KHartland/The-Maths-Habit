@@ -6529,6 +6529,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showAddSchool, setShowAddSchool] = useState(false);
   const [newSchoolName, setNewSchoolName] = useState('');
   const [newSchoolTown, setNewSchoolTown] = useState('');
+  const [showWeeklySummary, setShowWeeklySummary] = useState(false);
+  const [weeklySummaryText, setWeeklySummaryText] = useState('');
+  const [summaryCopied, setSummaryCopied] = useState(false);
   
   // Generate plain-English weekly summary for teachers/parents
   const generateWeeklySummary = () => {
@@ -6600,18 +6603,44 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     return lines.join('\n');
   };
   
-  // Export weekly summary
+  // Export weekly summary — show in modal (mobile browsers block programmatic downloads)
   const handleExportSummary = () => {
     const summary = generateWeeklySummary();
-    const blob = new Blob([summary], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `maths-weekly-summary-${new Date().toISOString().split('T')[0]}.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    setWeeklySummaryText(summary);
+    setShowWeeklySummary(true);
+    setSummaryCopied(false);
+  };
+
+  const handleShareSummary = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'GCSE Maths Weekly Summary',
+          text: weeklySummaryText,
+        });
+        return;
+      } catch {}
+    }
+    // Fallback: copy to clipboard
+    handleCopySummary();
+  };
+
+  const handleCopySummary = async () => {
+    try {
+      await navigator.clipboard.writeText(weeklySummaryText);
+      setSummaryCopied(true);
+      setTimeout(() => setSummaryCopied(false), 2000);
+    } catch {
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = weeklySummaryText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setSummaryCopied(true);
+      setTimeout(() => setSummaryCopied(false), 2000);
+    }
   };
 
   // Handle export
@@ -8830,6 +8859,40 @@ function AppContent() {
         onClose={() => setShowAuthModal(false)}
         initialMode={authModalMode}
       />
+
+      {/* Weekly Summary Modal */}
+      {showWeeklySummary && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-card-bg border border-border-subtle rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-border-subtle">
+              <h2 className="text-lg font-bold text-primary-text">Weekly Summary</h2>
+              <button
+                onClick={() => setShowWeeklySummary(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 text-secondary-text"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <pre className="whitespace-pre-wrap text-sm text-primary-text font-mono leading-relaxed">{weeklySummaryText}</pre>
+            </div>
+            <div className="flex gap-2 p-4 border-t border-border-subtle">
+              <button
+                onClick={handleCopySummary}
+                className="flex-1 px-4 py-2.5 bg-violet/30 hover:bg-violet/40 text-primary-text text-sm font-medium rounded-xl transition-colors"
+              >
+                {summaryCopied ? '✓ Copied!' : '📋 Copy Text'}
+              </button>
+              <button
+                onClick={handleShareSummary}
+                className="flex-1 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-xl transition-colors"
+              >
+                📤 Share
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Upgrade Prompt */}
       <UpgradePrompt
