@@ -6729,6 +6729,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     try {
       await joinSchool(user.id, school.id);
       setUserSchool(school);
+      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
       setSchoolDropdownOpen(false);
       setSchoolFilter('');
     } catch (err) {
@@ -6747,6 +6748,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       const school = await createSchool(newSchoolName.trim(), newSchoolTown.trim(), user.id);
       await joinSchool(user.id, school.id);
       setUserSchool(school);
+      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
       setShowAddSchool(false);
       setNewSchoolName('');
       setNewSchoolTown('');
@@ -6765,6 +6767,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     try {
       await leaveSchool(user.id);
       setUserSchool(null);
+      localStorage.removeItem('maths-habit-user-school');
     } catch (err) {
       setSchoolError(err.message || 'Failed to leave school');
     }
@@ -7931,10 +7934,25 @@ function AppContent() {
     syncOnLogin();
   }, [user, authLoading]);
 
-  // Fetch user's school on login
+  // Fetch user's school on login — also check localStorage cache
   useEffect(() => {
     if (user && !authLoading) {
-      getUserSchool(user.id).then(school => setUserSchool(school));
+      // Load cached school immediately for instant display
+      try {
+        const cached = localStorage.getItem('maths-habit-user-school');
+        if (cached) setUserSchool(JSON.parse(cached));
+      } catch {}
+      // Then fetch fresh from server
+      getUserSchool(user.id).then(school => {
+        setUserSchool(school);
+        if (school) {
+          localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
+        } else {
+          localStorage.removeItem('maths-habit-user-school');
+        }
+      }).catch(err => {
+        console.error('Failed to fetch user school:', err);
+      });
     } else if (!user) {
       setUserSchool(null);
     }
