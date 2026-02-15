@@ -6942,7 +6942,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           </div>
                         ) : schoolFilter.trim().length < 2 ? (
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            {allSchoolsList.length} schools loaded — start typing to search...
+                            Start typing to search...
                           </div>
                         ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
@@ -7867,6 +7867,24 @@ function AppContent() {
   const [showOneVsOne, setShowOneVsOne] = useState(false);
   const [userSchool, setUserSchool] = useState(null); // { id, name } or null
 
+  // 1v1 daily limit for free users (1 per day)
+  const FREE_1V1_LIMIT = 1;
+  const get1v1TodayCount = () => {
+    try {
+      const data = JSON.parse(localStorage.getItem('maths-habit-1v1-daily') || '{}');
+      const todayKey = getTodayKey();
+      return data[todayKey] || 0;
+    } catch { return 0; }
+  };
+  const increment1v1Count = () => {
+    try {
+      const data = JSON.parse(localStorage.getItem('maths-habit-1v1-daily') || '{}');
+      const todayKey = getTodayKey();
+      data[todayKey] = (data[todayKey] || 0) + 1;
+      localStorage.setItem('maths-habit-1v1-daily', JSON.stringify(data));
+    } catch {}
+  };
+
   // Auth context
   const {
     user,
@@ -8305,6 +8323,16 @@ function AppContent() {
     dailyObjectives = allObjectives.slice(0, 5);
   }
 
+  // Gated 1v1 launcher — checks free daily limit
+  const tryOpenOneVsOne = () => {
+    if (!isSubscribed && get1v1TodayCount() >= FREE_1V1_LIMIT) {
+      setShowUpgradePrompt(true);
+      return;
+    }
+    if (!isSubscribed) increment1v1Count();
+    setShowOneVsOne(true);
+  };
+
   // 1v1 Battle Mode
   if (showOneVsOne) {
     if (!user) {
@@ -8341,7 +8369,7 @@ function AppContent() {
         tier={tier}
         setRecentSessionCodes={setRecentSessionCodes}
         setSessionToastData={setSessionToastData}
-        setShowOneVsOne={setShowOneVsOne}
+        setShowOneVsOne={tryOpenOneVsOne}
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
         setShowUpgradePrompt={setShowUpgradePrompt}
@@ -8735,7 +8763,7 @@ function AppContent() {
 
               {/* 1v1 Battle Button */}
               <button
-                onClick={() => setShowOneVsOne(true)}
+                onClick={() => tryOpenOneVsOne()}
                 className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-white btn-gradient-violet"
               >
                 <Swords className="w-4 h-4" />
