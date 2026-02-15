@@ -118,13 +118,21 @@ export const AuthProvider = ({ children }) => {
 
   // Sign out
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      setUser(null);
-      setProfile(null);
-      setDailyQuestionsUsed(0);
-    }
-    return { error };
+    // Always clear local state immediately
+    setUser(null);
+    setProfile(null);
+    setDailyQuestionsUsed(0);
+    // Clear auth token from localStorage
+    try {
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      localStorage.removeItem(storageKey);
+    } catch {}
+    // Try to sign out on server (with timeout so it doesn't hang)
+    try {
+      const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+      await Promise.race([supabase.auth.signOut(), timeout]);
+    } catch {}
+    return { error: null };
   };
 
   // Reset password
