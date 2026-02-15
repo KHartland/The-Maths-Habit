@@ -6933,18 +6933,18 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   </button>
 
                   {schoolDropdownOpen && (
-                    <div className="rounded-xl border border-white/10 bg-void/95 backdrop-blur overflow-hidden">
+                    <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
                       {/* Search input */}
-                      <div className="p-2 border-b border-white/10">
+                      <div className="p-2 border-b border-gray-200">
                         <div className="relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text" />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                           <input
                             type="text"
                             value={schoolFilter}
                             onChange={(e) => setSchoolFilter(e.target.value)}
                             placeholder="Type your school name..."
                             autoFocus
-                            className="w-full pl-10 pr-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-primary-text placeholder-secondary-text/60"
+                            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400"
                           />
                           {!schoolsLoaded && (
                             <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
@@ -6971,7 +6971,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             key={school.id}
                             onClick={() => handleJoinSchool(school)}
                             disabled={schoolJoining}
-                            className="w-full text-left px-4 py-3 hover:bg-metallic-base/10 transition-colors flex items-center justify-between disabled:opacity-50 border-b border-white/5 last:border-b-0"
+                            className="w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors flex items-center justify-between disabled:opacity-50 border-b border-gray-100 last:border-b-0"
                           >
                             <div>
                               <div className="text-sm text-primary-text">{school.name}</div>
@@ -6987,7 +6987,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       </div>
 
                       {/* Can't find school option */}
-                      <div className="p-2 border-t border-white/10">
+                      <div className="p-2 border-t border-gray-200">
                         <button
                           onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); }}
                           className="w-full py-2 text-sm text-metallic-base hover:text-mint font-medium transition-colors"
