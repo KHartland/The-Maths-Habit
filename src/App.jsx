@@ -7285,22 +7285,22 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               )}
 
               {/* Reset button */}
-              <div className="pt-4 border-t border-white/10">
+              <div className="pt-4 border-t border-gray-200">
                 {!showResetConfirm ? (
                   <button
                     onClick={() => setShowResetConfirm(true)}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-medium rounded-xl transition-colors"
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors border border-red-200"
                   >
                     <Trash2 className="w-4 h-4" />
                     Reset All Progress
                   </button>
                 ) : (
-                  <div className="bg-red-500/20 rounded-xl p-4 border border-red-500/30">
-                    <div className="flex items-center gap-2 text-red-400 mb-3">
+                  <div className="bg-red-50 rounded-xl p-4 border border-red-300">
+                    <div className="flex items-center gap-2 text-red-600 mb-3">
                       <AlertTriangle className="w-5 h-5" />
                       <span className="font-semibold">Are you sure?</span>
                     </div>
-                    <p className="text-sm text-red-300 mb-4">
+                    <p className="text-sm text-red-500 mb-4">
                       This will permanently delete all your progress. This action cannot be undone.
                     </p>
                     <div className="flex gap-2">
