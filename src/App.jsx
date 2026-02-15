@@ -8405,7 +8405,7 @@ function AppContent() {
           isSubscribed={isSubscribed}
           onSignIn={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
           onSignUp={() => { setAuthModalMode('signup'); setShowAuthModal(true); }}
-          onSignOut={async () => { await signOut(); localStorage.removeItem('maths-habit-onboarding-complete'); window.location.reload(); }}
+          onSignOut={async () => { await signOut(); window.location.reload(); }}
           onUpgrade={() => setShowUpgradePrompt(true)}
           userSchool={userSchool}
           setUserSchool={setUserSchool}
@@ -8767,6 +8767,17 @@ function AppContent() {
                 <Swords className="w-4 h-4" />
                 1v1 Battle
               </button>
+
+              {/* Sign In Button — shown when logged out */}
+              {!user && (
+                <button
+                  onClick={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
+                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-white/10"
+                >
+                  <User className="w-4 h-4" />
+                  Sign In
+                </button>
+              )}
             </div>
           </div>
         </div>
