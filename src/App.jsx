@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
@@ -6,7 +6,7 @@ import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
 import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
-import { searchSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
+import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -6461,8 +6461,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
-  const [schoolResults, setSchoolResults] = useState([]);
-  const [schoolSearching, setSchoolSearching] = useState(false);
+  const [allSchoolsList, setAllSchoolsList] = useState([]);
+  const [schoolsLoaded, setSchoolsLoaded] = useState(false);
   const [schoolFilter, setSchoolFilter] = useState('');
   const [schoolDropdownOpen, setSchoolDropdownOpen] = useState(false);
   const [schoolError, setSchoolError] = useState('');
@@ -6608,27 +6608,33 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     saveSettings(newSettings);
   };
 
-  // Search schools server-side with debounce
+  // Load all schools once when dropdown opens, then filter client-side
   useEffect(() => {
-    if (!schoolFilter.trim() || schoolFilter.trim().length < 2) {
-      setSchoolResults([]);
-      setSchoolSearching(false);
-      return;
-    }
-    setSchoolSearching(true);
-    const timer = setTimeout(async () => {
+    if (!schoolDropdownOpen || schoolsLoaded) return;
+    let cancelled = false;
+    (async () => {
       try {
-        const results = await searchSchools(schoolFilter);
-        setSchoolResults(results);
+        const schools = await getAllSchools();
+        if (!cancelled) {
+          setAllSchoolsList(schools);
+          setSchoolsLoaded(true);
+        }
       } catch (err) {
-        console.error('School search failed:', err);
-        setSchoolResults([]);
-      } finally {
-        setSchoolSearching(false);
+        console.error('Failed to load schools:', err);
+        if (!cancelled) setSchoolsLoaded(true); // stop retrying
       }
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [schoolFilter]);
+    })();
+    return () => { cancelled = true; };
+  }, [schoolDropdownOpen, schoolsLoaded]);
+
+  // Client-side filter (instant, no debounce needed)
+  const schoolResults = useMemo(() => {
+    if (!schoolFilter.trim() || schoolFilter.trim().length < 2) return [];
+    const q = schoolFilter.trim().toLowerCase();
+    return allSchoolsList.filter(s =>
+      s.name?.toLowerCase().includes(q) || s.town?.toLowerCase().includes(q)
+    );
+  }, [schoolFilter, allSchoolsList]);
 
   // Handle joining a school
   const handleJoinSchool = async (school) => {
@@ -6659,7 +6665,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       setShowAddSchool(false);
       setNewSchoolName('');
       setNewSchoolTown('');
-      setSchoolResults([]);
+      setSchoolsLoaded(false); // refresh list on next open
     } catch (err) {
       setSchoolError(err.message || 'Failed to create school');
     } finally {
@@ -6852,7 +6858,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             autoFocus
                             className="w-full pl-10 pr-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-primary-text placeholder-secondary-text/60"
                           />
-                          {schoolSearching && (
+                          {!schoolsLoaded && (
                             <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
                           )}
                         </div>
@@ -6860,13 +6866,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
                       {/* School results */}
                       <div className="max-h-56 overflow-y-auto">
-                        {schoolFilter.trim().length < 2 ? (
+                        {!schoolsLoaded ? (
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
+                            Loading schools...
+                          </div>
+                        ) : schoolFilter.trim().length < 2 ? (
                           <div className="px-4 py-4 text-center text-sm text-secondary-text">
                             Start typing to search schools...
-                          </div>
-                        ) : schoolSearching ? (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Searching...
                           </div>
                         ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
