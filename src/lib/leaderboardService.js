@@ -1,37 +1,49 @@
 import { supabase, supabaseUrl, supabaseAnonKey } from './supabase';
 
-// Fetch all schools using raw fetch (bypasses Supabase JS client which hangs)
+// Fetch all schools in pages of 1000 (PostgREST default limit)
 export const getAllSchools = async () => {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const allSchools = [];
+  let offset = 0;
+  const pageSize = 1000;
 
-  try {
-    const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc&limit=10000`;
+  while (true) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const response = await fetch(url, {
-      headers: {
-        'apikey': supabaseAnonKey,
-        'Authorization': `Bearer ${supabaseAnonKey}`,
-      },
-      signal: controller.signal,
-    });
+    try {
+      const url = `${supabaseUrl}/rest/v1/schools?select=id,name,town&order=name.asc&limit=${pageSize}&offset=${offset}`;
 
-    clearTimeout(timeout);
+      const response = await fetch(url, {
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${supabaseAnonKey}`,
+        },
+        signal: controller.signal,
+      });
 
-    if (!response.ok) {
-      const body = await response.text();
-      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+      }
+
+      const page = await response.json();
+      if (!page || page.length === 0) break;
+
+      allSchools.push(...page);
+      if (page.length < pageSize) break; // last page
+      offset += pageSize;
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err.name === 'AbortError') {
+        throw new Error('Request timed out (8s) — is your Supabase project active?');
+      }
+      throw err;
     }
-
-    const data = await response.json();
-    return data || [];
-  } catch (err) {
-    clearTimeout(timeout);
-    if (err.name === 'AbortError') {
-      throw new Error('Request timed out (8s) — is your Supabase project active?');
-    }
-    throw err;
   }
+
+  return allSchools;
 };
 
 // Search for schools by name or town (for the school picker)
