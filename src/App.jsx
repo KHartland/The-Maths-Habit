@@ -2426,6 +2426,42 @@ const questionBank = {
     ],
   ],
 
+  // ═══════════════════════════════════════════════════════════════
+  // N13: Money Calculations
+  // ═══════════════════════════════════════════════════════════════
+  'N13': [
+    // Level 0 (1 mark) — Change from a purchase
+    [
+      { q: "Sam buys a coffee for £2.80 and a sandwich for £3.50. How much change does he get from £10?", a: "3.70", worked: ["Add the costs: £2.80 + £3.50 = £6.30", "Subtract from £10: £10 − £6.30 = £3.70"] },
+      { q: "Jo buys a magazine for £3.20 and a drink for £1.95. How much change from £20?", a: "14.85", worked: ["Add the costs: £3.20 + £1.95 = £5.15", "Subtract from £20: £20 − £5.15 = £14.85"] },
+      { q: "Sarah buys a sandwich for £3.45 and a drink for £1.20. How much change does she get from £10?", a: "5.35", worked: ["Add the costs: £3.45 + £1.20 = £4.65", "Subtract from £10: £10 − £4.65 = £5.35"] },
+    ],
+    // Level 1 (2 marks) — Unit cost
+    [
+      { q: "A pack of 6 pens costs £4.50. Work out the cost of one pen.", a: "0.75", worked: ["Divide total cost by number of pens", "£4.50 ÷ 6 = £0.75"] },
+      { q: "A box of 12 eggs costs £3.60. Work out the cost of one egg.", a: "0.30", worked: ["Divide total cost by number of eggs", "£3.60 ÷ 12 = £0.30"] },
+      { q: "A pack of 6 cans of cola costs £4.50. How much does one can cost?", a: "0.75", worked: ["Divide total cost by number of cans", "£4.50 ÷ 6 = £0.75"] },
+    ],
+    // Level 2 (2 marks) — Earnings calculation
+    [
+      { q: "Sarah earns £9.20 per hour. Last week she worked 15 hours. How much did she earn?", a: "138", worked: ["Multiply hourly rate by hours", "£9.20 × 15 = £138"] },
+      { q: "Tom earns £10.50 per hour. He works 12 hours. How much is his total pay?", a: "126", worked: ["Multiply hourly rate by hours", "£10.50 × 12 = £126"] },
+      { q: "Gas costs 15p per unit. A family uses 800 units. How much is the total bill in pounds?", a: "120", worked: ["Cost = 15p × 800 = 12000p", "Convert to pounds: 12000 ÷ 100 = £120"] },
+    ],
+    // Level 3 (3 marks) — Multi-buy offer
+    [
+      { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90", worked: ["Buy 2 Get 1 Free: every 3 bars costs 2 × 65p = 130p", "9 bars = 3 groups of 3", "Total: 3 × 130p = 390p = £3.90"] },
+      { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40", worked: ["Each pair costs £1.20 + £0.60 = £1.80", "6 bars = 3 pairs", "Total: 3 × £1.80 = £5.40"] },
+      { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", worked: ["Shop A: £1.20 ÷ 0.5 kg = £2.40 per kg", "Shop B: £1.70 ÷ 0.75 kg = £2.27 per kg", "Shop B is cheaper per kg, so better value"] },
+    ],
+    // Level 4 (3 marks) — Tiered pricing
+    [
+      { q: "Gas costs 18p per unit for the first 100 units, and 12p per unit for any additional units. Calculate the total cost in £ for using 250 units.", a: "36", calculator: true, worked: ["First 100 units: 100 × 18p = 1800p = £18", "Remaining 150 units: 150 × 12p = 1800p = £18", "Total: £18 + £18 = £36"] },
+      { q: "Electricity costs 22p per unit for the first 50 units, then 15p per unit after that. Calculate the total cost in £ for 120 units.", a: "21.50", calculator: true, worked: ["First 50 units: 50 × 22p = 1100p = £11", "Remaining 70 units: 70 × 15p = 1050p = £10.50", "Total: £11 + £10.50 = £21.50"] },
+      { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240", calculator: true, worked: ["Interest per year: 3% of £2000 = 0.03 × £2000 = £60", "After 4 years: £60 × 4 = £240"] },
+    ],
+  ],
+
   // ─── A3 (+ A5–A11, A14, A19, A22–A25): Mixed Algebra Practice ──
   'A3': [
     // Level 0 (2 marks) — Expand single brackets (A5)
@@ -2582,7 +2618,6 @@ questionBank['N8'] = questionBank['N5'];
 questionBank['N9'] = questionBank['N5'];
 questionBank['N10'] = questionBank['N5'];
 questionBank['N11'] = questionBank['N5'];
-questionBank['N13'] = questionBank['N5'];
 questionBank['N16'] = questionBank['N5'];
 
 // Shared references for remaining Algebra objectives → A3
@@ -4719,35 +4754,363 @@ const higherQuestionBank = {
     ],
   ],
 
-  // A17: Algebraic Fractions (Simplifying, adding, solving)
+  // ═══════════════════════════════════════════════════════════════
+  // A3: Expanding & Factorising
+  // ═══════════════════════════════════════════════════════════════
+  'A3': [
+    // Level 0 (Grade 4) — Expand single brackets
+    [
+      { q: "Expand 2(x + 5)", a: "2x + 10", worked: ["Multiply each term inside by 2", "2 × x = 2x", "2 × 5 = 10", "= 2x + 10"], hint: "Multiply the number outside by each term inside the bracket" },
+      { q: "Expand 4(2a − 3)", a: "8a − 12", worked: ["Multiply each term inside by 4", "4 × 2a = 8a", "4 × (−3) = −12", "= 8a − 12"], hint: "Multiply 4 by each term inside the bracket" },
+      { q: "Expand x(x + 8)", a: "x² + 8x", worked: ["Multiply each term inside by x", "x × x = x²", "x × 8 = 8x", "= x² + 8x"], hint: "Multiply x by each term inside the bracket" },
+    ],
+    // Level 1 (Grade 5) — Factorise into single bracket
+    [
+      { q: "Factorise 3y − 12", a: "3(y − 4)", worked: ["Find the HCF of 3y and 12: HCF = 3", "3y ÷ 3 = y", "12 ÷ 3 = 4", "= 3(y − 4)"], hint: "Find the highest common factor of both terms" },
+      { q: "Factorise 5x + 20", a: "5(x + 4)", worked: ["Find the HCF of 5x and 20: HCF = 5", "5x ÷ 5 = x", "20 ÷ 5 = 4", "= 5(x + 4)"], hint: "Find the highest common factor of both terms" },
+      { q: "Factorise 14w − 7", a: "7(2w − 1)", worked: ["Find the HCF of 14w and 7: HCF = 7", "14w ÷ 7 = 2w", "7 ÷ 7 = 1", "= 7(2w − 1)"], hint: "Find the highest common factor of both terms" },
+    ],
+    // Level 2 (Grade 6) — Expand and simplify double brackets
+    [
+      { q: "Expand and simplify (x + 3)(x − 5)", a: "x² − 2x − 15", worked: ["Use FOIL: First × First = x²", "Outer: x × (−5) = −5x", "Inner: 3 × x = 3x", "Last: 3 × (−5) = −15", "= x² − 5x + 3x − 15 = x² − 2x − 15"], hint: "Use FOIL: First, Outer, Inner, Last, then collect like terms" },
+      { q: "Expand and simplify (x − 4)(x − 2)", a: "x² − 6x + 8", worked: ["First: x × x = x²", "Outer: x × (−2) = −2x", "Inner: (−4) × x = −4x", "Last: (−4) × (−2) = 8", "= x² − 2x − 4x + 8 = x² − 6x + 8"], hint: "Use FOIL and be careful with negative signs" },
+      { q: "Expand and simplify (2x + 1)(x − 3)", a: "2x² − 5x − 3", worked: ["First: 2x × x = 2x²", "Outer: 2x × (−3) = −6x", "Inner: 1 × x = x", "Last: 1 × (−3) = −3", "= 2x² − 6x + x − 3 = 2x² − 5x − 3"], hint: "Use FOIL — the first term gives 2x², not x²" },
+    ],
+    // Level 3 (Grade 7) — Difference of two squares
+    [
+      { q: "Factorise x² − 9", type: "mcq", options: ["(x + 3)(x − 3)", "(x − 3)(x − 3)", "(x + 9)(x − 1)", "(x + 3)²"], a: "(x + 3)(x − 3)", worked: ["Recognise difference of two squares: a² − b² = (a + b)(a − b)", "x² − 9 = x² − 3²", "= (x + 3)(x − 3)"], hint: "This is a difference of two squares: a² − b² = (a + b)(a − b)" },
+      { q: "Factorise y² − 144", type: "mcq", options: ["(y + 12)(y − 12)", "(y − 12)(y − 12)", "(y + 144)(y − 1)", "(y + 12)²"], a: "(y + 12)(y − 12)", worked: ["Difference of two squares: y² − 144 = y² − 12²", "= (y + 12)(y − 12)"], hint: "144 = 12², so this is a difference of two squares" },
+      { q: "Factorise 4a² − 25", type: "mcq", options: ["(2a + 5)(2a − 5)", "(4a + 5)(4a − 5)", "(2a − 5)²", "(a + 5)(4a − 5)"], a: "(2a + 5)(2a − 5)", worked: ["Difference of two squares: 4a² − 25 = (2a)² − 5²", "= (2a + 5)(2a − 5)"], hint: "4a² = (2a)² and 25 = 5², so use (2a + 5)(2a − 5)" },
+    ],
+    // Level 4 (Grade 9) — Factorise fully / expand triple brackets
+    [
+      { q: "Factorise fully 10p² + 15p", a: "5p(2p + 3)", worked: ["Find the HCF of 10p² and 15p: HCF = 5p", "10p² ÷ 5p = 2p", "15p ÷ 5p = 3", "= 5p(2p + 3)"], hint: "The HCF includes both a number and a variable" },
+      { q: "Factorise fully 12x²y − 18xy²", a: "6xy(2x − 3y)", worked: ["Find the HCF of 12x²y and 18xy²: HCF = 6xy", "12x²y ÷ 6xy = 2x", "18xy² ÷ 6xy = 3y", "= 6xy(2x − 3y)"], hint: "Find the HCF of both the numbers and all variables" },
+      { q: "Expand and simplify (x + 2)(x − 3)(x + 5)", a: "x³ + 4x² − 11x − 30", worked: ["First expand (x + 2)(x − 3) = x² − x − 6", "Then multiply by (x + 5):", "x²(x + 5) = x³ + 5x²", "−x(x + 5) = −x² − 5x", "−6(x + 5) = −6x − 30", "= x³ + 5x² − x² − 5x − 6x − 30", "= x³ + 4x² − 11x − 30"], hint: "Expand the first two brackets, then multiply the result by the third" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A17: Algebraic Fractions
+  // ═══════════════════════════════════════════════════════════════
   'A17': [
-    // Level 1 (Grade 5) — Simplifying basic algebraic fractions
+    // Level 0 (Grade 5) — Simplify basic algebraic fractions
     [
-      { q: "Simplify 4x²/2x", a: "2x", worked: ["4x² ÷ 2x", "Divide coefficients: 4 ÷ 2 = 2", "Divide x terms: x² ÷ x = x", "= 2x"], hint: "Divide the numbers and subtract the powers of x" },
-      { q: "Simplify 10x³/5x", a: "2x²", worked: ["10x³ ÷ 5x", "Divide coefficients: 10 ÷ 5 = 2", "Divide x terms: x³ ÷ x = x²", "= 2x²"], hint: "Divide the numbers and subtract the powers of x" },
+      { q: "Simplify 10x³/5x", a: "2x²", worked: ["Divide coefficients: 10 ÷ 5 = 2", "Divide x terms: x³ ÷ x = x²", "= 2x²"], hint: "Divide the numbers and subtract the powers of x" },
+      { q: "Simplify 12a⁴/3a²", a: "4a²", worked: ["Divide coefficients: 12 ÷ 3 = 4", "Divide a terms: a⁴ ÷ a² = a²", "= 4a²"], hint: "Divide the numbers and subtract the powers" },
+      { q: "Simplify 15x²y/5x", a: "3xy", worked: ["Divide coefficients: 15 ÷ 5 = 3", "Divide x terms: x² ÷ x = x", "y stays: y", "= 3xy"], hint: "Divide the numbers, subtract powers of x, and keep y" },
     ],
-    // Level 2 (Grade 6) — Adding algebraic fractions
+    // Level 1 (Grade 6) — Adding/subtracting algebraic fractions
     [
-      { q: "Write x/3 + x/4 as a single fraction.", a: "7x/12", worked: ["Find common denominator: LCM of 3 and 4 = 12", "x/3 = 4x/12", "x/4 = 3x/12", "4x/12 + 3x/12 = 7x/12"], hint: "Find the LCM of the denominators, then convert each fraction" },
       { q: "Express x/2 + x/5 as a single fraction.", a: "7x/10", worked: ["Common denominator: LCM of 2 and 5 = 10", "x/2 = 5x/10", "x/5 = 2x/10", "5x/10 + 2x/10 = 7x/10"], hint: "Find the LCM of the denominators, then convert each fraction" },
+      { q: "Express 2y/3 − y/4 as a single fraction.", a: "5y/12", worked: ["Common denominator: LCM of 3 and 4 = 12", "2y/3 = 8y/12", "y/4 = 3y/12", "8y/12 − 3y/12 = 5y/12"], hint: "Find the LCM of 3 and 4, then convert each fraction" },
+      { q: "Express 3/x + 2/y as a single fraction.", a: "(3y + 2x)/xy", worked: ["Common denominator: xy", "3/x = 3y/xy", "2/y = 2x/xy", "= (3y + 2x)/xy"], hint: "The common denominator for x and y is xy" },
     ],
-    // Level 3 (Grade 7) — Simplifying by factorising
+    // Level 2 (Grade 7) — Simplify by factorising
     [
-      { q: "Simplify fully: (x² − 16)/(2x + 8)", a: "(x − 4)/2", worked: ["Factorise numerator: x² − 16 = (x + 4)(x − 4) (difference of two squares)", "Factorise denominator: 2x + 8 = 2(x + 4)", "= (x + 4)(x − 4) / 2(x + 4)", "Cancel (x + 4): = (x − 4)/2"], hint: "Factorise the numerator (difference of two squares) and the denominator, then cancel common factors" },
-      { q: "Simplify fully: (x² − 25)/(3x + 15)", a: "(x − 5)/3", worked: ["Factorise numerator: x² − 25 = (x + 5)(x − 5)", "Factorise denominator: 3x + 15 = 3(x + 5)", "= (x + 5)(x − 5) / 3(x + 5)", "Cancel (x + 5): = (x − 5)/3"], hint: "Factorise both: difference of two squares on top, common factor on bottom" },
-      { q: "Simplify fully: (x² − 9)/(5x + 15)", a: "(x − 3)/5", worked: ["Factorise numerator: x² − 9 = (x + 3)(x − 3)", "Factorise denominator: 5x + 15 = 5(x + 3)", "= (x + 3)(x − 3) / 5(x + 3)", "Cancel (x + 3): = (x − 3)/5"], hint: "Difference of two squares on top, take out common factor on bottom" },
+      { q: "Simplify fully: (x² − 25)/(3x + 15)", a: "(x − 5)/3", worked: ["Factorise numerator: x² − 25 = (x + 5)(x − 5)", "Factorise denominator: 3x + 15 = 3(x + 5)", "Cancel (x + 5): = (x − 5)/3"], hint: "Factorise both: difference of two squares on top, common factor on bottom" },
+      { q: "Simplify fully: (x² − 9)/(5x + 15)", a: "(x − 3)/5", worked: ["Factorise numerator: x² − 9 = (x + 3)(x − 3)", "Factorise denominator: 5x + 15 = 5(x + 3)", "Cancel (x + 3): = (x − 3)/5"], hint: "Difference of two squares on top, common factor on bottom" },
+      { q: "Simplify fully: (2x + 4)/(x² − 4)", a: "2/(x − 2)", worked: ["Factorise numerator: 2x + 4 = 2(x + 2)", "Factorise denominator: x² − 4 = (x + 2)(x − 2)", "Cancel (x + 2): = 2/(x − 2)"], hint: "Factorise both parts and look for a common factor to cancel" },
     ],
-    // Level 4 (Grade 8) — Solving equations with algebraic fractions
+    // Level 3 (Grade 8) — Solve equations / combine fractions
     [
-      { q: "Solve: 3/(x + 1) + 1/(x − 2) = 2. Give your answers to 2 decimal places.", a: "x = 2.82 and x = 0.18", calculator: true, worked: ["Multiply through by (x + 1)(x − 2):", "3(x − 2) + 1(x + 1) = 2(x + 1)(x − 2)", "3x − 6 + x + 1 = 2(x² − x − 2)", "4x − 5 = 2x² − 2x − 4", "2x² − 6x + 1 = 0", "x = (6 ± √(36 − 8)) / 4 = (6 ± √28) / 4", "x = (3 + √7)/2 ≈ 2.82 or x = (3 − √7)/2 ≈ 0.18"], hint: "Multiply every term by (x + 1)(x − 2) to clear the fractions, then solve the quadratic" },
-      { q: "Solve: 4/(x + 2) + 2/(x − 1) = 1. Give your answers to 2 decimal places.", a: "x = 5.37 and x = −0.37", calculator: true, worked: ["Multiply through by (x + 2)(x − 1):", "4(x − 1) + 2(x + 2) = (x + 2)(x − 1)", "4x − 4 + 2x + 4 = x² + x − 2", "6x = x² + x − 2", "x² − 5x − 2 = 0", "x = (5 ± √(25 + 8)) / 2 = (5 ± √33) / 2", "x ≈ 5.37 or x ≈ −0.37"], hint: "Multiply every term by (x + 2)(x − 1) to clear fractions, then rearrange to a quadratic" },
-      { q: "Express 2/(x − 3) − 1/(x + 2) as a single fraction in its simplest form.", a: "(x + 7)/((x − 3)(x + 2))", worked: ["Common denominator: (x − 3)(x + 2)", "2(x + 2)/((x − 3)(x + 2)) − 1(x − 3)/((x − 3)(x + 2))", "= (2x + 4 − x + 3) / ((x − 3)(x + 2))", "= (x + 7) / ((x − 3)(x + 2))"], hint: "Find the common denominator (x − 3)(x + 2), then combine the numerators carefully" },
-      { q: "Express 3/(x − 2) − 2/(x + 3) as a single fraction in its simplest form.", a: "(x + 13)/((x − 2)(x + 3))", worked: ["Common denominator: (x − 2)(x + 3)", "3(x + 3)/((x − 2)(x + 3)) − 2(x − 2)/((x − 2)(x + 3))", "= (3x + 9 − 2x + 4) / ((x − 2)(x + 3))", "= (x + 13) / ((x − 2)(x + 3))"], hint: "Common denominator is (x − 2)(x + 3). Be careful with signs when subtracting." },
+      { q: "Solve: 4/(x + 2) + 2/(x − 1) = 1. Give your answers to 2 decimal places.", a: "x = 5.37 and x = −0.37", calculator: true, worked: ["Multiply through by (x + 2)(x − 1):", "4(x − 1) + 2(x + 2) = (x + 2)(x − 1)", "4x − 4 + 2x + 4 = x² + x − 2", "6x = x² + x − 2", "x² − 5x − 2 = 0", "x = (5 ± √33) / 2", "x ≈ 5.37 or x ≈ −0.37"], hint: "Multiply every term by (x + 2)(x − 1) to clear fractions, then solve the quadratic" },
+      { q: "Solve: 3/(x − 1) + 1/(x + 2) = 2. Give your answers to 2 decimal places.", a: "x = 2.68 and x = −1.68", calculator: true, worked: ["Multiply through by (x − 1)(x + 2):", "3(x + 2) + 1(x − 1) = 2(x − 1)(x + 2)", "3x + 6 + x − 1 = 2(x² + x − 2)", "4x + 5 = 2x² + 2x − 4", "2x² − 2x − 9 = 0", "x = (2 ± √76) / 4 = (1 ± √19) / 2", "x ≈ 2.68 or x ≈ −1.68"], hint: "Clear fractions by multiplying through, then use the quadratic formula" },
+      { q: "Express (x + 1)/2 − (x − 3)/5 as a single fraction in its simplest form.", a: "(3x + 11)/10", worked: ["Common denominator: 10", "(x + 1)/2 = 5(x + 1)/10", "(x − 3)/5 = 2(x − 3)/10", "= [5(x + 1) − 2(x − 3)] / 10", "= (5x + 5 − 2x + 6) / 10", "= (3x + 11)/10"], hint: "Find common denominator 10, then expand and simplify the numerator" },
     ],
-    // Level 5 (Grade 9) — Simplify and hence solve
+    // Level 4 (Grade 9) — Simplify and hence solve
     [
-      { q: "Simplify (2x² − 5x − 3)/(x² − 9) and hence solve (2x² − 5x − 3)/(x² − 9) = 3.", a: "x = −8", worked: ["Factorise numerator: 2x² − 5x − 3 = (2x + 1)(x − 3)", "Factorise denominator: x² − 9 = (x + 3)(x − 3)", "Simplified: (2x + 1)(x − 3) / ((x + 3)(x − 3)) = (2x + 1)/(x + 3)", "Now solve (2x + 1)/(x + 3) = 3:", "2x + 1 = 3(x + 3)", "2x + 1 = 3x + 9", "−x = 8", "x = −8"], hint: "Factorise both numerator and denominator using difference of two squares. Cancel common factors, then solve." },
-      { q: "Simplify (3x² + 10x − 8)/(x² − 16) and find the value of x for which the fraction equals 2.", a: "x = −6", worked: ["Factorise numerator: 3x² + 10x − 8 = (3x − 2)(x + 4)", "Factorise denominator: x² − 16 = (x + 4)(x − 4)", "Simplified: (3x − 2)(x + 4) / ((x + 4)(x − 4)) = (3x − 2)/(x − 4)", "Solve (3x − 2)/(x − 4) = 2:", "3x − 2 = 2(x − 4)", "3x − 2 = 2x − 8", "x = −6"], hint: "Factorise numerator and denominator, cancel, then solve the resulting linear equation." },
+      { q: "Simplify (3x² + 10x − 8)/(x² − 16) and find the value of x for which the fraction equals 2.", a: "x = −6", worked: ["Factorise numerator: 3x² + 10x − 8 = (3x − 2)(x + 4)", "Factorise denominator: x² − 16 = (x + 4)(x − 4)", "Simplified: (3x − 2)/(x − 4)", "Solve (3x − 2)/(x − 4) = 2:", "3x − 2 = 2(x − 4)", "3x − 2 = 2x − 8", "x = −6"], hint: "Factorise numerator and denominator, cancel, then solve" },
+      { q: "Simplify (2x² − 5x − 3)/(x² − 9).", a: "(2x + 1)/(x + 3)", worked: ["Factorise numerator: 2x² − 5x − 3 = (2x + 1)(x − 3)", "Factorise denominator: x² − 9 = (x + 3)(x − 3)", "Cancel (x − 3): = (2x + 1)/(x + 3)"], hint: "Factorise both using appropriate methods, then cancel common factors" },
+      { q: "Solve 1/x + 1/(x + 1) = 5/6.", a: "x = 2 or x = −3/5", worked: ["Multiply through by 6x(x + 1):", "6(x + 1) + 6x = 5x(x + 1)", "6x + 6 + 6x = 5x² + 5x", "12x + 6 = 5x² + 5x", "5x² − 7x − 6 = 0", "(5x + 3)(x − 2) = 0", "x = 2 or x = −3/5"], hint: "Clear all fractions by multiplying through by 6x(x + 1), then factorise the quadratic" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A21: Straight-Line Graphs
+  // ═══════════════════════════════════════════════════════════════
+  'A21': [
+    // Level 0 (Grade 4) — Identify y-intercept
+    [
+      { q: "Write down the y-intercept for the line y = x + 5.", a: "5", worked: ["The equation is in the form y = mx + c", "The y-intercept is c = 5"], hint: "In y = mx + c, the y-intercept is the value of c" },
+      { q: "Write down the y-intercept for y = 3x − 7.", a: "−7", worked: ["The equation is in the form y = mx + c", "The y-intercept is c = −7"], hint: "In y = mx + c, the y-intercept is the constant term" },
+      { q: "Where does the line y = 10 − 2x cross the y-axis?", a: "10", worked: ["Rewrite as y = −2x + 10", "The y-intercept is c = 10", "The line crosses the y-axis at (0, 10)"], hint: "The y-axis is where x = 0. Substitute x = 0 into the equation" },
+    ],
+    // Level 1 (Grade 5) — Find gradient
+    [
+      { q: "Find the gradient of the line y = 4x − 2.", a: "4", worked: ["The equation is in the form y = mx + c", "The gradient is m = 4"], hint: "In y = mx + c, the gradient is the coefficient of x" },
+      { q: "Find the gradient of the line 2y = 6x + 4.", a: "3", worked: ["Divide both sides by 2: y = 3x + 2", "The gradient is m = 3"], hint: "First rearrange to the form y = mx + c" },
+      { q: "Find the gradient of the line y = ½x + 3.", a: "1/2", worked: ["The equation is already in y = mx + c form", "The gradient is m = 1/2"], hint: "In y = mx + c, the gradient is the number multiplied by x" },
+    ],
+    // Level 2 (Grade 6) — Describe horizontal/vertical/simple lines
+    [
+      { q: "Describe the graph of y = 3.", a: "A horizontal line through y = 3", worked: ["y = 3 means every point has y-coordinate 3", "This is a horizontal line passing through (0, 3)"], hint: "When y equals a constant, the line is horizontal" },
+      { q: "Describe the graph of x = −2.", a: "A vertical line through x = −2", worked: ["x = −2 means every point has x-coordinate −2", "This is a vertical line passing through (−2, 0)"], hint: "When x equals a constant, the line is vertical" },
+      { q: "Describe the graph of y = −x for values of x from −3 to 3.", a: "A straight line through the origin with gradient −1", worked: ["When x = −3, y = 3; when x = 0, y = 0; when x = 3, y = −3", "The line passes through the origin", "Gradient = −1 (slopes downward left to right)"], hint: "Substitute a few x-values to get coordinates, then describe the line" },
+    ],
+    // Level 3 (Grade 7) — Parallel and perpendicular lines
+    [
+      { q: "State the equation of a line parallel to y = 5x + 3 passing through (0, −1).", a: "y = 5x − 1", worked: ["Parallel lines have the same gradient: m = 5", "The line passes through (0, −1), so c = −1", "Equation: y = 5x − 1"], hint: "Parallel lines have the same gradient. Use the given point to find c" },
+      { q: "State the equation of a line parallel to y = −2x + 4 passing through (0, 5).", a: "y = −2x + 5", worked: ["Parallel lines have the same gradient: m = −2", "Passes through (0, 5), so c = 5", "Equation: y = −2x + 5"], hint: "Same gradient as the given line, then use the point for c" },
+      { q: "Find the equation of a line perpendicular to y = 2x + 1 passing through (0, 6).", a: "y = −½x + 6", worked: ["Original gradient: m = 2", "Perpendicular gradient: −1/m = −1/2", "Passes through (0, 6), so c = 6", "Equation: y = −½x + 6"], hint: "Perpendicular gradients multiply to give −1. If m = 2, the perpendicular gradient is −1/2" },
+    ],
+    // Level 4 (Grade 8) — Equation of line through two points
+    [
+      { q: "Find the equation of the line passing through (2, 5) and (4, 13).", a: "y = 4x − 3", worked: ["Gradient: m = (13 − 5)/(4 − 2) = 8/2 = 4", "Using y = mx + c with point (2, 5):", "5 = 4(2) + c", "5 = 8 + c", "c = −3", "Equation: y = 4x − 3"], hint: "Find the gradient using (y₂ − y₁)/(x₂ − x₁), then substitute a point to find c" },
+      { q: "Find the equation of the line passing through (1, 4) and (3, 10).", a: "y = 3x + 1", worked: ["Gradient: m = (10 − 4)/(3 − 1) = 6/2 = 3", "Using y = mx + c with point (1, 4):", "4 = 3(1) + c", "c = 1", "Equation: y = 3x + 1"], hint: "Find gradient first, then substitute one point into y = mx + c" },
+      { q: "Find the equation of the line passing through (−2, 1) and (2, 9).", a: "y = 2x + 5", worked: ["Gradient: m = (9 − 1)/(2 − (−2)) = 8/4 = 2", "Using y = mx + c with point (2, 9):", "9 = 2(2) + c", "9 = 4 + c", "c = 5", "Equation: y = 2x + 5"], hint: "Be careful with negative coordinates when finding the gradient" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G1: Angle Facts & Shape Properties
+  // ═══════════════════════════════════════════════════════════════
+  'G1': [
+    // Level 0 (Grade 4) — Angles on a straight line / around a point
+    [
+      { q: "Angles on a straight line add up to 180°. One angle is 130°. Find the other angle.", a: "50", worked: ["Angles on a straight line sum to 180°", "Other angle = 180° − 130° = 50°"], hint: "Angles on a straight line add up to 180°" },
+      { q: "Angles around a point add up to 360°. Three angles are 120°, 85° and 90°. Find angle y.", a: "65", worked: ["Angles around a point sum to 360°", "y = 360° − 120° − 85° − 90° = 65°"], hint: "Angles around a point add up to 360°" },
+      { q: "Find the supplement of 115°.", a: "65", worked: ["Supplementary angles add to 180°", "180° − 115° = 65°"], hint: "Supplementary angles add up to 180°" },
+    ],
+    // Level 1 (Grade 5) — Angles in a triangle
+    [
+      { q: "Find the missing angle in a triangle with angles 40° and 70°.", a: "70", worked: ["Angles in a triangle sum to 180°", "Missing angle = 180° − 40° − 70° = 70°"], hint: "Angles in a triangle add up to 180°" },
+      { q: "Find the base angle of an isosceles triangle where the vertex angle is 50°.", a: "65", worked: ["Isosceles triangle has two equal base angles", "Base angles = (180° − 50°) ÷ 2 = 130° ÷ 2 = 65°"], hint: "An isosceles triangle has two equal angles. All three add to 180°" },
+      { q: "In a right-angled triangle, one angle is 32°. Find the third angle.", a: "58", worked: ["One angle is 90° (right angle), another is 32°", "Third angle = 180° − 90° − 32° = 58°"], hint: "A right angle is 90°. All angles in a triangle sum to 180°" },
+    ],
+    // Level 2 (Grade 6) — Vertically opposite angles / forming equations
+    [
+      { q: "Find y if the vertically opposite angle is 72°.", a: "72", worked: ["Vertically opposite angles are equal", "y = 72°"], hint: "Vertically opposite angles are always equal" },
+      { q: "Two angles on a straight line are 3x and 2x. Find x.", a: "36", worked: ["Angles on a straight line: 3x + 2x = 180°", "5x = 180°", "x = 36°"], hint: "Set up an equation using the fact that angles on a straight line sum to 180°" },
+      { q: "Vertically opposite angles are (2x + 10)° and 50°. Find x.", a: "20", worked: ["Vertically opposite angles are equal:", "2x + 10 = 50", "2x = 40", "x = 20"], hint: "Vertically opposite angles are equal — set up and solve the equation" },
+    ],
+    // Level 3 (Grade 7) — Interior/exterior angles of polygons
+    [
+      { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", worked: ["Sum of interior angles = (n − 2) × 180° = (5 − 2) × 180° = 540°", "Each interior angle = 540° ÷ 5 = 108°"], hint: "Sum of interior angles = (n − 2) × 180°, then divide by the number of sides" },
+      { q: "Work out the size of one exterior angle of a regular hexagon.", a: "60", worked: ["Exterior angles of any polygon sum to 360°", "Each exterior angle = 360° ÷ 6 = 60°"], hint: "Exterior angles of any polygon add up to 360°" },
+      { q: "An interior angle of a regular polygon is 140°. Find the number of sides.", a: "9", worked: ["Exterior angle = 180° − 140° = 40°", "Number of sides = 360° ÷ 40° = 9"], hint: "Find the exterior angle first (180° − interior), then divide 360° by it" },
+    ],
+    // Level 4 (Grade 8) — Complex angle problems
+    [
+      { q: "The ratio of exterior to interior angles of a regular polygon is 1:4. How many sides does it have?", a: "10", worked: ["Let exterior = x, interior = 4x", "x + 4x = 180° (angles on a straight line)", "5x = 180°, so x = 36°", "Number of sides = 360° ÷ 36° = 10"], hint: "Use the ratio to find the exterior angle, then divide 360° by it" },
+      { q: "Calculate the sum of interior angles for a 12-sided polygon.", a: "1800", worked: ["Sum = (n − 2) × 180°", "= (12 − 2) × 180°", "= 10 × 180°", "= 1800°"], hint: "Use the formula (n − 2) × 180°" },
+      { q: "Find the value of x in a quadrilateral with angles x, 2x, 3x, and 90°.", a: "45", worked: ["Angles in a quadrilateral sum to 360°", "x + 2x + 3x + 90 = 360", "6x + 90 = 360", "6x = 270", "x = 45"], hint: "Angles in a quadrilateral add up to 360°" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G2: Transformations
+  // ═══════════════════════════════════════════════════════════════
+  'G2': [
+    // Level 0 (Grade 4) — Reflections
+    [
+      { q: "A shape has a vertex at (3, 2). What are its coordinates after reflection in the y-axis?", a: "(−3, 2)", worked: ["Reflecting in the y-axis: x-coordinate changes sign", "y-coordinate stays the same", "(3, 2) → (−3, 2)"], hint: "When reflecting in the y-axis, the x-coordinate changes sign" },
+      { q: "A point is at (4, −1). What are its coordinates after reflection in the x-axis?", a: "(4, 1)", worked: ["Reflecting in the x-axis: y-coordinate changes sign", "x-coordinate stays the same", "(4, −1) → (4, 1)"], hint: "When reflecting in the x-axis, the y-coordinate changes sign" },
+      { q: "A point is at (2, 5). What are its coordinates after reflection in the line y = x?", a: "(5, 2)", worked: ["Reflecting in y = x: swap x and y coordinates", "(2, 5) → (5, 2)"], hint: "Reflecting in y = x swaps the x and y coordinates" },
+    ],
+    // Level 1 (Grade 5) — Translations
+    [
+      { q: "A shape has a vertex at (1, 4). Where is this vertex after translation by vector (3, −2)?", a: "(4, 2)", worked: ["Add the vector to the coordinates:", "x: 1 + 3 = 4", "y: 4 + (−2) = 2", "New position: (4, 2)"], hint: "Add the top number to x and the bottom number to y" },
+      { q: "A shape has a vertex at (3, 1). Where is this vertex after translation by vector (−4, 5)?", a: "(−1, 6)", worked: ["Add the vector to the coordinates:", "x: 3 + (−4) = −1", "y: 1 + 5 = 6", "New position: (−1, 6)"], hint: "Add the vector components to the original coordinates" },
+      { q: "What vector moves a shape from (1, 1) to (5, −2)?", a: "(4, −3)", worked: ["Vector = new position − old position", "x: 5 − 1 = 4", "y: −2 − 1 = −3", "Translation vector: (4, −3)"], hint: "Subtract the old coordinates from the new coordinates" },
+    ],
+    // Level 2 (Grade 6) — Rotations
+    [
+      { q: "A point is at (2, 3). Where is it after a 90° clockwise rotation about the origin?", a: "(3, −2)", worked: ["90° clockwise about origin: (x, y) → (y, −x)", "(2, 3) → (3, −2)"], hint: "For 90° clockwise about the origin: (x, y) becomes (y, −x)" },
+      { q: "A point is at (1, 4). Where is it after a 180° rotation about the origin?", a: "(−1, −4)", worked: ["180° rotation about origin: (x, y) → (−x, −y)", "(1, 4) → (−1, −4)"], hint: "For 180° rotation about the origin: both coordinates change sign" },
+      { q: "A point is at (3, 1). Where is it after a 90° anticlockwise rotation about the origin?", a: "(−1, 3)", worked: ["90° anticlockwise about origin: (x, y) → (−y, x)", "(3, 1) → (−1, 3)"], hint: "For 90° anticlockwise about the origin: (x, y) becomes (−y, x)" },
+    ],
+    // Level 3 (Grade 7) — Enlargements (positive scale factor)
+    [
+      { q: "A vertex is at (3, 1). Enlarge by scale factor 2 from the origin. Find the new coordinates.", a: "(6, 2)", worked: ["Multiply each coordinate by the scale factor:", "x: 3 × 2 = 6", "y: 1 × 2 = 2", "New position: (6, 2)"], hint: "From the origin, multiply both coordinates by the scale factor" },
+      { q: "A vertex is at (4, 2). Enlarge by scale factor 0.5 from the origin. Find the new coordinates.", a: "(2, 1)", worked: ["Multiply each coordinate by the scale factor:", "x: 4 × 0.5 = 2", "y: 2 × 0.5 = 1", "New position: (2, 1)"], hint: "Scale factor 0.5 means halve both coordinates (from the origin)" },
+      { q: "A vertex is at (1, 3). Enlarge by scale factor 3 from centre (2, 2). Find the new coordinates.", a: "(−1, 5)", worked: ["Find vector from centre to point: (1−2, 3−2) = (−1, 1)", "Multiply by scale factor 3: (−3, 3)", "Add to centre: (2+(−3), 2+3) = (−1, 5)"], hint: "Find the vector from the centre to each point, multiply by scale factor, then add back to the centre" },
+    ],
+    // Level 4 (Grade 8) — Negative scale factor enlargements
+    [
+      { q: "A vertex is at (4, 2). Enlarge by scale factor −1.5 from centre (1, 1). Find the new coordinates.", a: "(−3.5, −0.5)", worked: ["Vector from centre to point: (4−1, 2−1) = (3, 1)", "Multiply by −1.5: (−4.5, −1.5)", "Add to centre: (1+(−4.5), 1+(−1.5)) = (−3.5, −0.5)"], hint: "A negative scale factor means the image is on the opposite side of the centre" },
+      { q: "Describe fully the single transformation that maps (2, 2) to (−4, −4).", a: "Enlargement, scale factor −2, centre (0, 0)", worked: ["The image is on the opposite side of the origin (negative SF)", "Scale factor = −4/2 = −2", "Check: (2 × −2, 2 × −2) = (−4, −4) ✓", "Enlargement, scale factor −2, centre the origin"], hint: "The point moved through the origin and got bigger — this is a negative enlargement" },
+      { q: "A vertex is at (1, 3). Enlarge by scale factor −½ from the origin. Find the new coordinates.", a: "(−0.5, −1.5)", worked: ["Multiply each coordinate by −½:", "x: 1 × (−½) = −0.5", "y: 3 × (−½) = −1.5", "New position: (−0.5, −1.5)"], hint: "Negative scale factor: multiply both coordinates by −½ (from the origin)" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G12: Perimeter, Area & Volume
+  // ═══════════════════════════════════════════════════════════════
+  'G12': [
+    // Level 0 (Grade 4) — Perimeter
+    [
+      { q: "Find the perimeter of a square with side length 5 cm.", a: "20", worked: ["Perimeter of a square = 4 × side", "= 4 × 5 = 20 cm"], hint: "A square has 4 equal sides. Add them all up" },
+      { q: "Find the perimeter of a rectangle with length 12 cm and width 4 cm.", a: "32", worked: ["Perimeter = 2 × (length + width)", "= 2 × (12 + 4) = 2 × 16 = 32 cm"], hint: "A rectangle has 2 lengths and 2 widths" },
+      { q: "The perimeter of a regular hexagon is 42 cm. Find the length of one side.", a: "7", worked: ["A regular hexagon has 6 equal sides", "Side = 42 ÷ 6 = 7 cm"], hint: "A regular hexagon has 6 equal sides" },
+    ],
+    // Level 1 (Grade 5) — Area of rectangles, parallelograms, trapeziums
+    [
+      { q: "Work out the area of a rectangle with base 8 cm and height 3 cm.", a: "24", worked: ["Area = base × height", "= 8 × 3 = 24 cm²"], hint: "Area of a rectangle = base × height" },
+      { q: "Calculate the area of a parallelogram with base 7 cm and vertical height 5 cm.", a: "35", worked: ["Area of parallelogram = base × vertical height", "= 7 × 5 = 35 cm²"], hint: "Area of a parallelogram = base × perpendicular height" },
+      { q: "Find the area of a trapezium with parallel sides 6 cm and 10 cm, and height 4 cm.", a: "32", worked: ["Area = ½ × (a + b) × h", "= ½ × (6 + 10) × 4", "= ½ × 16 × 4 = 32 cm²"], hint: "Area of trapezium = ½ × (sum of parallel sides) × height" },
+    ],
+    // Level 2 (Grade 6) — Triangles and circles
+    [
+      { q: "Find the area of a triangle with base 6 cm and vertical height 4 cm.", a: "12", worked: ["Area = ½ × base × height", "= ½ × 6 × 4 = 12 cm²"], hint: "Area of a triangle = ½ × base × height" },
+      { q: "The area of a triangle is 20 cm² and the base is 8 cm. Find the vertical height.", a: "5", worked: ["Area = ½ × base × height", "20 = ½ × 8 × h", "20 = 4h", "h = 5 cm"], hint: "Rearrange the triangle area formula to find height" },
+      { q: "Find the circumference of a circle with diameter 14 cm. Use π = 22/7.", a: "44", worked: ["Circumference = π × d", "= 22/7 × 14", "= 22 × 2 = 44 cm"], hint: "Circumference = π × diameter" },
+    ],
+    // Level 3 (Grade 7) — Volume of prisms and cubes
+    [
+      { q: "Calculate the volume of a cuboid with dimensions 2 cm × 3 cm × 10 cm.", a: "60", worked: ["Volume = length × width × height", "= 2 × 3 × 10 = 60 cm³"], hint: "Volume of a cuboid = l × w × h" },
+      { q: "Calculate the volume of a triangular prism with a cross-sectional area of 15 cm² and length 12 cm.", a: "180", worked: ["Volume = area of cross-section × length", "= 15 × 12 = 180 cm³"], hint: "Volume of any prism = area of cross-section × length" },
+      { q: "A cube has a surface area of 150 cm². Find its volume.", a: "125", worked: ["A cube has 6 identical faces", "Area of one face = 150 ÷ 6 = 25 cm²", "Side length = √25 = 5 cm", "Volume = 5³ = 125 cm³"], hint: "Find the area of one face first, then the side length, then cube it" },
+    ],
+    // Level 4 (Grade 8) — Surface area and volume of cylinders, spheres, cones
+    [
+      { q: "Calculate the total surface area of a cylinder with radius 3 cm and height 10 cm. Give your answer to 1 decimal place.", a: "245.0", calculator: true, worked: ["SA = 2πrh + 2πr²", "= 2π(3)(10) + 2π(3²)", "= 60π + 18π = 78π", "= 245.0 cm² (1 d.p.)"], hint: "Total SA = curved surface (2πrh) + two circles (2πr²)" },
+      { q: "Calculate the volume of a sphere with radius 6 cm. Give your answer to 1 decimal place.", a: "904.8", calculator: true, worked: ["V = 4/3 × π × r³", "= 4/3 × π × 6³", "= 4/3 × π × 216", "= 288π = 904.8 cm³ (1 d.p.)"], hint: "V = 4/3 πr³. Remember to cube the radius first" },
+      { q: "Calculate the total surface area of a cone with radius 5 cm and slant height 13 cm. Give your answer to 1 decimal place.", a: "282.7", calculator: true, worked: ["SA = πrl + πr²", "= π(5)(13) + π(5²)", "= 65π + 25π = 90π", "= 282.7 cm² (1 d.p.)"], hint: "Total SA = curved surface (πrl) + base circle (πr²)" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P4: Relative Frequency
+  // ═══════════════════════════════════════════════════════════════
+  'P4': [
+    // Level 0 (Grade 4) — Calculate relative frequency
+    [
+      { q: "A coin is flipped 50 times and lands on heads 20 times. Write the relative frequency of heads.", a: "0.4", worked: ["Relative frequency = number of successes ÷ number of trials", "= 20 ÷ 50 = 0.4"], hint: "Relative frequency = successes ÷ total trials" },
+      { q: "A spinner is spun 80 times and lands on Blue 32 times. State the relative frequency of Blue.", a: "0.4", worked: ["Relative frequency = 32 ÷ 80 = 0.4"], hint: "Divide the number of Blues by the total number of spins" },
+      { q: "A basketball player makes 15 out of 25 free throws. What is the relative frequency of success?", a: "0.6", worked: ["Relative frequency = 15 ÷ 25 = 0.6"], hint: "Divide successful throws by total throws" },
+    ],
+    // Level 1 (Grade 5) — Expected outcomes
+    [
+      { q: "If the probability of an event is 0.3, how many times would you expect it to happen in 100 trials?", a: "30", worked: ["Expected frequency = probability × number of trials", "= 0.3 × 100 = 30"], hint: "Multiply the probability by the number of trials" },
+      { q: "The probability that a seed grows is 0.85. If 200 seeds are planted, how many are expected to grow?", a: "170", worked: ["Expected = 0.85 × 200 = 170"], hint: "Multiply the probability by the number of seeds" },
+      { q: "P(Late) = 0.05. In a 20-day month, how many days is a train expected to be late?", a: "1", worked: ["Expected = 0.05 × 20 = 1"], hint: "Multiply the probability by the number of days" },
+    ],
+    // Level 2 (Grade 6) — Use relative frequency from trials
+    [
+      { q: "Use a table: after 200 trials, a biased spinner lands on Red 48 times. Estimate the probability of Red.", a: "0.24", worked: ["Estimated probability = relative frequency", "= 48 ÷ 200 = 0.24"], hint: "Relative frequency is the best estimate of probability from experimental data" },
+      { q: "After 500 trials, the relative frequency of an event is 0.12. How many times did the event occur?", a: "60", worked: ["Frequency = relative frequency × trials", "= 0.12 × 500 = 60"], hint: "Multiply the relative frequency by the number of trials" },
+      { q: "A biased coin is flipped. After 100 flips there are 62 heads. After 500 flips there are 315 heads. Which is the better estimate for P(Heads)?", type: "mcq", options: ["500 flips: 0.63", "100 flips: 0.62"], a: "500 flips: 0.63", worked: ["100 flips: RF = 62/100 = 0.62", "500 flips: RF = 315/500 = 0.63", "More trials gives a more reliable estimate", "The 500-flip estimate (0.63) is better"], hint: "More trials give a more reliable estimate of the true probability" },
+    ],
+    // Level 3 (Grade 7) — Apply relative frequency reasoning
+    [
+      { q: "A die is rolled 300 times. The relative frequency of rolling a 6 is 0.2. How many 6s were rolled?", a: "60", worked: ["Frequency = RF × trials", "= 0.2 × 300 = 60"], hint: "Multiply the relative frequency by the number of rolls" },
+      { q: "A bag contains black and white counters. In 150 trials, a white counter was picked 60 times. Estimate the probability of picking a black counter.", a: "0.6", worked: ["P(white) = 60/150 = 0.4", "P(black) = 1 − 0.4 = 0.6"], hint: "Find P(white) first, then use P(black) = 1 − P(white)" },
+      { q: "A spinner has 4 sections. After 400 spins, Section 1 has a relative frequency of 0.35. Find the frequency of Section 1.", a: "140", worked: ["Frequency = RF × total spins", "= 0.35 × 400 = 140"], hint: "Multiply the relative frequency by the total number of spins" },
+    ],
+    // Level 4 (Grade 8) — Reasoning about reliability / extended problems
+    [
+      { q: "Explain why relative frequency becomes a more reliable estimate of probability as the number of trials increases.", a: "As the number of trials increases, the relative frequency gets closer to the true probability because random variation has less effect on a larger sample", worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
+      { q: "Two people conduct the same experiment: Person A does 10 trials, Person B does 1000 trials. Whose estimate is more reliable and why?", a: "Person B, because more trials reduces the effect of random variation", worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
+      { q: "If the relative frequency of an event is 7/25 over 200 trials, how many more times should it occur in the next 100 trials?", a: "28", worked: ["Estimated probability = 7/25 = 0.28", "Expected in next 100 trials = 0.28 × 100 = 28"], hint: "Use the relative frequency as your probability estimate, then multiply by 100" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P7: Tree Diagrams & Enumeration
+  // ═══════════════════════════════════════════════════════════════
+  'P7': [
+    // Level 0 (Grade 4) — List outcomes / systematic listing
+    [
+      { q: "List all possible outcomes of flipping a coin and rolling a 4-sided die. How many outcomes are there?", a: "8", worked: ["H1, H2, H3, H4", "T1, T2, T3, T4", "Total = 2 × 4 = 8 outcomes"], hint: "List heads with each die number, then tails with each die number" },
+      { q: "A menu has 2 starters and 3 mains. How many different 2-course meal combinations are there?", a: "6", worked: ["For each starter, there are 3 mains", "Total = 2 × 3 = 6 combinations"], hint: "Multiply the number of starters by the number of mains" },
+      { q: "How many different 3-digit numbers can be made using the digits 1, 2, and 3 without repetition?", a: "6", worked: ["First digit: 3 choices", "Second digit: 2 choices", "Third digit: 1 choice", "Total = 3 × 2 × 1 = 6"], hint: "For each position, count how many digits are left to choose from" },
+    ],
+    // Level 1 (Grade 5) — Tree diagram basics
+    [
+      { q: "Complete the branches: P(Success) = 0.6. What is P(Failure)?", a: "0.4", worked: ["Probabilities on branches must sum to 1", "P(Failure) = 1 − 0.6 = 0.4"], hint: "The probabilities on each set of branches must add up to 1" },
+      { q: "Complete a tree diagram where P(Rain) = 1/4. What is P(No Rain)?", a: "3/4", worked: ["P(No Rain) = 1 − 1/4 = 3/4"], hint: "The two branches from each point must add to 1" },
+      { q: "If P(Win) = p, what is P(Lose) in terms of p?", a: "1 − p", worked: ["Probabilities on branches sum to 1", "P(Lose) = 1 − p"], hint: "The two probabilities must add up to 1" },
+    ],
+    // Level 2 (Grade 6) — Combined events (with replacement)
+    [
+      { q: "Use a tree diagram to find the probability of getting two Heads when a fair coin is flipped twice.", a: "1/4", worked: ["P(H) = 1/2 for each flip", "P(HH) = 1/2 × 1/2 = 1/4"], hint: "Multiply along the branches for P(H and H)" },
+      { q: "A bag has 3 red and 7 blue counters. One is picked, replaced, then another picked. Find P(both red).", a: "9/100", worked: ["P(red) = 3/10 each time (with replacement)", "P(RR) = 3/10 × 3/10 = 9/100"], hint: "With replacement, the probabilities stay the same for each pick" },
+      { q: "A fair coin is flipped three times. Find the probability of getting exactly two Tails.", a: "3/8", worked: ["Possible ways: HTT, THT, TTH = 3 ways", "P(each) = (1/2)³ = 1/8", "P(exactly 2T) = 3 × 1/8 = 3/8"], hint: "List all the ways to get exactly 2 tails, then add their probabilities" },
+    ],
+    // Level 3 (Grade 7) — Independent events
+    [
+      { q: "P(A) = 0.5 and P(B) = 0.2. If A and B are independent, find P(A and B).", a: "0.1", worked: ["For independent events: P(A and B) = P(A) × P(B)", "= 0.5 × 0.2 = 0.1"], hint: "For independent events, multiply the probabilities" },
+      { q: "A student takes two tests. P(Pass A) = 0.8, P(Pass B) = 0.7. Find P(Pass both).", a: "0.56", worked: ["Tests are independent", "P(Pass both) = 0.8 × 0.7 = 0.56"], hint: "Multiply the individual probabilities for independent events" },
+      { q: "The probability a lightbulb is faulty is 0.02. Find the probability that two randomly selected bulbs are both working.", a: "0.9604", worked: ["P(working) = 1 − 0.02 = 0.98", "P(both working) = 0.98 × 0.98 = 0.9604"], hint: "First find P(working), then multiply for both bulbs" },
+    ],
+    // Level 4 (Grade 8) — Without replacement problems
+    [
+      { q: "A bag has 5 red and 5 blue marbles. Two are picked without replacement. Find P(different colours).", a: "5/9", worked: ["P(RB) = 5/10 × 5/9 = 25/90", "P(BR) = 5/10 × 5/9 = 25/90", "P(different) = 25/90 + 25/90 = 50/90 = 5/9"], hint: "There are two ways to get different colours: RB or BR" },
+      { q: "In a bag of 10 sweets, 4 are lime. Two are taken without replacement. Find P(exactly one lime).", a: "8/15", worked: ["P(Lime then Not) = 4/10 × 6/9 = 24/90", "P(Not then Lime) = 6/10 × 4/9 = 24/90", "P(exactly one) = 24/90 + 24/90 = 48/90 = 8/15"], hint: "Two paths: Lime-then-Not or Not-then-Lime. Add both probabilities" },
+      { q: "A box contains 5 red and 3 green apples. Two are chosen without replacement. Find P(both red).", a: "5/14", worked: ["P(1st red) = 5/8", "P(2nd red | 1st red) = 4/7", "P(both red) = 5/8 × 4/7 = 20/56 = 5/14"], hint: "After taking one red, there are fewer reds and fewer total" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R2: Percentage Change & Growth/Decay
+  // ═══════════════════════════════════════════════════════════════
+  'R2': [
+    // Level 0 (Grade 4) — Simple percentage increase/decrease
+    [
+      { q: "Increase £40 by 10%.", a: "44", worked: ["10% of £40 = £4", "£40 + £4 = £44"], hint: "Find 10% first, then add it on" },
+      { q: "Decrease £120 by 5%.", a: "114", worked: ["5% of £120 = £6", "£120 − £6 = £114"], hint: "Find 5% first, then subtract it" },
+      { q: "What is the multiplier for a 17.5% increase?", type: "mcq", options: ["1.175", "0.175", "1.75", "0.825"], a: "1.175", worked: ["A 17.5% increase means 100% + 17.5% = 117.5%", "As a decimal: 117.5 ÷ 100 = 1.175"], hint: "Add the percentage to 100%, then divide by 100" },
+    ],
+    // Level 1 (Grade 5) — Percentage of an amount
+    [
+      { q: "Decrease 60 kg by 20%.", a: "48", worked: ["20% of 60 = 12", "60 − 12 = 48 kg"], hint: "Find 20%, then subtract from 60" },
+      { q: "Increase 250g by 12%.", a: "280", worked: ["12% of 250 = 30", "250 + 30 = 280g"], hint: "Find 12% of 250 and add it" },
+      { q: "A shop offers '20% extra free' on a 500 ml bottle. What is the new volume?", a: "600", worked: ["20% of 500 = 100 ml", "New volume = 500 + 100 = 600 ml"], hint: "20% extra means add 20% of 500" },
+    ],
+    // Level 2 (Grade 6) — Percentage change
+    [
+      { q: "A house price increases from £200,000 to £220,000. Calculate the percentage increase.", a: "10", worked: ["Increase = £220,000 − £200,000 = £20,000", "% increase = (20,000 ÷ 200,000) × 100 = 10%"], hint: "% change = (change ÷ original) × 100" },
+      { q: "A car's value drops from £15,000 to £12,300. Find the percentage decrease.", a: "18", worked: ["Decrease = £15,000 − £12,300 = £2,700", "% decrease = (2,700 ÷ 15,000) × 100 = 18%"], hint: "% change = (change ÷ original) × 100" },
+      { q: "An item costing £80 is sold for £100. Find the percentage profit.", a: "25", worked: ["Profit = £100 − £80 = £20", "% profit = (20 ÷ 80) × 100 = 25%"], hint: "% profit = (profit ÷ cost price) × 100" },
+    ],
+    // Level 3 (Grade 7) — Multipliers
+    [
+      { q: "Use a multiplier to increase £450 by 3.5%.", a: "465.75", calculator: true, worked: ["Multiplier = 1 + 0.035 = 1.035", "£450 × 1.035 = £465.75"], hint: "The multiplier for an increase of x% is 1 + x/100" },
+      { q: "A population of 8000 increases by 1.5% per year. What is the population after 1 year?", a: "8120", worked: ["Multiplier = 1.015", "8000 × 1.015 = 8120"], hint: "Multiply by (1 + rate/100)" },
+      { q: "Use multipliers to decrease £60 by 15% and then increase the result by 10%.", a: "56.10", calculator: true, worked: ["Decrease by 15%: £60 × 0.85 = £51", "Increase by 10%: £51 × 1.10 = £56.10"], hint: "Apply the two multipliers in sequence: × 0.85 then × 1.10" },
+    ],
+    // Level 4 (Grade 8) — Compound interest / growth and decay
+    [
+      { q: "£1000 is invested at 4% compound interest for 2 years. Work out the final amount.", a: "1081.60", calculator: true, worked: ["Year 1: £1000 × 1.04 = £1040", "Year 2: £1040 × 1.04 = £1081.60", "Or: £1000 × 1.04² = £1081.60"], hint: "Compound interest: multiply by (1 + rate)ⁿ" },
+      { q: "£2500 is invested at 3% compound interest per year. Find the total interest earned after 3 years.", a: "231.82", calculator: true, worked: ["Final amount = £2500 × 1.03³", "= £2500 × 1.092727 = £2731.82", "Interest = £2731.82 − £2500 = £231.82"], hint: "Find the final amount using (1.03)³, then subtract the original" },
+      { q: "A rare stamp appreciates by 5% each year. If it is worth £400 now, find its value in 4 years. Give your answer to 2 decimal places.", a: "486.20", calculator: true, worked: ["Value = £400 × 1.05⁴", "= £400 × 1.21550625", "= £486.20"], hint: "Appreciation is like compound interest: multiply by (1.05)⁴" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S2: Tables & Charts
+  // ═══════════════════════════════════════════════════════════════
+  'S2': [
+    // Level 0 (Grade 4) — Read and interpret simple charts
+    [
+      { q: "A bar chart shows: Football 12, Tennis 8, Rugby 5. How many more chose Football than Rugby?", a: "7", worked: ["Football = 12, Rugby = 5", "Difference = 12 − 5 = 7"], hint: "Subtract the smaller value from the larger" },
+      { q: "From a frequency table, the scores are: 3, 5, 5, 7, 5, 3, 7. What is the mode?", a: "5", worked: ["Count each value: 3 appears 2 times, 5 appears 3 times, 7 appears 2 times", "Mode = most frequent = 5"], hint: "The mode is the value that appears most often" },
+      { q: "State one advantage of using a bar chart over a pictogram.", a: "A bar chart can show exact values more easily because it uses a scale", worked: ["Bar charts use a continuous scale on the y-axis", "Pictograms use symbols which can be harder to read precisely", "Bar charts are better for exact comparisons"], hint: "Think about which is easier to read exact values from" },
+    ],
+    // Level 1 (Grade 5) — Pictograms and basic data
+    [
+      { q: "Complete a tally chart: the data is 3, 1, 4, 1, 5, 1, 3, 5. What is the frequency of 1?", a: "3", worked: ["Go through the data and count each 1:", "1 appears at positions 2, 4, 6", "Frequency of 1 = 3"], hint: "Go through the data one by one and count how many times 1 appears" },
+      { q: "A pictogram uses 1 circle to represent 8 books. How many circles represent 20 books?", a: "2.5", worked: ["Each circle = 8 books", "20 ÷ 8 = 2.5 circles", "Draw 2 full circles and a half circle"], hint: "Divide the number of books by what each symbol represents" },
+      { q: "A line graph shows temperature at noon: 12°C at 2pm, 16°C at 3pm. Estimate the temperature at 2:30pm.", a: "14", worked: ["2:30pm is halfway between 2pm and 3pm", "Halfway between 12°C and 16°C = (12 + 16) ÷ 2 = 14°C"], hint: "2:30 is halfway between the two readings — find the midpoint" },
+    ],
+    // Level 2 (Grade 6) — Two-way tables and constructing charts
+    [
+      { q: "In a pictogram, 1 symbol represents 4 people. How many symbols are needed for 18 people?", a: "4.5", worked: ["18 ÷ 4 = 4.5 symbols", "Draw 4 full symbols and a half symbol"], hint: "Divide the frequency by the value of each symbol" },
+      { q: "Complete a two-way table: 100 students, 55 boys. 30 boys take the bus, 20 girls take the bus. How many girls walk?", a: "25", worked: ["Girls = 100 − 55 = 45", "Girls who take bus = 20", "Girls who walk = 45 − 20 = 25"], hint: "Find total girls first, then subtract those who take the bus" },
+      { q: "Draw a bar chart: scores are Red 15, Blue 25, Green 10. If 1 unit = 5 people, how tall is the Blue bar?", a: "5", worked: ["Blue = 25 people", "Height = 25 ÷ 5 = 5 units"], hint: "Divide the frequency by the scale (1 unit = 5 people)" },
+    ],
+    // Level 3 (Grade 7) — Pie charts
+    [
+      { q: "Calculate the angle for a sector in a pie chart representing 10 people out of 40.", a: "90", worked: ["Fraction = 10/40 = 1/4", "Angle = 1/4 × 360° = 90°"], hint: "Angle = (frequency ÷ total) × 360°" },
+      { q: "In a pie chart, a sector of 72° represents 12 people. How many people are in the whole survey?", a: "60", worked: ["72° represents 12 people", "1° represents 12/72 = 1/6 person", "360° represents 1/6 × 360 = 60 people"], hint: "Find how many people per degree, then multiply by 360" },
+      { q: "A survey of 60 people is shown on a pie chart. The Red sector has an angle of 120°. How many people chose Red?", a: "20", worked: ["Fraction = 120/360 = 1/3", "Number = 1/3 × 60 = 20 people"], hint: "Find what fraction of 360° the angle is, then multiply by the total" },
+    ],
+    // Level 4 (Grade 8) — Interpret and critique charts
+    [
+      { q: "A dual bar chart shows Group A scored a mean of 65 and Group B scored 72 across 5 tests. Find the difference in their means.", a: "7", worked: ["Mean of Group A = 65", "Mean of Group B = 72", "Difference = 72 − 65 = 7"], hint: "Subtract the smaller mean from the larger" },
+      { q: "A frequency polygon has its highest point at the 20-30 class. The frequency is 15. What does this tell you?", a: "The modal class is 20-30 with 15 data values in that interval", worked: ["The highest point on a frequency polygon shows the modal class", "Modal class = 20-30", "15 data values fall in this interval"], hint: "The highest point on a frequency polygon shows the most common class interval" },
+      { q: "A chart has a y-axis starting at 50 instead of 0. Explain why this could be misleading.", a: "It exaggerates differences between bars because the scale doesn't start at zero", worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
     ],
   ],
 };
