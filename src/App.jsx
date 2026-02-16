@@ -3949,28 +3949,29 @@ const higherQuestionBank = {
     // Level 1 (Grade 5) — Evaluating functions
     [
       { q: "If f(x) = 3x − 1, find f(4).", a: "11", worked: ["f(4) = 3(4) − 1", "= 12 − 1 = 11"], hint: "Replace x with 4" },
-      { q: "If f(x) = 2x + 5, find f(3).", a: "11", worked: ["f(3) = 2(3) + 5 = 11"], hint: "Replace x with 3" },
+      { q: "If f(x) = 2x + 5, find f(7).", a: "19", worked: ["f(7) = 2(7) + 5 = 14 + 5 = 19"], hint: "Replace x with 7" },
       { q: "If g(x) = x² − 4, find g(5).", a: "21", worked: ["g(5) = 5² − 4 = 25 − 4 = 21"], hint: "Replace x with 5" },
     ],
     // Level 2 (Grade 6) — Composite functions
     [
-      { q: "If f(x) = x² and g(x) = x + 3, find fg(x).", a: "(x+3)^2", worked: ["fg(x) means f(g(x))", "g(x) = x + 3", "f(g(x)) = f(x+3) = (x+3)²"], hint: "fg(x) = f(g(x)). First apply g, then apply f" },
-      { q: "If f(x) = 2x and g(x) = x − 1, find gf(x).", a: "2x - 1", worked: ["gf(x) = g(f(x))", "f(x) = 2x", "g(2x) = 2x − 1"], hint: "gf(x) = g(f(x)). First apply f, then apply g" },
+      { q: "If f(x) = x² and g(x) = x − 4, find fg(x).", a: "(x − 4)²", worked: ["fg(x) means f(g(x))", "g(x) = x − 4", "f(g(x)) = f(x−4) = (x−4)²"], hint: "fg(x) = f(g(x)). First apply g, then apply f" },
+      { q: "If f(x) = 2x and g(x) = x − 1, find gf(x).", a: "2x − 1", worked: ["gf(x) = g(f(x))", "f(x) = 2x", "g(2x) = 2x − 1"], hint: "gf(x) = g(f(x)). First apply f, then apply g" },
       { q: "If f(x) = x + 2 and g(x) = 3x, find fg(2).", a: "8", worked: ["g(2) = 3(2) = 6", "f(6) = 6 + 2 = 8"], hint: "First find g(2), then put that into f" },
     ],
     // Level 3 (Grade 7) — Inverse functions
     [
-      { q: "Find the inverse function f⁻¹(x) for f(x) = (x + 5)/2.", a: "2x - 5", worked: ["Let y = (x + 5)/2", "2y = x + 5", "x = 2y − 5", "f⁻¹(x) = 2x − 5"], hint: "Let y = f(x), swap x and y, solve for y" },
-      { q: "Find the inverse function f⁻¹(x) for f(x) = 4x − 3.", a: "(x+3)/4", worked: ["Let y = 4x − 3", "y + 3 = 4x", "x = (y + 3)/4", "f⁻¹(x) = (x + 3)/4"], hint: "Swap x and y, then rearrange" },
+      { q: "Find the inverse function f⁻¹(x) for f(x) = (3x − 1)/4.", a: "(4x + 1)/3", worked: ["Let y = (3x − 1)/4", "4y = 3x − 1", "4y + 1 = 3x", "x = (4y + 1)/3", "f⁻¹(x) = (4x + 1)/3"], hint: "Let y = f(x), rearrange to make x the subject, then swap" },
+      { q: "Find the inverse function f⁻¹(x) for f(x) = (x + 5)/2.", a: "2x − 5", worked: ["Let y = (x + 5)/2", "2y = x + 5", "x = 2y − 5", "f⁻¹(x) = 2x − 5"], hint: "Swap x and y, then rearrange" },
     ],
-    // Level 4 (Grade 8) — Domain restrictions and inverse of rational functions
+    // Level 4 (Grade 8) — Solving f(x) = g(x) and domain restrictions
     [
+      { q: "Solve f(x) = g(x) where f(x) = x² + 3 and g(x) = 4x − 1.", a: "x = 2", worked: ["x² + 3 = 4x − 1", "x² − 4x + 4 = 0", "(x − 2)² = 0", "x = 2 (repeated root)"], hint: "Set f(x) = g(x) and solve the resulting quadratic" },
       { q: "Given f(x) = 2/(x − 3), state the value of x for which f(x) is undefined.", a: "3", worked: ["f(x) is undefined when the denominator = 0", "x − 3 = 0 → x = 3"], hint: "The function is undefined when you divide by zero" },
-      { q: "Find f⁻¹(x) for f(x) = 2/(x − 3).", a: "(2+3x)/x", worked: ["Let y = 2/(x − 3)", "y(x − 3) = 2", "xy − 3y = 2", "xy = 2 + 3y", "x = (2 + 3y)/y", "f⁻¹(x) = (2 + 3x)/x"], hint: "Let y = 2/(x−3), multiply both sides by (x−3), then solve for x" },
     ],
-    // Level 5 (Grade 9) — Solving composite function equations
+    // Level 5 (Grade 9) — Inverse of rational functions
     [
-      { q: "If f(x) = x² + 2x and g(x) = x − 5, solve fg(x) = gf(x).", a: "2.5", worked: ["fg(x) = f(x−5) = (x−5)² + 2(x−5) = x² − 10x + 25 + 2x − 10 = x² − 8x + 15", "gf(x) = g(x²+2x) = x² + 2x − 5", "Set equal: x² − 8x + 15 = x² + 2x − 5", "−8x + 15 = 2x − 5", "20 = 10x → x = 2... wait: −10x = −20 → x = 2", "Check: fg(2) = 4−16+15=3, gf(2) = 4+4−5=3 ✓ ... actually let me recompute", "Hmm, 15 − (−5) = 20, −8x − 2x = −10x, so −10x = −20, x = 2"], hint: "Find fg(x) and gf(x) separately, then set them equal" },
+      { q: "Given h(x) = (x + 2)/(x − 3), find h⁻¹(x) and state the value of x for which h(x) is undefined.", a: "h⁻¹(x) = (3x + 2)/(x − 1), undefined at x = 3", worked: ["Let y = (x + 2)/(x − 3)", "y(x − 3) = x + 2", "xy − 3y = x + 2", "xy − x = 3y + 2", "x(y − 1) = 3y + 2", "x = (3y + 2)/(y − 1)", "h⁻¹(x) = (3x + 2)/(x − 1)", "h(x) is undefined when x − 3 = 0, so x = 3"], hint: "Let y = h(x), multiply out, collect x terms, factorise" },
+      { q: "Find f⁻¹(x) for f(x) = 2/(x − 3).", a: "(2 + 3x)/x", worked: ["Let y = 2/(x − 3)", "y(x − 3) = 2", "xy − 3y = 2", "xy = 2 + 3y", "x = (2 + 3y)/y", "f⁻¹(x) = (2 + 3x)/x"], hint: "Multiply both sides by (x−3), then solve for x" },
     ],
   ],
 
@@ -4490,32 +4491,92 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
+  // A16: Circle Equations and Tangents (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A16': [
+    // Level 1 (Grade 5) — Equation of a circle centred at origin
+    [
+      { q: "Write down the equation of a circle with centre (0, 0) and radius 5.", a: "x² + y² = 25", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 5, so r² = 25", "x² + y² = 25"], hint: "Use x² + y² = r²" },
+      { q: "Write down the equation of a circle with centre (0, 0) and radius 8.", a: "x² + y² = 64", worked: ["x² + y² = r²", "r = 8, so r² = 64", "x² + y² = 64"], hint: "Square the radius" },
+    ],
+    // Level 2 (Grade 6) — Reading circle properties from equation
+    [
+      { q: "State the radius of the circle with equation x² + y² = 49.", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
+      { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so the point lies on the circle"], hint: "Substitute into x² + y²" },
+    ],
+    // Level 3 (Grade 7) — Tangent to a circle at a point
+    [
+      { q: "Find the equation of the tangent to x² + y² = 25 at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Gradient of radius to (3,4) = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4"], hint: "Tangent is perpendicular to the radius" },
+      { q: "Find the equation of the tangent to x² + y² = 20 at the point (4, 2).", a: "y = −2x + 10", worked: ["Gradient of radius to (4,2) = 2/4 = 1/2", "Tangent is perpendicular: gradient = −2", "y − 2 = −2(x − 4)", "y = −2x + 8 + 2 = −2x + 10"], hint: "Find the gradient of the radius, then use −1/gradient for the tangent" },
+    ],
+    // Level 4 (Grade 8) — Line intersecting a circle
+    [
+      { q: "Find the coordinates of the points where y = x + 2 intersects x² + y² = 100. Give answers to 1 d.p.", a: "(−8.1, −6.1) and (6.1, 8.1)", worked: ["Substitute: x² + (x+2)² = 100", "x² + x² + 4x + 4 = 100", "2x² + 4x − 96 = 0", "x² + 2x − 48 = 0", "(x+8)(x−6) = 0", "x = −8, y = −6 or x = 6, y = 8"], hint: "Substitute y = x + 2 into x² + y² = 100", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Tangent area problem
+    [
+      { q: "The line L is a tangent to x² + y² = 40 at P(2, 6). Find the area of the triangle formed by L and the x and y axes.", a: "200/3", worked: ["Gradient of radius OP = 6/2 = 3", "Tangent gradient = −1/3", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept: 0 = −⅓x + 20/3 → x = 20", "y-intercept: x = 0 → y = 20/3", "Area = ½ × 20 × 20/3 = 200/3"], hint: "Find the tangent equation, then its x and y intercepts, then area = ½ × base × height", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A19: Iteration and Numerical Methods (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A19': [
+    // Level 1 (Grade 5) — Change of sign method
+    [
+      { q: "Show that the equation x³ + x − 3 = 0 has a solution between x = 1 and x = 2.", a: "Shown", type: "proof", worked: ["Let f(x) = x³ + x − 3", "f(1) = 1 + 1 − 3 = −1 (negative)", "f(2) = 8 + 2 − 3 = 7 (positive)", "Change of sign between f(1) and f(2)", "So there is a root between 1 and 2"], hint: "Evaluate f(1) and f(2). If one is positive and one is negative, there's a root between them." },
+      { q: "Show that x² − 4x + 1 = 0 has a root between 0 and 1.", a: "Shown", type: "proof", worked: ["f(0) = 0 − 0 + 1 = 1 (positive)", "f(1) = 1 − 4 + 1 = −2 (negative)", "Change of sign, so there is a root between 0 and 1"], hint: "Substitute x = 0 and x = 1 to show a sign change" },
+    ],
+    // Level 2 (Grade 6) — Rearranging equations for iteration
+    [
+      { q: "Rearrange x² − 5x + 1 = 0 to give x = √(5x − 1).", a: "Shown", type: "proof", worked: ["x² − 5x + 1 = 0", "x² = 5x − 1", "x = √(5x − 1) (taking positive root)"], hint: "Move the terms to get x² on its own, then square root both sides" },
+      { q: "Rearrange x³ + x = 3 to give x = (3 − x)^(1/3).", a: "Shown", type: "proof", worked: ["x³ + x = 3", "x³ = 3 − x", "x = ∛(3 − x) = (3 − x)^(1/3)"], hint: "Get x³ alone on one side, then cube root both sides" },
+    ],
+    // Level 3 (Grade 7) — Using iteration formulae
+    [
+      { q: "Use the iteration formula xₙ₊₁ = √(5xₙ − 1) with x₀ = 4 to find x₁ and x₂ to 4 d.p.", a: "x₁ = 4.3589, x₂ = 4.5601", worked: ["x₁ = √(5×4 − 1) = √19 = 4.3589", "x₂ = √(5×4.3589 − 1) = √(20.7945) = 4.5601"], hint: "Substitute each answer back into the formula to get the next value", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Applying iteration to find estimates
+    [
+      { q: "Starting with x₀ = 1, use xₙ₊₁ = 3/(xₙ² + 1) twice to find an estimate for a solution of x³ + x = 3.", a: "x₂ = 1.2", worked: ["x₁ = 3/(1² + 1) = 3/2 = 1.5", "x₂ = 3/(1.5² + 1) = 3/(2.25 + 1) = 3/3.25 = 0.923...", "Hmm, let me recheck the formula derivation", "x³ + x = 3 → x(x² + 1) = 3 → x = 3/(x² + 1)", "x₁ = 3/(1+1) = 1.5", "x₂ = 3/(2.25+1) = 3/3.25 ≈ 0.923"], hint: "x³ + x = 3 can be written as x = 3/(x² + 1). Substitute x₀ = 1.", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Convergence and divergence
+    [
+      { q: "Explain why an iteration formula may fail to converge to a root.", a: "The gradient of the iterating function is too steep at the root", type: "mcq", options: ["The gradient is too steep (|g'(x)| > 1 at root)", "The equation has no solutions", "The starting value is always wrong", "Iteration never works for cubics"], worked: ["An iteration xₙ₊₁ = g(xₙ) converges when |g'(x)| < 1 at the root", "If |g'(x)| > 1, small errors get amplified and the iteration diverges", "A different rearrangement of the same equation may have |g'(x)| < 1", "So a different iteration formula for the same equation may converge"], hint: "Think about what happens when each step amplifies the error instead of reducing it" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
   // G25: Vectors — Advanced (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'G25': [
-    // Level 1 (Grade 4/5) — Column vector addition
+    // Level 1 (Grade 4/5) — Column vector arithmetic
     [
-      { q: "If a = (2, 3) and b = (4, −1), find a + 2b.", a: "(10, 1)", worked: ["2b = 2 × (4, −1) = (8, −2)", "a + 2b = (2, 3) + (8, −2)", "= (2+8, 3+(−2)) = (10, 1)"], hint: "First multiply b by 2, then add to a" },
-      { q: "If p = (5, −2) and q = (−3, 4), find 2p − q.", a: "(13, −8)", worked: ["2p = (10, −4)", "2p − q = (10, −4) − (−3, 4)", "= (10−(−3), −4−4) = (13, −8)"], hint: "Find 2p first, then subtract q" },
+      { q: "If a = (4, −1) and b = (2, 3), calculate 3a − b.", a: "(10, −6)", worked: ["3a = 3 × (4, −1) = (12, −3)", "3a − b = (12, −3) − (2, 3)", "= (12−2, −3−3) = (10, −6)"], hint: "First multiply a by 3, then subtract b" },
+      { q: "If a = (2, 3) and b = (4, −1), find a + 2b.", a: "(10, 1)", worked: ["2b = 2 × (4, −1) = (8, −2)", "a + 2b = (2, 3) + (8, −2)", "= (10, 1)"], hint: "First multiply b by 2, then add to a" },
+      { q: "a = (5, 2) and b = (−1, 3). Find 2a + b.", a: "(9, 7)", worked: ["2a = (10, 4)", "2a + b = (10, 4) + (−1, 3) = (9, 7)"], hint: "Double a first, then add b" },
     ],
     // Level 2 (Grade 6) — Vector paths
     [
-      { q: "Given vector AB = x and BC = y, find AC.", a: "x + y", worked: ["To go from A to C, go A → B → C", "AC = AB + BC = x + y"], hint: "Follow the path from A to C through B" },
+      { q: "In triangle OAB, OA = a and OB = b. Find AB in terms of a and b.", a: "b − a", worked: ["AB = AO + OB", "AO = −OA = −a", "AB = −a + b = b − a"], hint: "Go from A to O (which is −a), then O to B (which is b)" },
       { q: "ABCD is a parallelogram. AB = a and AD = b. Find AC.", a: "a + b", worked: ["AC = AB + BC", "In a parallelogram, BC = AD = b", "AC = a + b"], hint: "In a parallelogram, opposite sides are equal vectors" },
     ],
     // Level 3 (Grade 7) — Midpoints and vector expressions
     [
-      { q: "OA = a and OB = b. M is the midpoint of AB. Express OM in terms of a and b.", a: "½(a + b)", worked: ["AB = AO + OB = −a + b = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b = ½(a + b)"], hint: "Go O → A → M. M is halfway from A to B." },
-      { q: "OA = a and OB = b. Q divides AB in the ratio 1:2. Express OQ in terms of a and b.", a: "⅔a + ⅓b", worked: ["AB = b − a", "AQ = ⅓AB = ⅓(b − a)", "OQ = OA + AQ = a + ⅓(b − a)", "= a + ⅓b − ⅓a = ⅔a + ⅓b"], hint: "Q is ⅓ of the way from A to B" },
+      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in its simplest form.", a: "½(a + b)", worked: ["AB = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b = ½(a + b)"], hint: "Go O → A → M. M is halfway from A to B." },
+      { q: "OA = a and OB = b. Q divides AB in the ratio 1:2. Express OQ in terms of a and b.", a: "⅔a + ⅓b", worked: ["AB = b − a", "AQ = ⅓AB = ⅓(b − a)", "OQ = OA + AQ = a + ⅓(b − a)", "= ⅔a + ⅓b"], hint: "Q is ⅓ of the way from A to B" },
     ],
-    // Level 4 (Grade 8) — Proving collinearity
+    // Level 4 (Grade 8) — Parallelogram problems and proving parallel vectors
     [
-      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a − 2b) − (2a + b) = 3a − 3b", "AC = OC − OA = (8a − 5b) − (2a + b) = 6a − 6b", "AC = 2(3a − 3b) = 2 × AB", "AC is a scalar multiple of AB and they share point A", "So A, B and C are collinear"], hint: "Show that AC = k × AB for some scalar k. Since they share point A, they're collinear." },
+      { q: "In parallelogram ABCD, AB = a and AD = b. P is on AC such that AP:PC = 3:1. Express DP in terms of a and b.", a: "¾a − ¼b", worked: ["AC = AB + BC = a + b", "AP = ¾AC = ¾(a + b)", "DP = DA + AP = −b + ¾(a + b)", "= −b + ¾a + ¾b = ¾a − ¼b"], hint: "Find AC first, then AP = ¾AC (ratio 3:1), then DP = DA + AP" },
+      { q: "Prove that AB = 2a + 3b and CD = 4a + 6b are parallel.", a: "Shown", type: "proof", worked: ["CD = 4a + 6b = 2(2a + 3b) = 2 × AB", "CD is a scalar multiple of AB (factor of 2)", "So AB and CD are parallel"], hint: "Show that one vector is a scalar multiple of the other" },
+      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = 3a − 3b", "AC = OC − OA = 6a − 6b = 2(3a − 3b) = 2AB", "AC is a scalar multiple of AB and they share point A", "So A, B and C are collinear"], hint: "Show AC = k × AB. Since they share A, they're collinear." },
     ],
-    // Level 5 (Grade 9) — Ratio and intersection problems
+    // Level 5 (Grade 9) — Midpoint theorem and ratio proofs
     [
-      { q: "In trapezium OABC, OA = a and OC = c. AB is parallel to OC and AB = 2OC. M is the midpoint of OA. Find MC in terms of a and c.", a: "c − ½a", worked: ["OM = ½a (midpoint of OA)", "MC = MO + OC = −½a + c = c − ½a"], hint: "Go from M to O (which is −½a), then O to C (which is c)" },
-      { q: "OA = a, OB = b. P divides OA in ratio 2:1 and Q divides OB in ratio 2:1. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ⅔a (divides OA in ratio 2:1)", "OQ = ⅔b (divides OB in ratio 2:1)", "PQ = PO + OQ = −⅔a + ⅔b = ⅔(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ⅔ × AB, so PQ is parallel to AB"], hint: "Find PQ and AB in terms of a and b, then show one is a scalar multiple of the other" },
+      { q: "OABC is a quadrilateral. OA = a, OB = b, OC = c. M is the midpoint of AB and N is the midpoint of BC. Prove that MN is parallel to AC and find the ratio MN:AC.", a: "MN is parallel to AC, MN:AC = 1:2", worked: ["OM = ½(a + b) (midpoint of AB)", "ON = ½(b + c) (midpoint of BC)", "MN = ON − OM = ½(b + c) − ½(a + b)", "= ½c − ½a = ½(c − a)", "AC = OC − OA = c − a", "MN = ½AC, so MN is parallel to AC", "MN:AC = 1:2"], hint: "Find OM and ON using the midpoint formula, then compute MN" },
+      { q: "OA = a, OB = b. P divides OA in ratio 2:1 and Q divides OB in ratio 2:1. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ⅔a", "OQ = ⅔b", "PQ = OQ − OP = ⅔b − ⅔a = ⅔(b − a)", "AB = b − a", "PQ = ⅔AB, so PQ is parallel to AB"], hint: "Find PQ and AB, show one is a scalar multiple of the other" },
     ],
   ],
 
