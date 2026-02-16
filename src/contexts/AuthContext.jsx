@@ -291,7 +291,8 @@ export const AuthProvider = ({ children }) => {
     incrementDailyQuestions,
     dailyQuestionsUsed,
     FREE_DAILY_LIMIT,
-    isSubscribed: profile?.subscription_status === 'active'
+    isSubscribed: profile?.subscription_status === 'active',
+    refreshProfile: () => user?.id ? fetchProfile(user.id) : null,
   };
 
   return (

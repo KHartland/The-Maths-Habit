@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -8,6 +8,8 @@ import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
+import { checkProfanity, sanitiseName } from './lib/profanityFilter';
+import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
@@ -850,7 +852,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
             level >= 5 ? 'bg-mint/20 text-mint border border-mint/30' :
             level >= 4 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
             level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
-            'bg-white/10 text-secondary-text border border-white/10'
+            'bg-gray-100 text-secondary-text border border-gray-200'
           }`}>
             {level >= 5 ? '✓ Mastered' :
              level >= 4 ? '🔥 Nearly there' :
@@ -4377,7 +4379,6 @@ const generateDiagram = (type) => {
     'distance-time-2': 'distance time graph 2.png',
     'distance-time-3': 'distance time graph 3.png',
     'plot-a-graph': 'Plot a graph.png',
-    'transformation': 'transformation.png',
     'football-pictogram': 'football pictogram.png',
     'scatter-graph': 'Scatter graph.png',
     'pythagoras': 'Pythagoras.png',
@@ -6346,7 +6347,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             </div>
 
             {/* Readiness bar */}
-            <div className="h-4 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
                 style={{ width: `${readinessScore}%` }}
@@ -6391,7 +6392,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                         style={{ height: `${(day.questions / maxQuestions) * 100}%`, minHeight: '8px' }}
                       />
                     ) : (
-                      <div className="w-full max-w-[40px] h-2 bg-white/10 rounded-lg" />
+                      <div className="w-full max-w-[40px] h-2 bg-gray-200 rounded-lg" />
                     )}
                   </div>
                   <span className="text-xs text-secondary-text">{day.day}</span>
@@ -6400,7 +6401,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
               ))}
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
                 <div className="text-xs text-secondary-text">Sessions this week</div>
@@ -6431,12 +6432,12 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             
             {/* Best Practice Time */}
             {getBestPracticeTime() && (
-              <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-secondary-text">🕐 Best time to practice:</span>
                   <span className="font-semibold text-primary-text">{getBestPracticeTime()}</span>
                 </div>
-                <p className="text-xs text-white/40 mt-1">Based on when you're most active</p>
+                <p className="text-xs text-secondary-text mt-1">Based on when you're most active</p>
               </div>
             )}
           </div>
@@ -6517,6 +6518,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 // ==================== SETTINGS PAGE ====================
 
 function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSettings, progress, setProgress, user, profile, isSubscribed, onSignIn, onSignUp, onSignOut, onUpgrade, userSchool, setUserSchool }) {
+  const { refreshProfile } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
@@ -6803,15 +6805,91 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
             {user && (
               <div className="space-y-4">
-                {/* User info */}
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                {/* User info with avatar */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold">
-                      {(profile?.display_name || user.email)?.[0]?.toUpperCase() || '?'}
+                    {/* Avatar with optional upload */}
+                    <div className="relative group">
+                      {profile?.avatar_url ? (
+                        <img
+                          src={profile.avatar_url}
+                          alt="Avatar"
+                          className="w-12 h-12 rounded-full object-cover border-2 border-violet/30"
+                          onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                        />
+                      ) : null}
+                      <div
+                        className={`w-12 h-12 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold text-lg ${profile?.avatar_url ? 'hidden' : ''}`}
+                      >
+                        {(profile?.display_name || user.email)?.[0]?.toUpperCase() || '?'}
+                      </div>
+                      {/* Camera overlay for subscribers */}
+                      {isSubscribed && (
+                        <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                          <Camera className="w-5 h-5 text-white" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              try {
+                                const url = await uploadAvatar(user.id, file);
+                                // Update profile in context
+                                refreshProfile();
+                              } catch (err) {
+                                console.error('Avatar upload failed:', err);
+                                alert('Failed to upload avatar. Please try again.');
+                              }
+                              e.target.value = '';
+                            }}
+                          />
+                        </label>
+                      )}
                     </div>
                     <div>
                       <div className="font-medium text-primary-text">{profile?.display_name || 'User'}</div>
                       <div className="text-sm text-secondary-text">{user.email}</div>
+                      {isSubscribed && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <label className="text-xs text-violet cursor-pointer hover:text-violet-light transition-colors">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                try {
+                                  await uploadAvatar(user.id, file);
+                                  refreshProfile();
+                                } catch (err) {
+                                  console.error('Avatar upload failed:', err);
+                                  alert('Failed to upload avatar. Please try again.');
+                                }
+                                e.target.value = '';
+                              }}
+                            />
+                            {profile?.avatar_url ? 'Change photo' : 'Add photo'}
+                          </label>
+                          {profile?.avatar_url && (
+                            <button
+                              onClick={async () => {
+                                try {
+                                  await deleteAvatar(user.id);
+                                  refreshProfile();
+                                } catch (err) {
+                                  console.error('Avatar delete failed:', err);
+                                }
+                              }}
+                              className="text-xs text-secondary-text hover:text-red-400 transition-colors"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <button
@@ -6896,14 +6974,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     value={newSchoolName}
                     onChange={(e) => setNewSchoolName(e.target.value)}
                     placeholder="School name..."
-                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
                   />
                   <input
                     type="text"
                     value={newSchoolTown}
                     onChange={(e) => setNewSchoolTown(e.target.value)}
                     placeholder="Town / region..."
-                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
                   />
                   <div className="flex gap-2">
                     <button
@@ -6915,7 +6993,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                     <button
                       onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
-                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-white/5 rounded-xl transition-colors"
+                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-gray-100 rounded-xl transition-colors"
                     >
                       Back
                     </button>
@@ -6926,7 +7004,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="space-y-3">
                   <button
                     onClick={() => setSchoolDropdownOpen(!schoolDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text"
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text"
                   >
                     <span className="text-secondary-text/60">Select your school...</span>
                     <svg className={`w-4 h-4 text-secondary-text transition-transform ${schoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -7037,7 +7115,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.questionsPerSession}
                     onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-violet"
+                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet"
                   />
                 ) : (
                   <div className="relative">
@@ -7048,7 +7126,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -7100,7 +7178,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.dailyGoal ?? 10}
                     onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-mint"
+                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-mint"
                   />
                 ) : (
                   <div className="relative">
@@ -7111,7 +7189,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -7139,7 +7217,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="1"
                   value={settings.weeklyMasteryGoal ?? 3}
                   onChange={(e) => updateSetting('weeklyMasteryGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-400"
+                  className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-amber-400"
                 />
                 <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>1</span>
@@ -7228,7 +7306,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           {/* Data Management */}
           <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
                 <Download className="w-5 h-5 text-secondary-text" />
               </div>
               <div>
@@ -7306,7 +7384,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowResetConfirm(false)}
-                        className="flex-1 py-2 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-lg transition-colors"
+                        className="flex-1 py-2 glass-panel hover:bg-gray-100 text-primary-text font-medium rounded-lg transition-colors"
                       >
                         Cancel
                       </button>
@@ -7338,7 +7416,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               A spaced repetition app designed to help GCSE students master every maths objective.
               Practice a little each day to build lasting understanding and confidence.
             </p>
-            <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-secondary-text">Objectives tracked</span>
                 <span className="font-medium text-primary-text">{Object.keys(progress).length}</span>
@@ -7373,7 +7451,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-gray-200 top-nav-bar">
         <div className="max-w-4xl mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
@@ -7468,6 +7546,11 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         if (error) throw error;
         onSuccess();
       } else {
+        // Check display name for profanity
+        const profanityCheck = checkProfanity(displayName);
+        if (!profanityCheck.clean) {
+          throw new Error(profanityCheck.reason);
+        }
         const { error } = await signUp(email, password, displayName);
         if (error) throw error;
         setMessage('Check your email to confirm your account!');
@@ -7671,7 +7754,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
             selectedPlan === 'monthly'
               ? 'bg-violet text-white'
-              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
           }`}
         >
           Monthly
@@ -7682,7 +7765,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all relative ${
             selectedPlan === 'yearly'
               ? 'bg-violet text-white'
-              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
           }`}
         >
           Yearly
@@ -7829,7 +7912,7 @@ function PromoCodeInput({ onSuccess }) {
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="e.g. MATHS2024"
-          className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
+          className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
         <button
@@ -8053,7 +8136,7 @@ function AppContent() {
 
             <button
               onClick={() => { setOnboardingAuthMode('signin'); setOnboardingStep(2); }}
-              className="w-full py-4 mt-3 glass-panel hover:bg-white/10 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
+              className="w-full py-4 mt-3 glass-panel hover:bg-gray-100 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
             >
               Sign In
             </button>
@@ -8407,6 +8490,7 @@ function AppContent() {
         questionBank={questionBank}
         onClose={() => setShowOneVsOne(false)}
         answersEquivalent={answersEquivalent}
+        userAvatarUrl={profile?.avatar_url || null}
       />
     );
   }
@@ -8583,7 +8667,7 @@ function AppContent() {
                   <p className="text-sm font-medium text-primary-text mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm bg-white/5 border border-white/10 shrink-0" />
+                      <span className="w-4 h-4 rounded-sm bg-gray-100 border border-gray-300 shrink-0" />
                       <span>Dark = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -8668,7 +8752,7 @@ function AppContent() {
           </div>
 
           {/* Legend - Readiness & Recency */}
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
               {/* Readiness indicators */}
               <div className="flex items-center gap-2">
@@ -8732,7 +8816,7 @@ function AppContent() {
                 <p className="text-secondary-text text-sm">
                   Complete 10 questions today to restore your {potentialStreak} day streak
                 </p>
-                <div className="mt-2 bg-white/10 rounded-full h-3 overflow-hidden">
+                <div className="mt-2 bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div
                     className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
                     style={{ width: `${repairProgress}%` }}
@@ -8833,7 +8917,7 @@ function AppContent() {
               {!user && (
                 <button
                   onClick={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
-                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-white/10"
+                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-gray-100"
                 >
                   <User className="w-4 h-4" />
                   Sign In

@@ -199,6 +199,7 @@ export const getSchoolLeaderboard = async (schoolId) => {
       rank: index + 1,
       userId: entry.user_id,
       displayName: entry.display_name,
+      avatarUrl: entry.avatar_url || null,
       totalCorrect: entry.total_correct,
     }));
   } catch (err) {
