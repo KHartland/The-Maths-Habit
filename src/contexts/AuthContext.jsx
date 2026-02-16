@@ -1,7 +1,19 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, supabaseUrl, supabaseAnonKey } from '../lib/supabase';
 
 const AuthContext = createContext({});
+
+// Helper: get auth token from localStorage
+const getAuthToken = () => {
+  try {
+    const raw = localStorage.getItem('sb-kxvtiqkmxhqwqckjikje-auth-token');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.access_token) return parsed.access_token;
+    }
+  } catch (e) {}
+  return supabaseAnonKey;
+};
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -27,58 +39,105 @@ export const AuthProvider = ({ children }) => {
     return Math.max(0, FREE_DAILY_LIMIT - dailyQuestionsUsed);
   };
 
-  // Increment daily question count
+  // Increment daily question count (raw fetch — supabase.from() hangs)
   const incrementDailyQuestions = async () => {
     if (!user) return;
-
     const today = new Date().toISOString().split('T')[0];
-
-    // Update in Supabase
-    const { data, error } = await supabase
-      .from('daily_activity')
-      .upsert({
-        user_id: user.id,
-        date: today,
-        questions_answered: dailyQuestionsUsed + 1
-      }, {
-        onConflict: 'user_id,date'
-      })
-      .select()
-      .single();
-
-    if (!error) {
-      setDailyQuestionsUsed(data.questions_answered);
+    const newCount = dailyQuestionsUsed + 1;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+      const token = getAuthToken();
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/daily_activity`,
+        {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates,return=representation',
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            date: today,
+            questions_answered: newCount,
+          }),
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeout);
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows && rows.length > 0) {
+          setDailyQuestionsUsed(rows[0].questions_answered);
+        }
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      console.error('incrementDailyQuestions error:', err);
     }
   };
 
-  // Fetch user profile
+  // Fetch user profile (raw fetch — supabase.from() hangs)
   const fetchProfile = async (userId) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-
-    if (!error && data) {
-      setProfile(data);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+      const token = getAuthToken();
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?id=eq.${userId}&select=*`,
+        {
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.pgrst.object+json',
+          },
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeout);
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data);
+        return data;
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      console.error('fetchProfile error:', err);
     }
-    return data;
+    return null;
   };
 
-  // Fetch today's question count
+  // Fetch today's question count (raw fetch — supabase.from() hangs)
   const fetchDailyCount = async (userId) => {
     const today = new Date().toISOString().split('T')[0];
-
-    const { data } = await supabase
-      .from('daily_activity')
-      .select('questions_answered')
-      .eq('user_id', userId)
-      .eq('date', today)
-      .single();
-
-    if (data) {
-      setDailyQuestionsUsed(data.questions_answered);
-    } else {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+      const token = getAuthToken();
+      const res = await fetch(
+        `${supabaseUrl}/rest/v1/daily_activity?user_id=eq.${userId}&date=eq.${today}&select=questions_answered`,
+        {
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${token}`,
+          },
+          signal: controller.signal,
+        }
+      );
+      clearTimeout(timeout);
+      if (res.ok) {
+        const rows = await res.json();
+        if (rows && rows.length > 0) {
+          setDailyQuestionsUsed(rows[0].questions_answered);
+        } else {
+          setDailyQuestionsUsed(0);
+        }
+      }
+    } catch (err) {
+      clearTimeout(timeout);
+      console.error('fetchDailyCount error:', err);
       setDailyQuestionsUsed(0);
     }
   };
