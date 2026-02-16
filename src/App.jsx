@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -7964,7 +7964,7 @@ function AppContent() {
   const [celebrationIndex, setCelebrationIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingComplete());
-  const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Plan Selection
+  const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Profile Picture, 4: Plan Selection
   const [onboardingAuthMode, setOnboardingAuthMode] = useState('signup');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
@@ -8071,10 +8071,10 @@ function AppContent() {
     setCurrentPage('practice'); // Go straight to practice
   };
 
-  // After auth during onboarding, skip plan for returning users or show it for new ones
+  // After auth during onboarding, skip plan for returning users or show profile pic step for new ones
   useEffect(() => {
     if (!showOnboarding || !user) return;
-    if (onboardingStep !== 2 && onboardingStep !== 3) return;
+    if (onboardingStep !== 2 && onboardingStep !== 3 && onboardingStep !== 4) return;
 
     // Wait for profile to load before deciding
     if (authLoading) return;
@@ -8085,7 +8085,7 @@ function AppContent() {
       setShowOnboarding(false);
       setCurrentPage('home');
     } else if (onboardingStep === 2) {
-      // New user — show plan selection
+      // New user — show profile picture step
       setOnboardingStep(3);
     }
   }, [user, showOnboarding, onboardingStep, profile, authLoading]);
@@ -8146,6 +8146,7 @@ function AppContent() {
               <div className="w-2 h-2 rounded-full bg-mint" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
             </div>
           </div>
         </div>
@@ -8200,14 +8201,69 @@ function AppContent() {
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-mint" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
             </div>
           </div>
         </div>
       );
     }
 
-    // Step 3: Plan Selection
+    // Step 3: Profile Picture (teaser with lock for free users)
     if (onboardingStep === 3) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
+
+          {/* Floating orb decoration */}
+          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
+
+          <div className="max-w-md w-full relative z-10">
+            <div className="glass-panel rounded-2xl p-8 text-center">
+              <h2 className="text-2xl font-bold text-primary-text mb-2">Personalise your profile</h2>
+              <p className="text-secondary-text mb-8">Stand out on the leaderboard with a profile picture</p>
+
+              {/* Avatar preview with lock overlay */}
+              <div className="relative w-28 h-28 mx-auto mb-6">
+                <div className="w-28 h-28 rounded-full bg-gradient-violet flex items-center justify-center text-white text-4xl font-bold">
+                  {(user?.user_metadata?.full_name || user?.email)?.[0]?.toUpperCase() || '?'}
+                </div>
+                {/* Lock overlay */}
+                <div className="absolute inset-0 rounded-full bg-black/50 flex flex-col items-center justify-center">
+                  <Lock className="w-8 h-8 text-white mb-1" />
+                  <span className="text-[10px] text-white/80 font-medium">PRO</span>
+                </div>
+              </div>
+
+              <p className="text-secondary-text text-sm mb-8">
+                Upload a custom profile picture with a <span className="text-mint font-semibold">Pro subscription</span>
+              </p>
+
+              <button
+                onClick={() => setOnboardingStep(4)}
+                className="w-full py-3 btn-gradient-mint text-gray-800 font-semibold rounded-xl"
+              >
+                Continue
+              </button>
+            </div>
+
+            {/* Step indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-mint" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Step 4: Plan Selection
+    if (onboardingStep === 4) {
       return (
         <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
           {/* Ambient glow background */}
@@ -8273,6 +8329,7 @@ function AppContent() {
             <div className="flex justify-center gap-2 mt-8">
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-mint" />
             </div>
           </div>
@@ -8280,7 +8337,7 @@ function AppContent() {
       );
     }
   }
-  
+
   // Calculate real streak from activity with protection
   const streakInfo = calculateStreak();
   const dayStreak = streakInfo.streak;
