@@ -4411,62 +4411,74 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
-  // A20: Iteration and Numerical Methods (corrected AQA mapping — merged from old A11 + A19)
+  // A20: Algebraic Proof
+  // ═══════════════════════════════════════════════════════════════
   'A20': [
-    // Level 1 (Grade 5-6) — Change of sign / Trial and improvement
+    // Level 0 (Grade 5) — Prove sums of consecutive integers
     [
-      { q: "Show that the equation x³ + x − 3 = 0 has a solution between x = 1 and x = 2.", a: "Shown", type: "proof", worked: ["Let f(x) = x³ + x − 3", "f(1) = 1 + 1 − 3 = −1 (negative)", "f(2) = 8 + 2 − 3 = 7 (positive)", "Change of sign, so there is a root between 1 and 2"], hint: "Evaluate f(1) and f(2). If one is +ve and one is −ve, there's a root between them." },
-      { q: "Show that x² − 4x + 1 = 0 has a root between 0 and 1.", a: "Shown", type: "proof", worked: ["f(0) = 0 − 0 + 1 = 1 (positive)", "f(1) = 1 − 4 + 1 = −2 (negative)", "Change of sign, so there is a root between 0 and 1"], hint: "Substitute x = 0 and x = 1 to show a sign change" },
-      { q: "Use trial and improvement to find a solution of x³ + x = 20, correct to 1 d.p.", a: "x = 2.6", calculator: true, worked: ["x = 2: 10 (too small)", "x = 3: 30 (too big)", "x = 2.5: 18.125 (too small)", "x = 2.7: 22.383 (too big)", "x = 2.6: 20.176 (close, just over)", "x = 2.55: 19.131 (under), so between 2.55 and 2.6 → 2.6"], hint: "Try values and narrow down. Check the midpoint." },
+      { q: "Prove that the sum of any three consecutive integers is a multiple of 3.", a: "Shown", type: "proof", worked: ["Let the integers be n, n+1, n+2", "Sum = n + (n+1) + (n+2) = 3n + 3 = 3(n+1)", "3(n+1) is a multiple of 3 for all integers n"], hint: "Let the three consecutive integers be n, n+1, n+2 and add them" },
+      { q: "Prove that the sum of any four consecutive integers is always even.", a: "Shown", type: "proof", worked: ["Let the integers be n, n+1, n+2, n+3", "Sum = 4n + 6 = 2(2n + 3)", "2(2n + 3) is always even (it's a multiple of 2)"], hint: "Let the integers be n, n+1, n+2, n+3" },
+      { q: "Show that the sum of 2n and 2n + 2 is always a multiple of 2.", a: "Shown", type: "proof", worked: ["2n + (2n + 2) = 4n + 2 = 2(2n + 1)", "2(2n + 1) is a multiple of 2 for all integers n"], hint: "Add the two expressions and factorise" },
     ],
-    // Level 2 (Grade 6-7) — Rearranging equations for iteration
+    // Level 1 (Grade 6) — Expand and prove identities
     [
-      { q: "Show that x³ + x = 20 can be rearranged to x = (20 − x)^(1/3)", a: "Shown", type: "proof", worked: ["x³ + x = 20", "x³ = 20 − x", "x = (20 − x)^(1/3)"], hint: "Get x³ on its own, then cube root both sides" },
-      { q: "Rearrange x² − 5x + 1 = 0 to give x = √(5x − 1).", a: "Shown", type: "proof", worked: ["x² − 5x + 1 = 0", "x² = 5x − 1", "x = √(5x − 1)"], hint: "Move terms to get x² on its own, then square root" },
-      { q: "Rearrange x³ + x = 3 to give x = (3 − x)^(1/3).", a: "Shown", type: "proof", worked: ["x³ + x = 3", "x³ = 3 − x", "x = ∛(3 − x) = (3 − x)^(1/3)"], hint: "Get x³ alone on one side, then cube root" },
+      { q: "Show that (n+1)² − n² is always equal to 2n + 1.", a: "Shown", type: "proof", worked: ["(n+1)² − n² = n² + 2n + 1 − n² = 2n + 1"], hint: "Expand (n+1)² and then subtract n²" },
+      { q: "Prove that (n+3)² − (n−3)² = 12n.", a: "Shown", type: "proof", worked: ["(n+3)² = n² + 6n + 9", "(n−3)² = n² − 6n + 9", "Difference = (n² + 6n + 9) − (n² − 6n + 9)", "= 12n"], hint: "Expand both brackets then subtract" },
+      { q: "Expand and simplify (n+2)² − (n+1)² to show it is always odd.", a: "Shown", type: "proof", worked: ["(n+2)² = n² + 4n + 4", "(n+1)² = n² + 2n + 1", "Difference = 2n + 3", "2n + 3 = 2n + 2 + 1 = 2(n+1) + 1", "This is odd (one more than an even number)"], hint: "Expand both, subtract, then show the result is 2k + 1" },
     ],
-    // Level 3 (Grade 7) — Using iteration formulae
+    // Level 2 (Grade 7) — Prove properties of even/odd numbers
     [
-      { q: "Use xₙ₊₁ = √(5xₙ − 1) with x₀ = 4 to find x₁ and x₂ to 4 d.p.", a: "x₁ = 4.3589, x₂ = 4.5601", calculator: true, worked: ["x₁ = √(5×4 − 1) = √19 = 4.3589", "x₂ = √(5×4.3589 − 1) = √(20.7945) = 4.5601"], hint: "Substitute each answer back into the formula" },
-      { q: "Use xₙ₊₁ = (20 − xₙ)^(1/3) with x₀ = 2 to find x₁, x₂ and x₃ to 4 d.p.", a: "x₁ = 2.6208, x₂ = 2.5765, x₃ = 2.5809", calculator: true, worked: ["x₁ = (18)^(1/3) = 2.6208", "x₂ = (17.3792)^(1/3) = 2.5765", "x₃ = (17.4235)^(1/3) = 2.5809"], hint: "Substitute each answer back to get the next value" },
+      { q: "Prove that the square of any even number is a multiple of 4.", a: "Shown", type: "proof", worked: ["Let the even number be 2n", "(2n)² = 4n²", "4n² is a multiple of 4 for all integers n"], hint: "Write an even number as 2n, then square it" },
+      { q: "Prove that the sum of two consecutive odd numbers is always a multiple of 4.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n+1 and 2n+3", "Sum = (2n+1) + (2n+3) = 4n + 4 = 4(n+1)", "4(n+1) is a multiple of 4"], hint: "Write two consecutive odd numbers as 2n+1 and 2n+3" },
+      { q: "Prove that the square of any odd number is always odd.", a: "Shown", type: "proof", worked: ["Let the odd number be 2n + 1", "(2n+1)² = 4n² + 4n + 1 = 2(2n² + 2n) + 1", "This is one more than an even number, so it is odd"], hint: "Write an odd number as 2n+1, square it, then show it's 2k+1" },
     ],
-    // Level 4 (Grade 8) — Applying iteration to converge
+    // Level 3 (Grade 8) — Prove products and squared expressions
     [
-      { q: "Starting with x₀ = 1, use xₙ₊₁ = 3/(xₙ² + 1) twice to estimate a solution of x³ + x = 3.", a: "x₂ ≈ 0.92", calculator: true, worked: ["x³ + x = 3 → x = 3/(x² + 1)", "x₁ = 3/(1 + 1) = 1.5", "x₂ = 3/(2.25 + 1) = 3/3.25 ≈ 0.923"], hint: "Use x = 3/(x² + 1). Substitute x₀ = 1." },
-      { q: "Using xₙ₊₁ = √(5/(xₙ + 2)) with x₀ = 1, find the value the iteration converges to (3 d.p.).", a: "1.070", calculator: true, worked: ["x₁ = √(5/3) = 1.2910", "x₂ = √(5/3.291) = 1.2326", "Continue iterating... converges to 1.070"], hint: "Keep substituting until values settle" },
+      { q: "Prove that the product of any two odd numbers is always odd.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2a+1 and 2b+1", "(2a+1)(2b+1) = 4ab + 2a + 2b + 1", "= 2(2ab + a + b) + 1", "This is one more than an even number, so it is odd"], hint: "Write the two odd numbers as 2a+1 and 2b+1, then multiply" },
+      { q: "Prove that (2n+1)² is always 1 more than a multiple of 4.", a: "Shown", type: "proof", worked: ["(2n+1)² = 4n² + 4n + 1 = 4(n² + n) + 1", "4(n² + n) is a multiple of 4", "So (2n+1)² is 1 more than a multiple of 4"], hint: "Expand (2n+1)², then factorise to show 4k + 1" },
+      { q: "Prove that (n+1)² + n² is always an odd number.", a: "Shown", type: "proof", worked: ["(n+1)² + n² = n² + 2n + 1 + n²", "= 2n² + 2n + 1", "= 2(n² + n) + 1", "This is one more than an even number, so it is odd"], hint: "Expand, collect terms, and show the result is 2k + 1" },
     ],
-    // Level 5 (Grade 9) — Convergence, divergence and choosing formulae
+    // Level 4 (Grade 9) — Advanced algebraic proofs
     [
-      { q: "x³ − 3x − 5 = 0 has a root between 2 and 3. Which gives a converging iteration: A) x = (3x + 5)^(1/3) or B) x = (x³ − 5)/3?", a: "A", type: "mcq", options: ["A", "B", "Both converge"], worked: ["A: x₁ = 11^(1/3) = 2.224, x₂ ≈ 2.267... converges ✓", "B: x₁ = (8−5)/3 = 1, x₂ = (1−5)/3 = −1.33... diverges ✗"], hint: "Try both with x₀ = 2 and see which converges" },
-      { q: "Why might an iteration formula fail to converge?", a: "The gradient of the iterating function is too steep at the root", type: "mcq", options: ["Gradient too steep (|g'(x)| > 1 at root)", "The equation has no solutions", "The starting value is always wrong", "Iteration never works for cubics"], worked: ["Iteration xₙ₊₁ = g(xₙ) converges when |g'(x)| < 1 at the root", "If |g'(x)| > 1, errors get amplified → divergence", "A different rearrangement may converge"], hint: "Think about what happens when each step amplifies the error" },
+      { q: "Prove algebraically that the difference between the squares of any two consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n+1 and 2n+3", "(2n+3)² − (2n+1)² = (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "8(n+1) is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n+1 and 2n+3, square both, subtract" },
+      { q: "Prove that n² + n is an even number for all integer values of n.", a: "Shown", type: "proof", worked: ["n² + n = n(n + 1)", "n and n+1 are consecutive integers", "One of any pair of consecutive integers is always even", "So their product n(n+1) is always even"], hint: "Factorise to n(n+1). One of two consecutive integers must be even" },
+      { q: "Prove that the sum of the squares of two consecutive integers is always 1 more than an even number.", a: "Shown", type: "proof", worked: ["Let the integers be n and n+1", "n² + (n+1)² = n² + n² + 2n + 1 = 2n² + 2n + 1", "= 2(n² + n) + 1", "2(n² + n) is even, so the sum is 1 more than an even number"], hint: "Expand n² + (n+1)², simplify, and show it's 2k + 1" },
     ],
   ],
 
-  // A15: Gradients of Curves and Areas Under Graphs (corrected AQA mapping)
+  // ═══════════════════════════════════════════════════════════════
+  // A15: Gradients and Area Under Curves
+  // ═══════════════════════════════════════════════════════════════
   'A15': [
-    // Level 1 (Grade 6) — Estimating gradients from tangents
+    // Level 0 (Grade 6) — Estimate gradient by drawing tangent
     [
-      { q: "A curve passes through (2, 3) and a tangent drawn at this point also passes through (4, 9). Estimate the gradient of the curve at x = 2.", a: "3", worked: ["Gradient of tangent = change in y / change in x", "Gradient = (9 − 3) / (4 − 2)", "Gradient = 6 / 2 = 3", "The gradient of the tangent equals the gradient of the curve at that point"], hint: "The gradient of the tangent line at a point equals the gradient of the curve at that point. Use rise/run." },
+      { q: "Estimate the gradient of y = x² at the point (2, 4) by considering a tangent through (1, 0) and (3, 8).", a: "4", worked: ["Gradient of tangent = (8 − 0)/(3 − 1) = 8/2 = 4", "The gradient of the curve at (2, 4) is approximately 4"], hint: "Use the two points on the tangent to calculate rise ÷ run" },
+      { q: "Estimate the gradient of y = x² − 2x at x = 3. A tangent at this point passes through (2, 0) and (4, 8).", a: "4", worked: ["At x = 3: y = 9 − 6 = 3", "Tangent gradient = (8 − 0)/(4 − 2) = 8/2 = 4"], hint: "Use the two tangent points to find the gradient" },
+      { q: "Estimate the gradient of y = 1/x at (1, 1). A tangent passes through (0, 2) and (2, 0).", a: "−1", worked: ["Tangent gradient = (0 − 2)/(2 − 0) = −2/2 = −1", "The gradient of the curve at (1, 1) is approximately −1"], hint: "The gradient is negative because the curve slopes downward" },
     ],
-    // Level 2 (Grade 7) — Interpreting gradients on real-life graphs
+    // Level 1 (Grade 7) — Interpret gradients on real-life graphs
     [
-      { q: "On a distance-time graph, a straight line goes from (0, 0) to (4, 20). What does the gradient represent and what is its value?", a: "Speed = 5 m/s", worked: ["Gradient = change in distance / change in time", "Gradient = 20/4 = 5", "On a distance-time graph, gradient = speed", "Speed = 5 m/s"], hint: "On a distance-time graph, the gradient gives the speed. Calculate rise ÷ run." },
-      { q: "On a velocity-time graph, what does the gradient at any point represent?", a: "Acceleration", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], worked: ["The gradient of a velocity-time graph = rate of change of velocity", "Rate of change of velocity = acceleration", "Units: (m/s) / s = m/s²"], hint: "Think about what 'rate of change of velocity' means" },
+      { q: "Explain why the area under a velocity-time graph represents distance.", a: "Area = velocity × time = distance, since the units are m/s × s = m", worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
+      { q: "What does the gradient of a velocity-time graph represent?", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], a: "Acceleration", worked: ["Gradient = change in velocity ÷ change in time", "= (m/s) ÷ s = m/s²", "This is acceleration"], hint: "The gradient is the rate of change. Rate of change of velocity is..." },
+      { q: "Calculate the distance travelled in 5 seconds from a velocity-time graph showing constant speed of 8 m/s.", a: "40", worked: ["Distance = area under the graph", "= velocity × time = 8 × 5 = 40 m"], hint: "For constant speed, the area is a rectangle" },
     ],
-    // Level 3 (Grade 8) — Area under graphs (trapezium rule)
+    // Level 2 (Grade 8) — Trapezium rule
     [
-      { q: "A velocity-time graph shows: 0–3 seconds velocity increases from 0 to 12 m/s, then 3–7 seconds velocity stays at 12 m/s. Calculate the total distance travelled.", a: "66 m", worked: ["Section 1 (0–3s): Triangle, area = ½ × 3 × 12 = 18 m", "Section 2 (3–7s): Rectangle, area = 4 × 12 = 48 m", "Total distance = 18 + 48 = 66 m", "The area under a velocity-time graph gives the distance"], hint: "Split the area into a triangle and a rectangle. Area under velocity-time = distance." },
-      { q: "Use three trapezia of equal width to estimate the area under y = x² between x = 0 and x = 3.", a: "9.5", calculator: true, worked: ["Width of each trapezium = (3 − 0)/3 = 1", "y-values: y(0)=0, y(1)=1, y(2)=4, y(3)=9", "Trap 1: ½(0 + 1) × 1 = 0.5", "Trap 2: ½(1 + 4) × 1 = 2.5", "Trap 3: ½(4 + 9) × 1 = 6.5", "Total = 0.5 + 2.5 + 6.5 = 9.5"], hint: "Calculate y at x = 0, 1, 2, 3. Each trapezium = ½(y₁ + y₂) × width." },
+      { q: "Use the trapezium rule with 3 strips to estimate the area under y = √x from x = 1 to x = 4.", a: "4.65", calculator: true, worked: ["h = (4−1)/3 = 1", "y₀ = √1 = 1, y₁ = √2 ≈ 1.414, y₂ = √3 ≈ 1.732, y₃ = √4 = 2", "Area ≈ h/2 × [y₀ + 2y₁ + 2y₂ + y₃]", "= 0.5 × [1 + 2(1.414) + 2(1.732) + 2]", "= 0.5 × [1 + 2.828 + 3.464 + 2] = 0.5 × 9.292 = 4.65"], hint: "Use h/2 × [first + 2×middles + last]. Calculate y at x = 1, 2, 3, 4" },
+      { q: "Use 2 trapezia to estimate the area under y = 2ˣ from x = 0 to x = 2.", a: "4.5", calculator: true, worked: ["h = (2−0)/2 = 1", "y₀ = 2⁰ = 1, y₁ = 2¹ = 2, y₂ = 2² = 4", "Area ≈ 1/2 × [1 + 2(2) + 4] = 1/2 × 9 = 4.5"], hint: "Calculate y at x = 0, 1, 2, then apply the trapezium rule" },
+      { q: "Use the trapezium rule with 3 strips to estimate the area under y = x² + 1 between x = 0 and x = 3.", a: "12.5", calculator: true, worked: ["h = 1. y₀ = 1, y₁ = 2, y₂ = 5, y₃ = 10", "Area ≈ 1/2 × [1 + 2(2) + 2(5) + 10]", "= 1/2 × [1 + 4 + 10 + 10] = 1/2 × 25 = 12.5"], hint: "y values at x=0,1,2,3 are 1,2,5,10. Apply h/2 × [first + 2×middles + last]" },
     ],
-    // Level 4 (Grade 9) — Instantaneous rate of change
+    // Level 3 (Grade 9) — Rate of change
     [
-      { q: "On a velocity-time graph, a tangent drawn at t = 5 passes through (3, 8) and (7, 20). What is the instantaneous acceleration at t = 5?", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (20 − 8) / (7 − 3)", "Gradient = 12 / 4 = 3", "Instantaneous acceleration at t = 5 is 3 m/s²"], hint: "On a velocity-time graph, the gradient gives acceleration. Use the tangent line's gradient." },
-      { q: "On a velocity-time graph, the velocity is 4 m/s at t = 0 and 14 m/s at t = 5. Calculate the average acceleration.", a: "2 m/s²", worked: ["Average acceleration = change in velocity / change in time", "= (14 − 4) / (5 − 0)", "= 10 / 5 = 2 m/s²"], hint: "Average acceleration = (final velocity − initial velocity) / time" },
+      { q: "Calculate the average rate of change for f(x) = x³ between x = 1 and x = 3.", a: "13", worked: ["f(1) = 1, f(3) = 27", "Average rate of change = (f(3) − f(1))/(3 − 1)", "= (27 − 1)/2 = 26/2 = 13"], hint: "Average rate of change = (f(b) − f(a))/(b − a)" },
+      { q: "Find the instantaneous rate of change of y = 5x² at x = 2 by considering a tangent through (1, 5) and (3, 45).", a: "20", worked: ["Tangent gradient = (45 − 5)/(3 − 1) = 40/2 = 20", "Instantaneous rate of change at x = 2 is 20"], hint: "Use the tangent line to estimate the gradient at x = 2" },
+      { q: "Compare the average speed and instantaneous speed at the midpoint: a car travels 100m in 10s. At t=5, a tangent gives gradient 12 m/s.", a: "Average speed = 10 m/s, instantaneous speed at t=5 = 12 m/s. The instantaneous speed is higher than the average.", worked: ["Average speed = total distance ÷ total time = 100/10 = 10 m/s", "Instantaneous speed at t=5 = gradient of tangent = 12 m/s", "The car is going faster than average at the midpoint"], hint: "Average speed = distance/time. Instantaneous speed = gradient of tangent" },
     ],
-    // Level 5 (Grade 9) — Area under acceleration-time graph and over/underestimates
+    // Level 4 (Grade 9) — Over/underestimates and velocity from distance-time
     [
-      { q: "An acceleration-time graph shows constant acceleration of 4 m/s² for 3 seconds, then 2 m/s² for 5 seconds. If the initial velocity was 6 m/s, find the final velocity.", a: "28 m/s", worked: ["Area under acceleration-time graph = change in velocity", "Section 1: 4 × 3 = 12 m/s", "Section 2: 2 × 5 = 10 m/s", "Total change in velocity = 12 + 10 = 22 m/s", "Final velocity = 6 + 22 = 28 m/s"], hint: "The area under an acceleration-time graph gives the change in velocity. Add this to the initial velocity." },
-      { q: "The trapezium rule estimates the area under y = x² from x = 0 to x = 3 as 9.5. The exact area is 9. Is this an over-estimate or under-estimate, and why?", a: "Over-estimate", type: "mcq", options: ["Over-estimate — curve is convex (bends upward)", "Under-estimate — curve is concave (bends downward)", "Exact — trapezium rule is always accurate"], worked: ["y = x² is a convex curve (it curves upward)", "The tops of the trapezia sit above the curve", "So the trapezium rule over-estimates the area", "For concave curves (bending downward), it would under-estimate"], hint: "Think about whether the straight tops of the trapezia sit above or below the curve." },
+      { q: "Determine if the trapezium rule provides an over-estimate or under-estimate for y = √x from x = 1 to x = 4.", type: "mcq", options: ["Over-estimate — curve is concave", "Under-estimate — curve is concave", "Over-estimate — curve is convex"], a: "Under-estimate — curve is concave", worked: ["y = √x is concave (curves downward/flattens out)", "For concave curves, the trapezium tops lie below the curve", "So the trapezium rule under-estimates the area"], hint: "Is √x bending upward (convex) or flattening out (concave)?" },
+      { q: "A car accelerates from rest. Use a velocity-time graph: v = 0 at t=0, v = 5 at t=2, v = 12 at t=4, v = 15 at t=6, v = 18 at t=8, v = 20 at t=10. Estimate total distance in 10 seconds.", a: "120", calculator: true, worked: ["Use trapezium rule with h = 2:", "Area ≈ h/2 × [first + 2(middles) + last]", "= 2/2 × [0 + 2(5) + 2(12) + 2(15) + 2(18) + 20]", "= 1 × [0 + 10 + 24 + 30 + 36 + 20] = 120 m"], hint: "Apply the trapezium rule to the velocity-time data. Distance = area under the graph" },
+      { q: "Use a distance-time graph to estimate the velocity at t = 4. The tangent at t = 4 passes through (2, 10) and (6, 50).", a: "10 m/s", worked: ["Velocity = gradient of distance-time graph", "Gradient of tangent = (50 − 10)/(6 − 2) = 40/4 = 10", "Estimated velocity at t = 4 is 10 m/s"], hint: "On a distance-time graph, velocity = gradient. Use the tangent" },
     ],
   ],
 
@@ -4533,28 +4545,74 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
+  // A11: Quadratic Graphs & Turning Points (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A11': [
+    // Level 1 (Grade 5) — Tables of values and basic quadratic graphs
+    [
+      { q: "Complete the table of values for y = x² − 3 when x = −2, −1, 0, 1, 2. What is y when x = −2?", a: "1", worked: ["y = x² − 3", "When x = −2: y = (−2)² − 3 = 4 − 3 = 1"], hint: "Substitute x = −2 into the equation. Remember (−2)² = 4" },
+      { q: "For y = 2x², what is the value of y when x = 3?", a: "18", worked: ["y = 2x²", "When x = 3: y = 2 × 3² = 2 × 9 = 18"], hint: "Substitute x = 3. Square first, then multiply by 2" },
+      { q: "State the equation of the line of symmetry for y = x² + 4.", a: "x = 0", worked: ["y = x² + 4 has no x-term", "The graph is symmetric about the y-axis", "Line of symmetry: x = 0"], hint: "A quadratic y = x² + c with no x-term is symmetric about the y-axis" },
+    ],
+    // Level 2 (Grade 6) — Intercepts and roots from factorised form
+    [
+      { q: "Write down the coordinates of the y-intercept for y = x² − 5x + 6.", a: "(0, 6)", worked: ["The y-intercept occurs when x = 0", "y = 0² − 5(0) + 6 = 6", "y-intercept is (0, 6)"], hint: "Substitute x = 0 to find the y-intercept" },
+      { q: "Find the roots of y = (x − 2)(x + 4).", a: "x = 2 and x = −4", worked: ["Set y = 0:", "(x − 2)(x + 4) = 0", "x − 2 = 0 → x = 2", "x + 4 = 0 → x = −4"], hint: "Set each bracket equal to zero" },
+      { q: "Where does the graph of y = 12 − x − x² cross the y-axis?", a: "(0, 12)", worked: ["Substitute x = 0:", "y = 12 − 0 − 0² = 12", "The graph crosses the y-axis at (0, 12)"], hint: "Substitute x = 0 into the equation" },
+    ],
+    // Level 3 (Grade 7) — Solving quadratics for x-intercepts
+    [
+      { q: "Solve x² − 4x − 5 = 0 to find the x-intercepts of y = x² − 4x − 5.", a: "x = 5 and x = −1", worked: ["Factorise: (x − 5)(x + 1) = 0", "x − 5 = 0 → x = 5", "x + 1 = 0 → x = −1", "x-intercepts: (5, 0) and (−1, 0)"], hint: "Find two numbers that multiply to −5 and add to −4" },
+      { q: "Use the quadratic formula to find the x-intercepts of y = x² + 3x − 1 to 2 decimal places.", a: "x = 0.30 and x = −3.30", calculator: true, worked: ["a = 1, b = 3, c = −1", "x = (−3 ± √(9 + 4)) / 2", "x = (−3 ± √13) / 2", "x = (−3 + 3.606) / 2 = 0.30", "x = (−3 − 3.606) / 2 = −3.30"], hint: "Use x = (−b ± √(b² − 4ac)) / 2a with a = 1, b = 3, c = −1" },
+      { q: "Determine the number of real roots for y = 2x² + 4x + 5 using the discriminant.", a: "No real roots", type: "mcq", options: ["No real roots", "One repeated root", "Two distinct roots"], worked: ["Discriminant = b² − 4ac", "= 4² − 4(2)(5)", "= 16 − 40 = −24", "Since −24 < 0, there are no real roots"], hint: "Calculate b² − 4ac. If it's negative, there are no real roots" },
+    ],
+    // Level 4 (Grade 8) — Completing the square for turning points
+    [
+      { q: "By completing the square, find the coordinates of the turning point of y = x² + 6x + 2.", a: "(−3, −7)", worked: ["y = x² + 6x + 2", "= (x + 3)² − 9 + 2", "= (x + 3)² − 7", "Turning point is at (−3, −7)"], hint: "Half the coefficient of x gives the bracket. Subtract (half)² and simplify" },
+      { q: "Find the coordinates of the minimum point of y = x² − 8x + 10.", a: "(4, −6)", worked: ["y = x² − 8x + 10", "= (x − 4)² − 16 + 10", "= (x − 4)² − 6", "Minimum point is at (4, −6)"], hint: "Complete the square: half of −8 is −4" },
+      { q: "Write y = 2x² + 8x − 3 in the form a(x + b)² + c and find the turning point.", a: "(−2, −11)", worked: ["y = 2x² + 8x − 3", "= 2(x² + 4x) − 3", "= 2[(x + 2)² − 4] − 3", "= 2(x + 2)² − 8 − 3", "= 2(x + 2)² − 11", "Turning point is at (−2, −11)"], hint: "Factor out the 2 from the first two terms first, then complete the square inside the brackets" },
+    ],
+    // Level 5 (Grade 9) — Sketching, equation from turning point, algebraic proof
+    [
+      { q: "Sketch the graph of y = 9 − (x − 2)². State whether the turning point is a maximum or minimum.", a: "Maximum at (2, 9)", worked: ["y = 9 − (x − 2)² = −(x − 2)² + 9", "The coefficient of (x − 2)² is negative", "So the parabola opens downward → maximum", "Turning point: (2, 9)", "y-intercept: 9 − (0 − 2)² = 9 − 4 = 5", "x-intercepts: (x − 2)² = 9 → x − 2 = ±3 → x = 5 or x = −1"], hint: "The negative sign in front of (x − 2)² means the parabola is upside down" },
+      { q: "A quadratic has a turning point at (3, −4) and passes through (0, 5). Find its equation in the form y = ax² + bx + c.", a: "y = x² − 6x + 5", worked: ["Vertex form: y = a(x − 3)² − 4", "Passes through (0, 5): 5 = a(0 − 3)² − 4", "5 = 9a − 4 → 9a = 9 → a = 1", "y = (x − 3)² − 4 = x² − 6x + 9 − 4", "y = x² − 6x + 5"], hint: "Use vertex form y = a(x − h)² + k with the turning point, then find a using the other point" },
+      { q: "Prove that the turning point of y = x² + kx + 4 always has a y-coordinate of 4 − k²/4.", a: "Shown", type: "proof", worked: ["Complete the square:", "y = x² + kx + 4", "= (x + k/2)² − k²/4 + 4", "= (x + k/2)² + (4 − k²/4)", "The turning point is at (−k/2, 4 − k²/4)", "So the y-coordinate is always 4 − k²/4 ∎"], hint: "Complete the square for x² + kx. The constant term that remains gives the y-coordinate of the turning point" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
   // A12: Equation of a Circle and Tangents (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'A12': [
-    // Level 1 (Grade 5) — Equation of a circle
+    // Level 1 (Grade 5) — Equation of a circle centred at origin
     [
-      { q: "Write down the equation of a circle with centre (0, 0) and a radius of 9.", a: "x² + y² = 81", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 9, so r² = 81", "x² + y² = 81"], hint: "Use x² + y² = r² and square the radius" },
+      { q: "Write down the equation of a circle with centre (0, 0) and radius 9.", a: "x² + y² = 81", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 9, so r² = 81", "x² + y² = 81"], hint: "Use x² + y² = r² and square the radius" },
+      { q: "State the radius of the circle x² + y² = 49.", a: "7", worked: ["x² + y² = r²", "r² = 49", "r = √49 = 7"], hint: "The number on the right-hand side is r². Take its square root" },
+      { q: "Write the equation of a circle centred at the origin that passes through (0, 5).", a: "x² + y² = 25", worked: ["The point (0, 5) lies on the circle", "r = distance from origin = 5", "r² = 25", "x² + y² = 25"], hint: "The radius equals the distance from (0,0) to (0,5)" },
     ],
-    // Level 2 (Grade 6) — Showing a point lies on a circle
+    // Level 2 (Grade 6) — Verifying points on a circle
     [
-      { q: "A circle has the equation x² + y² = 80. Show that the point (8, 4) lies on the circumference.", a: "Shown", type: "proof", worked: ["Substitute (8, 4) into x² + y²", "8² + 4² = 64 + 16 = 80 ✓", "This equals the right-hand side", "So (8, 4) lies on the circle"], hint: "Substitute x = 8 and y = 4 into x² + y² and check it equals 80" },
+      { q: "Verify that the point (3, 4) lies on the circle x² + y² = 25.", a: "Shown", type: "proof", worked: ["Substitute (3, 4) into x² + y²", "3² + 4² = 9 + 16 = 25 ✓", "This equals the right-hand side", "So (3, 4) lies on the circle"], hint: "Substitute x = 3 and y = 4 into x² + y² and check it equals 25" },
+      { q: "Does the point (1, √3) lie on the circle x² + y² = 4?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["Substitute: 1² + (√3)² = 1 + 3 = 4 ✓", "4 = 4, so yes the point lies on the circle"], hint: "Substitute the coordinates. Remember (√3)² = 3" },
+      { q: "Find the coordinates of the points where x² + y² = 16 crosses the x-axis.", a: "(4, 0) and (−4, 0)", worked: ["On the x-axis, y = 0", "x² + 0² = 16", "x² = 16 → x = ±4", "Points are (4, 0) and (−4, 0)"], hint: "On the x-axis, y = 0. Substitute into the equation" },
     ],
-    // Level 3 (Grade 7) — Finding the tangent equation
+    // Level 3 (Grade 7) — Tangent equations
     [
-      { q: "Find the equation of the tangent to the circle x² + y² = 25 at the point (3, −4). Give your answer in the form y = mx + c.", a: "y = ¾x − 25/4", worked: ["Gradient of radius to (3, −4) = −4/3", "Tangent is perpendicular: gradient = ¾", "y − (−4) = ¾(x − 3)", "y + 4 = ¾x − 9/4", "y = ¾x − 9/4 − 4 = ¾x − 25/4"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal." },
+      { q: "Find the equation of the tangent to x² + y² = 25 at the point (3, 4). Give your answer in the form y = mx + c.", a: "y = −¾x + 25/4", worked: ["Gradient of radius to (3, 4) = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal" },
+      { q: "Find the equation of the tangent to x² + y² = 100 at the point (−6, 8).", a: "y = ¾x + 25/2", worked: ["Gradient of radius to (−6, 8) = 8/(−6) = −4/3", "Tangent gradient = 3/4 (negative reciprocal)", "y − 8 = ¾(x − (−6))", "y − 8 = ¾(x + 6) = ¾x + 9/2", "y = ¾x + 9/2 + 8 = ¾x + 25/2"], hint: "Find the gradient from origin to (−6, 8), then the perpendicular gradient" },
+      { q: "Find the equation of the tangent to x² + y² = 50 at the point (5, −5).", a: "y = x − 10", worked: ["Gradient of radius to (5, −5) = −5/5 = −1", "Tangent gradient = 1 (negative reciprocal)", "y − (−5) = 1(x − 5)", "y + 5 = x − 5", "y = x − 10"], hint: "The radius gradient is −1, so the tangent gradient is 1" },
     ],
-    // Level 4 (Grade 8) — Tangent intercepts
+    // Level 4 (Grade 8) — Line-circle intersections
     [
-      { q: "The line L is a tangent to the circle x² + y² = 40 at the point P(2, 6). Find the coordinates of the points where L crosses the x and y axes.", a: "(20, 0) and (0, 20/3)", worked: ["Gradient of OP = 6/2 = 3", "Tangent gradient = −1/3 (perpendicular)", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept: 0 = −⅓x + 20/3 → x = 20", "y-intercept: x = 0 → y = 20/3"], hint: "Find the tangent equation using the perpendicular gradient, then set y = 0 and x = 0 to find intercepts", calculator: true },
+      { q: "Find the points where the line y = x + 1 intersects the circle x² + y² = 13.", a: "(−3, −2) and (2, 3)", calculator: true, worked: ["Substitute y = x + 1 into x² + y² = 13:", "x² + (x + 1)² = 13", "x² + x² + 2x + 1 = 13", "2x² + 2x − 12 = 0 → x² + x − 6 = 0", "(x + 3)(x − 2) = 0 → x = −3 or x = 2", "When x = −3: y = −2. When x = 2: y = 3", "Points: (−3, −2) and (2, 3)"], hint: "Substitute the line equation into the circle equation and solve the resulting quadratic" },
+      { q: "Solve simultaneously: x² + y² = 25 and y = 2x − 5.", a: "(0, −5) and (4, 3)", calculator: true, worked: ["Substitute y = 2x − 5 into x² + y² = 25:", "x² + (2x − 5)² = 25", "x² + 4x² − 20x + 25 = 25", "5x² − 20x = 0", "5x(x − 4) = 0 → x = 0 or x = 4", "When x = 0: y = −5. When x = 4: y = 3", "Points: (0, −5) and (4, 3)"], hint: "Substitute the line into the circle and factorise" },
+      { q: "Show that the line y = x + 10 is a tangent to the circle x² + y² = 50.", a: "Shown", type: "proof", calculator: true, worked: ["Substitute y = x + 10 into x² + y² = 50:", "x² + (x + 10)² = 50", "x² + x² + 20x + 100 = 50", "2x² + 20x + 50 = 0", "x² + 10x + 25 = 0", "Discriminant = 100 − 100 = 0", "Discriminant = 0, so the line touches the circle at exactly one point (tangent)"], hint: "Substitute into the circle equation and show the discriminant equals zero" },
     ],
-    // Level 5 (Grade 9) — Finding k and radius from tangent
+    // Level 5 (Grade 9) — Triangle area, distance, and point of contact
     [
-      { q: "A circle is centred at (0, 0). The line y = 2x + k is a tangent to the circle at the point (−4, 2). Find the value of k and the radius of the circle.", a: "k = 10, r = 2√5", worked: ["Check (−4, 2) is on the tangent: 2 = 2(−4) + k → k = 10", "Check perpendicularity: radius gradient = 2/(−4) = −½", "Tangent gradient = 2. Product = −½ × 2 = −1 ✓ (perpendicular)", "Radius: r² = (−4)² + 2² = 16 + 4 = 20", "r = √20 = 2√5"], hint: "Substitute the point into y = 2x + k to find k. Check the tangent is perpendicular to the radius. Use x² + y² = r² to find the radius." },
+      { q: "Find the area of the triangle formed by the tangent to x² + y² = 40 at the point (2, 6), the x-axis and the y-axis.", a: "200/3", calculator: true, worked: ["Check: 2² + 6² = 4 + 36 = 40 ✓", "Gradient of radius = 6/2 = 3", "Tangent gradient = −1/3 (perpendicular)", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept (y = 0): x = 20", "y-intercept (x = 0): y = 20/3", "Area = ½ × 20 × 20/3 = 200/3 ≈ 66.7"], hint: "Find the tangent equation, then its x and y intercepts. Use Area = ½ × base × height" },
+      { q: "The tangent to x² + y² = 25 is y = −¾x + 25/4. Find the point of contact on the circle.", a: "(3, 4)", worked: ["Tangent gradient = −3/4, so radius gradient = 4/3", "Point (x, y) on circle with y/x = 4/3 → y = 4x/3", "Substitute: x² + 16x²/9 = 25", "25x²/9 = 25 → x² = 9 → x = 3 (positive, since tangent has positive y-intercept)", "y = 4(3)/3 = 4", "Point of contact: (3, 4)"], hint: "The radius to the point of contact is perpendicular to the tangent. Use this to find the relationship between x and y" },
+      { q: "Find the shortest distance from the origin to the line 3x + 4y = 25.", a: "5", worked: ["Use the distance formula: d = |ax₀ + by₀ − c| / √(a² + b²)", "Rewrite as 3x + 4y − 25 = 0", "d = |3(0) + 4(0) − 25| / √(9 + 16)", "d = 25 / √25 = 25/5 = 5"], hint: "Use the perpendicular distance formula: d = |ax + by + c| / √(a² + b²)" },
     ],
   ],
 
@@ -4645,38 +4703,38 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
-  // S3: Box Plots & Cumulative Frequency (Higher)
+  // S3: Averages & Range
   // ═══════════════════════════════════════════════════════════════
   'S3': [
-    // Level 1 (Grade 5) — Calculating frequency density
+    // Level 0 (Grade 4) — Median, range, mean of simple lists
     [
-      { q: "Calculate the frequency density for a class with width 20 and frequency 60.", a: "3", worked: ["Frequency density = frequency ÷ class width", "= 60 ÷ 20 = 3"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "Calculate the frequency density for a class with width 10 and frequency 50.", a: "5", worked: ["Frequency density = frequency ÷ class width", "= 50 ÷ 10 = 5"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "A histogram class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "FD = frequency ÷ class width" },
+      { q: "Find the median of the list: 3, 8, 2, 10, 5", a: "5", worked: ["Order the data: 2, 3, 5, 8, 10", "Median = middle value = 5"], hint: "Put the numbers in order first, then find the middle one" },
+      { q: "Find the range of the list: 15, 2, 22, 8, 11", a: "20", worked: ["Highest value = 22", "Lowest value = 2", "Range = 22 − 2 = 20"], hint: "Range = highest value − lowest value" },
+      { q: "Calculate the mean and range of: 1.2, 3.4, 2.1, 0.5, 2.8", a: "Mean = 2, Range = 2.9", worked: ["Mean = (1.2 + 3.4 + 2.1 + 0.5 + 2.8) ÷ 5 = 10 ÷ 5 = 2", "Range = 3.4 − 0.5 = 2.9"], hint: "Mean = sum ÷ count. Range = highest − lowest" },
     ],
-    // Level 2 (Grade 6) — Using a histogram to find frequency
+    // Level 1 (Grade 5) — Mode, median of larger lists
     [
-      { q: "A histogram bar has width 5 and frequency density 2.4. What is the frequency?", a: "12", worked: ["Frequency = frequency density × class width", "= 2.4 × 5 = 12"], hint: "Frequency = frequency density × class width" },
-      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width", calculator: true },
-      { q: "A histogram bar for the interval 20 < x ≤ 35 has frequency density 4. How many data values are in this class?", a: "60", worked: ["Class width = 35 − 20 = 15", "Frequency = 4 × 15 = 60"], hint: "Find the class width first, then multiply by the frequency density" },
+      { q: "Calculate the mean of 4, 7, 9, 10.", a: "7.5", worked: ["Sum = 4 + 7 + 9 + 10 = 30", "Mean = 30 ÷ 4 = 7.5"], hint: "Add all the numbers and divide by how many there are" },
+      { q: "Find the mode and median of: 5, 2, 8, 5, 10, 12, 5", a: "Mode = 5, Median = 5", worked: ["Mode = 5 (appears 3 times)", "Order: 2, 5, 5, 5, 8, 10, 12", "Median = 4th value = 5"], hint: "Mode = most frequent. Median = middle value when ordered" },
+      { q: "Find the median of: 4, 9, 2, 11, 6, 8", a: "7", worked: ["Order: 2, 4, 6, 8, 9, 11", "Even number of values: median = average of 3rd and 4th", "Median = (6 + 8) ÷ 2 = 7"], hint: "With an even number, average the two middle values" },
     ],
-    // Level 3 (Grade 7) — Constructing histograms with unequal class widths
+    // Level 2 (Grade 6) — Working backwards from the mean
     [
-      { q: "Complete the frequency density column: 0-10 (freq 15), 10-25 (freq 30), 25-30 (freq 20), 30-50 (freq 40).", a: "1.5, 2, 4, 2", worked: ["0-10: width 10, FD = 15/10 = 1.5", "10-25: width 15, FD = 30/15 = 2", "25-30: width 5, FD = 20/5 = 4", "30-50: width 20, FD = 40/20 = 2"], hint: "FD = frequency ÷ class width for each interval" },
-      { q: "In a histogram, a class has width 10 and frequency 45. Another class has width 20 and frequency 60. Which class has the taller bar?", type: "mcq", options: ["Width 10, freq 45", "Width 20, freq 60", "Same height"], a: "Width 10, freq 45", worked: ["FD for first class: 45 ÷ 10 = 4.5", "FD for second class: 60 ÷ 20 = 3", "4.5 > 3, so the first class has the taller bar"], hint: "Calculate frequency density for each. The taller bar has the higher FD." },
-      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8"], hint: "Calculate FD = frequency ÷ class width for each" },
+      { q: "The mean of five numbers is 12. Four of the numbers are 8, 15, 10, and 13. Find the fifth number.", a: "14", worked: ["Total = mean × count = 12 × 5 = 60", "Sum of four numbers = 8 + 15 + 10 + 13 = 46", "Fifth number = 60 − 46 = 14"], hint: "Find the total first (mean × count), then subtract the known numbers" },
+      { q: "A set of 4 numbers has a mean of 7. When a 5th number is added, the mean becomes 8. What number was added?", a: "12", worked: ["Original total = 4 × 7 = 28", "New total = 5 × 8 = 40", "Number added = 40 − 28 = 12"], hint: "Find both totals, then subtract" },
+      { q: "The mean age of 10 people is 25. The mean age of 15 people is 30. Find the mean age of all 25 people.", a: "28", worked: ["Total for group 1 = 10 × 25 = 250", "Total for group 2 = 15 × 30 = 450", "Combined mean = (250 + 450) ÷ 25 = 700 ÷ 25 = 28"], hint: "Find the total for each group, add them, then divide by the total number of people" },
     ],
-    // Level 4 (Grade 8) — Estimating from histograms (non-boundary intervals)
+    // Level 3 (Grade 7) — Grouped frequency tables
     [
-      { q: "A histogram shows the 30-50 class has frequency density 2.4. Estimate the number of items with values greater than 35.", a: "36", worked: ["Class width from 35 to 50 = 15", "Assuming uniform distribution within the class:", "Frequency = FD × width = 2.4 × 15 = 36"], hint: "Find the width of the sub-interval (35 to 50), then multiply by the frequency density" },
-      { q: "Estimate the number of people scoring more than 45 if the 40-60 class has frequency 100.", a: "75", worked: ["Class width = 20, sub-interval 45-60 has width 15", "Proportion above 45: 15/20 = 0.75", "Estimate = 0.75 × 100 = 75"], hint: "Find what fraction of the class interval is above 45, then multiply by the frequency" },
-      { q: "A histogram has these classes: 0-10 (freq 8), 10-20 (freq 22), 20-30 (freq 15), 30-50 (freq 10). In which class does the median lie?", type: "mcq", options: ["0-10", "10-20", "20-30", "30-50"], a: "10-20", worked: ["Total = 8 + 22 + 15 + 10 = 55", "Median position = 55/2 = 27.5th value", "0-10: cumulative = 8", "10-20: cumulative = 30", "27.5th value is in the 10-20 class"], hint: "Find the median position (n/2), then add up frequencies until you pass it" },
+      { q: "Estimate the mean from a grouped frequency table: 0-10 (f=5), 10-20 (f=12), 20-30 (f=8), 30-40 (f=5). Use midpoints.", a: "19", calculator: true, worked: ["Midpoints: 5, 15, 25, 35", "Σfx = 5(5) + 12(15) + 8(25) + 5(35)", "= 25 + 180 + 200 + 175 = 580", "Σf = 30", "Estimated mean = 580 ÷ 30 ≈ 19.3"], hint: "Use midpoints of each class. Estimated mean = Σ(f × midpoint) ÷ Σf" },
+      { q: "Find the modal class and the class containing the median for: 0-10 (f=3), 10-20 (f=8), 20-30 (f=12), 30-40 (f=7).", a: "Modal class: 20-30, Median class: 20-30", worked: ["Modal class = highest frequency = 20-30 (f=12)", "Total = 30, median at 15th value", "Cumulative: 3, 11, 23...", "15th value is in the 20-30 class"], hint: "Modal class has the highest frequency. For the median class, use cumulative frequencies" },
+      { q: "Explain why the mean calculated from a grouped frequency table is only an estimate.", a: "Because we use midpoints to represent each class, not the actual data values", worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
     ],
-    // Level 5 (Grade 9) — Estimating the median from a histogram
+    // Level 4 (Grade 8–9) — Box plots, IQR, outliers
     [
-      { q: "A histogram shows 80 values: 0-10 (freq 10), 10-20 (freq 25), 20-30 (freq 30), 30-50 (freq 15). Estimate the median.", a: "21.7", worked: ["Total = 80, median at 40th value", "0-10: cumulative = 10", "10-20: cumulative = 35", "40th value is in the 20-30 class", "Need 5 more into this class of 30", "Median = 20 + (5/30) × 10 = 20 + 1.67 = 21.7"], hint: "Find which class the median falls in using cumulative frequency, then interpolate within that class", calculator: true },
-      { q: "Estimate the lower quartile of 80 data values with classes: 0-10 (f=10), 10-20 (f=30), 20-40 (f=40).", a: "13.3", worked: ["LQ position = 80/4 = 20th value", "0-10: cumulative = 10 (need 10 more)", "10-20: 10 more into this class of 30", "LQ = 10 + (10/30) × 10 = 10 + 3.33 = 13.3"], hint: "Find the 20th value. It's in the 10-20 class. Use interpolation.", calculator: true },
-      { q: "A histogram shows: 30 < t ≤ 40 (FD 2.5), 40 < t ≤ 60 (FD 1.5). Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30-40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40-60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35, then add the full 40-60 bar", calculator: true },
+      { q: "Compare two distributions: Class A has median 55 and IQR 12. Class B has median 62 and IQR 20. Comment on the differences.", a: "Class B has a higher median (62 vs 55), so scored better on average. Class A has a smaller IQR (12 vs 20), so scores are more consistent.", worked: ["Compare medians: Class B's median (62) > Class A's (55)", "Class B scored higher on average", "Compare IQRs: Class A's IQR (12) < Class B's (20)", "Class A's scores are more consistent/less spread out"], hint: "Compare medians for average, IQR for spread/consistency" },
+      { q: "A dataset has Q1 = 20, Q3 = 44. Use the 1.5 × IQR rule to identify the boundaries for outliers.", a: "Lower boundary: −16, Upper boundary: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "IQR = Q3 − Q1. Outlier boundaries are Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
+      { q: "A frequency table has an unknown frequency x. Scores: 2 (f=3), 4 (f=x), 5 (f=5), 6 (f=2). The mean is 4.2. Find x.", a: "5", calculator: true, worked: ["Σfx = 2(3) + 4(x) + 5(5) + 6(2) = 6 + 4x + 25 + 12 = 43 + 4x", "Σf = 3 + x + 5 + 2 = 10 + x", "Mean = (43 + 4x)/(10 + x) = 4.2", "43 + 4x = 4.2(10 + x) = 42 + 4.2x", "43 − 42 = 4.2x − 4x", "1 = 0.2x", "x = 5"], hint: "Set up Σfx ÷ Σf = 4.2, then solve for x" },
     ],
   ],
 
