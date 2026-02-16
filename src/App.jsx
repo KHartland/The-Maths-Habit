@@ -4610,6 +4610,104 @@ const higherQuestionBank = {
       { q: "A data set has Q1 = 15, Q3 = 35. The value 72 appears in the data. Is it an outlier? Explain how outliers affect the mean.", a: "Yes, 72 is an outlier", worked: ["IQR = 35 − 15 = 20", "1.5 × IQR = 30", "Upper boundary = 35 + 30 = 65", "72 > 65, so 72 IS an outlier", "Outliers pull the mean towards them (increase it here)", "The median is not affected by outliers"], hint: "Check if 72 > Q3 + 1.5 × IQR. Outliers affect the mean but not the median." },
     ],
   ],
+
+  // G21: Sine and Cosine Rules (Non-right-angled triangles)
+  'G21': [
+    // Level 1 (Grade 5) — Area of a triangle using ½absinC
+    [
+      { q: "Calculate the area of a triangle with sides 7 cm and 10 cm and an included angle of 30°.", a: "17.5 cm²", calculator: true, worked: ["Area = ½ × a × b × sin(C)", "Area = ½ × 7 × 10 × sin(30°)", "sin(30°) = 0.5", "Area = ½ × 7 × 10 × 0.5 = 17.5 cm²"], hint: "Use Area = ½ × a × b × sin(C) where C is the angle between the two known sides" },
+    ],
+    // Level 2 (Grade 6) — Sine Rule to find a missing side
+    [
+      { q: "In triangle ABC, angle A = 40°, angle B = 75°, and side a = 12 cm (opposite angle A). Find side b (opposite angle B).", a: "18.0 cm", calculator: true, worked: ["Sine Rule: a/sin A = b/sin B", "12/sin 40° = b/sin 75°", "12/0.6428 = b/0.9659", "18.666 = b/0.9659", "b = 18.666 × 0.9659 ≈ 18.0 cm"], hint: "Use the Sine Rule: a/sin A = b/sin B. Rearrange to find b." },
+    ],
+    // Level 3 (Grade 7) — Cosine Rule to find a missing side
+    [
+      { q: "In triangle ABC, side a = 6 cm, side b = 9 cm, and angle C = 120°. Use the Cosine Rule to find side c.", a: "13.1 cm", calculator: true, worked: ["Cosine Rule: c² = a² + b² − 2ab cos(C)", "c² = 6² + 9² − 2(6)(9)cos(120°)", "c² = 36 + 81 − 108 × (−0.5)", "c² = 117 + 54 = 171", "c = √171 ≈ 13.1 cm"], hint: "Use c² = a² + b² − 2ab cos(C). Remember cos(120°) is negative." },
+      { q: "Triangle PQR has PQ = 5 cm, PR = 8 cm, and angle QPR = 60°. Find QR.", a: "7.0 cm", calculator: true, worked: ["Cosine Rule: QR² = PQ² + PR² − 2(PQ)(PR)cos(QPR)", "QR² = 25 + 64 − 2(5)(8)cos(60°)", "QR² = 89 − 80 × 0.5", "QR² = 89 − 40 = 49", "QR = √49 = 7 cm"], hint: "Use the Cosine Rule: c² = a² + b² − 2ab cos(C) with the angle between the two known sides." },
+    ],
+    // Level 4 (Grade 8) — Cosine Rule to find a missing angle
+    [
+      { q: "In triangle ABC, a = 5 cm, b = 7 cm, c = 8 cm. Find angle C (the angle opposite side c).", a: "81.8°", calculator: true, worked: ["Rearranged Cosine Rule: cos C = (a² + b² − c²) / (2ab)", "cos C = (25 + 49 − 64) / (2 × 5 × 7)", "cos C = 10 / 70", "cos C = 1/7 ≈ 0.1429", "C = cos⁻¹(0.1429) ≈ 81.8°"], hint: "Use cos C = (a² + b² − c²) / (2ab) and then use inverse cosine." },
+    ],
+    // Level 5 (Grade 9) — 3D problem requiring Sine/Cosine Rule
+    [
+      { q: "A pyramid has a rectangular base ABCD where AB = 8 cm and BC = 6 cm. The apex E is directly above the centre of the base, and the slant edge AE = 13 cm. Find angle AEB.", a: "35.8°", calculator: true, worked: ["Diagonal AC = √(8² + 6²) = √100 = 10 cm", "Centre M is midpoint of diagonals, so AM = 5 cm", "Height EM: AE² = AM² + EM² → 169 = 25 + EM² → EM = 12 cm", "BM = half of BD = 5 cm (diagonals of rectangle bisect each other)", "BE = √(BM² + EM²) = √(25 + 144) = √169 = 13 cm", "Triangle AEB: AE = 13, BE = 13, AB = 8", "cos(AEB) = (13² + 13² − 8²) / (2 × 13 × 13)", "= (169 + 169 − 64) / 338 = 274/338 ≈ 0.811", "Angle AEB = cos⁻¹(0.811) ≈ 35.8°"], hint: "First find the height of the pyramid using 3D Pythagoras. Then use the Cosine Rule on triangle AEB." },
+    ],
+  ],
+
+  // G23: Trigonometric Graphs
+  'G23': [
+    // Level 1 (Grade 5) — Sketch sin graph
+    [
+      { q: "Which of these correctly describes the graph of y = sin(x) for 0° ≤ x ≤ 360°?", a: "Starts at 0, rises to 1 at 90°, returns to 0 at 180°, falls to −1 at 270°, returns to 0 at 360°", type: "mcq", options: ["Starts at 0, rises to 1 at 90°, returns to 0 at 180°, falls to −1 at 270°, returns to 0 at 360°", "Starts at 1, falls to 0 at 90°, falls to −1 at 180°", "Starts at 0, rises to 1 at 180°, returns to 0 at 360°"], worked: ["y = sin(0°) = 0 (starts at origin)", "y = sin(90°) = 1 (maximum)", "y = sin(180°) = 0 (crosses x-axis)", "y = sin(270°) = −1 (minimum)", "y = sin(360°) = 0 (completes one cycle)"], hint: "The sine graph starts at 0, reaches its maximum at 90°, and has a period of 360°." },
+    ],
+    // Level 2 (Grade 6) — Max/min of cos graph
+    [
+      { q: "State the coordinates of the maximum and minimum points on y = cos(x) for 0° ≤ x ≤ 360°.", a: "Maximum: (0°, 1) and (360°, 1); Minimum: (180°, −1)", worked: ["cos(0°) = 1 → maximum at (0°, 1)", "cos(180°) = −1 → minimum at (180°, −1)", "cos(360°) = 1 → maximum at (360°, 1)", "The cosine graph starts at its maximum, unlike sine"], hint: "cos(0°) = 1, cos(180°) = −1, cos(360°) = 1" },
+    ],
+    // Level 3 (Grade 7) — Solve using trig graph
+    [
+      { q: "Use the graph of y = sin(x) to find two solutions for sin(x) = 0.5 in the range 0° ≤ x ≤ 360°.", a: "x = 30° and x = 150°", worked: ["sin(x) = 0.5", "First solution: x = sin⁻¹(0.5) = 30°", "The sine graph is symmetric about x = 90°", "Second solution: x = 180° − 30° = 150°", "So x = 30° and x = 150°"], hint: "Find the first solution with inverse sin, then use the symmetry of the sine curve: the second solution is 180° minus the first." },
+    ],
+    // Level 4 (Grade 8) — Transformation of trig graph
+    [
+      { q: "Describe the transformation that maps y = sin(x) onto y = 3sin(x).", a: "Vertical stretch, scale factor 3", worked: ["In y = 3sin(x), the output of sin(x) is multiplied by 3", "This stretches the graph vertically by factor 3", "The amplitude changes from 1 to 3", "Maximum becomes 3, minimum becomes −3", "The period (360°) is unchanged"], hint: "The number in front of sin multiplies all y-values. This is a vertical stretch." },
+    ],
+    // Level 5 (Grade 9) — Solve tan equation over extended range
+    [
+      { q: "Solve tan(x) = −1 for 0° ≤ x ≤ 540°. Give all solutions.", a: "x = 135°, 315°, 495°", worked: ["tan(x) = −1", "Reference angle: tan⁻¹(1) = 45°", "tan is negative in the 2nd and 4th quadrants", "2nd quadrant: x = 180° − 45° = 135°", "4th quadrant: x = 360° − 45° = 315°", "tan has period 180°, so next solution: 135° + 360° = 495°", "Check: 315° + 180° = 495° ✓", "All solutions in range: 135°, 315°, 495°"], hint: "Find where tan is negative (2nd and 4th quadrants). The period of tan is 180°, so add 180° to find more solutions." },
+    ],
+  ],
+
+  // A14: Transformations of Functions (f(x) notation)
+  'A14': [
+    // Level 1 (Grade 6) — Vertical translation f(x) + a
+    [
+      { q: "The graph of y = f(x) passes through (3, 5). What point must be on the graph of y = f(x) + 3?", a: "(3, 8)", worked: ["y = f(x) + 3 adds 3 to every y-coordinate", "Original point: (3, 5)", "New point: (3, 5 + 3) = (3, 8)", "This is a translation of (0, 3) — shift up 3 units"], hint: "f(x) + 3 moves every point UP by 3. Add 3 to the y-coordinate." },
+    ],
+    // Level 2 (Grade 7) — Horizontal translation f(x − a)
+    [
+      { q: "Describe the single transformation that maps y = f(x) onto y = f(x − 2).", a: "Translation by vector (2, 0) — shift right 2 units", worked: ["f(x − 2) replaces x with (x − 2)", "This shifts the graph 2 units to the RIGHT", "Note: f(x − 2) shifts RIGHT (opposite sign!)", "Transformation: translation by vector (2, 0)"], hint: "f(x − a) shifts the graph RIGHT by a units. Be careful with the sign!" },
+    ],
+    // Level 3 (Grade 8) — Reflections −f(x) and f(−x)
+    [
+      { q: "The graph of y = f(x) has a maximum at (2, 7). State the coordinates of the maximum/minimum of: (a) y = −f(x) and (b) y = f(−x).", a: "(a) minimum at (2, −7); (b) maximum at (−2, 7)", worked: ["(a) y = −f(x) reflects in the x-axis", "All y-values change sign: (2, 7) → (2, −7)", "The maximum becomes a minimum", "(b) y = f(−x) reflects in the y-axis", "All x-values change sign: (2, 7) → (−2, 7)", "The maximum remains a maximum"], hint: "−f(x) reflects in the x-axis (negate y). f(−x) reflects in the y-axis (negate x)." },
+    ],
+    // Level 4 (Grade 9) — Horizontal stretch f(ax)
+    [
+      { q: "A curve has a maximum point at (2, 5). State the new coordinates of the maximum point after the transformation y = f(2x).", a: "(1, 5)", worked: ["y = f(2x) is a horizontal stretch with scale factor ½", "All x-coordinates are divided by 2", "y-coordinates stay the same", "Maximum: (2, 5) → (2 ÷ 2, 5) = (1, 5)"], hint: "f(2x) squashes the graph horizontally by factor 2. Divide x-coordinates by 2." },
+      { q: "The graph of y = x² is translated by the vector (0, −4). Write the equation of the new graph.", a: "y = x² − 4", worked: ["Translation by (0, −4) means shift down 4 units", "Every y-value decreases by 4", "Original: y = x²", "New: y = x² − 4", "This is f(x) + k where k = −4"], hint: "A translation of (0, −4) shifts the graph down 4 units. Subtract 4 from the equation." },
+    ],
+    // Level 5 (Grade 9) — Combined transformations
+    [
+      { q: "The graph of y = f(x) passes through (−1, 4) and (3, −2). Find the corresponding points on y = 2f(x + 4) and explain the order of transformations.", a: "(−5, 8) and (−1, −4)", worked: ["Two transformations: replace x with (x + 4), then multiply f by 2", "Order: horizontal translation LEFT 4, then vertical stretch factor 2", "Point (−1, 4): x shifts left 4: −1 − 4 = −5, y doubles: 4 × 2 = 8 → (−5, 8)", "Point (3, −2): x shifts left 4: 3 − 4 = −1, y doubles: −2 × 2 = −4 → (−1, −4)", "Translation first (inside the function), then stretch (outside)"], hint: "Apply transformations in order: f(x + 4) shifts LEFT 4 (inside), then 2f multiplies y by 2 (outside)." },
+    ],
+  ],
+
+  // A12: Gradients and Area Under a Curve (Kinematics interpretation)
+  'A12': [
+    // Level 1 (Grade 6) — Estimate gradient by drawing tangent
+    [
+      { q: "A curve passes through (2, 3) and a tangent drawn at this point also passes through (4, 9). Estimate the gradient of the curve at x = 2.", a: "3", worked: ["Gradient of tangent = change in y / change in x", "Gradient = (9 − 3) / (4 − 2)", "Gradient = 6 / 2 = 3", "The gradient of the tangent equals the gradient of the curve at that point"], hint: "The gradient of the tangent line at a point equals the gradient of the curve at that point. Use rise/run." },
+    ],
+    // Level 2 (Grade 7) — Distance-time graph gradient = speed
+    [
+      { q: "On a distance-time graph, a straight line goes from (0, 0) to (4, 20). What does the gradient represent and what is its value?", a: "Speed = 5 m/s", worked: ["Gradient = change in distance / change in time", "Gradient = 20/4 = 5", "On a distance-time graph, gradient = speed (or velocity)", "Speed = 5 m/s"], hint: "On a distance-time graph, the gradient gives the speed. Calculate rise ÷ run." },
+    ],
+    // Level 3 (Grade 8) — Area under velocity-time graph = distance
+    [
+      { q: "A velocity-time graph shows: 0–3 seconds velocity increases from 0 to 12 m/s, then 3–7 seconds velocity stays at 12 m/s. Calculate the total distance travelled.", a: "66 m", worked: ["Section 1 (0–3s): Triangle, area = ½ × 3 × 12 = 18 m", "Section 2 (3–7s): Rectangle, area = 4 × 12 = 48 m", "Total distance = 18 + 48 = 66 m", "The area under a velocity-time graph gives the distance"], hint: "Split the area into a triangle and a rectangle. Area under velocity-time = distance." },
+    ],
+    // Level 4 (Grade 9) — Instantaneous acceleration from tangent
+    [
+      { q: "On a velocity-time graph, a tangent drawn at t = 5 passes through the points (3, 8) and (7, 20). What is the instantaneous acceleration at t = 5?", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (20 − 8) / (7 − 3)", "Gradient = 12 / 4 = 3", "Instantaneous acceleration at t = 5 is 3 m/s²"], hint: "On a velocity-time graph, the gradient gives acceleration. Use the tangent line's gradient." },
+    ],
+    // Level 5 (Grade 9) — Area under acceleration-time graph
+    [
+      { q: "An acceleration-time graph shows constant acceleration of 4 m/s² for 3 seconds, then 2 m/s² for 5 seconds. If the initial velocity was 6 m/s, find the final velocity.", a: "28 m/s", worked: ["Area under acceleration-time graph = change in velocity", "Section 1: 4 × 3 = 12 m/s (change in velocity)", "Section 2: 2 × 5 = 10 m/s (change in velocity)", "Total change in velocity = 12 + 10 = 22 m/s", "Final velocity = initial + change = 6 + 22 = 28 m/s"], hint: "The area under an acceleration-time graph gives the change in velocity. Add this to the initial velocity." },
+    ],
+  ],
 };
 
 // Pick a random variant from a question slot (supports both single questions and variant arrays)
