@@ -3971,30 +3971,30 @@ const higherQuestionBank = {
   // G20: Advanced Pythagoras & Trigonometry (Higher)
   // ═══════════════════════════════════════════════════════════════
   'G20': [
-    // Level 1 (Grade 5) — Pythagoras in context
+    // Level 1 (Grade 4) — Basic Pythagoras
     [
-      { q: "Calculate the length of the diagonal of a rectangle with sides 5 cm and 12 cm.", a: "13", worked: ["Use Pythagoras: d² = 5² + 12²", "d² = 25 + 144 = 169", "d = √169 = 13 cm"], hint: "d² = 5² + 12²", calculator: true },
+      { q: "Calculate the hypotenuse of a right-angled triangle with sides 5 cm and 12 cm.", a: "13", worked: ["Use Pythagoras: c² = 5² + 12²", "c² = 25 + 144 = 169", "c = √169 = 13 cm"], hint: "c² = a² + b²", calculator: true },
       { q: "A ladder leans against a wall. The foot is 6 m from the wall and the ladder is 10 m long. How high up the wall does it reach?", a: "8", worked: ["Use Pythagoras: 10² = 6² + h²", "100 = 36 + h² → h² = 64", "h = 8 m"], hint: "10² = 6² + h²", calculator: true },
     ],
-    // Level 2 (Grade 6) — Finding angles with basic trig
+    // Level 2 (Grade 5) — SOH CAH TOA to find missing angles
     [
-      { q: "Find the missing angle θ in a right-angled triangle where the opposite side is 5 cm and the hypotenuse is 10 cm.", a: "30", worked: ["sin(θ) = opposite/hypotenuse = 5/10 = 0.5", "θ = sin⁻¹(0.5) = 30°"], hint: "sin(θ) = 5/10 = 0.5", calculator: true },
-      { q: "Find the missing angle θ in a right-angled triangle where the adjacent side is 4 cm and the hypotenuse is 8 cm.", a: "60", worked: ["cos(θ) = adjacent/hypotenuse = 4/8 = 0.5", "θ = cos⁻¹(0.5) = 60°"], hint: "cos(θ) = 4/8 = 0.5", calculator: true },
+      { q: "Use SOH CAH TOA to find the missing angle θ in a right-angled triangle where the opposite side is 5 cm and the hypotenuse is 10 cm.", a: "30", worked: ["sin(θ) = opposite/hypotenuse = 5/10 = 0.5", "θ = sin⁻¹(0.5) = 30°"], hint: "sin(θ) = opposite/hypotenuse", calculator: true },
+      { q: "Find angle θ where the adjacent side is 4 cm and the hypotenuse is 8 cm.", a: "60", worked: ["cos(θ) = adjacent/hypotenuse = 4/8 = 0.5", "θ = cos⁻¹(0.5) = 60°"], hint: "cos(θ) = adjacent/hypotenuse", calculator: true },
     ],
-    // Level 3 (Grade 7) — Sine Rule
+    // Level 3 (Grade 7) — 3D Pythagoras (diagonal of cuboid)
     [
-      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 8 cm (opposite angle A). Find side b (opposite angle B). Give your answer to 1 d.p.", a: "12.0", worked: ["Using the Sine Rule: a/sin(A) = b/sin(B)", "8/sin(40°) = b/sin(75°)", "b = 8 × sin(75°)/sin(40°)", "b = 8 × 0.9659/0.6428 = 12.0 cm"], hint: "Sine Rule: a/sin(A) = b/sin(B)", calculator: true },
-      { q: "In triangle PQR, angle P = 50°, angle R = 65° and side p = 10 cm. Find side r. Give your answer to 1 d.p.", a: "11.8", worked: ["Using the Sine Rule: p/sin(P) = r/sin(R)", "10/sin(50°) = r/sin(65°)", "r = 10 × sin(65°)/sin(50°) = 11.8 cm"], hint: "Sine Rule: p/sin(P) = r/sin(R)", calculator: true },
+      { q: "Calculate the length of the diagonal across a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "13", worked: ["Base diagonal = √(3² + 4²) = √(9 + 16) = √25 = 5 cm", "Space diagonal = √(5² + 12²) = √(25 + 144) = √169 = 13 cm"], hint: "First find the base diagonal, then use Pythagoras again with the height", calculator: true },
+      { q: "A cuboid is 6 cm × 8 cm × 24 cm. Find the length of the space diagonal.", a: "26", worked: ["Base diagonal = √(6² + 8²) = √(36 + 64) = √100 = 10 cm", "Space diagonal = √(10² + 24²) = √(100 + 576) = √676 = 26 cm"], hint: "3D Pythagoras: find the base diagonal first, then include the height", calculator: true },
     ],
-    // Level 4 (Grade 8) — Cosine Rule
+    // Level 4 (Grade 8) — Angle between diagonal and base in 3D shapes
     [
-      { q: "Find the length of side x in a triangle with sides 7 cm and 9 cm and an included angle of 110°. Give your answer to 1 d.p.", a: "13.0", worked: ["Using Cosine Rule: x² = a² + b² − 2ab cos(C)", "x² = 7² + 9² − 2(7)(9)cos(110°)", "x² = 49 + 81 − 126×(−0.342)", "x² = 130 + 43.1 = 173.1", "x = √173.1 = 13.2 cm... ≈ 13.0"], hint: "Cosine Rule: x² = 7² + 9² − 2(7)(9)cos(110°)", calculator: true },
-      { q: "Find the length of side x in a triangle with sides 8 cm and 11 cm and an included angle of 55°. Give your answer to 1 d.p.", a: "9.1", worked: ["x² = 8² + 11² − 2(8)(11)cos(55°)", "x² = 64 + 121 − 176×0.5736", "x² = 185 − 100.95 = 84.05", "x = √84.05 = 9.2 cm"], hint: "Cosine Rule: x² = 8² + 11² − 2(8)(11)cos(55°)", calculator: true },
-    ],
-    // Level 5 (Grade 9) — 3D Pythagoras and Trigonometry
-    [
-      { q: "Find the angle between the longest diagonal and the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm. Give your answer to 1 d.p.", a: "67.4", worked: ["Base diagonal = √(3² + 4²) = √25 = 5 cm", "Space diagonal = √(5² + 12²) = √169 = 13 cm", "tan(θ) = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "First find the base diagonal, then use tan = height/base diagonal", calculator: true },
+      { q: "Find the angle between a diagonal and the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm. Give your answer to 1 d.p.", a: "67.4", worked: ["Base diagonal = √(3² + 4²) = 5 cm", "tan(θ) = height/base diagonal = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "Find the base diagonal, then use tan(θ) = height/base diagonal", calculator: true },
       { q: "A pyramid has a square base of side 6 cm and a vertical height of 8 cm. Find the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "62.1", worked: ["Half diagonal of base = √(3² + 3²) = 3√2 ≈ 4.243 cm", "tan(θ) = 8/4.243 = 1.885", "θ = tan⁻¹(1.885) = 62.1°"], hint: "Find the distance from centre of base to corner, then use tan = height/distance", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Sine Rule, Cosine Rule and complex 3D problems
+    [
+      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 8 cm. Find side b using the Sine Rule. Give your answer to 1 d.p.", a: "12.0", worked: ["Sine Rule: a/sin(A) = b/sin(B)", "8/sin(40°) = b/sin(75°)", "b = 8 × sin(75°)/sin(40°)", "b = 8 × 0.9659/0.6428 = 12.0 cm"], hint: "Sine Rule: a/sin(A) = b/sin(B)", calculator: true },
+      { q: "Find the length of side x in a triangle with sides 7 cm and 9 cm and an included angle of 110°. Give your answer to 1 d.p.", a: "13.2", worked: ["Cosine Rule: x² = 7² + 9² − 2(7)(9)cos(110°)", "x² = 49 + 81 − 126×(−0.342)", "x² = 130 + 43.1 = 173.1", "x = √173.1 = 13.2 cm"], hint: "Cosine Rule: x² = a² + b² − 2ab cos(C)", calculator: true },
     ],
   ],
 
@@ -4002,28 +4002,30 @@ const higherQuestionBank = {
   // G10: Circle Theorems (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'G10': [
-    // Level 1 (Grade 5) — Basic angle facts
+    // Level 1 (Grade 4/5) — Angle in a semicircle
     [
       { q: "The angle in a semicircle is always...", type: "mcq", options: ["45°", "90°", "180°", "360°"], a: "90°", worked: ["The angle subtended by a diameter at the circumference is always 90°", "This is one of the key circle theorems"], hint: "Think about a triangle inscribed in a semicircle" },
+      { q: "Triangle ABC is inscribed in a circle where AC is a diameter. Angle BAC = 35°. Find angle ABC.", a: "90", worked: ["AC is a diameter, so angle ABC is an angle in a semicircle", "Angle in a semicircle = 90°"], hint: "If one side of the triangle is a diameter, the angle opposite it is 90°" },
     ],
-    // Level 2 (Grade 6) — Angle at centre vs circumference
+    // Level 2 (Grade 6) — Cyclic quadrilateral and angle at centre
     [
+      { q: "In a cyclic quadrilateral, one angle is 85°. Calculate the opposite angle.", a: "95", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 85° = 95°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
       { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference" },
-      { q: "An angle at the circumference is 40°. What is the angle at the centre standing on the same arc?", a: "80", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at centre = 2 × 40° = 80°"], hint: "Angle at centre = 2 × angle at circumference" },
     ],
-    // Level 3 (Grade 7) — Tangent-radius and cyclic quadrilateral
+    // Level 3 (Grade 7) — Tangent-radius and combined theorems
     [
-      { q: "A tangent meets a radius at the point of contact. What is the angle between them?", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
-      { q: "In a cyclic quadrilateral, one angle is 115°. What is the opposite angle?", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+      { q: "Find the angle between a tangent and a radius at the point of contact.", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
+      { q: "In a cyclic quadrilateral ABCD, angle A = 115°. Find angle C.", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Angle C = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
     ],
-    // Level 4 (Grade 8) — Alternate segment theorem
+    // Level 4 (Grade 8) — Alternate Segment Theorem
     [
-      { q: "A tangent to a circle meets a chord at the point of contact. The angle between the tangent and the chord is 55°. Find the angle in the alternate segment.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So the angle = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
+      { q: "A tangent to a circle meets chord AB at point A. The angle between the tangent and chord AB is 55°. Use the Alternate Segment Theorem to find the angle ACB where C is a point on the major arc.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So angle ACB = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
       { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem" },
     ],
-    // Level 5 (Grade 9) — Combined circle theorems
+    // Level 5 (Grade 9) — Proving circle theorems and combined problems
     [
-      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP. Give your answer to 1 d.p.", a: "10.0", worked: ["The tangent is perpendicular to the radius at the point of contact", "The angle between OP and each tangent line is 30° (half of 60°)", "Wait: angle OAP = 90° where A is tangent point", "Angle APO = 30° (half of 60°)", "sin(30°) = OA/OP → 1/2 = 5/OP → OP = 10"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
+      { q: "Prove that the angle subtended by an arc at the centre is twice the angle subtended at the circumference. (What is the name of this theorem?)", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Tangent-radius theorem"], worked: ["Draw a radius to the point on the circumference to create two isosceles triangles", "In each isosceles triangle, the base angles are equal", "The angle at the centre = sum of the two exterior angles of the isosceles triangles", "This equals twice the angle at the circumference"], hint: "Create isosceles triangles using radii, then use exterior angle = sum of interior opposite angles" },
+      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP.", a: "10", worked: ["The tangent is perpendicular to the radius: angle OAP = 90°", "Angle APO = 30° (half of 60° by symmetry)", "sin(30°) = OA/OP", "½ = 5/OP", "OP = 10 cm"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
     ],
   ],
 
@@ -4031,30 +4033,30 @@ const higherQuestionBank = {
   // R16: Direct & Inverse Proportion (Higher)
   // ═══════════════════════════════════════════════════════════════
   'R16': [
-    // Level 1 (Grade 5) — Direct proportion
+    // Level 1 (Grade 4) — Finding the constant of proportionality
     [
-      { q: "y is directly proportional to x. When x = 5, y = 20. Find y when x = 8.", a: "32", worked: ["y = kx where k is the constant", "20 = k × 5 → k = 4", "When x = 8: y = 4 × 8 = 32"], hint: "Find k first: y = kx, so k = 20/5" },
-      { q: "y is directly proportional to x. When x = 3, y = 12. Find y when x = 7.", a: "28", worked: ["y = kx", "12 = k × 3 → k = 4", "When x = 7: y = 4 × 7 = 28"], hint: "Find k: y = kx, so k = 12/3" },
+      { q: "y is directly proportional to x. When x = 10, y = 50. Find the constant k.", a: "5", worked: ["y = kx", "50 = k × 10", "k = 50/10 = 5"], hint: "y = kx, so k = y/x" },
+      { q: "y is directly proportional to x. When x = 5, y = 20. Find y when x = 8.", a: "32", worked: ["y = kx", "20 = k × 5 → k = 4", "When x = 8: y = 4 × 8 = 32"], hint: "Find k first: y = kx, so k = 20/5" },
     ],
-    // Level 2 (Grade 7) — Inverse proportion
+    // Level 2 (Grade 5) — Using direct proportion
     [
-      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 5.", a: "8", worked: ["y = k/x", "10 = k/4 → k = 40", "When x = 5: y = 40/5 = 8"], hint: "y = k/x, so k = 10 × 4 = 40" },
-      { q: "y is inversely proportional to x. When x = 6, y = 15. Find y when x = 10.", a: "9", worked: ["y = k/x", "15 = k/6 → k = 90", "When x = 10: y = 90/10 = 9"], hint: "y = k/x, so k = 15 × 6 = 90" },
+      { q: "y ∝ x. If x = 4 when y = 12, find y when x = 9.", a: "27", worked: ["y = kx", "12 = k × 4 → k = 3", "When x = 9: y = 3 × 9 = 27"], hint: "Find k first, then substitute the new x value" },
+      { q: "y is directly proportional to x. When x = 3, y = 12. Find y when x = 7.", a: "28", worked: ["y = kx", "12 = k × 3 → k = 4", "When x = 7: y = 4 × 7 = 28"], hint: "y = kx, so k = 12/3" },
     ],
-    // Level 3 (Grade 8) — Proportion to a power
+    // Level 3 (Grade 7) — Inverse proportion
     [
-      { q: "y is directly proportional to x². When x = 3, y = 18. Find y when x = 5.", a: "50", worked: ["y = kx²", "18 = k × 3² = 9k → k = 2", "When x = 5: y = 2 × 25 = 50"], hint: "y = kx², so k = 18/9 = 2" },
+      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 2.5.", a: "16", worked: ["y = k/x", "10 = k/4 → k = 40", "When x = 2.5: y = 40/2.5 = 16"], hint: "y = k/x, so k = 10 × 4 = 40" },
+      { q: "y is inversely proportional to x. When x = 6, y = 15. Find y when x = 10.", a: "9", worked: ["y = k/x", "15 = k/6 → k = 90", "When x = 10: y = 90/10 = 9"], hint: "y = k/x, so k = y × x" },
+    ],
+    // Level 4 (Grade 8) — Proportion to a power
+    [
+      { q: "y is directly proportional to the square of x. When x = 3, y = 36. Find y when x = 5.", a: "100", worked: ["y = kx²", "36 = k × 3² = 9k → k = 4", "When x = 5: y = 4 × 25 = 100"], hint: "y = kx², so k = 36/9 = 4" },
       { q: "y is directly proportional to x². When x = 4, y = 48. Find y when x = 6.", a: "108", worked: ["y = kx²", "48 = k × 16 → k = 3", "When x = 6: y = 3 × 36 = 108"], hint: "y = kx², so k = 48/16 = 3" },
     ],
-    // Level 4 (Grade 9) — Inverse proportion to a root
+    // Level 5 (Grade 9) — Inverse proportion to roots and percentage change
     [
-      { q: "y is inversely proportional to √x. When x = 16, y = 2. Find x when y = 8.", a: "1", worked: ["y = k/√x", "2 = k/√16 = k/4 → k = 8", "When y = 8: 8 = 8/√x → √x = 1 → x = 1"], hint: "y = k/√x, so k = 2 × 4 = 8. Then solve 8 = 8/√x" },
-      { q: "y is inversely proportional to √x. When x = 9, y = 6. Find x when y = 3.", a: "36", worked: ["y = k/√x", "6 = k/√9 = k/3 → k = 18", "When y = 3: 3 = 18/√x → √x = 6 → x = 36"], hint: "y = k/√x, so k = 6 × 3 = 18. Then solve 3 = 18/√x" },
-    ],
-    // Level 5 (Grade 9) — Proportion in context
-    [
-      { q: "The force F between two magnets is inversely proportional to the square of the distance d. If d increases by 50%, what is the percentage decrease in F?", a: "55.6", worked: ["F = k/d²", "If d increases by 50%, new d = 1.5d", "New F = k/(1.5d)² = k/2.25d²", "Ratio = 1/2.25 = 0.444...", "Decrease = 1 − 0.444 = 0.556 = 55.6%"], hint: "New d = 1.5d. New F = k/(1.5d)². Compare to original F = k/d²", calculator: true },
-      { q: "The intensity I of light is inversely proportional to the square of the distance d. If d is doubled, by what fraction does I decrease?", a: "3/4", worked: ["I = k/d²", "If d doubles: new I = k/(2d)² = k/4d²", "New I = original I/4", "Decrease = 1 − 1/4 = 3/4"], hint: "New d = 2d. New I = k/(2d)² = k/4d²" },
+      { q: "y is inversely proportional to the cube root of x. If x is increased by 700%, calculate the percentage decrease in y. Give your answer to 1 d.p.", a: "50.0", worked: ["x increases by 700% means new x = 8x (original + 700%)", "y = k/∛x", "New y = k/∛(8x) = k/(2∛x) = original y / 2", "Decrease = 1 − 0.5 = 0.5 = 50%"], hint: "700% increase means new x = 8 × original x. ∛8 = 2", calculator: true },
+      { q: "The force F between two magnets is inversely proportional to the square of the distance d. If d increases by 50%, what is the percentage decrease in F? Give your answer to 1 d.p.", a: "55.6", worked: ["F = k/d²", "New d = 1.5d", "New F = k/(1.5d)² = k/2.25d²", "Ratio = 1/2.25 = 0.444...", "Decrease = 1 − 0.444 = 0.556 = 55.6%"], hint: "New d = 1.5d. New F = k/(1.5d)². Compare to original", calculator: true },
     ],
   ],
 
@@ -4403,24 +4405,28 @@ const higherQuestionBank = {
   // R15: Growth & Decay (Higher)
   // ═══════════════════════════════════════════════════════════════
   'R15': [
-    // Level 1 (Grade 6) — Simple percentage increase/decrease
+    // Level 1 (Grade 4) — Simple percentage increase
     [
+      { q: "Increase £200 by 15%.", a: "£230", worked: ["15% of £200 = 0.15 × 200 = £30", "£200 + £30 = £230", "Or: 200 × 1.15 = £230"], hint: "Find 15% then add it, or multiply by 1.15", calculator: true },
       { q: "A car loses 15% of its value each year. It is worth £12,000 now. What will it be worth in 1 year?", a: "£10,200", worked: ["15% of £12,000 = £1,800", "£12,000 − £1,800 = £10,200", "Or: 12000 × 0.85 = £10,200"], hint: "Multiply by 0.85 (100% − 15% = 85%)", calculator: true },
     ],
-    // Level 2 (Grade 7) — Compound interest
+    // Level 2 (Grade 5) — Compound interest
     [
-      { q: "£5,000 is invested at 3% compound interest per year. Find the value after 4 years.", a: "£5,627.54", worked: ["Value = 5000 × 1.03⁴", "= 5000 × 1.12551", "= £5,627.54 (to nearest penny)"], hint: "Use the formula: amount × (multiplier)^years", calculator: true },
+      { q: "Calculate the total value of £5,000 after 3 years at 2% compound interest.", a: "£5,306.04", worked: ["Value = 5000 × 1.02³", "= 5000 × 1.061208", "= £5,306.04 (to nearest penny)"], hint: "Use the formula: amount × (1 + rate)^years", calculator: true },
+      { q: "£5,000 is invested at 3% compound interest per year. Find the value after 4 years.", a: "£5,627.54", worked: ["Value = 5000 × 1.03⁴", "= 5000 × 1.12551", "= £5,627.54 (to nearest penny)"], hint: "Multiply by 1.03 four times, or use 5000 × 1.03⁴", calculator: true },
     ],
-    // Level 3 (Grade 8) — Depreciation
+    // Level 3 (Grade 7) — Depreciation
     [
-      { q: "A car worth £18,000 depreciates by 20% per year. After how many whole years will it first be worth less than £8,000?", a: "4 years", worked: ["After 1 year: 18000 × 0.8 = £14,400", "After 2 years: 14400 × 0.8 = £11,520", "After 3 years: 11520 × 0.8 = £9,216", "After 4 years: 9216 × 0.8 = £7,372.80", "First below £8,000 after 4 years"], hint: "Keep multiplying by 0.8 until below £8,000", calculator: true },
+      { q: "A car depreciates by 12% each year. If it is worth £15,000 now, what will it be worth in 4 years? Give your answer to the nearest pound.", a: "£8,994", worked: ["Multiplier = 1 − 0.12 = 0.88", "Value = 15000 × 0.88⁴", "= 15000 × 0.59969536", "= £8,995.43 ≈ £8,994"], hint: "Multiply by 0.88 each year, or use 15000 × 0.88⁴", calculator: true },
+      { q: "A car worth £18,000 depreciates by 20% per year. After how many whole years will it first be worth less than £8,000?", a: "4", worked: ["After 1 year: 18000 × 0.8 = £14,400", "After 2 years: 14400 × 0.8 = £11,520", "After 3 years: 11520 × 0.8 = £9,216", "After 4 years: 9216 × 0.8 = £7,372.80", "First below £8,000 after 4 years"], hint: "Keep multiplying by 0.8 until below £8,000", calculator: true },
     ],
-    // Level 4 (Grade 8) — Exponential growth/decay formula
+    // Level 4 (Grade 8) — Finding the growth rate
     [
-      { q: "A population of bacteria doubles every 3 hours. Starting with 500, find the population after 12 hours.", a: "8000", worked: ["12 hours ÷ 3 = 4 doubling periods", "500 × 2⁴ = 500 × 16 = 8,000"], hint: "Work out how many doubling periods there are, then multiply", calculator: true },
+      { q: "A population grows by x% each year. In 2 years, it grows from 1000 to 1210. Find x.", a: "10", worked: ["1000 × (1 + x/100)² = 1210", "(1 + x/100)² = 1.21", "1 + x/100 = √1.21 = 1.1", "x/100 = 0.1", "x = 10"], hint: "Set up: 1000 × (multiplier)² = 1210, then square root both sides", calculator: true },
     ],
-    // Level 5 (Grade 9) — Working backwards from growth/decay
+    // Level 5 (Grade 9) — Working backwards and complex decay
     [
+      { q: "A radioactive substance decays by k% every decade. After 50 years (5 decades), 60% of the substance remains. Find k to 2 decimal places.", a: "9.54", worked: ["(1 − k/100)⁵ = 0.6", "1 − k/100 = 0.6^(1/5)", "1 − k/100 = 0.6^0.2 = 0.90536...", "k/100 = 1 − 0.90536 = 0.09464", "k = 9.46... ≈ 9.54"], hint: "Set up (1 − k/100)⁵ = 0.6, then take the 5th root", calculator: true },
       { q: "After 3 years of 5% compound interest, an investment is worth £5,788.13. What was the original investment?", a: "£5,000", worked: ["5788.13 = P × 1.05³", "5788.13 = P × 1.157625", "P = 5788.13 ÷ 1.157625", "P = £5,000"], hint: "Divide the final amount by (multiplier)^years", calculator: true },
     ],
   ],
@@ -4449,6 +4455,36 @@ const higherQuestionBank = {
     // Level 5 (Grade 9) — Completing the square for circles
     [
       { q: "Find the centre and radius of the circle x² + y² − 6x + 4y − 12 = 0", a: "Centre (3, −2), radius 5", worked: ["Group: (x² − 6x) + (y² + 4y) = 12", "Complete square: (x − 3)² − 9 + (y + 2)² − 4 = 12", "(x − 3)² + (y + 2)² = 25", "Centre = (3, −2), radius = √25 = 5"], hint: "Complete the square for x and y separately" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G25: Vectors — Advanced (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'G25': [
+    // Level 1 (Grade 4/5) — Column vector addition
+    [
+      { q: "If a = (2, 3) and b = (4, −1), find a + 2b.", a: "(10, 1)", worked: ["2b = 2 × (4, −1) = (8, −2)", "a + 2b = (2, 3) + (8, −2)", "= (2+8, 3+(−2)) = (10, 1)"], hint: "First multiply b by 2, then add to a" },
+      { q: "If p = (5, −2) and q = (−3, 4), find 2p − q.", a: "(13, −8)", worked: ["2p = (10, −4)", "2p − q = (10, −4) − (−3, 4)", "= (10−(−3), −4−4) = (13, −8)"], hint: "Find 2p first, then subtract q" },
+    ],
+    // Level 2 (Grade 6) — Vector paths
+    [
+      { q: "Given vector AB = x and BC = y, find AC.", a: "x + y", worked: ["To go from A to C, go A → B → C", "AC = AB + BC = x + y"], hint: "Follow the path from A to C through B" },
+      { q: "ABCD is a parallelogram. AB = a and AD = b. Find AC.", a: "a + b", worked: ["AC = AB + BC", "In a parallelogram, BC = AD = b", "AC = a + b"], hint: "In a parallelogram, opposite sides are equal vectors" },
+    ],
+    // Level 3 (Grade 7) — Midpoints and vector expressions
+    [
+      { q: "OA = a and OB = b. M is the midpoint of AB. Express OM in terms of a and b.", a: "½(a + b)", worked: ["AB = AO + OB = −a + b = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b = ½(a + b)"], hint: "Go O → A → M. M is halfway from A to B." },
+      { q: "OA = a and OB = b. Q divides AB in the ratio 1:2. Express OQ in terms of a and b.", a: "⅔a + ⅓b", worked: ["AB = b − a", "AQ = ⅓AB = ⅓(b − a)", "OQ = OA + AQ = a + ⅓(b − a)", "= a + ⅓b − ⅓a = ⅔a + ⅓b"], hint: "Q is ⅓ of the way from A to B" },
+    ],
+    // Level 4 (Grade 8) — Proving collinearity
+    [
+      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a − 2b) − (2a + b) = 3a − 3b", "AC = OC − OA = (8a − 5b) − (2a + b) = 6a − 6b", "AC = 2(3a − 3b) = 2 × AB", "AC is a scalar multiple of AB and they share point A", "So A, B and C are collinear"], hint: "Show that AC = k × AB for some scalar k. Since they share point A, they're collinear." },
+    ],
+    // Level 5 (Grade 9) — Ratio and intersection problems
+    [
+      { q: "In trapezium OABC, OA = a and OC = c. AB is parallel to OC and AB = 2OC. M is the midpoint of OA. Find MC in terms of a and c.", a: "c − ½a", worked: ["OM = ½a (midpoint of OA)", "MC = MO + OC = −½a + c = c − ½a"], hint: "Go from M to O (which is −½a), then O to C (which is c)" },
+      { q: "OA = a, OB = b. P divides OA in ratio 2:1 and Q divides OB in ratio 2:1. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ⅔a (divides OA in ratio 2:1)", "OQ = ⅔b (divides OB in ratio 2:1)", "PQ = PO + OQ = −⅔a + ⅔b = ⅔(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ⅔ × AB, so PQ is parallel to AB"], hint: "Find PQ and AB in terms of a and b, then show one is a scalar multiple of the other" },
     ],
   ],
 };
