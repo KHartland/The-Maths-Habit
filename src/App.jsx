@@ -2158,7 +2158,7 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Isosceles triangle angles
     [
-      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2" },
+      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2", diagram: "isosceles-40" },
       { q: "Work out the size of angle Q.", a: "65", worked: ["PQR is isosceles with PQ = PR, so base angles are equal", "Angle Q = Angle R", "50 + 2×Q = 180 → 2×Q = 130 → Q = 65°"], hint: "Base angles are equal: (180 − 50) ÷ 2", diagram: "isosceles-50" },
       { q: "Find the size of angle YXZ.", a: "40", worked: ["The triangle has two equal sides, so base angles are equal at 70° each", "Sum of angles in a triangle = 180°", "Angle at top = 180 − 70 − 70 = 40"], hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40", diagram: "isosceles-triangle" },
     ],
@@ -4388,6 +4388,7 @@ const generateDiagram = (type) => {
     'dual-bar-chart': 'dual bar chart.png',
     'spinners': 'spinners.png',
     'isosceles-triangle': 'Isoceles triangle missing angle.png',
+    'isosceles-40': 'Isoceles 40.png',
     'isosceles-50': 'Isoceles 50.png',
     'pythagoras-shorter': 'pythagoras shorter side.png',
   };
