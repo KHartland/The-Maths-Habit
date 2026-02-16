@@ -4150,7 +4150,8 @@ const higherQuestionBank = {
   // ═══════════════════════════════════════════════════════════════
   // A6: Rearranging & Using Formulae (Higher)
   // ═══════════════════════════════════════════════════════════════
-  'A6': [
+  // A5: Rearranging Formulae (moved from old A6 — corrected AQA mapping)
+  'A5': [
     // Level 1 (Grade 5) — Substituting into formulae
     [
       { q: "The formula for the area of a trapezium is A = ½(a + b)h. Find A when a = 5, b = 9 and h = 4.", a: "28", worked: ["A = ½(a + b)h", "A = ½(5 + 9) × 4", "A = ½ × 14 × 4 = 28"], hint: "Substitute the values into the formula and work out step by step", calculator: true },
@@ -4172,7 +4173,39 @@ const higherQuestionBank = {
     ],
     // Level 5 (Grade 9) — Complex rearrangement
     [
-      { q: "Make x the subject of y = √((2x + 3)/(x − 1))", a: "x = (y² + 3)/(2 − y²) or (3 + y²)/(2 − y²)", worked: ["y² = (2x + 3)/(x − 1)", "y²(x − 1) = 2x + 3", "xy² − y² = 2x + 3", "xy² − 2x = y² + 3", "x(y² − 2) = y² + 3", "x = (y² + 3)/(y² − 2)"], hint: "Square both sides first, then multiply out and collect x terms" },
+      { q: "Make x the subject of y = √((2x + 3)/(x − 1))", a: "x = (y² + 3)/(y² − 2)", worked: ["y² = (2x + 3)/(x − 1)", "y²(x − 1) = 2x + 3", "xy² − y² = 2x + 3", "xy² − 2x = y² + 3", "x(y² − 2) = y² + 3", "x = (y² + 3)/(y² − 2)"], hint: "Square both sides first, then multiply out and collect x terms" },
+    ],
+  ],
+
+  // A6: Algebraic Proof (corrected AQA mapping — proofs and identities)
+  'A6': [
+    // Level 1 (Grade 5) — Simple sum proofs
+    [
+      { q: "Prove that the sum of any two consecutive integers is always odd.", a: "Shown", type: "proof", worked: ["Let the consecutive integers be n and n + 1", "Sum = n + (n + 1) = 2n + 1", "2n + 1 is always odd (one more than an even number)"], hint: "Write two consecutive integers as n and n + 1, then add them" },
+      { q: "Prove that the sum of any three consecutive integers is always a multiple of 3.", a: "Shown", type: "proof", worked: ["Let the integers be n, n + 1, n + 2", "Sum = n + (n + 1) + (n + 2) = 3n + 3", "= 3(n + 1)", "This is a multiple of 3"], hint: "Call the first integer n. Write all three and add them up." },
+      { q: "Prove that the sum of any two even numbers is even.", a: "Shown", type: "proof", worked: ["Let the two even numbers be 2a and 2b", "Sum = 2a + 2b = 2(a + b)", "This is 2 × (a + b), which is a multiple of 2", "So the sum is always even"], hint: "Write each even number as 2 times something" },
+    ],
+    // Level 2 (Grade 6-7) — Expanding bracket proofs
+    [
+      { q: "Show that (n + 2)² − n² is always a multiple of 4 for any integer n.", a: "Shown", type: "proof", worked: ["(n + 2)² − n² = n² + 4n + 4 − n²", "= 4n + 4", "= 4(n + 1)", "This is a multiple of 4"], hint: "Expand (n + 2)², then subtract n² and factorise" },
+      { q: "Prove that (n + 1)² − (n − 1)² is always a multiple of 4.", a: "Shown", type: "proof", worked: ["(n + 1)² = n² + 2n + 1", "(n − 1)² = n² − 2n + 1", "(n + 1)² − (n − 1)² = 4n", "4n is a multiple of 4"], hint: "Expand both brackets and subtract. Look for a factor of 4." },
+      { q: "Prove that (n + 3)² − (n + 1)² is always a multiple of 4.", a: "Shown", type: "proof", worked: ["(n + 3)² = n² + 6n + 9", "(n + 1)² = n² + 2n + 1", "(n + 3)² − (n + 1)² = 4n + 8", "= 4(n + 2)", "This is a multiple of 4"], hint: "Expand both, subtract, and factorise" },
+    ],
+    // Level 3 (Grade 7-8) — Proofs involving squares
+    [
+      { q: "Prove algebraically that the square of any odd number is always 1 more than a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd number be 2n + 1", "(2n + 1)² = 4n² + 4n + 1", "= 4n(n + 1) + 1", "n and n + 1 are consecutive, so one is even", "Therefore n(n + 1) is always even: n(n + 1) = 2k", "= 4(2k) + 1 = 8k + 1", "This is 1 more than a multiple of 8"], hint: "Write an odd number as 2n + 1. Square it and use the fact that n(n + 1) is always even." },
+      { q: "Prove algebraically that the sum of the squares of any two consecutive even numbers is always 4 more than a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the consecutive even numbers be 2n and 2n + 2", "(2n)² + (2n + 2)² = 4n² + 4n² + 8n + 4", "= 8n² + 8n + 4", "= 8(n² + n) + 4", "= 8n(n + 1) + 4", "This is 4 more than a multiple of 8"], hint: "Write two consecutive even numbers as 2n and 2n + 2. Square each, add, and factorise." },
+    ],
+    // Level 4 (Grade 8) — Difference of squares proofs
+    [
+      { q: "Prove that the difference between the squares of any two consecutive even numbers is always a multiple of 4 but never a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the consecutive even numbers be 2n and 2n + 2", "(2n + 2)² − (2n)² = 4n² + 8n + 4 − 4n²", "= 8n + 4 = 4(2n + 1)", "4(2n + 1) is a multiple of 4 ✓", "But 2n + 1 is always odd, so 4(2n + 1) is not divisible by 8 ✗"], hint: "Expand and simplify. Show it equals 4 × (odd number) — that's divisible by 4 but not 8." },
+      { q: "Prove that the difference between the squares of any two odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the two odd numbers be 2a + 1 and 2b + 1", "(2a + 1)² − (2b + 1)² = 4a² + 4a + 1 − 4b² − 4b − 1", "= 4(a² + a − b² − b) = 4(a(a + 1) − b(b + 1))", "a(a + 1) and b(b + 1) are both even (consecutive integers)", "Let a(a + 1) = 2m and b(b + 1) = 2p", "= 4(2m − 2p) = 8(m − p)", "This is a multiple of 8"], hint: "Use 2a + 1 and 2b + 1 for any two odd numbers. Remember n(n+1) is always even." },
+    ],
+    // Level 5 (Grade 9) — Complex expansion proofs
+    [
+      { q: "Prove that (3n + 1)² − (3n − 1)² is always a multiple of 12 for all integer values of n.", a: "Shown", type: "proof", worked: ["(3n + 1)² = 9n² + 6n + 1", "(3n − 1)² = 9n² − 6n + 1", "(3n + 1)² − (3n − 1)² = 12n", "12n is a multiple of 12 for all integers n"], hint: "Expand both squares and subtract. Look for a factor of 12." },
+      { q: "Prove that (2n + 3)² − (2n − 3)² is a multiple of 24 for all integer values of n.", a: "Shown", type: "proof", worked: ["(2n + 3)² = 4n² + 12n + 9", "(2n − 3)² = 4n² − 12n + 9", "(2n + 3)² − (2n − 3)² = 24n", "24n is a multiple of 24 for all integers n"], hint: "Expand both squares and subtract. Look for a factor of 24." },
+      { q: "Prove that the difference between the squares of consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n + 1 and 2n + 3", "(2n + 3)² − (2n + 1)²", "= (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "This is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n + 1 and 2n + 3, then expand" },
     ],
   ],
 
@@ -4204,36 +4237,10 @@ const higherQuestionBank = {
     ],
   ],
 
-  // ═══════════════════════════════════════════════════════════════
-  // A11: Iteration (Higher only)
-  // ═══════════════════════════════════════════════════════════════
-  'A11': [
-    // Level 1 (Grade 6) — Trial and improvement
-    [
-      { q: "Use trial and improvement to find a solution of x³ + x = 20, correct to 1 decimal place. Start with x = 2.", a: "x = 2.6", worked: ["x = 2: 8 + 2 = 10 (too small)", "x = 3: 27 + 3 = 30 (too big)", "x = 2.5: 15.625 + 2.5 = 18.125 (too small)", "x = 2.7: 19.683 + 2.7 = 22.383 (too big)", "x = 2.6: 17.576 + 2.6 = 20.176 (close!)", "x = 2.55: 16.581 + 2.55 = 19.131 (too small)", "Between 2.55 and 2.6, closer to 2.6"], hint: "Try values and narrow down. Check the midpoint.", calculator: true },
-    ],
-    // Level 2 (Grade 7) — Using iteration formulae
-    [
-      { q: "Use the iteration formula xₙ₊₁ = (20 − xₙ)^(1/3) with x₀ = 2 to find x₁, x₂ and x₃ to 4 d.p.", a: "x₁ = 2.6208, x₂ = 2.5765, x₃ = 2.5809", worked: ["x₁ = (20 − 2)^(1/3) = 18^(1/3) = 2.6208", "x₂ = (20 − 2.6208)^(1/3) = 17.3792^(1/3) = 2.5765", "x₃ = (20 − 2.5765)^(1/3) = 17.4235^(1/3) = 2.5809"], hint: "Substitute each answer back into the formula to get the next value", calculator: true },
-    ],
-    // Level 3 (Grade 7) — Setting up iteration formulae
-    [
-      { q: "Show that x³ + x = 20 can be rearranged to x = (20 − x)^(1/3)", a: "Shown", type: "proof", worked: ["x³ + x = 20", "x³ = 20 − x", "x = (20 − x)^(1/3)"], hint: "Rearrange to get x³ = something, then cube root both sides" },
-    ],
-    // Level 4 (Grade 8) — Convergence of iteration
-    [
-      { q: "Using xₙ₊₁ = √(5/(xₙ + 2)) with x₀ = 1, find the value the iteration converges to, correct to 3 d.p.", a: "1.070", worked: ["x₁ = √(5/3) = 1.2910", "x₂ = √(5/3.2910) = 1.2326", "Continue iterating...", "Values converge to 1.070"], hint: "Keep substituting until the values settle to 3 decimal places", calculator: true },
-    ],
-    // Level 5 (Grade 9) — Choosing an iteration formula
-    [
-      { q: "The equation x³ − 3x − 5 = 0 has a root between 2 and 3. Which rearrangement gives a converging iteration: A) x = (3x + 5)^(1/3) or B) x = (x³ − 5)/3? Use x₀ = 2.", a: "A", type: "mcq", options: ["A", "B", "Both converge"], worked: ["Try A: x₁ = (6+5)^(1/3) = 11^(1/3) = 2.224", "x₂ = (6.672+5)^(1/3) = 2.267...", "This converges", "Try B: x₁ = (8−5)/3 = 1", "x₂ = (1−5)/3 = −1.333...", "This diverges"], hint: "Try both formulae and see which one converges" },
-    ],
-  ],
+  // (A11 iteration content moved to A20 — corrected AQA mapping)
 
-  // ═══════════════════════════════════════════════════════════════
-  // G17: Vectors (Higher only)
-  // ═══════════════════════════════════════════════════════════════
-  'G17': [
+  // G24: Vectors — Column Vectors and Translations (moved from old G17 — corrected AQA mapping)
+  'G24': [
     // Level 1 (Grade 7) — Column vectors and basic operations
     [
       { q: "Write the vector that translates point A(2, 3) to point B(5, 1) as a column vector.", a: "(3, −2)", worked: ["Change in x: 5 − 2 = 3", "Change in y: 1 − 3 = −2", "Vector AB = (3, −2)"], hint: "Subtract the coordinates: (x₂ − x₁, y₂ − y₁)" },
@@ -4255,6 +4262,30 @@ const higherQuestionBank = {
     // Level 5 (Grade 9) — Ratio and vector proofs
     [
       { q: "OA = a and OB = b. P is the midpoint of OA and Q is the midpoint of OB. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ½a (midpoint of OA)", "OQ = ½b (midpoint of OB)", "PQ = PO + OQ = −½a + ½b = ½(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ½AB, so PQ is parallel to AB (scalar multiple)"], hint: "Find PQ in terms of a and b, then show it's a scalar multiple of AB" },
+    ],
+  ],
+
+  // G17: Circles — Circumference, Area, Arcs and Sectors (corrected AQA mapping)
+  'G17': [
+    // Level 1 (Grade 4) — Area of a circle
+    [
+      { q: "Calculate the area of a circle with a radius of 6 cm. Give your answer in terms of π.", a: "36π cm²", worked: ["Area = πr²", "Area = π × 6²", "Area = 36π cm²"], hint: "Use the formula Area = πr². Leave your answer as a multiple of π." },
+    ],
+    // Level 2 (Grade 5) — Perimeter of a semicircle
+    [
+      { q: "Find the perimeter of a semicircle with a diameter of 10 cm. Give your answer to 1 d.p.", a: "25.7 cm", calculator: true, worked: ["Curved part = half the circumference = πd/2 = 10π/2 = 5π", "Straight part = diameter = 10", "Perimeter = 5π + 10 ≈ 15.71 + 10 = 25.7 cm"], hint: "Perimeter = half the circumference + the diameter. Don't forget the straight edge!" },
+    ],
+    // Level 3 (Grade 7) — Area of a sector
+    [
+      { q: "Calculate the area of a sector with radius 8 cm and central angle 45°. Give your answer in terms of π.", a: "8π cm²", worked: ["Area of sector = (θ/360) × πr²", "= (45/360) × π × 8²", "= (1/8) × 64π", "= 8π cm²"], hint: "Sector area = (angle/360) × πr²" },
+    ],
+    // Level 4 (Grade 8) — Reverse sector problems
+    [
+      { q: "The area of a sector is 20π cm² and the radius is 10 cm. Find the central angle.", a: "72°", worked: ["Area = (θ/360) × πr²", "20π = (θ/360) × π × 100", "20π = 100πθ/360", "20 = 100θ/360", "θ = 20 × 360/100 = 72°"], hint: "Substitute into the sector area formula and solve for θ" },
+    ],
+    // Level 5 (Grade 9) — Composite sector problems
+    [
+      { q: "A shape is made from a sector of a circle with radius r. If the radius is increased by 50%, find the percentage increase in the area of the sector.", a: "125%", worked: ["Original area = (θ/360) × πr²", "New radius = 1.5r", "New area = (θ/360) × π(1.5r)² = (θ/360) × 2.25πr²", "New area = 2.25 × original area", "Percentage increase = (2.25 − 1) × 100% = 125%"], hint: "If the radius is multiplied by k, the area is multiplied by k². What is 1.5²?" },
     ],
   ],
 
@@ -4294,31 +4325,29 @@ const higherQuestionBank = {
     ],
   ],
 
-  // ═══════════════════════════════════════════════════════════════
-  // A22: Graphs of Trigonometric Functions (Higher)
-  // ═══════════════════════════════════════════════════════════════
+  // A22: Solving Inequalities including Quadratic (corrected AQA mapping — moved from old A15)
   'A22': [
-    // Level 1 (Grade 6) — Recognising trig graphs
+    // Level 1 (Grade 6) — Solving linear inequalities
     [
-      { q: "What is the period of the graph y = sin(x)?", a: "360°", type: "mcq", options: ["180°", "360°", "90°"], worked: ["The sine curve completes one full cycle from 0° to 360°", "So the period is 360°"], hint: "A full cycle means from one peak back to the same peak" },
-      { q: "What is the maximum value of y = cos(x)?", a: "1", worked: ["The cosine graph oscillates between −1 and 1", "Maximum value = 1 (at x = 0°, 360°, etc.)"], hint: "Think about the range of the cosine function" },
+      { q: "Solve 3x + 2 > 14", a: "x > 4", worked: ["3x + 2 > 14", "3x > 12", "x > 4"], hint: "Treat it like an equation, but keep the inequality sign" },
+      { q: "Solve 5 − 2x ≤ 11", a: "x ≥ −3", worked: ["5 − 2x ≤ 11", "−2x ≤ 6", "x ≥ −3 (flip the sign when dividing by negative)"], hint: "Remember to flip the inequality when dividing by a negative" },
     ],
-    // Level 2 (Grade 7) — Reading values from trig graphs
+    // Level 2 (Grade 7) — Compound inequalities
     [
-      { q: "How many solutions does sin(x) = 0.5 have for 0° ≤ x ≤ 360°?", a: "2", worked: ["sin(30°) = 0.5", "The sine graph also equals 0.5 at 180° − 30° = 150°", "So there are 2 solutions: x = 30° and x = 150°"], hint: "Think about the symmetry of the sine curve" },
-      { q: "Solve tan(x) = 1 for 0° ≤ x ≤ 360°", a: "x = 45° or x = 225°", worked: ["tan(45°) = 1", "tan repeats every 180°, so also at 45° + 180° = 225°", "Solutions: x = 45° and x = 225°"], hint: "The tangent function repeats every 180°" },
+      { q: "Solve −3 < 2x + 1 ≤ 7 and list the integer values.", a: "−1, 0, 1, 2, 3", worked: ["−3 < 2x + 1 ≤ 7", "Subtract 1: −4 < 2x ≤ 6", "Divide by 2: −2 < x ≤ 3", "Integer values: −1, 0, 1, 2, 3"], hint: "Solve the compound inequality in one go, doing the same to all three parts" },
     ],
-    // Level 3 (Grade 7) — Transformations of trig graphs
+    // Level 3 (Grade 8) — Quadratic inequalities (basic)
     [
-      { q: "Describe the transformation that maps y = sin(x) to y = sin(x) + 3", a: "Translation of (0, 3)", worked: ["Adding 3 to the whole function shifts the graph up by 3 units", "This is a translation by the vector (0, 3)"], hint: "What happens when you add a number outside the function?" },
+      { q: "Solve x² < 25", a: "−5 < x < 5", worked: ["x² < 25", "x² − 25 < 0", "(x + 5)(x − 5) < 0", "The parabola is negative between the roots", "−5 < x < 5"], hint: "Find where x² = 25, then think about where the parabola is below zero" },
+      { q: "Solve x² ≥ 9", a: "x ≤ −3 or x ≥ 3", worked: ["x² ≥ 9", "x² − 9 ≥ 0", "(x + 3)(x − 3) ≥ 0", "The parabola is positive outside the roots", "x ≤ −3 or x ≥ 3"], hint: "Think about where the U-shaped parabola is above the x-axis" },
     ],
-    // Level 4 (Grade 8) — Using trig graphs to solve equations
+    // Level 4 (Grade 8) — Factorised quadratic inequalities
     [
-      { q: "Solve 2sin(x) − 1 = 0 for 0° ≤ x ≤ 360°", a: "x = 30° or x = 150°", worked: ["2sin(x) − 1 = 0", "2sin(x) = 1", "sin(x) = 0.5", "x = 30° or x = 180° − 30° = 150°"], hint: "Rearrange to find sin(x) = ?, then solve" },
+      { q: "Solve x² − 5x + 6 > 0", a: "x < 2 or x > 3", worked: ["Factorise: (x − 2)(x − 3) > 0", "Roots at x = 2 and x = 3", "Parabola is positive outside the roots", "x < 2 or x > 3"], hint: "Factorise, find the roots, then sketch the parabola" },
     ],
-    // Level 5 (Grade 9) — Combined transformations
+    // Level 5 (Grade 9) — Complex quadratic inequalities
     [
-      { q: "The graph of y = sin(x) is transformed to y = 3sin(2x) + 1. State the amplitude, period, and vertical shift.", a: "Amplitude = 3, Period = 180°, Shift up 1", worked: ["Amplitude = 3 (the coefficient of sin)", "Period = 360°/2 = 180° (divide by the coefficient of x)", "Vertical shift = +1 (added outside the sin)"], hint: "The number in front stretches vertically, the number inside compresses horizontally" },
+      { q: "Find the set of values of x for which x² − 3x − 10 ≤ 0", a: "−2 ≤ x ≤ 5", worked: ["Factorise: (x − 5)(x + 2) ≤ 0", "Roots at x = −2 and x = 5", "Parabola is negative (or zero) between the roots", "−2 ≤ x ≤ 5"], hint: "Factorise, find roots, then determine where the quadratic is ≤ 0" },
     ],
   ],
 
@@ -4351,58 +4380,62 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
-  // A20: Algebraic Proof (Higher only)
-  // ═══════════════════════════════════════════════════════════════
+  // A20: Iteration and Numerical Methods (corrected AQA mapping — merged from old A11 + A19)
   'A20': [
-    // Level 1 (Grade 6) — Writing algebraic expressions
+    // Level 1 (Grade 5-6) — Change of sign / Trial and improvement
     [
-      { q: "Write an expression for: an even number", a: "2n", worked: ["An even number is any multiple of 2", "If n is an integer, then 2n is always even"], hint: "What do all even numbers have in common?" },
-      { q: "Write expressions for two consecutive odd numbers.", a: "2n + 1 and 2n + 3", worked: ["An odd number can be written as 2n + 1", "The next odd number is 2 more: 2n + 3"], hint: "Odd numbers are 1 more than even numbers" },
+      { q: "Show that the equation x³ + x − 3 = 0 has a solution between x = 1 and x = 2.", a: "Shown", type: "proof", worked: ["Let f(x) = x³ + x − 3", "f(1) = 1 + 1 − 3 = −1 (negative)", "f(2) = 8 + 2 − 3 = 7 (positive)", "Change of sign, so there is a root between 1 and 2"], hint: "Evaluate f(1) and f(2). If one is +ve and one is −ve, there's a root between them." },
+      { q: "Show that x² − 4x + 1 = 0 has a root between 0 and 1.", a: "Shown", type: "proof", worked: ["f(0) = 0 − 0 + 1 = 1 (positive)", "f(1) = 1 − 4 + 1 = −2 (negative)", "Change of sign, so there is a root between 0 and 1"], hint: "Substitute x = 0 and x = 1 to show a sign change" },
+      { q: "Use trial and improvement to find a solution of x³ + x = 20, correct to 1 d.p.", a: "x = 2.6", calculator: true, worked: ["x = 2: 10 (too small)", "x = 3: 30 (too big)", "x = 2.5: 18.125 (too small)", "x = 2.7: 22.383 (too big)", "x = 2.6: 20.176 (close, just over)", "x = 2.55: 19.131 (under), so between 2.55 and 2.6 → 2.6"], hint: "Try values and narrow down. Check the midpoint." },
     ],
-    // Level 2 (Grade 7) — Simple algebraic proofs
+    // Level 2 (Grade 6-7) — Rearranging equations for iteration
     [
-      { q: "Prove that the sum of any two even numbers is even.", a: "Shown", type: "proof", worked: ["Let the two even numbers be 2a and 2b", "Sum = 2a + 2b = 2(a + b)", "This is 2 × (a + b), which is a multiple of 2", "So the sum is always even"], hint: "Write each even number as 2 times something" },
-      { q: "Prove that the sum of any two odd numbers is even.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2a + 1 and 2b + 1", "Sum = 2a + 1 + 2b + 1 = 2a + 2b + 2", "= 2(a + b + 1)", "This is a multiple of 2, so it's even"], hint: "Write each odd number as 2n + 1" },
+      { q: "Show that x³ + x = 20 can be rearranged to x = (20 − x)^(1/3)", a: "Shown", type: "proof", worked: ["x³ + x = 20", "x³ = 20 − x", "x = (20 − x)^(1/3)"], hint: "Get x³ on its own, then cube root both sides" },
+      { q: "Rearrange x² − 5x + 1 = 0 to give x = √(5x − 1).", a: "Shown", type: "proof", worked: ["x² − 5x + 1 = 0", "x² = 5x − 1", "x = √(5x − 1)"], hint: "Move terms to get x² on its own, then square root" },
+      { q: "Rearrange x³ + x = 3 to give x = (3 − x)^(1/3).", a: "Shown", type: "proof", worked: ["x³ + x = 3", "x³ = 3 − x", "x = ∛(3 − x) = (3 − x)^(1/3)"], hint: "Get x³ alone on one side, then cube root" },
     ],
-    // Level 3 (Grade 8) — Product proofs
+    // Level 3 (Grade 7) — Using iteration formulae
     [
-      { q: "Prove that the product of two consecutive integers is always even.", a: "Shown", type: "proof", worked: ["Let the consecutive integers be n and n + 1", "Product = n(n + 1)", "If n is even, then n(n + 1) is even (even × anything = even)", "If n is odd, then n + 1 is even, so n(n + 1) is even", "Either way, the product is always even"], hint: "Consider two cases: n even and n odd" },
+      { q: "Use xₙ₊₁ = √(5xₙ − 1) with x₀ = 4 to find x₁ and x₂ to 4 d.p.", a: "x₁ = 4.3589, x₂ = 4.5601", calculator: true, worked: ["x₁ = √(5×4 − 1) = √19 = 4.3589", "x₂ = √(5×4.3589 − 1) = √(20.7945) = 4.5601"], hint: "Substitute each answer back into the formula" },
+      { q: "Use xₙ₊₁ = (20 − xₙ)^(1/3) with x₀ = 2 to find x₁, x₂ and x₃ to 4 d.p.", a: "x₁ = 2.6208, x₂ = 2.5765, x₃ = 2.5809", calculator: true, worked: ["x₁ = (18)^(1/3) = 2.6208", "x₂ = (17.3792)^(1/3) = 2.5765", "x₃ = (17.4235)^(1/3) = 2.5809"], hint: "Substitute each answer back to get the next value" },
     ],
-    // Level 4 (Grade 8) — Proof with quadratics
+    // Level 4 (Grade 8) — Applying iteration to converge
     [
-      { q: "Prove that n² + n is always even for all positive integers n.", a: "Shown", type: "proof", worked: ["n² + n = n(n + 1)", "This is the product of consecutive integers", "One of n or n + 1 must be even", "So n(n + 1) is always even"], hint: "Factorise first, then think about consecutive integers" },
+      { q: "Starting with x₀ = 1, use xₙ₊₁ = 3/(xₙ² + 1) twice to estimate a solution of x³ + x = 3.", a: "x₂ ≈ 0.92", calculator: true, worked: ["x³ + x = 3 → x = 3/(x² + 1)", "x₁ = 3/(1 + 1) = 1.5", "x₂ = 3/(2.25 + 1) = 3/3.25 ≈ 0.923"], hint: "Use x = 3/(x² + 1). Substitute x₀ = 1." },
+      { q: "Using xₙ₊₁ = √(5/(xₙ + 2)) with x₀ = 1, find the value the iteration converges to (3 d.p.).", a: "1.070", calculator: true, worked: ["x₁ = √(5/3) = 1.2910", "x₂ = √(5/3.291) = 1.2326", "Continue iterating... converges to 1.070"], hint: "Keep substituting until values settle" },
     ],
-    // Level 5 (Grade 9) — Counter-examples and complex proofs
+    // Level 5 (Grade 9) — Convergence, divergence and choosing formulae
     [
-      { q: "Prove that the difference between the squares of consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n + 1 and 2n + 3", "(2n + 3)² − (2n + 1)²", "= (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "This is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n + 1 and 2n + 3, then expand" },
+      { q: "x³ − 3x − 5 = 0 has a root between 2 and 3. Which gives a converging iteration: A) x = (3x + 5)^(1/3) or B) x = (x³ − 5)/3?", a: "A", type: "mcq", options: ["A", "B", "Both converge"], worked: ["A: x₁ = 11^(1/3) = 2.224, x₂ ≈ 2.267... converges ✓", "B: x₁ = (8−5)/3 = 1, x₂ = (1−5)/3 = −1.33... diverges ✗"], hint: "Try both with x₀ = 2 and see which converges" },
+      { q: "Why might an iteration formula fail to converge?", a: "The gradient of the iterating function is too steep at the root", type: "mcq", options: ["Gradient too steep (|g'(x)| > 1 at root)", "The equation has no solutions", "The starting value is always wrong", "Iteration never works for cubics"], worked: ["Iteration xₙ₊₁ = g(xₙ) converges when |g'(x)| < 1 at the root", "If |g'(x)| > 1, errors get amplified → divergence", "A different rearrangement may converge"], hint: "Think about what happens when each step amplifies the error" },
     ],
   ],
 
-  // ═══════════════════════════════════════════════════════════════
-  // A15: Solving Quadratic Inequalities (Higher only)
-  // ═══════════════════════════════════════════════════════════════
+  // A15: Gradients of Curves and Areas Under Graphs (corrected AQA mapping)
   'A15': [
-    // Level 1 (Grade 6) — Solving linear inequalities (review)
+    // Level 1 (Grade 6) — Estimating gradients from tangents
     [
-      { q: "Solve 3x + 2 > 14", a: "x > 4", worked: ["3x + 2 > 14", "3x > 12", "x > 4"], hint: "Treat it like an equation, but keep the inequality sign" },
-      { q: "Solve 5 − 2x ≤ 11", a: "x ≥ −3", worked: ["5 − 2x ≤ 11", "−2x ≤ 6", "x ≥ −3 (flip the sign when dividing by negative)"], hint: "Remember to flip the inequality when dividing by a negative" },
+      { q: "A curve passes through (2, 3) and a tangent drawn at this point also passes through (4, 9). Estimate the gradient of the curve at x = 2.", a: "3", worked: ["Gradient of tangent = change in y / change in x", "Gradient = (9 − 3) / (4 − 2)", "Gradient = 6 / 2 = 3", "The gradient of the tangent equals the gradient of the curve at that point"], hint: "The gradient of the tangent line at a point equals the gradient of the curve at that point. Use rise/run." },
     ],
-    // Level 2 (Grade 7) — Representing inequalities on number lines
+    // Level 2 (Grade 7) — Interpreting gradients on real-life graphs
     [
-      { q: "Solve −3 < 2x + 1 ≤ 7 and list the integer values.", a: "−1, 0, 1, 2, 3", worked: ["−3 < 2x + 1 ≤ 7", "Subtract 1: −4 < 2x ≤ 6", "Divide by 2: −2 < x ≤ 3", "Integer values: −1, 0, 1, 2, 3"], hint: "Solve the compound inequality in one go, doing the same to all three parts" },
+      { q: "On a distance-time graph, a straight line goes from (0, 0) to (4, 20). What does the gradient represent and what is its value?", a: "Speed = 5 m/s", worked: ["Gradient = change in distance / change in time", "Gradient = 20/4 = 5", "On a distance-time graph, gradient = speed", "Speed = 5 m/s"], hint: "On a distance-time graph, the gradient gives the speed. Calculate rise ÷ run." },
+      { q: "On a velocity-time graph, what does the gradient at any point represent?", a: "Acceleration", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], worked: ["The gradient of a velocity-time graph = rate of change of velocity", "Rate of change of velocity = acceleration", "Units: (m/s) / s = m/s²"], hint: "Think about what 'rate of change of velocity' means" },
     ],
-    // Level 3 (Grade 8) — Quadratic inequalities (basic)
+    // Level 3 (Grade 8) — Area under graphs (trapezium rule)
     [
-      { q: "Solve x² < 25", a: "−5 < x < 5", worked: ["x² < 25", "x² − 25 < 0", "(x + 5)(x − 5) < 0", "The parabola is negative between the roots", "−5 < x < 5"], hint: "Find where x² = 25, then think about where the parabola is below zero" },
-      { q: "Solve x² ≥ 9", a: "x ≤ −3 or x ≥ 3", worked: ["x² ≥ 9", "x² − 9 ≥ 0", "(x + 3)(x − 3) ≥ 0", "The parabola is positive outside the roots", "x ≤ −3 or x ≥ 3"], hint: "Think about where the U-shaped parabola is above the x-axis" },
+      { q: "A velocity-time graph shows: 0–3 seconds velocity increases from 0 to 12 m/s, then 3–7 seconds velocity stays at 12 m/s. Calculate the total distance travelled.", a: "66 m", worked: ["Section 1 (0–3s): Triangle, area = ½ × 3 × 12 = 18 m", "Section 2 (3–7s): Rectangle, area = 4 × 12 = 48 m", "Total distance = 18 + 48 = 66 m", "The area under a velocity-time graph gives the distance"], hint: "Split the area into a triangle and a rectangle. Area under velocity-time = distance." },
+      { q: "Use three trapezia of equal width to estimate the area under y = x² between x = 0 and x = 3.", a: "9.5", calculator: true, worked: ["Width of each trapezium = (3 − 0)/3 = 1", "y-values: y(0)=0, y(1)=1, y(2)=4, y(3)=9", "Trap 1: ½(0 + 1) × 1 = 0.5", "Trap 2: ½(1 + 4) × 1 = 2.5", "Trap 3: ½(4 + 9) × 1 = 6.5", "Total = 0.5 + 2.5 + 6.5 = 9.5"], hint: "Calculate y at x = 0, 1, 2, 3. Each trapezium = ½(y₁ + y₂) × width." },
     ],
-    // Level 4 (Grade 8) — Factorised quadratic inequalities
+    // Level 4 (Grade 9) — Instantaneous rate of change
     [
-      { q: "Solve x² − 5x + 6 > 0", a: "x < 2 or x > 3", worked: ["Factorise: (x − 2)(x − 3) > 0", "Roots at x = 2 and x = 3", "Parabola is positive outside the roots", "x < 2 or x > 3"], hint: "Factorise, find the roots, then sketch the parabola" },
+      { q: "On a velocity-time graph, a tangent drawn at t = 5 passes through (3, 8) and (7, 20). What is the instantaneous acceleration at t = 5?", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (20 − 8) / (7 − 3)", "Gradient = 12 / 4 = 3", "Instantaneous acceleration at t = 5 is 3 m/s²"], hint: "On a velocity-time graph, the gradient gives acceleration. Use the tangent line's gradient." },
+      { q: "On a velocity-time graph, the velocity is 4 m/s at t = 0 and 14 m/s at t = 5. Calculate the average acceleration.", a: "2 m/s²", worked: ["Average acceleration = change in velocity / change in time", "= (14 − 4) / (5 − 0)", "= 10 / 5 = 2 m/s²"], hint: "Average acceleration = (final velocity − initial velocity) / time" },
     ],
-    // Level 5 (Grade 9) — Complex quadratic inequalities
+    // Level 5 (Grade 9) — Area under acceleration-time graph and over/underestimates
     [
-      { q: "Find the set of values of x for which x² − 3x − 10 ≤ 0", a: "−2 ≤ x ≤ 5", worked: ["Factorise: (x − 5)(x + 2) ≤ 0", "Roots at x = −2 and x = 5", "Parabola is negative (or zero) between the roots", "−2 ≤ x ≤ 5"], hint: "Factorise, find roots, then determine where the quadratic is ≤ 0" },
+      { q: "An acceleration-time graph shows constant acceleration of 4 m/s² for 3 seconds, then 2 m/s² for 5 seconds. If the initial velocity was 6 m/s, find the final velocity.", a: "28 m/s", worked: ["Area under acceleration-time graph = change in velocity", "Section 1: 4 × 3 = 12 m/s", "Section 2: 2 × 5 = 10 m/s", "Total change in velocity = 12 + 10 = 22 m/s", "Final velocity = 6 + 22 = 28 m/s"], hint: "The area under an acceleration-time graph gives the change in velocity. Add this to the initial velocity." },
+      { q: "The trapezium rule estimates the area under y = x² from x = 0 to x = 3 as 9.5. The exact area is 9. Is this an over-estimate or under-estimate, and why?", a: "Over-estimate", type: "mcq", options: ["Over-estimate — curve is convex (bends upward)", "Under-estimate — curve is concave (bends downward)", "Exact — trapezium rule is always accurate"], worked: ["y = x² is a convex curve (it curves upward)", "The tops of the trapezia sit above the curve", "So the trapezium rule over-estimates the area", "For concave curves (bending downward), it would under-estimate"], hint: "Think about whether the straight tops of the trapezia sit above or below the curve." },
     ],
   ],
 
@@ -4503,11 +4536,14 @@ const higherQuestionBank = {
     [
       { q: "State the radius of the circle with equation x² + y² = 49.", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
       { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so the point lies on the circle"], hint: "Substitute into x² + y²" },
+      { q: "A circle has equation x² + y² = 50. Show that the point (5, 5) lies on the circumference.", a: "Shown", type: "proof", worked: ["Substitute (5, 5) into x² + y²", "5² + 5² = 25 + 25 = 50 ✓", "This equals the right-hand side, so (5, 5) lies on the circle"], hint: "Substitute x = 5 and y = 5 into the left side and check it equals 50" },
     ],
     // Level 3 (Grade 7) — Tangent to a circle at a point
     [
       { q: "Find the equation of the tangent to x² + y² = 25 at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Gradient of radius to (3,4) = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4"], hint: "Tangent is perpendicular to the radius" },
       { q: "Find the equation of the tangent to x² + y² = 20 at the point (4, 2).", a: "y = −2x + 10", worked: ["Gradient of radius to (4,2) = 2/4 = 1/2", "Tangent is perpendicular: gradient = −2", "y − 2 = −2(x − 4)", "y = −2x + 8 + 2 = −2x + 10"], hint: "Find the gradient of the radius, then use −1/gradient for the tangent" },
+      { q: "Find the equation of the tangent to x² + y² = 13 at the point (2, 3). Give your answer in the form y = mx + c.", a: "y = −⅔x + 13/3", worked: ["Gradient of radius to (2, 3) = 3/2", "Tangent is perpendicular: gradient = −2/3", "y − 3 = −⅔(x − 2)", "y = −⅔x + 4/3 + 3", "y = −⅔x + 13/3"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal." },
+      { q: "Find the equation of the tangent to x² + y² = 25 at the point (−3, 4).", a: "y = ¾x + 25/4", worked: ["Gradient of radius to (−3, 4) = 4/(−3) = −4/3", "Tangent is perpendicular: gradient = 3/4", "y − 4 = ¾(x − (−3))", "y − 4 = ¾(x + 3)", "y = ¾x + 9/4 + 4 = ¾x + 25/4"], hint: "The radius goes from (0,0) to (−3, 4). Find its gradient, then use the negative reciprocal for the tangent." },
     ],
     // Level 4 (Grade 8) — Line intersecting a circle
     [
@@ -4516,34 +4552,7 @@ const higherQuestionBank = {
     // Level 5 (Grade 9) — Tangent area problem
     [
       { q: "The line L is a tangent to x² + y² = 40 at P(2, 6). Find the area of the triangle formed by L and the x and y axes.", a: "200/3", worked: ["Gradient of radius OP = 6/2 = 3", "Tangent gradient = −1/3", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept: 0 = −⅓x + 20/3 → x = 20", "y-intercept: x = 0 → y = 20/3", "Area = ½ × 20 × 20/3 = 200/3"], hint: "Find the tangent equation, then its x and y intercepts, then area = ½ × base × height", calculator: true },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A19: Iteration and Numerical Methods (Higher)
-  // ═══════════════════════════════════════════════════════════════
-  'A19': [
-    // Level 1 (Grade 5) — Change of sign method
-    [
-      { q: "Show that the equation x³ + x − 3 = 0 has a solution between x = 1 and x = 2.", a: "Shown", type: "proof", worked: ["Let f(x) = x³ + x − 3", "f(1) = 1 + 1 − 3 = −1 (negative)", "f(2) = 8 + 2 − 3 = 7 (positive)", "Change of sign between f(1) and f(2)", "So there is a root between 1 and 2"], hint: "Evaluate f(1) and f(2). If one is positive and one is negative, there's a root between them." },
-      { q: "Show that x² − 4x + 1 = 0 has a root between 0 and 1.", a: "Shown", type: "proof", worked: ["f(0) = 0 − 0 + 1 = 1 (positive)", "f(1) = 1 − 4 + 1 = −2 (negative)", "Change of sign, so there is a root between 0 and 1"], hint: "Substitute x = 0 and x = 1 to show a sign change" },
-    ],
-    // Level 2 (Grade 6) — Rearranging equations for iteration
-    [
-      { q: "Rearrange x² − 5x + 1 = 0 to give x = √(5x − 1).", a: "Shown", type: "proof", worked: ["x² − 5x + 1 = 0", "x² = 5x − 1", "x = √(5x − 1) (taking positive root)"], hint: "Move the terms to get x² on its own, then square root both sides" },
-      { q: "Rearrange x³ + x = 3 to give x = (3 − x)^(1/3).", a: "Shown", type: "proof", worked: ["x³ + x = 3", "x³ = 3 − x", "x = ∛(3 − x) = (3 − x)^(1/3)"], hint: "Get x³ alone on one side, then cube root both sides" },
-    ],
-    // Level 3 (Grade 7) — Using iteration formulae
-    [
-      { q: "Use the iteration formula xₙ₊₁ = √(5xₙ − 1) with x₀ = 4 to find x₁ and x₂ to 4 d.p.", a: "x₁ = 4.3589, x₂ = 4.5601", worked: ["x₁ = √(5×4 − 1) = √19 = 4.3589", "x₂ = √(5×4.3589 − 1) = √(20.7945) = 4.5601"], hint: "Substitute each answer back into the formula to get the next value", calculator: true },
-    ],
-    // Level 4 (Grade 8) — Applying iteration to find estimates
-    [
-      { q: "Starting with x₀ = 1, use xₙ₊₁ = 3/(xₙ² + 1) twice to find an estimate for a solution of x³ + x = 3.", a: "x₂ = 1.2", worked: ["x₁ = 3/(1² + 1) = 3/2 = 1.5", "x₂ = 3/(1.5² + 1) = 3/(2.25 + 1) = 3/3.25 = 0.923...", "Hmm, let me recheck the formula derivation", "x³ + x = 3 → x(x² + 1) = 3 → x = 3/(x² + 1)", "x₁ = 3/(1+1) = 1.5", "x₂ = 3/(2.25+1) = 3/3.25 ≈ 0.923"], hint: "x³ + x = 3 can be written as x = 3/(x² + 1). Substitute x₀ = 1.", calculator: true },
-    ],
-    // Level 5 (Grade 9) — Convergence and divergence
-    [
-      { q: "Explain why an iteration formula may fail to converge to a root.", a: "The gradient of the iterating function is too steep at the root", type: "mcq", options: ["The gradient is too steep (|g'(x)| > 1 at root)", "The equation has no solutions", "The starting value is always wrong", "Iteration never works for cubics"], worked: ["An iteration xₙ₊₁ = g(xₙ) converges when |g'(x)| < 1 at the root", "If |g'(x)| > 1, small errors get amplified and the iteration diverges", "A different rearrangement of the same equation may have |g'(x)| < 1", "So a different iteration formula for the same equation may converge"], hint: "Think about what happens when each step amplifies the error instead of reducing it" },
+      { q: "The tangent L₁ to the circle x² + y² = 25 at point P(3, 4) meets the x-axis at Q. Find the area of triangle OPQ, where O is the origin.", a: "50/3", worked: ["Gradient of radius OP = 4/3", "Tangent gradient = −3/4", "Tangent: y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4", "x-intercept (Q): 0 = −¾x + 25/4 → x = 25/3, so Q = (25/3, 0)", "Triangle OPQ: base OQ = 25/3, height = y-coord of P = 4", "Area = ½ × 25/3 × 4 = 50/3"], hint: "Find the tangent equation, then where it crosses the x-axis. Use base × height ÷ 2 with the origin." },
     ],
   ],
 
@@ -4685,27 +4694,35 @@ const higherQuestionBank = {
     ],
   ],
 
-  // A12: Gradients and Area Under a Curve (Kinematics interpretation)
-  'A12': [
-    // Level 1 (Grade 6) — Estimate gradient by drawing tangent
+  // A17: Algebraic Fractions (Simplifying, adding, solving)
+  'A17': [
+    // Level 1 (Grade 5) — Simplifying basic algebraic fractions
     [
-      { q: "A curve passes through (2, 3) and a tangent drawn at this point also passes through (4, 9). Estimate the gradient of the curve at x = 2.", a: "3", worked: ["Gradient of tangent = change in y / change in x", "Gradient = (9 − 3) / (4 − 2)", "Gradient = 6 / 2 = 3", "The gradient of the tangent equals the gradient of the curve at that point"], hint: "The gradient of the tangent line at a point equals the gradient of the curve at that point. Use rise/run." },
+      { q: "Simplify 4x²/2x", a: "2x", worked: ["4x² ÷ 2x", "Divide coefficients: 4 ÷ 2 = 2", "Divide x terms: x² ÷ x = x", "= 2x"], hint: "Divide the numbers and subtract the powers of x" },
+      { q: "Simplify 10x³/5x", a: "2x²", worked: ["10x³ ÷ 5x", "Divide coefficients: 10 ÷ 5 = 2", "Divide x terms: x³ ÷ x = x²", "= 2x²"], hint: "Divide the numbers and subtract the powers of x" },
     ],
-    // Level 2 (Grade 7) — Distance-time graph gradient = speed
+    // Level 2 (Grade 6) — Adding algebraic fractions
     [
-      { q: "On a distance-time graph, a straight line goes from (0, 0) to (4, 20). What does the gradient represent and what is its value?", a: "Speed = 5 m/s", worked: ["Gradient = change in distance / change in time", "Gradient = 20/4 = 5", "On a distance-time graph, gradient = speed (or velocity)", "Speed = 5 m/s"], hint: "On a distance-time graph, the gradient gives the speed. Calculate rise ÷ run." },
+      { q: "Write x/3 + x/4 as a single fraction.", a: "7x/12", worked: ["Find common denominator: LCM of 3 and 4 = 12", "x/3 = 4x/12", "x/4 = 3x/12", "4x/12 + 3x/12 = 7x/12"], hint: "Find the LCM of the denominators, then convert each fraction" },
+      { q: "Express x/2 + x/5 as a single fraction.", a: "7x/10", worked: ["Common denominator: LCM of 2 and 5 = 10", "x/2 = 5x/10", "x/5 = 2x/10", "5x/10 + 2x/10 = 7x/10"], hint: "Find the LCM of the denominators, then convert each fraction" },
     ],
-    // Level 3 (Grade 8) — Area under velocity-time graph = distance
+    // Level 3 (Grade 7) — Simplifying by factorising
     [
-      { q: "A velocity-time graph shows: 0–3 seconds velocity increases from 0 to 12 m/s, then 3–7 seconds velocity stays at 12 m/s. Calculate the total distance travelled.", a: "66 m", worked: ["Section 1 (0–3s): Triangle, area = ½ × 3 × 12 = 18 m", "Section 2 (3–7s): Rectangle, area = 4 × 12 = 48 m", "Total distance = 18 + 48 = 66 m", "The area under a velocity-time graph gives the distance"], hint: "Split the area into a triangle and a rectangle. Area under velocity-time = distance." },
+      { q: "Simplify fully: (x² − 16)/(2x + 8)", a: "(x − 4)/2", worked: ["Factorise numerator: x² − 16 = (x + 4)(x − 4) (difference of two squares)", "Factorise denominator: 2x + 8 = 2(x + 4)", "= (x + 4)(x − 4) / 2(x + 4)", "Cancel (x + 4): = (x − 4)/2"], hint: "Factorise the numerator (difference of two squares) and the denominator, then cancel common factors" },
+      { q: "Simplify fully: (x² − 25)/(3x + 15)", a: "(x − 5)/3", worked: ["Factorise numerator: x² − 25 = (x + 5)(x − 5)", "Factorise denominator: 3x + 15 = 3(x + 5)", "= (x + 5)(x − 5) / 3(x + 5)", "Cancel (x + 5): = (x − 5)/3"], hint: "Factorise both: difference of two squares on top, common factor on bottom" },
+      { q: "Simplify fully: (x² − 9)/(5x + 15)", a: "(x − 3)/5", worked: ["Factorise numerator: x² − 9 = (x + 3)(x − 3)", "Factorise denominator: 5x + 15 = 5(x + 3)", "= (x + 3)(x − 3) / 5(x + 3)", "Cancel (x + 3): = (x − 3)/5"], hint: "Difference of two squares on top, take out common factor on bottom" },
     ],
-    // Level 4 (Grade 9) — Instantaneous acceleration from tangent
+    // Level 4 (Grade 8) — Solving equations with algebraic fractions
     [
-      { q: "On a velocity-time graph, a tangent drawn at t = 5 passes through the points (3, 8) and (7, 20). What is the instantaneous acceleration at t = 5?", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (20 − 8) / (7 − 3)", "Gradient = 12 / 4 = 3", "Instantaneous acceleration at t = 5 is 3 m/s²"], hint: "On a velocity-time graph, the gradient gives acceleration. Use the tangent line's gradient." },
+      { q: "Solve: 3/(x + 1) + 1/(x − 2) = 2. Give your answers to 2 decimal places.", a: "x = 2.82 and x = 0.18", calculator: true, worked: ["Multiply through by (x + 1)(x − 2):", "3(x − 2) + 1(x + 1) = 2(x + 1)(x − 2)", "3x − 6 + x + 1 = 2(x² − x − 2)", "4x − 5 = 2x² − 2x − 4", "2x² − 6x + 1 = 0", "x = (6 ± √(36 − 8)) / 4 = (6 ± √28) / 4", "x = (3 + √7)/2 ≈ 2.82 or x = (3 − √7)/2 ≈ 0.18"], hint: "Multiply every term by (x + 1)(x − 2) to clear the fractions, then solve the quadratic" },
+      { q: "Solve: 4/(x + 2) + 2/(x − 1) = 1. Give your answers to 2 decimal places.", a: "x = 5.37 and x = −0.37", calculator: true, worked: ["Multiply through by (x + 2)(x − 1):", "4(x − 1) + 2(x + 2) = (x + 2)(x − 1)", "4x − 4 + 2x + 4 = x² + x − 2", "6x = x² + x − 2", "x² − 5x − 2 = 0", "x = (5 ± √(25 + 8)) / 2 = (5 ± √33) / 2", "x ≈ 5.37 or x ≈ −0.37"], hint: "Multiply every term by (x + 2)(x − 1) to clear fractions, then rearrange to a quadratic" },
+      { q: "Express 2/(x − 3) − 1/(x + 2) as a single fraction in its simplest form.", a: "(x + 7)/((x − 3)(x + 2))", worked: ["Common denominator: (x − 3)(x + 2)", "2(x + 2)/((x − 3)(x + 2)) − 1(x − 3)/((x − 3)(x + 2))", "= (2x + 4 − x + 3) / ((x − 3)(x + 2))", "= (x + 7) / ((x − 3)(x + 2))"], hint: "Find the common denominator (x − 3)(x + 2), then combine the numerators carefully" },
+      { q: "Express 3/(x − 2) − 2/(x + 3) as a single fraction in its simplest form.", a: "(x + 13)/((x − 2)(x + 3))", worked: ["Common denominator: (x − 2)(x + 3)", "3(x + 3)/((x − 2)(x + 3)) − 2(x − 2)/((x − 2)(x + 3))", "= (3x + 9 − 2x + 4) / ((x − 2)(x + 3))", "= (x + 13) / ((x − 2)(x + 3))"], hint: "Common denominator is (x − 2)(x + 3). Be careful with signs when subtracting." },
     ],
-    // Level 5 (Grade 9) — Area under acceleration-time graph
+    // Level 5 (Grade 9) — Simplify and hence solve
     [
-      { q: "An acceleration-time graph shows constant acceleration of 4 m/s² for 3 seconds, then 2 m/s² for 5 seconds. If the initial velocity was 6 m/s, find the final velocity.", a: "28 m/s", worked: ["Area under acceleration-time graph = change in velocity", "Section 1: 4 × 3 = 12 m/s (change in velocity)", "Section 2: 2 × 5 = 10 m/s (change in velocity)", "Total change in velocity = 12 + 10 = 22 m/s", "Final velocity = initial + change = 6 + 22 = 28 m/s"], hint: "The area under an acceleration-time graph gives the change in velocity. Add this to the initial velocity." },
+      { q: "Simplify (2x² − 5x − 3)/(x² − 9) and hence solve (2x² − 5x − 3)/(x² − 9) = 3.", a: "x = −8", worked: ["Factorise numerator: 2x² − 5x − 3 = (2x + 1)(x − 3)", "Factorise denominator: x² − 9 = (x + 3)(x − 3)", "Simplified: (2x + 1)(x − 3) / ((x + 3)(x − 3)) = (2x + 1)/(x + 3)", "Now solve (2x + 1)/(x + 3) = 3:", "2x + 1 = 3(x + 3)", "2x + 1 = 3x + 9", "−x = 8", "x = −8"], hint: "Factorise both numerator and denominator using difference of two squares. Cancel common factors, then solve." },
+      { q: "Simplify (3x² + 10x − 8)/(x² − 16) and find the value of x for which the fraction equals 2.", a: "x = −6", worked: ["Factorise numerator: 3x² + 10x − 8 = (3x − 2)(x + 4)", "Factorise denominator: x² − 16 = (x + 4)(x − 4)", "Simplified: (3x − 2)(x + 4) / ((x + 4)(x − 4)) = (3x − 2)/(x − 4)", "Solve (3x − 2)/(x − 4) = 2:", "3x − 2 = 2(x − 4)", "3x − 2 = 2x − 8", "x = −6"], hint: "Factorise numerator and denominator, cancel, then solve the resulting linear equation." },
     ],
   ],
 };
