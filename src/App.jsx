@@ -6454,7 +6454,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {sessionHistory.slice(-10).reverse().map((session, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div>
                       <div className="text-sm font-medium text-primary-text">
                         Session #{session.sessionNumber}
@@ -7477,7 +7477,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       currentPage === item.id
                         ? "bg-gradient-violet text-white shadow-glow-violet"
-                        : "text-secondary-text hover:text-primary-text hover:bg-white/5"
+                        : "text-secondary-text hover:text-primary-text hover:bg-gray-100"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
