@@ -42,7 +42,7 @@ angle_to_C = math.degrees(math.atan2(Cy - Ay, Cx - Ax))
 # PIL arc uses 0° = 3 o'clock, going clockwise
 # We need to draw arc from direction of AB to AC
 arc_bbox = [Ax - arc_radius, Ay - arc_radius, Ax + arc_radius, Ay + arc_radius]
-draw.arc(arc_bbox, start=angle_to_B, end=angle_to_C, fill='black', width=2)
+draw.arc(arc_bbox, start=angle_to_C, end=angle_to_B, fill='black', width=2)
 
 # Draw tick marks on AB and AC (equal sides)
 def draw_tick_marks(draw, x1, y1, x2, y2, num_ticks=2, tick_len=18):
