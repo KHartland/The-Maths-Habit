@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Copy, Check, Play, Trophy, Clock, X, Loader2, Swords } from 'lucide-react';
+import { sanitiseName } from '../lib/profanityFilter';
 import {
   createMatch,
   joinMatch,
@@ -30,7 +31,39 @@ const STATES = {
   FINISHED: 'finished'
 };
 
-const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
+// Avatar circle with image fallback to initial
+const AvatarCircle = ({ avatarUrl, name, size = 'md', colorClass = 'bg-metallic-base/20', textClass = 'text-metallic-base' }) => {
+  const sizeClasses = size === 'lg' ? 'w-16 h-16 text-2xl' : 'w-10 h-10 text-base';
+  const initial = name?.charAt(0)?.toUpperCase() || '?';
+
+  if (avatarUrl) {
+    return (
+      <img
+        src={avatarUrl}
+        alt=""
+        className={`${size === 'lg' ? 'w-16 h-16' : 'w-10 h-10'} rounded-full object-cover`}
+        onError={(e) => {
+          // Replace with initial fallback on error
+          const div = document.createElement('div');
+          div.className = `${sizeClasses} rounded-full ${colorClass} flex items-center justify-center`;
+          const span = document.createElement('span');
+          span.className = `font-bold ${textClass}`;
+          span.textContent = initial;
+          div.appendChild(span);
+          e.target.replaceWith(div);
+        }}
+      />
+    );
+  }
+
+  return (
+    <div className={`${sizeClasses} rounded-full ${colorClass} flex items-center justify-center`}>
+      <span className={`font-bold ${textClass}`}>{initial}</span>
+    </div>
+  );
+};
+
+const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUrl }) => {
   const [gameState, setGameState] = useState(STATES.MENU);
   const [match, setMatch] = useState(null);
   const [joinCode, setJoinCode] = useState('');
@@ -142,7 +175,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
       );
 
       const newMatch = await Promise.race([
-        createMatch(user.id, displayName, { questionCount, tier }),
+        createMatch(user.id, displayName, { questionCount, tier }, userAvatarUrl),
         timeoutPromise
       ]);
 
@@ -172,7 +205,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
       );
 
       const joinedMatch = await Promise.race([
-        joinMatch(joinCode, user.id, displayName),
+        joinMatch(joinCode, user.id, displayName, userAvatarUrl),
         timeoutPromise
       ]);
 
@@ -392,24 +425,32 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
 
               <div className="flex items-center justify-center gap-8 mb-8">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-metallic-base/20 flex items-center justify-center mb-2">
-                    <span className="text-2xl font-bold text-metallic-base">
-                      {match.host_name?.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="mb-2 flex justify-center">
+                    <AvatarCircle
+                      avatarUrl={match.host_avatar}
+                      name={sanitiseName(match.host_name)}
+                      size="lg"
+                      colorClass="bg-metallic-base/20"
+                      textClass="text-metallic-base"
+                    />
                   </div>
-                  <p className="font-semibold text-gray-800">{match.host_name}</p>
+                  <p className="font-semibold text-gray-800">{sanitiseName(match.host_name)}</p>
                   {playerType === 'host' && <span className="text-xs text-metallic-base">(You)</span>}
                 </div>
 
                 <div className="text-3xl font-bold text-gray-400">VS</div>
 
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-full bg-mint/20 flex items-center justify-center mb-2">
-                    <span className="text-2xl font-bold text-green-600">
-                      {match.guest_name?.charAt(0).toUpperCase()}
-                    </span>
+                  <div className="mb-2 flex justify-center">
+                    <AvatarCircle
+                      avatarUrl={match.guest_avatar}
+                      name={sanitiseName(match.guest_name)}
+                      size="lg"
+                      colorClass="bg-mint/20"
+                      textClass="text-green-600"
+                    />
                   </div>
-                  <p className="font-semibold text-gray-800">{match.guest_name}</p>
+                  <p className="font-semibold text-gray-800">{sanitiseName(match.guest_name)}</p>
                   {playerType === 'guest' && <span className="text-xs text-metallic-base">(You)</span>}
                 </div>
               </div>
@@ -453,7 +494,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
             <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="text-center">
-                  <p className="text-sm text-gray-500">{playerType === 'host' ? 'You' : match.host_name}</p>
+                  <p className="text-sm text-gray-500">{playerType === 'host' ? 'You' : sanitiseName(match.host_name)}</p>
                   <p className="text-2xl font-bold text-metallic-base">{playerType === 'host' ? myScore : opponentScore}</p>
                 </div>
 
@@ -463,7 +504,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
                 </div>
 
                 <div className="text-center">
-                  <p className="text-sm text-gray-500">{playerType === 'guest' ? 'You' : match.guest_name}</p>
+                  <p className="text-sm text-gray-500">{playerType === 'guest' ? 'You' : sanitiseName(match.guest_name)}</p>
                   <p className="text-2xl font-bold text-green-600">{playerType === 'guest' ? myScore : opponentScore}</p>
                 </div>
               </div>
@@ -560,7 +601,16 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
               {/* Final scores */}
               <div className="flex items-center justify-center gap-12 my-8">
                 <div className="text-center">
-                  <p className="text-sm text-gray-500 mb-1">{match.host_name}</p>
+                  <div className="flex justify-center mb-2">
+                    <AvatarCircle
+                      avatarUrl={match.host_avatar}
+                      name={sanitiseName(match.host_name)}
+                      size="md"
+                      colorClass="bg-metallic-base/20"
+                      textClass="text-metallic-base"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mb-1">{sanitiseName(match.host_name)}</p>
                   <p className="text-4xl font-bold text-metallic-base">{hostScore}</p>
                   {match.host_finished_at && (
                     <p className="text-sm text-gray-400 mt-1">
@@ -572,7 +622,16 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
                 <div className="text-2xl text-gray-400">-</div>
 
                 <div className="text-center">
-                  <p className="text-sm text-gray-500 mb-1">{match.guest_name}</p>
+                  <div className="flex justify-center mb-2">
+                    <AvatarCircle
+                      avatarUrl={match.guest_avatar}
+                      name={sanitiseName(match.guest_name)}
+                      size="md"
+                      colorClass="bg-mint/20"
+                      textClass="text-green-600"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mb-1">{sanitiseName(match.guest_name)}</p>
                   <p className="text-4xl font-bold text-green-600">{guestScore}</p>
                   {match.guest_finished_at && (
                     <p className="text-sm text-gray-400 mt-1">

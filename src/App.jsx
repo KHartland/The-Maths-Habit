@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -8,6 +8,8 @@ import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
+import { checkProfanity, sanitiseName } from './lib/profanityFilter';
+import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
@@ -850,7 +852,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
             level >= 5 ? 'bg-mint/20 text-mint border border-mint/30' :
             level >= 4 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
             level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
-            'bg-white/10 text-secondary-text border border-white/10'
+            'bg-gray-100 text-secondary-text border border-gray-200'
           }`}>
             {level >= 5 ? '✓ Mastered' :
              level >= 4 ? '🔥 Nearly there' :
@@ -2057,9 +2059,9 @@ const questionBank = {
     ],
     // Level 4 (3 marks) — Convert km/h to m/s
     [
-      { q: "Convert 72 km/h into metres per second (m/s).", a: "20", worked: ["72 km = 72000 m", "1 hour = 3600 seconds", "Speed = 72000 ÷ 3600 = 20 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
-      { q: "Convert 54 km/h into metres per second (m/s).", a: "15", worked: ["54 km = 54000 m", "1 hour = 3600 seconds", "Speed = 54000 ÷ 3600 = 15 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
-      { q: "Convert 90 km/h into metres per second (m/s).", a: "25", worked: ["90 km = 90000 m", "1 hour = 3600 seconds", "Speed = 90000 ÷ 3600 = 25 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600" },
+      { q: "Convert 72 km/h into metres per second (m/s).", a: "20", worked: ["72 km = 72000 m", "1 hour = 3600 seconds", "Speed = 72000 ÷ 3600 = 20 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600", calculator: true },
+      { q: "Convert 54 km/h into metres per second (m/s).", a: "15", worked: ["54 km = 54000 m", "1 hour = 3600 seconds", "Speed = 54000 ÷ 3600 = 15 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600", calculator: true },
+      { q: "Convert 90 km/h into metres per second (m/s).", a: "25", worked: ["90 km = 90000 m", "1 hour = 3600 seconds", "Speed = 90000 ÷ 3600 = 25 m/s"], hint: "Divide by 3.6, or × 1000 then ÷ 3600", calculator: true },
     ],
   ],
 
@@ -2156,7 +2158,7 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Isosceles triangle angles
     [
-      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2" },
+      { q: "ABC is an isosceles triangle. AB = AC. Angle A = 40°. Work out the size of angle B.", a: "70", worked: ["In isosceles triangle, base angles are equal", "Angle B = Angle C. Sum of angles = 180°", "40 + 2×B = 180 → 2×B = 140 → B = 70"], hint: "Base angles are equal: (180 − 40) ÷ 2", diagram: "isosceles-40" },
       { q: "Work out the size of angle Q.", a: "65", worked: ["PQR is isosceles with PQ = PR, so base angles are equal", "Angle Q = Angle R", "50 + 2×Q = 180 → 2×Q = 130 → Q = 65°"], hint: "Base angles are equal: (180 − 50) ÷ 2", diagram: "isosceles-50" },
       { q: "Find the size of angle YXZ.", a: "40", worked: ["The triangle has two equal sides, so base angles are equal at 70° each", "Sum of angles in a triangle = 180°", "Angle at top = 180 − 70 − 70 = 40"], hint: "Base angles are equal, so angle Z = 70° too. Then 180 − 70 − 70 = 40", diagram: "isosceles-triangle" },
     ],
@@ -2424,6 +2426,42 @@ const questionBank = {
     ],
   ],
 
+  // ═══════════════════════════════════════════════════════════════
+  // N13: Money Calculations
+  // ═══════════════════════════════════════════════════════════════
+  'N13': [
+    // Level 0 (1 mark) — Change from a purchase
+    [
+      { q: "Sam buys a coffee for £2.80 and a sandwich for £3.50. How much change does he get from £10?", a: "3.70", worked: ["Add the costs: £2.80 + £3.50 = £6.30", "Subtract from £10: £10 − £6.30 = £3.70"] },
+      { q: "Jo buys a magazine for £3.20 and a drink for £1.95. How much change from £20?", a: "14.85", worked: ["Add the costs: £3.20 + £1.95 = £5.15", "Subtract from £20: £20 − £5.15 = £14.85"] },
+      { q: "Sarah buys a sandwich for £3.45 and a drink for £1.20. How much change does she get from £10?", a: "5.35", worked: ["Add the costs: £3.45 + £1.20 = £4.65", "Subtract from £10: £10 − £4.65 = £5.35"] },
+    ],
+    // Level 1 (2 marks) — Unit cost
+    [
+      { q: "A pack of 6 pens costs £4.50. Work out the cost of one pen.", a: "0.75", worked: ["Divide total cost by number of pens", "£4.50 ÷ 6 = £0.75"] },
+      { q: "A box of 12 eggs costs £3.60. Work out the cost of one egg.", a: "0.30", worked: ["Divide total cost by number of eggs", "£3.60 ÷ 12 = £0.30"] },
+      { q: "A pack of 6 cans of cola costs £4.50. How much does one can cost?", a: "0.75", worked: ["Divide total cost by number of cans", "£4.50 ÷ 6 = £0.75"] },
+    ],
+    // Level 2 (2 marks) — Earnings calculation
+    [
+      { q: "Sarah earns £9.20 per hour. Last week she worked 15 hours. How much did she earn?", a: "138", worked: ["Multiply hourly rate by hours", "£9.20 × 15 = £138"] },
+      { q: "Tom earns £10.50 per hour. He works 12 hours. How much is his total pay?", a: "126", worked: ["Multiply hourly rate by hours", "£10.50 × 12 = £126"] },
+      { q: "Gas costs 15p per unit. A family uses 800 units. How much is the total bill in pounds?", a: "120", worked: ["Cost = 15p × 800 = 12000p", "Convert to pounds: 12000 ÷ 100 = £120"] },
+    ],
+    // Level 3 (3 marks) — Multi-buy offer
+    [
+      { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90", worked: ["Buy 2 Get 1 Free: every 3 bars costs 2 × 65p = 130p", "9 bars = 3 groups of 3", "Total: 3 × 130p = 390p = £3.90"] },
+      { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40", worked: ["Each pair costs £1.20 + £0.60 = £1.80", "6 bars = 3 pairs", "Total: 3 × £1.80 = £5.40"] },
+      { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", worked: ["Shop A: £1.20 ÷ 0.5 kg = £2.40 per kg", "Shop B: £1.70 ÷ 0.75 kg = £2.27 per kg", "Shop B is cheaper per kg, so better value"] },
+    ],
+    // Level 4 (3 marks) — Tiered pricing
+    [
+      { q: "Gas costs 18p per unit for the first 100 units, and 12p per unit for any additional units. Calculate the total cost in £ for using 250 units.", a: "36", calculator: true, worked: ["First 100 units: 100 × 18p = 1800p = £18", "Remaining 150 units: 150 × 12p = 1800p = £18", "Total: £18 + £18 = £36"] },
+      { q: "Electricity costs 22p per unit for the first 50 units, then 15p per unit after that. Calculate the total cost in £ for 120 units.", a: "21.50", calculator: true, worked: ["First 50 units: 50 × 22p = 1100p = £11", "Remaining 70 units: 70 × 15p = 1050p = £10.50", "Total: £11 + £10.50 = £21.50"] },
+      { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240", calculator: true, worked: ["Interest per year: 3% of £2000 = 0.03 × £2000 = £60", "After 4 years: £60 × 4 = £240"] },
+    ],
+  ],
+
   // ─── A3 (+ A5–A11, A14, A19, A22–A25): Mixed Algebra Practice ──
   'A3': [
     // Level 0 (2 marks) — Expand single brackets (A5)
@@ -2580,7 +2618,6 @@ questionBank['N8'] = questionBank['N5'];
 questionBank['N9'] = questionBank['N5'];
 questionBank['N10'] = questionBank['N5'];
 questionBank['N11'] = questionBank['N5'];
-questionBank['N13'] = questionBank['N5'];
 questionBank['N16'] = questionBank['N5'];
 
 // Shared references for remaining Algebra objectives → A3
@@ -3804,8 +3841,1336 @@ const questionBankLabel = {
   'P4': 'Mixed Probability & Statistics',
 };
 
-// Higher tier question bank - to be rewritten
+// Higher tier question bank — harder versions of shared objectives + Higher-only topics
 const higherQuestionBank = {
+
+  // ═══════════════════════════════════════════════════════════════
+  // N6: Index Laws & Surds (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N6': [
+    // Level 1 (Grade 4) — Understanding bounds
+    [
+      { q: "A length is given as 15 cm to the nearest cm. Write down the lower bound.", a: "14.5 cm", worked: ["Nearest cm means accuracy ± 0.5 cm", "Lower bound = 15 − 0.5 = 14.5 cm"], hint: "The lower bound is half a unit below the rounded value" },
+    ],
+    // Level 2 (Grade 5) — Error intervals
+    [
+      { q: "Write the error interval for x = 4.7 rounded to 1 decimal place.", a: "4.65 ≤ x < 4.75", worked: ["Rounded to 1 d.p. means accurate to ± 0.05", "Lower bound = 4.7 − 0.05 = 4.65", "Upper bound = 4.7 + 0.05 = 4.75", "Error interval: 4.65 ≤ x < 4.75"], hint: "Half a unit of the last decimal place either side" },
+    ],
+    // Level 3 (Grade 7) — Bounds with calculations
+    [
+      { q: "Calculate the maximum possible area of a rectangle with sides 8.4 cm and 5.2 cm, both given to 1 decimal place.", a: "44.3625 cm²", worked: ["UB of 8.4 = 8.45 cm", "UB of 5.2 = 5.25 cm", "Maximum area = 8.45 × 5.25 = 44.3625 cm²"], hint: "For maximum area, use the upper bound of both measurements", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Bounds with division
+    [
+      { q: "v = s/t. s = 100 m to the nearest 10 m, t = 9.8 s to 1 d.p. Calculate the upper bound for v. Give your answer to 3 s.f.", a: "10.8 m/s", worked: ["UB of s = 105 m", "LB of t = 9.75 s", "Upper bound of v = UB(s) / LB(t)", "= 105 / 9.75 = 10.769...", "= 10.8 m/s (3 s.f.)"], hint: "For upper bound of a fraction: use upper bound of numerator and lower bound of denominator", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Complex bounds expressions
+    [
+      { q: "a = (b − c)/d. b = 50 (nearest 10), c = 20 (nearest 10), d = 6 (nearest integer). Calculate the lower bound for a. Give your answer to 3 s.f.", a: "3.08", worked: ["For minimum a: minimise numerator, maximise denominator", "LB of b = 45, UB of c = 25, UB of d = 6.5", "LB of (b − c) = 45 − 25 = 20", "LB of a = 20 / 6.5 = 3.076...", "= 3.08 (3 s.f.)"], hint: "For the smallest value of a fraction: smallest numerator ÷ largest denominator. For (b−c), smallest means smallest b and largest c.", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // N15: Exact Trigonometric Values (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N15': [
+    // Level 1 (Grade 4) — Recall exact values
+    [
+      { q: "State the value of tan(45°).", a: "1", worked: ["tan(45°) = 1", "This is a standard exact trig value to memorise"], hint: "sin(45°)/cos(45°) = 1" },
+      { q: "Write down the exact value of sin(30°).", a: "1/2", worked: ["sin(30°) = 1/2"], hint: "A standard exact value" },
+      { q: "Write down the exact value of cos(0°).", a: "1", worked: ["cos(0°) = 1"], hint: "What is cos at 0 degrees?" },
+    ],
+    // Level 2 (Grade 5) — Combining exact values
+    [
+      { q: "Use exact values to calculate sin(30°) + cos(60°).", a: "1", worked: ["sin(30°) = 1/2", "cos(60°) = 1/2", "1/2 + 1/2 = 1"], hint: "sin(30°) = 1/2 and cos(60°) = 1/2" },
+      { q: "Without a calculator, work out cos(60°) + tan(45°). Give your answer as a fraction.", a: "3/2", worked: ["cos(60°) = 1/2", "tan(45°) = 1", "1/2 + 1 = 3/2"], hint: "cos(60°) = 1/2 and tan(45°) = 1" },
+      { q: "Without a calculator, work out sin(45°) × cos(45°). Give your answer as a fraction.", a: "1/2", worked: ["sin(45°) = √2/2", "cos(45°) = √2/2", "√2/2 × √2/2 = 2/4 = 1/2"], hint: "Both sin(45°) and cos(45°) equal √2/2" },
+    ],
+    // Level 3 (Grade 7) — Using exact values in area problems
+    [
+      { q: "Calculate the area of a triangle with sides 6 cm and 8 cm and an included angle of 60°. Leave your answer in surd form.", a: "12√3", worked: ["Area = ½ × a × b × sin(C)", "= ½ × 6 × 8 × sin(60°)", "= ½ × 48 × √3/2", "= 24 × √3/2 = 12√3 cm²"], hint: "Area = ½ab sin(C), and sin(60°) = √3/2" },
+      { q: "A triangle has sides 8 cm and 10 cm with an included angle of 30°. Find the exact area.", a: "20", worked: ["Area = ½ × 8 × 10 × sin(30°)", "= ½ × 80 × ½ = 20 cm²"], hint: "Area = ½ab sin(C), and sin(30°) = ½" },
+    ],
+    // Level 4 (Grade 8) — Using exact values with trigonometry
+    [
+      { q: "A right-angled triangle has an angle of 30° and an adjacent side of 12 cm. Find the exact length of the opposite side. Give your answer in surd form.", a: "4√3", worked: ["tan(30°) = opposite/adjacent", "tan(30°) = 1/√3", "opposite = 12 × 1/√3 = 12/√3", "= 12√3/3 = 4√3 cm"], hint: "tan(30°) = 1/√3. Opposite = 12 × 1/√3, then rationalise" },
+      { q: "In a right-angled triangle, one angle is 60° and the hypotenuse is 10 cm. Find the exact length of the side opposite the 60° angle.", a: "5√3", worked: ["sin(60°) = opposite/hypotenuse", "√3/2 = opposite/10", "opposite = 10 × √3/2 = 5√3 cm"], hint: "Use sin(60°) = √3/2 = opp/10" },
+    ],
+    // Level 5 (Grade 9) — Proving trig identities with exact values
+    [
+      { q: "Prove that sin(60°)/tan(30°) = 1.5. Write down each step of your proof.", a: "1.5", worked: ["sin(60°) = √3/2", "tan(30°) = 1/√3", "sin(60°)/tan(30°) = (√3/2) ÷ (1/√3)", "= (√3/2) × (√3/1) = 3/2 = 1.5 ✓"], hint: "Substitute the exact values: sin(60°) = √3/2 and tan(30°) = 1/√3" },
+      { q: "Solve cos(θ) = −1/2 for 0° ≤ θ ≤ 360°. Give both values.", a: "120, 240", worked: ["cos(60°) = 1/2, so the reference angle is 60°", "cos is negative in Q2 and Q3", "θ = 180° − 60° = 120° or θ = 180° + 60° = 240°"], hint: "Reference angle is 60°. Cos is negative in Q2 and Q3" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A4/A11: Quadratic Sequences (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A25': [
+    // Level 1 (Grade 4) — Continue a quadratic sequence
+    [
+      { q: "Find the next two terms in the sequence 3, 6, 11, 18, ...", a: "27, 38", worked: ["Differences: 3, 5, 7 (increasing by 2 each time)", "Next differences: 9, 11", "18 + 9 = 27, 27 + 11 = 38"], hint: "Find the differences, then the second differences" },
+      { q: "Find the next two terms in the sequence 2, 5, 10, 17, ...", a: "26, 37", worked: ["Differences: 3, 5, 7 (increasing by 2)", "Next differences: 9, 11", "17 + 9 = 26, 26 + 11 = 37"], hint: "Find the first and second differences" },
+    ],
+    // Level 2 (Grade 5) — nth term of linear sequence
+    [
+      { q: "Find the nth term of the sequence 7, 10, 13, 16, ...", a: "3n + 4", worked: ["Common difference = 3", "nth term starts as 3n", "When n=1: 3(1) = 3, but first term is 7", "Adjustment: +4", "nth term = 3n + 4"], hint: "Common difference = 3, so starts with 3n. Then adjust" },
+      { q: "Find the nth term of the sequence 5, 9, 13, 17, ...", a: "4n + 1", worked: ["Common difference = 4", "nth term = 4n + ?", "When n=1: 4(1) = 4, need 5, so +1", "nth term = 4n + 1"], hint: "Common difference = 4, so starts with 4n" },
+    ],
+    // Level 3 (Grade 7) — nth term of quadratic sequence
+    [
+      { q: "Find the nth term of the quadratic sequence 5, 12, 23, 38, ...", a: "2n^2 + n + 2", worked: ["First differences: 7, 11, 15", "Second differences: 4, 4 → constant, so quadratic", "a = 4/2 = 2, so starts with 2n²", "Subtract 2n²: 5−2, 12−8, 23−18, 38−32 → 3, 4, 5, 6", "Linear part: n + 2", "nth term = 2n² + n + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² and find the linear part" },
+      { q: "Find the nth term of the quadratic sequence 4, 10, 20, 34, ...", a: "2n^2 + 2", worked: ["First differences: 6, 10, 14", "Second differences: 4, 4", "a = 2, so 2n²", "Subtract 2n²: 4−2, 10−8, 20−18, 34−32 → 2, 2, 2, 2", "nth term = 2n² + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² from each term" },
+    ],
+    // Level 4 (Grade 8) — Finding coefficients from terms
+    [
+      { q: "A sequence has nth term n² + bn + c. The 3rd term is 15 and the 5th term is 35. Find b and c.", a: "b = 1, c = 3", worked: ["3rd term: 9 + 3b + c = 15 → 3b + c = 6", "5th term: 25 + 5b + c = 35 → 5b + c = 10", "Subtract: 2b = 4 → b = 2... wait", "Let me recheck: 5b + c − (3b + c) = 10 − 6", "2b = 4 → b = 2, c = 6 − 6 = 0", "Check: 3rd = 9+6+0=15 ✓, 5th = 25+10+0=35 ✓", "b = 2, c = 0"], hint: "Substitute n=3 and n=5 to form two simultaneous equations" },
+    ],
+    // Level 5 (Grade 9) — Proof about sequences
+    [
+      { q: "The nth term of a sequence is n² + n + 1. Prove that every term is odd.", type: "mcq", options: ["n² + n is always even, so +1 makes it odd", "Every other term is odd", "Only works for even n", "Cannot be proven"], a: "n² + n is always even, so +1 makes it odd", worked: ["n² + n = n(n+1)", "n and n+1 are consecutive integers", "One of them must be even, so n(n+1) is always even", "Even + 1 = odd", "Therefore every term is odd ✓"], hint: "Factor n² + n as n(n+1). What can you say about consecutive integers?" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A18: Simultaneous Equations (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A18': [
+    // Level 1 (Grade 4) — Simple elimination
+    [
+      { q: "Solve simultaneously: x + y = 10 and x − y = 4. Give your answer as x, y.", a: "7, 3", worked: ["Add the equations: 2x = 14 → x = 7", "Substitute: 7 + y = 10 → y = 3"], hint: "Add the equations to eliminate y" },
+      { q: "Solve simultaneously: x + y = 8 and x − y = 2. Give your answer as x, y.", a: "5, 3", worked: ["Add: 2x = 10 → x = 5", "Substitute: 5 + y = 8 → y = 3"], hint: "Add the equations to eliminate y" },
+      { q: "Solve simultaneously: x + y = 12 and x − y = 2. Give your answer as x, y.", a: "7, 5", worked: ["Add the equations: 2x = 14 → x = 7", "Substitute: 7 + y = 12 → y = 5"], hint: "Add the equations to eliminate y" },
+    ],
+    // Level 2 (Grade 5) — Elimination with multiplication
+    [
+      { q: "Solve simultaneously: 3x + 2y = 16 and 2x + 3y = 14. Give your answer as x, y.", a: "4, 2", worked: ["Multiply eq1 by 3: 9x + 6y = 48", "Multiply eq2 by 2: 4x + 6y = 28", "Subtract: 5x = 20 → x = 4", "Substitute: 3(4) + 2y = 16 → 2y = 4 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
+      { q: "Solve simultaneously: 5x + 3y = 21 and 2x + 4y = 14. Give your answer as x, y.", a: "3, 2", worked: ["Multiply eq1 by 4: 20x + 12y = 84", "Multiply eq2 by 3: 6x + 12y = 42", "Subtract: 14x = 42 → x = 3", "Substitute: 2(3) + 4y = 14 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
+      { q: "Solve simultaneously: 4x + 3y = 18 and x − 3y = 7. Give your answer as x, y.", a: "5, -2/3", worked: ["Add the equations: 5x = 25 → x = 5", "Substitute: 5 − 3y = 7 → −3y = 2 → y = −2/3"], hint: "The y terms cancel when you add the equations" },
+    ],
+    // Level 3 (Grade 7) — One linear, one quadratic
+    [
+      { q: "Solve y = x + 2 and x² + y² = 10. Give your answers as coordinate pairs.", a: "(-3, -1), (1, 3)", worked: ["Substitute y = x + 2 into x² + y² = 10", "x² + (x+2)² = 10", "2x² + 4x + 4 = 10", "2x² + 4x − 6 = 0 → (x+3)(x−1) = 0", "x = −3, y = −1 or x = 1, y = 3"], hint: "Substitute y = x + 2 into x² + y² = 10" },
+      { q: "Solve y = x + 3 and x² + y² = 17. Give your answers as coordinate pairs.", a: "(-4, -1), (1, 4)", worked: ["Substitute y = x + 3 into x² + y² = 17", "x² + (x+3)² = 17", "x² + x² + 6x + 9 = 17", "2x² + 6x − 8 = 0 → x² + 3x − 4 = 0", "(x+4)(x−1) = 0", "x = −4, y = −1 or x = 1, y = 4"], hint: "Substitute y = x + 3 into x² + y² = 17" },
+    ],
+    // Level 4 (Grade 8) — Line intersects circle/curve
+    [
+      { q: "Find the coordinates where y = x − 4 and x² + y² = 10 intersect. Give your answers as coordinate pairs.", a: "(1, -3), (3, -1)", worked: ["Substitute y = x − 4 into x² + y² = 10", "x² + (x−4)² = 10", "x² + x² − 8x + 16 = 10", "2x² − 8x + 6 = 0 → x² − 4x + 3 = 0", "(x−1)(x−3) = 0", "x = 1, y = −3 or x = 3, y = −1"], hint: "Substitute y = x − 4 into x² + y² = 10" },
+    ],
+    // Level 5 (Grade 9) — Complex simultaneous
+    [
+      { q: "Solve 2x² + xy = 10 and x + y = 5. Give your answers as coordinate pairs.", a: "(2, 3), (-5/3, 20/3)", worked: ["From eq2: y = 5 − x", "Substitute: 2x² + x(5−x) = 10", "2x² + 5x − x² = 10", "x² + 5x − 10 = 0", "Use quadratic formula or: let's try integer values", "x = 2: 4 + 10 − 4 = 10 ✓, y = 3"], hint: "Rearrange x + y = 5 for y, substitute into the quadratic" },
+      { q: "Solve 3x² − xy = 4 and x + y = 3. Give your answers to 2 d.p.", a: "x = 1.44 or x = −0.69", worked: ["From eq2: y = 3 − x", "Substitute: 3x² − x(3 − x) = 4", "3x² − 3x + x² = 4", "4x² − 3x − 4 = 0", "x = (3 ± √(9 + 64))/8 = (3 ± √73)/8", "x ≈ 1.44 or x ≈ −0.69"], hint: "Rearrange x + y = 3 for y, substitute into the quadratic, use the formula", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A7: Composite and Inverse Functions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A7': [
+    // Level 1 (Grade 5) — Evaluating functions
+    [
+      { q: "If f(x) = 3x − 1, find f(4).", a: "11", worked: ["f(4) = 3(4) − 1", "= 12 − 1 = 11"], hint: "Replace x with 4" },
+      { q: "If f(x) = 2x + 5, find f(7).", a: "19", worked: ["f(7) = 2(7) + 5 = 14 + 5 = 19"], hint: "Replace x with 7" },
+      { q: "If g(x) = x² − 4, find g(5).", a: "21", worked: ["g(5) = 5² − 4 = 25 − 4 = 21"], hint: "Replace x with 5" },
+    ],
+    // Level 2 (Grade 6) — Composite functions
+    [
+      { q: "If f(x) = x² and g(x) = x − 4, find fg(x).", a: "(x − 4)²", worked: ["fg(x) means f(g(x))", "g(x) = x − 4", "f(g(x)) = f(x−4) = (x−4)²"], hint: "fg(x) = f(g(x)). First apply g, then apply f" },
+      { q: "If f(x) = 2x and g(x) = x − 1, find gf(x).", a: "2x − 1", worked: ["gf(x) = g(f(x))", "f(x) = 2x", "g(2x) = 2x − 1"], hint: "gf(x) = g(f(x)). First apply f, then apply g" },
+      { q: "If f(x) = x + 2 and g(x) = 3x, find fg(2).", a: "8", worked: ["g(2) = 3(2) = 6", "f(6) = 6 + 2 = 8"], hint: "First find g(2), then put that into f" },
+    ],
+    // Level 3 (Grade 7) — Inverse functions
+    [
+      { q: "Find the inverse function f⁻¹(x) for f(x) = (3x − 1)/4.", a: "(4x + 1)/3", worked: ["Let y = (3x − 1)/4", "4y = 3x − 1", "4y + 1 = 3x", "x = (4y + 1)/3", "f⁻¹(x) = (4x + 1)/3"], hint: "Let y = f(x), rearrange to make x the subject, then swap" },
+      { q: "Find the inverse function f⁻¹(x) for f(x) = (x + 5)/2.", a: "2x − 5", worked: ["Let y = (x + 5)/2", "2y = x + 5", "x = 2y − 5", "f⁻¹(x) = 2x − 5"], hint: "Swap x and y, then rearrange" },
+    ],
+    // Level 4 (Grade 8) — Solving f(x) = g(x) and domain restrictions
+    [
+      { q: "Solve f(x) = g(x) where f(x) = x² + 3 and g(x) = 4x − 1.", a: "x = 2", worked: ["x² + 3 = 4x − 1", "x² − 4x + 4 = 0", "(x − 2)² = 0", "x = 2 (repeated root)"], hint: "Set f(x) = g(x) and solve the resulting quadratic" },
+      { q: "Given f(x) = 2/(x − 3), state the value of x for which f(x) is undefined.", a: "3", worked: ["f(x) is undefined when the denominator = 0", "x − 3 = 0 → x = 3"], hint: "The function is undefined when you divide by zero" },
+    ],
+    // Level 5 (Grade 9) — Inverse of rational functions
+    [
+      { q: "Given h(x) = (x + 2)/(x − 3), find h⁻¹(x) and state the value of x for which h(x) is undefined.", a: "h⁻¹(x) = (3x + 2)/(x − 1), undefined at x = 3", worked: ["Let y = (x + 2)/(x − 3)", "y(x − 3) = x + 2", "xy − 3y = x + 2", "xy − x = 3y + 2", "x(y − 1) = 3y + 2", "x = (3y + 2)/(y − 1)", "h⁻¹(x) = (3x + 2)/(x − 1)", "h(x) is undefined when x − 3 = 0, so x = 3"], hint: "Let y = h(x), multiply out, collect x terms, factorise" },
+      { q: "Find f⁻¹(x) for f(x) = 2/(x − 3).", a: "(2 + 3x)/x", worked: ["Let y = 2/(x − 3)", "y(x − 3) = 2", "xy − 3y = 2", "xy = 2 + 3y", "x = (2 + 3y)/y", "f⁻¹(x) = (2 + 3x)/x"], hint: "Multiply both sides by (x−3), then solve for x" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G20: Advanced Pythagoras & Trigonometry (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'G20': [
+    // Level 1 (Grade 5) — Finding base diagonal of a cuboid
+    [
+      { q: "Find the length of the diagonal on the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "5 cm", worked: ["Base diagonal = √(3² + 4²)", "= √(9 + 16) = √25", "= 5 cm"], hint: "Use 2D Pythagoras on the base: √(length² + width²)", calculator: true },
+      { q: "Find the diagonal of the base of a cuboid with dimensions 5 cm × 12 cm × 10 cm.", a: "13 cm", worked: ["Base diagonal = √(5² + 12²)", "= √(25 + 144) = √169", "= 13 cm"], hint: "Use Pythagoras on the base rectangle", calculator: true },
+      { q: "Find the diagonal of the base for a 6 cm × 8 cm × 15 cm cuboid.", a: "10 cm", worked: ["Base diagonal = √(6² + 8²)", "= √(36 + 64) = √100", "= 10 cm"], hint: "Apply Pythagoras to the length and width", calculator: true },
+    ],
+    // Level 2 (Grade 6) — Internal (space) diagonal of a cuboid
+    [
+      { q: "Calculate the longest diagonal (internal diagonal) of a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "13 cm", worked: ["Base diagonal = √(9 + 16) = 5 cm", "Space diagonal = √(5² + 12²) = √(25 + 144)", "= √169 = 13 cm"], hint: "Find the base diagonal first, then use Pythagoras with the height", calculator: true },
+      { q: "Calculate the internal diagonal of an 8 cm × 6 cm × 5 cm cuboid. Give your answer to 1 d.p.", a: "11.2 cm", worked: ["Space diagonal = √(8² + 6² + 5²)", "= √(64 + 36 + 25) = √125", "= 11.2 cm (1 d.p.)"], hint: "Space diagonal = √(l² + w² + h²)", calculator: true },
+      { q: "Find the distance between opposite corners (0,0,0) and (4,4,4) in a cube.", a: "4√3 cm", worked: ["Distance = √(4² + 4² + 4²)", "= √(16 + 16 + 16) = √48", "= 4√3 ≈ 6.93 cm"], hint: "Use 3D distance: √(x² + y² + z²)" },
+    ],
+    // Level 3 (Grade 7) — Angle between space diagonal and base
+    [
+      { q: "Find the angle between the longest diagonal and the base of a 3 cm × 4 cm × 12 cm cuboid. Give your answer to 1 d.p.", a: "67.4°", worked: ["Base diagonal = 5 cm", "tan θ = height / base diagonal = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "tan(angle) = vertical height ÷ base diagonal", calculator: true },
+      { q: "Find the angle between the internal diagonal and the shortest edge (5 cm) of an 8 cm × 6 cm × 5 cm cuboid. Give your answer to 1 d.p.", a: "63.4°", worked: ["Base diagonal (8 × 6 face) = √(64 + 36) = 10 cm", "The angle is between space diagonal and the vertical edge", "tan θ = base diagonal / height = 10/5 = 2", "θ = tan⁻¹(2) = 63.4°"], hint: "The angle at the base between the vertical edge and the space diagonal. Use tan = base diagonal / height.", calculator: true },
+      { q: "Find the angle between the diagonal of a cube and its base. Give your answer to 1 d.p.", a: "35.3°", worked: ["For a cube with side a:", "Base diagonal = a√2", "tan θ = a / (a√2) = 1/√2", "θ = tan⁻¹(1/√2) = 35.3°"], hint: "The base diagonal of a cube with side a is a√2. Use tan = height / base diagonal.", calculator: true },
+    ],
+    // Level 4 (Grade 8) — 3D pyramids and cones
+    [
+      { q: "A square-based pyramid has base 6 cm × 6 cm and slant height 10 cm. Find the vertical height. Give your answer to 1 d.p.", a: "9.5 cm", worked: ["Slant height goes from apex to midpoint of base edge", "Half base edge = 3 cm", "h² + 3² = 10²", "h² = 100 − 9 = 91", "h = √91 = 9.5 cm (1 d.p.)"], hint: "The slant height, half the base edge, and the vertical height form a right triangle", calculator: true },
+      { q: "A pyramid has a 10 cm square base and vertical height 12 cm. Find the slant height.", a: "13 cm", worked: ["Half base edge = 5 cm", "Slant height² = 12² + 5²", "= 144 + 25 = 169", "Slant height = √169 = 13 cm"], hint: "The slant height forms a right triangle with the height and half the base edge", calculator: true },
+      { q: "In a cone, the radius is 5 cm and slant height is 13 cm. Find the vertical height.", a: "12 cm", worked: ["h² + r² = slant²", "h² + 25 = 169", "h² = 144", "h = 12 cm"], hint: "Use Pythagoras: h² + radius² = slant height²", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Complex 3D angle problems
+    [
+      { q: "Calculate the angle between two triangular faces of a regular tetrahedron. Give your answer to 1 d.p.", a: "70.5°", worked: ["For a regular tetrahedron, the dihedral angle = arccos(1/3)", "cos θ = 1/3", "θ = cos⁻¹(1/3) = 70.5°"], hint: "The dihedral angle of a regular tetrahedron is arccos(1/3). This is a well-known result.", calculator: true },
+      { q: "A pyramid has a 10 cm square base and vertical height 12 cm. Find the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "59.5°", worked: ["Half diagonal of base = ½ × 10√2 = 5√2 ≈ 7.071 cm", "tan θ = height / half-diagonal = 12/5√2", "θ = tan⁻¹(12/7.071) = 59.5°"], hint: "The slant edge goes to a corner, so use the half-diagonal (not half-edge) of the base", calculator: true },
+      { q: "Find the angle at the apex of a cone with radius 5 cm and slant height 13 cm. Give your answer to 1 d.p.", a: "45.2°", worked: ["The cross-section is an isosceles triangle: sides 13, 13, base 10", "cos A = (13² + 13² − 10²)/(2 × 13 × 13)", "= (169 + 169 − 100)/338 = 238/338", "A = cos⁻¹(0.7041) = 45.2°"], hint: "Use the cosine rule on the cross-sectional triangle with both slant heights and the diameter", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G10: Circle Theorems (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'G10': [
+    // Level 1 (Grade 4/5) — Angle in a semicircle and angle at centre
+    [
+      { q: "The angle in a semicircle is always...", type: "mcq", options: ["45°", "90°", "180°", "360°"], a: "90°", worked: ["The angle subtended by a diameter at the circumference is always 90°", "This is one of the key circle theorems"], hint: "Think about a triangle inscribed in a semicircle" },
+      { q: "Triangle ABC is inscribed in a circle where AC is a diameter. Angle BAC = 35°. Find angle ABC.", a: "90", worked: ["AC is a diameter, so angle ABC is an angle in a semicircle", "Angle in a semicircle = 90°"], hint: "If one side of the triangle is a diameter, the angle opposite it is 90°" },
+      { q: "An arc subtends an angle of 140° at the centre. Find the angle subtended at the circumference.", a: "70", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 140° ÷ 2 = 70°"], hint: "Angle at centre = 2 × angle at circumference" },
+    ],
+    // Level 2 (Grade 6) — Cyclic quadrilateral and angle at centre
+    [
+      { q: "In a cyclic quadrilateral, one angle is 85°. Calculate the opposite angle.", a: "95", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 85° = 95°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+      { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference" },
+      { q: "A cyclic quadrilateral has an angle of 110°. Find the opposite angle.", a: "70", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 110° = 70°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+    ],
+    // Level 3 (Grade 7) — Tangent-radius and alternate segment
+    [
+      { q: "Find the angle between a tangent and a radius at the point of contact.", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
+      { q: "In a cyclic quadrilateral ABCD, angle A = 115°. Find angle C.", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Angle C = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+      { q: "The angle in the alternate segment is 65°. Calculate the angle between the chord and the tangent.", a: "65", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals the angle in the alternate segment", "Angle = 65°"], hint: "Alternate Segment Theorem works both ways" },
+    ],
+    // Level 4 (Grade 8) — Proving cyclic quadrilateral property
+    [
+      { q: "A tangent to a circle meets chord AB at point A. The angle between the tangent and chord AB is 55°. Use the Alternate Segment Theorem to find the angle ACB where C is a point on the major arc.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So angle ACB = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
+      { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem" },
+      { q: "Prove that opposite angles in a cyclic quadrilateral sum to 180°. What theorem does this use?", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Pythagoras"], worked: ["Each pair of opposite angles subtends the full circle at the centre", "The two angles at the centre sum to 360°", "Each angle at circumference = half the angle at centre", "So opposite angles at circumference sum to 360°/2 = 180°"], hint: "Use the fact that the angle at the centre is twice the angle at the circumference" },
+    ],
+    // Level 5 (Grade 9) — Combined problems and tangent lengths
+    [
+      { q: "Prove that the angle subtended by an arc at the centre is twice the angle subtended at the circumference. (What is the name of this theorem?)", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Tangent-radius theorem"], worked: ["Draw a radius to the point on the circumference to create two isosceles triangles", "In each isosceles triangle, the base angles are equal", "The angle at the centre = sum of the two exterior angles of the isosceles triangles", "This equals twice the angle at the circumference"], hint: "Create isosceles triangles using radii, then use exterior angle = sum of interior opposite angles" },
+      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP.", a: "10", worked: ["The tangent is perpendicular to the radius: angle OAP = 90°", "Angle APO = 30° (half of 60° by symmetry)", "sin(30°) = OA/OP", "½ = 5/OP", "OP = 10 cm"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
+      { q: "Find the length of a tangent from point P(0, 10) to a circle centred at (0, 0) with radius 6.", a: "8", worked: ["OP = 10 (distance from origin to P)", "The tangent is perpendicular to the radius at the point of contact", "By Pythagoras: tangent² + 6² = 10²", "tangent² = 100 − 36 = 64", "tangent = 8"], hint: "The tangent, radius and OP form a right triangle. Use Pythagoras.", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R16: Direct & Inverse Proportion (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'R16': [
+    // Level 1 (Grade 4) — Finding the constant of proportionality
+    [
+      { q: "y is directly proportional to x. When x = 10, y = 50. Find the constant k.", a: "5", worked: ["y = kx", "50 = k × 10", "k = 50/10 = 5"], hint: "y = kx, so k = y/x" },
+      { q: "y is directly proportional to x. When x = 5, y = 20. Find y when x = 8.", a: "32", worked: ["y = kx", "20 = k × 5 → k = 4", "When x = 8: y = 4 × 8 = 32"], hint: "Find k first: y = kx, so k = 20/5" },
+      { q: "y ∝ x. When x = 6, y = 42. Find the constant k.", a: "7", worked: ["y = kx", "42 = k × 6", "k = 42/6 = 7"], hint: "y = kx, so k = y/x" },
+    ],
+    // Level 2 (Grade 5) — Using direct and inverse proportion
+    [
+      { q: "y ∝ x. If x = 4 when y = 12, find y when x = 9.", a: "27", worked: ["y = kx", "12 = k × 4 → k = 3", "When x = 9: y = 3 × 9 = 27"], hint: "Find k first, then substitute the new x value" },
+      { q: "y is directly proportional to x. When x = 3, y = 12. Find y when x = 7.", a: "28", worked: ["y = kx", "12 = k × 3 → k = 4", "When x = 7: y = 4 × 7 = 28"], hint: "y = kx, so k = 12/3" },
+      { q: "y is inversely proportional to x. When x = 2, y = 20. Find y when x = 8.", a: "5", worked: ["y = k/x", "20 = k/2 → k = 40", "When x = 8: y = 40/8 = 5"], hint: "y = k/x, so k = 20 × 2 = 40" },
+    ],
+    // Level 3 (Grade 7) — Proportion to a power
+    [
+      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 2.5.", a: "16", worked: ["y = k/x", "10 = k/4 → k = 40", "When x = 2.5: y = 40/2.5 = 16"], hint: "y = k/x, so k = 10 × 4 = 40" },
+      { q: "y is inversely proportional to x. When x = 6, y = 15. Find y when x = 10.", a: "9", worked: ["y = k/x", "15 = k/6 → k = 90", "When x = 10: y = 90/10 = 9"], hint: "y = k/x, so k = y × x" },
+      { q: "y ∝ x². When x = 2, y = 12. Find y when x = 5.", a: "75", worked: ["y = kx²", "12 = k × 4 → k = 3", "When x = 5: y = 3 × 25 = 75"], hint: "y = kx², so k = 12/4 = 3" },
+    ],
+    // Level 4 (Grade 8) — Proportion to a power and compound growth
+    [
+      { q: "y is directly proportional to the square of x. When x = 3, y = 36. Find y when x = 5.", a: "100", worked: ["y = kx²", "36 = k × 3² = 9k → k = 4", "When x = 5: y = 4 × 25 = 100"], hint: "y = kx², so k = 36/9 = 4" },
+      { q: "y is directly proportional to x². When x = 4, y = 48. Find y when x = 6.", a: "108", worked: ["y = kx²", "48 = k × 16 → k = 3", "When x = 6: y = 3 × 36 = 108"], hint: "y = kx², so k = 48/16 = 3" },
+      { q: "£2,000 is invested at 4% compound interest. Find the value after 3 years.", a: "£2,249.73", worked: ["Value = 2000 × 1.04³", "= 2000 × 1.124864", "= £2,249.73 (to nearest penny)"], hint: "Multiply by 1.04 three times, or use 2000 × 1.04³", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Complex proportion and multi-rate depreciation
+    [
+      { q: "y is inversely proportional to the cube root of x. If x is increased by 700%, calculate the percentage decrease in y. Give your answer to 1 d.p.", a: "50.0", worked: ["x increases by 700% means new x = 8x (original + 700%)", "y = k/∛x", "New y = k/∛(8x) = k/(2∛x) = original y / 2", "Decrease = 1 − 0.5 = 0.5 = 50%"], hint: "700% increase means new x = 8 × original x. ∛8 = 2", calculator: true },
+      { q: "The force F between two magnets is inversely proportional to the square of the distance d. If d increases by 50%, what is the percentage decrease in F? Give your answer to 1 d.p.", a: "55.6", worked: ["F = k/d²", "New d = 1.5d", "New F = k/(1.5d)² = k/2.25d²", "Ratio = 1/2.25 = 0.444...", "Decrease = 1 − 0.444 = 0.556 = 55.6%"], hint: "New d = 1.5d. New F = k/(1.5d)². Compare to original", calculator: true },
+      { q: "A car loses 20% of its value in year 1, then 10% each year after. If the original value is £20,000, find the value after 4 years.", a: "£11,664", worked: ["After year 1: 20000 × 0.8 = £16,000", "After year 2: 16000 × 0.9 = £14,400", "After year 3: 14400 × 0.9 = £12,960", "After year 4: 12960 × 0.9 = £11,664"], hint: "Year 1: multiply by 0.8. Years 2-4: multiply by 0.9 each year.", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S4: Cumulative Frequency & Histograms (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'S4': [
+    // Level 1 (Grade 4/5) — Reading median from cumulative frequency
+    [
+      { q: "A cumulative frequency graph shows 80 data points. At what position should you read the median?", a: "40", worked: ["Median position = n/2", "= 80/2 = 40", "Read across from 40 on the cumulative frequency axis"], hint: "Median position = n ÷ 2" },
+      { q: "A cumulative frequency graph for 60 students shows the 30th value corresponds to a score of 54. What is the median?", a: "54", worked: ["Median position = 60/2 = 30th value", "The 30th value corresponds to a score of 54", "Median = 54"], hint: "Find the n/2 position on the y-axis, then read across to the x-axis" },
+    ],
+    // Level 2 (Grade 6) — Drawing and reading box plots
+    [
+      { q: "A data set has: minimum = 12, Q1 = 18, median = 25, Q3 = 33, maximum = 45. What is the IQR?", a: "15", worked: ["IQR = Q3 − Q1", "= 33 − 18 = 15"], hint: "IQR = Q3 − Q1" },
+      { q: "A box plot shows Q1 = 23, median = 31, Q3 = 51. What is the range of the middle 50% of the data?", a: "28", worked: ["The middle 50% is between Q1 and Q3", "Range of middle 50% = IQR = Q3 − Q1", "= 51 − 23 = 28"], hint: "The middle 50% is described by the interquartile range" },
+    ],
+    // Level 3 (Grade 7) — Using cumulative frequency to estimate
+    [
+      { q: "A cumulative frequency graph for 120 students shows: at 70 marks the CF is 85. Estimate the number of students who scored more than 70%.", a: "35", worked: ["Total students = 120", "Students scoring 70 or less = 85", "Students scoring more than 70 = 120 − 85 = 35"], hint: "Subtract the cumulative frequency at 70 from the total" },
+      { q: "From a cumulative frequency graph of 200 data values, Q1 corresponds to 35 and Q3 corresponds to 58. Estimate the IQR.", a: "23", worked: ["Q1 position = 200/4 = 50th value → value = 35", "Q3 position = 3 × 200/4 = 150th value → value = 58", "IQR = 58 − 35 = 23"], hint: "Q1 is at n/4, Q3 is at 3n/4. Read the values and subtract." },
+    ],
+    // Level 4 (Grade 8) — Comparing distributions using box plots
+    [
+      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
+      { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
+    ],
+    // Level 5 (Grade 9) — Outliers using 1.5 × IQR rule
+    [
+      { q: "A data set has Q1 = 20 and Q3 = 44. Using the 1.5 × IQR rule, what are the boundaries for outliers?", a: "Lower: −16, Upper: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 1.5 × 24 = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "Outlier boundaries: Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
+      { q: "A data set has Q1 = 15, Q3 = 35. The value 72 appears in the data. Is it an outlier? Explain how outliers affect the mean.", a: "Yes, 72 is an outlier", worked: ["IQR = 35 − 15 = 20", "1.5 × IQR = 30", "Upper boundary = 35 + 30 = 65", "72 > 65, so 72 IS an outlier", "Outliers pull the mean towards them (increase it here)", "The median is not affected by outliers"], hint: "Check if 72 > Q3 + 1.5 × IQR. Outliers affect the mean but not the median." },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A4: Expanding, Factorising, Completing the Square & Algebraic Fractions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A4': [
+    // Level 1 (Grade 4) — Solving linear simultaneous equations
+    [
+      { q: "Solve x + y = 10 and x − y = 4.", a: "x = 7, y = 3", worked: ["Add the equations: 2x = 14", "x = 7", "Substitute: 7 + y = 10 → y = 3"], hint: "Add the two equations to eliminate y" },
+      { q: "Solve x + y = 15 and x − y = 3.", a: "x = 9, y = 6", worked: ["Add: 2x = 18 → x = 9", "9 + y = 15 → y = 6"], hint: "Add the equations to eliminate y" },
+      { q: "Solve x + y = 20 and y − x = 4.", a: "x = 8, y = 12", worked: ["Add: 2y = 24 → y = 12", "x + 12 = 20 → x = 8"], hint: "Add the equations to eliminate x" },
+    ],
+    // Level 2 (Grade 6) — Simultaneous equations by elimination
+    [
+      { q: "Solve 3x + 2y = 16 and 2x + y = 9.", a: "x = 2, y = 5", worked: ["From eq 2: y = 9 − 2x", "Substitute into eq 1: 3x + 2(9 − 2x) = 16", "3x + 18 − 4x = 16 → −x = −2 → x = 2", "y = 9 − 4 = 5"], hint: "Rearrange one equation for y, then substitute into the other" },
+      { q: "Solve 5x + 3y = 21 and x + y = 5.", a: "x = 3, y = 2", worked: ["From eq 2: y = 5 − x", "Substitute: 5x + 3(5 − x) = 21", "5x + 15 − 3x = 21 → 2x = 6 → x = 3", "y = 5 − 3 = 2"], hint: "Rearrange the simpler equation for y" },
+      { q: "Solve 2x − y = 7 and x + 2y = 11.", a: "x = 5, y = 3", worked: ["From eq 1: y = 2x − 7", "Substitute: x + 2(2x − 7) = 11", "5x − 14 = 11 → 5x = 25 → x = 5", "y = 10 − 7 = 3"], hint: "Rearrange for y, then substitute" },
+    ],
+    // Level 3 (Grade 7) — One linear, one quadratic (circle)
+    [
+      { q: "Solve y = x − 3 and x² + y² = 9.", a: "(0, −3) and (3, 0)", worked: ["Substitute y = x − 3 into x² + y² = 9", "x² + (x − 3)² = 9", "x² + x² − 6x + 9 = 9", "2x² − 6x = 0 → 2x(x − 3) = 0", "x = 0, y = −3 or x = 3, y = 0"], hint: "Substitute the linear equation into the circle equation" },
+      { q: "Solve y = x + 2 and x² + y² = 10.", a: "(−3, −1) and (1, 3)", worked: ["x² + (x + 2)² = 10", "2x² + 4x + 4 = 10", "2x² + 4x − 6 = 0 → x² + 2x − 3 = 0", "(x + 3)(x − 1) = 0", "x = −3, y = −1 or x = 1, y = 3"], hint: "Substitute y = x + 2 into x² + y² = 10" },
+      { q: "Solve x = y − 4 and x² + y² = 10.", a: "(−3, 1) and (−1, 3)", worked: ["(y − 4)² + y² = 10", "y² − 8y + 16 + y² = 10", "2y² − 8y + 6 = 0 → y² − 4y + 3 = 0", "(y − 1)(y − 3) = 0", "y = 1, x = −3 or y = 3, x = −1"], hint: "Substitute x = y − 4 into x² + y² = 10" },
+    ],
+    // Level 4 (Grade 8) — Line intersecting a circle
+    [
+      { q: "Find the intersection points of y = 2x + 1 and x² + y² = 13.", a: "(1.2, 3.4) and (−2, −3)", worked: ["x² + (2x + 1)² = 13", "x² + 4x² + 4x + 1 = 13", "5x² + 4x − 12 = 0", "x = (−4 ± √(16 + 240))/10 = (−4 ± 16)/10", "x = 1.2, y = 3.4 or x = −2, y = −3"], hint: "Substitute the linear equation into the circle, then use the quadratic formula", calculator: true },
+      { q: "Find the intersection points of y = 3x − 1 and x² + y² = 5.", a: "(1, 2) and (−0.4, −2.2)", worked: ["x² + (3x − 1)² = 5", "10x² − 6x + 1 = 5", "10x² − 6x − 4 = 0 → 5x² − 3x − 2 = 0", "x = (3 ± 7)/10", "x = 1, y = 2 or x = −0.4, y = −2.2"], hint: "Substitute and solve the resulting quadratic", calculator: true },
+      { q: "Find the intersection points of y = x + 1 and x² + y² = 25.", a: "(3, 4) and (−4, −3)", worked: ["x² + (x + 1)² = 25", "2x² + 2x + 1 = 25", "2x² + 2x − 24 = 0 → x² + x − 12 = 0", "(x + 4)(x − 3) = 0", "x = 3, y = 4 or x = −4, y = −3"], hint: "Substitute y = x + 1 and solve the quadratic" },
+    ],
+    // Level 5 (Grade 9) — Non-standard simultaneous equations
+    [
+      { q: "Solve 2x² + xy = 6 and x + 2y = 7. Give answers to 2 d.p.", a: "x = 1.15, y = 2.93 and x = −3.48, y = 5.24", worked: ["From eq 2: y = (7 − x)/2", "Substitute: 2x² + x(7 − x)/2 = 6", "4x² + 7x − x² = 12", "3x² + 7x − 12 = 0", "x = (−7 ± √193)/6", "x = 1.15, y = 2.93 or x = −3.48, y = 5.24"], hint: "Rearrange the linear equation for y, substitute, and use the quadratic formula", calculator: true },
+      { q: "Solve x² − xy = 4 and y = 2x − 5.", a: "(1, −3) and (4, 3)", worked: ["x² − x(2x − 5) = 4", "x² − 2x² + 5x = 4", "−x² + 5x − 4 = 0 → x² − 5x + 4 = 0", "(x − 1)(x − 4) = 0", "x = 1, y = −3 or x = 4, y = 3"], hint: "Substitute y = 2x − 5 and solve the quadratic" },
+      { q: "Solve 3x² + 2xy = 1 and x − y = 2.", a: "(1, −1) and (−0.2, −2.2)", worked: ["From eq 2: y = x − 2", "3x² + 2x(x − 2) = 1", "5x² − 4x − 1 = 0", "(5x + 1)(x − 1) = 0", "x = 1, y = −1 or x = −0.2, y = −2.2"], hint: "Substitute y = x − 2 into the quadratic equation" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A6: Rearranging & Using Formulae (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  // A5: Rearranging Formulae (moved from old A6 — corrected AQA mapping)
+  'A5': [
+    // Level 1 (Grade 5) — Substituting into formulae
+    [
+      { q: "The formula for the area of a trapezium is A = ½(a + b)h. Find A when a = 5, b = 9 and h = 4.", a: "28", worked: ["A = ½(a + b)h", "A = ½(5 + 9) × 4", "A = ½ × 14 × 4 = 28"], hint: "Substitute the values into the formula and work out step by step", calculator: true },
+      { q: "v = u + at. Find v when u = 3, a = 10 and t = 4.", a: "43", worked: ["v = u + at", "v = 3 + 10 × 4", "v = 3 + 40 = 43"], hint: "Substitute and remember to multiply before adding" },
+    ],
+    // Level 2 (Grade 6) — Rearranging simple formulae
+    [
+      { q: "Make t the subject of v = u + at", a: "t = (v − u)/a", worked: ["v = u + at", "Subtract u: v − u = at", "Divide by a: t = (v − u)/a"], hint: "Get the term with t on its own by undoing each operation" },
+      { q: "Make r the subject of A = πr²", a: "r = √(A/π)", worked: ["A = πr²", "Divide by π: A/π = r²", "Square root: r = √(A/π)"], hint: "Divide by π first, then take the square root" },
+    ],
+    // Level 3 (Grade 7) — Rearranging with subject appearing twice
+    [
+      { q: "Make x the subject of y = (3x + 1)/(x − 2)", a: "x = (2y + 1)/(y − 3)", worked: ["y(x − 2) = 3x + 1", "yx − 2y = 3x + 1", "yx − 3x = 2y + 1", "x(y − 3) = 2y + 1", "x = (2y + 1)/(y − 3)"], hint: "Multiply out, collect all x terms on one side, then factorise" },
+      { q: "Make t the subject of s = (t + 1)/(t − 1)", a: "t = (s + 1)/(s − 1)", worked: ["s(t − 1) = t + 1", "st − s = t + 1", "st − t = s + 1", "t(s − 1) = s + 1", "t = (s + 1)/(s − 1)"], hint: "Multiply both sides by (t − 1), expand, then collect t terms" },
+    ],
+    // Level 4 (Grade 8) — Rearranging with roots and powers
+    [
+      { q: "Make a the subject of T = 2π√(a/g)", a: "a = gT²/(4π²)", worked: ["T = 2π√(a/g)", "T/(2π) = √(a/g)", "Square both sides: T²/(4π²) = a/g", "Multiply by g: a = gT²/(4π²)"], hint: "Divide by 2π, then square both sides, then multiply by g" },
+    ],
+    // Level 5 (Grade 9) — Complex rearrangement
+    [
+      { q: "Make x the subject of y = √((2x + 3)/(x − 1))", a: "x = (y² + 3)/(y² − 2)", worked: ["y² = (2x + 3)/(x − 1)", "y²(x − 1) = 2x + 3", "xy² − y² = 2x + 3", "xy² − 2x = y² + 3", "x(y² − 2) = y² + 3", "x = (y² + 3)/(y² − 2)"], hint: "Square both sides first, then multiply out and collect x terms" },
+    ],
+  ],
+
+  // A6: Algebraic Proof (corrected AQA mapping — proofs and identities)
+  'A6': [
+    // Level 1 (Grade 5) — Simple sum proofs
+    [
+      { q: "Prove that the sum of any two consecutive integers is always odd.", a: "Shown", type: "proof", worked: ["Let the consecutive integers be n and n + 1", "Sum = n + (n + 1) = 2n + 1", "2n + 1 is always odd (one more than an even number)"], hint: "Write two consecutive integers as n and n + 1, then add them" },
+      { q: "Prove that the sum of any three consecutive integers is always a multiple of 3.", a: "Shown", type: "proof", worked: ["Let the integers be n, n + 1, n + 2", "Sum = n + (n + 1) + (n + 2) = 3n + 3", "= 3(n + 1)", "This is a multiple of 3"], hint: "Call the first integer n. Write all three and add them up." },
+      { q: "Prove that the sum of any two even numbers is even.", a: "Shown", type: "proof", worked: ["Let the two even numbers be 2a and 2b", "Sum = 2a + 2b = 2(a + b)", "This is 2 × (a + b), which is a multiple of 2", "So the sum is always even"], hint: "Write each even number as 2 times something" },
+    ],
+    // Level 2 (Grade 6-7) — Expanding bracket proofs
+    [
+      { q: "Show that (n + 2)² − n² is always a multiple of 4 for any integer n.", a: "Shown", type: "proof", worked: ["(n + 2)² − n² = n² + 4n + 4 − n²", "= 4n + 4", "= 4(n + 1)", "This is a multiple of 4"], hint: "Expand (n + 2)², then subtract n² and factorise" },
+      { q: "Prove that (n + 1)² − (n − 1)² is always a multiple of 4.", a: "Shown", type: "proof", worked: ["(n + 1)² = n² + 2n + 1", "(n − 1)² = n² − 2n + 1", "(n + 1)² − (n − 1)² = 4n", "4n is a multiple of 4"], hint: "Expand both brackets and subtract. Look for a factor of 4." },
+      { q: "Prove that (n + 3)² − (n + 1)² is always a multiple of 4.", a: "Shown", type: "proof", worked: ["(n + 3)² = n² + 6n + 9", "(n + 1)² = n² + 2n + 1", "(n + 3)² − (n + 1)² = 4n + 8", "= 4(n + 2)", "This is a multiple of 4"], hint: "Expand both, subtract, and factorise" },
+    ],
+    // Level 3 (Grade 7-8) — Proofs involving squares
+    [
+      { q: "Prove algebraically that the square of any odd number is always 1 more than a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd number be 2n + 1", "(2n + 1)² = 4n² + 4n + 1", "= 4n(n + 1) + 1", "n and n + 1 are consecutive, so one is even", "Therefore n(n + 1) is always even: n(n + 1) = 2k", "= 4(2k) + 1 = 8k + 1", "This is 1 more than a multiple of 8"], hint: "Write an odd number as 2n + 1. Square it and use the fact that n(n + 1) is always even." },
+      { q: "Prove algebraically that the sum of the squares of any two consecutive even numbers is always 4 more than a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the consecutive even numbers be 2n and 2n + 2", "(2n)² + (2n + 2)² = 4n² + 4n² + 8n + 4", "= 8n² + 8n + 4", "= 8(n² + n) + 4", "= 8n(n + 1) + 4", "This is 4 more than a multiple of 8"], hint: "Write two consecutive even numbers as 2n and 2n + 2. Square each, add, and factorise." },
+    ],
+    // Level 4 (Grade 8) — Difference of squares proofs
+    [
+      { q: "Prove that the difference between the squares of any two consecutive even numbers is always a multiple of 4 but never a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the consecutive even numbers be 2n and 2n + 2", "(2n + 2)² − (2n)² = 4n² + 8n + 4 − 4n²", "= 8n + 4 = 4(2n + 1)", "4(2n + 1) is a multiple of 4 ✓", "But 2n + 1 is always odd, so 4(2n + 1) is not divisible by 8 ✗"], hint: "Expand and simplify. Show it equals 4 × (odd number) — that's divisible by 4 but not 8." },
+      { q: "Prove that the difference between the squares of any two odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the two odd numbers be 2a + 1 and 2b + 1", "(2a + 1)² − (2b + 1)² = 4a² + 4a + 1 − 4b² − 4b − 1", "= 4(a² + a − b² − b) = 4(a(a + 1) − b(b + 1))", "a(a + 1) and b(b + 1) are both even (consecutive integers)", "Let a(a + 1) = 2m and b(b + 1) = 2p", "= 4(2m − 2p) = 8(m − p)", "This is a multiple of 8"], hint: "Use 2a + 1 and 2b + 1 for any two odd numbers. Remember n(n+1) is always even." },
+    ],
+    // Level 5 (Grade 9) — Complex expansion proofs
+    [
+      { q: "Prove that (3n + 1)² − (3n − 1)² is always a multiple of 12 for all integer values of n.", a: "Shown", type: "proof", worked: ["(3n + 1)² = 9n² + 6n + 1", "(3n − 1)² = 9n² − 6n + 1", "(3n + 1)² − (3n − 1)² = 12n", "12n is a multiple of 12 for all integers n"], hint: "Expand both squares and subtract. Look for a factor of 12." },
+      { q: "Prove that (2n + 3)² − (2n − 3)² is a multiple of 24 for all integer values of n.", a: "Shown", type: "proof", worked: ["(2n + 3)² = 4n² + 12n + 9", "(2n − 3)² = 4n² − 12n + 9", "(2n + 3)² − (2n − 3)² = 24n", "24n is a multiple of 24 for all integers n"], hint: "Expand both squares and subtract. Look for a factor of 24." },
+      { q: "Prove that the difference between the squares of consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n + 1 and 2n + 3", "(2n + 3)² − (2n + 1)²", "= (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "This is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n + 1 and 2n + 3, then expand" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A9: Solving Quadratic Equations (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A9': [
+    // Level 1 (Grade 5) — Solving by factorising (a = 1)
+    [
+      { q: "Solve x² + 5x + 6 = 0", a: "x = −2 or x = −3", worked: ["Factorise: (x + 2)(x + 3) = 0", "x + 2 = 0 → x = −2", "x + 3 = 0 → x = −3"], hint: "Factorise and set each bracket equal to zero" },
+      { q: "Solve x² − 7x + 10 = 0", a: "x = 2 or x = 5", worked: ["Factorise: (x − 2)(x − 5) = 0", "x − 2 = 0 → x = 2", "x − 5 = 0 → x = 5"], hint: "Find two numbers that multiply to 10 and add to −7" },
+    ],
+    // Level 2 (Grade 6) — Solving by factorising (a ≠ 1)
+    [
+      { q: "Solve 2x² + 7x + 3 = 0", a: "x = −3 or x = −0.5", worked: ["AC = 6. Numbers: 6 and 1", "2x² + 6x + x + 3 = 0", "2x(x + 3) + 1(x + 3) = 0", "(2x + 1)(x + 3) = 0", "x = −½ or x = −3"], hint: "Use the AC method to factorise, then set each bracket to zero" },
+      { q: "Solve 3x² − 10x − 8 = 0", a: "x = 4 or x = −2/3", worked: ["AC = −24. Numbers: −12 and 2", "3x² − 12x + 2x − 8 = 0", "3x(x − 4) + 2(x − 4) = 0", "(3x + 2)(x − 4) = 0", "x = −⅔ or x = 4"], hint: "Find two numbers that multiply to −24 and add to −10" },
+    ],
+    // Level 3 (Grade 7) — Using the quadratic formula
+    [
+      { q: "Solve x² + 3x − 7 = 0, giving your answers to 2 decimal places.", a: "x = 1.54 or x = −4.54", worked: ["a = 1, b = 3, c = −7", "x = (−3 ± √(9 + 28))/2", "x = (−3 ± √37)/2", "x = (−3 + 6.083)/2 = 1.54", "x = (−3 − 6.083)/2 = −4.54"], hint: "Use x = (−b ± √(b² − 4ac))/(2a)", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Completing the square to solve
+    [
+      { q: "Solve x² + 6x + 1 = 0 by completing the square. Give exact answers.", a: "x = −3 + 2√2 or x = −3 − 2√2", worked: ["(x + 3)² − 9 + 1 = 0", "(x + 3)² = 8", "x + 3 = ±√8 = ±2√2", "x = −3 ± 2√2"], hint: "Complete the square, then rearrange and take the square root" },
+    ],
+    // Level 5 (Grade 9) — Using the discriminant
+    [
+      { q: "The equation kx² + 6x + 3 = 0 has equal roots. Find the value of k.", a: "k = 3", worked: ["For equal roots: b² − 4ac = 0", "6² − 4(k)(3) = 0", "36 − 12k = 0", "12k = 36", "k = 3"], hint: "Equal roots means discriminant = 0: b² − 4ac = 0" },
+    ],
+  ],
+
+  // (A11 iteration content moved to A20 — corrected AQA mapping)
+
+  // G24: Vectors — Column Vectors and Translations (moved from old G17 — corrected AQA mapping)
+  'G24': [
+    // Level 1 (Grade 5) — Vector paths
+    [
+      { q: "In triangle OAB, OA = a and OB = b. Find AB in terms of a and b.", a: "b − a", worked: ["To go from A to B, go via O:", "AB = AO + OB", "AO = −OA = −a", "AB = −a + b = b − a"], hint: "Go from A to O (which is −a), then O to B (which is b)" },
+    ],
+    // Level 2 (Grade 6) — Midpoint vectors
+    [
+      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in terms of a and b.", a: "½(a + b)", worked: ["AB = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b", "= ½(a + b)"], hint: "Go from O to A, then halfway from A to B" },
+    ],
+    // Level 3 (Grade 7) — Showing lines are parallel
+    [
+      { q: "In triangle OAB, OA = a and OB = b. M is the midpoint of OA and N is the midpoint of OB. Show that MN is parallel to AB.", a: "Shown", type: "proof", worked: ["OM = ½a (midpoint of OA)", "ON = ½b (midpoint of OB)", "MN = MO + ON = −½a + ½b = ½(b − a)", "AB = AO + OB = −a + b = b − a", "MN = ½AB", "MN is a scalar multiple of AB, so MN is parallel to AB"], hint: "Find MN and AB in terms of a and b. If one is a scalar multiple of the other, they are parallel." },
+    ],
+    // Level 4 (Grade 8) — Proving collinearity
+    [
+      { q: "OA = 2a + b, OB = 5a + 2.5b, OC = 8a + 4b. Show that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a + 2.5b) − (2a + b) = 3a + 1.5b", "AC = OC − OA = (8a + 4b) − (2a + b) = 6a + 3b", "AC = 2(3a + 1.5b) = 2 × AB", "AC is a scalar multiple of AB, so they are parallel", "They share point A, so A, B and C are collinear"], hint: "Find AB and AC. If AC = k × AB for some scalar k, and they share point A, then A, B and C lie on the same line." },
+    ],
+    // Level 5 (Grade 9) — Ratio problems with vectors
+    [
+      { q: "In triangle OAB, OA = a and OB = b. P lies on AB such that AP:PB = 2:1. Q is the midpoint of OP. Find OQ in terms of a and b.", a: "⅙a + ⅓b", worked: ["AP:PB = 2:1, so AP = ⅔AB", "AB = b − a", "OP = OA + AP = a + ⅔(b − a)", "= a + ⅔b − ⅔a = ⅓a + ⅔b", "Q is the midpoint of OP:", "OQ = ½OP = ½(⅓a + ⅔b)", "= ⅙a + ⅓b"], hint: "First find OP using the ratio on AB. Then halve it for the midpoint Q." },
+    ],
+  ],
+
+  // G17: Circles — Circumference, Area, Arcs and Sectors (corrected AQA mapping)
+  'G17': [
+    // Level 1 (Grade 4) — Area of a circle
+    [
+      { q: "Calculate the area of a circle with a radius of 6 cm. Give your answer in terms of π.", a: "36π cm²", worked: ["Area = πr²", "Area = π × 6²", "Area = 36π cm²"], hint: "Use the formula Area = πr². Leave your answer as a multiple of π." },
+    ],
+    // Level 2 (Grade 5) — Perimeter of a semicircle
+    [
+      { q: "Find the perimeter of a semicircle with a diameter of 10 cm. Give your answer to 1 d.p.", a: "25.7 cm", calculator: true, worked: ["Curved part = half the circumference = πd/2 = 10π/2 = 5π", "Straight part = diameter = 10", "Perimeter = 5π + 10 ≈ 15.71 + 10 = 25.7 cm"], hint: "Perimeter = half the circumference + the diameter. Don't forget the straight edge!" },
+    ],
+    // Level 3 (Grade 7) — Area of a sector
+    [
+      { q: "Calculate the area of a sector with radius 8 cm and central angle 45°. Give your answer in terms of π.", a: "8π cm²", worked: ["Area of sector = (θ/360) × πr²", "= (45/360) × π × 8²", "= (1/8) × 64π", "= 8π cm²"], hint: "Sector area = (angle/360) × πr²" },
+    ],
+    // Level 4 (Grade 8) — Reverse sector problems
+    [
+      { q: "The area of a sector is 20π cm² and the radius is 10 cm. Find the central angle.", a: "72°", worked: ["Area = (θ/360) × πr²", "20π = (θ/360) × π × 100", "20π = 100πθ/360", "20 = 100θ/360", "θ = 20 × 360/100 = 72°"], hint: "Substitute into the sector area formula and solve for θ" },
+    ],
+    // Level 5 (Grade 9) — Composite sector problems
+    [
+      { q: "A shape is made from a sector of a circle with radius r. If the radius is increased by 50%, find the percentage increase in the area of the sector.", a: "125%", worked: ["Original area = (θ/360) × πr²", "New radius = 1.5r", "New area = (θ/360) × π(1.5r)² = (θ/360) × 2.25πr²", "New area = 2.25 × original area", "Percentage increase = (2.25 − 1) × 100% = 125%"], hint: "If the radius is multiplied by k, the area is multiplied by k². What is 1.5²?" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P9: Conditional Probability & Set Notation (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'P9': [
+    // Level 1 (Grade 4/5) — Complement and basic probability
+    [
+      { q: "A bag contains 5 red and 3 blue marbles. Two marbles are picked with replacement. Find the probability of picking two reds.", a: "25/64", worked: ["P(1st red) = 5/8", "With replacement, P(2nd red) = 5/8", "P(both red) = 5/8 × 5/8 = 25/64"], hint: "With replacement means the probabilities stay the same each time" },
+      { q: "A fair coin is flipped and a fair die is rolled. Find the probability of getting heads and a 6.", a: "1/12", worked: ["P(heads) = 1/2", "P(six) = 1/6", "P(heads and 6) = 1/2 × 1/6 = 1/12"], hint: "These are independent events — multiply the probabilities" },
+      { q: "P(A) = 0.3. Find P(not A).", a: "0.7", worked: ["P(not A) = 1 − P(A)", "= 1 − 0.3 = 0.7"], hint: "P(not A) = 1 − P(A)" },
+    ],
+    // Level 2 (Grade 6) — Independent events and tree diagrams
+    [
+      { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(A and B).", a: "0.28", worked: ["For independent events: P(A and B) = P(A) × P(B)", "= 0.7 × 0.4 = 0.28"], hint: "Independent means P(A and B) = P(A) × P(B)", calculator: true },
+      { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(neither A nor B).", a: "0.18", worked: ["P(A') = 1 − 0.7 = 0.3", "P(B') = 1 − 0.4 = 0.6", "P(neither) = P(A') × P(B') = 0.3 × 0.6 = 0.18"], hint: "P(neither) = P(not A) × P(not B)", calculator: true },
+      { q: "Two independent events each have P(Win) = 0.6. Find P(Win both times).", a: "0.36", worked: ["P(Win twice) = 0.6 × 0.6 = 0.36"], hint: "Independent: multiply the probabilities", calculator: true },
+    ],
+    // Level 3 (Grade 7) — Without replacement (dependent events)
+    [
+      { q: "A bag has 4 red and 6 blue marbles. Two are picked without replacement. Find the probability that both are the same colour.", a: "7/15", worked: ["P(both red) = 4/10 × 3/9 = 12/90", "P(both blue) = 6/10 × 5/9 = 30/90", "P(same colour) = 12/90 + 30/90 = 42/90 = 7/15"], hint: "Calculate P(both red) + P(both blue). Remember totals decrease without replacement." },
+      { q: "A bag has 3 red and 5 blue balls. Two are picked without replacement. Find P(both red).", a: "3/28", worked: ["P(1st red) = 3/8", "P(2nd red | 1st red) = 2/7", "P(both red) = 3/8 × 2/7 = 6/56 = 3/28"], hint: "After taking a red ball, there are 2 red left out of 7 total" },
+      { q: "A bag has 4 green and 6 blue marbles. Two are picked without replacement. Find P(both blue).", a: "1/3", worked: ["P(1st blue) = 6/10", "P(2nd blue | 1st blue) = 5/9", "P(both blue) = 6/10 × 5/9 = 30/90 = 1/3"], hint: "After taking a blue marble, there are 5 blue left out of 9 total" },
+    ],
+    // Level 4 (Grade 8) — Venn diagrams and conditional probability
+    [
+      { q: "In a group of 100 students, 60 study French, 40 study Spanish, and 20 study both. Find the probability that a student studies only French, given that they study a language.", a: "0.5", worked: ["Only French = 60 − 20 = 40", "Study a language = 60 + 40 − 20 = 80", "P(only French | studies a language) = 40/80 = 0.5"], hint: "Find 'only French' from the Venn diagram, then divide by total who study a language", calculator: true },
+      { q: "ξ = {1,2,3,...,12}, A = {multiples of 3}, B = {even numbers}. List the members of (A ∪ B)'.", a: "{1, 5, 7, 11}", worked: ["A = {3, 6, 9, 12}", "B = {2, 4, 6, 8, 10, 12}", "A ∪ B = {2, 3, 4, 6, 8, 9, 10, 12}", "(A ∪ B)' = {1, 5, 7, 11}"], hint: "Find A ∪ B first, then find everything NOT in that set" },
+      { q: "P(A|B) = 0.4 and P(B) = 0.5. Find P(A ∩ B).", a: "0.2", worked: ["P(A|B) = P(A ∩ B)/P(B)", "0.4 = P(A ∩ B)/0.5", "P(A ∩ B) = 0.4 × 0.5 = 0.2"], hint: "Rearrange: P(A ∩ B) = P(A|B) × P(B)", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Algebraic probability proof
+    [
+      { q: "There are n sweets in a bag. 6 are orange and the rest are yellow. Two sweets are taken without replacement. The probability of two orange sweets is 1/3. Show that n² − n − 90 = 0 and find n.", a: "n = 10", worked: ["P(1st orange) = 6/n", "P(2nd orange) = 5/(n − 1)", "P(both orange) = 6/n × 5/(n−1) = 30/(n(n−1)) = 1/3", "Cross multiply: 90 = n(n − 1) = n² − n", "n² − n − 90 = 0", "Factorise: (n − 10)(n + 9) = 0", "n = 10 (n must be positive)"], hint: "Set up P(both orange) = (6/n) × (5/(n−1)) = 1/3, then rearrange" },
+      { q: "Events A and B are independent. P(A) = 0.3 and P(A ∪ B) = 0.72. Find P(B).", a: "0.6", worked: ["P(A ∩ B) = P(A) × P(B) = 0.3P(B)", "0.72 = 0.3 + P(B) − 0.3P(B)", "0.42 = P(B)(1 − 0.3) = 0.7P(B)", "P(B) = 0.6"], hint: "Independent means P(A ∩ B) = P(A) × P(B). Substitute into the addition rule.", calculator: true },
+      { q: "A bag has n red and 4 white balls. Two are picked without replacement. P(both red) = 1/3. Find n.", a: "n = 6", worked: ["P(both red) = n/(n+4) × (n−1)/(n+3) = 1/3", "3n(n−1) = (n+4)(n+3)", "3n² − 3n = n² + 7n + 12", "2n² − 10n − 12 = 0", "n² − 5n − 6 = 0", "(n − 6)(n + 1) = 0", "n = 6 (must be positive)"], hint: "Set up n/(n+4) × (n−1)/(n+3) = 1/3 and solve the quadratic" },
+    ],
+  ],
+
+  // A22: Solving Inequalities including Quadratic (corrected AQA mapping — moved from old A15)
+  'A22': [
+    // Level 1 (Grade 6) — Solving linear inequalities
+    [
+      { q: "Solve 3x + 2 > 14", a: "x > 4", worked: ["3x + 2 > 14", "3x > 12", "x > 4"], hint: "Treat it like an equation, but keep the inequality sign" },
+      { q: "Solve 5 − 2x ≤ 11", a: "x ≥ −3", worked: ["5 − 2x ≤ 11", "−2x ≤ 6", "x ≥ −3 (flip the sign when dividing by negative)"], hint: "Remember to flip the inequality when dividing by a negative" },
+    ],
+    // Level 2 (Grade 7) — Compound inequalities
+    [
+      { q: "Solve −3 < 2x + 1 ≤ 7 and list the integer values.", a: "−1, 0, 1, 2, 3", worked: ["−3 < 2x + 1 ≤ 7", "Subtract 1: −4 < 2x ≤ 6", "Divide by 2: −2 < x ≤ 3", "Integer values: −1, 0, 1, 2, 3"], hint: "Solve the compound inequality in one go, doing the same to all three parts" },
+    ],
+    // Level 3 (Grade 8) — Quadratic inequalities (basic)
+    [
+      { q: "Solve x² < 25", a: "−5 < x < 5", worked: ["x² < 25", "x² − 25 < 0", "(x + 5)(x − 5) < 0", "The parabola is negative between the roots", "−5 < x < 5"], hint: "Find where x² = 25, then think about where the parabola is below zero" },
+      { q: "Solve x² ≥ 9", a: "x ≤ −3 or x ≥ 3", worked: ["x² ≥ 9", "x² − 9 ≥ 0", "(x + 3)(x − 3) ≥ 0", "The parabola is positive outside the roots", "x ≤ −3 or x ≥ 3"], hint: "Think about where the U-shaped parabola is above the x-axis" },
+    ],
+    // Level 4 (Grade 8) — Factorised quadratic inequalities
+    [
+      { q: "Solve x² − 5x + 6 > 0", a: "x < 2 or x > 3", worked: ["Factorise: (x − 2)(x − 3) > 0", "Roots at x = 2 and x = 3", "Parabola is positive outside the roots", "x < 2 or x > 3"], hint: "Factorise, find the roots, then sketch the parabola" },
+    ],
+    // Level 5 (Grade 9) — Complex quadratic inequalities
+    [
+      { q: "Find the set of values of x for which x² − 3x − 10 ≤ 0", a: "−2 ≤ x ≤ 5", worked: ["Factorise: (x − 5)(x + 2) ≤ 0", "Roots at x = −2 and x = 5", "Parabola is negative (or zero) between the roots", "−2 ≤ x ≤ 5"], hint: "Factorise, find roots, then determine where the quadratic is ≤ 0" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // N10: Fraction, Decimal & Percentage Conversions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N10': [
+    // Level 1 (Grade 5) — Simplifying surds
+    [
+      { q: "Simplify √75.", a: "5√3", worked: ["√75 = √(25 × 3)", "= √25 × √3", "= 5√3"], hint: "Find the largest square factor of 75" },
+      { q: "Simplify √48.", a: "4√3", worked: ["√48 = √(16 × 3)", "= √16 × √3", "= 4√3"], hint: "Find the largest square factor of 48" },
+      { q: "Simplify √200.", a: "10√2", worked: ["√200 = √(100 × 2)", "= √100 × √2", "= 10√2"], hint: "Find the largest square factor of 200" },
+    ],
+    // Level 2 (Grade 6) — Expanding surd expressions
+    [
+      { q: "Expand and simplify √2(3 + √8).", a: "3√2 + 4", worked: ["√2 × 3 = 3√2", "√2 × √8 = √16 = 4", "= 3√2 + 4"], hint: "Multiply √2 by each term. Remember √2 × √8 = √16" },
+      { q: "Expand and simplify √3(4 − √27).", a: "4√3 − 9", worked: ["√3 × 4 = 4√3", "√3 × √27 = √81 = 9", "= 4√3 − 9"], hint: "√3 × √27 = √81 = 9" },
+      { q: "Expand and simplify √5(√20 + 2).", a: "10 + 2√5", worked: ["√5 × √20 = √100 = 10", "√5 × 2 = 2√5", "= 10 + 2√5"], hint: "√5 × √20 = √100" },
+    ],
+    // Level 3 (Grade 7) — Rationalising the denominator
+    [
+      { q: "Rationalise the denominator of 15/√5. Give your answer in simplified surd form.", a: "3√5", worked: ["Multiply top and bottom by √5", "15/√5 × √5/√5 = 15√5/5 = 3√5"], hint: "Multiply numerator and denominator by √5" },
+      { q: "Rationalise the denominator of 21/√7.", a: "3√7", worked: ["Multiply top and bottom by √7", "21/√7 × √7/√7 = 21√7/7 = 3√7"], hint: "Multiply numerator and denominator by √7" },
+      { q: "Rationalise the denominator of 18/√3.", a: "6√3", worked: ["Multiply top and bottom by √3", "18/√3 × √3/√3 = 18√3/3 = 6√3"], hint: "Multiply numerator and denominator by √3" },
+    ],
+    // Level 4 (Grade 8) — Expanding double surd brackets
+    [
+      { q: "Simplify (4 + √3)(2 − √3). Give your answer in the form a + b√3.", a: "5 − 2√3", worked: ["Expand: 4×2 + 4×(−√3) + √3×2 + √3×(−√3)", "= 8 − 4√3 + 2√3 − 3", "= 5 − 2√3"], hint: "FOIL: multiply each term, remember √3 × √3 = 3" },
+      { q: "Simplify (3 − √5)(1 + √5). Give your answer in the form a + b√5.", a: "−2 + 2√5", worked: ["Expand: 3×1 + 3×√5 + (−√5)×1 + (−√5)×√5", "= 3 + 3√5 − √5 − 5", "= −2 + 2√5"], hint: "FOIL: multiply each term, remember √5 × √5 = 5" },
+      { q: "Simplify (2 + √7)(5 − √7).", a: "3 + 3√7", worked: ["Expand: 2×5 + 2×(−√7) + √7×5 + √7×(−√7)", "= 10 − 2√7 + 5√7 − 7", "= 3 + 3√7"], hint: "FOIL: multiply each term, remember √7 × √7 = 7" },
+    ],
+    // Level 5 (Grade 9) — Surd proof problems
+    [
+      { q: "Show that 6/√2 + √50 can be written as 8√2.", a: "Shown", type: "proof", worked: ["6/√2 = 6√2/2 = 3√2 (rationalise)", "√50 = √(25×2) = 5√2", "3√2 + 5√2 = 8√2 ✓"], hint: "Rationalise 6/√2 and simplify √50, then add" },
+      { q: "Show that 10/√5 + √45 can be written as 5√5.", a: "Shown", type: "proof", worked: ["10/√5 = 10√5/5 = 2√5 (rationalise)", "√45 = √(9×5) = 3√5", "2√5 + 3√5 = 5√5 ✓"], hint: "Rationalise 10/√5 and simplify √45, then add" },
+      { q: "Show that 12/√6 + √24 can be written as 4√6.", a: "Shown", type: "proof", worked: ["12/√6 = 12√6/6 = 2√6 (rationalise)", "√24 = √(4×6) = 2√6", "2√6 + 2√6 = 4√6 ✓"], hint: "Rationalise 12/√6 and simplify √24, then add" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A20: Algebraic Proof
+  // ═══════════════════════════════════════════════════════════════
+  'A20': [
+    // Level 0 (Grade 5) — Prove sums of consecutive integers
+    [
+      { q: "Prove that the sum of any three consecutive integers is a multiple of 3.", a: "Shown", type: "proof", worked: ["Let the integers be n, n+1, n+2", "Sum = n + (n+1) + (n+2) = 3n + 3 = 3(n+1)", "3(n+1) is a multiple of 3 for all integers n"], hint: "Let the three consecutive integers be n, n+1, n+2 and add them" },
+      { q: "Prove that the sum of any four consecutive integers is always even.", a: "Shown", type: "proof", worked: ["Let the integers be n, n+1, n+2, n+3", "Sum = 4n + 6 = 2(2n + 3)", "2(2n + 3) is always even (it's a multiple of 2)"], hint: "Let the integers be n, n+1, n+2, n+3" },
+      { q: "Show that the sum of 2n and 2n + 2 is always a multiple of 2.", a: "Shown", type: "proof", worked: ["2n + (2n + 2) = 4n + 2 = 2(2n + 1)", "2(2n + 1) is a multiple of 2 for all integers n"], hint: "Add the two expressions and factorise" },
+    ],
+    // Level 1 (Grade 6) — Expand and prove identities
+    [
+      { q: "Show that (n+1)² − n² is always equal to 2n + 1.", a: "Shown", type: "proof", worked: ["(n+1)² − n² = n² + 2n + 1 − n² = 2n + 1"], hint: "Expand (n+1)² and then subtract n²" },
+      { q: "Prove that (n+3)² − (n−3)² = 12n.", a: "Shown", type: "proof", worked: ["(n+3)² = n² + 6n + 9", "(n−3)² = n² − 6n + 9", "Difference = (n² + 6n + 9) − (n² − 6n + 9)", "= 12n"], hint: "Expand both brackets then subtract" },
+      { q: "Expand and simplify (n+2)² − (n+1)² to show it is always odd.", a: "Shown", type: "proof", worked: ["(n+2)² = n² + 4n + 4", "(n+1)² = n² + 2n + 1", "Difference = 2n + 3", "2n + 3 = 2n + 2 + 1 = 2(n+1) + 1", "This is odd (one more than an even number)"], hint: "Expand both, subtract, then show the result is 2k + 1" },
+    ],
+    // Level 2 (Grade 7) — Prove properties of even/odd numbers
+    [
+      { q: "Prove that the square of any even number is a multiple of 4.", a: "Shown", type: "proof", worked: ["Let the even number be 2n", "(2n)² = 4n²", "4n² is a multiple of 4 for all integers n"], hint: "Write an even number as 2n, then square it" },
+      { q: "Prove that the sum of two consecutive odd numbers is always a multiple of 4.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n+1 and 2n+3", "Sum = (2n+1) + (2n+3) = 4n + 4 = 4(n+1)", "4(n+1) is a multiple of 4"], hint: "Write two consecutive odd numbers as 2n+1 and 2n+3" },
+      { q: "Prove that the square of any odd number is always odd.", a: "Shown", type: "proof", worked: ["Let the odd number be 2n + 1", "(2n+1)² = 4n² + 4n + 1 = 2(2n² + 2n) + 1", "This is one more than an even number, so it is odd"], hint: "Write an odd number as 2n+1, square it, then show it's 2k+1" },
+    ],
+    // Level 3 (Grade 8) — Prove products and squared expressions
+    [
+      { q: "Prove that the product of any two odd numbers is always odd.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2a+1 and 2b+1", "(2a+1)(2b+1) = 4ab + 2a + 2b + 1", "= 2(2ab + a + b) + 1", "This is one more than an even number, so it is odd"], hint: "Write the two odd numbers as 2a+1 and 2b+1, then multiply" },
+      { q: "Prove that (2n+1)² is always 1 more than a multiple of 4.", a: "Shown", type: "proof", worked: ["(2n+1)² = 4n² + 4n + 1 = 4(n² + n) + 1", "4(n² + n) is a multiple of 4", "So (2n+1)² is 1 more than a multiple of 4"], hint: "Expand (2n+1)², then factorise to show 4k + 1" },
+      { q: "Prove that (n+1)² + n² is always an odd number.", a: "Shown", type: "proof", worked: ["(n+1)² + n² = n² + 2n + 1 + n²", "= 2n² + 2n + 1", "= 2(n² + n) + 1", "This is one more than an even number, so it is odd"], hint: "Expand, collect terms, and show the result is 2k + 1" },
+    ],
+    // Level 4 (Grade 9) — Advanced algebraic proofs
+    [
+      { q: "Prove algebraically that the difference between the squares of any two consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n+1 and 2n+3", "(2n+3)² − (2n+1)² = (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "8(n+1) is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n+1 and 2n+3, square both, subtract" },
+      { q: "Prove that n² + n is an even number for all integer values of n.", a: "Shown", type: "proof", worked: ["n² + n = n(n + 1)", "n and n+1 are consecutive integers", "One of any pair of consecutive integers is always even", "So their product n(n+1) is always even"], hint: "Factorise to n(n+1). One of two consecutive integers must be even" },
+      { q: "Prove that the sum of the squares of two consecutive integers is always 1 more than an even number.", a: "Shown", type: "proof", worked: ["Let the integers be n and n+1", "n² + (n+1)² = n² + n² + 2n + 1 = 2n² + 2n + 1", "= 2(n² + n) + 1", "2(n² + n) is even, so the sum is 1 more than an even number"], hint: "Expand n² + (n+1)², simplify, and show it's 2k + 1" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A15: Gradients and Area Under Curves
+  // ═══════════════════════════════════════════════════════════════
+  'A15': [
+    // Level 0 (Grade 6) — Estimate gradient by drawing tangent
+    [
+      { q: "Estimate the gradient of y = x² at the point (2, 4) by considering a tangent through (1, 0) and (3, 8).", a: "4", worked: ["Gradient of tangent = (8 − 0)/(3 − 1) = 8/2 = 4", "The gradient of the curve at (2, 4) is approximately 4"], hint: "Use the two points on the tangent to calculate rise ÷ run" },
+      { q: "Estimate the gradient of y = x² − 2x at x = 3. A tangent at this point passes through (2, 0) and (4, 8).", a: "4", worked: ["At x = 3: y = 9 − 6 = 3", "Tangent gradient = (8 − 0)/(4 − 2) = 8/2 = 4"], hint: "Use the two tangent points to find the gradient" },
+      { q: "Estimate the gradient of y = 1/x at (1, 1). A tangent passes through (0, 2) and (2, 0).", a: "−1", worked: ["Tangent gradient = (0 − 2)/(2 − 0) = −2/2 = −1", "The gradient of the curve at (1, 1) is approximately −1"], hint: "The gradient is negative because the curve slopes downward" },
+    ],
+    // Level 1 (Grade 7) — Interpret gradients on real-life graphs
+    [
+      { q: "Explain why the area under a velocity-time graph represents distance.", a: "Area = velocity × time = distance, since the units are m/s × s = m", worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
+      { q: "What does the gradient of a velocity-time graph represent?", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], a: "Acceleration", worked: ["Gradient = change in velocity ÷ change in time", "= (m/s) ÷ s = m/s²", "This is acceleration"], hint: "The gradient is the rate of change. Rate of change of velocity is..." },
+      { q: "Calculate the distance travelled in 5 seconds from a velocity-time graph showing constant speed of 8 m/s.", a: "40", worked: ["Distance = area under the graph", "= velocity × time = 8 × 5 = 40 m"], hint: "For constant speed, the area is a rectangle" },
+    ],
+    // Level 2 (Grade 8) — Trapezium rule
+    [
+      { q: "Use the trapezium rule with 3 strips to estimate the area under y = √x from x = 1 to x = 4.", a: "4.65", calculator: true, worked: ["h = (4−1)/3 = 1", "y₀ = √1 = 1, y₁ = √2 ≈ 1.414, y₂ = √3 ≈ 1.732, y₃ = √4 = 2", "Area ≈ h/2 × [y₀ + 2y₁ + 2y₂ + y₃]", "= 0.5 × [1 + 2(1.414) + 2(1.732) + 2]", "= 0.5 × [1 + 2.828 + 3.464 + 2] = 0.5 × 9.292 = 4.65"], hint: "Use h/2 × [first + 2×middles + last]. Calculate y at x = 1, 2, 3, 4" },
+      { q: "Use 2 trapezia to estimate the area under y = 2ˣ from x = 0 to x = 2.", a: "4.5", calculator: true, worked: ["h = (2−0)/2 = 1", "y₀ = 2⁰ = 1, y₁ = 2¹ = 2, y₂ = 2² = 4", "Area ≈ 1/2 × [1 + 2(2) + 4] = 1/2 × 9 = 4.5"], hint: "Calculate y at x = 0, 1, 2, then apply the trapezium rule" },
+      { q: "Use the trapezium rule with 3 strips to estimate the area under y = x² + 1 between x = 0 and x = 3.", a: "12.5", calculator: true, worked: ["h = 1. y₀ = 1, y₁ = 2, y₂ = 5, y₃ = 10", "Area ≈ 1/2 × [1 + 2(2) + 2(5) + 10]", "= 1/2 × [1 + 4 + 10 + 10] = 1/2 × 25 = 12.5"], hint: "y values at x=0,1,2,3 are 1,2,5,10. Apply h/2 × [first + 2×middles + last]" },
+    ],
+    // Level 3 (Grade 9) — Rate of change
+    [
+      { q: "Calculate the average rate of change for f(x) = x³ between x = 1 and x = 3.", a: "13", worked: ["f(1) = 1, f(3) = 27", "Average rate of change = (f(3) − f(1))/(3 − 1)", "= (27 − 1)/2 = 26/2 = 13"], hint: "Average rate of change = (f(b) − f(a))/(b − a)" },
+      { q: "Find the instantaneous rate of change of y = 5x² at x = 2 by considering a tangent through (1, 5) and (3, 45).", a: "20", worked: ["Tangent gradient = (45 − 5)/(3 − 1) = 40/2 = 20", "Instantaneous rate of change at x = 2 is 20"], hint: "Use the tangent line to estimate the gradient at x = 2" },
+      { q: "Compare the average speed and instantaneous speed at the midpoint: a car travels 100m in 10s. At t=5, a tangent gives gradient 12 m/s.", a: "Average speed = 10 m/s, instantaneous speed at t=5 = 12 m/s. The instantaneous speed is higher than the average.", worked: ["Average speed = total distance ÷ total time = 100/10 = 10 m/s", "Instantaneous speed at t=5 = gradient of tangent = 12 m/s", "The car is going faster than average at the midpoint"], hint: "Average speed = distance/time. Instantaneous speed = gradient of tangent" },
+    ],
+    // Level 4 (Grade 9) — Over/underestimates and velocity from distance-time
+    [
+      { q: "Determine if the trapezium rule provides an over-estimate or under-estimate for y = √x from x = 1 to x = 4.", type: "mcq", options: ["Over-estimate — curve is concave", "Under-estimate — curve is concave", "Over-estimate — curve is convex"], a: "Under-estimate — curve is concave", worked: ["y = √x is concave (curves downward/flattens out)", "For concave curves, the trapezium tops lie below the curve", "So the trapezium rule under-estimates the area"], hint: "Is √x bending upward (convex) or flattening out (concave)?" },
+      { q: "A car accelerates from rest. Use a velocity-time graph: v = 0 at t=0, v = 5 at t=2, v = 12 at t=4, v = 15 at t=6, v = 18 at t=8, v = 20 at t=10. Estimate total distance in 10 seconds.", a: "120", calculator: true, worked: ["Use trapezium rule with h = 2:", "Area ≈ h/2 × [first + 2(middles) + last]", "= 2/2 × [0 + 2(5) + 2(12) + 2(15) + 2(18) + 20]", "= 1 × [0 + 10 + 24 + 30 + 36 + 20] = 120 m"], hint: "Apply the trapezium rule to the velocity-time data. Distance = area under the graph" },
+      { q: "Use a distance-time graph to estimate the velocity at t = 4. The tangent at t = 4 passes through (2, 10) and (6, 50).", a: "10 m/s", worked: ["Velocity = gradient of distance-time graph", "Gradient of tangent = (50 − 10)/(6 − 2) = 40/4 = 10", "Estimated velocity at t = 4 is 10 m/s"], hint: "On a distance-time graph, velocity = gradient. Use the tangent" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G22: Enlargement with Negative & Fractional Scale Factors (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'G22': [
+    // Level 1 (Grade 5) — Area of triangle using ½absinC
+    [
+      { q: "Calculate the area of a triangle with sides 8 cm and 11 cm and an included angle of 42°. Give your answer to 1 d.p.", a: "29.4 cm²", calculator: true, worked: ["Area = ½ × a × b × sin(C)", "= ½ × 8 × 11 × sin(42°)", "= 44 × 0.6691...", "= 29.4 cm² (1 d.p.)"], hint: "Use Area = ½ × a × b × sin(C)" },
+    ],
+    // Level 2 (Grade 6) — Sine Rule to find a missing side
+    [
+      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 10 cm (opposite angle A). Use the Sine Rule to find side b. Give your answer to 1 d.p.", a: "15.0 cm", calculator: true, worked: ["Sine Rule: a/sin A = b/sin B", "10/sin 40° = b/sin 75°", "b = 10 × sin 75° / sin 40°", "b = 10 × 0.9659 / 0.6428", "b = 15.0 cm (1 d.p.)"], hint: "Use a/sin A = b/sin B and rearrange to find b" },
+    ],
+    // Level 3 (Grade 7) — Cosine Rule in bearing context
+    [
+      { q: "A ship sails 15 km on a bearing of 060° and then 20 km on a bearing of 150°. Calculate the direct distance back to the starting point.", a: "25 km", calculator: true, worked: ["Back-bearing of first leg = 060° + 180° = 240°", "Angle at turning point = 240° − 150° = 90°", "Using Cosine Rule: c² = 15² + 20² − 2(15)(20)cos(90°)", "cos(90°) = 0, so c² = 225 + 400 = 625", "c = √625 = 25 km"], hint: "Find the angle between the two legs using bearings. The back-bearing of the first leg minus the forward bearing of the second gives the angle." },
+    ],
+    // Level 4 (Grade 8) — Cosine Rule to find an angle
+    [
+      { q: "Find the largest angle in a triangle with sides 5 cm, 7 cm and 10 cm. Give your answer to 1 d.p.", a: "111.8°", calculator: true, worked: ["The largest angle is opposite the longest side (10 cm)", "cos C = (a² + b² − c²) / 2ab", "cos C = (25 + 49 − 100) / (2 × 5 × 7)", "cos C = −26/70 = −0.3714...", "C = cos⁻¹(−0.3714) = 111.8°"], hint: "The largest angle is opposite the longest side. Use cos C = (a² + b² − c²) / 2ab" },
+    ],
+    // Level 5 (Grade 9) — 3D pyramid problem
+    [
+      { q: "A square-based pyramid has a base of side 10 cm and a vertical height of 12 cm. Calculate the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "59.5°", calculator: true, worked: ["The slant edge goes from a base corner to the apex", "Half-diagonal of base = ½ × 10√2 = 5√2 = 7.071 cm", "The slant edge, height and half-diagonal form a right triangle", "tan θ = height / half-diagonal = 12 / 5√2", "θ = tan⁻¹(12/7.071) = 59.5°"], hint: "Find the half-diagonal of the square base. The angle is between the slant edge and the horizontal half-diagonal, with the vertical height opposite." },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R15: Growth & Decay (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'R15': [
+    // Level 1 (Grade 4) — Speed, distance, time
+    [
+      { q: "A car travels 120 miles in 2 hours 30 minutes. Calculate its average speed.", a: "48 mph", worked: ["Time = 2.5 hours", "Speed = distance ÷ time", "= 120 ÷ 2.5 = 48 mph"], hint: "Convert minutes to hours first, then use speed = distance ÷ time", calculator: true },
+      { q: "A train travels 210 km in 3 hours 30 minutes. Calculate its average speed.", a: "60 km/h", worked: ["Time = 3.5 hours", "Speed = 210 ÷ 3.5 = 60 km/h"], hint: "Convert to hours, then speed = distance ÷ time", calculator: true },
+      { q: "Walk 6 miles at 4 mph. How many minutes does it take?", a: "90 minutes", worked: ["Time = distance ÷ speed", "= 6 ÷ 4 = 1.5 hours", "= 1.5 × 60 = 90 minutes"], hint: "Time = distance ÷ speed, then convert hours to minutes", calculator: true },
+    ],
+    // Level 2 (Grade 5) — Density and mass
+    [
+      { q: "A block of wood has a mass of 600 g and a volume of 750 cm³. Calculate its density.", a: "0.8 g/cm³", worked: ["Density = mass ÷ volume", "= 600 ÷ 750 = 0.8 g/cm³"], hint: "Density = mass ÷ volume", calculator: true },
+      { q: "A metal bar has density 8 g/cm³ and volume 50 cm³. Calculate its mass.", a: "400 g", worked: ["Mass = density × volume", "= 8 × 50 = 400 g"], hint: "Mass = density × volume", calculator: true },
+      { q: "A stone has mass 2.4 kg and density 3 g/cm³. Find its volume.", a: "800 cm³", worked: ["Convert mass: 2.4 kg = 2400 g", "Volume = mass ÷ density", "= 2400 ÷ 3 = 800 cm³"], hint: "Convert kg to g first, then volume = mass ÷ density", calculator: true },
+    ],
+    // Level 3 (Grade 7) — Compound measures with unit conversion
+    [
+      { q: "A liquid has a density of 1.2 g/cm³. Calculate the mass of 2.5 litres of the liquid.", a: "3000 g (or 3 kg)", worked: ["2.5 litres = 2500 cm³", "Mass = density × volume", "= 1.2 × 2500 = 3000 g = 3 kg"], hint: "1 litre = 1000 cm³. Then use mass = density × volume", calculator: true },
+      { q: "Force = 120 N acting on an area of 0.5 m². Calculate the pressure.", a: "240 N/m²", worked: ["Pressure = force ÷ area", "= 120 ÷ 0.5 = 240 N/m²"], hint: "Pressure = force ÷ area", calculator: true },
+      { q: "Change a pressure of 40 N/m² into N/cm².", a: "0.004 N/cm²", worked: ["1 m² = 10,000 cm²", "40 N/m² = 40 N per 10,000 cm²", "= 40 ÷ 10,000 = 0.004 N/cm²"], hint: "1 m = 100 cm, so 1 m² = 10,000 cm². Divide by 10,000.", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Converting compound units
+    [
+      { q: "Convert a speed of 72 km/h into metres per second (m/s).", a: "20 m/s", worked: ["72 km = 72,000 m", "1 hour = 3600 seconds", "72 km/h = 72,000 ÷ 3600 = 20 m/s"], hint: "Multiply km by 1000, divide hours by 3600", calculator: true },
+      { q: "Convert a density of 1000 kg/m³ into g/cm³.", a: "1 g/cm³", worked: ["1000 kg = 1,000,000 g", "1 m³ = 1,000,000 cm³", "1000 kg/m³ = 1,000,000/1,000,000 = 1 g/cm³"], hint: "Convert both units: kg to g and m³ to cm³", calculator: true },
+      { q: "Convert 15 m/s into km/h.", a: "54 km/h", worked: ["15 m/s = 15 × 3600 m/h = 54,000 m/h", "= 54,000 ÷ 1000 = 54 km/h"], hint: "Multiply by 3600 to get m/h, then divide by 1000 for km/h", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Complex compound measure problems
+    [
+      { q: "Liquid A (density 0.8 g/cm³) is mixed with Liquid B (density 1.1 g/cm³) in a 3:1 ratio by volume. Find the density of the mixture.", a: "0.875 g/cm³", worked: ["Take 3 cm³ of A and 1 cm³ of B", "Mass of A = 0.8 × 3 = 2.4 g", "Mass of B = 1.1 × 1 = 1.1 g", "Total mass = 3.5 g, total volume = 4 cm³", "Density = 3.5/4 = 0.875 g/cm³"], hint: "Find the total mass and total volume of the mixture, then divide", calculator: true },
+      { q: "A cyclist travels at 12 mph for 20 miles, then 18 mph for 30 miles. Find the average speed for the whole journey.", a: "15 mph", worked: ["Time 1 = 20/12 = 5/3 hours", "Time 2 = 30/18 = 5/3 hours", "Total distance = 50 miles", "Total time = 10/3 hours", "Average speed = 50 ÷ (10/3) = 15 mph"], hint: "Average speed = total distance ÷ total time. Don't just average the two speeds!", calculator: true },
+      { q: "Alloy X is 60% metal A (density 7 g/cm³) and 40% metal B (density 9 g/cm³) by mass. Find the density of Alloy X to 1 d.p.", a: "7.7 g/cm³", worked: ["Take 100 g of alloy: 60 g of A, 40 g of B", "Volume of A = 60/7 = 8.571 cm³", "Volume of B = 40/9 = 4.444 cm³", "Total volume = 13.016 cm³", "Density = 100/13.016 = 7.7 g/cm³ (1 d.p.)"], hint: "Find the volume of each component using mass/density, then total density = total mass / total volume", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A11: Quadratic Graphs & Turning Points (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A11': [
+    // Level 1 (Grade 5) — Tables of values and basic quadratic graphs
+    [
+      { q: "Complete the table of values for y = x² − 3 when x = −2, −1, 0, 1, 2. What is y when x = −2?", a: "1", worked: ["y = x² − 3", "When x = −2: y = (−2)² − 3 = 4 − 3 = 1"], hint: "Substitute x = −2 into the equation. Remember (−2)² = 4" },
+      { q: "For y = 2x², what is the value of y when x = 3?", a: "18", worked: ["y = 2x²", "When x = 3: y = 2 × 3² = 2 × 9 = 18"], hint: "Substitute x = 3. Square first, then multiply by 2" },
+      { q: "State the equation of the line of symmetry for y = x² + 4.", a: "x = 0", worked: ["y = x² + 4 has no x-term", "The graph is symmetric about the y-axis", "Line of symmetry: x = 0"], hint: "A quadratic y = x² + c with no x-term is symmetric about the y-axis" },
+    ],
+    // Level 2 (Grade 6) — Intercepts and roots from factorised form
+    [
+      { q: "Write down the coordinates of the y-intercept for y = x² − 5x + 6.", a: "(0, 6)", worked: ["The y-intercept occurs when x = 0", "y = 0² − 5(0) + 6 = 6", "y-intercept is (0, 6)"], hint: "Substitute x = 0 to find the y-intercept" },
+      { q: "Find the roots of y = (x − 2)(x + 4).", a: "x = 2 and x = −4", worked: ["Set y = 0:", "(x − 2)(x + 4) = 0", "x − 2 = 0 → x = 2", "x + 4 = 0 → x = −4"], hint: "Set each bracket equal to zero" },
+      { q: "Where does the graph of y = 12 − x − x² cross the y-axis?", a: "(0, 12)", worked: ["Substitute x = 0:", "y = 12 − 0 − 0² = 12", "The graph crosses the y-axis at (0, 12)"], hint: "Substitute x = 0 into the equation" },
+    ],
+    // Level 3 (Grade 7) — Solving quadratics for x-intercepts
+    [
+      { q: "Solve x² − 4x − 5 = 0 to find the x-intercepts of y = x² − 4x − 5.", a: "x = 5 and x = −1", worked: ["Factorise: (x − 5)(x + 1) = 0", "x − 5 = 0 → x = 5", "x + 1 = 0 → x = −1", "x-intercepts: (5, 0) and (−1, 0)"], hint: "Find two numbers that multiply to −5 and add to −4" },
+      { q: "Use the quadratic formula to find the x-intercepts of y = x² + 3x − 1 to 2 decimal places.", a: "x = 0.30 and x = −3.30", calculator: true, worked: ["a = 1, b = 3, c = −1", "x = (−3 ± √(9 + 4)) / 2", "x = (−3 ± √13) / 2", "x = (−3 + 3.606) / 2 = 0.30", "x = (−3 − 3.606) / 2 = −3.30"], hint: "Use x = (−b ± √(b² − 4ac)) / 2a with a = 1, b = 3, c = −1" },
+      { q: "Determine the number of real roots for y = 2x² + 4x + 5 using the discriminant.", a: "No real roots", type: "mcq", options: ["No real roots", "One repeated root", "Two distinct roots"], worked: ["Discriminant = b² − 4ac", "= 4² − 4(2)(5)", "= 16 − 40 = −24", "Since −24 < 0, there are no real roots"], hint: "Calculate b² − 4ac. If it's negative, there are no real roots" },
+    ],
+    // Level 4 (Grade 8) — Completing the square for turning points
+    [
+      { q: "By completing the square, find the coordinates of the turning point of y = x² + 6x + 2.", a: "(−3, −7)", worked: ["y = x² + 6x + 2", "= (x + 3)² − 9 + 2", "= (x + 3)² − 7", "Turning point is at (−3, −7)"], hint: "Half the coefficient of x gives the bracket. Subtract (half)² and simplify" },
+      { q: "Find the coordinates of the minimum point of y = x² − 8x + 10.", a: "(4, −6)", worked: ["y = x² − 8x + 10", "= (x − 4)² − 16 + 10", "= (x − 4)² − 6", "Minimum point is at (4, −6)"], hint: "Complete the square: half of −8 is −4" },
+      { q: "Write y = 2x² + 8x − 3 in the form a(x + b)² + c and find the turning point.", a: "(−2, −11)", worked: ["y = 2x² + 8x − 3", "= 2(x² + 4x) − 3", "= 2[(x + 2)² − 4] − 3", "= 2(x + 2)² − 8 − 3", "= 2(x + 2)² − 11", "Turning point is at (−2, −11)"], hint: "Factor out the 2 from the first two terms first, then complete the square inside the brackets" },
+    ],
+    // Level 5 (Grade 9) — Sketching, equation from turning point, algebraic proof
+    [
+      { q: "Sketch the graph of y = 9 − (x − 2)². State whether the turning point is a maximum or minimum.", a: "Maximum at (2, 9)", worked: ["y = 9 − (x − 2)² = −(x − 2)² + 9", "The coefficient of (x − 2)² is negative", "So the parabola opens downward → maximum", "Turning point: (2, 9)", "y-intercept: 9 − (0 − 2)² = 9 − 4 = 5", "x-intercepts: (x − 2)² = 9 → x − 2 = ±3 → x = 5 or x = −1"], hint: "The negative sign in front of (x − 2)² means the parabola is upside down" },
+      { q: "A quadratic has a turning point at (3, −4) and passes through (0, 5). Find its equation in the form y = ax² + bx + c.", a: "y = x² − 6x + 5", worked: ["Vertex form: y = a(x − 3)² − 4", "Passes through (0, 5): 5 = a(0 − 3)² − 4", "5 = 9a − 4 → 9a = 9 → a = 1", "y = (x − 3)² − 4 = x² − 6x + 9 − 4", "y = x² − 6x + 5"], hint: "Use vertex form y = a(x − h)² + k with the turning point, then find a using the other point" },
+      { q: "Prove that the turning point of y = x² + kx + 4 always has a y-coordinate of 4 − k²/4.", a: "Shown", type: "proof", worked: ["Complete the square:", "y = x² + kx + 4", "= (x + k/2)² − k²/4 + 4", "= (x + k/2)² + (4 − k²/4)", "The turning point is at (−k/2, 4 − k²/4)", "So the y-coordinate is always 4 − k²/4 ∎"], hint: "Complete the square for x² + kx. The constant term that remains gives the y-coordinate of the turning point" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A12: Equation of a Circle and Tangents (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A12': [
+    // Level 1 (Grade 5) — Equation of a circle centred at origin
+    [
+      { q: "Write down the equation of a circle with centre (0, 0) and radius 9.", a: "x² + y² = 81", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 9, so r² = 81", "x² + y² = 81"], hint: "Use x² + y² = r² and square the radius" },
+      { q: "State the radius of the circle x² + y² = 49.", a: "7", worked: ["x² + y² = r²", "r² = 49", "r = √49 = 7"], hint: "The number on the right-hand side is r². Take its square root" },
+      { q: "Write the equation of a circle centred at the origin that passes through (0, 5).", a: "x² + y² = 25", worked: ["The point (0, 5) lies on the circle", "r = distance from origin = 5", "r² = 25", "x² + y² = 25"], hint: "The radius equals the distance from (0,0) to (0,5)" },
+    ],
+    // Level 2 (Grade 6) — Verifying points on a circle
+    [
+      { q: "Verify that the point (3, 4) lies on the circle x² + y² = 25.", a: "Shown", type: "proof", worked: ["Substitute (3, 4) into x² + y²", "3² + 4² = 9 + 16 = 25 ✓", "This equals the right-hand side", "So (3, 4) lies on the circle"], hint: "Substitute x = 3 and y = 4 into x² + y² and check it equals 25" },
+      { q: "Does the point (1, √3) lie on the circle x² + y² = 4?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["Substitute: 1² + (√3)² = 1 + 3 = 4 ✓", "4 = 4, so yes the point lies on the circle"], hint: "Substitute the coordinates. Remember (√3)² = 3" },
+      { q: "Find the coordinates of the points where x² + y² = 16 crosses the x-axis.", a: "(4, 0) and (−4, 0)", worked: ["On the x-axis, y = 0", "x² + 0² = 16", "x² = 16 → x = ±4", "Points are (4, 0) and (−4, 0)"], hint: "On the x-axis, y = 0. Substitute into the equation" },
+    ],
+    // Level 3 (Grade 7) — Tangent equations
+    [
+      { q: "Find the equation of the tangent to x² + y² = 25 at the point (3, 4). Give your answer in the form y = mx + c.", a: "y = −¾x + 25/4", worked: ["Gradient of radius to (3, 4) = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal" },
+      { q: "Find the equation of the tangent to x² + y² = 100 at the point (−6, 8).", a: "y = ¾x + 25/2", worked: ["Gradient of radius to (−6, 8) = 8/(−6) = −4/3", "Tangent gradient = 3/4 (negative reciprocal)", "y − 8 = ¾(x − (−6))", "y − 8 = ¾(x + 6) = ¾x + 9/2", "y = ¾x + 9/2 + 8 = ¾x + 25/2"], hint: "Find the gradient from origin to (−6, 8), then the perpendicular gradient" },
+      { q: "Find the equation of the tangent to x² + y² = 50 at the point (5, −5).", a: "y = x − 10", worked: ["Gradient of radius to (5, −5) = −5/5 = −1", "Tangent gradient = 1 (negative reciprocal)", "y − (−5) = 1(x − 5)", "y + 5 = x − 5", "y = x − 10"], hint: "The radius gradient is −1, so the tangent gradient is 1" },
+    ],
+    // Level 4 (Grade 8) — Line-circle intersections
+    [
+      { q: "Find the points where the line y = x + 1 intersects the circle x² + y² = 13.", a: "(−3, −2) and (2, 3)", calculator: true, worked: ["Substitute y = x + 1 into x² + y² = 13:", "x² + (x + 1)² = 13", "x² + x² + 2x + 1 = 13", "2x² + 2x − 12 = 0 → x² + x − 6 = 0", "(x + 3)(x − 2) = 0 → x = −3 or x = 2", "When x = −3: y = −2. When x = 2: y = 3", "Points: (−3, −2) and (2, 3)"], hint: "Substitute the line equation into the circle equation and solve the resulting quadratic" },
+      { q: "Solve simultaneously: x² + y² = 25 and y = 2x − 5.", a: "(0, −5) and (4, 3)", calculator: true, worked: ["Substitute y = 2x − 5 into x² + y² = 25:", "x² + (2x − 5)² = 25", "x² + 4x² − 20x + 25 = 25", "5x² − 20x = 0", "5x(x − 4) = 0 → x = 0 or x = 4", "When x = 0: y = −5. When x = 4: y = 3", "Points: (0, −5) and (4, 3)"], hint: "Substitute the line into the circle and factorise" },
+      { q: "Show that the line y = x + 10 is a tangent to the circle x² + y² = 50.", a: "Shown", type: "proof", calculator: true, worked: ["Substitute y = x + 10 into x² + y² = 50:", "x² + (x + 10)² = 50", "x² + x² + 20x + 100 = 50", "2x² + 20x + 50 = 0", "x² + 10x + 25 = 0", "Discriminant = 100 − 100 = 0", "Discriminant = 0, so the line touches the circle at exactly one point (tangent)"], hint: "Substitute into the circle equation and show the discriminant equals zero" },
+    ],
+    // Level 5 (Grade 9) — Triangle area, distance, and point of contact
+    [
+      { q: "Find the area of the triangle formed by the tangent to x² + y² = 40 at the point (2, 6), the x-axis and the y-axis.", a: "200/3", calculator: true, worked: ["Check: 2² + 6² = 4 + 36 = 40 ✓", "Gradient of radius = 6/2 = 3", "Tangent gradient = −1/3 (perpendicular)", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept (y = 0): x = 20", "y-intercept (x = 0): y = 20/3", "Area = ½ × 20 × 20/3 = 200/3 ≈ 66.7"], hint: "Find the tangent equation, then its x and y intercepts. Use Area = ½ × base × height" },
+      { q: "The tangent to x² + y² = 25 is y = −¾x + 25/4. Find the point of contact on the circle.", a: "(3, 4)", worked: ["Tangent gradient = −3/4, so radius gradient = 4/3", "Point (x, y) on circle with y/x = 4/3 → y = 4x/3", "Substitute: x² + 16x²/9 = 25", "25x²/9 = 25 → x² = 9 → x = 3 (positive, since tangent has positive y-intercept)", "y = 4(3)/3 = 4", "Point of contact: (3, 4)"], hint: "The radius to the point of contact is perpendicular to the tangent. Use this to find the relationship between x and y" },
+      { q: "Find the shortest distance from the origin to the line 3x + 4y = 25.", a: "5", worked: ["Use the distance formula: d = |ax₀ + by₀ − c| / √(a² + b²)", "Rewrite as 3x + 4y − 25 = 0", "d = |3(0) + 4(0) − 25| / √(9 + 16)", "d = 25 / √25 = 25/5 = 5"], hint: "Use the perpendicular distance formula: d = |ax + by + c| / √(a² + b²)" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A13: Equation of a Circle (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A13': [
+    // Level 1 (Grade 7) — Equation of a circle centred at origin
+    [
+      { q: "What is the equation of a circle with centre (0,0) and radius 5?", a: "x² + y² = 25", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 5, so r² = 25", "x² + y² = 25"], hint: "Use x² + y² = r²" },
+      { q: "A circle has equation x² + y² = 49. What is the radius?", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
+    ],
+    // Level 2 (Grade 7) — Points on a circle
+    [
+      { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["Substitute: 3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so yes, the point lies on the circle"], hint: "Substitute the coordinates into the equation and check if it equals 25" },
+    ],
+    // Level 3 (Grade 8) — Tangent to a circle
+    [
+      { q: "A circle has equation x² + y² = 25. Find the equation of the tangent at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Radius to (3,4): gradient = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4", "y = −¾x + 25/4"], hint: "The tangent is perpendicular to the radius at the point of contact" },
+    ],
+    // Level 4 (Grade 8) — Circle with centre (a, b)
+    [
+      { q: "What is the equation of a circle with centre (2, −3) and radius 4?", a: "(x − 2)² + (y + 3)² = 16", worked: ["The equation is (x − a)² + (y − b)² = r²", "Centre (2, −3): a = 2, b = −3", "(x − 2)² + (y − (−3))² = 4²", "(x − 2)² + (y + 3)² = 16"], hint: "Use (x − a)² + (y − b)² = r²" },
+    ],
+    // Level 5 (Grade 9) — Completing the square for circles
+    [
+      { q: "Find the centre and radius of the circle x² + y² − 6x + 4y − 12 = 0", a: "Centre (3, −2), radius 5", worked: ["Group: (x² − 6x) + (y² + 4y) = 12", "Complete square: (x − 3)² − 9 + (y + 2)² − 4 = 12", "(x − 3)² + (y + 2)² = 25", "Centre = (3, −2), radius = √25 = 5"], hint: "Complete the square for x and y separately" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A16: Circle Equations and Tangents (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A16': [
+    // Level 1 (Grade 5) — Angle in a semicircle
+    [
+      { q: "Points A, B and C lie on a circle. BC is a diameter. What is the size of angle BAC? State the reason.", a: "90°", worked: ["BC is a diameter of the circle", "Angle BAC is an angle in a semicircle", "The angle in a semicircle is always 90°"], hint: "What theorem applies when an angle is drawn from the ends of a diameter?" },
+    ],
+    // Level 2 (Grade 6) — Opposite angles in a cyclic quadrilateral
+    [
+      { q: "Points A, B, C and D lie on a circle. Angle ABC = 112°. Calculate the size of angle ADC.", a: "68°", worked: ["ABCD is a cyclic quadrilateral", "Opposite angles in a cyclic quadrilateral sum to 180°", "Angle ADC = 180° − 112° = 68°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+    ],
+    // Level 3 (Grade 7) — Alternate Segment Theorem
+    [
+      { q: "A tangent meets a circle at point T. A chord from T makes an angle of 55° with the tangent. Find the angle in the alternate segment.", a: "55°", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So the angle in the alternate segment = 55°"], hint: "The Alternate Segment Theorem says the angle between tangent and chord equals the angle in the other segment" },
+    ],
+    // Level 4 (Grade 8) — Proving angle at centre = 2 × angle at circumference
+    [
+      { q: "A, B and C are points on a circle with centre O. Angle AOC = 148°. Find angle ABC. State the theorem used.", a: "74°", worked: ["The angle at the centre is twice the angle at the circumference", "Angle AOC = 2 × angle ABC", "148° = 2 × angle ABC", "Angle ABC = 74°"], hint: "The angle at the centre is twice the angle at the circumference when both subtend the same arc" },
+    ],
+    // Level 5 (Grade 9) — Tangent length proof
+    [
+      { q: "Two tangents are drawn from an external point P to a circle with centre O, touching at T₁ and T₂. Prove that PT₁ = PT₂.", a: "Shown", type: "proof", worked: ["In triangles OPT₁ and OPT₂:", "OT₁ = OT₂ (radii of the same circle)", "OP = OP (common side)", "Angle OT₁P = angle OT₂P = 90° (radius ⊥ tangent)", "So triangles OPT₁ and OPT₂ are congruent (RHS)", "Therefore PT₁ = PT₂ (corresponding sides)"], hint: "Consider the right-angled triangles formed by the radius to each tangent point and the line OP. What congruence condition applies?" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G25: Vectors — Advanced (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'G25': [
+    // Level 1 (Grade 4/5) — Column vector arithmetic
+    [
+      { q: "If a = (4, −1) and b = (2, 3), calculate 3a − b.", a: "(10, −6)", worked: ["3a = 3 × (4, −1) = (12, −3)", "3a − b = (12, −3) − (2, 3)", "= (12−2, −3−3) = (10, −6)"], hint: "First multiply a by 3, then subtract b" },
+      { q: "If a = (2, 3) and b = (4, −1), find a + 2b.", a: "(10, 1)", worked: ["2b = 2 × (4, −1) = (8, −2)", "a + 2b = (2, 3) + (8, −2)", "= (10, 1)"], hint: "First multiply b by 2, then add to a" },
+      { q: "a = (5, 2) and b = (−1, 3). Find 2a + b.", a: "(9, 7)", worked: ["2a = (10, 4)", "2a + b = (10, 4) + (−1, 3) = (9, 7)"], hint: "Double a first, then add b" },
+    ],
+    // Level 2 (Grade 6) — Vector paths
+    [
+      { q: "In triangle OAB, OA = a and OB = b. Find AB in terms of a and b.", a: "b − a", worked: ["AB = AO + OB", "AO = −OA = −a", "AB = −a + b = b − a"], hint: "Go from A to O (which is −a), then O to B (which is b)" },
+      { q: "ABCD is a parallelogram. AB = a and AD = b. Find AC.", a: "a + b", worked: ["AC = AB + BC", "In a parallelogram, BC = AD = b", "AC = a + b"], hint: "In a parallelogram, opposite sides are equal vectors" },
+    ],
+    // Level 3 (Grade 7) — Midpoints and vector expressions
+    [
+      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in its simplest form.", a: "½(a + b)", worked: ["AB = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b = ½(a + b)"], hint: "Go O → A → M. M is halfway from A to B." },
+      { q: "OA = a and OB = b. Q divides AB in the ratio 1:2. Express OQ in terms of a and b.", a: "⅔a + ⅓b", worked: ["AB = b − a", "AQ = ⅓AB = ⅓(b − a)", "OQ = OA + AQ = a + ⅓(b − a)", "= ⅔a + ⅓b"], hint: "Q is ⅓ of the way from A to B" },
+    ],
+    // Level 4 (Grade 8) — Parallelogram problems and proving parallel vectors
+    [
+      { q: "In parallelogram ABCD, AB = a and AD = b. P is on AC such that AP:PC = 3:1. Express DP in terms of a and b.", a: "¾a − ¼b", worked: ["AC = AB + BC = a + b", "AP = ¾AC = ¾(a + b)", "DP = DA + AP = −b + ¾(a + b)", "= −b + ¾a + ¾b = ¾a − ¼b"], hint: "Find AC first, then AP = ¾AC (ratio 3:1), then DP = DA + AP" },
+      { q: "Prove that AB = 2a + 3b and CD = 4a + 6b are parallel.", a: "Shown", type: "proof", worked: ["CD = 4a + 6b = 2(2a + 3b) = 2 × AB", "CD is a scalar multiple of AB (factor of 2)", "So AB and CD are parallel"], hint: "Show that one vector is a scalar multiple of the other" },
+      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = 3a − 3b", "AC = OC − OA = 6a − 6b = 2(3a − 3b) = 2AB", "AC is a scalar multiple of AB and they share point A", "So A, B and C are collinear"], hint: "Show AC = k × AB. Since they share A, they're collinear." },
+    ],
+    // Level 5 (Grade 9) — Midpoint theorem and ratio proofs
+    [
+      { q: "OABC is a quadrilateral. OA = a, OB = b, OC = c. M is the midpoint of AB and N is the midpoint of BC. Prove that MN is parallel to AC and find the ratio MN:AC.", a: "MN is parallel to AC, MN:AC = 1:2", worked: ["OM = ½(a + b) (midpoint of AB)", "ON = ½(b + c) (midpoint of BC)", "MN = ON − OM = ½(b + c) − ½(a + b)", "= ½c − ½a = ½(c − a)", "AC = OC − OA = c − a", "MN = ½AC, so MN is parallel to AC", "MN:AC = 1:2"], hint: "Find OM and ON using the midpoint formula, then compute MN" },
+      { q: "OA = a, OB = b. P divides OA in ratio 2:1 and Q divides OB in ratio 2:1. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ⅔a", "OQ = ⅔b", "PQ = OQ − OP = ⅔b − ⅔a = ⅔(b − a)", "AB = b − a", "PQ = ⅔AB, so PQ is parallel to AB"], hint: "Find PQ and AB, show one is a scalar multiple of the other" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S3: Averages & Range
+  // ═══════════════════════════════════════════════════════════════
+  'S3': [
+    // Level 0 (Grade 4) — Median, range, mean of simple lists
+    [
+      { q: "Find the median of the list: 3, 8, 2, 10, 5", a: "5", worked: ["Order the data: 2, 3, 5, 8, 10", "Median = middle value = 5"], hint: "Put the numbers in order first, then find the middle one" },
+      { q: "Find the range of the list: 15, 2, 22, 8, 11", a: "20", worked: ["Highest value = 22", "Lowest value = 2", "Range = 22 − 2 = 20"], hint: "Range = highest value − lowest value" },
+      { q: "Calculate the mean and range of: 1.2, 3.4, 2.1, 0.5, 2.8", a: "Mean = 2, Range = 2.9", worked: ["Mean = (1.2 + 3.4 + 2.1 + 0.5 + 2.8) ÷ 5 = 10 ÷ 5 = 2", "Range = 3.4 − 0.5 = 2.9"], hint: "Mean = sum ÷ count. Range = highest − lowest" },
+    ],
+    // Level 1 (Grade 5) — Mode, median of larger lists
+    [
+      { q: "Calculate the mean of 4, 7, 9, 10.", a: "7.5", worked: ["Sum = 4 + 7 + 9 + 10 = 30", "Mean = 30 ÷ 4 = 7.5"], hint: "Add all the numbers and divide by how many there are" },
+      { q: "Find the mode and median of: 5, 2, 8, 5, 10, 12, 5", a: "Mode = 5, Median = 5", worked: ["Mode = 5 (appears 3 times)", "Order: 2, 5, 5, 5, 8, 10, 12", "Median = 4th value = 5"], hint: "Mode = most frequent. Median = middle value when ordered" },
+      { q: "Find the median of: 4, 9, 2, 11, 6, 8", a: "7", worked: ["Order: 2, 4, 6, 8, 9, 11", "Even number of values: median = average of 3rd and 4th", "Median = (6 + 8) ÷ 2 = 7"], hint: "With an even number, average the two middle values" },
+    ],
+    // Level 2 (Grade 6) — Working backwards from the mean
+    [
+      { q: "The mean of five numbers is 12. Four of the numbers are 8, 15, 10, and 13. Find the fifth number.", a: "14", worked: ["Total = mean × count = 12 × 5 = 60", "Sum of four numbers = 8 + 15 + 10 + 13 = 46", "Fifth number = 60 − 46 = 14"], hint: "Find the total first (mean × count), then subtract the known numbers" },
+      { q: "A set of 4 numbers has a mean of 7. When a 5th number is added, the mean becomes 8. What number was added?", a: "12", worked: ["Original total = 4 × 7 = 28", "New total = 5 × 8 = 40", "Number added = 40 − 28 = 12"], hint: "Find both totals, then subtract" },
+      { q: "The mean age of 10 people is 25. The mean age of 15 people is 30. Find the mean age of all 25 people.", a: "28", worked: ["Total for group 1 = 10 × 25 = 250", "Total for group 2 = 15 × 30 = 450", "Combined mean = (250 + 450) ÷ 25 = 700 ÷ 25 = 28"], hint: "Find the total for each group, add them, then divide by the total number of people" },
+    ],
+    // Level 3 (Grade 7) — Grouped frequency tables
+    [
+      { q: "Estimate the mean from a grouped frequency table: 0-10 (f=5), 10-20 (f=12), 20-30 (f=8), 30-40 (f=5). Use midpoints.", a: "19", calculator: true, worked: ["Midpoints: 5, 15, 25, 35", "Σfx = 5(5) + 12(15) + 8(25) + 5(35)", "= 25 + 180 + 200 + 175 = 580", "Σf = 30", "Estimated mean = 580 ÷ 30 ≈ 19.3"], hint: "Use midpoints of each class. Estimated mean = Σ(f × midpoint) ÷ Σf" },
+      { q: "Find the modal class and the class containing the median for: 0-10 (f=3), 10-20 (f=8), 20-30 (f=12), 30-40 (f=7).", a: "Modal class: 20-30, Median class: 20-30", worked: ["Modal class = highest frequency = 20-30 (f=12)", "Total = 30, median at 15th value", "Cumulative: 3, 11, 23...", "15th value is in the 20-30 class"], hint: "Modal class has the highest frequency. For the median class, use cumulative frequencies" },
+      { q: "Explain why the mean calculated from a grouped frequency table is only an estimate.", a: "Because we use midpoints to represent each class, not the actual data values", worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
+    ],
+    // Level 4 (Grade 8–9) — Box plots, IQR, outliers
+    [
+      { q: "Compare two distributions: Class A has median 55 and IQR 12. Class B has median 62 and IQR 20. Comment on the differences.", a: "Class B has a higher median (62 vs 55), so scored better on average. Class A has a smaller IQR (12 vs 20), so scores are more consistent.", worked: ["Compare medians: Class B's median (62) > Class A's (55)", "Class B scored higher on average", "Compare IQRs: Class A's IQR (12) < Class B's (20)", "Class A's scores are more consistent/less spread out"], hint: "Compare medians for average, IQR for spread/consistency" },
+      { q: "A dataset has Q1 = 20, Q3 = 44. Use the 1.5 × IQR rule to identify the boundaries for outliers.", a: "Lower boundary: −16, Upper boundary: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "IQR = Q3 − Q1. Outlier boundaries are Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
+      { q: "A frequency table has an unknown frequency x. Scores: 2 (f=3), 4 (f=x), 5 (f=5), 6 (f=2). The mean is 4.2. Find x.", a: "5", calculator: true, worked: ["Σfx = 2(3) + 4(x) + 5(5) + 6(2) = 6 + 4x + 25 + 12 = 43 + 4x", "Σf = 3 + x + 5 + 2 = 10 + x", "Mean = (43 + 4x)/(10 + x) = 4.2", "43 + 4x = 4.2(10 + x) = 42 + 4.2x", "43 − 42 = 4.2x − 4x", "1 = 0.2x", "x = 5"], hint: "Set up Σfx ÷ Σf = 4.2, then solve for x" },
+    ],
+  ],
+
+  // G21: Sine and Cosine Rules (Non-right-angled triangles)
+  'G21': [
+    // Level 1 (Grade 5) — Area of a triangle using ½absinC
+    [
+      { q: "Calculate the area of a triangle with sides 7 cm and 10 cm and an included angle of 30°.", a: "17.5 cm²", calculator: true, worked: ["Area = ½ × a × b × sin(C)", "Area = ½ × 7 × 10 × sin(30°)", "sin(30°) = 0.5", "Area = ½ × 7 × 10 × 0.5 = 17.5 cm²"], hint: "Use Area = ½ × a × b × sin(C) where C is the angle between the two known sides" },
+    ],
+    // Level 2 (Grade 6) — Sine Rule to find a missing side
+    [
+      { q: "In triangle ABC, angle A = 40°, angle B = 75°, and side a = 12 cm (opposite angle A). Find side b (opposite angle B).", a: "18.0 cm", calculator: true, worked: ["Sine Rule: a/sin A = b/sin B", "12/sin 40° = b/sin 75°", "12/0.6428 = b/0.9659", "18.666 = b/0.9659", "b = 18.666 × 0.9659 ≈ 18.0 cm"], hint: "Use the Sine Rule: a/sin A = b/sin B. Rearrange to find b." },
+    ],
+    // Level 3 (Grade 7) — Cosine Rule to find a missing side
+    [
+      { q: "In triangle ABC, side a = 6 cm, side b = 9 cm, and angle C = 120°. Use the Cosine Rule to find side c.", a: "13.1 cm", calculator: true, worked: ["Cosine Rule: c² = a² + b² − 2ab cos(C)", "c² = 6² + 9² − 2(6)(9)cos(120°)", "c² = 36 + 81 − 108 × (−0.5)", "c² = 117 + 54 = 171", "c = √171 ≈ 13.1 cm"], hint: "Use c² = a² + b² − 2ab cos(C). Remember cos(120°) is negative." },
+      { q: "Triangle PQR has PQ = 5 cm, PR = 8 cm, and angle QPR = 60°. Find QR.", a: "7.0 cm", calculator: true, worked: ["Cosine Rule: QR² = PQ² + PR² − 2(PQ)(PR)cos(QPR)", "QR² = 25 + 64 − 2(5)(8)cos(60°)", "QR² = 89 − 80 × 0.5", "QR² = 89 − 40 = 49", "QR = √49 = 7 cm"], hint: "Use the Cosine Rule: c² = a² + b² − 2ab cos(C) with the angle between the two known sides." },
+    ],
+    // Level 4 (Grade 8) — Cosine Rule to find a missing angle
+    [
+      { q: "In triangle ABC, a = 5 cm, b = 7 cm, c = 8 cm. Find angle C (the angle opposite side c).", a: "81.8°", calculator: true, worked: ["Rearranged Cosine Rule: cos C = (a² + b² − c²) / (2ab)", "cos C = (25 + 49 − 64) / (2 × 5 × 7)", "cos C = 10 / 70", "cos C = 1/7 ≈ 0.1429", "C = cos⁻¹(0.1429) ≈ 81.8°"], hint: "Use cos C = (a² + b² − c²) / (2ab) and then use inverse cosine." },
+    ],
+    // Level 5 (Grade 9) — 3D problem requiring Sine/Cosine Rule
+    [
+      { q: "A pyramid has a rectangular base ABCD where AB = 8 cm and BC = 6 cm. The apex E is directly above the centre of the base, and the slant edge AE = 13 cm. Find angle AEB.", a: "35.8°", calculator: true, worked: ["Diagonal AC = √(8² + 6²) = √100 = 10 cm", "Centre M is midpoint of diagonals, so AM = 5 cm", "Height EM: AE² = AM² + EM² → 169 = 25 + EM² → EM = 12 cm", "BM = half of BD = 5 cm (diagonals of rectangle bisect each other)", "BE = √(BM² + EM²) = √(25 + 144) = √169 = 13 cm", "Triangle AEB: AE = 13, BE = 13, AB = 8", "cos(AEB) = (13² + 13² − 8²) / (2 × 13 × 13)", "= (169 + 169 − 64) / 338 = 274/338 ≈ 0.811", "Angle AEB = cos⁻¹(0.811) ≈ 35.8°"], hint: "First find the height of the pyramid using 3D Pythagoras. Then use the Cosine Rule on triangle AEB." },
+    ],
+  ],
+
+  // G23: Trigonometric Graphs
+  'G23': [
+    // Level 1 (Grade 5) — Sketch sin graph
+    [
+      { q: "Which of these correctly describes the graph of y = sin(x) for 0° ≤ x ≤ 360°?", a: "Starts at 0, rises to 1 at 90°, returns to 0 at 180°, falls to −1 at 270°, returns to 0 at 360°", type: "mcq", options: ["Starts at 0, rises to 1 at 90°, returns to 0 at 180°, falls to −1 at 270°, returns to 0 at 360°", "Starts at 1, falls to 0 at 90°, falls to −1 at 180°", "Starts at 0, rises to 1 at 180°, returns to 0 at 360°"], worked: ["y = sin(0°) = 0 (starts at origin)", "y = sin(90°) = 1 (maximum)", "y = sin(180°) = 0 (crosses x-axis)", "y = sin(270°) = −1 (minimum)", "y = sin(360°) = 0 (completes one cycle)"], hint: "The sine graph starts at 0, reaches its maximum at 90°, and has a period of 360°." },
+    ],
+    // Level 2 (Grade 6) — Max/min of cos graph
+    [
+      { q: "State the coordinates of the maximum and minimum points on y = cos(x) for 0° ≤ x ≤ 360°.", a: "Maximum: (0°, 1) and (360°, 1); Minimum: (180°, −1)", worked: ["cos(0°) = 1 → maximum at (0°, 1)", "cos(180°) = −1 → minimum at (180°, −1)", "cos(360°) = 1 → maximum at (360°, 1)", "The cosine graph starts at its maximum, unlike sine"], hint: "cos(0°) = 1, cos(180°) = −1, cos(360°) = 1" },
+    ],
+    // Level 3 (Grade 7) — Solve using trig graph
+    [
+      { q: "Use the graph of y = sin(x) to find two solutions for sin(x) = 0.5 in the range 0° ≤ x ≤ 360°.", a: "x = 30° and x = 150°", worked: ["sin(x) = 0.5", "First solution: x = sin⁻¹(0.5) = 30°", "The sine graph is symmetric about x = 90°", "Second solution: x = 180° − 30° = 150°", "So x = 30° and x = 150°"], hint: "Find the first solution with inverse sin, then use the symmetry of the sine curve: the second solution is 180° minus the first." },
+    ],
+    // Level 4 (Grade 8) — Transformation of trig graph
+    [
+      { q: "Describe the transformation that maps y = sin(x) onto y = 3sin(x).", a: "Vertical stretch, scale factor 3", worked: ["In y = 3sin(x), the output of sin(x) is multiplied by 3", "This stretches the graph vertically by factor 3", "The amplitude changes from 1 to 3", "Maximum becomes 3, minimum becomes −3", "The period (360°) is unchanged"], hint: "The number in front of sin multiplies all y-values. This is a vertical stretch." },
+    ],
+    // Level 5 (Grade 9) — Solve tan equation over extended range
+    [
+      { q: "Solve tan(x) = −1 for 0° ≤ x ≤ 540°. Give all solutions.", a: "x = 135°, 315°, 495°", worked: ["tan(x) = −1", "Reference angle: tan⁻¹(1) = 45°", "tan is negative in the 2nd and 4th quadrants", "2nd quadrant: x = 180° − 45° = 135°", "4th quadrant: x = 360° − 45° = 315°", "tan has period 180°, so next solution: 135° + 360° = 495°", "Check: 315° + 180° = 495° ✓", "All solutions in range: 135°, 315°, 495°"], hint: "Find where tan is negative (2nd and 4th quadrants). The period of tan is 180°, so add 180° to find more solutions." },
+    ],
+  ],
+
+  // A14: Transformations of Functions (f(x) notation)
+  'A14': [
+    // Level 1 (Grade 6) — Vertical translation f(x) + a
+    [
+      { q: "The graph of y = f(x) passes through (3, 5). What point must be on the graph of y = f(x) + 3?", a: "(3, 8)", worked: ["y = f(x) + 3 adds 3 to every y-coordinate", "Original point: (3, 5)", "New point: (3, 5 + 3) = (3, 8)", "This is a translation of (0, 3) — shift up 3 units"], hint: "f(x) + 3 moves every point UP by 3. Add 3 to the y-coordinate." },
+    ],
+    // Level 2 (Grade 7) — Horizontal translation f(x − a)
+    [
+      { q: "Describe the single transformation that maps y = f(x) onto y = f(x − 2).", a: "Translation by vector (2, 0) — shift right 2 units", worked: ["f(x − 2) replaces x with (x − 2)", "This shifts the graph 2 units to the RIGHT", "Note: f(x − 2) shifts RIGHT (opposite sign!)", "Transformation: translation by vector (2, 0)"], hint: "f(x − a) shifts the graph RIGHT by a units. Be careful with the sign!" },
+    ],
+    // Level 3 (Grade 8) — Reflections −f(x) and f(−x)
+    [
+      { q: "The graph of y = f(x) has a maximum at (2, 7). State the coordinates of the maximum/minimum of: (a) y = −f(x) and (b) y = f(−x).", a: "(a) minimum at (2, −7); (b) maximum at (−2, 7)", worked: ["(a) y = −f(x) reflects in the x-axis", "All y-values change sign: (2, 7) → (2, −7)", "The maximum becomes a minimum", "(b) y = f(−x) reflects in the y-axis", "All x-values change sign: (2, 7) → (−2, 7)", "The maximum remains a maximum"], hint: "−f(x) reflects in the x-axis (negate y). f(−x) reflects in the y-axis (negate x)." },
+    ],
+    // Level 4 (Grade 9) — Horizontal stretch f(ax)
+    [
+      { q: "A curve has a maximum point at (2, 5). State the new coordinates of the maximum point after the transformation y = f(2x).", a: "(1, 5)", worked: ["y = f(2x) is a horizontal stretch with scale factor ½", "All x-coordinates are divided by 2", "y-coordinates stay the same", "Maximum: (2, 5) → (2 ÷ 2, 5) = (1, 5)"], hint: "f(2x) squashes the graph horizontally by factor 2. Divide x-coordinates by 2." },
+      { q: "The graph of y = x² is translated by the vector (0, −4). Write the equation of the new graph.", a: "y = x² − 4", worked: ["Translation by (0, −4) means shift down 4 units", "Every y-value decreases by 4", "Original: y = x²", "New: y = x² − 4", "This is f(x) + k where k = −4"], hint: "A translation of (0, −4) shifts the graph down 4 units. Subtract 4 from the equation." },
+    ],
+    // Level 5 (Grade 9) — Combined transformations
+    [
+      { q: "The graph of y = f(x) passes through (−1, 4) and (3, −2). Find the corresponding points on y = 2f(x + 4) and explain the order of transformations.", a: "(−5, 8) and (−1, −4)", worked: ["Two transformations: replace x with (x + 4), then multiply f by 2", "Order: horizontal translation LEFT 4, then vertical stretch factor 2", "Point (−1, 4): x shifts left 4: −1 − 4 = −5, y doubles: 4 × 2 = 8 → (−5, 8)", "Point (3, −2): x shifts left 4: 3 − 4 = −1, y doubles: −2 × 2 = −4 → (−1, −4)", "Translation first (inside the function), then stretch (outside)"], hint: "Apply transformations in order: f(x + 4) shifts LEFT 4 (inside), then 2f multiplies y by 2 (outside)." },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A3: Expanding & Factorising
+  // ═══════════════════════════════════════════════════════════════
+  'A3': [
+    // Level 0 (Grade 4) — Expand single brackets
+    [
+      { q: "Expand 2(x + 5)", a: "2x + 10", worked: ["Multiply each term inside by 2", "2 × x = 2x", "2 × 5 = 10", "= 2x + 10"], hint: "Multiply the number outside by each term inside the bracket" },
+      { q: "Expand 4(2a − 3)", a: "8a − 12", worked: ["Multiply each term inside by 4", "4 × 2a = 8a", "4 × (−3) = −12", "= 8a − 12"], hint: "Multiply 4 by each term inside the bracket" },
+      { q: "Expand x(x + 8)", a: "x² + 8x", worked: ["Multiply each term inside by x", "x × x = x²", "x × 8 = 8x", "= x² + 8x"], hint: "Multiply x by each term inside the bracket" },
+    ],
+    // Level 1 (Grade 5) — Factorise into single bracket
+    [
+      { q: "Factorise 3y − 12", a: "3(y − 4)", worked: ["Find the HCF of 3y and 12: HCF = 3", "3y ÷ 3 = y", "12 ÷ 3 = 4", "= 3(y − 4)"], hint: "Find the highest common factor of both terms" },
+      { q: "Factorise 5x + 20", a: "5(x + 4)", worked: ["Find the HCF of 5x and 20: HCF = 5", "5x ÷ 5 = x", "20 ÷ 5 = 4", "= 5(x + 4)"], hint: "Find the highest common factor of both terms" },
+      { q: "Factorise 14w − 7", a: "7(2w − 1)", worked: ["Find the HCF of 14w and 7: HCF = 7", "14w ÷ 7 = 2w", "7 ÷ 7 = 1", "= 7(2w − 1)"], hint: "Find the highest common factor of both terms" },
+    ],
+    // Level 2 (Grade 6) — Expand and simplify double brackets
+    [
+      { q: "Expand and simplify (x + 3)(x − 5)", a: "x² − 2x − 15", worked: ["Use FOIL: First × First = x²", "Outer: x × (−5) = −5x", "Inner: 3 × x = 3x", "Last: 3 × (−5) = −15", "= x² − 5x + 3x − 15 = x² − 2x − 15"], hint: "Use FOIL: First, Outer, Inner, Last, then collect like terms" },
+      { q: "Expand and simplify (x − 4)(x − 2)", a: "x² − 6x + 8", worked: ["First: x × x = x²", "Outer: x × (−2) = −2x", "Inner: (−4) × x = −4x", "Last: (−4) × (−2) = 8", "= x² − 2x − 4x + 8 = x² − 6x + 8"], hint: "Use FOIL and be careful with negative signs" },
+      { q: "Expand and simplify (2x + 1)(x − 3)", a: "2x² − 5x − 3", worked: ["First: 2x × x = 2x²", "Outer: 2x × (−3) = −6x", "Inner: 1 × x = x", "Last: 1 × (−3) = −3", "= 2x² − 6x + x − 3 = 2x² − 5x − 3"], hint: "Use FOIL — the first term gives 2x², not x²" },
+    ],
+    // Level 3 (Grade 7) — Difference of two squares
+    [
+      { q: "Factorise x² − 9", type: "mcq", options: ["(x + 3)(x − 3)", "(x − 3)(x − 3)", "(x + 9)(x − 1)", "(x + 3)²"], a: "(x + 3)(x − 3)", worked: ["Recognise difference of two squares: a² − b² = (a + b)(a − b)", "x² − 9 = x² − 3²", "= (x + 3)(x − 3)"], hint: "This is a difference of two squares: a² − b² = (a + b)(a − b)" },
+      { q: "Factorise y² − 144", type: "mcq", options: ["(y + 12)(y − 12)", "(y − 12)(y − 12)", "(y + 144)(y − 1)", "(y + 12)²"], a: "(y + 12)(y − 12)", worked: ["Difference of two squares: y² − 144 = y² − 12²", "= (y + 12)(y − 12)"], hint: "144 = 12², so this is a difference of two squares" },
+      { q: "Factorise 4a² − 25", type: "mcq", options: ["(2a + 5)(2a − 5)", "(4a + 5)(4a − 5)", "(2a − 5)²", "(a + 5)(4a − 5)"], a: "(2a + 5)(2a − 5)", worked: ["Difference of two squares: 4a² − 25 = (2a)² − 5²", "= (2a + 5)(2a − 5)"], hint: "4a² = (2a)² and 25 = 5², so use (2a + 5)(2a − 5)" },
+    ],
+    // Level 4 (Grade 9) — Factorise fully / expand triple brackets
+    [
+      { q: "Factorise fully 10p² + 15p", a: "5p(2p + 3)", worked: ["Find the HCF of 10p² and 15p: HCF = 5p", "10p² ÷ 5p = 2p", "15p ÷ 5p = 3", "= 5p(2p + 3)"], hint: "The HCF includes both a number and a variable" },
+      { q: "Factorise fully 12x²y − 18xy²", a: "6xy(2x − 3y)", worked: ["Find the HCF of 12x²y and 18xy²: HCF = 6xy", "12x²y ÷ 6xy = 2x", "18xy² ÷ 6xy = 3y", "= 6xy(2x − 3y)"], hint: "Find the HCF of both the numbers and all variables" },
+      { q: "Expand and simplify (x + 2)(x − 3)(x + 5)", a: "x³ + 4x² − 11x − 30", worked: ["First expand (x + 2)(x − 3) = x² − x − 6", "Then multiply by (x + 5):", "x²(x + 5) = x³ + 5x²", "−x(x + 5) = −x² − 5x", "−6(x + 5) = −6x − 30", "= x³ + 5x² − x² − 5x − 6x − 30", "= x³ + 4x² − 11x − 30"], hint: "Expand the first two brackets, then multiply the result by the third" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A17: Algebraic Fractions
+  // ═══════════════════════════════════════════════════════════════
+  'A17': [
+    // Level 0 (Grade 5) — Simplify basic algebraic fractions
+    [
+      { q: "Simplify 10x³/5x", a: "2x²", worked: ["Divide coefficients: 10 ÷ 5 = 2", "Divide x terms: x³ ÷ x = x²", "= 2x²"], hint: "Divide the numbers and subtract the powers of x" },
+      { q: "Simplify 12a⁴/3a²", a: "4a²", worked: ["Divide coefficients: 12 ÷ 3 = 4", "Divide a terms: a⁴ ÷ a² = a²", "= 4a²"], hint: "Divide the numbers and subtract the powers" },
+      { q: "Simplify 15x²y/5x", a: "3xy", worked: ["Divide coefficients: 15 ÷ 5 = 3", "Divide x terms: x² ÷ x = x", "y stays: y", "= 3xy"], hint: "Divide the numbers, subtract powers of x, and keep y" },
+    ],
+    // Level 1 (Grade 6) — Adding/subtracting algebraic fractions
+    [
+      { q: "Express x/2 + x/5 as a single fraction.", a: "7x/10", worked: ["Common denominator: LCM of 2 and 5 = 10", "x/2 = 5x/10", "x/5 = 2x/10", "5x/10 + 2x/10 = 7x/10"], hint: "Find the LCM of the denominators, then convert each fraction" },
+      { q: "Express 2y/3 − y/4 as a single fraction.", a: "5y/12", worked: ["Common denominator: LCM of 3 and 4 = 12", "2y/3 = 8y/12", "y/4 = 3y/12", "8y/12 − 3y/12 = 5y/12"], hint: "Find the LCM of 3 and 4, then convert each fraction" },
+      { q: "Express 3/x + 2/y as a single fraction.", a: "(3y + 2x)/xy", worked: ["Common denominator: xy", "3/x = 3y/xy", "2/y = 2x/xy", "= (3y + 2x)/xy"], hint: "The common denominator for x and y is xy" },
+    ],
+    // Level 2 (Grade 7) — Simplify by factorising
+    [
+      { q: "Simplify fully: (x² − 25)/(3x + 15)", a: "(x − 5)/3", worked: ["Factorise numerator: x² − 25 = (x + 5)(x − 5)", "Factorise denominator: 3x + 15 = 3(x + 5)", "Cancel (x + 5): = (x − 5)/3"], hint: "Factorise both: difference of two squares on top, common factor on bottom" },
+      { q: "Simplify fully: (x² − 9)/(5x + 15)", a: "(x − 3)/5", worked: ["Factorise numerator: x² − 9 = (x + 3)(x − 3)", "Factorise denominator: 5x + 15 = 5(x + 3)", "Cancel (x + 3): = (x − 3)/5"], hint: "Difference of two squares on top, common factor on bottom" },
+      { q: "Simplify fully: (2x + 4)/(x² − 4)", a: "2/(x − 2)", worked: ["Factorise numerator: 2x + 4 = 2(x + 2)", "Factorise denominator: x² − 4 = (x + 2)(x − 2)", "Cancel (x + 2): = 2/(x − 2)"], hint: "Factorise both parts and look for a common factor to cancel" },
+    ],
+    // Level 3 (Grade 8) — Solve equations / combine fractions
+    [
+      { q: "Solve: 4/(x + 2) + 2/(x − 1) = 1. Give your answers to 2 decimal places.", a: "x = 5.37 and x = −0.37", calculator: true, worked: ["Multiply through by (x + 2)(x − 1):", "4(x − 1) + 2(x + 2) = (x + 2)(x − 1)", "4x − 4 + 2x + 4 = x² + x − 2", "6x = x² + x − 2", "x² − 5x − 2 = 0", "x = (5 ± √33) / 2", "x ≈ 5.37 or x ≈ −0.37"], hint: "Multiply every term by (x + 2)(x − 1) to clear fractions, then solve the quadratic" },
+      { q: "Solve: 3/(x − 1) + 1/(x + 2) = 2. Give your answers to 2 decimal places.", a: "x = 2.68 and x = −1.68", calculator: true, worked: ["Multiply through by (x − 1)(x + 2):", "3(x + 2) + 1(x − 1) = 2(x − 1)(x + 2)", "3x + 6 + x − 1 = 2(x² + x − 2)", "4x + 5 = 2x² + 2x − 4", "2x² − 2x − 9 = 0", "x = (2 ± √76) / 4 = (1 ± √19) / 2", "x ≈ 2.68 or x ≈ −1.68"], hint: "Clear fractions by multiplying through, then use the quadratic formula" },
+      { q: "Express (x + 1)/2 − (x − 3)/5 as a single fraction in its simplest form.", a: "(3x + 11)/10", worked: ["Common denominator: 10", "(x + 1)/2 = 5(x + 1)/10", "(x − 3)/5 = 2(x − 3)/10", "= [5(x + 1) − 2(x − 3)] / 10", "= (5x + 5 − 2x + 6) / 10", "= (3x + 11)/10"], hint: "Find common denominator 10, then expand and simplify the numerator" },
+    ],
+    // Level 4 (Grade 9) — Simplify and hence solve
+    [
+      { q: "Simplify (3x² + 10x − 8)/(x² − 16) and find the value of x for which the fraction equals 2.", a: "x = −6", worked: ["Factorise numerator: 3x² + 10x − 8 = (3x − 2)(x + 4)", "Factorise denominator: x² − 16 = (x + 4)(x − 4)", "Simplified: (3x − 2)/(x − 4)", "Solve (3x − 2)/(x − 4) = 2:", "3x − 2 = 2(x − 4)", "3x − 2 = 2x − 8", "x = −6"], hint: "Factorise numerator and denominator, cancel, then solve" },
+      { q: "Simplify (2x² − 5x − 3)/(x² − 9).", a: "(2x + 1)/(x + 3)", worked: ["Factorise numerator: 2x² − 5x − 3 = (2x + 1)(x − 3)", "Factorise denominator: x² − 9 = (x + 3)(x − 3)", "Cancel (x − 3): = (2x + 1)/(x + 3)"], hint: "Factorise both using appropriate methods, then cancel common factors" },
+      { q: "Solve 1/x + 1/(x + 1) = 5/6.", a: "x = 2 or x = −3/5", worked: ["Multiply through by 6x(x + 1):", "6(x + 1) + 6x = 5x(x + 1)", "6x + 6 + 6x = 5x² + 5x", "12x + 6 = 5x² + 5x", "5x² − 7x − 6 = 0", "(5x + 3)(x − 2) = 0", "x = 2 or x = −3/5"], hint: "Clear all fractions by multiplying through by 6x(x + 1), then factorise the quadratic" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A21: Straight-Line Graphs
+  // ═══════════════════════════════════════════════════════════════
+  'A21': [
+    // Level 0 (Grade 4) — Identify y-intercept
+    [
+      { q: "Write down the y-intercept for the line y = x + 5.", a: "5", worked: ["The equation is in the form y = mx + c", "The y-intercept is c = 5"], hint: "In y = mx + c, the y-intercept is the value of c" },
+      { q: "Write down the y-intercept for y = 3x − 7.", a: "−7", worked: ["The equation is in the form y = mx + c", "The y-intercept is c = −7"], hint: "In y = mx + c, the y-intercept is the constant term" },
+      { q: "Where does the line y = 10 − 2x cross the y-axis?", a: "10", worked: ["Rewrite as y = −2x + 10", "The y-intercept is c = 10", "The line crosses the y-axis at (0, 10)"], hint: "The y-axis is where x = 0. Substitute x = 0 into the equation" },
+    ],
+    // Level 1 (Grade 5) — Find gradient
+    [
+      { q: "Find the gradient of the line y = 4x − 2.", a: "4", worked: ["The equation is in the form y = mx + c", "The gradient is m = 4"], hint: "In y = mx + c, the gradient is the coefficient of x" },
+      { q: "Find the gradient of the line 2y = 6x + 4.", a: "3", worked: ["Divide both sides by 2: y = 3x + 2", "The gradient is m = 3"], hint: "First rearrange to the form y = mx + c" },
+      { q: "Find the gradient of the line y = ½x + 3.", a: "1/2", worked: ["The equation is already in y = mx + c form", "The gradient is m = 1/2"], hint: "In y = mx + c, the gradient is the number multiplied by x" },
+    ],
+    // Level 2 (Grade 6) — Describe horizontal/vertical/simple lines
+    [
+      { q: "Describe the graph of y = 3.", a: "A horizontal line through y = 3", worked: ["y = 3 means every point has y-coordinate 3", "This is a horizontal line passing through (0, 3)"], hint: "When y equals a constant, the line is horizontal" },
+      { q: "Describe the graph of x = −2.", a: "A vertical line through x = −2", worked: ["x = −2 means every point has x-coordinate −2", "This is a vertical line passing through (−2, 0)"], hint: "When x equals a constant, the line is vertical" },
+      { q: "Describe the graph of y = −x for values of x from −3 to 3.", a: "A straight line through the origin with gradient −1", worked: ["When x = −3, y = 3; when x = 0, y = 0; when x = 3, y = −3", "The line passes through the origin", "Gradient = −1 (slopes downward left to right)"], hint: "Substitute a few x-values to get coordinates, then describe the line" },
+    ],
+    // Level 3 (Grade 7) — Parallel and perpendicular lines
+    [
+      { q: "State the equation of a line parallel to y = 5x + 3 passing through (0, −1).", a: "y = 5x − 1", worked: ["Parallel lines have the same gradient: m = 5", "The line passes through (0, −1), so c = −1", "Equation: y = 5x − 1"], hint: "Parallel lines have the same gradient. Use the given point to find c" },
+      { q: "State the equation of a line parallel to y = −2x + 4 passing through (0, 5).", a: "y = −2x + 5", worked: ["Parallel lines have the same gradient: m = −2", "Passes through (0, 5), so c = 5", "Equation: y = −2x + 5"], hint: "Same gradient as the given line, then use the point for c" },
+      { q: "Find the equation of a line perpendicular to y = 2x + 1 passing through (0, 6).", a: "y = −½x + 6", worked: ["Original gradient: m = 2", "Perpendicular gradient: −1/m = −1/2", "Passes through (0, 6), so c = 6", "Equation: y = −½x + 6"], hint: "Perpendicular gradients multiply to give −1. If m = 2, the perpendicular gradient is −1/2" },
+    ],
+    // Level 4 (Grade 8) — Equation of line through two points
+    [
+      { q: "Find the equation of the line passing through (2, 5) and (4, 13).", a: "y = 4x − 3", worked: ["Gradient: m = (13 − 5)/(4 − 2) = 8/2 = 4", "Using y = mx + c with point (2, 5):", "5 = 4(2) + c", "5 = 8 + c", "c = −3", "Equation: y = 4x − 3"], hint: "Find the gradient using (y₂ − y₁)/(x₂ − x₁), then substitute a point to find c" },
+      { q: "Find the equation of the line passing through (1, 4) and (3, 10).", a: "y = 3x + 1", worked: ["Gradient: m = (10 − 4)/(3 − 1) = 6/2 = 3", "Using y = mx + c with point (1, 4):", "4 = 3(1) + c", "c = 1", "Equation: y = 3x + 1"], hint: "Find gradient first, then substitute one point into y = mx + c" },
+      { q: "Find the equation of the line passing through (−2, 1) and (2, 9).", a: "y = 2x + 5", worked: ["Gradient: m = (9 − 1)/(2 − (−2)) = 8/4 = 2", "Using y = mx + c with point (2, 9):", "9 = 2(2) + c", "9 = 4 + c", "c = 5", "Equation: y = 2x + 5"], hint: "Be careful with negative coordinates when finding the gradient" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G1: Angle Facts & Shape Properties
+  // ═══════════════════════════════════════════════════════════════
+  'G1': [
+    // Level 0 (Grade 4) — Angles on a straight line / around a point
+    [
+      { q: "Angles on a straight line add up to 180°. One angle is 130°. Find the other angle.", a: "50", worked: ["Angles on a straight line sum to 180°", "Other angle = 180° − 130° = 50°"], hint: "Angles on a straight line add up to 180°" },
+      { q: "Angles around a point add up to 360°. Three angles are 120°, 85° and 90°. Find angle y.", a: "65", worked: ["Angles around a point sum to 360°", "y = 360° − 120° − 85° − 90° = 65°"], hint: "Angles around a point add up to 360°" },
+      { q: "Find the supplement of 115°.", a: "65", worked: ["Supplementary angles add to 180°", "180° − 115° = 65°"], hint: "Supplementary angles add up to 180°" },
+    ],
+    // Level 1 (Grade 5) — Angles in a triangle
+    [
+      { q: "Find the missing angle in a triangle with angles 40° and 70°.", a: "70", worked: ["Angles in a triangle sum to 180°", "Missing angle = 180° − 40° − 70° = 70°"], hint: "Angles in a triangle add up to 180°" },
+      { q: "Find the base angle of an isosceles triangle where the vertex angle is 50°.", a: "65", worked: ["Isosceles triangle has two equal base angles", "Base angles = (180° − 50°) ÷ 2 = 130° ÷ 2 = 65°"], hint: "An isosceles triangle has two equal angles. All three add to 180°" },
+      { q: "In a right-angled triangle, one angle is 32°. Find the third angle.", a: "58", worked: ["One angle is 90° (right angle), another is 32°", "Third angle = 180° − 90° − 32° = 58°"], hint: "A right angle is 90°. All angles in a triangle sum to 180°" },
+    ],
+    // Level 2 (Grade 6) — Vertically opposite angles / forming equations
+    [
+      { q: "Find y if the vertically opposite angle is 72°.", a: "72", worked: ["Vertically opposite angles are equal", "y = 72°"], hint: "Vertically opposite angles are always equal" },
+      { q: "Two angles on a straight line are 3x and 2x. Find x.", a: "36", worked: ["Angles on a straight line: 3x + 2x = 180°", "5x = 180°", "x = 36°"], hint: "Set up an equation using the fact that angles on a straight line sum to 180°" },
+      { q: "Vertically opposite angles are (2x + 10)° and 50°. Find x.", a: "20", worked: ["Vertically opposite angles are equal:", "2x + 10 = 50", "2x = 40", "x = 20"], hint: "Vertically opposite angles are equal — set up and solve the equation" },
+    ],
+    // Level 3 (Grade 7) — Interior/exterior angles of polygons
+    [
+      { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", worked: ["Sum of interior angles = (n − 2) × 180° = (5 − 2) × 180° = 540°", "Each interior angle = 540° ÷ 5 = 108°"], hint: "Sum of interior angles = (n − 2) × 180°, then divide by the number of sides" },
+      { q: "Work out the size of one exterior angle of a regular hexagon.", a: "60", worked: ["Exterior angles of any polygon sum to 360°", "Each exterior angle = 360° ÷ 6 = 60°"], hint: "Exterior angles of any polygon add up to 360°" },
+      { q: "An interior angle of a regular polygon is 140°. Find the number of sides.", a: "9", worked: ["Exterior angle = 180° − 140° = 40°", "Number of sides = 360° ÷ 40° = 9"], hint: "Find the exterior angle first (180° − interior), then divide 360° by it" },
+    ],
+    // Level 4 (Grade 8) — Complex angle problems
+    [
+      { q: "The ratio of exterior to interior angles of a regular polygon is 1:4. How many sides does it have?", a: "10", worked: ["Let exterior = x, interior = 4x", "x + 4x = 180° (angles on a straight line)", "5x = 180°, so x = 36°", "Number of sides = 360° ÷ 36° = 10"], hint: "Use the ratio to find the exterior angle, then divide 360° by it" },
+      { q: "Calculate the sum of interior angles for a 12-sided polygon.", a: "1800", worked: ["Sum = (n − 2) × 180°", "= (12 − 2) × 180°", "= 10 × 180°", "= 1800°"], hint: "Use the formula (n − 2) × 180°" },
+      { q: "Find the value of x in a quadrilateral with angles x, 2x, 3x, and 90°.", a: "45", worked: ["Angles in a quadrilateral sum to 360°", "x + 2x + 3x + 90 = 360", "6x + 90 = 360", "6x = 270", "x = 45"], hint: "Angles in a quadrilateral add up to 360°" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G2: Transformations
+  // ═══════════════════════════════════════════════════════════════
+  'G2': [
+    // Level 0 (Grade 4) — Reflections
+    [
+      { q: "A shape has a vertex at (3, 2). What are its coordinates after reflection in the y-axis?", a: "(−3, 2)", worked: ["Reflecting in the y-axis: x-coordinate changes sign", "y-coordinate stays the same", "(3, 2) → (−3, 2)"], hint: "When reflecting in the y-axis, the x-coordinate changes sign" },
+      { q: "A point is at (4, −1). What are its coordinates after reflection in the x-axis?", a: "(4, 1)", worked: ["Reflecting in the x-axis: y-coordinate changes sign", "x-coordinate stays the same", "(4, −1) → (4, 1)"], hint: "When reflecting in the x-axis, the y-coordinate changes sign" },
+      { q: "A point is at (2, 5). What are its coordinates after reflection in the line y = x?", a: "(5, 2)", worked: ["Reflecting in y = x: swap x and y coordinates", "(2, 5) → (5, 2)"], hint: "Reflecting in y = x swaps the x and y coordinates" },
+    ],
+    // Level 1 (Grade 5) — Translations
+    [
+      { q: "A shape has a vertex at (1, 4). Where is this vertex after translation by vector (3, −2)?", a: "(4, 2)", worked: ["Add the vector to the coordinates:", "x: 1 + 3 = 4", "y: 4 + (−2) = 2", "New position: (4, 2)"], hint: "Add the top number to x and the bottom number to y" },
+      { q: "A shape has a vertex at (3, 1). Where is this vertex after translation by vector (−4, 5)?", a: "(−1, 6)", worked: ["Add the vector to the coordinates:", "x: 3 + (−4) = −1", "y: 1 + 5 = 6", "New position: (−1, 6)"], hint: "Add the vector components to the original coordinates" },
+      { q: "What vector moves a shape from (1, 1) to (5, −2)?", a: "(4, −3)", worked: ["Vector = new position − old position", "x: 5 − 1 = 4", "y: −2 − 1 = −3", "Translation vector: (4, −3)"], hint: "Subtract the old coordinates from the new coordinates" },
+    ],
+    // Level 2 (Grade 6) — Rotations
+    [
+      { q: "A point is at (2, 3). Where is it after a 90° clockwise rotation about the origin?", a: "(3, −2)", worked: ["90° clockwise about origin: (x, y) → (y, −x)", "(2, 3) → (3, −2)"], hint: "For 90° clockwise about the origin: (x, y) becomes (y, −x)" },
+      { q: "A point is at (1, 4). Where is it after a 180° rotation about the origin?", a: "(−1, −4)", worked: ["180° rotation about origin: (x, y) → (−x, −y)", "(1, 4) → (−1, −4)"], hint: "For 180° rotation about the origin: both coordinates change sign" },
+      { q: "A point is at (3, 1). Where is it after a 90° anticlockwise rotation about the origin?", a: "(−1, 3)", worked: ["90° anticlockwise about origin: (x, y) → (−y, x)", "(3, 1) → (−1, 3)"], hint: "For 90° anticlockwise about the origin: (x, y) becomes (−y, x)" },
+    ],
+    // Level 3 (Grade 7) — Enlargements (positive scale factor)
+    [
+      { q: "A vertex is at (3, 1). Enlarge by scale factor 2 from the origin. Find the new coordinates.", a: "(6, 2)", worked: ["Multiply each coordinate by the scale factor:", "x: 3 × 2 = 6", "y: 1 × 2 = 2", "New position: (6, 2)"], hint: "From the origin, multiply both coordinates by the scale factor" },
+      { q: "A vertex is at (4, 2). Enlarge by scale factor 0.5 from the origin. Find the new coordinates.", a: "(2, 1)", worked: ["Multiply each coordinate by the scale factor:", "x: 4 × 0.5 = 2", "y: 2 × 0.5 = 1", "New position: (2, 1)"], hint: "Scale factor 0.5 means halve both coordinates (from the origin)" },
+      { q: "A vertex is at (1, 3). Enlarge by scale factor 3 from centre (2, 2). Find the new coordinates.", a: "(−1, 5)", worked: ["Find vector from centre to point: (1−2, 3−2) = (−1, 1)", "Multiply by scale factor 3: (−3, 3)", "Add to centre: (2+(−3), 2+3) = (−1, 5)"], hint: "Find the vector from the centre to each point, multiply by scale factor, then add back to the centre" },
+    ],
+    // Level 4 (Grade 8) — Negative scale factor enlargements
+    [
+      { q: "A vertex is at (4, 2). Enlarge by scale factor −1.5 from centre (1, 1). Find the new coordinates.", a: "(−3.5, −0.5)", worked: ["Vector from centre to point: (4−1, 2−1) = (3, 1)", "Multiply by −1.5: (−4.5, −1.5)", "Add to centre: (1+(−4.5), 1+(−1.5)) = (−3.5, −0.5)"], hint: "A negative scale factor means the image is on the opposite side of the centre" },
+      { q: "Describe fully the single transformation that maps (2, 2) to (−4, −4).", a: "Enlargement, scale factor −2, centre (0, 0)", worked: ["The image is on the opposite side of the origin (negative SF)", "Scale factor = −4/2 = −2", "Check: (2 × −2, 2 × −2) = (−4, −4) ✓", "Enlargement, scale factor −2, centre the origin"], hint: "The point moved through the origin and got bigger — this is a negative enlargement" },
+      { q: "A vertex is at (1, 3). Enlarge by scale factor −½ from the origin. Find the new coordinates.", a: "(−0.5, −1.5)", worked: ["Multiply each coordinate by −½:", "x: 1 × (−½) = −0.5", "y: 3 × (−½) = −1.5", "New position: (−0.5, −1.5)"], hint: "Negative scale factor: multiply both coordinates by −½ (from the origin)" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G12: Perimeter, Area & Volume
+  // ═══════════════════════════════════════════════════════════════
+  'G12': [
+    // Level 0 (Grade 4) — Perimeter
+    [
+      { q: "Find the perimeter of a square with side length 5 cm.", a: "20", worked: ["Perimeter of a square = 4 × side", "= 4 × 5 = 20 cm"], hint: "A square has 4 equal sides. Add them all up" },
+      { q: "Find the perimeter of a rectangle with length 12 cm and width 4 cm.", a: "32", worked: ["Perimeter = 2 × (length + width)", "= 2 × (12 + 4) = 2 × 16 = 32 cm"], hint: "A rectangle has 2 lengths and 2 widths" },
+      { q: "The perimeter of a regular hexagon is 42 cm. Find the length of one side.", a: "7", worked: ["A regular hexagon has 6 equal sides", "Side = 42 ÷ 6 = 7 cm"], hint: "A regular hexagon has 6 equal sides" },
+    ],
+    // Level 1 (Grade 5) — Area of rectangles, parallelograms, trapeziums
+    [
+      { q: "Work out the area of a rectangle with base 8 cm and height 3 cm.", a: "24", worked: ["Area = base × height", "= 8 × 3 = 24 cm²"], hint: "Area of a rectangle = base × height" },
+      { q: "Calculate the area of a parallelogram with base 7 cm and vertical height 5 cm.", a: "35", worked: ["Area of parallelogram = base × vertical height", "= 7 × 5 = 35 cm²"], hint: "Area of a parallelogram = base × perpendicular height" },
+      { q: "Find the area of a trapezium with parallel sides 6 cm and 10 cm, and height 4 cm.", a: "32", worked: ["Area = ½ × (a + b) × h", "= ½ × (6 + 10) × 4", "= ½ × 16 × 4 = 32 cm²"], hint: "Area of trapezium = ½ × (sum of parallel sides) × height" },
+    ],
+    // Level 2 (Grade 6) — Triangles and circles
+    [
+      { q: "Find the area of a triangle with base 6 cm and vertical height 4 cm.", a: "12", worked: ["Area = ½ × base × height", "= ½ × 6 × 4 = 12 cm²"], hint: "Area of a triangle = ½ × base × height" },
+      { q: "The area of a triangle is 20 cm² and the base is 8 cm. Find the vertical height.", a: "5", worked: ["Area = ½ × base × height", "20 = ½ × 8 × h", "20 = 4h", "h = 5 cm"], hint: "Rearrange the triangle area formula to find height" },
+      { q: "Find the circumference of a circle with diameter 14 cm. Use π = 22/7.", a: "44", worked: ["Circumference = π × d", "= 22/7 × 14", "= 22 × 2 = 44 cm"], hint: "Circumference = π × diameter" },
+    ],
+    // Level 3 (Grade 7) — Volume of prisms and cubes
+    [
+      { q: "Calculate the volume of a cuboid with dimensions 2 cm × 3 cm × 10 cm.", a: "60", worked: ["Volume = length × width × height", "= 2 × 3 × 10 = 60 cm³"], hint: "Volume of a cuboid = l × w × h" },
+      { q: "Calculate the volume of a triangular prism with a cross-sectional area of 15 cm² and length 12 cm.", a: "180", worked: ["Volume = area of cross-section × length", "= 15 × 12 = 180 cm³"], hint: "Volume of any prism = area of cross-section × length" },
+      { q: "A cube has a surface area of 150 cm². Find its volume.", a: "125", worked: ["A cube has 6 identical faces", "Area of one face = 150 ÷ 6 = 25 cm²", "Side length = √25 = 5 cm", "Volume = 5³ = 125 cm³"], hint: "Find the area of one face first, then the side length, then cube it" },
+    ],
+    // Level 4 (Grade 8) — Surface area and volume of cylinders, spheres, cones
+    [
+      { q: "Calculate the total surface area of a cylinder with radius 3 cm and height 10 cm. Give your answer to 1 decimal place.", a: "245.0", calculator: true, worked: ["SA = 2πrh + 2πr²", "= 2π(3)(10) + 2π(3²)", "= 60π + 18π = 78π", "= 245.0 cm² (1 d.p.)"], hint: "Total SA = curved surface (2πrh) + two circles (2πr²)" },
+      { q: "Calculate the volume of a sphere with radius 6 cm. Give your answer to 1 decimal place.", a: "904.8", calculator: true, worked: ["V = 4/3 × π × r³", "= 4/3 × π × 6³", "= 4/3 × π × 216", "= 288π = 904.8 cm³ (1 d.p.)"], hint: "V = 4/3 πr³. Remember to cube the radius first" },
+      { q: "Calculate the total surface area of a cone with radius 5 cm and slant height 13 cm. Give your answer to 1 decimal place.", a: "282.7", calculator: true, worked: ["SA = πrl + πr²", "= π(5)(13) + π(5²)", "= 65π + 25π = 90π", "= 282.7 cm² (1 d.p.)"], hint: "Total SA = curved surface (πrl) + base circle (πr²)" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P4: Relative Frequency
+  // ═══════════════════════════════════════════════════════════════
+  'P4': [
+    // Level 0 (Grade 4) — Calculate relative frequency
+    [
+      { q: "A coin is flipped 50 times and lands on heads 20 times. Write the relative frequency of heads.", a: "0.4", worked: ["Relative frequency = number of successes ÷ number of trials", "= 20 ÷ 50 = 0.4"], hint: "Relative frequency = successes ÷ total trials" },
+      { q: "A spinner is spun 80 times and lands on Blue 32 times. State the relative frequency of Blue.", a: "0.4", worked: ["Relative frequency = 32 ÷ 80 = 0.4"], hint: "Divide the number of Blues by the total number of spins" },
+      { q: "A basketball player makes 15 out of 25 free throws. What is the relative frequency of success?", a: "0.6", worked: ["Relative frequency = 15 ÷ 25 = 0.6"], hint: "Divide successful throws by total throws" },
+    ],
+    // Level 1 (Grade 5) — Expected outcomes
+    [
+      { q: "If the probability of an event is 0.3, how many times would you expect it to happen in 100 trials?", a: "30", worked: ["Expected frequency = probability × number of trials", "= 0.3 × 100 = 30"], hint: "Multiply the probability by the number of trials" },
+      { q: "The probability that a seed grows is 0.85. If 200 seeds are planted, how many are expected to grow?", a: "170", worked: ["Expected = 0.85 × 200 = 170"], hint: "Multiply the probability by the number of seeds" },
+      { q: "P(Late) = 0.05. In a 20-day month, how many days is a train expected to be late?", a: "1", worked: ["Expected = 0.05 × 20 = 1"], hint: "Multiply the probability by the number of days" },
+    ],
+    // Level 2 (Grade 6) — Use relative frequency from trials
+    [
+      { q: "Use a table: after 200 trials, a biased spinner lands on Red 48 times. Estimate the probability of Red.", a: "0.24", worked: ["Estimated probability = relative frequency", "= 48 ÷ 200 = 0.24"], hint: "Relative frequency is the best estimate of probability from experimental data" },
+      { q: "After 500 trials, the relative frequency of an event is 0.12. How many times did the event occur?", a: "60", worked: ["Frequency = relative frequency × trials", "= 0.12 × 500 = 60"], hint: "Multiply the relative frequency by the number of trials" },
+      { q: "A biased coin is flipped. After 100 flips there are 62 heads. After 500 flips there are 315 heads. Which is the better estimate for P(Heads)?", type: "mcq", options: ["500 flips: 0.63", "100 flips: 0.62"], a: "500 flips: 0.63", worked: ["100 flips: RF = 62/100 = 0.62", "500 flips: RF = 315/500 = 0.63", "More trials gives a more reliable estimate", "The 500-flip estimate (0.63) is better"], hint: "More trials give a more reliable estimate of the true probability" },
+    ],
+    // Level 3 (Grade 7) — Apply relative frequency reasoning
+    [
+      { q: "A die is rolled 300 times. The relative frequency of rolling a 6 is 0.2. How many 6s were rolled?", a: "60", worked: ["Frequency = RF × trials", "= 0.2 × 300 = 60"], hint: "Multiply the relative frequency by the number of rolls" },
+      { q: "A bag contains black and white counters. In 150 trials, a white counter was picked 60 times. Estimate the probability of picking a black counter.", a: "0.6", worked: ["P(white) = 60/150 = 0.4", "P(black) = 1 − 0.4 = 0.6"], hint: "Find P(white) first, then use P(black) = 1 − P(white)" },
+      { q: "A spinner has 4 sections. After 400 spins, Section 1 has a relative frequency of 0.35. Find the frequency of Section 1.", a: "140", worked: ["Frequency = RF × total spins", "= 0.35 × 400 = 140"], hint: "Multiply the relative frequency by the total number of spins" },
+    ],
+    // Level 4 (Grade 8) — Reasoning about reliability / extended problems
+    [
+      { q: "Explain why relative frequency becomes a more reliable estimate of probability as the number of trials increases.", a: "As the number of trials increases, the relative frequency gets closer to the true probability because random variation has less effect on a larger sample", worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
+      { q: "Two people conduct the same experiment: Person A does 10 trials, Person B does 1000 trials. Whose estimate is more reliable and why?", a: "Person B, because more trials reduces the effect of random variation", worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
+      { q: "If the relative frequency of an event is 7/25 over 200 trials, how many more times should it occur in the next 100 trials?", a: "28", worked: ["Estimated probability = 7/25 = 0.28", "Expected in next 100 trials = 0.28 × 100 = 28"], hint: "Use the relative frequency as your probability estimate, then multiply by 100" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P7: Tree Diagrams & Enumeration
+  // ═══════════════════════════════════════════════════════════════
+  'P7': [
+    // Level 0 (Grade 4) — List outcomes / systematic listing
+    [
+      { q: "List all possible outcomes of flipping a coin and rolling a 4-sided die. How many outcomes are there?", a: "8", worked: ["H1, H2, H3, H4", "T1, T2, T3, T4", "Total = 2 × 4 = 8 outcomes"], hint: "List heads with each die number, then tails with each die number" },
+      { q: "A menu has 2 starters and 3 mains. How many different 2-course meal combinations are there?", a: "6", worked: ["For each starter, there are 3 mains", "Total = 2 × 3 = 6 combinations"], hint: "Multiply the number of starters by the number of mains" },
+      { q: "How many different 3-digit numbers can be made using the digits 1, 2, and 3 without repetition?", a: "6", worked: ["First digit: 3 choices", "Second digit: 2 choices", "Third digit: 1 choice", "Total = 3 × 2 × 1 = 6"], hint: "For each position, count how many digits are left to choose from" },
+    ],
+    // Level 1 (Grade 5) — Tree diagram basics
+    [
+      { q: "Complete the branches: P(Success) = 0.6. What is P(Failure)?", a: "0.4", worked: ["Probabilities on branches must sum to 1", "P(Failure) = 1 − 0.6 = 0.4"], hint: "The probabilities on each set of branches must add up to 1" },
+      { q: "Complete a tree diagram where P(Rain) = 1/4. What is P(No Rain)?", a: "3/4", worked: ["P(No Rain) = 1 − 1/4 = 3/4"], hint: "The two branches from each point must add to 1" },
+      { q: "If P(Win) = p, what is P(Lose) in terms of p?", a: "1 − p", worked: ["Probabilities on branches sum to 1", "P(Lose) = 1 − p"], hint: "The two probabilities must add up to 1" },
+    ],
+    // Level 2 (Grade 6) — Combined events (with replacement)
+    [
+      { q: "Use a tree diagram to find the probability of getting two Heads when a fair coin is flipped twice.", a: "1/4", worked: ["P(H) = 1/2 for each flip", "P(HH) = 1/2 × 1/2 = 1/4"], hint: "Multiply along the branches for P(H and H)" },
+      { q: "A bag has 3 red and 7 blue counters. One is picked, replaced, then another picked. Find P(both red).", a: "9/100", worked: ["P(red) = 3/10 each time (with replacement)", "P(RR) = 3/10 × 3/10 = 9/100"], hint: "With replacement, the probabilities stay the same for each pick" },
+      { q: "A fair coin is flipped three times. Find the probability of getting exactly two Tails.", a: "3/8", worked: ["Possible ways: HTT, THT, TTH = 3 ways", "P(each) = (1/2)³ = 1/8", "P(exactly 2T) = 3 × 1/8 = 3/8"], hint: "List all the ways to get exactly 2 tails, then add their probabilities" },
+    ],
+    // Level 3 (Grade 7) — Independent events
+    [
+      { q: "P(A) = 0.5 and P(B) = 0.2. If A and B are independent, find P(A and B).", a: "0.1", worked: ["For independent events: P(A and B) = P(A) × P(B)", "= 0.5 × 0.2 = 0.1"], hint: "For independent events, multiply the probabilities" },
+      { q: "A student takes two tests. P(Pass A) = 0.8, P(Pass B) = 0.7. Find P(Pass both).", a: "0.56", worked: ["Tests are independent", "P(Pass both) = 0.8 × 0.7 = 0.56"], hint: "Multiply the individual probabilities for independent events" },
+      { q: "The probability a lightbulb is faulty is 0.02. Find the probability that two randomly selected bulbs are both working.", a: "0.9604", worked: ["P(working) = 1 − 0.02 = 0.98", "P(both working) = 0.98 × 0.98 = 0.9604"], hint: "First find P(working), then multiply for both bulbs" },
+    ],
+    // Level 4 (Grade 8) — Without replacement problems
+    [
+      { q: "A bag has 5 red and 5 blue marbles. Two are picked without replacement. Find P(different colours).", a: "5/9", worked: ["P(RB) = 5/10 × 5/9 = 25/90", "P(BR) = 5/10 × 5/9 = 25/90", "P(different) = 25/90 + 25/90 = 50/90 = 5/9"], hint: "There are two ways to get different colours: RB or BR" },
+      { q: "In a bag of 10 sweets, 4 are lime. Two are taken without replacement. Find P(exactly one lime).", a: "8/15", worked: ["P(Lime then Not) = 4/10 × 6/9 = 24/90", "P(Not then Lime) = 6/10 × 4/9 = 24/90", "P(exactly one) = 24/90 + 24/90 = 48/90 = 8/15"], hint: "Two paths: Lime-then-Not or Not-then-Lime. Add both probabilities" },
+      { q: "A box contains 5 red and 3 green apples. Two are chosen without replacement. Find P(both red).", a: "5/14", worked: ["P(1st red) = 5/8", "P(2nd red | 1st red) = 4/7", "P(both red) = 5/8 × 4/7 = 20/56 = 5/14"], hint: "After taking one red, there are fewer reds and fewer total" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R2: Percentage Change & Growth/Decay
+  // ═══════════════════════════════════════════════════════════════
+  'R2': [
+    // Level 0 (Grade 4) — Simple percentage increase/decrease
+    [
+      { q: "Increase £40 by 10%.", a: "44", worked: ["10% of £40 = £4", "£40 + £4 = £44"], hint: "Find 10% first, then add it on" },
+      { q: "Decrease £120 by 5%.", a: "114", worked: ["5% of £120 = £6", "£120 − £6 = £114"], hint: "Find 5% first, then subtract it" },
+      { q: "What is the multiplier for a 17.5% increase?", type: "mcq", options: ["1.175", "0.175", "1.75", "0.825"], a: "1.175", worked: ["A 17.5% increase means 100% + 17.5% = 117.5%", "As a decimal: 117.5 ÷ 100 = 1.175"], hint: "Add the percentage to 100%, then divide by 100" },
+    ],
+    // Level 1 (Grade 5) — Percentage of an amount
+    [
+      { q: "Decrease 60 kg by 20%.", a: "48", worked: ["20% of 60 = 12", "60 − 12 = 48 kg"], hint: "Find 20%, then subtract from 60" },
+      { q: "Increase 250g by 12%.", a: "280", worked: ["12% of 250 = 30", "250 + 30 = 280g"], hint: "Find 12% of 250 and add it" },
+      { q: "A shop offers '20% extra free' on a 500 ml bottle. What is the new volume?", a: "600", worked: ["20% of 500 = 100 ml", "New volume = 500 + 100 = 600 ml"], hint: "20% extra means add 20% of 500" },
+    ],
+    // Level 2 (Grade 6) — Percentage change
+    [
+      { q: "A house price increases from £200,000 to £220,000. Calculate the percentage increase.", a: "10", worked: ["Increase = £220,000 − £200,000 = £20,000", "% increase = (20,000 ÷ 200,000) × 100 = 10%"], hint: "% change = (change ÷ original) × 100" },
+      { q: "A car's value drops from £15,000 to £12,300. Find the percentage decrease.", a: "18", worked: ["Decrease = £15,000 − £12,300 = £2,700", "% decrease = (2,700 ÷ 15,000) × 100 = 18%"], hint: "% change = (change ÷ original) × 100" },
+      { q: "An item costing £80 is sold for £100. Find the percentage profit.", a: "25", worked: ["Profit = £100 − £80 = £20", "% profit = (20 ÷ 80) × 100 = 25%"], hint: "% profit = (profit ÷ cost price) × 100" },
+    ],
+    // Level 3 (Grade 7) — Multipliers
+    [
+      { q: "Use a multiplier to increase £450 by 3.5%.", a: "465.75", calculator: true, worked: ["Multiplier = 1 + 0.035 = 1.035", "£450 × 1.035 = £465.75"], hint: "The multiplier for an increase of x% is 1 + x/100" },
+      { q: "A population of 8000 increases by 1.5% per year. What is the population after 1 year?", a: "8120", worked: ["Multiplier = 1.015", "8000 × 1.015 = 8120"], hint: "Multiply by (1 + rate/100)" },
+      { q: "Use multipliers to decrease £60 by 15% and then increase the result by 10%.", a: "56.10", calculator: true, worked: ["Decrease by 15%: £60 × 0.85 = £51", "Increase by 10%: £51 × 1.10 = £56.10"], hint: "Apply the two multipliers in sequence: × 0.85 then × 1.10" },
+    ],
+    // Level 4 (Grade 8) — Compound interest / growth and decay
+    [
+      { q: "£1000 is invested at 4% compound interest for 2 years. Work out the final amount.", a: "1081.60", calculator: true, worked: ["Year 1: £1000 × 1.04 = £1040", "Year 2: £1040 × 1.04 = £1081.60", "Or: £1000 × 1.04² = £1081.60"], hint: "Compound interest: multiply by (1 + rate)ⁿ" },
+      { q: "£2500 is invested at 3% compound interest per year. Find the total interest earned after 3 years.", a: "231.82", calculator: true, worked: ["Final amount = £2500 × 1.03³", "= £2500 × 1.092727 = £2731.82", "Interest = £2731.82 − £2500 = £231.82"], hint: "Find the final amount using (1.03)³, then subtract the original" },
+      { q: "A rare stamp appreciates by 5% each year. If it is worth £400 now, find its value in 4 years. Give your answer to 2 decimal places.", a: "486.20", calculator: true, worked: ["Value = £400 × 1.05⁴", "= £400 × 1.21550625", "= £486.20"], hint: "Appreciation is like compound interest: multiply by (1.05)⁴" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S2: Tables & Charts
+  // ═══════════════════════════════════════════════════════════════
+  'S2': [
+    // Level 0 (Grade 4) — Read and interpret simple charts
+    [
+      { q: "A bar chart shows: Football 12, Tennis 8, Rugby 5. How many more chose Football than Rugby?", a: "7", worked: ["Football = 12, Rugby = 5", "Difference = 12 − 5 = 7"], hint: "Subtract the smaller value from the larger" },
+      { q: "From a frequency table, the scores are: 3, 5, 5, 7, 5, 3, 7. What is the mode?", a: "5", worked: ["Count each value: 3 appears 2 times, 5 appears 3 times, 7 appears 2 times", "Mode = most frequent = 5"], hint: "The mode is the value that appears most often" },
+      { q: "State one advantage of using a bar chart over a pictogram.", a: "A bar chart can show exact values more easily because it uses a scale", worked: ["Bar charts use a continuous scale on the y-axis", "Pictograms use symbols which can be harder to read precisely", "Bar charts are better for exact comparisons"], hint: "Think about which is easier to read exact values from" },
+    ],
+    // Level 1 (Grade 5) — Pictograms and basic data
+    [
+      { q: "Complete a tally chart: the data is 3, 1, 4, 1, 5, 1, 3, 5. What is the frequency of 1?", a: "3", worked: ["Go through the data and count each 1:", "1 appears at positions 2, 4, 6", "Frequency of 1 = 3"], hint: "Go through the data one by one and count how many times 1 appears" },
+      { q: "A pictogram uses 1 circle to represent 8 books. How many circles represent 20 books?", a: "2.5", worked: ["Each circle = 8 books", "20 ÷ 8 = 2.5 circles", "Draw 2 full circles and a half circle"], hint: "Divide the number of books by what each symbol represents" },
+      { q: "A line graph shows temperature at noon: 12°C at 2pm, 16°C at 3pm. Estimate the temperature at 2:30pm.", a: "14", worked: ["2:30pm is halfway between 2pm and 3pm", "Halfway between 12°C and 16°C = (12 + 16) ÷ 2 = 14°C"], hint: "2:30 is halfway between the two readings — find the midpoint" },
+    ],
+    // Level 2 (Grade 6) — Two-way tables and constructing charts
+    [
+      { q: "In a pictogram, 1 symbol represents 4 people. How many symbols are needed for 18 people?", a: "4.5", worked: ["18 ÷ 4 = 4.5 symbols", "Draw 4 full symbols and a half symbol"], hint: "Divide the frequency by the value of each symbol" },
+      { q: "Complete a two-way table: 100 students, 55 boys. 30 boys take the bus, 20 girls take the bus. How many girls walk?", a: "25", worked: ["Girls = 100 − 55 = 45", "Girls who take bus = 20", "Girls who walk = 45 − 20 = 25"], hint: "Find total girls first, then subtract those who take the bus" },
+      { q: "Draw a bar chart: scores are Red 15, Blue 25, Green 10. If 1 unit = 5 people, how tall is the Blue bar?", a: "5", worked: ["Blue = 25 people", "Height = 25 ÷ 5 = 5 units"], hint: "Divide the frequency by the scale (1 unit = 5 people)" },
+    ],
+    // Level 3 (Grade 7) — Pie charts
+    [
+      { q: "Calculate the angle for a sector in a pie chart representing 10 people out of 40.", a: "90", worked: ["Fraction = 10/40 = 1/4", "Angle = 1/4 × 360° = 90°"], hint: "Angle = (frequency ÷ total) × 360°" },
+      { q: "In a pie chart, a sector of 72° represents 12 people. How many people are in the whole survey?", a: "60", worked: ["72° represents 12 people", "1° represents 12/72 = 1/6 person", "360° represents 1/6 × 360 = 60 people"], hint: "Find how many people per degree, then multiply by 360" },
+      { q: "A survey of 60 people is shown on a pie chart. The Red sector has an angle of 120°. How many people chose Red?", a: "20", worked: ["Fraction = 120/360 = 1/3", "Number = 1/3 × 60 = 20 people"], hint: "Find what fraction of 360° the angle is, then multiply by the total" },
+    ],
+    // Level 4 (Grade 8) — Interpret and critique charts
+    [
+      { q: "A dual bar chart shows Group A scored a mean of 65 and Group B scored 72 across 5 tests. Find the difference in their means.", a: "7", worked: ["Mean of Group A = 65", "Mean of Group B = 72", "Difference = 72 − 65 = 7"], hint: "Subtract the smaller mean from the larger" },
+      { q: "A frequency polygon has its highest point at the 20-30 class. The frequency is 15. What does this tell you?", a: "The modal class is 20-30 with 15 data values in that interval", worked: ["The highest point on a frequency polygon shows the modal class", "Modal class = 20-30", "15 data values fall in this interval"], hint: "The highest point on a frequency polygon shows the most common class interval" },
+      { q: "A chart has a y-axis starting at 50 instead of 0. Explain why this could be misleading.", a: "It exaggerates differences between bars because the scale doesn't start at zero", worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
+    ],
+  ],
 };
 
 // Pick a random variant from a question slot (supports both single questions and variant arrays)
@@ -4377,7 +5742,6 @@ const generateDiagram = (type) => {
     'distance-time-2': 'distance time graph 2.png',
     'distance-time-3': 'distance time graph 3.png',
     'plot-a-graph': 'Plot a graph.png',
-    'transformation': 'transformation.png',
     'football-pictogram': 'football pictogram.png',
     'scatter-graph': 'Scatter graph.png',
     'pythagoras': 'Pythagoras.png',
@@ -4387,6 +5751,7 @@ const generateDiagram = (type) => {
     'dual-bar-chart': 'dual bar chart.png',
     'spinners': 'spinners.png',
     'isosceles-triangle': 'Isoceles triangle missing angle.png',
+    'isosceles-40': 'Isoceles 40.png',
     'isosceles-50': 'Isoceles 50.png',
     'pythagoras-shorter': 'pythagoras shorter side.png',
   };
@@ -6346,7 +7711,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             </div>
 
             {/* Readiness bar */}
-            <div className="h-4 bg-white/10 rounded-full overflow-hidden">
+            <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
                 style={{ width: `${readinessScore}%` }}
@@ -6391,7 +7756,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                         style={{ height: `${(day.questions / maxQuestions) * 100}%`, minHeight: '8px' }}
                       />
                     ) : (
-                      <div className="w-full max-w-[40px] h-2 bg-white/10 rounded-lg" />
+                      <div className="w-full max-w-[40px] h-2 bg-gray-200 rounded-lg" />
                     )}
                   </div>
                   <span className="text-xs text-secondary-text">{day.day}</span>
@@ -6400,7 +7765,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
               ))}
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-white/10">
+            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
               <div className="text-center">
                 <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
                 <div className="text-xs text-secondary-text">Sessions this week</div>
@@ -6431,12 +7796,12 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             
             {/* Best Practice Time */}
             {getBestPracticeTime() && (
-              <div className="mt-4 pt-4 border-t border-white/10">
+              <div className="mt-4 pt-4 border-t border-gray-200">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-secondary-text">🕐 Best time to practice:</span>
                   <span className="font-semibold text-primary-text">{getBestPracticeTime()}</span>
                 </div>
-                <p className="text-xs text-white/40 mt-1">Based on when you're most active</p>
+                <p className="text-xs text-secondary-text mt-1">Based on when you're most active</p>
               </div>
             )}
           </div>
@@ -6453,7 +7818,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {sessionHistory.slice(-10).reverse().map((session, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                     <div>
                       <div className="text-sm font-medium text-primary-text">
                         Session #{session.sessionNumber}
@@ -6517,6 +7882,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 // ==================== SETTINGS PAGE ====================
 
 function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSettings, progress, setProgress, user, profile, isSubscribed, onSignIn, onSignUp, onSignOut, onUpgrade, userSchool, setUserSchool }) {
+  const { refreshProfile } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
@@ -6803,15 +8169,91 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
             {user && (
               <div className="space-y-4">
-                {/* User info */}
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                {/* User info with avatar */}
+                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold">
-                      {(profile?.display_name || user.email)?.[0]?.toUpperCase() || '?'}
+                    {/* Avatar with optional upload */}
+                    <div className="relative group">
+                      {profile?.avatar_url ? (
+                        <img
+                          src={profile.avatar_url}
+                          alt="Avatar"
+                          className="w-12 h-12 rounded-full object-cover border-2 border-violet/30"
+                          onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                        />
+                      ) : null}
+                      <div
+                        className={`w-12 h-12 bg-gradient-violet rounded-full flex items-center justify-center text-white font-semibold text-lg ${profile?.avatar_url ? 'hidden' : ''}`}
+                      >
+                        {(profile?.display_name || user.email)?.[0]?.toUpperCase() || '?'}
+                      </div>
+                      {/* Camera overlay for subscribers */}
+                      {isSubscribed && (
+                        <label className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                          <Camera className="w-5 h-5 text-white" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              try {
+                                const url = await uploadAvatar(user.id, file);
+                                // Update profile in context
+                                refreshProfile();
+                              } catch (err) {
+                                console.error('Avatar upload failed:', err);
+                                alert('Failed to upload avatar. Please try again.');
+                              }
+                              e.target.value = '';
+                            }}
+                          />
+                        </label>
+                      )}
                     </div>
                     <div>
                       <div className="font-medium text-primary-text">{profile?.display_name || 'User'}</div>
                       <div className="text-sm text-secondary-text">{user.email}</div>
+                      {isSubscribed && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <label className="text-xs text-violet cursor-pointer hover:text-violet-light transition-colors">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                try {
+                                  await uploadAvatar(user.id, file);
+                                  refreshProfile();
+                                } catch (err) {
+                                  console.error('Avatar upload failed:', err);
+                                  alert('Failed to upload avatar. Please try again.');
+                                }
+                                e.target.value = '';
+                              }}
+                            />
+                            {profile?.avatar_url ? 'Change photo' : 'Add photo'}
+                          </label>
+                          {profile?.avatar_url && (
+                            <button
+                              onClick={async () => {
+                                try {
+                                  await deleteAvatar(user.id);
+                                  refreshProfile();
+                                } catch (err) {
+                                  console.error('Avatar delete failed:', err);
+                                }
+                              }}
+                              className="text-xs text-secondary-text hover:text-red-400 transition-colors"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <button
@@ -6896,14 +8338,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     value={newSchoolName}
                     onChange={(e) => setNewSchoolName(e.target.value)}
                     placeholder="School name..."
-                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
                   />
                   <input
                     type="text"
                     value={newSchoolTown}
                     onChange={(e) => setNewSchoolTown(e.target.value)}
                     placeholder="Town / region..."
-                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
                   />
                   <div className="flex gap-2">
                     <button
@@ -6915,7 +8357,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                     <button
                       onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
-                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-white/5 rounded-xl transition-colors"
+                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-gray-100 rounded-xl transition-colors"
                     >
                       Back
                     </button>
@@ -6926,7 +8368,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="space-y-3">
                   <button
                     onClick={() => setSchoolDropdownOpen(!schoolDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-primary-text"
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text"
                   >
                     <span className="text-secondary-text/60">Select your school...</span>
                     <svg className={`w-4 h-4 text-secondary-text transition-transform ${schoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -7037,7 +8479,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.questionsPerSession}
                     onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-violet"
+                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet"
                   />
                 ) : (
                   <div className="relative">
@@ -7048,7 +8490,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -7100,7 +8542,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.dailyGoal ?? 10}
                     onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                    className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-mint"
+                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-mint"
                   />
                 ) : (
                   <div className="relative">
@@ -7111,7 +8553,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -7139,7 +8581,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="1"
                   value={settings.weeklyMasteryGoal ?? 3}
                   onChange={(e) => updateSetting('weeklyMasteryGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-amber-400"
+                  className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-amber-400"
                 />
                 <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>1</span>
@@ -7228,7 +8670,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           {/* Data Management */}
           <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
                 <Download className="w-5 h-5 text-secondary-text" />
               </div>
               <div>
@@ -7306,7 +8748,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowResetConfirm(false)}
-                        className="flex-1 py-2 glass-panel hover:bg-white/10 text-primary-text font-medium rounded-lg transition-colors"
+                        className="flex-1 py-2 glass-panel hover:bg-gray-100 text-primary-text font-medium rounded-lg transition-colors"
                       >
                         Cancel
                       </button>
@@ -7338,7 +8780,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               A spaced repetition app designed to help GCSE students master every maths objective.
               Practice a little each day to build lasting understanding and confidence.
             </p>
-            <div className="mt-4 pt-4 border-t border-white/10">
+            <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-secondary-text">Objectives tracked</span>
                 <span className="font-medium text-primary-text">{Object.keys(progress).length}</span>
@@ -7373,7 +8815,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-gray-200 top-nav-bar">
         <div className="max-w-4xl mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
@@ -7399,7 +8841,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       currentPage === item.id
                         ? "bg-gradient-violet text-white shadow-glow-violet"
-                        : "text-secondary-text hover:text-primary-text hover:bg-white/5"
+                        : "text-secondary-text hover:text-primary-text hover:bg-gray-100"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -7468,6 +8910,11 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         if (error) throw error;
         onSuccess();
       } else {
+        // Check display name for profanity
+        const profanityCheck = checkProfanity(displayName);
+        if (!profanityCheck.clean) {
+          throw new Error(profanityCheck.reason);
+        }
         const { error } = await signUp(email, password, displayName);
         if (error) throw error;
         setMessage('Check your email to confirm your account!');
@@ -7671,7 +9118,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
             selectedPlan === 'monthly'
               ? 'bg-violet text-white'
-              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
           }`}
         >
           Monthly
@@ -7682,7 +9129,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all relative ${
             selectedPlan === 'yearly'
               ? 'bg-violet text-white'
-              : 'bg-white/5 text-secondary-text hover:bg-white/10'
+              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
           }`}
         >
           Yearly
@@ -7829,7 +9276,7 @@ function PromoCodeInput({ onSuccess }) {
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="e.g. MATHS2024"
-          className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
+          className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
         <button
@@ -7881,7 +9328,7 @@ function AppContent() {
   const [celebrationIndex, setCelebrationIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(() => !isOnboardingComplete());
-  const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Plan Selection
+  const [onboardingStep, setOnboardingStep] = useState(1); // 1: Welcome, 2: Auth, 3: Profile Picture, 4: Plan Selection
   const [onboardingAuthMode, setOnboardingAuthMode] = useState('signup');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
@@ -7988,10 +9435,10 @@ function AppContent() {
     setCurrentPage('practice'); // Go straight to practice
   };
 
-  // After auth during onboarding, skip plan for returning users or show it for new ones
+  // After auth during onboarding, skip plan for returning users or show profile pic step for new ones
   useEffect(() => {
     if (!showOnboarding || !user) return;
-    if (onboardingStep !== 2 && onboardingStep !== 3) return;
+    if (onboardingStep !== 2 && onboardingStep !== 3 && onboardingStep !== 4) return;
 
     // Wait for profile to load before deciding
     if (authLoading) return;
@@ -8002,7 +9449,7 @@ function AppContent() {
       setShowOnboarding(false);
       setCurrentPage('home');
     } else if (onboardingStep === 2) {
-      // New user — show plan selection
+      // New user — show profile picture step
       setOnboardingStep(3);
     }
   }, [user, showOnboarding, onboardingStep, profile, authLoading]);
@@ -8053,7 +9500,7 @@ function AppContent() {
 
             <button
               onClick={() => { setOnboardingAuthMode('signin'); setOnboardingStep(2); }}
-              className="w-full py-4 mt-3 glass-panel hover:bg-white/10 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
+              className="w-full py-4 mt-3 glass-panel hover:bg-gray-100 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
             >
               Sign In
             </button>
@@ -8061,6 +9508,7 @@ function AppContent() {
             {/* Step indicator */}
             <div className="flex justify-center gap-2 mt-8">
               <div className="w-2 h-2 rounded-full bg-mint" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
             </div>
@@ -8117,14 +9565,69 @@ function AppContent() {
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-mint" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
             </div>
           </div>
         </div>
       );
     }
 
-    // Step 3: Plan Selection
+    // Step 3: Profile Picture (teaser with lock for free users)
     if (onboardingStep === 3) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
+
+          {/* Floating orb decoration */}
+          <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+          <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+          <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+          <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
+
+          <div className="max-w-md w-full relative z-10">
+            <div className="glass-panel rounded-2xl p-8 text-center">
+              <h2 className="text-2xl font-bold text-primary-text mb-2">Personalise your profile</h2>
+              <p className="text-secondary-text mb-8">Stand out on the leaderboard with a profile picture</p>
+
+              {/* Avatar preview with lock overlay */}
+              <div className="relative w-28 h-28 mx-auto mb-6">
+                <div className="w-28 h-28 rounded-full bg-gradient-violet flex items-center justify-center text-white text-4xl font-bold">
+                  {(user?.user_metadata?.full_name || user?.email)?.[0]?.toUpperCase() || '?'}
+                </div>
+                {/* Lock overlay */}
+                <div className="absolute inset-0 rounded-full bg-black/50 flex flex-col items-center justify-center">
+                  <Lock className="w-8 h-8 text-white mb-1" />
+                  <span className="text-[10px] text-white/80 font-medium">PRO</span>
+                </div>
+              </div>
+
+              <p className="text-secondary-text text-sm mb-8">
+                Upload a custom profile picture with a <span className="text-mint font-semibold">Pro subscription</span>
+              </p>
+
+              <button
+                onClick={() => setOnboardingStep(4)}
+                className="w-full py-3 btn-gradient-mint text-gray-800 font-semibold rounded-xl"
+              >
+                Continue
+              </button>
+            </div>
+
+            {/* Step indicator */}
+            <div className="flex justify-center gap-2 mt-8">
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-mint" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Step 4: Plan Selection
+    if (onboardingStep === 4) {
       return (
         <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
           {/* Ambient glow background */}
@@ -8190,6 +9693,7 @@ function AppContent() {
             <div className="flex justify-center gap-2 mt-8">
               <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-white/20" />
+              <div className="w-2 h-2 rounded-full bg-white/20" />
               <div className="w-2 h-2 rounded-full bg-mint" />
             </div>
           </div>
@@ -8197,7 +9701,7 @@ function AppContent() {
       );
     }
   }
-  
+
   // Calculate real streak from activity with protection
   const streakInfo = calculateStreak();
   const dayStreak = streakInfo.streak;
@@ -8407,6 +9911,7 @@ function AppContent() {
         questionBank={questionBank}
         onClose={() => setShowOneVsOne(false)}
         answersEquivalent={answersEquivalent}
+        userAvatarUrl={profile?.avatar_url || null}
       />
     );
   }
@@ -8583,7 +10088,7 @@ function AppContent() {
                   <p className="text-sm font-medium text-primary-text mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm bg-white/5 border border-white/10 shrink-0" />
+                      <span className="w-4 h-4 rounded-sm bg-gray-100 border border-gray-300 shrink-0" />
                       <span>Dark = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -8668,7 +10173,7 @@ function AppContent() {
           </div>
 
           {/* Legend - Readiness & Recency */}
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
               {/* Readiness indicators */}
               <div className="flex items-center gap-2">
@@ -8732,7 +10237,7 @@ function AppContent() {
                 <p className="text-secondary-text text-sm">
                   Complete 10 questions today to restore your {potentialStreak} day streak
                 </p>
-                <div className="mt-2 bg-white/10 rounded-full h-3 overflow-hidden">
+                <div className="mt-2 bg-gray-200 rounded-full h-3 overflow-hidden">
                   <div
                     className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
                     style={{ width: `${repairProgress}%` }}
@@ -8833,7 +10338,7 @@ function AppContent() {
               {!user && (
                 <button
                   onClick={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
-                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-white/10"
+                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-gray-100"
                 >
                   <User className="w-4 h-4" />
                   Sign In

@@ -35,8 +35,8 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      success_url: successUrl || `${process.env.FRONTEND_URL || 'https://the-maths-habit-clrx.vercel.app'}?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl || `${process.env.FRONTEND_URL || 'https://the-maths-habit-clrx.vercel.app'}?canceled=true`,
+      success_url: successUrl || `${process.env.FRONTEND_URL || 'https://squareonemaths.vercel.app'}?success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: cancelUrl || `${process.env.FRONTEND_URL || 'https://squareonemaths.vercel.app'}?canceled=true`,
       customer_email: userEmail,
       client_reference_id: userId,
       metadata: {

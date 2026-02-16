@@ -1,4 +1,61 @@
 import { supabase } from './supabase';
+import { supabaseUrl, supabaseAnonKey } from './supabase';
+
+// Helper: get auth token directly from localStorage (bypasses Supabase JS client)
+const getAuthToken = () => {
+  try {
+    const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.access_token) return parsed.access_token;
+    }
+  } catch (e) {
+    console.error('Failed to read auth token:', e);
+  }
+  return supabaseAnonKey;
+};
+
+// Helper: raw fetch to PostgREST with timeout
+const restFetch = async (path, options = {}) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  const token = getAuthToken();
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || '',
+        ...options.headers,
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      if (response.status === 404 || body.includes('PGRST116')) {
+        return { data: null, notFound: true };
+      }
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+    }
+
+    const text = await response.text();
+    if (!text) return { data: null };
+    return { data: JSON.parse(text) };
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out (10s)');
+    }
+    throw err;
+  }
+};
 
 // Generate a random 6-character code
 const generateCode = () => {
@@ -11,7 +68,7 @@ const generateCode = () => {
 };
 
 // Create a new match
-export const createMatch = async (hostId, hostName, settings = {}) => {
+export const createMatch = async (hostId, hostName, settings = {}, hostAvatar = null) => {
   const {
     questionCount = 10,
     tier = 'foundation',
@@ -24,42 +81,33 @@ export const createMatch = async (hostId, hostName, settings = {}) => {
 
   while (attempts < 10) {
     try {
-      const { data, error } = await supabase
-        .from('matches')
-        .insert({
+      const { data } = await restFetch('matches', {
+        method: 'POST',
+        body: JSON.stringify({
           code,
           host_id: hostId,
           host_name: hostName,
+          host_avatar: hostAvatar || null,
           question_count: questionCount,
           tier,
           topics,
           status: 'waiting'
-        })
-        .select()
-        .single();
+        }),
+        headers: { 'Prefer': 'return=representation' },
+      });
 
-      if (error?.code === '23505') {
-        // Duplicate code, try again
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        throw new Error('Match was not created. This may be a database permissions issue — check RLS policies.');
+      }
+
+      return Array.isArray(data) ? data[0] : data;
+    } catch (err) {
+      // Duplicate code (23505) — try again
+      if (err.message?.includes('23505')) {
         code = generateCode();
         attempts++;
         continue;
       }
-
-      if (error) {
-        console.error('Match create error:', error);
-        throw new Error(error.message || 'Failed to create match. Check that the matches table exists in Supabase.');
-      }
-
-      if (!data) {
-        throw new Error('Match was not created. This may be a database permissions issue — check RLS policies.');
-      }
-
-      return data;
-    } catch (err) {
-      if (err.message?.includes('Failed to') || err.message?.includes('Match was not') || err.message?.includes('permissions')) {
-        throw err;
-      }
-      console.error('Match create exception:', err);
       throw new Error(err.message || 'Unexpected error creating match');
     }
   }
@@ -68,57 +116,61 @@ export const createMatch = async (hostId, hostName, settings = {}) => {
 };
 
 // Join a match by code
-export const joinMatch = async (code, guestId, guestName) => {
+export const joinMatch = async (code, guestId, guestName, guestAvatar = null) => {
   const upperCode = code.toUpperCase().trim();
 
   // First, find the match
-  const { data: match, error: findError } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('code', upperCode)
-    .eq('status', 'waiting')
-    .single();
+  const { data: matches } = await restFetch(
+    `matches?code=eq.${upperCode}&status=eq.waiting&select=*`
+  );
 
-  if (findError || !match) {
+  if (!matches || matches.length === 0) {
     throw new Error('Match not found or already started');
   }
+
+  const match = matches[0];
 
   if (match.host_id === guestId) {
     throw new Error("You can't join your own match");
   }
 
   // Update match with guest
-  const { data, error } = await supabase
-    .from('matches')
-    .update({
-      guest_id: guestId,
-      guest_name: guestName,
-      status: 'ready'
-    })
-    .eq('id', match.id)
-    .eq('status', 'waiting')
-    .select()
-    .single();
+  const { data: updated } = await restFetch(
+    `matches?id=eq.${match.id}&status=eq.waiting`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        guest_id: guestId,
+        guest_name: guestName,
+        guest_avatar: guestAvatar || null,
+        status: 'ready'
+      }),
+      headers: { 'Prefer': 'return=representation' },
+    }
+  );
 
-  if (error) throw error;
-  return data;
+  if (!updated || updated.length === 0) {
+    throw new Error('Failed to join match — it may have already started');
+  }
+
+  return updated[0];
 };
 
 // Start the match (host only)
 export const startMatch = async (matchId, questions) => {
-  const { data, error } = await supabase
-    .from('matches')
-    .update({
-      status: 'playing',
-      questions: questions,
-      started_at: new Date().toISOString()
-    })
-    .eq('id', matchId)
-    .select()
-    .single();
+  const { data } = await restFetch(
+    `matches?id=eq.${matchId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        status: 'playing',
+        questions: questions,
+        started_at: new Date().toISOString()
+      }),
+      headers: { 'Prefer': 'return=representation' },
+    }
+  );
 
-  if (error) throw error;
-  return data;
+  if (!data || data.length === 0) throw new Error('Failed to start match');
+  return data[0];
 };
 
 // Submit an answer
@@ -128,13 +180,12 @@ export const submitAnswer = async (matchId, playerId, playerType, questionIndex,
   const scoreField = isHost ? 'host_score' : 'guest_score';
 
   // Get current match state
-  const { data: match, error: fetchError } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('id', matchId)
-    .single();
+  const { data: matches } = await restFetch(
+    `matches?id=eq.${matchId}&select=*`
+  );
 
-  if (fetchError) throw fetchError;
+  if (!matches || matches.length === 0) throw new Error('Match not found');
+  const match = matches[0];
 
   // Add answer to array
   const currentAnswers = match[answersField] || [];
@@ -149,31 +200,32 @@ export const submitAnswer = async (matchId, playerId, playerType, questionIndex,
   // Calculate new score
   const newScore = currentAnswers.filter(a => a.isCorrect).length;
 
-  const { data, error } = await supabase
-    .from('matches')
-    .update({
-      [answersField]: currentAnswers,
-      [scoreField]: newScore
-    })
-    .eq('id', matchId)
-    .select()
-    .single();
+  const { data: updated } = await restFetch(
+    `matches?id=eq.${matchId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
+        [answersField]: currentAnswers,
+        [scoreField]: newScore
+      }),
+      headers: { 'Prefer': 'return=representation' },
+    }
+  );
 
-  if (error) throw error;
-  return data;
+  if (!updated || updated.length === 0) throw new Error('Failed to submit answer');
+  return updated[0];
 };
 
 // Player finished all questions
 export const finishMatch = async (matchId, playerId, playerType) => {
   const finishedField = playerType === 'host' ? 'host_finished_at' : 'guest_finished_at';
 
-  const { data: match, error: fetchError } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('id', matchId)
-    .single();
+  // Get current match state
+  const { data: matches } = await restFetch(
+    `matches?id=eq.${matchId}&select=*`
+  );
 
-  if (fetchError) throw fetchError;
+  if (!matches || matches.length === 0) throw new Error('Match not found');
+  const match = matches[0];
 
   const updates = {
     [finishedField]: new Date().toISOString()
@@ -184,7 +236,7 @@ export const finishMatch = async (matchId, playerId, playerType) => {
   if (match[otherFinishedField]) {
     // Both finished - determine winner
     const hostScore = match.host_score;
-    const guestScore = match.guest_score + (playerType === 'guest' ? 0 : 0); // Current scores
+    const guestScore = match.guest_score;
 
     let winnerId = null;
     let winnerReason = null;
@@ -216,30 +268,29 @@ export const finishMatch = async (matchId, playerId, playerType) => {
     updates.winner_reason = winnerReason;
   }
 
-  const { data, error } = await supabase
-    .from('matches')
-    .update(updates)
-    .eq('id', matchId)
-    .select()
-    .single();
+  const { data: updated } = await restFetch(
+    `matches?id=eq.${matchId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+      headers: { 'Prefer': 'return=representation' },
+    }
+  );
 
-  if (error) throw error;
-  return data;
+  if (!updated || updated.length === 0) throw new Error('Failed to finish match');
+  return updated[0];
 };
 
 // Get match by ID
 export const getMatch = async (matchId) => {
-  const { data, error } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('id', matchId)
-    .single();
+  const { data } = await restFetch(
+    `matches?id=eq.${matchId}&select=*`
+  );
 
-  if (error) throw error;
-  return data;
+  if (!data || data.length === 0) throw new Error('Match not found');
+  return data[0];
 };
 
-// Subscribe to match updates
+// Subscribe to match updates (Realtime — uses supabase client, which is fine for channels)
 export const subscribeToMatch = (matchId, callback) => {
   const channel = supabase
     .channel(`match-${matchId}`)
@@ -264,33 +315,28 @@ export const subscribeToMatch = (matchId, callback) => {
 
 // Leave/cancel match
 export const leaveMatch = async (matchId, playerId) => {
-  const { data: match, error: fetchError } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('id', matchId)
-    .single();
+  // Get match to check if host or guest
+  const { data: matches } = await restFetch(
+    `matches?id=eq.${matchId}&select=*`
+  );
 
-  if (fetchError) throw fetchError;
+  if (!matches || matches.length === 0) throw new Error('Match not found');
+  const match = matches[0];
 
   if (match.host_id === playerId) {
-    // Host leaving - cancel match
-    const { error } = await supabase
-      .from('matches')
-      .delete()
-      .eq('id', matchId);
-
-    if (error) throw error;
+    // Host leaving - cancel/delete match
+    await restFetch(`matches?id=eq.${matchId}`, {
+      method: 'DELETE',
+    });
   } else {
     // Guest leaving - reset to waiting
-    const { error } = await supabase
-      .from('matches')
-      .update({
+    await restFetch(`matches?id=eq.${matchId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({
         guest_id: null,
         guest_name: null,
         status: 'waiting'
-      })
-      .eq('id', matchId);
-
-    if (error) throw error;
+      }),
+    });
   }
 };

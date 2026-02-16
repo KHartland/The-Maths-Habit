@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, RefreshCw, Users } from 'lucide-react';
 import { getSchoolLeaderboard } from '../lib/leaderboardService';
+import { sanitiseName } from '../lib/profanityFilter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
 
@@ -71,7 +72,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
           </div>
           <button
             onClick={fetchLeaderboard}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             title="Refresh"
           >
             <RefreshCw className="w-4 h-4 text-secondary-text" />
@@ -100,7 +101,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
                 isCurrentUser
                   ? 'bg-metallic-base/15 border border-metallic-base/30'
-                  : 'bg-white/5 hover:bg-white/10'
+                  : 'bg-gray-50 hover:bg-gray-100'
               }`}
             >
               {/* Rank */}
@@ -113,20 +114,36 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
               </div>
 
               {/* Avatar + Name */}
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${
-                entry.rank === 1 ? 'bg-gradient-to-br from-[#FBBF24] to-amber-600' :
-                entry.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
-                entry.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-800' :
-                'bg-metallic-base/40'
-              }`}>
-                {entry.displayName?.[0]?.toUpperCase() || '?'}
+              {entry.avatarUrl ? (
+                <img
+                  src={entry.avatarUrl}
+                  alt=""
+                  className={`w-8 h-8 rounded-full object-cover flex-shrink-0 ring-2 ${
+                    entry.rank === 1 ? 'ring-[#FBBF24]' :
+                    entry.rank === 2 ? 'ring-gray-400' :
+                    entry.rank === 3 ? 'ring-amber-600' :
+                    'ring-transparent'
+                  }`}
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                />
+              ) : null}
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${
+                  entry.rank === 1 ? 'bg-gradient-to-br from-[#FBBF24] to-amber-600' :
+                  entry.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
+                  entry.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-800' :
+                  'bg-metallic-base/40'
+                }`}
+                style={entry.avatarUrl ? { display: 'none' } : {}}
+              >
+                {sanitiseName(entry.displayName)?.[0]?.toUpperCase() || '?'}
               </div>
 
               <div className="flex-1 min-w-0">
                 <span className={`text-sm font-medium truncate block ${
                   isCurrentUser ? 'text-metallic-base' : 'text-primary-text'
                 }`}>
-                  {entry.displayName}
+                  {sanitiseName(entry.displayName)}
                   {isCurrentUser && <span className="text-xs text-secondary-text ml-1">(you)</span>}
                 </span>
               </div>

@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     // Create Stripe Customer Portal session
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: returnUrl || `${process.env.FRONTEND_URL || 'https://the-maths-habit-clrx.vercel.app'}`,
+      return_url: returnUrl || `${process.env.FRONTEND_URL || 'https://squareonemaths.vercel.app'}`,
     });
 
     res.status(200).json({ url: session.url });

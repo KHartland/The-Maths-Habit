@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabaseUrl, supabaseAnonKey } from './supabase';
 
 // Storage keys (same as in App.jsx)
 const STORAGE_KEY = 'maths-habit-progress';
@@ -8,6 +8,62 @@ const STREAK_DATA_KEY = 'maths-habit-streak-data';
 const DAILY_ACTIVITY_KEY = 'maths-habit-daily-activity';
 const SESSION_COUNT_KEY = 'maths-habit-session-count';
 const TOTAL_QUESTIONS_KEY = 'maths-habit-total-questions';
+
+// Helper: get auth token directly from localStorage (bypasses Supabase JS client)
+const getAuthToken = () => {
+  try {
+    const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+    const raw = localStorage.getItem(storageKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.access_token) return parsed.access_token;
+    }
+  } catch (e) {
+    console.error('Failed to read auth token:', e);
+  }
+  return supabaseAnonKey;
+};
+
+// Helper: raw fetch to PostgREST with timeout (same pattern as leaderboardService)
+const restFetch = async (path, options = {}) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+  const token = getAuthToken();
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
+      ...options,
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Prefer': options.prefer || '',
+        ...options.headers,
+      },
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      if (response.status === 404 || body.includes('PGRST116')) {
+        return { data: null, notFound: true };
+      }
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+    }
+
+    const text = await response.text();
+    if (!text) return { data: null };
+    return { data: JSON.parse(text) };
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out (10s)');
+    }
+    throw err;
+  }
+};
 
 /**
  * Migrate all localStorage data to Supabase for a new user
@@ -27,8 +83,11 @@ export const migrateLocalToCloud = async (userId) => {
       }));
 
       if (progressRows.length > 0) {
-        await supabase.from('user_progress').upsert(progressRows, {
-          onConflict: 'user_id,objective_code'
+        await restFetch('user_progress', {
+          method: 'POST',
+          body: JSON.stringify(progressRows),
+          prefer: 'resolution=merge-duplicates',
+          headers: { 'Prefer': 'resolution=merge-duplicates' },
         });
       }
     }
@@ -51,8 +110,11 @@ export const migrateLocalToCloud = async (userId) => {
         }));
 
         if (fsrsRows.length > 0) {
-          await supabase.from('user_fsrs_cards').upsert(fsrsRows, {
-            onConflict: 'user_id,question_id'
+          await restFetch('user_fsrs_cards', {
+            method: 'POST',
+            body: JSON.stringify(fsrsRows),
+            prefer: 'resolution=merge-duplicates',
+            headers: { 'Prefer': 'resolution=merge-duplicates' },
           });
         }
       }
@@ -62,15 +124,18 @@ export const migrateLocalToCloud = async (userId) => {
     const streakData = localStorage.getItem(STREAK_DATA_KEY);
     if (streakData) {
       const streak = JSON.parse(streakData);
-      await supabase.from('user_streaks').upsert({
-        user_id: userId,
-        current_streak: streak.currentStreak || 0,
-        longest_streak: streak.longestStreak || 0,
-        freezes_available: streak.freezesAvailable || 0,
-        last_activity_date: streak.lastActivityDate || null,
-        streak_data: streak
-      }, {
-        onConflict: 'user_id'
+      await restFetch('user_streaks', {
+        method: 'POST',
+        body: JSON.stringify({
+          user_id: userId,
+          current_streak: streak.currentStreak || 0,
+          longest_streak: streak.longestStreak || 0,
+          freezes_available: streak.freezesAvailable || 0,
+          last_activity_date: streak.lastActivityDate || null,
+          streak_data: streak
+        }),
+        prefer: 'resolution=merge-duplicates',
+        headers: { 'Prefer': 'resolution=merge-duplicates' },
       });
     }
 
@@ -78,18 +143,21 @@ export const migrateLocalToCloud = async (userId) => {
     const settingsData = localStorage.getItem(SETTINGS_KEY);
     if (settingsData) {
       const settings = JSON.parse(settingsData);
-      await supabase.from('user_settings').upsert({
-        user_id: userId,
-        questions_per_session: settings.questionsPerSession || 7,
-        show_hints: settings.showHints !== false,
-        include_higher_tier: settings.includeHigherTier || false,
-        daily_goal: settings.dailyGoal || 7,
-        weekly_mastery_goal: settings.weeklyMasteryGoal || 3,
-        font_size: settings.fontSize || 'normal',
-        dyslexia_font: settings.dyslexiaFont || false,
-        high_contrast: settings.highContrast || false
-      }, {
-        onConflict: 'user_id'
+      await restFetch('user_settings', {
+        method: 'POST',
+        body: JSON.stringify({
+          user_id: userId,
+          questions_per_session: settings.questionsPerSession || 7,
+          show_hints: settings.showHints !== false,
+          include_higher_tier: settings.includeHigherTier || false,
+          daily_goal: settings.dailyGoal || 7,
+          weekly_mastery_goal: settings.weeklyMasteryGoal || 3,
+          font_size: settings.fontSize || 'normal',
+          dyslexia_font: settings.dyslexiaFont || false,
+          high_contrast: settings.highContrast || false
+        }),
+        prefer: 'resolution=merge-duplicates',
+        headers: { 'Prefer': 'resolution=merge-duplicates' },
       });
     }
 
@@ -106,8 +174,11 @@ export const migrateLocalToCloud = async (userId) => {
       }));
 
       if (dailyRows.length > 0) {
-        await supabase.from('daily_activity').upsert(dailyRows, {
-          onConflict: 'user_id,date'
+        await restFetch('daily_activity', {
+          method: 'POST',
+          body: JSON.stringify(dailyRows),
+          prefer: 'resolution=merge-duplicates',
+          headers: { 'Prefer': 'resolution=merge-duplicates' },
         });
       }
     }
@@ -126,10 +197,9 @@ export const migrateLocalToCloud = async (userId) => {
 export const loadFromCloud = async (userId) => {
   try {
     // 1. Load progress
-    const { data: progressRows } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', userId);
+    const { data: progressRows } = await restFetch(
+      `user_progress?user_id=eq.${userId}&select=*`
+    );
 
     if (progressRows && progressRows.length > 0) {
       const progress = {};
@@ -144,10 +214,9 @@ export const loadFromCloud = async (userId) => {
     }
 
     // 2. Load FSRS data
-    const { data: fsrsRows } = await supabase
-      .from('user_fsrs_cards')
-      .select('*')
-      .eq('user_id', userId);
+    const { data: fsrsRows } = await restFetch(
+      `user_fsrs_cards?user_id=eq.${userId}&select=*`
+    );
 
     if (fsrsRows && fsrsRows.length > 0) {
       const existingFsrs = JSON.parse(localStorage.getItem(FSRS_DATA_KEY) || '{}');
@@ -170,11 +239,10 @@ export const loadFromCloud = async (userId) => {
     }
 
     // 3. Load streak data
-    const { data: streakRow } = await supabase
-      .from('user_streaks')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+    const { data: streakRows } = await restFetch(
+      `user_streaks?user_id=eq.${userId}&select=*`
+    );
+    const streakRow = streakRows && streakRows.length > 0 ? streakRows[0] : null;
 
     if (streakRow) {
       const streakData = streakRow.streak_data || {};
@@ -186,11 +254,10 @@ export const loadFromCloud = async (userId) => {
     }
 
     // 4. Load settings
-    const { data: settingsRow } = await supabase
-      .from('user_settings')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
+    const { data: settingsRows } = await restFetch(
+      `user_settings?user_id=eq.${userId}&select=*`
+    );
+    const settingsRow = settingsRows && settingsRows.length > 0 ? settingsRows[0] : null;
 
     if (settingsRow) {
       const settings = {
@@ -207,10 +274,9 @@ export const loadFromCloud = async (userId) => {
     }
 
     // 5. Load daily activity
-    const { data: dailyRows } = await supabase
-      .from('daily_activity')
-      .select('*')
-      .eq('user_id', userId);
+    const { data: dailyRows } = await restFetch(
+      `daily_activity?user_id=eq.${userId}&select=*`
+    );
 
     if (dailyRows && dailyRows.length > 0) {
       const daily = {};
@@ -254,8 +320,11 @@ export const saveProgressToCloud = async (userId, progress) => {
       }));
 
       if (progressRows.length > 0) {
-        await supabase.from('user_progress').upsert(progressRows, {
-          onConflict: 'user_id,objective_code'
+        await restFetch('user_progress', {
+          method: 'POST',
+          body: JSON.stringify(progressRows),
+          prefer: 'resolution=merge-duplicates',
+          headers: { 'Prefer': 'resolution=merge-duplicates' },
         });
       }
     } catch (error) {
@@ -289,8 +358,11 @@ export const saveFsrsToCloud = async (userId, fsrsData) => {
       }));
 
       if (fsrsRows.length > 0) {
-        await supabase.from('user_fsrs_cards').upsert(fsrsRows, {
-          onConflict: 'user_id,question_id'
+        await restFetch('user_fsrs_cards', {
+          method: 'POST',
+          body: JSON.stringify(fsrsRows),
+          prefer: 'resolution=merge-duplicates',
+          headers: { 'Prefer': 'resolution=merge-duplicates' },
         });
       }
     } catch (error) {
@@ -306,16 +378,19 @@ export const saveStreakToCloud = async (userId, streakData) => {
   if (!userId) return;
 
   try {
-    await supabase.from('user_streaks').upsert({
-      user_id: userId,
-      current_streak: streakData.currentStreak || 0,
-      longest_streak: streakData.longestStreak || 0,
-      freezes_available: streakData.freezesAvailable || 0,
-      last_activity_date: streakData.lastActivityDate || null,
-      streak_data: streakData,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id'
+    await restFetch('user_streaks', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        current_streak: streakData.currentStreak || 0,
+        longest_streak: streakData.longestStreak || 0,
+        freezes_available: streakData.freezesAvailable || 0,
+        last_activity_date: streakData.lastActivityDate || null,
+        streak_data: streakData,
+        updated_at: new Date().toISOString()
+      }),
+      prefer: 'resolution=merge-duplicates',
+      headers: { 'Prefer': 'resolution=merge-duplicates' },
     });
   } catch (error) {
     console.error('Error saving streak to cloud:', error);
@@ -329,19 +404,22 @@ export const saveSettingsToCloud = async (userId, settings) => {
   if (!userId) return;
 
   try {
-    await supabase.from('user_settings').upsert({
-      user_id: userId,
-      questions_per_session: settings.questionsPerSession || 7,
-      show_hints: settings.showHints !== false,
-      include_higher_tier: settings.includeHigherTier || false,
-      daily_goal: settings.dailyGoal || 7,
-      weekly_mastery_goal: settings.weeklyMasteryGoal || 3,
-      font_size: settings.fontSize || 'normal',
-      dyslexia_font: settings.dyslexiaFont || false,
-      high_contrast: settings.highContrast || false,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id'
+    await restFetch('user_settings', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        questions_per_session: settings.questionsPerSession || 7,
+        show_hints: settings.showHints !== false,
+        include_higher_tier: settings.includeHigherTier || false,
+        daily_goal: settings.dailyGoal || 7,
+        weekly_mastery_goal: settings.weeklyMasteryGoal || 3,
+        font_size: settings.fontSize || 'normal',
+        dyslexia_font: settings.dyslexiaFont || false,
+        high_contrast: settings.highContrast || false,
+        updated_at: new Date().toISOString()
+      }),
+      prefer: 'resolution=merge-duplicates',
+      headers: { 'Prefer': 'resolution=merge-duplicates' },
     });
   } catch (error) {
     console.error('Error saving settings to cloud:', error);
@@ -355,15 +433,18 @@ export const saveDailyActivityToCloud = async (userId, date, activity) => {
   if (!userId) return;
 
   try {
-    await supabase.from('daily_activity').upsert({
-      user_id: userId,
-      date: date,
-      questions_answered: activity.questions || 0,
-      correct_answers: activity.correct || 0,
-      mastery_gained: activity.masteryGained || 0,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id,date'
+    await restFetch('daily_activity', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: userId,
+        date: date,
+        questions_answered: activity.questions || 0,
+        correct_answers: activity.correct || 0,
+        mastery_gained: activity.masteryGained || 0,
+        updated_at: new Date().toISOString()
+      }),
+      prefer: 'resolution=merge-duplicates',
+      headers: { 'Prefer': 'resolution=merge-duplicates' },
     });
   } catch (error) {
     console.error('Error saving daily activity to cloud:', error);
