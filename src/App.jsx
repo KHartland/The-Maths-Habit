@@ -3813,38 +3813,25 @@ const higherQuestionBank = {
   // N6: Index Laws & Surds (Higher)
   // ═══════════════════════════════════════════════════════════════
   'N6': [
-    // Level 1 (Grade 4) — Negative indices
+    // Level 1 (Grade 4) — Understanding bounds
     [
-      { q: "Simplify 5² × 5⁻⁴", a: "1/25", worked: ["When multiplying powers, add the indices", "5² × 5⁻⁴ = 5²⁺⁽⁻⁴⁾ = 5⁻²", "5⁻² = 1/5² = 1/25"], hint: "Add the indices: 2 + (−4) = −2, then evaluate 5⁻²" },
-      { q: "Simplify y⁷ × y⁻³", a: "y^4", worked: ["When multiplying powers, add the indices", "y⁷ × y⁻³ = y⁷⁺⁽⁻³⁾ = y⁴"], hint: "Add the indices: 7 + (−3)" },
-      { q: "Simplify x⁵ × x⁻²", a: "x^3", worked: ["When multiplying powers, add the indices", "x⁵ × x⁻² = x⁵⁺⁽⁻²⁾ = x³"], hint: "Add the indices: 5 + (−2)" },
-      { q: "Simplify 7⁵ × 7⁻²", a: "7^3", worked: ["When multiplying powers, add the indices", "7⁵ × 7⁻² = 7⁵⁺⁽⁻²⁾ = 7³"], hint: "Add the indices: 5 + (−2)" },
+      { q: "A length is given as 15 cm to the nearest cm. Write down the lower bound.", a: "14.5 cm", worked: ["Nearest cm means accuracy ± 0.5 cm", "Lower bound = 15 − 0.5 = 14.5 cm"], hint: "The lower bound is half a unit below the rounded value" },
     ],
-    // Level 2 (Grade 5) — Fractional indices with numbers
+    // Level 2 (Grade 5) — Error intervals
     [
-      { q: "Find the value of 64^(2/3).", a: "16", worked: ["64^(2/3) = (64^(1/3))²", "∛64 = 4", "4² = 16"], hint: "First find the cube root of 64, then square it" },
-      { q: "Work out the value of 25^(−1/2).", a: "1/5", worked: ["25^(1/2) = √25 = 5", "25^(−1/2) = 1/5"], hint: "First find √25, then take the reciprocal" },
-      { q: "Find the value of 27^(2/3).", a: "9", worked: ["27^(2/3) = (27^(1/3))²", "∛27 = 3", "3² = 9"], hint: "Cube root first, then square" },
-      { q: "Find the value of 125^(2/3).", a: "25", worked: ["125^(2/3) = (125^(1/3))²", "∛125 = 5", "5² = 25"], hint: "Cube root first, then square" },
+      { q: "Write the error interval for x = 4.7 rounded to 1 decimal place.", a: "4.65 ≤ x < 4.75", worked: ["Rounded to 1 d.p. means accurate to ± 0.05", "Lower bound = 4.7 − 0.05 = 4.65", "Upper bound = 4.7 + 0.05 = 4.75", "Error interval: 4.65 ≤ x < 4.75"], hint: "Half a unit of the last decimal place either side" },
     ],
-    // Level 3 (Grade 7) — Rationalising the denominator
+    // Level 3 (Grade 7) — Bounds with calculations
     [
-      { q: "Rationalise the denominator of 10/√5. Give your answer in simplified surd form.", a: "2√5", worked: ["Multiply top and bottom by √5", "10/√5 × √5/√5 = 10√5/5 = 2√5"], hint: "Multiply numerator and denominator by √5" },
-      { q: "Rationalise the denominator of 6/√3. Give your answer in simplified surd form.", a: "2√3", worked: ["Multiply top and bottom by √3", "6/√3 × √3/√3 = 6√3/3 = 2√3"], hint: "Multiply numerator and denominator by √3" },
-      { q: "Rationalise the denominator of 12/√6. Give your answer in simplified surd form.", a: "2√6", worked: ["Multiply top and bottom by √6", "12/√6 × √6/√6 = 12√6/6 = 2√6"], hint: "Multiply numerator and denominator by √6" },
+      { q: "Calculate the maximum possible area of a rectangle with sides 8.4 cm and 5.2 cm, both given to 1 decimal place.", a: "44.3625 cm²", worked: ["UB of 8.4 = 8.45 cm", "UB of 5.2 = 5.25 cm", "Maximum area = 8.45 × 5.25 = 44.3625 cm²"], hint: "For maximum area, use the upper bound of both measurements", calculator: true },
     ],
-    // Level 4 (Grade 8) — Expanding surds
+    // Level 4 (Grade 8) — Bounds with division
     [
-      { q: "Simplify (4 + √3)(2 − √3). Give your answer in the form a + b√3.", a: "5 - 2√3", worked: ["Expand: 4×2 + 4×(−√3) + √3×2 + √3×(−√3)", "= 8 − 4√3 + 2√3 − 3", "= 5 − 2√3"], hint: "FOIL: multiply each term, remember √3 × √3 = 3" },
-      { q: "Simplify (3 + √5)(2 − √5). Give your answer in the form a + b√5.", a: "1 - √5", worked: ["Expand: 3×2 + 3×(−√5) + √5×2 + √5×(−√5)", "= 6 − 3√5 + 2√5 − 5", "= 1 − √5"], hint: "FOIL: multiply each term, remember √5 × √5 = 5" },
-      { q: "Simplify (5 − √2)(3 + √2). Give your answer in the form a + b√2.", a: "13 + 2√2", worked: ["Expand: 5×3 + 5×√2 + (−√2)×3 + (−√2)×√2", "= 15 + 5√2 − 3√2 − 2", "= 13 + 2√2"], hint: "FOIL: multiply each term, remember √2 × √2 = 2" },
-      { q: "Simplify (5 + √2)(3 − √2). Give your answer in the form a + b√2.", a: "13 - 2√2", worked: ["Expand: 5×3 + 5×(−√2) + √2×3 + √2×(−√2)", "= 15 − 5√2 + 3√2 − 2", "= 13 − 2√2"], hint: "FOIL: multiply each term, remember √2 × √2 = 2" },
+      { q: "v = s/t. s = 100 m to the nearest 10 m, t = 9.8 s to 1 d.p. Calculate the upper bound for v. Give your answer to 3 s.f.", a: "10.8 m/s", worked: ["UB of s = 105 m", "LB of t = 9.75 s", "Upper bound of v = UB(s) / LB(t)", "= 105 / 9.75 = 10.769...", "= 10.8 m/s (3 s.f.)"], hint: "For upper bound of a fraction: use upper bound of numerator and lower bound of denominator", calculator: true },
     ],
-    // Level 5 (Grade 9) — Solving index equations
+    // Level 5 (Grade 9) — Complex bounds expressions
     [
-      { q: "Solve 8^(x+1) = 4^(2x−5) for x.", a: "13", worked: ["Write both as powers of 2: 8 = 2³, 4 = 2²", "2^(3(x+1)) = 2^(2(2x−5))", "3(x+1) = 2(2x−5)", "3x + 3 = 4x − 10 → x = 13"], hint: "Write 8 as 2³ and 4 as 2², then equate the powers" },
-      { q: "Solve 27^(x+2) = 9^(2x−1) for x.", a: "8", worked: ["Write both as powers of 3: 27 = 3³, 9 = 3²", "3^(3(x+2)) = 3^(2(2x−1))", "3x + 6 = 4x − 2 → x = 8"], hint: "Write 27 as 3³ and 9 as 3², then equate the powers" },
-      { q: "Solve 16^(x+2) = 8^(2x−1) for x.", a: "5.5", worked: ["Write both as powers of 2: 16 = 2⁴, 8 = 2³", "2^(4(x+2)) = 2^(3(2x−1))", "4(x+2) = 3(2x−1)", "4x + 8 = 6x − 3", "11 = 2x", "x = 5.5"], hint: "Write 16 as 2⁴ and 8 as 2³, then equate the powers" },
+      { q: "a = (b − c)/d. b = 50 (nearest 10), c = 20 (nearest 10), d = 6 (nearest integer). Calculate the lower bound for a. Give your answer to 3 s.f.", a: "3.08", worked: ["For minimum a: minimise numerator, maximise denominator", "LB of b = 45, UB of c = 25, UB of d = 6.5", "LB of (b − c) = 45 − 25 = 20", "LB of a = 20 / 6.5 = 3.076...", "= 3.08 (3 s.f.)"], hint: "For the smallest value of a fraction: smallest numerator ÷ largest denominator. For (b−c), smallest means smallest b and largest c.", calculator: true },
     ],
   ],
 
@@ -4082,34 +4069,30 @@ const higherQuestionBank = {
   // S4: Cumulative Frequency & Histograms (Higher)
   // ═══════════════════════════════════════════════════════════════
   'S4': [
-    // Level 1 (Grade 5) — Calculating frequency density
+    // Level 1 (Grade 4/5) — Reading median from cumulative frequency
     [
-      { q: "Calculate the frequency density for a class with width 10 and frequency 50.", a: "5", worked: ["Frequency density = frequency ÷ class width", "= 50 ÷ 10 = 5"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "A histogram class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "Frequency = 30, class width = 5. Find the frequency density.", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "FD = frequency ÷ class width" },
+      { q: "A cumulative frequency graph shows 80 data points. At what position should you read the median?", a: "40", worked: ["Median position = n/2", "= 80/2 = 40", "Read across from 40 on the cumulative frequency axis"], hint: "Median position = n ÷ 2" },
+      { q: "A cumulative frequency graph for 60 students shows the 30th value corresponds to a score of 54. What is the median?", a: "54", worked: ["Median position = 60/2 = 30th value", "The 30th value corresponds to a score of 54", "Median = 54"], hint: "Find the n/2 position on the y-axis, then read across to the x-axis" },
     ],
-    // Level 2 (Grade 6) — Interpreting histograms to find frequency
+    // Level 2 (Grade 6) — Drawing and reading box plots
     [
-      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width", calculator: true },
-      { q: "A histogram bar for the interval 20 < x ≤ 35 has frequency density 4. How many data values are in this class?", a: "60", worked: ["Class width = 35 − 20 = 15", "Frequency = 4 × 15 = 60"], hint: "Find the class width first, then multiply by the frequency density" },
-      { q: "In a histogram, a bar has width 10 and height (frequency density) 4.5. Find the frequency.", a: "45", worked: ["Frequency = frequency density × class width", "= 4.5 × 10 = 45"], hint: "Frequency = FD × class width" },
+      { q: "A data set has: minimum = 12, Q1 = 18, median = 25, Q3 = 33, maximum = 45. What is the IQR?", a: "15", worked: ["IQR = Q3 − Q1", "= 33 − 18 = 15"], hint: "IQR = Q3 − Q1" },
+      { q: "A box plot shows Q1 = 23, median = 31, Q3 = 51. What is the range of the middle 50% of the data?", a: "28", worked: ["The middle 50% is between Q1 and Q3", "Range of middle 50% = IQR = Q3 − Q1", "= 51 − 23 = 28"], hint: "The middle 50% is described by the interquartile range" },
     ],
-    // Level 3 (Grade 7) — Drawing and interpreting histograms with unequal class widths
+    // Level 3 (Grade 7) — Using cumulative frequency to estimate
     [
-      { q: "In a histogram, a class has width 10 and frequency 45. Another class has width 20 and frequency 60. Which class has the taller bar?", type: "mcq", options: ["Width 10, freq 45", "Width 20, freq 60", "Same height"], a: "Width 10, freq 45", worked: ["FD for first class: 45 ÷ 10 = 4.5", "FD for second class: 60 ÷ 20 = 3", "4.5 > 3, so the first class has the taller bar"], hint: "Calculate frequency density for each. The taller bar has the higher FD." },
-      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8"], hint: "Calculate FD = frequency ÷ class width for each" },
-      { q: "Draw a histogram for: 0 < x ≤ 10 (f = 20) and 10 < x ≤ 30 (f = 30). What are the frequency densities?", a: "2 and 1.5", worked: ["0 < x ≤ 10: width = 10, FD = 20/10 = 2", "10 < x ≤ 30: width = 20, FD = 30/20 = 1.5"], hint: "Calculate FD = frequency ÷ class width for each interval" },
+      { q: "A cumulative frequency graph for 120 students shows: at 70 marks the CF is 85. Estimate the number of students who scored more than 70%.", a: "35", worked: ["Total students = 120", "Students scoring 70 or less = 85", "Students scoring more than 70 = 120 − 85 = 35"], hint: "Subtract the cumulative frequency at 70 from the total" },
+      { q: "From a cumulative frequency graph of 200 data values, Q1 corresponds to 35 and Q3 corresponds to 58. Estimate the IQR.", a: "23", worked: ["Q1 position = 200/4 = 50th value → value = 35", "Q3 position = 3 × 200/4 = 150th value → value = 58", "IQR = 58 − 35 = 23"], hint: "Q1 is at n/4, Q3 is at 3n/4. Read the values and subtract." },
     ],
-    // Level 4 (Grade 8) — Estimating from histograms
+    // Level 4 (Grade 8) — Comparing distributions using box plots
     [
-      { q: "A histogram has these classes and frequencies: 0-10 (freq 8), 10-20 (freq 22), 20-30 (freq 15), 30-50 (freq 10). There are 55 data values. In which class does the median lie?", type: "mcq", options: ["0-10", "10-20", "20-30", "30-50"], a: "10-20", worked: ["Median position = 55/2 = 27.5th value", "0-10: cumulative = 8", "10-20: cumulative = 8 + 22 = 30", "The 27.5th value is in the 10-20 class (since 8 < 27.5 ≤ 30)"], hint: "Find the median position (n/2), then add up frequencies until you pass it" },
-      { q: "Estimate the number of people scoring more than 45 if the 40-60 class has frequency 100.", a: "75", worked: ["Class width = 20, 45 is ¼ of the way through", "Proportion above 45: (60−45)/(60−40) = 15/20 = 0.75", "Estimate = 0.75 × 100 = 75"], hint: "Find what fraction of the class interval is above 45, then multiply by the frequency" },
+      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
+      { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
     ],
-    // Level 5 (Grade 9) — Estimating quartiles and non-boundary values
+    // Level 5 (Grade 9) — Outliers using 1.5 × IQR rule
     [
-      { q: "A histogram shows times to complete a task. The bar for 30 < t ≤ 40 has frequency density 2.5 and the bar for 40 < t ≤ 60 has frequency density 1.5. Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30 < t ≤ 40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40 < t ≤ 60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35 (assume uniform distribution), then add the full 40-60 bar", calculator: true },
-      { q: "A histogram shows ages. The 10-20 bar has FD = 3, the 20-25 bar has FD = 4, the 25-40 bar has FD = 2. How many people are aged 20-40?", a: "50", worked: ["20-25: FD = 4, width = 5, freq = 20", "25-40: FD = 2, width = 15, freq = 30", "Total 20-40 = 20 + 30 = 50"], hint: "Frequency = FD × class width for each interval" },
-      { q: "Use a histogram to estimate the lower quartile of 80 data values with classes: 0-10 (f=10), 10-20 (f=30), 20-40 (f=40). The LQ is the 20th value.", a: "13.3", worked: ["LQ position = 80/4 = 20th value", "0-10: cumulative = 10 (need 10 more)", "10-20: 10 more into this class of 30", "LQ = 10 + (10/30) × 10 = 10 + 3.33 = 13.3"], hint: "Find the 20th value. It's in the 10-20 class. Use interpolation.", calculator: true },
+      { q: "A data set has Q1 = 20 and Q3 = 44. Using the 1.5 × IQR rule, what are the boundaries for outliers?", a: "Lower: −16, Upper: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 1.5 × 24 = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "Outlier boundaries: Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
+      { q: "A data set has Q1 = 15, Q3 = 35. The value 72 appears in the data. Is it an outlier? Explain how outliers affect the mean.", a: "Yes, 72 is an outlier", worked: ["IQR = 35 − 15 = 20", "1.5 × IQR = 30", "Upper boundary = 35 + 30 = 65", "72 > 65, so 72 IS an outlier", "Outliers pull the mean towards them (increase it here)", "The median is not affected by outliers"], hint: "Check if 72 > Q3 + 1.5 × IQR. Outliers affect the mean but not the median." },
     ],
   ],
 
@@ -4241,27 +4224,25 @@ const higherQuestionBank = {
 
   // G24: Vectors — Column Vectors and Translations (moved from old G17 — corrected AQA mapping)
   'G24': [
-    // Level 1 (Grade 7) — Column vectors and basic operations
+    // Level 1 (Grade 5) — Vector paths
     [
-      { q: "Write the vector that translates point A(2, 3) to point B(5, 1) as a column vector.", a: "(3, −2)", worked: ["Change in x: 5 − 2 = 3", "Change in y: 1 − 3 = −2", "Vector AB = (3, −2)"], hint: "Subtract the coordinates: (x₂ − x₁, y₂ − y₁)" },
-      { q: "If a = (3, 2) and b = (1, −4), find a + b.", a: "(4, −2)", worked: ["Add the x components: 3 + 1 = 4", "Add the y components: 2 + (−4) = −2", "a + b = (4, −2)"], hint: "Add the x parts and the y parts separately" },
+      { q: "In triangle OAB, OA = a and OB = b. Find AB in terms of a and b.", a: "b − a", worked: ["To go from A to B, go via O:", "AB = AO + OB", "AO = −OA = −a", "AB = −a + b = b − a"], hint: "Go from A to O (which is −a), then O to B (which is b)" },
     ],
-    // Level 2 (Grade 7) — Scalar multiplication
+    // Level 2 (Grade 6) — Midpoint vectors
     [
-      { q: "If a = (2, −3), find 3a.", a: "(6, −9)", worked: ["Multiply each component by 3", "3 × 2 = 6", "3 × (−3) = −9", "3a = (6, −9)"], hint: "Multiply each component by the scalar" },
-      { q: "If a = (4, 1) and b = (2, −3), find 2a − b.", a: "(6, 5)", worked: ["2a = (8, 2)", "2a − b = (8 − 2, 2 − (−3))", "= (6, 5)"], hint: "Find 2a first, then subtract b" },
+      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in terms of a and b.", a: "½(a + b)", worked: ["AB = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b", "= ½(a + b)"], hint: "Go from O to A, then halfway from A to B" },
     ],
-    // Level 3 (Grade 8) — Vector geometry
+    // Level 3 (Grade 7) — Showing lines are parallel
     [
-      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in terms of a and b.", a: "½(a + b)", worked: ["AB = AO + OB = −a + b = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b", "= ½(a + b)"], hint: "Go from O to A, then halfway from A to B" },
+      { q: "In triangle OAB, OA = a and OB = b. M is the midpoint of OA and N is the midpoint of OB. Show that MN is parallel to AB.", a: "Shown", type: "proof", worked: ["OM = ½a (midpoint of OA)", "ON = ½b (midpoint of OB)", "MN = MO + ON = −½a + ½b = ½(b − a)", "AB = AO + OB = −a + b = b − a", "MN = ½AB", "MN is a scalar multiple of AB, so MN is parallel to AB"], hint: "Find MN and AB in terms of a and b. If one is a scalar multiple of the other, they are parallel." },
     ],
-    // Level 4 (Grade 8) — Proving collinearity and parallel vectors
+    // Level 4 (Grade 8) — Proving collinearity
     [
-      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a − 2b) − (2a + b) = 3a − 3b", "AC = OC − OA = (8a − 5b) − (2a + b) = 6a − 6b", "AC = 2(3a − 3b) = 2 × AB", "AC is a scalar multiple of AB, so they are parallel", "They share point A, so A, B and C are collinear"], hint: "Show that AC is a scalar multiple of AB (they share point A)" },
+      { q: "OA = 2a + b, OB = 5a + 2.5b, OC = 8a + 4b. Show that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a + 2.5b) − (2a + b) = 3a + 1.5b", "AC = OC − OA = (8a + 4b) − (2a + b) = 6a + 3b", "AC = 2(3a + 1.5b) = 2 × AB", "AC is a scalar multiple of AB, so they are parallel", "They share point A, so A, B and C are collinear"], hint: "Find AB and AC. If AC = k × AB for some scalar k, and they share point A, then A, B and C lie on the same line." },
     ],
-    // Level 5 (Grade 9) — Ratio and vector proofs
+    // Level 5 (Grade 9) — Ratio problems with vectors
     [
-      { q: "OA = a and OB = b. P is the midpoint of OA and Q is the midpoint of OB. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ½a (midpoint of OA)", "OQ = ½b (midpoint of OB)", "PQ = PO + OQ = −½a + ½b = ½(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ½AB, so PQ is parallel to AB (scalar multiple)"], hint: "Find PQ in terms of a and b, then show it's a scalar multiple of AB" },
+      { q: "In triangle OAB, OA = a and OB = b. P lies on AB such that AP:PB = 2:1. Q is the midpoint of OP. Find OQ in terms of a and b.", a: "⅙a + ⅓b", worked: ["AP:PB = 2:1, so AP = ⅔AB", "AB = b − a", "OP = OA + AP = a + ⅔(b − a)", "= a + ⅔b − ⅔a = ⅓a + ⅔b", "Q is the midpoint of OP:", "OQ = ½OP = ½(⅓a + ⅔b)", "= ⅙a + ⅓b"], hint: "First find OP using the ratio on AB. Then halve it for the midpoint Q." },
     ],
   ],
 
@@ -4443,26 +4424,25 @@ const higherQuestionBank = {
   // G22: Enlargement with Negative & Fractional Scale Factors (Higher)
   // ═══════════════════════════════════════════════════════════════
   'G22': [
-    // Level 1 (Grade 5) — Enlargement with positive integer scale factor
+    // Level 1 (Grade 5) — Area of triangle using ½absinC
     [
-      { q: "A triangle has vertices at (1,1), (3,1) and (1,3). It is enlarged by scale factor 2, centre the origin. What are the new coordinates?", a: "(2,2), (6,2), (2,6)", worked: ["Multiply each coordinate by 2", "(1,1) → (2,2)", "(3,1) → (6,2)", "(1,3) → (2,6)"], hint: "Multiply each coordinate by the scale factor" },
+      { q: "Calculate the area of a triangle with sides 8 cm and 11 cm and an included angle of 42°. Give your answer to 1 d.p.", a: "29.4 cm²", calculator: true, worked: ["Area = ½ × a × b × sin(C)", "= ½ × 8 × 11 × sin(42°)", "= 44 × 0.6691...", "= 29.4 cm² (1 d.p.)"], hint: "Use Area = ½ × a × b × sin(C)" },
     ],
-    // Level 2 (Grade 6) — Enlargement with fractional scale factor
+    // Level 2 (Grade 6) — Sine Rule to find a missing side
     [
-      { q: "A shape is enlarged by scale factor ½, centre the origin. A vertex at (6, 4) maps to which point?", a: "(3, 2)", worked: ["Multiply each coordinate by ½", "6 × ½ = 3", "4 × ½ = 2", "New point: (3, 2)"], hint: "A fractional scale factor makes the shape smaller" },
-      { q: "Describe the single transformation that maps a triangle with vertices (2,4), (6,4), (2,8) to a triangle with vertices (1,2), (3,2), (1,4).", a: "Enlargement, scale factor ½, centre (0,0)", worked: ["Each coordinate is halved", "2→1, 4→2, 6→3, 8→4", "Scale factor = ½", "Centre is the origin (0,0)"], hint: "Compare corresponding coordinates to find the scale factor" },
+      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 10 cm (opposite angle A). Use the Sine Rule to find side b. Give your answer to 1 d.p.", a: "15.0 cm", calculator: true, worked: ["Sine Rule: a/sin A = b/sin B", "10/sin 40° = b/sin 75°", "b = 10 × sin 75° / sin 40°", "b = 10 × 0.9659 / 0.6428", "b = 15.0 cm (1 d.p.)"], hint: "Use a/sin A = b/sin B and rearrange to find b" },
     ],
-    // Level 3 (Grade 7) — Enlargement with centre not at origin
+    // Level 3 (Grade 7) — Cosine Rule in bearing context
     [
-      { q: "Triangle A has a vertex at (4, 3). It is enlarged by scale factor 2, centre (1, 1). Where does this vertex map to?", a: "(7, 5)", worked: ["Vector from centre to vertex: (4−1, 3−1) = (3, 2)", "Multiply by scale factor 2: (6, 4)", "Add back to centre: (1+6, 1+4) = (7, 5)"], hint: "Find the vector from the centre to the point, multiply by scale factor, add back to centre" },
+      { q: "A ship sails 15 km on a bearing of 060° and then 20 km on a bearing of 150°. Calculate the direct distance back to the starting point.", a: "25 km", calculator: true, worked: ["Back-bearing of first leg = 060° + 180° = 240°", "Angle at turning point = 240° − 150° = 90°", "Using Cosine Rule: c² = 15² + 20² − 2(15)(20)cos(90°)", "cos(90°) = 0, so c² = 225 + 400 = 625", "c = √625 = 25 km"], hint: "Find the angle between the two legs using bearings. The back-bearing of the first leg minus the forward bearing of the second gives the angle." },
     ],
-    // Level 4 (Grade 8) — Negative scale factor
+    // Level 4 (Grade 8) — Cosine Rule to find an angle
     [
-      { q: "A point P(5, 3) is enlarged by scale factor −2, centre (1, 1). Find the image of P.", a: "(−7, −3)", worked: ["Vector from centre to P: (5−1, 3−1) = (4, 2)", "Multiply by −2: (−8, −4)", "Add to centre: (1+(−8), 1+(−4)) = (−7, −3)", "Negative SF means the image is on the opposite side"], hint: "Negative scale factor means the image is on the opposite side of the centre" },
+      { q: "Find the largest angle in a triangle with sides 5 cm, 7 cm and 10 cm. Give your answer to 1 d.p.", a: "111.8°", calculator: true, worked: ["The largest angle is opposite the longest side (10 cm)", "cos C = (a² + b² − c²) / 2ab", "cos C = (25 + 49 − 100) / (2 × 5 × 7)", "cos C = −26/70 = −0.3714...", "C = cos⁻¹(−0.3714) = 111.8°"], hint: "The largest angle is opposite the longest side. Use cos C = (a² + b² − c²) / 2ab" },
     ],
-    // Level 5 (Grade 9) — Describing enlargements and area/volume scale factors
+    // Level 5 (Grade 9) — 3D pyramid problem
     [
-      { q: "Two similar shapes have lengths in the ratio 3:5. The area of the smaller shape is 36 cm². Find the area of the larger shape.", a: "100 cm²", worked: ["Length ratio = 3:5", "Area ratio = 3²:5² = 9:25", "36/9 = 4 (scale unit)", "Larger area = 25 × 4 = 100 cm²"], hint: "If lengths are in ratio a:b, areas are in ratio a²:b²", calculator: true },
+      { q: "A square-based pyramid has a base of side 10 cm and a vertical height of 12 cm. Calculate the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "59.5°", calculator: true, worked: ["The slant edge goes from a base corner to the apex", "Half-diagonal of base = ½ × 10√2 = 5√2 = 7.071 cm", "The slant edge, height and half-diagonal form a right triangle", "tan θ = height / half-diagonal = 12 / 5√2", "θ = tan⁻¹(12/7.071) = 59.5°"], hint: "Find the half-diagonal of the square base. The angle is between the slant edge and the horizontal half-diagonal, with the vertical height opposite." },
     ],
   ],
 
@@ -4497,6 +4477,32 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
+  // A12: Equation of a Circle and Tangents (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A12': [
+    // Level 1 (Grade 5) — Equation of a circle
+    [
+      { q: "Write down the equation of a circle with centre (0, 0) and a radius of 9.", a: "x² + y² = 81", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 9, so r² = 81", "x² + y² = 81"], hint: "Use x² + y² = r² and square the radius" },
+    ],
+    // Level 2 (Grade 6) — Showing a point lies on a circle
+    [
+      { q: "A circle has the equation x² + y² = 80. Show that the point (8, 4) lies on the circumference.", a: "Shown", type: "proof", worked: ["Substitute (8, 4) into x² + y²", "8² + 4² = 64 + 16 = 80 ✓", "This equals the right-hand side", "So (8, 4) lies on the circle"], hint: "Substitute x = 8 and y = 4 into x² + y² and check it equals 80" },
+    ],
+    // Level 3 (Grade 7) — Finding the tangent equation
+    [
+      { q: "Find the equation of the tangent to the circle x² + y² = 25 at the point (3, −4). Give your answer in the form y = mx + c.", a: "y = ¾x − 25/4", worked: ["Gradient of radius to (3, −4) = −4/3", "Tangent is perpendicular: gradient = ¾", "y − (−4) = ¾(x − 3)", "y + 4 = ¾x − 9/4", "y = ¾x − 9/4 − 4 = ¾x − 25/4"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal." },
+    ],
+    // Level 4 (Grade 8) — Tangent intercepts
+    [
+      { q: "The line L is a tangent to the circle x² + y² = 40 at the point P(2, 6). Find the coordinates of the points where L crosses the x and y axes.", a: "(20, 0) and (0, 20/3)", worked: ["Gradient of OP = 6/2 = 3", "Tangent gradient = −1/3 (perpendicular)", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept: 0 = −⅓x + 20/3 → x = 20", "y-intercept: x = 0 → y = 20/3"], hint: "Find the tangent equation using the perpendicular gradient, then set y = 0 and x = 0 to find intercepts", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Finding k and radius from tangent
+    [
+      { q: "A circle is centred at (0, 0). The line y = 2x + k is a tangent to the circle at the point (−4, 2). Find the value of k and the radius of the circle.", a: "k = 10, r = 2√5", worked: ["Check (−4, 2) is on the tangent: 2 = 2(−4) + k → k = 10", "Check perpendicularity: radius gradient = 2/(−4) = −½", "Tangent gradient = 2. Product = −½ × 2 = −1 ✓ (perpendicular)", "Radius: r² = (−4)² + 2² = 16 + 4 = 20", "r = √20 = 2√5"], hint: "Substitute the point into y = 2x + k to find k. Check the tangent is perpendicular to the radius. Use x² + y² = r² to find the radius." },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
   // A13: Equation of a Circle (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'A13': [
@@ -4527,32 +4533,25 @@ const higherQuestionBank = {
   // A16: Circle Equations and Tangents (Higher)
   // ═══════════════════════════════════════════════════════════════
   'A16': [
-    // Level 1 (Grade 5) — Equation of a circle centred at origin
+    // Level 1 (Grade 5) — Angle in a semicircle
     [
-      { q: "Write down the equation of a circle with centre (0, 0) and radius 5.", a: "x² + y² = 25", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 5, so r² = 25", "x² + y² = 25"], hint: "Use x² + y² = r²" },
-      { q: "Write down the equation of a circle with centre (0, 0) and radius 8.", a: "x² + y² = 64", worked: ["x² + y² = r²", "r = 8, so r² = 64", "x² + y² = 64"], hint: "Square the radius" },
+      { q: "Points A, B and C lie on a circle. BC is a diameter. What is the size of angle BAC? State the reason.", a: "90°", worked: ["BC is a diameter of the circle", "Angle BAC is an angle in a semicircle", "The angle in a semicircle is always 90°"], hint: "What theorem applies when an angle is drawn from the ends of a diameter?" },
     ],
-    // Level 2 (Grade 6) — Reading circle properties from equation
+    // Level 2 (Grade 6) — Opposite angles in a cyclic quadrilateral
     [
-      { q: "State the radius of the circle with equation x² + y² = 49.", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
-      { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so the point lies on the circle"], hint: "Substitute into x² + y²" },
-      { q: "A circle has equation x² + y² = 50. Show that the point (5, 5) lies on the circumference.", a: "Shown", type: "proof", worked: ["Substitute (5, 5) into x² + y²", "5² + 5² = 25 + 25 = 50 ✓", "This equals the right-hand side, so (5, 5) lies on the circle"], hint: "Substitute x = 5 and y = 5 into the left side and check it equals 50" },
+      { q: "Points A, B, C and D lie on a circle. Angle ABC = 112°. Calculate the size of angle ADC.", a: "68°", worked: ["ABCD is a cyclic quadrilateral", "Opposite angles in a cyclic quadrilateral sum to 180°", "Angle ADC = 180° − 112° = 68°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
     ],
-    // Level 3 (Grade 7) — Tangent to a circle at a point
+    // Level 3 (Grade 7) — Alternate Segment Theorem
     [
-      { q: "Find the equation of the tangent to x² + y² = 25 at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Gradient of radius to (3,4) = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4"], hint: "Tangent is perpendicular to the radius" },
-      { q: "Find the equation of the tangent to x² + y² = 20 at the point (4, 2).", a: "y = −2x + 10", worked: ["Gradient of radius to (4,2) = 2/4 = 1/2", "Tangent is perpendicular: gradient = −2", "y − 2 = −2(x − 4)", "y = −2x + 8 + 2 = −2x + 10"], hint: "Find the gradient of the radius, then use −1/gradient for the tangent" },
-      { q: "Find the equation of the tangent to x² + y² = 13 at the point (2, 3). Give your answer in the form y = mx + c.", a: "y = −⅔x + 13/3", worked: ["Gradient of radius to (2, 3) = 3/2", "Tangent is perpendicular: gradient = −2/3", "y − 3 = −⅔(x − 2)", "y = −⅔x + 4/3 + 3", "y = −⅔x + 13/3"], hint: "The tangent is perpendicular to the radius. Find the radius gradient, then use the negative reciprocal." },
-      { q: "Find the equation of the tangent to x² + y² = 25 at the point (−3, 4).", a: "y = ¾x + 25/4", worked: ["Gradient of radius to (−3, 4) = 4/(−3) = −4/3", "Tangent is perpendicular: gradient = 3/4", "y − 4 = ¾(x − (−3))", "y − 4 = ¾(x + 3)", "y = ¾x + 9/4 + 4 = ¾x + 25/4"], hint: "The radius goes from (0,0) to (−3, 4). Find its gradient, then use the negative reciprocal for the tangent." },
+      { q: "A tangent meets a circle at point T. A chord from T makes an angle of 55° with the tangent. Find the angle in the alternate segment.", a: "55°", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So the angle in the alternate segment = 55°"], hint: "The Alternate Segment Theorem says the angle between tangent and chord equals the angle in the other segment" },
     ],
-    // Level 4 (Grade 8) — Line intersecting a circle
+    // Level 4 (Grade 8) — Proving angle at centre = 2 × angle at circumference
     [
-      { q: "Find the coordinates of the points where y = x + 2 intersects x² + y² = 100. Give answers to 1 d.p.", a: "(−8.1, −6.1) and (6.1, 8.1)", worked: ["Substitute: x² + (x+2)² = 100", "x² + x² + 4x + 4 = 100", "2x² + 4x − 96 = 0", "x² + 2x − 48 = 0", "(x+8)(x−6) = 0", "x = −8, y = −6 or x = 6, y = 8"], hint: "Substitute y = x + 2 into x² + y² = 100", calculator: true },
+      { q: "A, B and C are points on a circle with centre O. Angle AOC = 148°. Find angle ABC. State the theorem used.", a: "74°", worked: ["The angle at the centre is twice the angle at the circumference", "Angle AOC = 2 × angle ABC", "148° = 2 × angle ABC", "Angle ABC = 74°"], hint: "The angle at the centre is twice the angle at the circumference when both subtend the same arc" },
     ],
-    // Level 5 (Grade 9) — Tangent area problem
+    // Level 5 (Grade 9) — Tangent length proof
     [
-      { q: "The line L is a tangent to x² + y² = 40 at P(2, 6). Find the area of the triangle formed by L and the x and y axes.", a: "200/3", worked: ["Gradient of radius OP = 6/2 = 3", "Tangent gradient = −1/3", "Tangent: y − 6 = −⅓(x − 2)", "y = −⅓x + ⅔ + 6 = −⅓x + 20/3", "x-intercept: 0 = −⅓x + 20/3 → x = 20", "y-intercept: x = 0 → y = 20/3", "Area = ½ × 20 × 20/3 = 200/3"], hint: "Find the tangent equation, then its x and y intercepts, then area = ½ × base × height", calculator: true },
-      { q: "The tangent L₁ to the circle x² + y² = 25 at point P(3, 4) meets the x-axis at Q. Find the area of triangle OPQ, where O is the origin.", a: "50/3", worked: ["Gradient of radius OP = 4/3", "Tangent gradient = −3/4", "Tangent: y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4 = −¾x + 25/4", "x-intercept (Q): 0 = −¾x + 25/4 → x = 25/3, so Q = (25/3, 0)", "Triangle OPQ: base OQ = 25/3, height = y-coord of P = 4", "Area = ½ × 25/3 × 4 = 50/3"], hint: "Find the tangent equation, then where it crosses the x-axis. Use base × height ÷ 2 with the origin." },
+      { q: "Two tangents are drawn from an external point P to a circle with centre O, touching at T₁ and T₂. Prove that PT₁ = PT₂.", a: "Shown", type: "proof", worked: ["In triangles OPT₁ and OPT₂:", "OT₁ = OT₂ (radii of the same circle)", "OP = OP (common side)", "Angle OT₁P = angle OT₂P = 90° (radius ⊥ tangent)", "So triangles OPT₁ and OPT₂ are congruent (RHS)", "Therefore PT₁ = PT₂ (corresponding sides)"], hint: "Consider the right-angled triangles formed by the radius to each tangent point and the line OP. What congruence condition applies?" },
     ],
   ],
 
@@ -4593,30 +4592,35 @@ const higherQuestionBank = {
   // S3: Box Plots & Cumulative Frequency (Higher)
   // ═══════════════════════════════════════════════════════════════
   'S3': [
-    // Level 1 (Grade 4/5) — Reading median from cumulative frequency
+    // Level 1 (Grade 5) — Calculating frequency density
     [
-      { q: "A cumulative frequency graph shows 80 data points. At what position should you read the median?", a: "40", worked: ["Median position = n/2", "= 80/2 = 40", "Read across from 40 on the cumulative frequency axis"], hint: "Median position = n ÷ 2" },
-      { q: "A cumulative frequency graph for 60 students shows the 30th value corresponds to a score of 54. What is the median?", a: "54", worked: ["Median position = 60/2 = 30th value", "The 30th value corresponds to a score of 54", "Median = 54"], hint: "Find the n/2 position on the y-axis, then read across to the x-axis" },
+      { q: "Calculate the frequency density for a class with width 20 and frequency 60.", a: "3", worked: ["Frequency density = frequency ÷ class width", "= 60 ÷ 20 = 3"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "Calculate the frequency density for a class with width 10 and frequency 50.", a: "5", worked: ["Frequency density = frequency ÷ class width", "= 50 ÷ 10 = 5"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "A histogram class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "FD = frequency ÷ class width" },
     ],
-    // Level 2 (Grade 6) — Drawing and reading box plots
+    // Level 2 (Grade 6) — Using a histogram to find frequency
     [
-      { q: "A data set has: minimum = 12, Q1 = 18, median = 25, Q3 = 33, maximum = 45. What is the IQR?", a: "15", worked: ["IQR = Q3 − Q1", "= 33 − 18 = 15"], hint: "IQR = Q3 − Q1" },
-      { q: "A box plot shows Q1 = 23, median = 31, Q3 = 51. What is the range of the middle 50% of the data?", a: "28", worked: ["The middle 50% is between Q1 and Q3", "Range of middle 50% = IQR = Q3 − Q1", "= 51 − 23 = 28"], hint: "The middle 50% is described by the interquartile range" },
+      { q: "A histogram bar has width 5 and frequency density 2.4. What is the frequency?", a: "12", worked: ["Frequency = frequency density × class width", "= 2.4 × 5 = 12"], hint: "Frequency = frequency density × class width" },
+      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width", calculator: true },
+      { q: "A histogram bar for the interval 20 < x ≤ 35 has frequency density 4. How many data values are in this class?", a: "60", worked: ["Class width = 35 − 20 = 15", "Frequency = 4 × 15 = 60"], hint: "Find the class width first, then multiply by the frequency density" },
     ],
-    // Level 3 (Grade 7) — Using cumulative frequency to estimate
+    // Level 3 (Grade 7) — Constructing histograms with unequal class widths
     [
-      { q: "A cumulative frequency graph for 120 students shows: at 70 marks the CF is 85. Estimate the number of students who scored more than 70%.", a: "35", worked: ["Total students = 120", "Students scoring 70 or less = 85", "Students scoring more than 70 = 120 − 85 = 35"], hint: "Subtract the cumulative frequency at 70 from the total" },
-      { q: "From a cumulative frequency graph of 200 data values, Q1 corresponds to 35 and Q3 corresponds to 58. Estimate the IQR.", a: "23", worked: ["Q1 position = 200/4 = 50th value → value = 35", "Q3 position = 3 × 200/4 = 150th value → value = 58", "IQR = 58 − 35 = 23"], hint: "Q1 is at n/4, Q3 is at 3n/4. Read the values and subtract." },
+      { q: "Complete the frequency density column: 0-10 (freq 15), 10-25 (freq 30), 25-30 (freq 20), 30-50 (freq 40).", a: "1.5, 2, 4, 2", worked: ["0-10: width 10, FD = 15/10 = 1.5", "10-25: width 15, FD = 30/15 = 2", "25-30: width 5, FD = 20/5 = 4", "30-50: width 20, FD = 40/20 = 2"], hint: "FD = frequency ÷ class width for each interval" },
+      { q: "In a histogram, a class has width 10 and frequency 45. Another class has width 20 and frequency 60. Which class has the taller bar?", type: "mcq", options: ["Width 10, freq 45", "Width 20, freq 60", "Same height"], a: "Width 10, freq 45", worked: ["FD for first class: 45 ÷ 10 = 4.5", "FD for second class: 60 ÷ 20 = 3", "4.5 > 3, so the first class has the taller bar"], hint: "Calculate frequency density for each. The taller bar has the higher FD." },
+      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8"], hint: "Calculate FD = frequency ÷ class width for each" },
     ],
-    // Level 4 (Grade 8) — Comparing distributions using box plots
+    // Level 4 (Grade 8) — Estimating from histograms (non-boundary intervals)
     [
-      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
-      { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
+      { q: "A histogram shows the 30-50 class has frequency density 2.4. Estimate the number of items with values greater than 35.", a: "36", worked: ["Class width from 35 to 50 = 15", "Assuming uniform distribution within the class:", "Frequency = FD × width = 2.4 × 15 = 36"], hint: "Find the width of the sub-interval (35 to 50), then multiply by the frequency density" },
+      { q: "Estimate the number of people scoring more than 45 if the 40-60 class has frequency 100.", a: "75", worked: ["Class width = 20, sub-interval 45-60 has width 15", "Proportion above 45: 15/20 = 0.75", "Estimate = 0.75 × 100 = 75"], hint: "Find what fraction of the class interval is above 45, then multiply by the frequency" },
+      { q: "A histogram has these classes: 0-10 (freq 8), 10-20 (freq 22), 20-30 (freq 15), 30-50 (freq 10). In which class does the median lie?", type: "mcq", options: ["0-10", "10-20", "20-30", "30-50"], a: "10-20", worked: ["Total = 8 + 22 + 15 + 10 = 55", "Median position = 55/2 = 27.5th value", "0-10: cumulative = 8", "10-20: cumulative = 30", "27.5th value is in the 10-20 class"], hint: "Find the median position (n/2), then add up frequencies until you pass it" },
     ],
-    // Level 5 (Grade 9) — Outliers using 1.5 × IQR rule
+    // Level 5 (Grade 9) — Estimating the median from a histogram
     [
-      { q: "A data set has Q1 = 20 and Q3 = 44. Using the 1.5 × IQR rule, what are the boundaries for outliers?", a: "Lower: −16, Upper: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 1.5 × 24 = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "Outlier boundaries: Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
-      { q: "A data set has Q1 = 15, Q3 = 35. The value 72 appears in the data. Is it an outlier? Explain how outliers affect the mean.", a: "Yes, 72 is an outlier", worked: ["IQR = 35 − 15 = 20", "1.5 × IQR = 30", "Upper boundary = 35 + 30 = 65", "72 > 65, so 72 IS an outlier", "Outliers pull the mean towards them (increase it here)", "The median is not affected by outliers"], hint: "Check if 72 > Q3 + 1.5 × IQR. Outliers affect the mean but not the median." },
+      { q: "A histogram shows 80 values: 0-10 (freq 10), 10-20 (freq 25), 20-30 (freq 30), 30-50 (freq 15). Estimate the median.", a: "21.7", worked: ["Total = 80, median at 40th value", "0-10: cumulative = 10", "10-20: cumulative = 35", "40th value is in the 20-30 class", "Need 5 more into this class of 30", "Median = 20 + (5/30) × 10 = 20 + 1.67 = 21.7"], hint: "Find which class the median falls in using cumulative frequency, then interpolate within that class", calculator: true },
+      { q: "Estimate the lower quartile of 80 data values with classes: 0-10 (f=10), 10-20 (f=30), 20-40 (f=40).", a: "13.3", worked: ["LQ position = 80/4 = 20th value", "0-10: cumulative = 10 (need 10 more)", "10-20: 10 more into this class of 30", "LQ = 10 + (10/30) × 10 = 10 + 3.33 = 13.3"], hint: "Find the 20th value. It's in the 10-20 class. Use interpolation.", calculator: true },
+      { q: "A histogram shows: 30 < t ≤ 40 (FD 2.5), 40 < t ≤ 60 (FD 1.5). Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30-40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40-60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35, then add the full 40-60 bar", calculator: true },
     ],
   ],
 
