@@ -4064,28 +4064,28 @@ const higherQuestionBank = {
   // S4: Cumulative Frequency & Histograms (Higher)
   // ═══════════════════════════════════════════════════════════════
   'S4': [
-    // Level 1 (Grade 5) — Reading cumulative frequency
+    // Level 1 (Grade 5) — Calculating frequency density
     [
-      { q: "A cumulative frequency graph shows 60 data points. Estimate the median.", type: "mcq", options: ["Read at 20th value", "Read at 30th value", "Read at 40th value", "Read at 60th value"], a: "Read at 30th value", worked: ["The median is the middle value", "For 60 data points: median position = 60/2 = 30th value", "Read across from 30 on the cumulative frequency axis"], hint: "Median position = n/2 = 60/2 = 30" },
+      { q: "Calculate the frequency density for a class with width 10 and frequency 50.", a: "5", worked: ["Frequency density = frequency ÷ class width", "= 50 ÷ 10 = 5"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "A histogram class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "Frequency density = frequency ÷ class width" },
     ],
-    // Level 2 (Grade 6) — Interquartile range from box plot
+    // Level 2 (Grade 6) — Interpreting histograms to find frequency
     [
-      { q: "A box plot shows Q1 = 15 and Q3 = 42. Find the interquartile range (IQR).", a: "27", worked: ["IQR = Q3 − Q1", "IQR = 42 − 15 = 27"], hint: "IQR = Q3 − Q1" },
-      { q: "A box plot shows Q1 = 23 and Q3 = 51. Find the IQR.", a: "28", worked: ["IQR = Q3 − Q1", "IQR = 51 − 23 = 28"], hint: "IQR = Q3 − Q1" },
+      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width", calculator: true },
+      { q: "A histogram bar for the interval 20 < x ≤ 35 has frequency density 4. How many data values are in this class?", a: "60", worked: ["Class width = 35 − 20 = 15", "Frequency = 4 × 15 = 60"], hint: "Find the class width first, then multiply by the frequency density" },
     ],
-    // Level 3 (Grade 7) — Frequency density
+    // Level 3 (Grade 7) — Drawing and interpreting histograms with unequal class widths
     [
-      { q: "In a histogram, a class has width 10 and frequency 45. What is the frequency density?", a: "4.5", worked: ["Frequency density = frequency ÷ class width", "= 45 ÷ 10 = 4.5"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "In a histogram, a class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "Frequency density = frequency ÷ class width" },
-      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width" },
+      { q: "In a histogram, a class has width 10 and frequency 45. Another class has width 20 and frequency 60. Which class has the taller bar?", type: "mcq", options: ["Width 10, freq 45", "Width 20, freq 60", "Same height"], a: "Width 10, freq 45", worked: ["FD for first class: 45 ÷ 10 = 4.5", "FD for second class: 60 ÷ 20 = 3", "4.5 > 3, so the first class has the taller bar"], hint: "Calculate frequency density for each. The taller bar has the higher FD." },
+      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8"], hint: "Calculate FD = frequency ÷ class width for each" },
     ],
-    // Level 4 (Grade 8) — Calculating frequency density for a table
+    // Level 4 (Grade 8) — Estimating the median from a histogram
     [
-      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8, so 20 < t ≤ 30 has higher frequency density"], hint: "Calculate FD = frequency ÷ class width for each" },
+      { q: "A histogram has these classes and frequencies: 0-10 (freq 8), 10-20 (freq 22), 20-30 (freq 15), 30-50 (freq 10). There are 55 data values. In which class does the median lie?", type: "mcq", options: ["0-10", "10-20", "20-30", "30-50"], a: "10-20", worked: ["Median position = 55/2 = 27.5th value", "0-10: cumulative = 8", "10-20: cumulative = 8 + 22 = 30", "The 27.5th value is in the 10-20 class (since 8 < 27.5 ≤ 30)"], hint: "Find the median position (n/2), then add up frequencies until you pass it" },
     ],
-    // Level 5 (Grade 9) — Using histograms to estimate
+    // Level 5 (Grade 9) — Estimating above/below non-boundary values
     [
-      { q: "A histogram shows times to complete a task. The bar for 30 < t ≤ 40 has frequency density 2.5 and the bar for 40 < t ≤ 60 has frequency density 1.5. Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30 < t ≤ 40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40 < t ≤ 60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35, then add the full 40-60 bar", calculator: true },
+      { q: "A histogram shows times to complete a task. The bar for 30 < t ≤ 40 has frequency density 2.5 and the bar for 40 < t ≤ 60 has frequency density 1.5. Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30 < t ≤ 40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40 < t ≤ 60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35 (assume uniform distribution), then add the full 40-60 bar", calculator: true },
       { q: "A histogram shows ages. The 10-20 bar has FD = 3, the 20-25 bar has FD = 4, the 25-40 bar has FD = 2. How many people are aged 20-40?", a: "50", worked: ["20-25: FD = 4, width = 5, freq = 20", "25-40: FD = 2, width = 15, freq = 30", "Total 20-40 = 20 + 30 = 50"], hint: "Frequency = FD × class width for each interval" },
     ],
   ],
@@ -4239,26 +4239,30 @@ const higherQuestionBank = {
   // P9: Conditional Probability & Set Notation (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'P9': [
-    // Level 1 (Grade 6) — Venn diagrams with two sets
+    // Level 1 (Grade 4/5) — Tree diagrams with replacement
     [
-      { q: "In a class of 30, 18 play football, 12 play tennis and 5 play both. How many play neither?", a: "5", worked: ["Football only: 18 − 5 = 13", "Tennis only: 12 − 5 = 7", "Both: 5", "Total who play a sport: 13 + 7 + 5 = 25", "Neither: 30 − 25 = 5"], hint: "Draw a Venn diagram. Start with the intersection (both)" },
-      { q: "In a group, P(A) = 0.6, P(B) = 0.5 and P(A ∩ B) = 0.2. Find P(A ∪ B).", a: "0.9", worked: ["P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", "= 0.6 + 0.5 − 0.2", "= 0.9"], hint: "Use the addition rule: P(A ∪ B) = P(A) + P(B) − P(A ∩ B)" },
+      { q: "A bag contains 5 red and 3 blue marbles. Two marbles are picked with replacement. Find the probability of picking two reds.", a: "25/64", worked: ["P(1st red) = 5/8", "With replacement, P(2nd red) = 5/8", "P(both red) = 5/8 × 5/8 = 25/64"], hint: "With replacement means the probabilities stay the same each time" },
+      { q: "A fair coin is flipped and a fair die is rolled. Find the probability of getting heads and a 6.", a: "1/12", worked: ["P(heads) = 1/2", "P(six) = 1/6", "P(heads and 6) = 1/2 × 1/6 = 1/12"], hint: "These are independent events — multiply the probabilities" },
     ],
-    // Level 2 (Grade 7) — Conditional probability from tables/diagrams
+    // Level 2 (Grade 6) — Independent events and tree diagrams
     [
-      { q: "A bag has 3 red and 5 blue balls. A ball is taken, not replaced, then another is taken. Find P(both red).", a: "3/28", worked: ["P(1st red) = 3/8", "P(2nd red | 1st red) = 2/7", "P(both red) = 3/8 × 2/7 = 6/56 = 3/28"], hint: "After taking the first red ball, there are fewer red balls and fewer total" },
+      { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(A and B).", a: "0.28", worked: ["For independent events: P(A and B) = P(A) × P(B)", "= 0.7 × 0.4 = 0.28"], hint: "Independent means P(A and B) = P(A) × P(B)", calculator: true },
+      { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(neither A nor B).", a: "0.18", worked: ["P(A') = 1 − 0.7 = 0.3", "P(B') = 1 − 0.4 = 0.6", "P(neither) = P(A') × P(B') = 0.3 × 0.6 = 0.18"], hint: "P(neither) = P(not A) × P(not B)", calculator: true },
     ],
-    // Level 3 (Grade 8) — Tree diagrams with conditional probability
+    // Level 3 (Grade 7) — Without replacement (dependent events)
     [
-      { q: "P(A) = 0.4 and P(B|A) = 0.3 and P(B|A') = 0.6. Draw a tree diagram and find P(B).", a: "0.48", worked: ["P(A and B) = 0.4 × 0.3 = 0.12", "P(A' and B) = 0.6 × 0.6 = 0.36", "P(B) = 0.12 + 0.36 = 0.48"], hint: "P(B) = P(A and B) + P(A' and B)", calculator: true },
+      { q: "A bag has 4 red and 6 blue marbles. Two are picked without replacement. Find the probability that both are the same colour.", a: "7/15", worked: ["P(both red) = 4/10 × 3/9 = 12/90", "P(both blue) = 6/10 × 5/9 = 30/90", "P(same colour) = 12/90 + 30/90 = 42/90 = 7/15"], hint: "Calculate P(both red) + P(both blue). Remember totals decrease without replacement." },
+      { q: "A bag has 3 red and 5 blue balls. Two are picked without replacement. Find P(both red).", a: "3/28", worked: ["P(1st red) = 3/8", "P(2nd red | 1st red) = 2/7", "P(both red) = 3/8 × 2/7 = 6/56 = 3/28"], hint: "After taking a red ball, there are 2 red left out of 7 total" },
     ],
-    // Level 4 (Grade 8) — Set notation
+    // Level 4 (Grade 8) — Venn diagrams and conditional probability
     [
-      { q: "ξ = {1,2,3,...,12}, A = {multiples of 3}, B = {even numbers}. List the members of (A ∪ B)'.", a: "{1, 5, 7, 11}", worked: ["A = {3, 6, 9, 12}", "B = {2, 4, 6, 8, 10, 12}", "A ∪ B = {2, 3, 4, 6, 8, 9, 10, 12}", "(A ∪ B)' = elements NOT in A ∪ B = {1, 5, 7, 11}"], hint: "Find A ∪ B first (everything in A or B), then find everything NOT in that set" },
+      { q: "In a group of 100 students, 60 study French, 40 study Spanish, and 20 study both. Find the probability that a student studies only French, given that they study a language.", a: "0.5", worked: ["Only French = 60 − 20 = 40", "Study a language = 60 + 40 − 20 = 80", "P(only French | studies a language) = 40/80 = 0.5"], hint: "Find 'only French' from the Venn diagram, then divide by total who study a language", calculator: true },
+      { q: "ξ = {1,2,3,...,12}, A = {multiples of 3}, B = {even numbers}. List the members of (A ∪ B)'.", a: "{1, 5, 7, 11}", worked: ["A = {3, 6, 9, 12}", "B = {2, 4, 6, 8, 10, 12}", "A ∪ B = {2, 3, 4, 6, 8, 9, 10, 12}", "(A ∪ B)' = {1, 5, 7, 11}"], hint: "Find A ∪ B first, then find everything NOT in that set" },
     ],
-    // Level 5 (Grade 9) — Advanced conditional probability
+    // Level 5 (Grade 9) — Algebraic probability proof (the 'n sweets' problem)
     [
-      { q: "Events A and B are independent. P(A) = 0.3 and P(A ∪ B) = 0.72. Find P(B).", a: "0.6", worked: ["For independent events: P(A ∩ B) = P(A) × P(B)", "P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", "0.72 = 0.3 + P(B) − 0.3 × P(B)", "0.42 = P(B)(1 − 0.3)", "0.42 = 0.7 × P(B)", "P(B) = 0.6"], hint: "Independent means P(A ∩ B) = P(A) × P(B). Substitute into the addition rule.", calculator: true },
+      { q: "There are n sweets in a bag. 6 are orange and the rest are yellow. Two sweets are taken without replacement. The probability of two orange sweets is 1/3. Show that n² − n − 90 = 0 and find n.", a: "n = 10", worked: ["P(1st orange) = 6/n", "P(2nd orange) = 5/(n − 1)", "P(both orange) = 6/n × 5/(n−1) = 30/(n(n−1)) = 1/3", "Cross multiply: 90 = n(n − 1) = n² − n", "n² − n − 90 = 0", "Factorise: (n − 10)(n + 9) = 0", "n = 10 (n must be positive)"], hint: "Set up P(both orange) = (6/n) × (5/(n−1)) = 1/3, then rearrange" },
+      { q: "Events A and B are independent. P(A) = 0.3 and P(A ∪ B) = 0.72. Find P(B).", a: "0.6", worked: ["P(A ∩ B) = P(A) × P(B) = 0.3P(B)", "0.72 = 0.3 + P(B) − 0.3P(B)", "0.42 = P(B)(1 − 0.3) = 0.7P(B)", "P(B) = 0.6"], hint: "Independent means P(A ∩ B) = P(A) × P(B). Substitute into the addition rule.", calculator: true },
     ],
   ],
 
@@ -4485,6 +4489,37 @@ const higherQuestionBank = {
     [
       { q: "In trapezium OABC, OA = a and OC = c. AB is parallel to OC and AB = 2OC. M is the midpoint of OA. Find MC in terms of a and c.", a: "c − ½a", worked: ["OM = ½a (midpoint of OA)", "MC = MO + OC = −½a + c = c − ½a"], hint: "Go from M to O (which is −½a), then O to C (which is c)" },
       { q: "OA = a, OB = b. P divides OA in ratio 2:1 and Q divides OB in ratio 2:1. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ⅔a (divides OA in ratio 2:1)", "OQ = ⅔b (divides OB in ratio 2:1)", "PQ = PO + OQ = −⅔a + ⅔b = ⅔(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ⅔ × AB, so PQ is parallel to AB"], hint: "Find PQ and AB in terms of a and b, then show one is a scalar multiple of the other" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S3: Box Plots & Cumulative Frequency (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'S3': [
+    // Level 1 (Grade 4/5) — Reading median from cumulative frequency
+    [
+      { q: "A cumulative frequency graph shows 80 data points. At what position should you read the median?", a: "40", worked: ["Median position = n/2", "= 80/2 = 40", "Read across from 40 on the cumulative frequency axis"], hint: "Median position = n ÷ 2" },
+      { q: "A cumulative frequency graph for 60 students shows the 30th value corresponds to a score of 54. What is the median?", a: "54", worked: ["Median position = 60/2 = 30th value", "The 30th value corresponds to a score of 54", "Median = 54"], hint: "Find the n/2 position on the y-axis, then read across to the x-axis" },
+    ],
+    // Level 2 (Grade 6) — Drawing and reading box plots
+    [
+      { q: "A data set has: minimum = 12, Q1 = 18, median = 25, Q3 = 33, maximum = 45. What is the IQR?", a: "15", worked: ["IQR = Q3 − Q1", "= 33 − 18 = 15"], hint: "IQR = Q3 − Q1" },
+      { q: "A box plot shows Q1 = 23, median = 31, Q3 = 51. What is the range of the middle 50% of the data?", a: "28", worked: ["The middle 50% is between Q1 and Q3", "Range of middle 50% = IQR = Q3 − Q1", "= 51 − 23 = 28"], hint: "The middle 50% is described by the interquartile range" },
+    ],
+    // Level 3 (Grade 7) — Using cumulative frequency to estimate
+    [
+      { q: "A cumulative frequency graph for 120 students shows: at 70 marks the CF is 85. Estimate the number of students who scored more than 70%.", a: "35", worked: ["Total students = 120", "Students scoring 70 or less = 85", "Students scoring more than 70 = 120 − 85 = 35"], hint: "Subtract the cumulative frequency at 70 from the total" },
+      { q: "From a cumulative frequency graph of 200 data values, Q1 corresponds to 35 and Q3 corresponds to 58. Estimate the IQR.", a: "23", worked: ["Q1 position = 200/4 = 50th value → value = 35", "Q3 position = 3 × 200/4 = 150th value → value = 58", "IQR = 58 − 35 = 23"], hint: "Q1 is at n/4, Q3 is at 3n/4. Read the values and subtract." },
+    ],
+    // Level 4 (Grade 8) — Comparing distributions using box plots
+    [
+      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
+      { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
+    ],
+    // Level 5 (Grade 9) — Outliers using 1.5 × IQR rule
+    [
+      { q: "A data set has Q1 = 20 and Q3 = 44. Using the 1.5 × IQR rule, what are the boundaries for outliers?", a: "Lower: −16, Upper: 80", worked: ["IQR = Q3 − Q1 = 44 − 20 = 24", "1.5 × IQR = 1.5 × 24 = 36", "Lower boundary = Q1 − 36 = 20 − 36 = −16", "Upper boundary = Q3 + 36 = 44 + 36 = 80", "Any value below −16 or above 80 is an outlier"], hint: "Outlier boundaries: Q1 − 1.5×IQR and Q3 + 1.5×IQR" },
+      { q: "A data set has Q1 = 15, Q3 = 35. The value 72 appears in the data. Is it an outlier? Explain how outliers affect the mean.", a: "Yes, 72 is an outlier", worked: ["IQR = 35 − 15 = 20", "1.5 × IQR = 30", "Upper boundary = 35 + 30 = 65", "72 > 65, so 72 IS an outlier", "Outliers pull the mean towards them (increase it here)", "The median is not affected by outliers"], hint: "Check if 72 > Q3 + 1.5 × IQR. Outliers affect the mean but not the median." },
     ],
   ],
 };
