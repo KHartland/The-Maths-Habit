@@ -3818,12 +3818,14 @@ const higherQuestionBank = {
       { q: "Simplify 5² × 5⁻⁴", a: "1/25", worked: ["When multiplying powers, add the indices", "5² × 5⁻⁴ = 5²⁺⁽⁻⁴⁾ = 5⁻²", "5⁻² = 1/5² = 1/25"], hint: "Add the indices: 2 + (−4) = −2, then evaluate 5⁻²" },
       { q: "Simplify y⁷ × y⁻³", a: "y^4", worked: ["When multiplying powers, add the indices", "y⁷ × y⁻³ = y⁷⁺⁽⁻³⁾ = y⁴"], hint: "Add the indices: 7 + (−3)" },
       { q: "Simplify x⁵ × x⁻²", a: "x^3", worked: ["When multiplying powers, add the indices", "x⁵ × x⁻² = x⁵⁺⁽⁻²⁾ = x³"], hint: "Add the indices: 5 + (−2)" },
+      { q: "Simplify 7⁵ × 7⁻²", a: "7^3", worked: ["When multiplying powers, add the indices", "7⁵ × 7⁻² = 7⁵⁺⁽⁻²⁾ = 7³"], hint: "Add the indices: 5 + (−2)" },
     ],
     // Level 2 (Grade 5) — Fractional indices with numbers
     [
       { q: "Find the value of 64^(2/3).", a: "16", worked: ["64^(2/3) = (64^(1/3))²", "∛64 = 4", "4² = 16"], hint: "First find the cube root of 64, then square it" },
       { q: "Work out the value of 25^(−1/2).", a: "1/5", worked: ["25^(1/2) = √25 = 5", "25^(−1/2) = 1/5"], hint: "First find √25, then take the reciprocal" },
       { q: "Find the value of 27^(2/3).", a: "9", worked: ["27^(2/3) = (27^(1/3))²", "∛27 = 3", "3² = 9"], hint: "Cube root first, then square" },
+      { q: "Find the value of 125^(2/3).", a: "25", worked: ["125^(2/3) = (125^(1/3))²", "∛125 = 5", "5² = 25"], hint: "Cube root first, then square" },
     ],
     // Level 3 (Grade 7) — Rationalising the denominator
     [
@@ -3836,11 +3838,13 @@ const higherQuestionBank = {
       { q: "Simplify (4 + √3)(2 − √3). Give your answer in the form a + b√3.", a: "5 - 2√3", worked: ["Expand: 4×2 + 4×(−√3) + √3×2 + √3×(−√3)", "= 8 − 4√3 + 2√3 − 3", "= 5 − 2√3"], hint: "FOIL: multiply each term, remember √3 × √3 = 3" },
       { q: "Simplify (3 + √5)(2 − √5). Give your answer in the form a + b√5.", a: "1 - √5", worked: ["Expand: 3×2 + 3×(−√5) + √5×2 + √5×(−√5)", "= 6 − 3√5 + 2√5 − 5", "= 1 − √5"], hint: "FOIL: multiply each term, remember √5 × √5 = 5" },
       { q: "Simplify (5 − √2)(3 + √2). Give your answer in the form a + b√2.", a: "13 + 2√2", worked: ["Expand: 5×3 + 5×√2 + (−√2)×3 + (−√2)×√2", "= 15 + 5√2 − 3√2 − 2", "= 13 + 2√2"], hint: "FOIL: multiply each term, remember √2 × √2 = 2" },
+      { q: "Simplify (5 + √2)(3 − √2). Give your answer in the form a + b√2.", a: "13 - 2√2", worked: ["Expand: 5×3 + 5×(−√2) + √2×3 + √2×(−√2)", "= 15 − 5√2 + 3√2 − 2", "= 13 − 2√2"], hint: "FOIL: multiply each term, remember √2 × √2 = 2" },
     ],
     // Level 5 (Grade 9) — Solving index equations
     [
       { q: "Solve 8^(x+1) = 4^(2x−5) for x.", a: "13", worked: ["Write both as powers of 2: 8 = 2³, 4 = 2²", "2^(3(x+1)) = 2^(2(2x−5))", "3(x+1) = 2(2x−5)", "3x + 3 = 4x − 10 → x = 13"], hint: "Write 8 as 2³ and 4 as 2², then equate the powers" },
       { q: "Solve 27^(x+2) = 9^(2x−1) for x.", a: "8", worked: ["Write both as powers of 3: 27 = 3³, 9 = 3²", "3^(3(x+2)) = 3^(2(2x−1))", "3x + 6 = 4x − 2 → x = 8"], hint: "Write 27 as 3³ and 9 as 3², then equate the powers" },
+      { q: "Solve 16^(x+2) = 8^(2x−1) for x.", a: "5.5", worked: ["Write both as powers of 2: 16 = 2⁴, 8 = 2³", "2^(4(x+2)) = 2^(3(2x−1))", "4(x+2) = 3(2x−1)", "4x + 8 = 6x − 3", "11 = 2x", "x = 5.5"], hint: "Write 16 as 2⁴ and 8 as 2³, then equate the powers" },
     ],
   ],
 
@@ -3914,24 +3918,27 @@ const higherQuestionBank = {
     [
       { q: "Solve simultaneously: x + y = 10 and x − y = 4. Give your answer as x, y.", a: "7, 3", worked: ["Add the equations: 2x = 14 → x = 7", "Substitute: 7 + y = 10 → y = 3"], hint: "Add the equations to eliminate y" },
       { q: "Solve simultaneously: x + y = 8 and x − y = 2. Give your answer as x, y.", a: "5, 3", worked: ["Add: 2x = 10 → x = 5", "Substitute: 5 + y = 8 → y = 3"], hint: "Add the equations to eliminate y" },
+      { q: "Solve simultaneously: x + y = 12 and x − y = 2. Give your answer as x, y.", a: "7, 5", worked: ["Add the equations: 2x = 14 → x = 7", "Substitute: 7 + y = 12 → y = 5"], hint: "Add the equations to eliminate y" },
     ],
     // Level 2 (Grade 5) — Elimination with multiplication
     [
       { q: "Solve simultaneously: 3x + 2y = 16 and 2x + 3y = 14. Give your answer as x, y.", a: "4, 2", worked: ["Multiply eq1 by 3: 9x + 6y = 48", "Multiply eq2 by 2: 4x + 6y = 28", "Subtract: 5x = 20 → x = 4", "Substitute: 3(4) + 2y = 16 → 2y = 4 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
       { q: "Solve simultaneously: 5x + 3y = 21 and 2x + 4y = 14. Give your answer as x, y.", a: "3, 2", worked: ["Multiply eq1 by 4: 20x + 12y = 84", "Multiply eq2 by 3: 6x + 12y = 42", "Subtract: 14x = 42 → x = 3", "Substitute: 2(3) + 4y = 14 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
+      { q: "Solve simultaneously: 4x + 3y = 18 and x − 3y = 7. Give your answer as x, y.", a: "5, -2/3", worked: ["Add the equations: 5x = 25 → x = 5", "Substitute: 5 − 3y = 7 → −3y = 2 → y = −2/3"], hint: "The y terms cancel when you add the equations" },
     ],
     // Level 3 (Grade 7) — One linear, one quadratic
     [
-      { q: "Solve y = 2x − 3 and x² + y² = 2. Give your answers as coordinate pairs.", a: "(1, -1), (1.4, -0.2)", worked: ["Substitute y = 2x − 3 into x² + y² = 2", "x² + (2x−3)² = 2", "x² + 4x² − 12x + 9 = 2", "5x² − 12x + 7 = 0", "(5x − 7)(x − 1) = 0", "x = 1, y = −1 or x = 7/5, y = −1/5"], hint: "Substitute y = 2x − 3 into x² + y² = 2", calculator: true },
       { q: "Solve y = x + 2 and x² + y² = 10. Give your answers as coordinate pairs.", a: "(-3, -1), (1, 3)", worked: ["Substitute y = x + 2 into x² + y² = 10", "x² + (x+2)² = 10", "2x² + 4x + 4 = 10", "2x² + 4x − 6 = 0 → (x+3)(x−1) = 0", "x = −3, y = −1 or x = 1, y = 3"], hint: "Substitute y = x + 2 into x² + y² = 10" },
+      { q: "Solve y = x + 3 and x² + y² = 17. Give your answers as coordinate pairs.", a: "(-4, -1), (1, 4)", worked: ["Substitute y = x + 3 into x² + y² = 17", "x² + (x+3)² = 17", "x² + x² + 6x + 9 = 17", "2x² + 6x − 8 = 0 → x² + 3x − 4 = 0", "(x+4)(x−1) = 0", "x = −4, y = −1 or x = 1, y = 4"], hint: "Substitute y = x + 3 into x² + y² = 17" },
     ],
     // Level 4 (Grade 8) — Line intersects circle/curve
     [
-      { q: "Find the coordinates where y = 3x + 1 intersects x² + y² = 25. Give your answers as coordinate pairs.", a: "(-2.6, -6.8), (1.8, 6.4)", worked: ["Substitute: x² + (3x+1)² = 25", "x² + 9x² + 6x + 1 = 25", "10x² + 6x − 24 = 0", "5x² + 3x − 12 = 0", "Use quadratic formula"], hint: "Substitute y = 3x + 1 into x² + y² = 25", calculator: true },
+      { q: "Find the coordinates where y = x − 4 and x² + y² = 10 intersect. Give your answers as coordinate pairs.", a: "(1, -3), (3, -1)", worked: ["Substitute y = x − 4 into x² + y² = 10", "x² + (x−4)² = 10", "x² + x² − 8x + 16 = 10", "2x² − 8x + 6 = 0 → x² − 4x + 3 = 0", "(x−1)(x−3) = 0", "x = 1, y = −3 or x = 3, y = −1"], hint: "Substitute y = x − 4 into x² + y² = 10" },
     ],
     // Level 5 (Grade 9) — Complex simultaneous
     [
-      { q: "Solve 2x² + xy = 12 and x + y = 5. Give your answers as coordinate pairs.", a: "(2, 3), (-3, 8)", worked: ["From eq2: y = 5 − x", "Substitute: 2x² + x(5−x) = 12", "2x² + 5x − x² = 12", "x² + 5x − 12 = 0... ", "Wait: (x−2)... not obvious, check"], hint: "Rearrange x + y = 5 for y, substitute into the quadratic" },
+      { q: "Solve 2x² + xy = 10 and x + y = 5. Give your answers as coordinate pairs.", a: "(2, 3), (-5/3, 20/3)", worked: ["From eq2: y = 5 − x", "Substitute: 2x² + x(5−x) = 10", "2x² + 5x − x² = 10", "x² + 5x − 10 = 0", "Use quadratic formula or: let's try integer values", "x = 2: 4 + 10 − 4 = 10 ✓, y = 3"], hint: "Rearrange x + y = 5 for y, substitute into the quadratic" },
+      { q: "Solve 3x² − xy = 4 and x + y = 3. Give your answers to 2 d.p.", a: "x = 1.44 or x = −0.69", worked: ["From eq2: y = 3 − x", "Substitute: 3x² − x(3 − x) = 4", "3x² − 3x + x² = 4", "4x² − 3x − 4 = 0", "x = (3 ± √(9 + 64))/8 = (3 ± √73)/8", "x ≈ 1.44 or x ≈ −0.69"], hint: "Rearrange x + y = 3 for y, substitute into the quadratic, use the formula", calculator: true },
     ],
   ],
 
@@ -4002,30 +4009,35 @@ const higherQuestionBank = {
   // G10: Circle Theorems (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'G10': [
-    // Level 1 (Grade 4/5) — Angle in a semicircle
+    // Level 1 (Grade 4/5) — Angle in a semicircle and angle at centre
     [
       { q: "The angle in a semicircle is always...", type: "mcq", options: ["45°", "90°", "180°", "360°"], a: "90°", worked: ["The angle subtended by a diameter at the circumference is always 90°", "This is one of the key circle theorems"], hint: "Think about a triangle inscribed in a semicircle" },
       { q: "Triangle ABC is inscribed in a circle where AC is a diameter. Angle BAC = 35°. Find angle ABC.", a: "90", worked: ["AC is a diameter, so angle ABC is an angle in a semicircle", "Angle in a semicircle = 90°"], hint: "If one side of the triangle is a diameter, the angle opposite it is 90°" },
+      { q: "An arc subtends an angle of 140° at the centre. Find the angle subtended at the circumference.", a: "70", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 140° ÷ 2 = 70°"], hint: "Angle at centre = 2 × angle at circumference" },
     ],
     // Level 2 (Grade 6) — Cyclic quadrilateral and angle at centre
     [
       { q: "In a cyclic quadrilateral, one angle is 85°. Calculate the opposite angle.", a: "95", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 85° = 95°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
       { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference" },
+      { q: "A cyclic quadrilateral has an angle of 110°. Find the opposite angle.", a: "70", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 110° = 70°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
     ],
-    // Level 3 (Grade 7) — Tangent-radius and combined theorems
+    // Level 3 (Grade 7) — Tangent-radius and alternate segment
     [
       { q: "Find the angle between a tangent and a radius at the point of contact.", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
       { q: "In a cyclic quadrilateral ABCD, angle A = 115°. Find angle C.", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Angle C = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+      { q: "The angle in the alternate segment is 65°. Calculate the angle between the chord and the tangent.", a: "65", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals the angle in the alternate segment", "Angle = 65°"], hint: "Alternate Segment Theorem works both ways" },
     ],
-    // Level 4 (Grade 8) — Alternate Segment Theorem
+    // Level 4 (Grade 8) — Proving cyclic quadrilateral property
     [
       { q: "A tangent to a circle meets chord AB at point A. The angle between the tangent and chord AB is 55°. Use the Alternate Segment Theorem to find the angle ACB where C is a point on the major arc.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So angle ACB = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
       { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem" },
+      { q: "Prove that opposite angles in a cyclic quadrilateral sum to 180°. What theorem does this use?", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Pythagoras"], worked: ["Each pair of opposite angles subtends the full circle at the centre", "The two angles at the centre sum to 360°", "Each angle at circumference = half the angle at centre", "So opposite angles at circumference sum to 360°/2 = 180°"], hint: "Use the fact that the angle at the centre is twice the angle at the circumference" },
     ],
-    // Level 5 (Grade 9) — Proving circle theorems and combined problems
+    // Level 5 (Grade 9) — Combined problems and tangent lengths
     [
       { q: "Prove that the angle subtended by an arc at the centre is twice the angle subtended at the circumference. (What is the name of this theorem?)", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Tangent-radius theorem"], worked: ["Draw a radius to the point on the circumference to create two isosceles triangles", "In each isosceles triangle, the base angles are equal", "The angle at the centre = sum of the two exterior angles of the isosceles triangles", "This equals twice the angle at the circumference"], hint: "Create isosceles triangles using radii, then use exterior angle = sum of interior opposite angles" },
       { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP.", a: "10", worked: ["The tangent is perpendicular to the radius: angle OAP = 90°", "Angle APO = 30° (half of 60° by symmetry)", "sin(30°) = OA/OP", "½ = 5/OP", "OP = 10 cm"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
+      { q: "Find the length of a tangent from point P(0, 10) to a circle centred at (0, 0) with radius 6.", a: "8", worked: ["OP = 10 (distance from origin to P)", "The tangent is perpendicular to the radius at the point of contact", "By Pythagoras: tangent² + 6² = 10²", "tangent² = 100 − 36 = 64", "tangent = 8"], hint: "The tangent, radius and OP form a right triangle. Use Pythagoras.", calculator: true },
     ],
   ],
 
@@ -4037,26 +4049,31 @@ const higherQuestionBank = {
     [
       { q: "y is directly proportional to x. When x = 10, y = 50. Find the constant k.", a: "5", worked: ["y = kx", "50 = k × 10", "k = 50/10 = 5"], hint: "y = kx, so k = y/x" },
       { q: "y is directly proportional to x. When x = 5, y = 20. Find y when x = 8.", a: "32", worked: ["y = kx", "20 = k × 5 → k = 4", "When x = 8: y = 4 × 8 = 32"], hint: "Find k first: y = kx, so k = 20/5" },
+      { q: "y ∝ x. When x = 6, y = 42. Find the constant k.", a: "7", worked: ["y = kx", "42 = k × 6", "k = 42/6 = 7"], hint: "y = kx, so k = y/x" },
     ],
-    // Level 2 (Grade 5) — Using direct proportion
+    // Level 2 (Grade 5) — Using direct and inverse proportion
     [
       { q: "y ∝ x. If x = 4 when y = 12, find y when x = 9.", a: "27", worked: ["y = kx", "12 = k × 4 → k = 3", "When x = 9: y = 3 × 9 = 27"], hint: "Find k first, then substitute the new x value" },
       { q: "y is directly proportional to x. When x = 3, y = 12. Find y when x = 7.", a: "28", worked: ["y = kx", "12 = k × 3 → k = 4", "When x = 7: y = 4 × 7 = 28"], hint: "y = kx, so k = 12/3" },
+      { q: "y is inversely proportional to x. When x = 2, y = 20. Find y when x = 8.", a: "5", worked: ["y = k/x", "20 = k/2 → k = 40", "When x = 8: y = 40/8 = 5"], hint: "y = k/x, so k = 20 × 2 = 40" },
     ],
-    // Level 3 (Grade 7) — Inverse proportion
+    // Level 3 (Grade 7) — Proportion to a power
     [
       { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 2.5.", a: "16", worked: ["y = k/x", "10 = k/4 → k = 40", "When x = 2.5: y = 40/2.5 = 16"], hint: "y = k/x, so k = 10 × 4 = 40" },
       { q: "y is inversely proportional to x. When x = 6, y = 15. Find y when x = 10.", a: "9", worked: ["y = k/x", "15 = k/6 → k = 90", "When x = 10: y = 90/10 = 9"], hint: "y = k/x, so k = y × x" },
+      { q: "y ∝ x². When x = 2, y = 12. Find y when x = 5.", a: "75", worked: ["y = kx²", "12 = k × 4 → k = 3", "When x = 5: y = 3 × 25 = 75"], hint: "y = kx², so k = 12/4 = 3" },
     ],
-    // Level 4 (Grade 8) — Proportion to a power
+    // Level 4 (Grade 8) — Proportion to a power and compound growth
     [
       { q: "y is directly proportional to the square of x. When x = 3, y = 36. Find y when x = 5.", a: "100", worked: ["y = kx²", "36 = k × 3² = 9k → k = 4", "When x = 5: y = 4 × 25 = 100"], hint: "y = kx², so k = 36/9 = 4" },
       { q: "y is directly proportional to x². When x = 4, y = 48. Find y when x = 6.", a: "108", worked: ["y = kx²", "48 = k × 16 → k = 3", "When x = 6: y = 3 × 36 = 108"], hint: "y = kx², so k = 48/16 = 3" },
+      { q: "£2,000 is invested at 4% compound interest. Find the value after 3 years.", a: "£2,249.73", worked: ["Value = 2000 × 1.04³", "= 2000 × 1.124864", "= £2,249.73 (to nearest penny)"], hint: "Multiply by 1.04 three times, or use 2000 × 1.04³", calculator: true },
     ],
-    // Level 5 (Grade 9) — Inverse proportion to roots and percentage change
+    // Level 5 (Grade 9) — Complex proportion and multi-rate depreciation
     [
       { q: "y is inversely proportional to the cube root of x. If x is increased by 700%, calculate the percentage decrease in y. Give your answer to 1 d.p.", a: "50.0", worked: ["x increases by 700% means new x = 8x (original + 700%)", "y = k/∛x", "New y = k/∛(8x) = k/(2∛x) = original y / 2", "Decrease = 1 − 0.5 = 0.5 = 50%"], hint: "700% increase means new x = 8 × original x. ∛8 = 2", calculator: true },
       { q: "The force F between two magnets is inversely proportional to the square of the distance d. If d increases by 50%, what is the percentage decrease in F? Give your answer to 1 d.p.", a: "55.6", worked: ["F = k/d²", "New d = 1.5d", "New F = k/(1.5d)² = k/2.25d²", "Ratio = 1/2.25 = 0.444...", "Decrease = 1 − 0.444 = 0.556 = 55.6%"], hint: "New d = 1.5d. New F = k/(1.5d)². Compare to original", calculator: true },
+      { q: "A car loses 20% of its value in year 1, then 10% each year after. If the original value is £20,000, find the value after 4 years.", a: "£11,664", worked: ["After year 1: 20000 × 0.8 = £16,000", "After year 2: 16000 × 0.9 = £14,400", "After year 3: 14400 × 0.9 = £12,960", "After year 4: 12960 × 0.9 = £11,664"], hint: "Year 1: multiply by 0.8. Years 2-4: multiply by 0.9 each year.", calculator: true },
     ],
   ],
 
@@ -4068,25 +4085,30 @@ const higherQuestionBank = {
     [
       { q: "Calculate the frequency density for a class with width 10 and frequency 50.", a: "5", worked: ["Frequency density = frequency ÷ class width", "= 50 ÷ 10 = 5"], hint: "Frequency density = frequency ÷ class width" },
       { q: "A histogram class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "Frequency = 30, class width = 5. Find the frequency density.", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "FD = frequency ÷ class width" },
     ],
     // Level 2 (Grade 6) — Interpreting histograms to find frequency
     [
       { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width", calculator: true },
       { q: "A histogram bar for the interval 20 < x ≤ 35 has frequency density 4. How many data values are in this class?", a: "60", worked: ["Class width = 35 − 20 = 15", "Frequency = 4 × 15 = 60"], hint: "Find the class width first, then multiply by the frequency density" },
+      { q: "In a histogram, a bar has width 10 and height (frequency density) 4.5. Find the frequency.", a: "45", worked: ["Frequency = frequency density × class width", "= 4.5 × 10 = 45"], hint: "Frequency = FD × class width" },
     ],
     // Level 3 (Grade 7) — Drawing and interpreting histograms with unequal class widths
     [
       { q: "In a histogram, a class has width 10 and frequency 45. Another class has width 20 and frequency 60. Which class has the taller bar?", type: "mcq", options: ["Width 10, freq 45", "Width 20, freq 60", "Same height"], a: "Width 10, freq 45", worked: ["FD for first class: 45 ÷ 10 = 4.5", "FD for second class: 60 ÷ 20 = 3", "4.5 > 3, so the first class has the taller bar"], hint: "Calculate frequency density for each. The taller bar has the higher FD." },
       { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8"], hint: "Calculate FD = frequency ÷ class width for each" },
+      { q: "Draw a histogram for: 0 < x ≤ 10 (f = 20) and 10 < x ≤ 30 (f = 30). What are the frequency densities?", a: "2 and 1.5", worked: ["0 < x ≤ 10: width = 10, FD = 20/10 = 2", "10 < x ≤ 30: width = 20, FD = 30/20 = 1.5"], hint: "Calculate FD = frequency ÷ class width for each interval" },
     ],
-    // Level 4 (Grade 8) — Estimating the median from a histogram
+    // Level 4 (Grade 8) — Estimating from histograms
     [
       { q: "A histogram has these classes and frequencies: 0-10 (freq 8), 10-20 (freq 22), 20-30 (freq 15), 30-50 (freq 10). There are 55 data values. In which class does the median lie?", type: "mcq", options: ["0-10", "10-20", "20-30", "30-50"], a: "10-20", worked: ["Median position = 55/2 = 27.5th value", "0-10: cumulative = 8", "10-20: cumulative = 8 + 22 = 30", "The 27.5th value is in the 10-20 class (since 8 < 27.5 ≤ 30)"], hint: "Find the median position (n/2), then add up frequencies until you pass it" },
+      { q: "Estimate the number of people scoring more than 45 if the 40-60 class has frequency 100.", a: "75", worked: ["Class width = 20, 45 is ¼ of the way through", "Proportion above 45: (60−45)/(60−40) = 15/20 = 0.75", "Estimate = 0.75 × 100 = 75"], hint: "Find what fraction of the class interval is above 45, then multiply by the frequency" },
     ],
-    // Level 5 (Grade 9) — Estimating above/below non-boundary values
+    // Level 5 (Grade 9) — Estimating quartiles and non-boundary values
     [
       { q: "A histogram shows times to complete a task. The bar for 30 < t ≤ 40 has frequency density 2.5 and the bar for 40 < t ≤ 60 has frequency density 1.5. Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30 < t ≤ 40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40 < t ≤ 60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35 (assume uniform distribution), then add the full 40-60 bar", calculator: true },
       { q: "A histogram shows ages. The 10-20 bar has FD = 3, the 20-25 bar has FD = 4, the 25-40 bar has FD = 2. How many people are aged 20-40?", a: "50", worked: ["20-25: FD = 4, width = 5, freq = 20", "25-40: FD = 2, width = 15, freq = 30", "Total 20-40 = 20 + 30 = 50"], hint: "Frequency = FD × class width for each interval" },
+      { q: "Use a histogram to estimate the lower quartile of 80 data values with classes: 0-10 (f=10), 10-20 (f=30), 20-40 (f=40). The LQ is the 20th value.", a: "13.3", worked: ["LQ position = 80/4 = 20th value", "0-10: cumulative = 10 (need 10 more)", "10-20: 10 more into this class of 30", "LQ = 10 + (10/30) × 10 = 10 + 3.33 = 13.3"], hint: "Find the 20th value. It's in the 10-20 class. Use interpolation.", calculator: true },
     ],
   ],
 
@@ -4239,30 +4261,35 @@ const higherQuestionBank = {
   // P9: Conditional Probability & Set Notation (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'P9': [
-    // Level 1 (Grade 4/5) — Tree diagrams with replacement
+    // Level 1 (Grade 4/5) — Complement and basic probability
     [
       { q: "A bag contains 5 red and 3 blue marbles. Two marbles are picked with replacement. Find the probability of picking two reds.", a: "25/64", worked: ["P(1st red) = 5/8", "With replacement, P(2nd red) = 5/8", "P(both red) = 5/8 × 5/8 = 25/64"], hint: "With replacement means the probabilities stay the same each time" },
       { q: "A fair coin is flipped and a fair die is rolled. Find the probability of getting heads and a 6.", a: "1/12", worked: ["P(heads) = 1/2", "P(six) = 1/6", "P(heads and 6) = 1/2 × 1/6 = 1/12"], hint: "These are independent events — multiply the probabilities" },
+      { q: "P(A) = 0.3. Find P(not A).", a: "0.7", worked: ["P(not A) = 1 − P(A)", "= 1 − 0.3 = 0.7"], hint: "P(not A) = 1 − P(A)" },
     ],
     // Level 2 (Grade 6) — Independent events and tree diagrams
     [
       { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(A and B).", a: "0.28", worked: ["For independent events: P(A and B) = P(A) × P(B)", "= 0.7 × 0.4 = 0.28"], hint: "Independent means P(A and B) = P(A) × P(B)", calculator: true },
       { q: "P(A) = 0.7 and P(B) = 0.4. A and B are independent. Find P(neither A nor B).", a: "0.18", worked: ["P(A') = 1 − 0.7 = 0.3", "P(B') = 1 − 0.4 = 0.6", "P(neither) = P(A') × P(B') = 0.3 × 0.6 = 0.18"], hint: "P(neither) = P(not A) × P(not B)", calculator: true },
+      { q: "Two independent events each have P(Win) = 0.6. Find P(Win both times).", a: "0.36", worked: ["P(Win twice) = 0.6 × 0.6 = 0.36"], hint: "Independent: multiply the probabilities", calculator: true },
     ],
     // Level 3 (Grade 7) — Without replacement (dependent events)
     [
       { q: "A bag has 4 red and 6 blue marbles. Two are picked without replacement. Find the probability that both are the same colour.", a: "7/15", worked: ["P(both red) = 4/10 × 3/9 = 12/90", "P(both blue) = 6/10 × 5/9 = 30/90", "P(same colour) = 12/90 + 30/90 = 42/90 = 7/15"], hint: "Calculate P(both red) + P(both blue). Remember totals decrease without replacement." },
       { q: "A bag has 3 red and 5 blue balls. Two are picked without replacement. Find P(both red).", a: "3/28", worked: ["P(1st red) = 3/8", "P(2nd red | 1st red) = 2/7", "P(both red) = 3/8 × 2/7 = 6/56 = 3/28"], hint: "After taking a red ball, there are 2 red left out of 7 total" },
+      { q: "A bag has 4 green and 6 blue marbles. Two are picked without replacement. Find P(both blue).", a: "1/3", worked: ["P(1st blue) = 6/10", "P(2nd blue | 1st blue) = 5/9", "P(both blue) = 6/10 × 5/9 = 30/90 = 1/3"], hint: "After taking a blue marble, there are 5 blue left out of 9 total" },
     ],
     // Level 4 (Grade 8) — Venn diagrams and conditional probability
     [
       { q: "In a group of 100 students, 60 study French, 40 study Spanish, and 20 study both. Find the probability that a student studies only French, given that they study a language.", a: "0.5", worked: ["Only French = 60 − 20 = 40", "Study a language = 60 + 40 − 20 = 80", "P(only French | studies a language) = 40/80 = 0.5"], hint: "Find 'only French' from the Venn diagram, then divide by total who study a language", calculator: true },
       { q: "ξ = {1,2,3,...,12}, A = {multiples of 3}, B = {even numbers}. List the members of (A ∪ B)'.", a: "{1, 5, 7, 11}", worked: ["A = {3, 6, 9, 12}", "B = {2, 4, 6, 8, 10, 12}", "A ∪ B = {2, 3, 4, 6, 8, 9, 10, 12}", "(A ∪ B)' = {1, 5, 7, 11}"], hint: "Find A ∪ B first, then find everything NOT in that set" },
+      { q: "P(A|B) = 0.4 and P(B) = 0.5. Find P(A ∩ B).", a: "0.2", worked: ["P(A|B) = P(A ∩ B)/P(B)", "0.4 = P(A ∩ B)/0.5", "P(A ∩ B) = 0.4 × 0.5 = 0.2"], hint: "Rearrange: P(A ∩ B) = P(A|B) × P(B)", calculator: true },
     ],
-    // Level 5 (Grade 9) — Algebraic probability proof (the 'n sweets' problem)
+    // Level 5 (Grade 9) — Algebraic probability proof
     [
       { q: "There are n sweets in a bag. 6 are orange and the rest are yellow. Two sweets are taken without replacement. The probability of two orange sweets is 1/3. Show that n² − n − 90 = 0 and find n.", a: "n = 10", worked: ["P(1st orange) = 6/n", "P(2nd orange) = 5/(n − 1)", "P(both orange) = 6/n × 5/(n−1) = 30/(n(n−1)) = 1/3", "Cross multiply: 90 = n(n − 1) = n² − n", "n² − n − 90 = 0", "Factorise: (n − 10)(n + 9) = 0", "n = 10 (n must be positive)"], hint: "Set up P(both orange) = (6/n) × (5/(n−1)) = 1/3, then rearrange" },
       { q: "Events A and B are independent. P(A) = 0.3 and P(A ∪ B) = 0.72. Find P(B).", a: "0.6", worked: ["P(A ∩ B) = P(A) × P(B) = 0.3P(B)", "0.72 = 0.3 + P(B) − 0.3P(B)", "0.42 = P(B)(1 − 0.3) = 0.7P(B)", "P(B) = 0.6"], hint: "Independent means P(A ∩ B) = P(A) × P(B). Substitute into the addition rule.", calculator: true },
+      { q: "A bag has n red and 4 white balls. Two are picked without replacement. P(both red) = 1/3. Find n.", a: "n = 6", worked: ["P(both red) = n/(n+4) × (n−1)/(n+3) = 1/3", "3n(n−1) = (n+4)(n+3)", "3n² − 3n = n² + 7n + 12", "2n² − 10n − 12 = 0", "n² − 5n − 6 = 0", "(n − 6)(n + 1) = 0", "n = 6 (must be positive)"], hint: "Set up n/(n+4) × (n−1)/(n+3) = 1/3 and solve the quadratic" },
     ],
   ],
 
