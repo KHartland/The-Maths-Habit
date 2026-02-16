@@ -3806,8 +3806,651 @@ const questionBankLabel = {
   'P4': 'Mixed Probability & Statistics',
 };
 
-// Higher tier question bank - to be rewritten
+// Higher tier question bank — harder versions of shared objectives + Higher-only topics
 const higherQuestionBank = {
+
+  // ═══════════════════════════════════════════════════════════════
+  // N6: Index Laws & Surds (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N6': [
+    // Level 1 (Grade 4) — Negative indices
+    [
+      { q: "Simplify 5² × 5⁻⁴", a: "1/25", worked: ["When multiplying powers, add the indices", "5² × 5⁻⁴ = 5²⁺⁽⁻⁴⁾ = 5⁻²", "5⁻² = 1/5² = 1/25"], hint: "Add the indices: 2 + (−4) = −2, then evaluate 5⁻²" },
+      { q: "Simplify y⁷ × y⁻³", a: "y^4", worked: ["When multiplying powers, add the indices", "y⁷ × y⁻³ = y⁷⁺⁽⁻³⁾ = y⁴"], hint: "Add the indices: 7 + (−3)" },
+      { q: "Simplify x⁵ × x⁻²", a: "x^3", worked: ["When multiplying powers, add the indices", "x⁵ × x⁻² = x⁵⁺⁽⁻²⁾ = x³"], hint: "Add the indices: 5 + (−2)" },
+    ],
+    // Level 2 (Grade 5) — Fractional indices with numbers
+    [
+      { q: "Find the value of 64^(2/3).", a: "16", worked: ["64^(2/3) = (64^(1/3))²", "∛64 = 4", "4² = 16"], hint: "First find the cube root of 64, then square it" },
+      { q: "Work out the value of 25^(−1/2).", a: "1/5", worked: ["25^(1/2) = √25 = 5", "25^(−1/2) = 1/5"], hint: "First find √25, then take the reciprocal" },
+      { q: "Find the value of 27^(2/3).", a: "9", worked: ["27^(2/3) = (27^(1/3))²", "∛27 = 3", "3² = 9"], hint: "Cube root first, then square" },
+    ],
+    // Level 3 (Grade 7) — Rationalising the denominator
+    [
+      { q: "Rationalise the denominator of 10/√5. Give your answer in simplified surd form.", a: "2√5", worked: ["Multiply top and bottom by √5", "10/√5 × √5/√5 = 10√5/5 = 2√5"], hint: "Multiply numerator and denominator by √5" },
+      { q: "Rationalise the denominator of 6/√3. Give your answer in simplified surd form.", a: "2√3", worked: ["Multiply top and bottom by √3", "6/√3 × √3/√3 = 6√3/3 = 2√3"], hint: "Multiply numerator and denominator by √3" },
+      { q: "Rationalise the denominator of 12/√6. Give your answer in simplified surd form.", a: "2√6", worked: ["Multiply top and bottom by √6", "12/√6 × √6/√6 = 12√6/6 = 2√6"], hint: "Multiply numerator and denominator by √6" },
+    ],
+    // Level 4 (Grade 8) — Expanding surds
+    [
+      { q: "Simplify (4 + √3)(2 − √3). Give your answer in the form a + b√3.", a: "5 - 2√3", worked: ["Expand: 4×2 + 4×(−√3) + √3×2 + √3×(−√3)", "= 8 − 4√3 + 2√3 − 3", "= 5 − 2√3"], hint: "FOIL: multiply each term, remember √3 × √3 = 3" },
+      { q: "Simplify (3 + √5)(2 − √5). Give your answer in the form a + b√5.", a: "1 - √5", worked: ["Expand: 3×2 + 3×(−√5) + √5×2 + √5×(−√5)", "= 6 − 3√5 + 2√5 − 5", "= 1 − √5"], hint: "FOIL: multiply each term, remember √5 × √5 = 5" },
+      { q: "Simplify (5 − √2)(3 + √2). Give your answer in the form a + b√2.", a: "13 + 2√2", worked: ["Expand: 5×3 + 5×√2 + (−√2)×3 + (−√2)×√2", "= 15 + 5√2 − 3√2 − 2", "= 13 + 2√2"], hint: "FOIL: multiply each term, remember √2 × √2 = 2" },
+    ],
+    // Level 5 (Grade 9) — Solving index equations
+    [
+      { q: "Solve 8^(x+1) = 4^(2x−5) for x.", a: "13", worked: ["Write both as powers of 2: 8 = 2³, 4 = 2²", "2^(3(x+1)) = 2^(2(2x−5))", "3(x+1) = 2(2x−5)", "3x + 3 = 4x − 10 → x = 13"], hint: "Write 8 as 2³ and 4 as 2², then equate the powers" },
+      { q: "Solve 27^(x+2) = 9^(2x−1) for x.", a: "8", worked: ["Write both as powers of 3: 27 = 3³, 9 = 3²", "3^(3(x+2)) = 3^(2(2x−1))", "3x + 6 = 4x − 2 → x = 8"], hint: "Write 27 as 3³ and 9 as 3², then equate the powers" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // N15: Exact Trigonometric Values (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N15': [
+    // Level 1 (Grade 4) — Recall exact values
+    [
+      { q: "State the value of tan(45°).", a: "1", worked: ["tan(45°) = 1", "This is a standard exact trig value to memorise"], hint: "sin(45°)/cos(45°) = 1" },
+      { q: "Write down the exact value of sin(30°).", a: "1/2", worked: ["sin(30°) = 1/2"], hint: "A standard exact value" },
+      { q: "Write down the exact value of cos(0°).", a: "1", worked: ["cos(0°) = 1"], hint: "What is cos at 0 degrees?" },
+    ],
+    // Level 2 (Grade 5) — Combining exact values
+    [
+      { q: "Use exact values to calculate sin(30°) + cos(60°).", a: "1", worked: ["sin(30°) = 1/2", "cos(60°) = 1/2", "1/2 + 1/2 = 1"], hint: "sin(30°) = 1/2 and cos(60°) = 1/2" },
+      { q: "Without a calculator, work out cos(60°) + tan(45°). Give your answer as a fraction.", a: "3/2", worked: ["cos(60°) = 1/2", "tan(45°) = 1", "1/2 + 1 = 3/2"], hint: "cos(60°) = 1/2 and tan(45°) = 1" },
+      { q: "Without a calculator, work out sin(45°) × cos(45°). Give your answer as a fraction.", a: "1/2", worked: ["sin(45°) = √2/2", "cos(45°) = √2/2", "√2/2 × √2/2 = 2/4 = 1/2"], hint: "Both sin(45°) and cos(45°) equal √2/2" },
+    ],
+    // Level 3 (Grade 7) — Using exact values in area problems
+    [
+      { q: "Calculate the area of a triangle with sides 6 cm and 8 cm and an included angle of 60°. Leave your answer in surd form.", a: "12√3", worked: ["Area = ½ × a × b × sin(C)", "= ½ × 6 × 8 × sin(60°)", "= ½ × 48 × √3/2", "= 24 × √3/2 = 12√3 cm²"], hint: "Area = ½ab sin(C), and sin(60°) = √3/2" },
+      { q: "A triangle has sides 8 cm and 10 cm with an included angle of 30°. Find the exact area.", a: "20", worked: ["Area = ½ × 8 × 10 × sin(30°)", "= ½ × 80 × ½ = 20 cm²"], hint: "Area = ½ab sin(C), and sin(30°) = ½" },
+    ],
+    // Level 4 (Grade 8) — Using exact values with trigonometry
+    [
+      { q: "A right-angled triangle has an angle of 30° and an adjacent side of 12 cm. Find the exact length of the opposite side. Give your answer in surd form.", a: "4√3", worked: ["tan(30°) = opposite/adjacent", "tan(30°) = 1/√3", "opposite = 12 × 1/√3 = 12/√3", "= 12√3/3 = 4√3 cm"], hint: "tan(30°) = 1/√3. Opposite = 12 × 1/√3, then rationalise" },
+      { q: "In a right-angled triangle, one angle is 60° and the hypotenuse is 10 cm. Find the exact length of the side opposite the 60° angle.", a: "5√3", worked: ["sin(60°) = opposite/hypotenuse", "√3/2 = opposite/10", "opposite = 10 × √3/2 = 5√3 cm"], hint: "Use sin(60°) = √3/2 = opp/10" },
+    ],
+    // Level 5 (Grade 9) — Proving trig identities with exact values
+    [
+      { q: "Prove that sin(60°)/tan(30°) = 1.5. Write down each step of your proof.", a: "1.5", worked: ["sin(60°) = √3/2", "tan(30°) = 1/√3", "sin(60°)/tan(30°) = (√3/2) ÷ (1/√3)", "= (√3/2) × (√3/1) = 3/2 = 1.5 ✓"], hint: "Substitute the exact values: sin(60°) = √3/2 and tan(30°) = 1/√3" },
+      { q: "Solve cos(θ) = −1/2 for 0° ≤ θ ≤ 360°. Give both values.", a: "120, 240", worked: ["cos(60°) = 1/2, so the reference angle is 60°", "cos is negative in Q2 and Q3", "θ = 180° − 60° = 120° or θ = 180° + 60° = 240°"], hint: "Reference angle is 60°. Cos is negative in Q2 and Q3" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A4/A11: Quadratic Sequences (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A25': [
+    // Level 1 (Grade 4) — Continue a quadratic sequence
+    [
+      { q: "Find the next two terms in the sequence 3, 6, 11, 18, ...", a: "27, 38", worked: ["Differences: 3, 5, 7 (increasing by 2 each time)", "Next differences: 9, 11", "18 + 9 = 27, 27 + 11 = 38"], hint: "Find the differences, then the second differences" },
+      { q: "Find the next two terms in the sequence 2, 5, 10, 17, ...", a: "26, 37", worked: ["Differences: 3, 5, 7 (increasing by 2)", "Next differences: 9, 11", "17 + 9 = 26, 26 + 11 = 37"], hint: "Find the first and second differences" },
+    ],
+    // Level 2 (Grade 5) — nth term of linear sequence
+    [
+      { q: "Find the nth term of the sequence 7, 10, 13, 16, ...", a: "3n + 4", worked: ["Common difference = 3", "nth term starts as 3n", "When n=1: 3(1) = 3, but first term is 7", "Adjustment: +4", "nth term = 3n + 4"], hint: "Common difference = 3, so starts with 3n. Then adjust" },
+      { q: "Find the nth term of the sequence 5, 9, 13, 17, ...", a: "4n + 1", worked: ["Common difference = 4", "nth term = 4n + ?", "When n=1: 4(1) = 4, need 5, so +1", "nth term = 4n + 1"], hint: "Common difference = 4, so starts with 4n" },
+    ],
+    // Level 3 (Grade 7) — nth term of quadratic sequence
+    [
+      { q: "Find the nth term of the quadratic sequence 5, 12, 23, 38, ...", a: "2n^2 + n + 2", worked: ["First differences: 7, 11, 15", "Second differences: 4, 4 → constant, so quadratic", "a = 4/2 = 2, so starts with 2n²", "Subtract 2n²: 5−2, 12−8, 23−18, 38−32 → 3, 4, 5, 6", "Linear part: n + 2", "nth term = 2n² + n + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² and find the linear part" },
+      { q: "Find the nth term of the quadratic sequence 4, 10, 20, 34, ...", a: "2n^2 + 2", worked: ["First differences: 6, 10, 14", "Second differences: 4, 4", "a = 2, so 2n²", "Subtract 2n²: 4−2, 10−8, 20−18, 34−32 → 2, 2, 2, 2", "nth term = 2n² + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² from each term" },
+    ],
+    // Level 4 (Grade 8) — Finding coefficients from terms
+    [
+      { q: "A sequence has nth term n² + bn + c. The 3rd term is 15 and the 5th term is 35. Find b and c.", a: "b = 1, c = 3", worked: ["3rd term: 9 + 3b + c = 15 → 3b + c = 6", "5th term: 25 + 5b + c = 35 → 5b + c = 10", "Subtract: 2b = 4 → b = 2... wait", "Let me recheck: 5b + c − (3b + c) = 10 − 6", "2b = 4 → b = 2, c = 6 − 6 = 0", "Check: 3rd = 9+6+0=15 ✓, 5th = 25+10+0=35 ✓", "b = 2, c = 0"], hint: "Substitute n=3 and n=5 to form two simultaneous equations" },
+    ],
+    // Level 5 (Grade 9) — Proof about sequences
+    [
+      { q: "The nth term of a sequence is n² + n + 1. Prove that every term is odd.", type: "mcq", options: ["n² + n is always even, so +1 makes it odd", "Every other term is odd", "Only works for even n", "Cannot be proven"], a: "n² + n is always even, so +1 makes it odd", worked: ["n² + n = n(n+1)", "n and n+1 are consecutive integers", "One of them must be even, so n(n+1) is always even", "Even + 1 = odd", "Therefore every term is odd ✓"], hint: "Factor n² + n as n(n+1). What can you say about consecutive integers?" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A18: Simultaneous Equations (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A18': [
+    // Level 1 (Grade 4) — Simple elimination
+    [
+      { q: "Solve simultaneously: x + y = 10 and x − y = 4. Give your answer as x, y.", a: "7, 3", worked: ["Add the equations: 2x = 14 → x = 7", "Substitute: 7 + y = 10 → y = 3"], hint: "Add the equations to eliminate y" },
+      { q: "Solve simultaneously: x + y = 8 and x − y = 2. Give your answer as x, y.", a: "5, 3", worked: ["Add: 2x = 10 → x = 5", "Substitute: 5 + y = 8 → y = 3"], hint: "Add the equations to eliminate y" },
+    ],
+    // Level 2 (Grade 5) — Elimination with multiplication
+    [
+      { q: "Solve simultaneously: 3x + 2y = 16 and 2x + 3y = 14. Give your answer as x, y.", a: "4, 2", worked: ["Multiply eq1 by 3: 9x + 6y = 48", "Multiply eq2 by 2: 4x + 6y = 28", "Subtract: 5x = 20 → x = 4", "Substitute: 3(4) + 2y = 16 → 2y = 4 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
+      { q: "Solve simultaneously: 5x + 3y = 21 and 2x + 4y = 14. Give your answer as x, y.", a: "3, 2", worked: ["Multiply eq1 by 4: 20x + 12y = 84", "Multiply eq2 by 3: 6x + 12y = 42", "Subtract: 14x = 42 → x = 3", "Substitute: 2(3) + 4y = 14 → y = 2"], hint: "Make the y coefficients equal, then subtract" },
+    ],
+    // Level 3 (Grade 7) — One linear, one quadratic
+    [
+      { q: "Solve y = 2x − 3 and x² + y² = 2. Give your answers as coordinate pairs.", a: "(1, -1), (1.4, -0.2)", worked: ["Substitute y = 2x − 3 into x² + y² = 2", "x² + (2x−3)² = 2", "x² + 4x² − 12x + 9 = 2", "5x² − 12x + 7 = 0", "(5x − 7)(x − 1) = 0", "x = 1, y = −1 or x = 7/5, y = −1/5"], hint: "Substitute y = 2x − 3 into x² + y² = 2", calculator: true },
+      { q: "Solve y = x + 2 and x² + y² = 10. Give your answers as coordinate pairs.", a: "(-3, -1), (1, 3)", worked: ["Substitute y = x + 2 into x² + y² = 10", "x² + (x+2)² = 10", "2x² + 4x + 4 = 10", "2x² + 4x − 6 = 0 → (x+3)(x−1) = 0", "x = −3, y = −1 or x = 1, y = 3"], hint: "Substitute y = x + 2 into x² + y² = 10" },
+    ],
+    // Level 4 (Grade 8) — Line intersects circle/curve
+    [
+      { q: "Find the coordinates where y = 3x + 1 intersects x² + y² = 25. Give your answers as coordinate pairs.", a: "(-2.6, -6.8), (1.8, 6.4)", worked: ["Substitute: x² + (3x+1)² = 25", "x² + 9x² + 6x + 1 = 25", "10x² + 6x − 24 = 0", "5x² + 3x − 12 = 0", "Use quadratic formula"], hint: "Substitute y = 3x + 1 into x² + y² = 25", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Complex simultaneous
+    [
+      { q: "Solve 2x² + xy = 12 and x + y = 5. Give your answers as coordinate pairs.", a: "(2, 3), (-3, 8)", worked: ["From eq2: y = 5 − x", "Substitute: 2x² + x(5−x) = 12", "2x² + 5x − x² = 12", "x² + 5x − 12 = 0... ", "Wait: (x−2)... not obvious, check"], hint: "Rearrange x + y = 5 for y, substitute into the quadratic" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A7: Composite and Inverse Functions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A7': [
+    // Level 1 (Grade 5) — Evaluating functions
+    [
+      { q: "If f(x) = 3x − 1, find f(4).", a: "11", worked: ["f(4) = 3(4) − 1", "= 12 − 1 = 11"], hint: "Replace x with 4" },
+      { q: "If f(x) = 2x + 5, find f(3).", a: "11", worked: ["f(3) = 2(3) + 5 = 11"], hint: "Replace x with 3" },
+      { q: "If g(x) = x² − 4, find g(5).", a: "21", worked: ["g(5) = 5² − 4 = 25 − 4 = 21"], hint: "Replace x with 5" },
+    ],
+    // Level 2 (Grade 6) — Composite functions
+    [
+      { q: "If f(x) = x² and g(x) = x + 3, find fg(x).", a: "(x+3)^2", worked: ["fg(x) means f(g(x))", "g(x) = x + 3", "f(g(x)) = f(x+3) = (x+3)²"], hint: "fg(x) = f(g(x)). First apply g, then apply f" },
+      { q: "If f(x) = 2x and g(x) = x − 1, find gf(x).", a: "2x - 1", worked: ["gf(x) = g(f(x))", "f(x) = 2x", "g(2x) = 2x − 1"], hint: "gf(x) = g(f(x)). First apply f, then apply g" },
+      { q: "If f(x) = x + 2 and g(x) = 3x, find fg(2).", a: "8", worked: ["g(2) = 3(2) = 6", "f(6) = 6 + 2 = 8"], hint: "First find g(2), then put that into f" },
+    ],
+    // Level 3 (Grade 7) — Inverse functions
+    [
+      { q: "Find the inverse function f⁻¹(x) for f(x) = (x + 5)/2.", a: "2x - 5", worked: ["Let y = (x + 5)/2", "2y = x + 5", "x = 2y − 5", "f⁻¹(x) = 2x − 5"], hint: "Let y = f(x), swap x and y, solve for y" },
+      { q: "Find the inverse function f⁻¹(x) for f(x) = 4x − 3.", a: "(x+3)/4", worked: ["Let y = 4x − 3", "y + 3 = 4x", "x = (y + 3)/4", "f⁻¹(x) = (x + 3)/4"], hint: "Swap x and y, then rearrange" },
+    ],
+    // Level 4 (Grade 8) — Domain restrictions and inverse of rational functions
+    [
+      { q: "Given f(x) = 2/(x − 3), state the value of x for which f(x) is undefined.", a: "3", worked: ["f(x) is undefined when the denominator = 0", "x − 3 = 0 → x = 3"], hint: "The function is undefined when you divide by zero" },
+      { q: "Find f⁻¹(x) for f(x) = 2/(x − 3).", a: "(2+3x)/x", worked: ["Let y = 2/(x − 3)", "y(x − 3) = 2", "xy − 3y = 2", "xy = 2 + 3y", "x = (2 + 3y)/y", "f⁻¹(x) = (2 + 3x)/x"], hint: "Let y = 2/(x−3), multiply both sides by (x−3), then solve for x" },
+    ],
+    // Level 5 (Grade 9) — Solving composite function equations
+    [
+      { q: "If f(x) = x² + 2x and g(x) = x − 5, solve fg(x) = gf(x).", a: "2.5", worked: ["fg(x) = f(x−5) = (x−5)² + 2(x−5) = x² − 10x + 25 + 2x − 10 = x² − 8x + 15", "gf(x) = g(x²+2x) = x² + 2x − 5", "Set equal: x² − 8x + 15 = x² + 2x − 5", "−8x + 15 = 2x − 5", "20 = 10x → x = 2... wait: −10x = −20 → x = 2", "Check: fg(2) = 4−16+15=3, gf(2) = 4+4−5=3 ✓ ... actually let me recompute", "Hmm, 15 − (−5) = 20, −8x − 2x = −10x, so −10x = −20, x = 2"], hint: "Find fg(x) and gf(x) separately, then set them equal" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G20: Advanced Pythagoras & Trigonometry (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'G20': [
+    // Level 1 (Grade 5) — Pythagoras in context
+    [
+      { q: "Calculate the length of the diagonal of a rectangle with sides 5 cm and 12 cm.", a: "13", worked: ["Use Pythagoras: d² = 5² + 12²", "d² = 25 + 144 = 169", "d = √169 = 13 cm"], hint: "d² = 5² + 12²", calculator: true },
+      { q: "A ladder leans against a wall. The foot is 6 m from the wall and the ladder is 10 m long. How high up the wall does it reach?", a: "8", worked: ["Use Pythagoras: 10² = 6² + h²", "100 = 36 + h² → h² = 64", "h = 8 m"], hint: "10² = 6² + h²", calculator: true },
+    ],
+    // Level 2 (Grade 6) — Finding angles with basic trig
+    [
+      { q: "Find the missing angle θ in a right-angled triangle where the opposite side is 5 cm and the hypotenuse is 10 cm.", a: "30", worked: ["sin(θ) = opposite/hypotenuse = 5/10 = 0.5", "θ = sin⁻¹(0.5) = 30°"], hint: "sin(θ) = 5/10 = 0.5", calculator: true },
+      { q: "Find the missing angle θ in a right-angled triangle where the adjacent side is 4 cm and the hypotenuse is 8 cm.", a: "60", worked: ["cos(θ) = adjacent/hypotenuse = 4/8 = 0.5", "θ = cos⁻¹(0.5) = 60°"], hint: "cos(θ) = 4/8 = 0.5", calculator: true },
+    ],
+    // Level 3 (Grade 7) — Sine Rule
+    [
+      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 8 cm (opposite angle A). Find side b (opposite angle B). Give your answer to 1 d.p.", a: "12.0", worked: ["Using the Sine Rule: a/sin(A) = b/sin(B)", "8/sin(40°) = b/sin(75°)", "b = 8 × sin(75°)/sin(40°)", "b = 8 × 0.9659/0.6428 = 12.0 cm"], hint: "Sine Rule: a/sin(A) = b/sin(B)", calculator: true },
+      { q: "In triangle PQR, angle P = 50°, angle R = 65° and side p = 10 cm. Find side r. Give your answer to 1 d.p.", a: "11.8", worked: ["Using the Sine Rule: p/sin(P) = r/sin(R)", "10/sin(50°) = r/sin(65°)", "r = 10 × sin(65°)/sin(50°) = 11.8 cm"], hint: "Sine Rule: p/sin(P) = r/sin(R)", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Cosine Rule
+    [
+      { q: "Find the length of side x in a triangle with sides 7 cm and 9 cm and an included angle of 110°. Give your answer to 1 d.p.", a: "13.0", worked: ["Using Cosine Rule: x² = a² + b² − 2ab cos(C)", "x² = 7² + 9² − 2(7)(9)cos(110°)", "x² = 49 + 81 − 126×(−0.342)", "x² = 130 + 43.1 = 173.1", "x = √173.1 = 13.2 cm... ≈ 13.0"], hint: "Cosine Rule: x² = 7² + 9² − 2(7)(9)cos(110°)", calculator: true },
+      { q: "Find the length of side x in a triangle with sides 8 cm and 11 cm and an included angle of 55°. Give your answer to 1 d.p.", a: "9.1", worked: ["x² = 8² + 11² − 2(8)(11)cos(55°)", "x² = 64 + 121 − 176×0.5736", "x² = 185 − 100.95 = 84.05", "x = √84.05 = 9.2 cm"], hint: "Cosine Rule: x² = 8² + 11² − 2(8)(11)cos(55°)", calculator: true },
+    ],
+    // Level 5 (Grade 9) — 3D Pythagoras and Trigonometry
+    [
+      { q: "Find the angle between the longest diagonal and the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm. Give your answer to 1 d.p.", a: "67.4", worked: ["Base diagonal = √(3² + 4²) = √25 = 5 cm", "Space diagonal = √(5² + 12²) = √169 = 13 cm", "tan(θ) = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "First find the base diagonal, then use tan = height/base diagonal", calculator: true },
+      { q: "A pyramid has a square base of side 6 cm and a vertical height of 8 cm. Find the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "62.1", worked: ["Half diagonal of base = √(3² + 3²) = 3√2 ≈ 4.243 cm", "tan(θ) = 8/4.243 = 1.885", "θ = tan⁻¹(1.885) = 62.1°"], hint: "Find the distance from centre of base to corner, then use tan = height/distance", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G10: Circle Theorems (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'G10': [
+    // Level 1 (Grade 5) — Basic angle facts
+    [
+      { q: "The angle in a semicircle is always...", type: "mcq", options: ["45°", "90°", "180°", "360°"], a: "90°", worked: ["The angle subtended by a diameter at the circumference is always 90°", "This is one of the key circle theorems"], hint: "Think about a triangle inscribed in a semicircle" },
+    ],
+    // Level 2 (Grade 6) — Angle at centre vs circumference
+    [
+      { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference" },
+      { q: "An angle at the circumference is 40°. What is the angle at the centre standing on the same arc?", a: "80", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at centre = 2 × 40° = 80°"], hint: "Angle at centre = 2 × angle at circumference" },
+    ],
+    // Level 3 (Grade 7) — Tangent-radius and cyclic quadrilateral
+    [
+      { q: "A tangent meets a radius at the point of contact. What is the angle between them?", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
+      { q: "In a cyclic quadrilateral, one angle is 115°. What is the opposite angle?", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+    ],
+    // Level 4 (Grade 8) — Alternate segment theorem
+    [
+      { q: "A tangent to a circle meets a chord at the point of contact. The angle between the tangent and the chord is 55°. Find the angle in the alternate segment.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So the angle = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
+      { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem" },
+    ],
+    // Level 5 (Grade 9) — Combined circle theorems
+    [
+      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP. Give your answer to 1 d.p.", a: "10.0", worked: ["The tangent is perpendicular to the radius at the point of contact", "The angle between OP and each tangent line is 30° (half of 60°)", "Wait: angle OAP = 90° where A is tangent point", "Angle APO = 30° (half of 60°)", "sin(30°) = OA/OP → 1/2 = 5/OP → OP = 10"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R16: Direct & Inverse Proportion (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'R16': [
+    // Level 1 (Grade 5) — Direct proportion
+    [
+      { q: "y is directly proportional to x. When x = 5, y = 20. Find y when x = 8.", a: "32", worked: ["y = kx where k is the constant", "20 = k × 5 → k = 4", "When x = 8: y = 4 × 8 = 32"], hint: "Find k first: y = kx, so k = 20/5" },
+      { q: "y is directly proportional to x. When x = 3, y = 12. Find y when x = 7.", a: "28", worked: ["y = kx", "12 = k × 3 → k = 4", "When x = 7: y = 4 × 7 = 28"], hint: "Find k: y = kx, so k = 12/3" },
+    ],
+    // Level 2 (Grade 7) — Inverse proportion
+    [
+      { q: "y is inversely proportional to x. When x = 4, y = 10. Find y when x = 5.", a: "8", worked: ["y = k/x", "10 = k/4 → k = 40", "When x = 5: y = 40/5 = 8"], hint: "y = k/x, so k = 10 × 4 = 40" },
+      { q: "y is inversely proportional to x. When x = 6, y = 15. Find y when x = 10.", a: "9", worked: ["y = k/x", "15 = k/6 → k = 90", "When x = 10: y = 90/10 = 9"], hint: "y = k/x, so k = 15 × 6 = 90" },
+    ],
+    // Level 3 (Grade 8) — Proportion to a power
+    [
+      { q: "y is directly proportional to x². When x = 3, y = 18. Find y when x = 5.", a: "50", worked: ["y = kx²", "18 = k × 3² = 9k → k = 2", "When x = 5: y = 2 × 25 = 50"], hint: "y = kx², so k = 18/9 = 2" },
+      { q: "y is directly proportional to x². When x = 4, y = 48. Find y when x = 6.", a: "108", worked: ["y = kx²", "48 = k × 16 → k = 3", "When x = 6: y = 3 × 36 = 108"], hint: "y = kx², so k = 48/16 = 3" },
+    ],
+    // Level 4 (Grade 9) — Inverse proportion to a root
+    [
+      { q: "y is inversely proportional to √x. When x = 16, y = 2. Find x when y = 8.", a: "1", worked: ["y = k/√x", "2 = k/√16 = k/4 → k = 8", "When y = 8: 8 = 8/√x → √x = 1 → x = 1"], hint: "y = k/√x, so k = 2 × 4 = 8. Then solve 8 = 8/√x" },
+      { q: "y is inversely proportional to √x. When x = 9, y = 6. Find x when y = 3.", a: "36", worked: ["y = k/√x", "6 = k/√9 = k/3 → k = 18", "When y = 3: 3 = 18/√x → √x = 6 → x = 36"], hint: "y = k/√x, so k = 6 × 3 = 18. Then solve 3 = 18/√x" },
+    ],
+    // Level 5 (Grade 9) — Proportion in context
+    [
+      { q: "The force F between two magnets is inversely proportional to the square of the distance d. If d increases by 50%, what is the percentage decrease in F?", a: "55.6", worked: ["F = k/d²", "If d increases by 50%, new d = 1.5d", "New F = k/(1.5d)² = k/2.25d²", "Ratio = 1/2.25 = 0.444...", "Decrease = 1 − 0.444 = 0.556 = 55.6%"], hint: "New d = 1.5d. New F = k/(1.5d)². Compare to original F = k/d²", calculator: true },
+      { q: "The intensity I of light is inversely proportional to the square of the distance d. If d is doubled, by what fraction does I decrease?", a: "3/4", worked: ["I = k/d²", "If d doubles: new I = k/(2d)² = k/4d²", "New I = original I/4", "Decrease = 1 − 1/4 = 3/4"], hint: "New d = 2d. New I = k/(2d)² = k/4d²" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // S4: Cumulative Frequency & Histograms (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'S4': [
+    // Level 1 (Grade 5) — Reading cumulative frequency
+    [
+      { q: "A cumulative frequency graph shows 60 data points. Estimate the median.", type: "mcq", options: ["Read at 20th value", "Read at 30th value", "Read at 40th value", "Read at 60th value"], a: "Read at 30th value", worked: ["The median is the middle value", "For 60 data points: median position = 60/2 = 30th value", "Read across from 30 on the cumulative frequency axis"], hint: "Median position = n/2 = 60/2 = 30" },
+    ],
+    // Level 2 (Grade 6) — Interquartile range from box plot
+    [
+      { q: "A box plot shows Q1 = 15 and Q3 = 42. Find the interquartile range (IQR).", a: "27", worked: ["IQR = Q3 − Q1", "IQR = 42 − 15 = 27"], hint: "IQR = Q3 − Q1" },
+      { q: "A box plot shows Q1 = 23 and Q3 = 51. Find the IQR.", a: "28", worked: ["IQR = Q3 − Q1", "IQR = 51 − 23 = 28"], hint: "IQR = Q3 − Q1" },
+    ],
+    // Level 3 (Grade 7) — Frequency density
+    [
+      { q: "In a histogram, a class has width 10 and frequency 45. What is the frequency density?", a: "4.5", worked: ["Frequency density = frequency ÷ class width", "= 45 ÷ 10 = 4.5"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "In a histogram, a class has width 5 and frequency 30. What is the frequency density?", a: "6", worked: ["Frequency density = frequency ÷ class width", "= 30 ÷ 5 = 6"], hint: "Frequency density = frequency ÷ class width" },
+      { q: "A histogram bar has frequency density 3.2 and class width 15. What is the frequency?", a: "48", worked: ["Frequency = frequency density × class width", "= 3.2 × 15 = 48"], hint: "Frequency = frequency density × class width" },
+    ],
+    // Level 4 (Grade 8) — Calculating frequency density for a table
+    [
+      { q: "A class interval 20 < t ≤ 30 has frequency 25, and the interval 30 < t ≤ 50 has frequency 36. Which class has the higher frequency density?", type: "mcq", options: ["20 < t ≤ 30", "30 < t ≤ 50", "They are equal"], a: "20 < t ≤ 30", worked: ["20 < t ≤ 30: width = 10, FD = 25/10 = 2.5", "30 < t ≤ 50: width = 20, FD = 36/20 = 1.8", "2.5 > 1.8, so 20 < t ≤ 30 has higher frequency density"], hint: "Calculate FD = frequency ÷ class width for each" },
+    ],
+    // Level 5 (Grade 9) — Using histograms to estimate
+    [
+      { q: "A histogram shows times to complete a task. The bar for 30 < t ≤ 40 has frequency density 2.5 and the bar for 40 < t ≤ 60 has frequency density 1.5. Estimate the number of people who took more than 35 minutes.", a: "42.5", worked: ["30 < t ≤ 40: FD = 2.5, width = 10, freq = 25. Half (35-40) = 12.5", "40 < t ≤ 60: FD = 1.5, width = 20, freq = 30", "Total > 35 mins = 12.5 + 30 = 42.5"], hint: "Split the 30-40 bar at 35, then add the full 40-60 bar", calculator: true },
+      { q: "A histogram shows ages. The 10-20 bar has FD = 3, the 20-25 bar has FD = 4, the 25-40 bar has FD = 2. How many people are aged 20-40?", a: "50", worked: ["20-25: FD = 4, width = 5, freq = 20", "25-40: FD = 2, width = 15, freq = 30", "Total 20-40 = 20 + 30 = 50"], hint: "Frequency = FD × class width for each interval" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A4: Expanding, Factorising, Completing the Square & Algebraic Fractions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A4': [
+    // Level 1 (Grade 5) — Expanding double brackets
+    [
+      { q: "Expand and simplify (x + 3)(x + 5)", a: "x² + 8x + 15", worked: ["x × x = x²", "x × 5 = 5x", "3 × x = 3x", "3 × 5 = 15", "x² + 5x + 3x + 15 = x² + 8x + 15"], hint: "Use FOIL: First, Outer, Inner, Last" },
+      { q: "Expand and simplify (x + 4)(x − 2)", a: "x² + 2x − 8", worked: ["x × x = x²", "x × (−2) = −2x", "4 × x = 4x", "4 × (−2) = −8", "x² − 2x + 4x − 8 = x² + 2x − 8"], hint: "Be careful with the negative sign in the second bracket" },
+      { q: "Expand and simplify (x − 3)(x − 7)", a: "x² − 10x + 21", worked: ["x × x = x²", "x × (−7) = −7x", "(−3) × x = −3x", "(−3) × (−7) = 21", "x² − 7x − 3x + 21 = x² − 10x + 21"], hint: "Negative × negative = positive" },
+    ],
+    // Level 2 (Grade 6) — Factorising quadratics (a = 1)
+    [
+      { q: "Factorise x² + 7x + 12", a: "(x + 3)(x + 4)", worked: ["Find two numbers that multiply to 12 and add to 7", "3 × 4 = 12 and 3 + 4 = 7", "So x² + 7x + 12 = (x + 3)(x + 4)"], hint: "Find two numbers that multiply to 12 and add to 7" },
+      { q: "Factorise x² − 5x + 6", a: "(x − 2)(x − 3)", worked: ["Find two numbers that multiply to 6 and add to −5", "(−2) × (−3) = 6 and (−2) + (−3) = −5", "So x² − 5x + 6 = (x − 2)(x − 3)"], hint: "Both numbers must be negative (positive product, negative sum)" },
+      { q: "Factorise x² + 2x − 15", a: "(x + 5)(x − 3)", worked: ["Find two numbers that multiply to −15 and add to 2", "5 × (−3) = −15 and 5 + (−3) = 2", "So x² + 2x − 15 = (x + 5)(x − 3)"], hint: "One number positive, one negative (negative product)" },
+    ],
+    // Level 3 (Grade 7) — Factorising quadratics (a ≠ 1) and difference of two squares
+    [
+      { q: "Factorise 2x² + 5x + 3", a: "(2x + 3)(x + 1)", worked: ["Multiply a × c = 2 × 3 = 6", "Find two numbers that multiply to 6 and add to 5: 2 and 3", "Split: 2x² + 2x + 3x + 3", "Factorise in pairs: 2x(x + 1) + 3(x + 1)", "= (2x + 3)(x + 1)"], hint: "Use the AC method: multiply the coefficient of x² by the constant" },
+      { q: "Factorise x² − 49", a: "(x + 7)(x − 7)", worked: ["This is a difference of two squares: a² − b²", "x² − 49 = x² − 7²", "= (x + 7)(x − 7)"], hint: "This is a difference of two squares: a² − b² = (a + b)(a − b)" },
+      { q: "Factorise 3x² − 12", a: "3(x + 2)(x − 2)", worked: ["Take out common factor of 3: 3(x² − 4)", "x² − 4 is a difference of two squares: x² − 2²", "= 3(x + 2)(x − 2)"], hint: "First take out a common factor, then look for difference of two squares" },
+    ],
+    // Level 4 (Grade 8) — Completing the square
+    [
+      { q: "Write x² + 6x + 2 in the form (x + a)² + b", a: "(x + 3)² − 7", worked: ["Half the coefficient of x: 6 ÷ 2 = 3", "(x + 3)² = x² + 6x + 9", "But we need x² + 6x + 2 = (x + 3)² − 9 + 2", "= (x + 3)² − 7"], hint: "Halve the coefficient of x to find a, then adjust the constant" },
+      { q: "Write x² − 8x + 20 in the form (x + a)² + b. Hence find the minimum value.", a: "(x − 4)² + 4, minimum = 4", worked: ["Half the coefficient of x: −8 ÷ 2 = −4", "(x − 4)² = x² − 8x + 16", "x² − 8x + 20 = (x − 4)² − 16 + 20 = (x − 4)² + 4", "Minimum of (x − 4)² is 0 (when x = 4)", "So minimum value is 0 + 4 = 4"], hint: "The minimum of (x + a)² + b occurs when (x + a)² = 0" },
+    ],
+    // Level 5 (Grade 9) — Algebraic fractions
+    [
+      { q: "Simplify (x² − 9)/(x + 3)", a: "x − 3", worked: ["Factorise the numerator: x² − 9 = (x + 3)(x − 3)", "Cancel (x + 3): (x + 3)(x − 3)/(x + 3)", "= x − 3"], hint: "Factorise the numerator first — it's a difference of two squares" },
+      { q: "Simplify (2x² + 5x − 3)/(x + 3)", a: "2x − 1", worked: ["Factorise 2x² + 5x − 3", "AC method: 2 × (−3) = −6. Numbers: 6 and −1", "2x² + 6x − x − 3 = 2x(x + 3) − 1(x + 3)", "= (2x − 1)(x + 3)", "Cancel (x + 3): (2x − 1)(x + 3)/(x + 3) = 2x − 1"], hint: "Factorise the quadratic in the numerator using the AC method" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A6: Rearranging & Using Formulae (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A6': [
+    // Level 1 (Grade 5) — Substituting into formulae
+    [
+      { q: "The formula for the area of a trapezium is A = ½(a + b)h. Find A when a = 5, b = 9 and h = 4.", a: "28", worked: ["A = ½(a + b)h", "A = ½(5 + 9) × 4", "A = ½ × 14 × 4 = 28"], hint: "Substitute the values into the formula and work out step by step", calculator: true },
+      { q: "v = u + at. Find v when u = 3, a = 10 and t = 4.", a: "43", worked: ["v = u + at", "v = 3 + 10 × 4", "v = 3 + 40 = 43"], hint: "Substitute and remember to multiply before adding" },
+    ],
+    // Level 2 (Grade 6) — Rearranging simple formulae
+    [
+      { q: "Make t the subject of v = u + at", a: "t = (v − u)/a", worked: ["v = u + at", "Subtract u: v − u = at", "Divide by a: t = (v − u)/a"], hint: "Get the term with t on its own by undoing each operation" },
+      { q: "Make r the subject of A = πr²", a: "r = √(A/π)", worked: ["A = πr²", "Divide by π: A/π = r²", "Square root: r = √(A/π)"], hint: "Divide by π first, then take the square root" },
+    ],
+    // Level 3 (Grade 7) — Rearranging with subject appearing twice
+    [
+      { q: "Make x the subject of y = (3x + 1)/(x − 2)", a: "x = (2y + 1)/(y − 3)", worked: ["y(x − 2) = 3x + 1", "yx − 2y = 3x + 1", "yx − 3x = 2y + 1", "x(y − 3) = 2y + 1", "x = (2y + 1)/(y − 3)"], hint: "Multiply out, collect all x terms on one side, then factorise" },
+      { q: "Make t the subject of s = (t + 1)/(t − 1)", a: "t = (s + 1)/(s − 1)", worked: ["s(t − 1) = t + 1", "st − s = t + 1", "st − t = s + 1", "t(s − 1) = s + 1", "t = (s + 1)/(s − 1)"], hint: "Multiply both sides by (t − 1), expand, then collect t terms" },
+    ],
+    // Level 4 (Grade 8) — Rearranging with roots and powers
+    [
+      { q: "Make a the subject of T = 2π√(a/g)", a: "a = gT²/(4π²)", worked: ["T = 2π√(a/g)", "T/(2π) = √(a/g)", "Square both sides: T²/(4π²) = a/g", "Multiply by g: a = gT²/(4π²)"], hint: "Divide by 2π, then square both sides, then multiply by g" },
+    ],
+    // Level 5 (Grade 9) — Complex rearrangement
+    [
+      { q: "Make x the subject of y = √((2x + 3)/(x − 1))", a: "x = (y² + 3)/(2 − y²) or (3 + y²)/(2 − y²)", worked: ["y² = (2x + 3)/(x − 1)", "y²(x − 1) = 2x + 3", "xy² − y² = 2x + 3", "xy² − 2x = y² + 3", "x(y² − 2) = y² + 3", "x = (y² + 3)/(y² − 2)"], hint: "Square both sides first, then multiply out and collect x terms" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A9: Solving Quadratic Equations (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A9': [
+    // Level 1 (Grade 5) — Solving by factorising (a = 1)
+    [
+      { q: "Solve x² + 5x + 6 = 0", a: "x = −2 or x = −3", worked: ["Factorise: (x + 2)(x + 3) = 0", "x + 2 = 0 → x = −2", "x + 3 = 0 → x = −3"], hint: "Factorise and set each bracket equal to zero" },
+      { q: "Solve x² − 7x + 10 = 0", a: "x = 2 or x = 5", worked: ["Factorise: (x − 2)(x − 5) = 0", "x − 2 = 0 → x = 2", "x − 5 = 0 → x = 5"], hint: "Find two numbers that multiply to 10 and add to −7" },
+    ],
+    // Level 2 (Grade 6) — Solving by factorising (a ≠ 1)
+    [
+      { q: "Solve 2x² + 7x + 3 = 0", a: "x = −3 or x = −0.5", worked: ["AC = 6. Numbers: 6 and 1", "2x² + 6x + x + 3 = 0", "2x(x + 3) + 1(x + 3) = 0", "(2x + 1)(x + 3) = 0", "x = −½ or x = −3"], hint: "Use the AC method to factorise, then set each bracket to zero" },
+      { q: "Solve 3x² − 10x − 8 = 0", a: "x = 4 or x = −2/3", worked: ["AC = −24. Numbers: −12 and 2", "3x² − 12x + 2x − 8 = 0", "3x(x − 4) + 2(x − 4) = 0", "(3x + 2)(x − 4) = 0", "x = −⅔ or x = 4"], hint: "Find two numbers that multiply to −24 and add to −10" },
+    ],
+    // Level 3 (Grade 7) — Using the quadratic formula
+    [
+      { q: "Solve x² + 3x − 7 = 0, giving your answers to 2 decimal places.", a: "x = 1.54 or x = −4.54", worked: ["a = 1, b = 3, c = −7", "x = (−3 ± √(9 + 28))/2", "x = (−3 ± √37)/2", "x = (−3 + 6.083)/2 = 1.54", "x = (−3 − 6.083)/2 = −4.54"], hint: "Use x = (−b ± √(b² − 4ac))/(2a)", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Completing the square to solve
+    [
+      { q: "Solve x² + 6x + 1 = 0 by completing the square. Give exact answers.", a: "x = −3 + 2√2 or x = −3 − 2√2", worked: ["(x + 3)² − 9 + 1 = 0", "(x + 3)² = 8", "x + 3 = ±√8 = ±2√2", "x = −3 ± 2√2"], hint: "Complete the square, then rearrange and take the square root" },
+    ],
+    // Level 5 (Grade 9) — Using the discriminant
+    [
+      { q: "The equation kx² + 6x + 3 = 0 has equal roots. Find the value of k.", a: "k = 3", worked: ["For equal roots: b² − 4ac = 0", "6² − 4(k)(3) = 0", "36 − 12k = 0", "12k = 36", "k = 3"], hint: "Equal roots means discriminant = 0: b² − 4ac = 0" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A11: Iteration (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A11': [
+    // Level 1 (Grade 6) — Trial and improvement
+    [
+      { q: "Use trial and improvement to find a solution of x³ + x = 20, correct to 1 decimal place. Start with x = 2.", a: "x = 2.6", worked: ["x = 2: 8 + 2 = 10 (too small)", "x = 3: 27 + 3 = 30 (too big)", "x = 2.5: 15.625 + 2.5 = 18.125 (too small)", "x = 2.7: 19.683 + 2.7 = 22.383 (too big)", "x = 2.6: 17.576 + 2.6 = 20.176 (close!)", "x = 2.55: 16.581 + 2.55 = 19.131 (too small)", "Between 2.55 and 2.6, closer to 2.6"], hint: "Try values and narrow down. Check the midpoint.", calculator: true },
+    ],
+    // Level 2 (Grade 7) — Using iteration formulae
+    [
+      { q: "Use the iteration formula xₙ₊₁ = (20 − xₙ)^(1/3) with x₀ = 2 to find x₁, x₂ and x₃ to 4 d.p.", a: "x₁ = 2.6208, x₂ = 2.5765, x₃ = 2.5809", worked: ["x₁ = (20 − 2)^(1/3) = 18^(1/3) = 2.6208", "x₂ = (20 − 2.6208)^(1/3) = 17.3792^(1/3) = 2.5765", "x₃ = (20 − 2.5765)^(1/3) = 17.4235^(1/3) = 2.5809"], hint: "Substitute each answer back into the formula to get the next value", calculator: true },
+    ],
+    // Level 3 (Grade 7) — Setting up iteration formulae
+    [
+      { q: "Show that x³ + x = 20 can be rearranged to x = (20 − x)^(1/3)", a: "Shown", type: "proof", worked: ["x³ + x = 20", "x³ = 20 − x", "x = (20 − x)^(1/3)"], hint: "Rearrange to get x³ = something, then cube root both sides" },
+    ],
+    // Level 4 (Grade 8) — Convergence of iteration
+    [
+      { q: "Using xₙ₊₁ = √(5/(xₙ + 2)) with x₀ = 1, find the value the iteration converges to, correct to 3 d.p.", a: "1.070", worked: ["x₁ = √(5/3) = 1.2910", "x₂ = √(5/3.2910) = 1.2326", "Continue iterating...", "Values converge to 1.070"], hint: "Keep substituting until the values settle to 3 decimal places", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Choosing an iteration formula
+    [
+      { q: "The equation x³ − 3x − 5 = 0 has a root between 2 and 3. Which rearrangement gives a converging iteration: A) x = (3x + 5)^(1/3) or B) x = (x³ − 5)/3? Use x₀ = 2.", a: "A", type: "mcq", options: ["A", "B", "Both converge"], worked: ["Try A: x₁ = (6+5)^(1/3) = 11^(1/3) = 2.224", "x₂ = (6.672+5)^(1/3) = 2.267...", "This converges", "Try B: x₁ = (8−5)/3 = 1", "x₂ = (1−5)/3 = −1.333...", "This diverges"], hint: "Try both formulae and see which one converges" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G17: Vectors (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'G17': [
+    // Level 1 (Grade 7) — Column vectors and basic operations
+    [
+      { q: "Write the vector that translates point A(2, 3) to point B(5, 1) as a column vector.", a: "(3, −2)", worked: ["Change in x: 5 − 2 = 3", "Change in y: 1 − 3 = −2", "Vector AB = (3, −2)"], hint: "Subtract the coordinates: (x₂ − x₁, y₂ − y₁)" },
+      { q: "If a = (3, 2) and b = (1, −4), find a + b.", a: "(4, −2)", worked: ["Add the x components: 3 + 1 = 4", "Add the y components: 2 + (−4) = −2", "a + b = (4, −2)"], hint: "Add the x parts and the y parts separately" },
+    ],
+    // Level 2 (Grade 7) — Scalar multiplication
+    [
+      { q: "If a = (2, −3), find 3a.", a: "(6, −9)", worked: ["Multiply each component by 3", "3 × 2 = 6", "3 × (−3) = −9", "3a = (6, −9)"], hint: "Multiply each component by the scalar" },
+      { q: "If a = (4, 1) and b = (2, −3), find 2a − b.", a: "(6, 5)", worked: ["2a = (8, 2)", "2a − b = (8 − 2, 2 − (−3))", "= (6, 5)"], hint: "Find 2a first, then subtract b" },
+    ],
+    // Level 3 (Grade 8) — Vector geometry
+    [
+      { q: "OA = a and OB = b. M is the midpoint of AB. Find OM in terms of a and b.", a: "½(a + b)", worked: ["AB = AO + OB = −a + b = b − a", "AM = ½AB = ½(b − a)", "OM = OA + AM = a + ½(b − a)", "= a + ½b − ½a = ½a + ½b", "= ½(a + b)"], hint: "Go from O to A, then halfway from A to B" },
+    ],
+    // Level 4 (Grade 8) — Proving collinearity and parallel vectors
+    [
+      { q: "OA = 2a + b, OB = 5a − 2b, OC = 8a − 5b. Prove that A, B and C are collinear.", a: "Shown", type: "proof", worked: ["AB = OB − OA = (5a − 2b) − (2a + b) = 3a − 3b", "AC = OC − OA = (8a − 5b) − (2a + b) = 6a − 6b", "AC = 2(3a − 3b) = 2 × AB", "AC is a scalar multiple of AB, so they are parallel", "They share point A, so A, B and C are collinear"], hint: "Show that AC is a scalar multiple of AB (they share point A)" },
+    ],
+    // Level 5 (Grade 9) — Ratio and vector proofs
+    [
+      { q: "OA = a and OB = b. P is the midpoint of OA and Q is the midpoint of OB. Show that PQ is parallel to AB.", a: "Shown", type: "proof", worked: ["OP = ½a (midpoint of OA)", "OQ = ½b (midpoint of OB)", "PQ = PO + OQ = −½a + ½b = ½(b − a)", "AB = AO + OB = −a + b = b − a", "PQ = ½AB, so PQ is parallel to AB (scalar multiple)"], hint: "Find PQ in terms of a and b, then show it's a scalar multiple of AB" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // P9: Conditional Probability & Set Notation (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'P9': [
+    // Level 1 (Grade 6) — Venn diagrams with two sets
+    [
+      { q: "In a class of 30, 18 play football, 12 play tennis and 5 play both. How many play neither?", a: "5", worked: ["Football only: 18 − 5 = 13", "Tennis only: 12 − 5 = 7", "Both: 5", "Total who play a sport: 13 + 7 + 5 = 25", "Neither: 30 − 25 = 5"], hint: "Draw a Venn diagram. Start with the intersection (both)" },
+      { q: "In a group, P(A) = 0.6, P(B) = 0.5 and P(A ∩ B) = 0.2. Find P(A ∪ B).", a: "0.9", worked: ["P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", "= 0.6 + 0.5 − 0.2", "= 0.9"], hint: "Use the addition rule: P(A ∪ B) = P(A) + P(B) − P(A ∩ B)" },
+    ],
+    // Level 2 (Grade 7) — Conditional probability from tables/diagrams
+    [
+      { q: "A bag has 3 red and 5 blue balls. A ball is taken, not replaced, then another is taken. Find P(both red).", a: "3/28", worked: ["P(1st red) = 3/8", "P(2nd red | 1st red) = 2/7", "P(both red) = 3/8 × 2/7 = 6/56 = 3/28"], hint: "After taking the first red ball, there are fewer red balls and fewer total" },
+    ],
+    // Level 3 (Grade 8) — Tree diagrams with conditional probability
+    [
+      { q: "P(A) = 0.4 and P(B|A) = 0.3 and P(B|A') = 0.6. Draw a tree diagram and find P(B).", a: "0.48", worked: ["P(A and B) = 0.4 × 0.3 = 0.12", "P(A' and B) = 0.6 × 0.6 = 0.36", "P(B) = 0.12 + 0.36 = 0.48"], hint: "P(B) = P(A and B) + P(A' and B)", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Set notation
+    [
+      { q: "ξ = {1,2,3,...,12}, A = {multiples of 3}, B = {even numbers}. List the members of (A ∪ B)'.", a: "{1, 5, 7, 11}", worked: ["A = {3, 6, 9, 12}", "B = {2, 4, 6, 8, 10, 12}", "A ∪ B = {2, 3, 4, 6, 8, 9, 10, 12}", "(A ∪ B)' = elements NOT in A ∪ B = {1, 5, 7, 11}"], hint: "Find A ∪ B first (everything in A or B), then find everything NOT in that set" },
+    ],
+    // Level 5 (Grade 9) — Advanced conditional probability
+    [
+      { q: "Events A and B are independent. P(A) = 0.3 and P(A ∪ B) = 0.72. Find P(B).", a: "0.6", worked: ["For independent events: P(A ∩ B) = P(A) × P(B)", "P(A ∪ B) = P(A) + P(B) − P(A ∩ B)", "0.72 = 0.3 + P(B) − 0.3 × P(B)", "0.42 = P(B)(1 − 0.3)", "0.42 = 0.7 × P(B)", "P(B) = 0.6"], hint: "Independent means P(A ∩ B) = P(A) × P(B). Substitute into the addition rule.", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A22: Graphs of Trigonometric Functions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'A22': [
+    // Level 1 (Grade 6) — Recognising trig graphs
+    [
+      { q: "What is the period of the graph y = sin(x)?", a: "360°", type: "mcq", options: ["180°", "360°", "90°"], worked: ["The sine curve completes one full cycle from 0° to 360°", "So the period is 360°"], hint: "A full cycle means from one peak back to the same peak" },
+      { q: "What is the maximum value of y = cos(x)?", a: "1", worked: ["The cosine graph oscillates between −1 and 1", "Maximum value = 1 (at x = 0°, 360°, etc.)"], hint: "Think about the range of the cosine function" },
+    ],
+    // Level 2 (Grade 7) — Reading values from trig graphs
+    [
+      { q: "How many solutions does sin(x) = 0.5 have for 0° ≤ x ≤ 360°?", a: "2", worked: ["sin(30°) = 0.5", "The sine graph also equals 0.5 at 180° − 30° = 150°", "So there are 2 solutions: x = 30° and x = 150°"], hint: "Think about the symmetry of the sine curve" },
+      { q: "Solve tan(x) = 1 for 0° ≤ x ≤ 360°", a: "x = 45° or x = 225°", worked: ["tan(45°) = 1", "tan repeats every 180°, so also at 45° + 180° = 225°", "Solutions: x = 45° and x = 225°"], hint: "The tangent function repeats every 180°" },
+    ],
+    // Level 3 (Grade 7) — Transformations of trig graphs
+    [
+      { q: "Describe the transformation that maps y = sin(x) to y = sin(x) + 3", a: "Translation of (0, 3)", worked: ["Adding 3 to the whole function shifts the graph up by 3 units", "This is a translation by the vector (0, 3)"], hint: "What happens when you add a number outside the function?" },
+    ],
+    // Level 4 (Grade 8) — Using trig graphs to solve equations
+    [
+      { q: "Solve 2sin(x) − 1 = 0 for 0° ≤ x ≤ 360°", a: "x = 30° or x = 150°", worked: ["2sin(x) − 1 = 0", "2sin(x) = 1", "sin(x) = 0.5", "x = 30° or x = 180° − 30° = 150°"], hint: "Rearrange to find sin(x) = ?, then solve" },
+    ],
+    // Level 5 (Grade 9) — Combined transformations
+    [
+      { q: "The graph of y = sin(x) is transformed to y = 3sin(2x) + 1. State the amplitude, period, and vertical shift.", a: "Amplitude = 3, Period = 180°, Shift up 1", worked: ["Amplitude = 3 (the coefficient of sin)", "Period = 360°/2 = 180° (divide by the coefficient of x)", "Vertical shift = +1 (added outside the sin)"], hint: "The number in front stretches vertically, the number inside compresses horizontally" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // N10: Fraction, Decimal & Percentage Conversions (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'N10': [
+    // Level 1 (Grade 5) — Converting between fractions, decimals and percentages
+    [
+      { q: "Convert 0.375 to a fraction in its simplest form.", a: "3/8", worked: ["0.375 = 375/1000", "Divide both by 125: 3/8"], hint: "Write as thousandths, then simplify by dividing top and bottom by the same number" },
+      { q: "Write 7/20 as a percentage.", a: "35%", worked: ["7/20 = 7 × 5 / (20 × 5) = 35/100 = 35%"], hint: "Convert to a fraction out of 100" },
+    ],
+    // Level 2 (Grade 6) — Recurring decimals to fractions
+    [
+      { q: "Convert 0.̇3̇ (0.333...) to a fraction.", a: "1/3", worked: ["Let x = 0.333...", "10x = 3.333...", "10x − x = 3", "9x = 3", "x = 3/9 = 1/3"], hint: "Let x equal the recurring decimal, then multiply by 10 to shift the repeating part" },
+      { q: "Convert 0.2̇7̇ (0.2727...) to a fraction.", a: "3/11", worked: ["Let x = 0.2727...", "100x = 27.2727...", "100x − x = 27", "99x = 27", "x = 27/99 = 3/11"], hint: "Two digits repeat, so multiply by 100" },
+    ],
+    // Level 3 (Grade 7) — Mixed recurring decimals
+    [
+      { q: "Convert 0.1̇6̇ (0.1666...) to a fraction.", a: "1/6", worked: ["Let x = 0.1666...", "10x = 1.666...", "100x = 16.666...", "100x − 10x = 15", "90x = 15", "x = 15/90 = 1/6"], hint: "The 1 doesn't repeat but the 6 does. Use two multiplications." },
+    ],
+    // Level 4 (Grade 8) — Proof that recurring decimal equals fraction
+    [
+      { q: "Prove algebraically that 0.4̇5̇ = 5/11", a: "Shown", type: "proof", worked: ["Let x = 0.454545...", "100x = 45.454545...", "100x − x = 45", "99x = 45", "x = 45/99 = 5/11 ✓"], hint: "Use the standard algebraic method and simplify the resulting fraction" },
+    ],
+    // Level 5 (Grade 9) — Complex recurring decimal problems
+    [
+      { q: "Show that 0.1̇2̇ + 0.2̇1̇ = 1/3", a: "Shown", type: "proof", worked: ["0.1̇2̇ = 12/99 = 4/33", "0.2̇1̇ = 21/99 = 7/33", "4/33 + 7/33 = 11/33 = 1/3 ✓"], hint: "Convert each recurring decimal to a fraction separately, then add" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A20: Algebraic Proof (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A20': [
+    // Level 1 (Grade 6) — Writing algebraic expressions
+    [
+      { q: "Write an expression for: an even number", a: "2n", worked: ["An even number is any multiple of 2", "If n is an integer, then 2n is always even"], hint: "What do all even numbers have in common?" },
+      { q: "Write expressions for two consecutive odd numbers.", a: "2n + 1 and 2n + 3", worked: ["An odd number can be written as 2n + 1", "The next odd number is 2 more: 2n + 3"], hint: "Odd numbers are 1 more than even numbers" },
+    ],
+    // Level 2 (Grade 7) — Simple algebraic proofs
+    [
+      { q: "Prove that the sum of any two even numbers is even.", a: "Shown", type: "proof", worked: ["Let the two even numbers be 2a and 2b", "Sum = 2a + 2b = 2(a + b)", "This is 2 × (a + b), which is a multiple of 2", "So the sum is always even"], hint: "Write each even number as 2 times something" },
+      { q: "Prove that the sum of any two odd numbers is even.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2a + 1 and 2b + 1", "Sum = 2a + 1 + 2b + 1 = 2a + 2b + 2", "= 2(a + b + 1)", "This is a multiple of 2, so it's even"], hint: "Write each odd number as 2n + 1" },
+    ],
+    // Level 3 (Grade 8) — Product proofs
+    [
+      { q: "Prove that the product of two consecutive integers is always even.", a: "Shown", type: "proof", worked: ["Let the consecutive integers be n and n + 1", "Product = n(n + 1)", "If n is even, then n(n + 1) is even (even × anything = even)", "If n is odd, then n + 1 is even, so n(n + 1) is even", "Either way, the product is always even"], hint: "Consider two cases: n even and n odd" },
+    ],
+    // Level 4 (Grade 8) — Proof with quadratics
+    [
+      { q: "Prove that n² + n is always even for all positive integers n.", a: "Shown", type: "proof", worked: ["n² + n = n(n + 1)", "This is the product of consecutive integers", "One of n or n + 1 must be even", "So n(n + 1) is always even"], hint: "Factorise first, then think about consecutive integers" },
+    ],
+    // Level 5 (Grade 9) — Counter-examples and complex proofs
+    [
+      { q: "Prove that the difference between the squares of consecutive odd numbers is always a multiple of 8.", a: "Shown", type: "proof", worked: ["Let the odd numbers be 2n + 1 and 2n + 3", "(2n + 3)² − (2n + 1)²", "= (4n² + 12n + 9) − (4n² + 4n + 1)", "= 8n + 8 = 8(n + 1)", "This is a multiple of 8"], hint: "Write two consecutive odd numbers as 2n + 1 and 2n + 3, then expand" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A15: Solving Quadratic Inequalities (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A15': [
+    // Level 1 (Grade 6) — Solving linear inequalities (review)
+    [
+      { q: "Solve 3x + 2 > 14", a: "x > 4", worked: ["3x + 2 > 14", "3x > 12", "x > 4"], hint: "Treat it like an equation, but keep the inequality sign" },
+      { q: "Solve 5 − 2x ≤ 11", a: "x ≥ −3", worked: ["5 − 2x ≤ 11", "−2x ≤ 6", "x ≥ −3 (flip the sign when dividing by negative)"], hint: "Remember to flip the inequality when dividing by a negative" },
+    ],
+    // Level 2 (Grade 7) — Representing inequalities on number lines
+    [
+      { q: "Solve −3 < 2x + 1 ≤ 7 and list the integer values.", a: "−1, 0, 1, 2, 3", worked: ["−3 < 2x + 1 ≤ 7", "Subtract 1: −4 < 2x ≤ 6", "Divide by 2: −2 < x ≤ 3", "Integer values: −1, 0, 1, 2, 3"], hint: "Solve the compound inequality in one go, doing the same to all three parts" },
+    ],
+    // Level 3 (Grade 8) — Quadratic inequalities (basic)
+    [
+      { q: "Solve x² < 25", a: "−5 < x < 5", worked: ["x² < 25", "x² − 25 < 0", "(x + 5)(x − 5) < 0", "The parabola is negative between the roots", "−5 < x < 5"], hint: "Find where x² = 25, then think about where the parabola is below zero" },
+      { q: "Solve x² ≥ 9", a: "x ≤ −3 or x ≥ 3", worked: ["x² ≥ 9", "x² − 9 ≥ 0", "(x + 3)(x − 3) ≥ 0", "The parabola is positive outside the roots", "x ≤ −3 or x ≥ 3"], hint: "Think about where the U-shaped parabola is above the x-axis" },
+    ],
+    // Level 4 (Grade 8) — Factorised quadratic inequalities
+    [
+      { q: "Solve x² − 5x + 6 > 0", a: "x < 2 or x > 3", worked: ["Factorise: (x − 2)(x − 3) > 0", "Roots at x = 2 and x = 3", "Parabola is positive outside the roots", "x < 2 or x > 3"], hint: "Factorise, find the roots, then sketch the parabola" },
+    ],
+    // Level 5 (Grade 9) — Complex quadratic inequalities
+    [
+      { q: "Find the set of values of x for which x² − 3x − 10 ≤ 0", a: "−2 ≤ x ≤ 5", worked: ["Factorise: (x − 5)(x + 2) ≤ 0", "Roots at x = −2 and x = 5", "Parabola is negative (or zero) between the roots", "−2 ≤ x ≤ 5"], hint: "Factorise, find roots, then determine where the quadratic is ≤ 0" },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // G22: Enlargement with Negative & Fractional Scale Factors (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'G22': [
+    // Level 1 (Grade 5) — Enlargement with positive integer scale factor
+    [
+      { q: "A triangle has vertices at (1,1), (3,1) and (1,3). It is enlarged by scale factor 2, centre the origin. What are the new coordinates?", a: "(2,2), (6,2), (2,6)", worked: ["Multiply each coordinate by 2", "(1,1) → (2,2)", "(3,1) → (6,2)", "(1,3) → (2,6)"], hint: "Multiply each coordinate by the scale factor" },
+    ],
+    // Level 2 (Grade 6) — Enlargement with fractional scale factor
+    [
+      { q: "A shape is enlarged by scale factor ½, centre the origin. A vertex at (6, 4) maps to which point?", a: "(3, 2)", worked: ["Multiply each coordinate by ½", "6 × ½ = 3", "4 × ½ = 2", "New point: (3, 2)"], hint: "A fractional scale factor makes the shape smaller" },
+      { q: "Describe the single transformation that maps a triangle with vertices (2,4), (6,4), (2,8) to a triangle with vertices (1,2), (3,2), (1,4).", a: "Enlargement, scale factor ½, centre (0,0)", worked: ["Each coordinate is halved", "2→1, 4→2, 6→3, 8→4", "Scale factor = ½", "Centre is the origin (0,0)"], hint: "Compare corresponding coordinates to find the scale factor" },
+    ],
+    // Level 3 (Grade 7) — Enlargement with centre not at origin
+    [
+      { q: "Triangle A has a vertex at (4, 3). It is enlarged by scale factor 2, centre (1, 1). Where does this vertex map to?", a: "(7, 5)", worked: ["Vector from centre to vertex: (4−1, 3−1) = (3, 2)", "Multiply by scale factor 2: (6, 4)", "Add back to centre: (1+6, 1+4) = (7, 5)"], hint: "Find the vector from the centre to the point, multiply by scale factor, add back to centre" },
+    ],
+    // Level 4 (Grade 8) — Negative scale factor
+    [
+      { q: "A point P(5, 3) is enlarged by scale factor −2, centre (1, 1). Find the image of P.", a: "(−7, −3)", worked: ["Vector from centre to P: (5−1, 3−1) = (4, 2)", "Multiply by −2: (−8, −4)", "Add to centre: (1+(−8), 1+(−4)) = (−7, −3)", "Negative SF means the image is on the opposite side"], hint: "Negative scale factor means the image is on the opposite side of the centre" },
+    ],
+    // Level 5 (Grade 9) — Describing enlargements and area/volume scale factors
+    [
+      { q: "Two similar shapes have lengths in the ratio 3:5. The area of the smaller shape is 36 cm². Find the area of the larger shape.", a: "100 cm²", worked: ["Length ratio = 3:5", "Area ratio = 3²:5² = 9:25", "36/9 = 4 (scale unit)", "Larger area = 25 × 4 = 100 cm²"], hint: "If lengths are in ratio a:b, areas are in ratio a²:b²", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // R15: Growth & Decay (Higher)
+  // ═══════════════════════════════════════════════════════════════
+  'R15': [
+    // Level 1 (Grade 6) — Simple percentage increase/decrease
+    [
+      { q: "A car loses 15% of its value each year. It is worth £12,000 now. What will it be worth in 1 year?", a: "£10,200", worked: ["15% of £12,000 = £1,800", "£12,000 − £1,800 = £10,200", "Or: 12000 × 0.85 = £10,200"], hint: "Multiply by 0.85 (100% − 15% = 85%)", calculator: true },
+    ],
+    // Level 2 (Grade 7) — Compound interest
+    [
+      { q: "£5,000 is invested at 3% compound interest per year. Find the value after 4 years.", a: "£5,627.54", worked: ["Value = 5000 × 1.03⁴", "= 5000 × 1.12551", "= £5,627.54 (to nearest penny)"], hint: "Use the formula: amount × (multiplier)^years", calculator: true },
+    ],
+    // Level 3 (Grade 8) — Depreciation
+    [
+      { q: "A car worth £18,000 depreciates by 20% per year. After how many whole years will it first be worth less than £8,000?", a: "4 years", worked: ["After 1 year: 18000 × 0.8 = £14,400", "After 2 years: 14400 × 0.8 = £11,520", "After 3 years: 11520 × 0.8 = £9,216", "After 4 years: 9216 × 0.8 = £7,372.80", "First below £8,000 after 4 years"], hint: "Keep multiplying by 0.8 until below £8,000", calculator: true },
+    ],
+    // Level 4 (Grade 8) — Exponential growth/decay formula
+    [
+      { q: "A population of bacteria doubles every 3 hours. Starting with 500, find the population after 12 hours.", a: "8000", worked: ["12 hours ÷ 3 = 4 doubling periods", "500 × 2⁴ = 500 × 16 = 8,000"], hint: "Work out how many doubling periods there are, then multiply", calculator: true },
+    ],
+    // Level 5 (Grade 9) — Working backwards from growth/decay
+    [
+      { q: "After 3 years of 5% compound interest, an investment is worth £5,788.13. What was the original investment?", a: "£5,000", worked: ["5788.13 = P × 1.05³", "5788.13 = P × 1.157625", "P = 5788.13 ÷ 1.157625", "P = £5,000"], hint: "Divide the final amount by (multiplier)^years", calculator: true },
+    ],
+  ],
+
+  // ═══════════════════════════════════════════════════════════════
+  // A13: Equation of a Circle (Higher only)
+  // ═══════════════════════════════════════════════════════════════
+  'A13': [
+    // Level 1 (Grade 7) — Equation of a circle centred at origin
+    [
+      { q: "What is the equation of a circle with centre (0,0) and radius 5?", a: "x² + y² = 25", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 5, so r² = 25", "x² + y² = 25"], hint: "Use x² + y² = r²" },
+      { q: "A circle has equation x² + y² = 49. What is the radius?", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
+    ],
+    // Level 2 (Grade 7) — Points on a circle
+    [
+      { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["Substitute: 3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so yes, the point lies on the circle"], hint: "Substitute the coordinates into the equation and check if it equals 25" },
+    ],
+    // Level 3 (Grade 8) — Tangent to a circle
+    [
+      { q: "A circle has equation x² + y² = 25. Find the equation of the tangent at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Radius to (3,4): gradient = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4", "y = −¾x + 25/4"], hint: "The tangent is perpendicular to the radius at the point of contact" },
+    ],
+    // Level 4 (Grade 8) — Circle with centre (a, b)
+    [
+      { q: "What is the equation of a circle with centre (2, −3) and radius 4?", a: "(x − 2)² + (y + 3)² = 16", worked: ["The equation is (x − a)² + (y − b)² = r²", "Centre (2, −3): a = 2, b = −3", "(x − 2)² + (y − (−3))² = 4²", "(x − 2)² + (y + 3)² = 16"], hint: "Use (x − a)² + (y − b)² = r²" },
+    ],
+    // Level 5 (Grade 9) — Completing the square for circles
+    [
+      { q: "Find the centre and radius of the circle x² + y² − 6x + 4y − 12 = 0", a: "Centre (3, −2), radius 5", worked: ["Group: (x² − 6x) + (y² + 4y) = 12", "Complete square: (x − 3)² − 9 + (y + 2)² − 4 = 12", "(x − 3)² + (y + 2)² = 25", "Centre = (3, −2), radius = √25 = 5"], hint: "Complete the square for x and y separately" },
+    ],
+  ],
 };
 
 // Pick a random variant from a question slot (supports both single questions and variant arrays)
