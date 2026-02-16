@@ -3966,30 +3966,35 @@ const higherQuestionBank = {
   // G20: Advanced Pythagoras & Trigonometry (Higher)
   // ═══════════════════════════════════════════════════════════════
   'G20': [
-    // Level 1 (Grade 4) — Basic Pythagoras
+    // Level 1 (Grade 5) — Finding base diagonal of a cuboid
     [
-      { q: "Calculate the hypotenuse of a right-angled triangle with sides 5 cm and 12 cm.", a: "13", worked: ["Use Pythagoras: c² = 5² + 12²", "c² = 25 + 144 = 169", "c = √169 = 13 cm"], hint: "c² = a² + b²", calculator: true },
-      { q: "A ladder leans against a wall. The foot is 6 m from the wall and the ladder is 10 m long. How high up the wall does it reach?", a: "8", worked: ["Use Pythagoras: 10² = 6² + h²", "100 = 36 + h² → h² = 64", "h = 8 m"], hint: "10² = 6² + h²", calculator: true },
+      { q: "Find the length of the diagonal on the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "5 cm", worked: ["Base diagonal = √(3² + 4²)", "= √(9 + 16) = √25", "= 5 cm"], hint: "Use 2D Pythagoras on the base: √(length² + width²)", calculator: true },
+      { q: "Find the diagonal of the base of a cuboid with dimensions 5 cm × 12 cm × 10 cm.", a: "13 cm", worked: ["Base diagonal = √(5² + 12²)", "= √(25 + 144) = √169", "= 13 cm"], hint: "Use Pythagoras on the base rectangle", calculator: true },
+      { q: "Find the diagonal of the base for a 6 cm × 8 cm × 15 cm cuboid.", a: "10 cm", worked: ["Base diagonal = √(6² + 8²)", "= √(36 + 64) = √100", "= 10 cm"], hint: "Apply Pythagoras to the length and width", calculator: true },
     ],
-    // Level 2 (Grade 5) — SOH CAH TOA to find missing angles
+    // Level 2 (Grade 6) — Internal (space) diagonal of a cuboid
     [
-      { q: "Use SOH CAH TOA to find the missing angle θ in a right-angled triangle where the opposite side is 5 cm and the hypotenuse is 10 cm.", a: "30", worked: ["sin(θ) = opposite/hypotenuse = 5/10 = 0.5", "θ = sin⁻¹(0.5) = 30°"], hint: "sin(θ) = opposite/hypotenuse", calculator: true },
-      { q: "Find angle θ where the adjacent side is 4 cm and the hypotenuse is 8 cm.", a: "60", worked: ["cos(θ) = adjacent/hypotenuse = 4/8 = 0.5", "θ = cos⁻¹(0.5) = 60°"], hint: "cos(θ) = adjacent/hypotenuse", calculator: true },
+      { q: "Calculate the longest diagonal (internal diagonal) of a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "13 cm", worked: ["Base diagonal = √(9 + 16) = 5 cm", "Space diagonal = √(5² + 12²) = √(25 + 144)", "= √169 = 13 cm"], hint: "Find the base diagonal first, then use Pythagoras with the height", calculator: true },
+      { q: "Calculate the internal diagonal of an 8 cm × 6 cm × 5 cm cuboid. Give your answer to 1 d.p.", a: "11.2 cm", worked: ["Space diagonal = √(8² + 6² + 5²)", "= √(64 + 36 + 25) = √125", "= 11.2 cm (1 d.p.)"], hint: "Space diagonal = √(l² + w² + h²)", calculator: true },
+      { q: "Find the distance between opposite corners (0,0,0) and (4,4,4) in a cube.", a: "4√3 cm", worked: ["Distance = √(4² + 4² + 4²)", "= √(16 + 16 + 16) = √48", "= 4√3 ≈ 6.93 cm"], hint: "Use 3D distance: √(x² + y² + z²)" },
     ],
-    // Level 3 (Grade 7) — 3D Pythagoras (diagonal of cuboid)
+    // Level 3 (Grade 7) — Angle between space diagonal and base
     [
-      { q: "Calculate the length of the diagonal across a cuboid with dimensions 3 cm × 4 cm × 12 cm.", a: "13", worked: ["Base diagonal = √(3² + 4²) = √(9 + 16) = √25 = 5 cm", "Space diagonal = √(5² + 12²) = √(25 + 144) = √169 = 13 cm"], hint: "First find the base diagonal, then use Pythagoras again with the height", calculator: true },
-      { q: "A cuboid is 6 cm × 8 cm × 24 cm. Find the length of the space diagonal.", a: "26", worked: ["Base diagonal = √(6² + 8²) = √(36 + 64) = √100 = 10 cm", "Space diagonal = √(10² + 24²) = √(100 + 576) = √676 = 26 cm"], hint: "3D Pythagoras: find the base diagonal first, then include the height", calculator: true },
+      { q: "Find the angle between the longest diagonal and the base of a 3 cm × 4 cm × 12 cm cuboid. Give your answer to 1 d.p.", a: "67.4°", worked: ["Base diagonal = 5 cm", "tan θ = height / base diagonal = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "tan(angle) = vertical height ÷ base diagonal", calculator: true },
+      { q: "Find the angle between the internal diagonal and the shortest edge (5 cm) of an 8 cm × 6 cm × 5 cm cuboid. Give your answer to 1 d.p.", a: "63.4°", worked: ["Base diagonal (8 × 6 face) = √(64 + 36) = 10 cm", "The angle is between space diagonal and the vertical edge", "tan θ = base diagonal / height = 10/5 = 2", "θ = tan⁻¹(2) = 63.4°"], hint: "The angle at the base between the vertical edge and the space diagonal. Use tan = base diagonal / height.", calculator: true },
+      { q: "Find the angle between the diagonal of a cube and its base. Give your answer to 1 d.p.", a: "35.3°", worked: ["For a cube with side a:", "Base diagonal = a√2", "tan θ = a / (a√2) = 1/√2", "θ = tan⁻¹(1/√2) = 35.3°"], hint: "The base diagonal of a cube with side a is a√2. Use tan = height / base diagonal.", calculator: true },
     ],
-    // Level 4 (Grade 8) — Angle between diagonal and base in 3D shapes
+    // Level 4 (Grade 8) — 3D pyramids and cones
     [
-      { q: "Find the angle between a diagonal and the base of a cuboid with dimensions 3 cm × 4 cm × 12 cm. Give your answer to 1 d.p.", a: "67.4", worked: ["Base diagonal = √(3² + 4²) = 5 cm", "tan(θ) = height/base diagonal = 12/5 = 2.4", "θ = tan⁻¹(2.4) = 67.4°"], hint: "Find the base diagonal, then use tan(θ) = height/base diagonal", calculator: true },
-      { q: "A pyramid has a square base of side 6 cm and a vertical height of 8 cm. Find the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "62.1", worked: ["Half diagonal of base = √(3² + 3²) = 3√2 ≈ 4.243 cm", "tan(θ) = 8/4.243 = 1.885", "θ = tan⁻¹(1.885) = 62.1°"], hint: "Find the distance from centre of base to corner, then use tan = height/distance", calculator: true },
+      { q: "A square-based pyramid has base 6 cm × 6 cm and slant height 10 cm. Find the vertical height. Give your answer to 1 d.p.", a: "9.5 cm", worked: ["Slant height goes from apex to midpoint of base edge", "Half base edge = 3 cm", "h² + 3² = 10²", "h² = 100 − 9 = 91", "h = √91 = 9.5 cm (1 d.p.)"], hint: "The slant height, half the base edge, and the vertical height form a right triangle", calculator: true },
+      { q: "A pyramid has a 10 cm square base and vertical height 12 cm. Find the slant height.", a: "13 cm", worked: ["Half base edge = 5 cm", "Slant height² = 12² + 5²", "= 144 + 25 = 169", "Slant height = √169 = 13 cm"], hint: "The slant height forms a right triangle with the height and half the base edge", calculator: true },
+      { q: "In a cone, the radius is 5 cm and slant height is 13 cm. Find the vertical height.", a: "12 cm", worked: ["h² + r² = slant²", "h² + 25 = 169", "h² = 144", "h = 12 cm"], hint: "Use Pythagoras: h² + radius² = slant height²", calculator: true },
     ],
-    // Level 5 (Grade 9) — Sine Rule, Cosine Rule and complex 3D problems
+    // Level 5 (Grade 9) — Complex 3D angle problems
     [
-      { q: "In triangle ABC, angle A = 40°, angle B = 75° and side a = 8 cm. Find side b using the Sine Rule. Give your answer to 1 d.p.", a: "12.0", worked: ["Sine Rule: a/sin(A) = b/sin(B)", "8/sin(40°) = b/sin(75°)", "b = 8 × sin(75°)/sin(40°)", "b = 8 × 0.9659/0.6428 = 12.0 cm"], hint: "Sine Rule: a/sin(A) = b/sin(B)", calculator: true },
-      { q: "Find the length of side x in a triangle with sides 7 cm and 9 cm and an included angle of 110°. Give your answer to 1 d.p.", a: "13.2", worked: ["Cosine Rule: x² = 7² + 9² − 2(7)(9)cos(110°)", "x² = 49 + 81 − 126×(−0.342)", "x² = 130 + 43.1 = 173.1", "x = √173.1 = 13.2 cm"], hint: "Cosine Rule: x² = a² + b² − 2ab cos(C)", calculator: true },
+      { q: "Calculate the angle between two triangular faces of a regular tetrahedron. Give your answer to 1 d.p.", a: "70.5°", worked: ["For a regular tetrahedron, the dihedral angle = arccos(1/3)", "cos θ = 1/3", "θ = cos⁻¹(1/3) = 70.5°"], hint: "The dihedral angle of a regular tetrahedron is arccos(1/3). This is a well-known result.", calculator: true },
+      { q: "A pyramid has a 10 cm square base and vertical height 12 cm. Find the angle between a slant edge and the base. Give your answer to 1 d.p.", a: "59.5°", worked: ["Half diagonal of base = ½ × 10√2 = 5√2 ≈ 7.071 cm", "tan θ = height / half-diagonal = 12/5√2", "θ = tan⁻¹(12/7.071) = 59.5°"], hint: "The slant edge goes to a corner, so use the half-diagonal (not half-edge) of the base", calculator: true },
+      { q: "Find the angle at the apex of a cone with radius 5 cm and slant height 13 cm. Give your answer to 1 d.p.", a: "45.2°", worked: ["The cross-section is an isosceles triangle: sides 13, 13, base 10", "cos A = (13² + 13² − 10²)/(2 × 13 × 13)", "= (169 + 169 − 100)/338 = 238/338", "A = cos⁻¹(0.7041) = 45.2°"], hint: "Use the cosine rule on the cross-sectional triangle with both slant heights and the diameter", calculator: true },
     ],
   ],
 
@@ -4100,33 +4105,35 @@ const higherQuestionBank = {
   // A4: Expanding, Factorising, Completing the Square & Algebraic Fractions (Higher)
   // ═══════════════════════════════════════════════════════════════
   'A4': [
-    // Level 1 (Grade 5) — Expanding double brackets
+    // Level 1 (Grade 4) — Solving linear simultaneous equations
     [
-      { q: "Expand and simplify (x + 3)(x + 5)", a: "x² + 8x + 15", worked: ["x × x = x²", "x × 5 = 5x", "3 × x = 3x", "3 × 5 = 15", "x² + 5x + 3x + 15 = x² + 8x + 15"], hint: "Use FOIL: First, Outer, Inner, Last" },
-      { q: "Expand and simplify (x + 4)(x − 2)", a: "x² + 2x − 8", worked: ["x × x = x²", "x × (−2) = −2x", "4 × x = 4x", "4 × (−2) = −8", "x² − 2x + 4x − 8 = x² + 2x − 8"], hint: "Be careful with the negative sign in the second bracket" },
-      { q: "Expand and simplify (x − 3)(x − 7)", a: "x² − 10x + 21", worked: ["x × x = x²", "x × (−7) = −7x", "(−3) × x = −3x", "(−3) × (−7) = 21", "x² − 7x − 3x + 21 = x² − 10x + 21"], hint: "Negative × negative = positive" },
+      { q: "Solve x + y = 10 and x − y = 4.", a: "x = 7, y = 3", worked: ["Add the equations: 2x = 14", "x = 7", "Substitute: 7 + y = 10 → y = 3"], hint: "Add the two equations to eliminate y" },
+      { q: "Solve x + y = 15 and x − y = 3.", a: "x = 9, y = 6", worked: ["Add: 2x = 18 → x = 9", "9 + y = 15 → y = 6"], hint: "Add the equations to eliminate y" },
+      { q: "Solve x + y = 20 and y − x = 4.", a: "x = 8, y = 12", worked: ["Add: 2y = 24 → y = 12", "x + 12 = 20 → x = 8"], hint: "Add the equations to eliminate x" },
     ],
-    // Level 2 (Grade 6) — Factorising quadratics (a = 1)
+    // Level 2 (Grade 6) — Simultaneous equations by elimination
     [
-      { q: "Factorise x² + 7x + 12", a: "(x + 3)(x + 4)", worked: ["Find two numbers that multiply to 12 and add to 7", "3 × 4 = 12 and 3 + 4 = 7", "So x² + 7x + 12 = (x + 3)(x + 4)"], hint: "Find two numbers that multiply to 12 and add to 7" },
-      { q: "Factorise x² − 5x + 6", a: "(x − 2)(x − 3)", worked: ["Find two numbers that multiply to 6 and add to −5", "(−2) × (−3) = 6 and (−2) + (−3) = −5", "So x² − 5x + 6 = (x − 2)(x − 3)"], hint: "Both numbers must be negative (positive product, negative sum)" },
-      { q: "Factorise x² + 2x − 15", a: "(x + 5)(x − 3)", worked: ["Find two numbers that multiply to −15 and add to 2", "5 × (−3) = −15 and 5 + (−3) = 2", "So x² + 2x − 15 = (x + 5)(x − 3)"], hint: "One number positive, one negative (negative product)" },
+      { q: "Solve 3x + 2y = 16 and 2x + y = 9.", a: "x = 2, y = 5", worked: ["From eq 2: y = 9 − 2x", "Substitute into eq 1: 3x + 2(9 − 2x) = 16", "3x + 18 − 4x = 16 → −x = −2 → x = 2", "y = 9 − 4 = 5"], hint: "Rearrange one equation for y, then substitute into the other" },
+      { q: "Solve 5x + 3y = 21 and x + y = 5.", a: "x = 3, y = 2", worked: ["From eq 2: y = 5 − x", "Substitute: 5x + 3(5 − x) = 21", "5x + 15 − 3x = 21 → 2x = 6 → x = 3", "y = 5 − 3 = 2"], hint: "Rearrange the simpler equation for y" },
+      { q: "Solve 2x − y = 7 and x + 2y = 11.", a: "x = 5, y = 3", worked: ["From eq 1: y = 2x − 7", "Substitute: x + 2(2x − 7) = 11", "5x − 14 = 11 → 5x = 25 → x = 5", "y = 10 − 7 = 3"], hint: "Rearrange for y, then substitute" },
     ],
-    // Level 3 (Grade 7) — Factorising quadratics (a ≠ 1) and difference of two squares
+    // Level 3 (Grade 7) — One linear, one quadratic (circle)
     [
-      { q: "Factorise 2x² + 5x + 3", a: "(2x + 3)(x + 1)", worked: ["Multiply a × c = 2 × 3 = 6", "Find two numbers that multiply to 6 and add to 5: 2 and 3", "Split: 2x² + 2x + 3x + 3", "Factorise in pairs: 2x(x + 1) + 3(x + 1)", "= (2x + 3)(x + 1)"], hint: "Use the AC method: multiply the coefficient of x² by the constant" },
-      { q: "Factorise x² − 49", a: "(x + 7)(x − 7)", worked: ["This is a difference of two squares: a² − b²", "x² − 49 = x² − 7²", "= (x + 7)(x − 7)"], hint: "This is a difference of two squares: a² − b² = (a + b)(a − b)" },
-      { q: "Factorise 3x² − 12", a: "3(x + 2)(x − 2)", worked: ["Take out common factor of 3: 3(x² − 4)", "x² − 4 is a difference of two squares: x² − 2²", "= 3(x + 2)(x − 2)"], hint: "First take out a common factor, then look for difference of two squares" },
+      { q: "Solve y = x − 3 and x² + y² = 9.", a: "(0, −3) and (3, 0)", worked: ["Substitute y = x − 3 into x² + y² = 9", "x² + (x − 3)² = 9", "x² + x² − 6x + 9 = 9", "2x² − 6x = 0 → 2x(x − 3) = 0", "x = 0, y = −3 or x = 3, y = 0"], hint: "Substitute the linear equation into the circle equation" },
+      { q: "Solve y = x + 2 and x² + y² = 10.", a: "(−3, −1) and (1, 3)", worked: ["x² + (x + 2)² = 10", "2x² + 4x + 4 = 10", "2x² + 4x − 6 = 0 → x² + 2x − 3 = 0", "(x + 3)(x − 1) = 0", "x = −3, y = −1 or x = 1, y = 3"], hint: "Substitute y = x + 2 into x² + y² = 10" },
+      { q: "Solve x = y − 4 and x² + y² = 10.", a: "(−3, 1) and (−1, 3)", worked: ["(y − 4)² + y² = 10", "y² − 8y + 16 + y² = 10", "2y² − 8y + 6 = 0 → y² − 4y + 3 = 0", "(y − 1)(y − 3) = 0", "y = 1, x = −3 or y = 3, x = −1"], hint: "Substitute x = y − 4 into x² + y² = 10" },
     ],
-    // Level 4 (Grade 8) — Completing the square
+    // Level 4 (Grade 8) — Line intersecting a circle
     [
-      { q: "Write x² + 6x + 2 in the form (x + a)² + b", a: "(x + 3)² − 7", worked: ["Half the coefficient of x: 6 ÷ 2 = 3", "(x + 3)² = x² + 6x + 9", "But we need x² + 6x + 2 = (x + 3)² − 9 + 2", "= (x + 3)² − 7"], hint: "Halve the coefficient of x to find a, then adjust the constant" },
-      { q: "Write x² − 8x + 20 in the form (x + a)² + b. Hence find the minimum value.", a: "(x − 4)² + 4, minimum = 4", worked: ["Half the coefficient of x: −8 ÷ 2 = −4", "(x − 4)² = x² − 8x + 16", "x² − 8x + 20 = (x − 4)² − 16 + 20 = (x − 4)² + 4", "Minimum of (x − 4)² is 0 (when x = 4)", "So minimum value is 0 + 4 = 4"], hint: "The minimum of (x + a)² + b occurs when (x + a)² = 0" },
+      { q: "Find the intersection points of y = 2x + 1 and x² + y² = 13.", a: "(1.2, 3.4) and (−2, −3)", worked: ["x² + (2x + 1)² = 13", "x² + 4x² + 4x + 1 = 13", "5x² + 4x − 12 = 0", "x = (−4 ± √(16 + 240))/10 = (−4 ± 16)/10", "x = 1.2, y = 3.4 or x = −2, y = −3"], hint: "Substitute the linear equation into the circle, then use the quadratic formula", calculator: true },
+      { q: "Find the intersection points of y = 3x − 1 and x² + y² = 5.", a: "(1, 2) and (−0.4, −2.2)", worked: ["x² + (3x − 1)² = 5", "10x² − 6x + 1 = 5", "10x² − 6x − 4 = 0 → 5x² − 3x − 2 = 0", "x = (3 ± 7)/10", "x = 1, y = 2 or x = −0.4, y = −2.2"], hint: "Substitute and solve the resulting quadratic", calculator: true },
+      { q: "Find the intersection points of y = x + 1 and x² + y² = 25.", a: "(3, 4) and (−4, −3)", worked: ["x² + (x + 1)² = 25", "2x² + 2x + 1 = 25", "2x² + 2x − 24 = 0 → x² + x − 12 = 0", "(x + 4)(x − 3) = 0", "x = 3, y = 4 or x = −4, y = −3"], hint: "Substitute y = x + 1 and solve the quadratic" },
     ],
-    // Level 5 (Grade 9) — Algebraic fractions
+    // Level 5 (Grade 9) — Non-standard simultaneous equations
     [
-      { q: "Simplify (x² − 9)/(x + 3)", a: "x − 3", worked: ["Factorise the numerator: x² − 9 = (x + 3)(x − 3)", "Cancel (x + 3): (x + 3)(x − 3)/(x + 3)", "= x − 3"], hint: "Factorise the numerator first — it's a difference of two squares" },
-      { q: "Simplify (2x² + 5x − 3)/(x + 3)", a: "2x − 1", worked: ["Factorise 2x² + 5x − 3", "AC method: 2 × (−3) = −6. Numbers: 6 and −1", "2x² + 6x − x − 3 = 2x(x + 3) − 1(x + 3)", "= (2x − 1)(x + 3)", "Cancel (x + 3): (2x − 1)(x + 3)/(x + 3) = 2x − 1"], hint: "Factorise the quadratic in the numerator using the AC method" },
+      { q: "Solve 2x² + xy = 6 and x + 2y = 7. Give answers to 2 d.p.", a: "x = 1.15, y = 2.93 and x = −3.48, y = 5.24", worked: ["From eq 2: y = (7 − x)/2", "Substitute: 2x² + x(7 − x)/2 = 6", "4x² + 7x − x² = 12", "3x² + 7x − 12 = 0", "x = (−7 ± √193)/6", "x = 1.15, y = 2.93 or x = −3.48, y = 5.24"], hint: "Rearrange the linear equation for y, substitute, and use the quadratic formula", calculator: true },
+      { q: "Solve x² − xy = 4 and y = 2x − 5.", a: "(1, −3) and (4, 3)", worked: ["x² − x(2x − 5) = 4", "x² − 2x² + 5x = 4", "−x² + 5x − 4 = 0 → x² − 5x + 4 = 0", "(x − 1)(x − 4) = 0", "x = 1, y = −3 or x = 4, y = 3"], hint: "Substitute y = 2x − 5 and solve the quadratic" },
+      { q: "Solve 3x² + 2xy = 1 and x − y = 2.", a: "(1, −1) and (−0.2, −2.2)", worked: ["From eq 2: y = x − 2", "3x² + 2x(x − 2) = 1", "5x² − 4x − 1 = 0", "(5x + 1)(x − 1) = 0", "x = 1, y = −1 or x = −0.2, y = −2.2"], hint: "Substitute y = x − 2 into the quadratic equation" },
     ],
   ],
 
@@ -4336,27 +4343,35 @@ const higherQuestionBank = {
   // N10: Fraction, Decimal & Percentage Conversions (Higher)
   // ═══════════════════════════════════════════════════════════════
   'N10': [
-    // Level 1 (Grade 5) — Converting between fractions, decimals and percentages
+    // Level 1 (Grade 5) — Simplifying surds
     [
-      { q: "Convert 0.375 to a fraction in its simplest form.", a: "3/8", worked: ["0.375 = 375/1000", "Divide both by 125: 3/8"], hint: "Write as thousandths, then simplify by dividing top and bottom by the same number" },
-      { q: "Write 7/20 as a percentage.", a: "35%", worked: ["7/20 = 7 × 5 / (20 × 5) = 35/100 = 35%"], hint: "Convert to a fraction out of 100" },
+      { q: "Simplify √75.", a: "5√3", worked: ["√75 = √(25 × 3)", "= √25 × √3", "= 5√3"], hint: "Find the largest square factor of 75" },
+      { q: "Simplify √48.", a: "4√3", worked: ["√48 = √(16 × 3)", "= √16 × √3", "= 4√3"], hint: "Find the largest square factor of 48" },
+      { q: "Simplify √200.", a: "10√2", worked: ["√200 = √(100 × 2)", "= √100 × √2", "= 10√2"], hint: "Find the largest square factor of 200" },
     ],
-    // Level 2 (Grade 6) — Recurring decimals to fractions
+    // Level 2 (Grade 6) — Expanding surd expressions
     [
-      { q: "Convert 0.̇3̇ (0.333...) to a fraction.", a: "1/3", worked: ["Let x = 0.333...", "10x = 3.333...", "10x − x = 3", "9x = 3", "x = 3/9 = 1/3"], hint: "Let x equal the recurring decimal, then multiply by 10 to shift the repeating part" },
-      { q: "Convert 0.2̇7̇ (0.2727...) to a fraction.", a: "3/11", worked: ["Let x = 0.2727...", "100x = 27.2727...", "100x − x = 27", "99x = 27", "x = 27/99 = 3/11"], hint: "Two digits repeat, so multiply by 100" },
+      { q: "Expand and simplify √2(3 + √8).", a: "3√2 + 4", worked: ["√2 × 3 = 3√2", "√2 × √8 = √16 = 4", "= 3√2 + 4"], hint: "Multiply √2 by each term. Remember √2 × √8 = √16" },
+      { q: "Expand and simplify √3(4 − √27).", a: "4√3 − 9", worked: ["√3 × 4 = 4√3", "√3 × √27 = √81 = 9", "= 4√3 − 9"], hint: "√3 × √27 = √81 = 9" },
+      { q: "Expand and simplify √5(√20 + 2).", a: "10 + 2√5", worked: ["√5 × √20 = √100 = 10", "√5 × 2 = 2√5", "= 10 + 2√5"], hint: "√5 × √20 = √100" },
     ],
-    // Level 3 (Grade 7) — Mixed recurring decimals
+    // Level 3 (Grade 7) — Rationalising the denominator
     [
-      { q: "Convert 0.1̇6̇ (0.1666...) to a fraction.", a: "1/6", worked: ["Let x = 0.1666...", "10x = 1.666...", "100x = 16.666...", "100x − 10x = 15", "90x = 15", "x = 15/90 = 1/6"], hint: "The 1 doesn't repeat but the 6 does. Use two multiplications." },
+      { q: "Rationalise the denominator of 15/√5. Give your answer in simplified surd form.", a: "3√5", worked: ["Multiply top and bottom by √5", "15/√5 × √5/√5 = 15√5/5 = 3√5"], hint: "Multiply numerator and denominator by √5" },
+      { q: "Rationalise the denominator of 21/√7.", a: "3√7", worked: ["Multiply top and bottom by √7", "21/√7 × √7/√7 = 21√7/7 = 3√7"], hint: "Multiply numerator and denominator by √7" },
+      { q: "Rationalise the denominator of 18/√3.", a: "6√3", worked: ["Multiply top and bottom by √3", "18/√3 × √3/√3 = 18√3/3 = 6√3"], hint: "Multiply numerator and denominator by √3" },
     ],
-    // Level 4 (Grade 8) — Proof that recurring decimal equals fraction
+    // Level 4 (Grade 8) — Expanding double surd brackets
     [
-      { q: "Prove algebraically that 0.4̇5̇ = 5/11", a: "Shown", type: "proof", worked: ["Let x = 0.454545...", "100x = 45.454545...", "100x − x = 45", "99x = 45", "x = 45/99 = 5/11 ✓"], hint: "Use the standard algebraic method and simplify the resulting fraction" },
+      { q: "Simplify (4 + √3)(2 − √3). Give your answer in the form a + b√3.", a: "5 − 2√3", worked: ["Expand: 4×2 + 4×(−√3) + √3×2 + √3×(−√3)", "= 8 − 4√3 + 2√3 − 3", "= 5 − 2√3"], hint: "FOIL: multiply each term, remember √3 × √3 = 3" },
+      { q: "Simplify (3 − √5)(1 + √5). Give your answer in the form a + b√5.", a: "−2 + 2√5", worked: ["Expand: 3×1 + 3×√5 + (−√5)×1 + (−√5)×√5", "= 3 + 3√5 − √5 − 5", "= −2 + 2√5"], hint: "FOIL: multiply each term, remember √5 × √5 = 5" },
+      { q: "Simplify (2 + √7)(5 − √7).", a: "3 + 3√7", worked: ["Expand: 2×5 + 2×(−√7) + √7×5 + √7×(−√7)", "= 10 − 2√7 + 5√7 − 7", "= 3 + 3√7"], hint: "FOIL: multiply each term, remember √7 × √7 = 7" },
     ],
-    // Level 5 (Grade 9) — Complex recurring decimal problems
+    // Level 5 (Grade 9) — Surd proof problems
     [
-      { q: "Show that 0.1̇2̇ + 0.2̇1̇ = 1/3", a: "Shown", type: "proof", worked: ["0.1̇2̇ = 12/99 = 4/33", "0.2̇1̇ = 21/99 = 7/33", "4/33 + 7/33 = 11/33 = 1/3 ✓"], hint: "Convert each recurring decimal to a fraction separately, then add" },
+      { q: "Show that 6/√2 + √50 can be written as 8√2.", a: "Shown", type: "proof", worked: ["6/√2 = 6√2/2 = 3√2 (rationalise)", "√50 = √(25×2) = 5√2", "3√2 + 5√2 = 8√2 ✓"], hint: "Rationalise 6/√2 and simplify √50, then add" },
+      { q: "Show that 10/√5 + √45 can be written as 5√5.", a: "Shown", type: "proof", worked: ["10/√5 = 10√5/5 = 2√5 (rationalise)", "√45 = √(9×5) = 3√5", "2√5 + 3√5 = 5√5 ✓"], hint: "Rationalise 10/√5 and simplify √45, then add" },
+      { q: "Show that 12/√6 + √24 can be written as 4√6.", a: "Shown", type: "proof", worked: ["12/√6 = 12√6/6 = 2√6 (rationalise)", "√24 = √(4×6) = 2√6", "2√6 + 2√6 = 4√6 ✓"], hint: "Rationalise 12/√6 and simplify √24, then add" },
     ],
   ],
 
@@ -4450,29 +4465,35 @@ const higherQuestionBank = {
   // R15: Growth & Decay (Higher)
   // ═══════════════════════════════════════════════════════════════
   'R15': [
-    // Level 1 (Grade 4) — Simple percentage increase
+    // Level 1 (Grade 4) — Speed, distance, time
     [
-      { q: "Increase £200 by 15%.", a: "£230", worked: ["15% of £200 = 0.15 × 200 = £30", "£200 + £30 = £230", "Or: 200 × 1.15 = £230"], hint: "Find 15% then add it, or multiply by 1.15", calculator: true },
-      { q: "A car loses 15% of its value each year. It is worth £12,000 now. What will it be worth in 1 year?", a: "£10,200", worked: ["15% of £12,000 = £1,800", "£12,000 − £1,800 = £10,200", "Or: 12000 × 0.85 = £10,200"], hint: "Multiply by 0.85 (100% − 15% = 85%)", calculator: true },
+      { q: "A car travels 120 miles in 2 hours 30 minutes. Calculate its average speed.", a: "48 mph", worked: ["Time = 2.5 hours", "Speed = distance ÷ time", "= 120 ÷ 2.5 = 48 mph"], hint: "Convert minutes to hours first, then use speed = distance ÷ time", calculator: true },
+      { q: "A train travels 210 km in 3 hours 30 minutes. Calculate its average speed.", a: "60 km/h", worked: ["Time = 3.5 hours", "Speed = 210 ÷ 3.5 = 60 km/h"], hint: "Convert to hours, then speed = distance ÷ time", calculator: true },
+      { q: "Walk 6 miles at 4 mph. How many minutes does it take?", a: "90 minutes", worked: ["Time = distance ÷ speed", "= 6 ÷ 4 = 1.5 hours", "= 1.5 × 60 = 90 minutes"], hint: "Time = distance ÷ speed, then convert hours to minutes", calculator: true },
     ],
-    // Level 2 (Grade 5) — Compound interest
+    // Level 2 (Grade 5) — Density and mass
     [
-      { q: "Calculate the total value of £5,000 after 3 years at 2% compound interest.", a: "£5,306.04", worked: ["Value = 5000 × 1.02³", "= 5000 × 1.061208", "= £5,306.04 (to nearest penny)"], hint: "Use the formula: amount × (1 + rate)^years", calculator: true },
-      { q: "£5,000 is invested at 3% compound interest per year. Find the value after 4 years.", a: "£5,627.54", worked: ["Value = 5000 × 1.03⁴", "= 5000 × 1.12551", "= £5,627.54 (to nearest penny)"], hint: "Multiply by 1.03 four times, or use 5000 × 1.03⁴", calculator: true },
+      { q: "A block of wood has a mass of 600 g and a volume of 750 cm³. Calculate its density.", a: "0.8 g/cm³", worked: ["Density = mass ÷ volume", "= 600 ÷ 750 = 0.8 g/cm³"], hint: "Density = mass ÷ volume", calculator: true },
+      { q: "A metal bar has density 8 g/cm³ and volume 50 cm³. Calculate its mass.", a: "400 g", worked: ["Mass = density × volume", "= 8 × 50 = 400 g"], hint: "Mass = density × volume", calculator: true },
+      { q: "A stone has mass 2.4 kg and density 3 g/cm³. Find its volume.", a: "800 cm³", worked: ["Convert mass: 2.4 kg = 2400 g", "Volume = mass ÷ density", "= 2400 ÷ 3 = 800 cm³"], hint: "Convert kg to g first, then volume = mass ÷ density", calculator: true },
     ],
-    // Level 3 (Grade 7) — Depreciation
+    // Level 3 (Grade 7) — Compound measures with unit conversion
     [
-      { q: "A car depreciates by 12% each year. If it is worth £15,000 now, what will it be worth in 4 years? Give your answer to the nearest pound.", a: "£8,994", worked: ["Multiplier = 1 − 0.12 = 0.88", "Value = 15000 × 0.88⁴", "= 15000 × 0.59969536", "= £8,995.43 ≈ £8,994"], hint: "Multiply by 0.88 each year, or use 15000 × 0.88⁴", calculator: true },
-      { q: "A car worth £18,000 depreciates by 20% per year. After how many whole years will it first be worth less than £8,000?", a: "4", worked: ["After 1 year: 18000 × 0.8 = £14,400", "After 2 years: 14400 × 0.8 = £11,520", "After 3 years: 11520 × 0.8 = £9,216", "After 4 years: 9216 × 0.8 = £7,372.80", "First below £8,000 after 4 years"], hint: "Keep multiplying by 0.8 until below £8,000", calculator: true },
+      { q: "A liquid has a density of 1.2 g/cm³. Calculate the mass of 2.5 litres of the liquid.", a: "3000 g (or 3 kg)", worked: ["2.5 litres = 2500 cm³", "Mass = density × volume", "= 1.2 × 2500 = 3000 g = 3 kg"], hint: "1 litre = 1000 cm³. Then use mass = density × volume", calculator: true },
+      { q: "Force = 120 N acting on an area of 0.5 m². Calculate the pressure.", a: "240 N/m²", worked: ["Pressure = force ÷ area", "= 120 ÷ 0.5 = 240 N/m²"], hint: "Pressure = force ÷ area", calculator: true },
+      { q: "Change a pressure of 40 N/m² into N/cm².", a: "0.004 N/cm²", worked: ["1 m² = 10,000 cm²", "40 N/m² = 40 N per 10,000 cm²", "= 40 ÷ 10,000 = 0.004 N/cm²"], hint: "1 m = 100 cm, so 1 m² = 10,000 cm². Divide by 10,000.", calculator: true },
     ],
-    // Level 4 (Grade 8) — Finding the growth rate
+    // Level 4 (Grade 8) — Converting compound units
     [
-      { q: "A population grows by x% each year. In 2 years, it grows from 1000 to 1210. Find x.", a: "10", worked: ["1000 × (1 + x/100)² = 1210", "(1 + x/100)² = 1.21", "1 + x/100 = √1.21 = 1.1", "x/100 = 0.1", "x = 10"], hint: "Set up: 1000 × (multiplier)² = 1210, then square root both sides", calculator: true },
+      { q: "Convert a speed of 72 km/h into metres per second (m/s).", a: "20 m/s", worked: ["72 km = 72,000 m", "1 hour = 3600 seconds", "72 km/h = 72,000 ÷ 3600 = 20 m/s"], hint: "Multiply km by 1000, divide hours by 3600", calculator: true },
+      { q: "Convert a density of 1000 kg/m³ into g/cm³.", a: "1 g/cm³", worked: ["1000 kg = 1,000,000 g", "1 m³ = 1,000,000 cm³", "1000 kg/m³ = 1,000,000/1,000,000 = 1 g/cm³"], hint: "Convert both units: kg to g and m³ to cm³", calculator: true },
+      { q: "Convert 15 m/s into km/h.", a: "54 km/h", worked: ["15 m/s = 15 × 3600 m/h = 54,000 m/h", "= 54,000 ÷ 1000 = 54 km/h"], hint: "Multiply by 3600 to get m/h, then divide by 1000 for km/h", calculator: true },
     ],
-    // Level 5 (Grade 9) — Working backwards and complex decay
+    // Level 5 (Grade 9) — Complex compound measure problems
     [
-      { q: "A radioactive substance decays by k% every decade. After 50 years (5 decades), 60% of the substance remains. Find k to 2 decimal places.", a: "9.54", worked: ["(1 − k/100)⁵ = 0.6", "1 − k/100 = 0.6^(1/5)", "1 − k/100 = 0.6^0.2 = 0.90536...", "k/100 = 1 − 0.90536 = 0.09464", "k = 9.46... ≈ 9.54"], hint: "Set up (1 − k/100)⁵ = 0.6, then take the 5th root", calculator: true },
-      { q: "After 3 years of 5% compound interest, an investment is worth £5,788.13. What was the original investment?", a: "£5,000", worked: ["5788.13 = P × 1.05³", "5788.13 = P × 1.157625", "P = 5788.13 ÷ 1.157625", "P = £5,000"], hint: "Divide the final amount by (multiplier)^years", calculator: true },
+      { q: "Liquid A (density 0.8 g/cm³) is mixed with Liquid B (density 1.1 g/cm³) in a 3:1 ratio by volume. Find the density of the mixture.", a: "0.875 g/cm³", worked: ["Take 3 cm³ of A and 1 cm³ of B", "Mass of A = 0.8 × 3 = 2.4 g", "Mass of B = 1.1 × 1 = 1.1 g", "Total mass = 3.5 g, total volume = 4 cm³", "Density = 3.5/4 = 0.875 g/cm³"], hint: "Find the total mass and total volume of the mixture, then divide", calculator: true },
+      { q: "A cyclist travels at 12 mph for 20 miles, then 18 mph for 30 miles. Find the average speed for the whole journey.", a: "15 mph", worked: ["Time 1 = 20/12 = 5/3 hours", "Time 2 = 30/18 = 5/3 hours", "Total distance = 50 miles", "Total time = 10/3 hours", "Average speed = 50 ÷ (10/3) = 15 mph"], hint: "Average speed = total distance ÷ total time. Don't just average the two speeds!", calculator: true },
+      { q: "Alloy X is 60% metal A (density 7 g/cm³) and 40% metal B (density 9 g/cm³) by mass. Find the density of Alloy X to 1 d.p.", a: "7.7 g/cm³", worked: ["Take 100 g of alloy: 60 g of A, 40 g of B", "Volume of A = 60/7 = 8.571 cm³", "Volume of B = 40/9 = 4.444 cm³", "Total volume = 13.016 cm³", "Density = 100/13.016 = 7.7 g/cm³ (1 d.p.)"], hint: "Find the volume of each component using mass/density, then total density = total mass / total volume", calculator: true },
     ],
   ],
 
