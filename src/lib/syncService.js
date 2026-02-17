@@ -83,7 +83,7 @@ export const migrateLocalToCloud = async (userId) => {
       }));
 
       if (progressRows.length > 0) {
-        await restFetch('user_progress', {
+        await restFetch('user_progress?on_conflict=user_id,objective_code', {
           method: 'POST',
           body: JSON.stringify(progressRows),
           prefer: 'resolution=merge-duplicates',
@@ -110,7 +110,7 @@ export const migrateLocalToCloud = async (userId) => {
         }));
 
         if (fsrsRows.length > 0) {
-          await restFetch('user_fsrs_cards', {
+          await restFetch('user_fsrs_cards?on_conflict=user_id,question_id', {
             method: 'POST',
             body: JSON.stringify(fsrsRows),
             prefer: 'resolution=merge-duplicates',
@@ -124,7 +124,7 @@ export const migrateLocalToCloud = async (userId) => {
     const streakData = localStorage.getItem(STREAK_DATA_KEY);
     if (streakData) {
       const streak = JSON.parse(streakData);
-      await restFetch('user_streaks', {
+      await restFetch('user_streaks?on_conflict=user_id', {
         method: 'POST',
         body: JSON.stringify({
           user_id: userId,
@@ -143,7 +143,7 @@ export const migrateLocalToCloud = async (userId) => {
     const settingsData = localStorage.getItem(SETTINGS_KEY);
     if (settingsData) {
       const settings = JSON.parse(settingsData);
-      await restFetch('user_settings', {
+      await restFetch('user_settings?on_conflict=user_id', {
         method: 'POST',
         body: JSON.stringify({
           user_id: userId,
@@ -174,7 +174,7 @@ export const migrateLocalToCloud = async (userId) => {
       }));
 
       if (dailyRows.length > 0) {
-        await restFetch('daily_activity', {
+        await restFetch('daily_activity?on_conflict=user_id,date', {
           method: 'POST',
           body: JSON.stringify(dailyRows),
           prefer: 'resolution=merge-duplicates',
@@ -290,11 +290,17 @@ export const loadFromCloud = async (userId) => {
       localStorage.setItem(DAILY_ACTIVITY_KEY, JSON.stringify(daily));
     }
 
-    console.log('Loaded data from cloud!');
-    return { success: true };
+    const hasData = (progressRows && progressRows.length > 0) ||
+                     (fsrsRows && fsrsRows.length > 0) ||
+                     !!streakRow ||
+                     !!settingsRow ||
+                     (dailyRows && dailyRows.length > 0);
+
+    console.log('Loaded data from cloud!', hasData ? '(found data)' : '(empty)');
+    return { success: true, hasData };
   } catch (error) {
     console.error('Load from cloud error:', error);
-    return { success: false, error };
+    return { success: false, hasData: false, error };
   }
 };
 
@@ -320,7 +326,7 @@ export const saveProgressToCloud = async (userId, progress) => {
       }));
 
       if (progressRows.length > 0) {
-        await restFetch('user_progress', {
+        await restFetch('user_progress?on_conflict=user_id,objective_code', {
           method: 'POST',
           body: JSON.stringify(progressRows),
           prefer: 'resolution=merge-duplicates',
@@ -358,7 +364,7 @@ export const saveFsrsToCloud = async (userId, fsrsData) => {
       }));
 
       if (fsrsRows.length > 0) {
-        await restFetch('user_fsrs_cards', {
+        await restFetch('user_fsrs_cards?on_conflict=user_id,question_id', {
           method: 'POST',
           body: JSON.stringify(fsrsRows),
           prefer: 'resolution=merge-duplicates',
@@ -378,7 +384,7 @@ export const saveStreakToCloud = async (userId, streakData) => {
   if (!userId) return;
 
   try {
-    await restFetch('user_streaks', {
+    await restFetch('user_streaks?on_conflict=user_id', {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,
@@ -404,7 +410,7 @@ export const saveSettingsToCloud = async (userId, settings) => {
   if (!userId) return;
 
   try {
-    await restFetch('user_settings', {
+    await restFetch('user_settings?on_conflict=user_id', {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,
@@ -433,7 +439,7 @@ export const saveDailyActivityToCloud = async (userId, date, activity) => {
   if (!userId) return;
 
   try {
-    await restFetch('daily_activity', {
+    await restFetch('daily_activity?on_conflict=user_id,date', {
       method: 'POST',
       body: JSON.stringify({
         user_id: userId,

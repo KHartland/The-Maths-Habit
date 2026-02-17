@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const token = getAuthToken();
       const res = await fetch(
-        `${supabaseUrl}/rest/v1/daily_activity`,
+        `${supabaseUrl}/rest/v1/daily_activity?on_conflict=user_id,date`,
         {
           method: 'POST',
           headers: {
