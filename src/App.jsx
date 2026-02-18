@@ -9542,18 +9542,19 @@ function AppContent() {
   useEffect(() => {
     const syncOnLogin = async () => {
       if (user && !authLoading) {
-        // Check if this is a new user (just signed up)
-        const hasLocalData = localStorage.getItem('maths-habit-progress');
+        // Always pull from cloud first (cloud is source of truth)
+        const cloudResult = await loadFromCloud(user.id);
 
-        if (hasLocalData) {
-          // Migrate local data to cloud
-          await migrateLocalToCloud(user.id);
-        } else {
-          // Load data from cloud
-          await loadFromCloud(user.id);
-          // Refresh local state
+        if (cloudResult.success && cloudResult.hasData) {
+          // Cloud had data — refresh React state from localStorage (which loadFromCloud populated)
           setProgress(loadProgress());
           setSettings(loadSettings());
+        } else {
+          // Cloud is empty — push local data up (first-time user)
+          const hasLocalData = localStorage.getItem('maths-habit-progress');
+          if (hasLocalData) {
+            await migrateLocalToCloud(user.id);
+          }
         }
       }
     };
