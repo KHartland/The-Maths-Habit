@@ -836,13 +836,13 @@ function TileDetailModal({ open, objective, progress, onClose }) {
               <span className="px-1.5 py-0.5 bg-violet text-white text-xs font-bold rounded">H</span>
             )}
           </div>
-          <button onClick={onClose} className="text-secondary-text/60 hover:text-primary-text p-1">
+          <button onClick={onClose} className="text-secondary-text/60 hover:text-white p-1">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Title */}
-        <h3 className="text-lg font-semibold text-primary-text mb-4">
+        <h3 className="text-lg font-semibold text-white mb-4">
           {objective.title}
         </h3>
 
@@ -852,7 +852,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
             level >= 5 ? 'bg-mint/20 text-mint border border-mint/30' :
             level >= 4 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
             level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
-            'bg-gray-100 text-secondary-text border border-gray-200'
+            'bg-white/10 text-secondary-text border border-white/10'
           }`}>
             {level >= 5 ? '✓ Mastered' :
              level >= 4 ? '🔥 Nearly there' :
@@ -867,7 +867,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
           <div>
             <div className="flex items-center justify-between text-xs mb-1.5">
               <span className="text-secondary-text">Questions</span>
-              <span className="font-medium text-primary-text">{Math.min(quickCorrect, 5)}/5</span>
+              <span className="font-medium text-white">{Math.min(quickCorrect, 5)}/5</span>
             </div>
             <div className="flex gap-1.5">
               {[0, 1, 2, 3, 4].map(i => (
@@ -6888,7 +6888,7 @@ What is the student's answer?`
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-24 px-4 text-center relative z-10 page-content">
           <PracticeIcon className="w-16 h-16 text-secondary-text/40 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-primary-text">No questions available</h2>
+          <h2 className="text-2xl font-bold text-white">No questions available</h2>
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
         </div>
       </div>
@@ -6923,7 +6923,7 @@ What is the student's answer?`
                    accuracy >= 80 ? <Sparkles className="w-10 h-10 text-white" /> :
                    <Target className="w-10 h-10 text-white" />}
                 </div>
-                <h2 className="text-2xl font-bold text-primary-text">
+                <h2 className="text-2xl font-bold text-white">
                   {accuracy === 100 ? 'Perfect! 🎉' :
                    accuracy >= 80 ? 'Great Work!' :
                    accuracy >= 60 ? 'Good Effort!' : 'Keep Practicing!'}
@@ -6941,7 +6941,7 @@ What is the student's answer?`
               {/* Stats Grid */}
               <div className="grid grid-cols-3 gap-3 mb-6">
                 <div className="glass-panel rounded-xl p-3 text-center">
-                  <div className="text-xl font-bold text-primary-text">{topicsSet.size}</div>
+                  <div className="text-xl font-bold text-white">{topicsSet.size}</div>
                   <div className="text-xs text-secondary-text">Topics</div>
                 </div>
                 <div className="glass-panel rounded-xl p-3 text-center border-mint/30">
@@ -6964,7 +6964,7 @@ What is the student's answer?`
                       }`}>
                         {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
                       </div>
-                      <span className="font-medium text-primary-text">{r.code}</span>
+                      <span className="font-medium text-white">{r.code}</span>
                       {r.newMastery && (
                         <span className="ml-auto text-xs bg-violet/20 text-violet-light px-2 py-0.5 rounded-full font-semibold border border-violet/30">
                           ✓ Mastered!
@@ -7043,14 +7043,14 @@ What is the student's answer?`
                 <div className="w-16 h-16 bg-gradient-violet rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow-violet">
                   <PracticeIcon className="w-8 h-8 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-primary-text">Practice Session</h2>
+                <h2 className="text-2xl font-bold text-white">Practice Session</h2>
                 <p className="text-secondary-text mt-1">Build lasting maths skills</p>
               </div>
 
               {dailyLimitReached ? (
                 <div className="text-center space-y-4">
                   <div className="glass-panel rounded-xl p-4 border border-violet/30">
-                    <p className="text-primary-text font-semibold mb-1">Daily limit reached</p>
+                    <p className="text-white font-semibold mb-1">Daily limit reached</p>
                     <p className="text-secondary-text text-sm">You've completed your {FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.</p>
                   </div>
                   <button
@@ -7061,7 +7061,7 @@ What is the student's answer?`
                   </button>
                   <button
                     onClick={() => setCurrentPage('home')}
-                    className="w-full py-2 text-secondary-text hover:text-primary-text text-sm font-medium transition-colors"
+                    className="w-full py-2 text-secondary-text hover:text-white text-sm font-medium transition-colors"
                   >
                     Back to Home
                   </button>
@@ -7129,7 +7129,7 @@ What is the student's answer?`
                 {/* Exit button */}
                 <button
                   onClick={() => setCurrentPage('home')}
-                  className="flex items-center gap-0.5 text-secondary-text hover:text-primary-text text-xs transition-colors shrink-0"
+                  className="flex items-center gap-0.5 text-secondary-text hover:text-white text-xs transition-colors shrink-0"
                 >
                   <ChevronRight className="w-3.5 h-3.5 rotate-180" />
                 </button>
@@ -7325,7 +7325,7 @@ What is the student's answer?`
                               className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
                                 inputMode === mode
                                   ? 'bg-gradient-violet text-white shadow-glow-violet'
-                                  : 'text-secondary-text hover:text-primary-text'
+                                  : 'text-secondary-text hover:text-white'
                               }`}
                             >
                               {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
@@ -7345,7 +7345,7 @@ What is the student's answer?`
                                 onChange={(e) => setUserAnswer(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && userAnswer && checkAnswer()}
                                 placeholder="Type your answer..."
-                                className="w-full px-4 py-3 pr-12 border-2 border-white/20 rounded-xl focus:border-violet focus:outline-none text-lg bg-white/10 text-primary-text placeholder-secondary-text"
+                                className="w-full px-4 py-3 pr-12 border-2 border-white/20 rounded-xl focus:border-violet focus:outline-none text-lg bg-white/10 text-white placeholder-secondary-text"
                                 autoFocus
                               />
                               {/* Math keyboard toggle button */}
@@ -7888,16 +7888,16 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 <Target className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-primary-text">Exam Readiness</h2>
+                <h2 className="font-bold text-white">Exam Readiness</h2>
                 <p className={`text-sm font-medium ${readiness.color}`}>{readiness.label}</p>
               </div>
               <div className="ml-auto text-right">
-                <div className="text-3xl font-bold text-primary-text">{readinessScore}%</div>
+                <div className="text-3xl font-bold text-white">{readinessScore}%</div>
               </div>
             </div>
 
             {/* Readiness bar */}
-            <div className="h-4 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-4 bg-white/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
                 style={{ width: `${readinessScore}%` }}
@@ -7927,7 +7927,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center">
                   <Calendar className="w-5 h-5 text-violet-light" />
                 </div>
-                <h2 className="font-semibold text-primary-text">Weekly Activity</h2>
+                <h2 className="font-semibold text-white">Weekly Activity</h2>
               </div>
             </div>
 
@@ -7942,22 +7942,22 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                         style={{ height: `${(day.questions / maxQuestions) * 100}%`, minHeight: '8px' }}
                       />
                     ) : (
-                      <div className="w-full max-w-[40px] h-2 bg-gray-200 rounded-lg" />
+                      <div className="w-full max-w-[40px] h-2 bg-white/20 rounded-lg" />
                     )}
                   </div>
                   <span className="text-xs text-secondary-text">{day.day}</span>
-                  <span className="text-xs font-medium text-primary-text">{day.questions}</span>
+                  <span className="text-xs font-medium text-white">{day.questions}</span>
                 </div>
               ))}
             </div>
 
-            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-white/10">
               <div className="text-center">
-                <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
+                <div className="text-lg font-bold text-white">{weeklyActivity.reduce((s, d) => s + d.sessions, 0)}</div>
                 <div className="text-xs text-secondary-text">Sessions this week</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-primary-text">{weeklyActivity.reduce((s, d) => s + d.questions, 0)}</div>
+                <div className="text-lg font-bold text-white">{weeklyActivity.reduce((s, d) => s + d.questions, 0)}</div>
                 <div className="text-xs text-secondary-text">Questions answered</div>
               </div>
             </div>
@@ -7982,10 +7982,10 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             
             {/* Best Practice Time */}
             {getBestPracticeTime() && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className="mt-4 pt-4 border-t border-white/10">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-secondary-text">🕐 Best time to practice:</span>
-                  <span className="font-semibold text-primary-text">{getBestPracticeTime()}</span>
+                  <span className="font-semibold text-white">{getBestPracticeTime()}</span>
                 </div>
                 <p className="text-xs text-secondary-text mt-1">Based on when you're most active</p>
               </div>
@@ -7999,14 +7999,14 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center">
                   <Zap className="w-5 h-5 text-amber-400" />
                 </div>
-                <h2 className="font-semibold text-primary-text">Recent Sessions</h2>
+                <h2 className="font-semibold text-white">Recent Sessions</h2>
               </div>
 
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {sessionHistory.slice(-10).reverse().map((session, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
                     <div>
-                      <div className="text-sm font-medium text-primary-text">
+                      <div className="text-sm font-medium text-white">
                         Session #{session.sessionNumber}
                       </div>
                       <div className="text-xs text-secondary-text">
@@ -8049,7 +8049,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
           ) : user ? (
             <div className="glass-panel rounded-2xl p-6 shadow-glass text-center">
               <Trophy className="w-8 h-8 text-[#FBBF24] mx-auto mb-2" />
-              <h3 className="font-semibold text-primary-text mb-1">School Leaderboard</h3>
+              <h3 className="font-semibold text-white mb-1">School Leaderboard</h3>
               <p className="text-sm text-secondary-text mb-3">Join your school to compete with classmates</p>
               <button
                 onClick={() => setCurrentPage('settings')}
@@ -8348,7 +8348,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <User className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-primary-text">Account</h2>
+                <h2 className="font-semibold text-white">Account</h2>
                 <p className="text-sm text-secondary-text">Manage your account and subscription</p>
               </div>
             </div>
@@ -8356,7 +8356,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
             {user && (
               <div className="space-y-4">
                 {/* User info with avatar */}
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
                   <div className="flex items-center gap-3">
                     {/* Avatar with optional upload */}
                     <div className="relative group">
@@ -8399,7 +8399,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       )}
                     </div>
                     <div>
-                      <div className="font-medium text-primary-text">{profile?.display_name || 'User'}</div>
+                      <div className="font-medium text-white">{profile?.display_name || 'User'}</div>
                       <div className="text-sm text-secondary-text">{user.email}</div>
                       {isSubscribed && (
                         <div className="flex items-center gap-2 mt-1">
@@ -8455,7 +8455,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="flex items-center justify-between p-4 bg-violet/20 rounded-xl border border-violet/30">
                   <div>
                     <div className="text-sm text-secondary-text">Subscription</div>
-                    <div className="font-semibold text-primary-text">
+                    <div className="font-semibold text-white">
                       {isSubscribed ? (
                         <span className="text-mint">Premium Active</span>
                       ) : (
@@ -8490,7 +8490,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   <School className="w-5 h-5 text-violet-light" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-primary-text">Your School</h2>
+                  <h2 className="font-semibold text-white">Your School</h2>
                   <p className="text-sm text-secondary-text">Join your school to see the leaderboard</p>
                 </div>
               </div>
@@ -8503,7 +8503,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         {userSchool.name?.[0]?.toUpperCase() || '?'}
                       </div>
                       <div>
-                        <div className="font-medium text-primary-text">{userSchool.name}</div>
+                        <div className="font-medium text-white">{userSchool.name}</div>
                         {userSchool.town && <div className="text-xs text-secondary-text">{userSchool.town}</div>}
                       </div>
                     </div>
@@ -8524,14 +8524,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     value={newSchoolName}
                     onChange={(e) => setNewSchoolName(e.target.value)}
                     placeholder="School name..."
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/40"
                   />
                   <input
                     type="text"
                     value={newSchoolTown}
                     onChange={(e) => setNewSchoolTown(e.target.value)}
                     placeholder="Town / region..."
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text placeholder-secondary-text/60"
+                    className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/40"
                   />
                   <div className="flex gap-2">
                     <button
@@ -8543,7 +8543,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                     <button
                       onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
-                      className="px-4 py-3 text-secondary-text hover:text-primary-text bg-gray-100 rounded-xl transition-colors"
+                      className="px-4 py-3 text-secondary-text hover:text-white bg-white/10 rounded-xl transition-colors"
                     >
                       Back
                     </button>
@@ -8554,25 +8554,25 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <div className="space-y-3">
                   <button
                     onClick={() => setSchoolDropdownOpen(!schoolDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-primary-text"
+                    className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white"
                   >
                     <span className="text-secondary-text/60">Select your school...</span>
                     <svg className={`w-4 h-4 text-secondary-text transition-transform ${schoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                   </button>
 
                   {schoolDropdownOpen && (
-                    <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+                    <div className="rounded-xl border border-white/10 bg-white/10 shadow-lg overflow-hidden backdrop-blur-sm">
                       {/* Search input */}
-                      <div className="p-2 border-b border-gray-200">
+                      <div className="p-2 border-b border-white/10">
                         <div className="relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                           <input
                             type="text"
                             value={schoolFilter}
                             onChange={(e) => setSchoolFilter(e.target.value)}
                             placeholder="Type your school name..."
                             autoFocus
-                            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder-gray-400"
+                            className="w-full pl-10 pr-4 py-2 rounded-lg border border-white/10 bg-white/5 text-sm text-white placeholder-white/40"
                           />
                           {!schoolsLoaded && (
                             <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-text animate-spin" />
@@ -8599,11 +8599,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             key={school.id}
                             onClick={() => handleJoinSchool(school)}
                             disabled={schoolJoining}
-                            className="w-full text-left px-4 py-3 hover:bg-gray-100 transition-colors flex items-center justify-between disabled:opacity-50 border-b border-gray-100 last:border-b-0"
+                            className="w-full text-left px-4 py-3 hover:bg-white/10 transition-colors flex items-center justify-between disabled:opacity-50 border-b border-white/5 last:border-b-0"
                           >
                             <div>
-                              <div className="text-sm text-primary-text">{school.name}</div>
-                              {school.town && <div className="text-xs text-secondary-text">{school.town}</div>}
+                              <div className="text-sm text-white">{school.name}</div>
+                              {school.town && <div className="text-xs text-white/60">{school.town}</div>}
                             </div>
                             <span className="text-xs text-metallic-base font-medium shrink-0 ml-3">Join</span>
                           </button>
@@ -8615,7 +8615,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       </div>
 
                       {/* Can't find school option */}
-                      <div className="p-2 border-t border-gray-200">
+                      <div className="p-2 border-t border-white/10">
                         <button
                           onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); }}
                           className="w-full py-2 text-sm text-metallic-base hover:text-mint font-medium transition-colors"
@@ -8643,7 +8643,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <BookOpen className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-primary-text">Study Preferences</h2>
+                <h2 className="font-semibold text-white">Study Preferences</h2>
                 <p className="text-sm text-secondary-text">Adjust your practice sessions</p>
               </div>
             </div>
@@ -8665,7 +8665,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.questionsPerSession}
                     onChange={(e) => updateSetting('questionsPerSession', parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-violet"
+                    className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer accent-violet"
                   />
                 ) : (
                   <div className="relative">
@@ -8676,7 +8676,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -8703,7 +8703,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     setTier(newVal ? 'higher' : 'foundation');
                   }}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.includeHigherTier ? 'bg-violet' : 'bg-gray-300'
+                    settings.includeHigherTier ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -8713,7 +8713,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               </div>
 
               {/* Daily goal */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-white/10">
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-sm font-medium text-secondary-text">Daily question goal</label>
                   <span className="text-sm font-bold text-mint bg-mint/20 px-2 py-1 rounded-lg">
@@ -8728,7 +8728,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     step="5"
                     value={settings.dailyGoal ?? 10}
                     onChange={(e) => updateSetting('dailyGoal', parseInt(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-mint"
+                    className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer accent-mint"
                   />
                 ) : (
                   <div className="relative">
@@ -8739,7 +8739,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       step="5"
                       value={5}
                       disabled
-                      className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-not-allowed opacity-50"
+                      className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
                     <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
                   </div>
@@ -8767,7 +8767,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   step="1"
                   value={settings.weeklyMasteryGoal ?? 3}
                   onChange={(e) => updateSetting('weeklyMasteryGoal', parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer accent-amber-400"
+                  className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-pointer accent-amber-400"
                 />
                 <div className="flex justify-between text-xs text-secondary-text mt-1">
                   <span>1</span>
@@ -8785,7 +8785,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <Target className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-primary-text">Accessibility</h2>
+                <h2 className="font-semibold text-white">Accessibility</h2>
                 <p className="text-sm text-secondary-text">Customize your learning experience</p>
               </div>
             </div>
@@ -8806,7 +8806,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       className={`flex-1 py-2 rounded-lg font-medium transition-all ${option.size} ${
                         (settings.fontSize ?? 'normal') === option.value
                           ? 'bg-violet text-white'
-                          : 'bg-gray-200 text-secondary-text hover:bg-gray-300'
+                          : 'bg-white/10 text-secondary-text hover:bg-white/20'
                       }`}
                     >
                       {option.label}
@@ -8824,7 +8824,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <button
                   onClick={() => updateSetting('dyslexiaFont', !settings.dyslexiaFont)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.dyslexiaFont ? 'bg-violet' : 'bg-gray-300'
+                    settings.dyslexiaFont ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -8842,7 +8842,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <button
                   onClick={() => updateSetting('highContrast', !settings.highContrast)}
                   className={`relative w-12 h-7 rounded-full transition-colors ${
-                    settings.highContrast ? 'bg-violet' : 'bg-gray-300'
+                    settings.highContrast ? 'bg-violet' : 'bg-white/20'
                   }`}
                 >
                   <div className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow transition-transform ${
@@ -8856,11 +8856,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
           {/* Data Management */}
           <div className="glass-panel rounded-2xl p-6 shadow-glass">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
                 <Download className="w-5 h-5 text-secondary-text" />
               </div>
               <div>
-                <h2 className="font-semibold text-primary-text">Data Management</h2>
+                <h2 className="font-semibold text-white">Data Management</h2>
                 <p className="text-sm text-secondary-text">Backup and manage your progress</p>
               </div>
             </div>
@@ -8873,7 +8873,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <span className="text-xl">📋</span>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-primary-text">Weekly Summary</h3>
+                    <h3 className="font-semibold text-white">Weekly Summary</h3>
                     <p className="text-xs text-secondary-text mb-3">
                       Plain-English report for parents or teachers
                     </p>
@@ -8889,7 +8889,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     ) : (
                       <button
                         onClick={onUpgrade}
-                        className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-gray-400 hover:bg-gray-500 transition-colors"
+                        className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
                       >
                         🔒 Upgrade to unlock
                       </button>
@@ -8913,28 +8913,28 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               )}
 
               {/* Reset button */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-white/10">
                 {!showResetConfirm ? (
                   <button
                     onClick={() => setShowResetConfirm(true)}
-                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors border border-red-200"
+                    className="w-full flex items-center justify-center gap-2 py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 font-medium rounded-xl transition-colors border border-red-500/20"
                   >
                     <Trash2 className="w-4 h-4" />
                     Reset All Progress
                   </button>
                 ) : (
-                  <div className="bg-red-50 rounded-xl p-4 border border-red-300">
-                    <div className="flex items-center gap-2 text-red-600 mb-3">
+                  <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/30">
+                    <div className="flex items-center gap-2 text-red-400 mb-3">
                       <AlertTriangle className="w-5 h-5" />
                       <span className="font-semibold">Are you sure?</span>
                     </div>
-                    <p className="text-sm text-red-500 mb-4">
+                    <p className="text-sm text-red-400/80 mb-4">
                       This will permanently delete all your progress. This action cannot be undone.
                     </p>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowResetConfirm(false)}
-                        className="flex-1 py-2 glass-panel hover:bg-gray-100 text-primary-text font-medium rounded-lg transition-colors"
+                        className="flex-1 py-2 glass-panel hover:bg-white/10 text-white font-medium rounded-lg transition-colors"
                       >
                         Cancel
                       </button>
@@ -8958,7 +8958,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 <Info className="w-5 h-5 text-violet-light" />
               </div>
               <div>
-                <h2 className="font-semibold text-primary-text">About</h2>
+                <h2 className="font-semibold text-white">About</h2>
                 <p className="text-sm text-secondary-text">Square One Maths v1.0</p>
               </div>
             </div>
@@ -8966,10 +8966,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
               A spaced repetition app designed to help GCSE students master every maths objective.
               Practice a little each day to build lasting understanding and confidence.
             </p>
-            <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="mt-4 pt-4 border-t border-white/10">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-secondary-text">Objectives tracked</span>
-                <span className="font-medium text-primary-text">{Object.keys(progress).length}</span>
+                <span className="font-medium text-white">{Object.keys(progress).length}</span>
               </div>
             </div>
           </div>
@@ -9001,7 +9001,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-gray-200 top-nav-bar">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar">
         <div className="max-w-4xl mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
@@ -9027,7 +9027,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       currentPage === item.id
                         ? "bg-gradient-violet text-white shadow-glow-violet"
-                        : "text-secondary-text hover:text-primary-text hover:bg-gray-100"
+                        : "text-secondary-text hover:text-white hover:bg-white/10"
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -9057,7 +9057,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                   className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${
                     isActive
                       ? "text-mint"
-                      : "text-secondary-text hover:text-primary-text"
+                      : "text-secondary-text hover:text-white"
                   }`}
                 >
                   <Icon className={`w-5 h-5 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : ''}`} />
@@ -9144,7 +9144,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
       <button
         onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
+        className="w-full py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -9176,7 +9176,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
               placeholder="Your name"
               required
             />
@@ -9191,7 +9191,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
             placeholder="you@example.com"
             required
           />
@@ -9205,7 +9205,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
             placeholder="••••••••"
             required
             minLength={6}
@@ -9236,14 +9236,14 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         {mode === 'signup' ? (
           <button
             onClick={() => { setMode('signin'); setError(''); setMessage(''); }}
-            className="text-violet-light hover:text-primary-text transition-colors"
+            className="text-violet-light hover:text-white transition-colors"
           >
             Already have an account? Sign in
           </button>
         ) : (
           <button
             onClick={() => { setMode('signup'); setError(''); setMessage(''); }}
-            className="text-violet-light hover:text-primary-text transition-colors"
+            className="text-violet-light hover:text-white transition-colors"
           >
             Need an account? Create one
           </button>
@@ -9291,7 +9291,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
 
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-bold text-primary-text mb-1">Premium</h3>
+          <h3 className="text-xl font-bold text-white mb-1">Premium</h3>
           <p className="text-secondary-text text-sm">Unlimited practice, maximum results</p>
         </div>
       </div>
@@ -9304,7 +9304,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all ${
             selectedPlan === 'monthly'
               ? 'bg-violet text-white'
-              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
+              : 'bg-white/10 text-secondary-text hover:bg-white/20'
           }`}
         >
           Monthly
@@ -9315,7 +9315,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
           className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all relative ${
             selectedPlan === 'yearly'
               ? 'bg-violet text-white'
-              : 'bg-gray-100 text-secondary-text hover:bg-gray-200'
+              : 'bg-white/10 text-secondary-text hover:bg-white/20'
           }`}
         >
           Yearly
@@ -9327,7 +9327,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
 
       {/* Price Display */}
       <div className="text-center mb-4">
-        <div className="text-4xl font-bold text-primary-text">
+        <div className="text-4xl font-bold text-white">
           {selectedPlan === 'monthly' ? '£3.99' : '£29.99'}
         </div>
         <div className="text-secondary-text text-sm">
@@ -9424,7 +9424,7 @@ function PromoCodeInput({ onSuccess }) {
       <div className="text-center">
         <button
           onClick={() => setShowInput(true)}
-          className="text-violet-light hover:text-primary-text text-sm transition-colors"
+          className="text-violet-light hover:text-white text-sm transition-colors"
         >
           Have a class code? Enter it here
         </button>
@@ -9434,7 +9434,7 @@ function PromoCodeInput({ onSuccess }) {
 
   return (
     <div className="glass-panel rounded-2xl p-5">
-      <h4 className="text-primary-text font-medium mb-3 flex items-center gap-2">
+      <h4 className="text-white font-medium mb-3 flex items-center gap-2">
         <svg className="w-5 h-5 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
         </svg>
@@ -9462,7 +9462,7 @@ function PromoCodeInput({ onSuccess }) {
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           placeholder="e.g. MATHS2024"
-          className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-primary-text placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
+          className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
         <button
@@ -9687,7 +9687,7 @@ function AppContent() {
 
             <button
               onClick={() => { setOnboardingAuthMode('signin'); setOnboardingStep(2); }}
-              className="w-full py-4 mt-3 glass-panel hover:bg-gray-100 font-semibold text-lg text-primary-text rounded-2xl transition-all active:scale-[0.98]"
+              className="w-full py-4 mt-3 glass-panel hover:bg-white/10 font-semibold text-lg text-white rounded-2xl transition-all active:scale-[0.98]"
             >
               Sign In
             </button>
@@ -9721,7 +9721,7 @@ function AppContent() {
             {/* Back button */}
             <button
               onClick={() => setOnboardingStep(1)}
-              className="flex items-center gap-2 text-secondary-text hover:text-primary-text mb-6 transition-colors"
+              className="flex items-center gap-2 text-secondary-text hover:text-white mb-6 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -9731,7 +9731,7 @@ function AppContent() {
 
             <div className="glass-panel rounded-2xl p-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-primary-text mb-2">
+                <h2 className="text-2xl font-bold text-white mb-2">
                   {onboardingAuthMode === 'signin' ? 'Welcome back' : 'Create your account'}
                 </h2>
                 <p className="text-secondary-text">
@@ -9774,7 +9774,7 @@ function AppContent() {
 
           <div className="max-w-md w-full relative z-10">
             <div className="glass-panel rounded-2xl p-8 text-center">
-              <h2 className="text-2xl font-bold text-primary-text mb-2">Personalise your profile</h2>
+              <h2 className="text-2xl font-bold text-white mb-2">Personalise your profile</h2>
               <p className="text-secondary-text mb-8">Stand out on the leaderboard with a profile picture</p>
 
               {/* Avatar preview with lock overlay */}
@@ -9828,7 +9828,7 @@ function AppContent() {
 
           <div className="max-w-lg w-full relative z-10">
             <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-primary-text mb-2">Choose your plan</h2>
+              <h2 className="text-3xl font-bold text-white mb-2">Choose your plan</h2>
               <p className="text-secondary-text">
                 Start with free or unlock unlimited practice
               </p>
@@ -9841,7 +9841,7 @@ function AppContent() {
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-primary-text mb-1">Free Plan</h3>
+                    <h3 className="text-xl font-bold text-white mb-1">Free Plan</h3>
                     <p className="text-secondary-text text-sm mb-4">Perfect for getting started</p>
                     <ul className="space-y-2 text-sm">
                       <li className="flex items-center gap-2 text-secondary-text">
@@ -9856,11 +9856,11 @@ function AppContent() {
                     </ul>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-primary-text">£0</div>
+                    <div className="text-3xl font-bold text-white">£0</div>
                     <div className="text-secondary-text text-sm">Forever free</div>
                   </div>
                 </div>
-                <button className="w-full mt-6 py-3 border border-violet rounded-xl text-primary-text font-medium hover:bg-violet/20 transition-colors">
+                <button className="w-full mt-6 py-3 border border-violet rounded-xl text-white font-medium hover:bg-violet/20 transition-colors">
                   Start Free →
                 </button>
               </div>
@@ -10242,7 +10242,7 @@ function AppContent() {
                 {['foundation', 'higher'].map(t => (
                   <button key={t} onClick={() => setTier(t)}
                     className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-primary-text'
+                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-white'
                     }`}>{t}</button>
                 ))}
               </div>
@@ -10272,10 +10272,10 @@ function AppContent() {
               <div className="flex items-start gap-3">
                 <span className="text-lg shrink-0">🗺️</span>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-primary-text mb-2">How the heatmap works</p>
+                  <p className="text-sm font-medium text-white mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm bg-gray-100 border border-gray-300 shrink-0" />
+                      <span className="w-4 h-4 rounded-sm bg-white/10 border border-white/20 shrink-0" />
                       <span>Dark = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -10295,7 +10295,7 @@ function AppContent() {
                 </div>
                 <button
                   onClick={(e) => { e.currentTarget.closest('.animate-fade-in').remove(); markTipShown('heatmapExplainer'); }}
-                  className="text-secondary-text/60 hover:text-primary-text shrink-0 p-1"
+                  className="text-secondary-text/60 hover:text-white shrink-0 p-1"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -10360,7 +10360,7 @@ function AppContent() {
           </div>
 
           {/* Legend - Readiness & Recency */}
-          <div className="mt-6 pt-6 border-t border-gray-200">
+          <div className="mt-6 pt-6 border-t border-white/10">
             <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
               {/* Readiness indicators */}
               <div className="flex items-center gap-2">
@@ -10424,7 +10424,7 @@ function AppContent() {
                 <p className="text-secondary-text text-sm">
                   Complete 10 questions today to restore your {potentialStreak} day streak
                 </p>
-                <div className="mt-2 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div className="mt-2 bg-white/20 rounded-full h-3 overflow-hidden">
                   <div
                     className="h-full bg-[#FBBF24] rounded-full transition-all duration-500"
                     style={{ width: `${repairProgress}%` }}
@@ -10459,14 +10459,14 @@ function AppContent() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm font-bold text-primary-text">{todayQuestions}</span>
+                <span className="text-sm font-bold text-white">{todayQuestions}</span>
               </div>
             </div>
 
             {/* Status */}
             <div className="flex-1 text-center sm:text-left">
               <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-                <span className={`text-sm font-semibold ${dailyProgress >= 100 ? 'text-mint' : 'text-primary-text'}`}>
+                <span className={`text-sm font-semibold ${dailyProgress >= 100 ? 'text-mint' : 'text-white'}`}>
                   {dailyProgress >= 100 ? '🎉 Goal complete!' : `${todayQuestions}/${dailyGoal} today`}
                 </span>
                 <span className="text-secondary-text/40">·</span>
@@ -10525,7 +10525,7 @@ function AppContent() {
               {!user && (
                 <button
                   onClick={() => { setAuthModalMode('signin'); setShowAuthModal(true); }}
-                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-primary-text glass-panel hover:bg-gray-100"
+                  className="px-6 py-2.5 font-semibold rounded-xl transition-all flex items-center gap-2 text-white glass-panel hover:bg-white/10"
                 >
                   <User className="w-4 h-4" />
                   Sign In
@@ -10542,7 +10542,7 @@ function AppContent() {
           <div className="glass-panel rounded-2xl p-5 shadow-glass">
             <div className="flex items-center gap-2 mb-3">
               <Trophy className="w-5 h-5 text-[#FBBF24]" />
-              <h2 className="font-bold text-primary-text">{userSchool.name}{userSchool.town ? `, ${userSchool.town}` : ''}</h2>
+              <h2 className="font-bold text-white">{userSchool.name}{userSchool.town ? `, ${userSchool.town}` : ''}</h2>
             </div>
             <SchoolLeaderboard
               schoolId={userSchool.id}
@@ -10564,7 +10564,7 @@ function AppContent() {
                 <Trophy className="w-5 h-5 text-[#FBBF24]" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-primary-text text-sm">School Leaderboard</h3>
+                <h3 className="font-semibold text-white text-sm">School Leaderboard</h3>
                 <p className="text-xs text-secondary-text">Join your school to compete with classmates</p>
               </div>
               <button
