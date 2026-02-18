@@ -6184,6 +6184,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
 };
 
 function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+  const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -6706,8 +6707,11 @@ What is the student's answer?`
           }
         };
 
-        // Persist to localStorage
+        // Persist to localStorage and cloud
         saveFsrsData(updatedFsrsData);
+        if (practiceUser) {
+          saveFsrsToCloud(practiceUser.id, updatedFsrsData);
+        }
         return updatedFsrsData;
       });
 
@@ -6757,12 +6761,21 @@ What is the student's answer?`
       const totalQuestions = sessionResults.length + 1;
       const topicsCovered = [...new Set(sessionResults.map(r => r.topic))];
       
-      // Record daily activity
-      recordDailyActivity(totalQuestions, correctCount, masteryGained);
-      
+      // Record daily activity and sync to cloud
+      const updatedActivity = recordDailyActivity(totalQuestions, correctCount, masteryGained);
+      if (practiceUser) {
+        const todayKey = getTodayKey();
+        saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
+      }
+
       // Check for streak milestones (earns freezes)
       const updatedStreak = calculateStreak();
       const freezeEarned = checkStreakMilestone(updatedStreak.streak);
+
+      // Sync streak data to cloud
+      if (practiceUser) {
+        saveStreakToCloud(practiceUser.id, loadStreakData());
+      }
       
       // Check if streak was repaired
       const streakRepaired = updatedStreak.repairCompleted;
