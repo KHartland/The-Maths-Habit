@@ -5928,7 +5928,7 @@ const generateDiagram = (type) => {
 
   // Check for image-based diagram first
   if (imageDiagrams[type]) {
-    return `<img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto rounded-lg" />`;
+    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto" /></div>`;
   }
 
   // Fallback SVG diagrams for legacy questions
@@ -6772,9 +6772,12 @@ What is the student's answer?`
       const updatedStreak = calculateStreak();
       const freezeEarned = checkStreakMilestone(updatedStreak.streak);
 
-      // Sync streak data to cloud
+      // Sync streak data to cloud (merge calculated streak with saved data)
       if (practiceUser) {
-        saveStreakToCloud(practiceUser.id, loadStreakData());
+        const savedStreak = loadStreakData();
+        savedStreak.currentStreak = updatedStreak.streak;
+        savedStreak.lastActivityDate = new Date().toISOString().split('T')[0];
+        saveStreakToCloud(practiceUser.id, savedStreak);
       }
       
       // Check if streak was repaired
