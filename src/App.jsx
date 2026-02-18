@@ -3955,31 +3955,31 @@ const higherQuestionBank = {
     [
       { q: "Find the next two terms in the sequence 3, 6, 11, 18, ...", a: "27, 38", worked: ["Differences: 3, 5, 7 (increasing by 2 each time)", "Next differences: 9, 11", "18 + 9 = 27, 27 + 11 = 38"], hint: "Find the differences, then the second differences" },
       { q: "Find the next two terms in the sequence 2, 5, 10, 17, ...", a: "26, 37", worked: ["Differences: 3, 5, 7 (increasing by 2)", "Next differences: 9, 11", "17 + 9 = 26, 26 + 11 = 37"], hint: "Find the first and second differences" },
-      { q: "A straight line passes through (0, 3) and (4, 11). What is the gradient?", a: "2", worked: ["Gradient = (y₂ − y₁) / (x₂ − x₁)", "= (11 − 3) / (4 − 0)", "= 8 / 4 = 2"], hint: "Gradient = change in y / change in x" },
-      { q: "A bath fills from empty to 60 litres in 10 minutes. What is the rate of filling?", a: "6 litres per minute", worked: ["Rate = change in volume / change in time", "= 60 / 10 = 6 litres per minute"], hint: "Rate = change in quantity / change in time" },
+      { q: "Find the next two terms in the sequence 1, 4, 9, 16, ...", a: "25, 36", worked: ["These are the square numbers: 1², 2², 3², 4²", "Next: 5² = 25, 6² = 36"], hint: "Look at the pattern — these are perfect squares" },
+      { q: "Find the next two terms in the sequence 0, 3, 8, 15, ...", a: "24, 35", worked: ["Differences: 3, 5, 7 (increasing by 2 each time)", "Next differences: 9, 11", "15 + 9 = 24, 24 + 11 = 35"], hint: "Find the differences between terms, then the second differences" },
     ],
     // Level 2 (Grade 5) — nth term of linear sequence
     [
       { q: "Find the nth term of the sequence 7, 10, 13, 16, ...", a: "3n + 4", worked: ["Common difference = 3", "nth term starts as 3n", "When n=1: 3(1) = 3, but first term is 7", "Adjustment: +4", "nth term = 3n + 4"], hint: "Common difference = 3, so starts with 3n. Then adjust" },
       { q: "Find the nth term of the sequence 5, 9, 13, 17, ...", a: "4n + 1", worked: ["Common difference = 4", "nth term = 4n + ?", "When n=1: 4(1) = 4, need 5, so +1", "nth term = 4n + 1"], hint: "Common difference = 4, so starts with 4n" },
-      { q: "A graph shows temperature falling from 80°C to 20°C over 30 minutes. What is the average rate of cooling?", a: "−2°C per minute", worked: ["Rate of change = change in temperature / change in time", "= (20 − 80) / 30", "= −60 / 30 = −2°C per minute", "The negative sign indicates cooling"], hint: "Rate of change = change in y / change in x. A negative rate means the quantity is decreasing." },
+      { q: "Find the nth term of the sequence 2, 8, 14, 20, ...", a: "6n − 4", worked: ["Common difference = 6", "nth term = 6n + ?", "When n=1: 6(1) = 6, but first term is 2, so −4", "nth term = 6n − 4"], hint: "Common difference = 6, so starts with 6n. Then adjust" },
     ],
     // Level 3 (Grade 7) — nth term of quadratic sequence
     [
       { q: "Find the nth term of the quadratic sequence 5, 12, 23, 38, ...", a: "2n^2 + n + 2", worked: ["First differences: 7, 11, 15", "Second differences: 4, 4 → constant, so quadratic", "a = 4/2 = 2, so starts with 2n²", "Subtract 2n²: 5−2, 12−8, 23−18, 38−32 → 3, 4, 5, 6", "Linear part: n + 2", "nth term = 2n² + n + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² and find the linear part" },
       { q: "Find the nth term of the quadratic sequence 4, 10, 20, 34, ...", a: "2n^2 + 2", worked: ["First differences: 6, 10, 14", "Second differences: 4, 4", "a = 2, so 2n²", "Subtract 2n²: 4−2, 10−8, 20−18, 34−32 → 2, 2, 2, 2", "nth term = 2n² + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² from each term" },
-      { q: "On a distance-time graph, the tangent at t = 5 passes through (3, 12) and (7, 36). Estimate the speed at t = 5.", a: "6 m/s", worked: ["Speed = gradient of tangent on a distance-time graph", "Gradient = (36 − 12) / (7 − 3)", "= 24 / 4 = 6 m/s", "This is the instantaneous speed at t = 5"], hint: "Draw a tangent at the point and find its gradient: rise / run." },
+      { q: "Find the nth term of the quadratic sequence 3, 8, 17, 30, ...", a: "2n^2 − n + 2", worked: ["First differences: 5, 9, 13", "Second differences: 4, 4 → constant, so quadratic", "a = 4/2 = 2, so starts with 2n²", "Subtract 2n²: 3−2, 8−8, 17−18, 30−32 → 1, 0, −1, −2", "Linear part: −n + 2", "nth term = 2n² − n + 2"], hint: "Second difference = 4, so a = 2. Subtract 2n² and find the linear part" },
     ],
     // Level 4 (Grade 8) — Finding coefficients from terms
     [
       { q: "A sequence has nth term n² + bn + c. The 3rd term is 15 and the 5th term is 35. Find b and c.", a: "b = 2, c = 0", worked: ["3rd term: 9 + 3b + c = 15 → 3b + c = 6", "5th term: 25 + 5b + c = 35 → 5b + c = 10", "Subtract: 2b = 4 → b = 2", "Substitute back: 3(2) + c = 6 → c = 0", "Check: 3rd = 9+6+0 = 15 ✓, 5th = 25+10+0 = 35 ✓"], hint: "Substitute n=3 and n=5 to form two simultaneous equations" },
-      { q: "Estimate the area under a curve using the trapezium rule with 4 strips of width 2. The y-values at x = 0, 2, 4, 6, 8 are 0, 3, 5, 4, 2.", a: "26", calculator: true, worked: ["Trapezium rule: h/2 × [y₀ + 2(y₁ + y₂ + y₃) + y₄]", "h = 2", "= 2/2 × [0 + 2(3 + 5 + 4) + 2]", "= 1 × [0 + 24 + 2] = 26"], hint: "Trapezium rule: h/2 × [first + last + 2 × (sum of middle values)]" },
-      { q: "A curve shows water depth changing over time. The gradient at t = 10 is −0.8. Interpret this value.", a: "The depth is decreasing at 0.8 cm per minute", worked: ["The gradient of a graph gives the rate of change", "A gradient of −0.8 means the depth is changing by −0.8 cm per minute", "The negative sign means the depth is decreasing", "The depth is falling at a rate of 0.8 cm per minute"], hint: "The gradient tells you the rate of change. What does the negative sign mean?" },
+      { q: "The nth term of a quadratic sequence is an² + bn + c. The first three terms are 4, 11, 22. Find a, b and c.", a: "a = 2, b = 1, c = 1", worked: ["n=1: a + b + c = 4", "n=2: 4a + 2b + c = 11", "n=3: 9a + 3b + c = 22", "Eq2 − Eq1: 3a + b = 7", "Eq3 − Eq2: 5a + b = 11", "Subtract: 2a = 4 → a = 2", "3(2) + b = 7 → b = 1", "2 + 1 + c = 4 → c = 1", "Check: 2(1) + 1 + 1 = 4 ✓, 2(4) + 2 + 1 = 11 ✓, 2(9) + 3 + 1 = 22 ✓"], hint: "Substitute n=1, 2, 3 to form three simultaneous equations" },
+      { q: "A quadratic sequence has nth term 3n² − 2n + 1. Find the 10th term and verify the second differences are constant.", a: "10th term = 281; second differences = 6", worked: ["10th term: 3(100) − 2(10) + 1 = 300 − 20 + 1 = 281", "First 4 terms: 3−2+1=2, 12−4+1=9, 27−6+1=22, 48−8+1=41", "First differences: 7, 13, 19", "Second differences: 6, 6 ✓ (constant = 2a = 2×3 = 6)"], hint: "Substitute n=10. For second differences, list the first few terms and check" },
     ],
     // Level 5 (Grade 9) — Proof about sequences
     [
       { q: "The nth term of a sequence is n² + n + 1. Prove that every term is odd.", type: "mcq", options: ["n² + n is always even, so +1 makes it odd", "Every other term is odd", "Only works for even n", "Cannot be proven"], a: "n² + n is always even, so +1 makes it odd", worked: ["n² + n = n(n+1)", "n and n+1 are consecutive integers", "One of them must be even, so n(n+1) is always even", "Even + 1 = odd", "Therefore every term is odd ✓"], hint: "Factor n² + n as n(n+1). What can you say about consecutive integers?" },
-      { q: "A velocity-time graph is a curve. At t = 3, the tangent to the curve passes through (1, 5) and (5, 17). Find the acceleration at t = 3.", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (17 − 5) / (5 − 1)", "= 12 / 4 = 3 m/s²", "This is the instantaneous acceleration at t = 3"], hint: "Acceleration is the gradient of a velocity-time graph. Use the tangent to estimate the gradient at a point." },
+      { q: "The nth term of a sequence is n² + n + 41. Show that the first 5 terms are all prime, then find a value of n for which the term is NOT prime.", a: "n = 40 gives 40² + 40 + 41 = 1681 = 41²", type: "mcq", options: ["n = 40 gives 40² + 40 + 41 = 1681 = 41²", "n = 10 gives 151 which is not prime", "All terms are always prime", "n = 20 gives 461 which is not prime"], worked: ["n=1: 1+1+41 = 43 (prime ✓)", "n=2: 4+2+41 = 47 (prime ✓)", "n=3: 9+3+41 = 53 (prime ✓)", "n=4: 16+4+41 = 61 (prime ✓)", "n=5: 25+5+41 = 71 (prime ✓)", "But n=40: 1600+40+41 = 1681 = 41×41 (NOT prime)", "This shows a formula can look like it always gives primes but doesn't"], hint: "Try n=40. What do you notice about 40² + 40 + 41 and factoring out?" },
     ],
   ],
 
@@ -4737,38 +4737,38 @@ const higherQuestionBank = {
   ],
 
   // ═══════════════════════════════════════════════════════════════
-  // A13: Equation of a Circle (Higher only)
+  // A13: Graph Transformations — f(x) notation (Higher only)
   // ═══════════════════════════════════════════════════════════════
   'A13': [
-    // Level 1 (Grade 7) — Equation of a circle centred at origin
+    // Level 1 (Grade 7) — Vertical translations f(x) + a
     [
-      { q: "What is the equation of a circle with centre (0,0) and radius 5?", a: "x² + y² = 25", worked: ["The equation of a circle centred at the origin is x² + y² = r²", "r = 5, so r² = 25", "x² + y² = 25"], hint: "Use x² + y² = r²" },
-      { q: "A circle has equation x² + y² = 49. What is the radius?", a: "7", worked: ["x² + y² = 49", "r² = 49", "r = √49 = 7"], hint: "The number on the right is r²" },
       { q: "The graph of y = x² is transformed to y = x² + 3. Describe the transformation.", a: "Translation by (0, 3) — shift up 3 units", worked: ["y = x² + 3 means f(x) + 3", "This adds 3 to every y-coordinate", "The graph shifts UP by 3 units", "Translation vector (0, 3)"], hint: "f(x) + a shifts the graph UP by a units" },
-    ],
-    // Level 2 (Grade 7) — Points on a circle
-    [
-      { q: "Does the point (3, 4) lie on the circle x² + y² = 25?", a: "Yes", type: "mcq", options: ["Yes", "No"], worked: ["Substitute: 3² + 4² = 9 + 16 = 25 ✓", "25 = 25, so yes, the point lies on the circle"], hint: "Substitute the coordinates into the equation and check if it equals 25" },
-      { q: "Describe the transformation that maps y = f(x) onto y = f(x − 4).", a: "Translation by (4, 0) — shift right 4 units", worked: ["f(x − 4) replaces x with (x − 4)", "This shifts the graph RIGHT by 4 units", "Translation vector (4, 0)"], hint: "f(x − a) shifts RIGHT by a units. Watch the sign!" },
       { q: "The graph of y = f(x) passes through (5, 2). What point must be on y = f(x) + 7?", a: "(5, 9)", worked: ["f(x) + 7 adds 7 to every y-value", "(5, 2) → (5, 2 + 7) = (5, 9)"], hint: "f(x) + 7 shifts every point up by 7" },
+      { q: "The graph of y = f(x) passes through (−3, 4). What point must be on y = f(x) − 5?", a: "(-3, -1)", worked: ["f(x) − 5 subtracts 5 from every y-value", "(−3, 4) → (−3, 4 − 5) = (−3, −1)"], hint: "f(x) − a shifts every point DOWN by a" },
     ],
-    // Level 3 (Grade 8) — Tangent to a circle
+    // Level 2 (Grade 7) — Horizontal translations f(x − a)
     [
-      { q: "A circle has equation x² + y² = 25. Find the equation of the tangent at the point (3, 4).", a: "y = −¾x + 25/4", worked: ["Radius to (3,4): gradient = 4/3", "Tangent is perpendicular: gradient = −3/4", "y − 4 = −¾(x − 3)", "y = −¾x + 9/4 + 4", "y = −¾x + 25/4"], hint: "The tangent is perpendicular to the radius at the point of contact" },
+      { q: "Describe the transformation that maps y = f(x) onto y = f(x − 4).", a: "Translation by (4, 0) — shift right 4 units", worked: ["f(x − 4) replaces x with (x − 4)", "This shifts the graph RIGHT by 4 units", "Translation vector (4, 0)"], hint: "f(x − a) shifts RIGHT by a units. Watch the sign!" },
+      { q: "The graph of y = f(x) passes through (1, 6). What point must be on y = f(x + 3)?", a: "(-2, 6)", worked: ["f(x + 3) shifts the graph LEFT by 3 units", "x-coordinates decrease by 3, y stays the same", "(1, 6) → (1 − 3, 6) = (−2, 6)"], hint: "f(x + a) shifts LEFT by a. Subtract a from x-coordinates" },
+      { q: "The minimum of y = f(x) is at (4, −2). State the minimum of y = f(x − 3) + 1.", a: "(7, -1)", worked: ["f(x − 3): shift right 3 → x becomes 4 + 3 = 7", "+1: shift up 1 → y becomes −2 + 1 = −1", "New minimum: (7, −1)"], hint: "f(x − 3) shifts right 3, then +1 shifts up 1" },
+    ],
+    // Level 3 (Grade 8) — Reflections −f(x) and f(−x)
+    [
       { q: "The graph of y = f(x) has a maximum at (4, 6). State the coordinates of the maximum of y = −f(x).", a: "(4, −6) — it becomes a minimum", worked: ["−f(x) reflects the graph in the x-axis", "All y-values change sign", "(4, 6) → (4, −6)", "The maximum becomes a minimum"], hint: "−f(x) reflects in the x-axis: negate the y-coordinate" },
       { q: "Describe the transformation that maps y = f(x) onto y = f(−x).", a: "Reflection in the y-axis", worked: ["f(−x) replaces x with −x", "All x-coordinates change sign", "This reflects the graph in the y-axis"], hint: "f(−x) reflects in the y-axis. −f(x) reflects in the x-axis." },
+      { q: "The graph of y = f(x) passes through (3, −1) and (−2, 5). Find the corresponding points on y = −f(x).", a: "(3, 1) and (-2, -5)", worked: ["−f(x) reflects in the x-axis: negate y-values", "(3, −1) → (3, 1)", "(−2, 5) → (−2, −5)"], hint: "−f(x) changes the sign of every y-coordinate" },
     ],
-    // Level 4 (Grade 8) — Circle with centre (a, b) and stretches
+    // Level 4 (Grade 8) — Stretches f(ax) and af(x)
     [
-      { q: "What is the equation of a circle with centre (2, −3) and radius 4?", a: "(x − 2)² + (y + 3)² = 16", worked: ["The equation is (x − a)² + (y − b)² = r²", "Centre (2, −3): a = 2, b = −3", "(x − 2)² + (y − (−3))² = 4²", "(x − 2)² + (y + 3)² = 16"], hint: "Use (x − a)² + (y − b)² = r²" },
       { q: "Describe the single transformation from y = cos(x) to y = cos(2x).", a: "Horizontal stretch, scale factor ½", worked: ["cos(2x) means f(2x)", "f(ax) is a horizontal stretch with scale factor 1/a", "Scale factor = 1/2", "The graph is squashed horizontally — the period halves from 360° to 180°"], hint: "f(ax) stretches horizontally by scale factor 1/a" },
       { q: "A curve has a maximum at (6, 3). State the new maximum after the transformation y = f(2x).", a: "(3, 3)", worked: ["f(2x) is a horizontal stretch with scale factor ½", "x-coordinates are divided by 2", "y-coordinates stay the same", "(6, 3) → (3, 3)"], hint: "f(2x) halves all x-coordinates" },
+      { q: "The graph of y = sin(x) is transformed to y = 3sin(x). Describe the transformation and state the new amplitude.", a: "Vertical stretch scale factor 3; amplitude = 3", worked: ["3sin(x) means 3 × f(x)", "This multiplies all y-values by 3", "Vertical stretch, scale factor 3", "Original amplitude 1 → new amplitude 3"], hint: "af(x) stretches vertically by factor a. Amplitude = |a|" },
     ],
-    // Level 5 (Grade 9) — Completing the square for circles and combined transformations
+    // Level 5 (Grade 9) — Combined transformations
     [
-      { q: "Find the centre and radius of the circle x² + y² − 6x + 4y − 12 = 0", a: "Centre (3, −2), radius 5", worked: ["Group: (x² − 6x) + (y² + 4y) = 12", "Complete square: (x − 3)² − 9 + (y + 2)² − 4 = 12", "(x − 3)² + (y + 2)² = 25", "Centre = (3, −2), radius = √25 = 5"], hint: "Complete the square for x and y separately" },
       { q: "The graph of y = f(x) passes through (2, 5). Find the corresponding point on y = 3f(x − 1).", a: "(3, 15)", worked: ["Two transformations:", "f(x − 1): shift RIGHT by 1 → x becomes 2 + 1 = 3", "3f: multiply y by 3 → y becomes 5 × 3 = 15", "New point: (3, 15)"], hint: "Apply inside function first (shift right 1), then outside (multiply y by 3)" },
       { q: "Describe the transformations that map y = sin(x) onto y = 2sin(x) + 1.", a: "Vertical stretch factor 2, then translation up 1", worked: ["2sin(x): vertical stretch with scale factor 2", "The amplitude doubles (−1 to 1 becomes −2 to 2)", "+1: translation up by 1 unit", "Final range: −2 + 1 = −1 to 2 + 1 = 3"], hint: "The 2 stretches vertically (doubles y-values), the +1 shifts up" },
+      { q: "The graph of y = f(x) passes through (−1, 4) and (3, −2). Find the corresponding points on y = 2f(x + 4).", a: "(-5, 8) and (-1, -4)", worked: ["Two transformations: f(x + 4) shifts LEFT 4, then 2f multiplies y by 2", "Point (−1, 4): x shifts left 4: −1 − 4 = −5, y doubles: 4 × 2 = 8 → (−5, 8)", "Point (3, −2): x shifts left 4: 3 − 4 = −1, y doubles: −2 × 2 = −4 → (−1, −4)"], hint: "Apply inside function first (shift left 4), then outside (multiply y by 2)" },
     ],
   ],
 
@@ -4948,37 +4948,37 @@ const higherQuestionBank = {
     ],
   ],
 
-  // A14: Transformations of Functions (f(x) notation)
+  // A14: Rates of Change & Graphs in Real Contexts
   'A14': [
-    // Level 1 (Grade 6) — Vertical translation f(x) + a
+    // Level 1 (Grade 6) — Reading distance-time graphs
     [
-      { q: "The graph of y = f(x) passes through (3, 5). What point must be on the graph of y = f(x) + 3?", a: "(3, 8)", worked: ["y = f(x) + 3 adds 3 to every y-coordinate", "Original point: (3, 5)", "New point: (3, 5 + 3) = (3, 8)", "This is a translation of (0, 3) — shift up 3 units"], hint: "f(x) + 3 moves every point UP by 3. Add 3 to the y-coordinate." },
       { q: "A car travels 80 km in 2 hours. What is the gradient of the distance-time graph, and what does it represent?", a: "40 km/h — the gradient represents speed", worked: ["Gradient = change in distance / change in time", "= 80/2 = 40 km/h", "On a distance-time graph, gradient = speed"], hint: "Gradient = rise/run = distance/time = speed" },
       { q: "A distance-time graph shows a horizontal line at 150 km from t = 3 to t = 5 hours. What is happening?", a: "The object is stationary (not moving)", worked: ["A horizontal line means the distance is not changing", "No change in distance = speed of 0", "The object is stationary for 2 hours"], hint: "What does a flat line mean on a distance-time graph?" },
+      { q: "A cyclist travels 15 km in 30 minutes. What is their speed in km/h?", a: "30 km/h", worked: ["30 minutes = 0.5 hours", "Speed = distance / time = 15 / 0.5 = 30 km/h"], hint: "Convert minutes to hours first, then speed = distance ÷ time" },
     ],
-    // Level 2 (Grade 7) — Horizontal translation f(x − a)
+    // Level 2 (Grade 7) — Velocity-time graphs: area and gradient
     [
-      { q: "Describe the single transformation that maps y = f(x) onto y = f(x − 2).", a: "Translation by vector (2, 0) — shift right 2 units", worked: ["f(x − 2) replaces x with (x − 2)", "This shifts the graph 2 units to the RIGHT", "Note: f(x − 2) shifts RIGHT (opposite sign!)", "Transformation: translation by vector (2, 0)"], hint: "f(x − a) shifts the graph RIGHT by a units. Be careful with the sign!" },
       { q: "A velocity-time graph shows a constant velocity of 15 m/s for 8 seconds. What is the total distance travelled?", a: "120 m", worked: ["Distance = area under a velocity-time graph", "Area = velocity × time (rectangle)", "= 15 × 8 = 120 m"], hint: "The area under a velocity-time graph gives the distance." },
       { q: "A velocity-time graph shows velocity increasing from 0 to 20 m/s in 5 seconds. What is the acceleration?", a: "4 m/s²", worked: ["Acceleration = gradient of a velocity-time graph", "= change in velocity / change in time", "= (20 − 0) / (5 − 0) = 20/5 = 4 m/s²"], hint: "On a velocity-time graph, the gradient gives the acceleration." },
+      { q: "A train decelerates from 30 m/s to 10 m/s in 4 seconds. What is the deceleration?", a: "5 m/s²", worked: ["Deceleration = change in velocity / time", "= (30 − 10) / 4 = 20/4 = 5 m/s²", "The velocity decreases, so this is a deceleration of 5 m/s²"], hint: "Deceleration = (initial − final velocity) / time" },
     ],
-    // Level 3 (Grade 8) — Reflections −f(x) and f(−x)
+    // Level 3 (Grade 8) — Multi-stage journeys
     [
-      { q: "The graph of y = f(x) has a maximum at (2, 7). State the coordinates of the maximum/minimum of: (a) y = −f(x) and (b) y = f(−x).", a: "(a) minimum at (2, −7); (b) maximum at (−2, 7)", worked: ["(a) y = −f(x) reflects in the x-axis", "All y-values change sign: (2, 7) → (2, −7)", "The maximum becomes a minimum", "(b) y = f(−x) reflects in the y-axis", "All x-values change sign: (2, 7) → (−2, 7)", "The maximum remains a maximum"], hint: "−f(x) reflects in the x-axis (negate y). f(−x) reflects in the y-axis (negate x)." },
       { q: "A car travels at 30 km/h for 2 hours, then 60 km/h for 1 hour. What is the total distance?", a: "120 km", worked: ["Stage 1: distance = speed × time = 30 × 2 = 60 km", "Stage 2: distance = 60 × 1 = 60 km", "Total = 60 + 60 = 120 km"], hint: "Calculate distance for each stage separately: distance = speed × time" },
       { q: "A velocity-time graph shows: 0–4 s accelerating from 0 to 12 m/s, then constant 12 m/s for 6 s. Find the total distance.", a: "96 m", worked: ["Stage 1 (triangle): ½ × 4 × 12 = 24 m", "Stage 2 (rectangle): 12 × 6 = 72 m", "Total distance = 24 + 72 = 96 m"], hint: "Split into a triangle (acceleration phase) and a rectangle (constant phase). Distance = area." },
-    ],
-    // Level 4 (Grade 9) — Horizontal stretch f(ax)
-    [
-      { q: "A curve has a maximum point at (2, 5). State the new coordinates of the maximum point after the transformation y = f(2x).", a: "(1, 5)", worked: ["y = f(2x) is a horizontal stretch with scale factor ½", "All x-coordinates are divided by 2", "y-coordinates stay the same", "Maximum: (2, 5) → (2 ÷ 2, 5) = (1, 5)"], hint: "f(2x) squashes the graph horizontally by factor 2. Divide x-coordinates by 2." },
-      { q: "The graph of y = x² is translated by the vector (0, −4). Write the equation of the new graph.", a: "y = x² − 4", worked: ["Translation by (0, −4) means shift down 4 units", "Every y-value decreases by 4", "Original: y = x²", "New: y = x² − 4", "This is f(x) + k where k = −4"], hint: "A translation of (0, −4) shifts the graph down 4 units. Subtract 4 from the equation." },
       { q: "A v-t graph shows: acceleration 0→10 m/s in 4 s, constant 10 m/s for 6 s, deceleration to 0 in 5 s. Find total distance.", a: "105 m", worked: ["Phase 1 (triangle): ½ × 4 × 10 = 20 m", "Phase 2 (rectangle): 10 × 6 = 60 m", "Phase 3 (triangle): ½ × 5 × 10 = 25 m", "Total = 20 + 60 + 25 = 105 m"], hint: "Split into three areas: two triangles and a rectangle. Distance = total area under the graph." },
     ],
-    // Level 5 (Grade 9) — Combined transformations
+    // Level 4 (Grade 9) — Tangent to a curve for instantaneous rate
     [
-      { q: "The graph of y = f(x) passes through (−1, 4) and (3, −2). Find the corresponding points on y = 2f(x + 4) and explain the order of transformations.", a: "(−5, 8) and (−1, −4)", worked: ["Two transformations: replace x with (x + 4), then multiply f by 2", "Order: horizontal translation LEFT 4, then vertical stretch factor 2", "Point (−1, 4): x shifts left 4: −1 − 4 = −5, y doubles: 4 × 2 = 8 → (−5, 8)", "Point (3, −2): x shifts left 4: 3 − 4 = −1, y doubles: −2 × 2 = −4 → (−1, −4)", "Translation first (inside the function), then stretch (outside)"], hint: "Apply transformations in order: f(x + 4) shifts LEFT 4 (inside), then 2f multiplies y by 2 (outside)." },
-      { q: "Estimate the distance using the trapezium rule with strips of width 2 s. Velocities at t = 0, 2, 4, 6, 8 are 0, 6, 10, 12, 8 m/s.", a: "64 m", calculator: true, worked: ["Trapezium rule: h/2 × [y₀ + 2(y₁ + y₂ + y₃) + y₄]", "h = 2", "= 2/2 × [0 + 2(6 + 10 + 12) + 8]", "= 1 × [0 + 56 + 8] = 64 m"], hint: "Trapezium rule: h/2 × [first + last + 2×(sum of middle values)]" },
       { q: "At a point on a distance-time curve, the tangent passes through (2, 10) and (6, 50). Estimate the speed at this point.", a: "10 m/s", worked: ["Speed = gradient of the tangent to a distance-time graph", "Gradient = (50 − 10) / (6 − 2)", "= 40 / 4 = 10 m/s", "This gives the instantaneous speed at that point"], hint: "The gradient of the tangent to a distance-time graph gives the instantaneous speed." },
+      { q: "A curve shows water depth changing over time. The gradient at t = 10 is −0.8. Interpret this value.", a: "The depth is decreasing at 0.8 cm per minute", worked: ["The gradient of a graph gives the rate of change", "A gradient of −0.8 means the depth is changing by −0.8 cm per minute", "The negative sign means the depth is decreasing", "The depth is falling at a rate of 0.8 cm per minute"], hint: "The gradient tells you the rate of change. What does the negative sign mean?" },
+      { q: "On a velocity-time curve, the tangent at t = 3 passes through (1, 5) and (5, 17). Find the acceleration at t = 3.", a: "3 m/s²", worked: ["Acceleration = gradient of velocity-time graph", "Gradient of tangent = (17 − 5) / (5 − 1)", "= 12 / 4 = 3 m/s²", "This is the instantaneous acceleration at t = 3"], hint: "Acceleration is the gradient of a velocity-time graph. Use the tangent to estimate the gradient at a point." },
+    ],
+    // Level 5 (Grade 9) — Trapezium rule and interpreting area under a curve
+    [
+      { q: "Estimate the distance using the trapezium rule with strips of width 2 s. Velocities at t = 0, 2, 4, 6, 8 are 0, 6, 10, 12, 8 m/s.", a: "64 m", calculator: true, worked: ["Trapezium rule: h/2 × [y₀ + 2(y₁ + y₂ + y₃) + y₄]", "h = 2", "= 2/2 × [0 + 2(6 + 10 + 12) + 8]", "= 1 × [0 + 56 + 8] = 64 m"], hint: "Trapezium rule: h/2 × [first + last + 2×(sum of middle values)]" },
+      { q: "A graph shows temperature falling from 80°C to 20°C over 30 minutes. At t = 15 the tangent has gradient −2.5. Interpret this.", a: "At 15 minutes, the temperature is dropping at 2.5°C per minute", worked: ["The gradient of a curve gives the instantaneous rate of change", "Gradient = −2.5 means the temperature is changing at −2.5°C/min", "The negative sign shows the temperature is falling", "At t = 15, the rate of cooling is 2.5°C per minute"], hint: "The gradient of the tangent gives the instantaneous rate of change at that point." },
+      { q: "Estimate the area under a curve using the trapezium rule with 4 strips of width 2. The y-values at x = 0, 2, 4, 6, 8 are 0, 3, 5, 4, 2.", a: "26", calculator: true, worked: ["Trapezium rule: h/2 × [y₀ + 2(y₁ + y₂ + y₃) + y₄]", "h = 2", "= 2/2 × [0 + 2(3 + 5 + 4) + 2]", "= 1 × [0 + 24 + 2] = 26"], hint: "Trapezium rule: h/2 × [first + last + 2 × (sum of middle values)]" },
     ],
   ],
 
@@ -6184,6 +6184,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
 };
 
 function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+  const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -6758,11 +6759,22 @@ What is the student's answer?`
       const topicsCovered = [...new Set(sessionResults.map(r => r.topic))];
       
       // Record daily activity
-      recordDailyActivity(totalQuestions, correctCount, masteryGained);
-      
+      const updatedActivity = recordDailyActivity(totalQuestions, correctCount, masteryGained);
+
+      // Sync daily activity to cloud
+      if (practiceUser) {
+        const todayKey = getTodayKey();
+        saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
+      }
+
       // Check for streak milestones (earns freezes)
       const updatedStreak = calculateStreak();
       const freezeEarned = checkStreakMilestone(updatedStreak.streak);
+
+      // Sync streak data to cloud
+      if (practiceUser) {
+        saveStreakToCloud(practiceUser.id, loadStreakData());
+      }
       
       // Check if streak was repaired
       const streakRepaired = updatedStreak.repairCompleted;
@@ -9598,7 +9610,14 @@ function AppContent() {
       saveSettingsToCloud(user.id, settings);
     }
   }, [settings, user]);
-  
+
+  // Sync FSRS data to cloud when it changes
+  useEffect(() => {
+    if (user) {
+      saveFsrsToCloud(user.id, fsrsData);
+    }
+  }, [fsrsData, user]);
+
   // Handle onboarding completion
   const completeOnboarding = () => {
     setOnboardingComplete();
