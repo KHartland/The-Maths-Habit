@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagram Test Page</title>
+  <style>
+    body { font-family: sans-serif; background: #0E0307; color: white; padding: 20px; }
+    h1 { color: #6E33B1; }
+    h2 { color: #9b59b6; margin-top: 2em; border-bottom: 1px solid #333; padding-bottom: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; }
+    .card img { background: white; border-radius: 8px; padding: 12px; width: 100%; height: auto; }
+    .card p { font-size: 12px; color: #aaa; margin: 8px 0 0; }
+    .card .status { font-size: 11px; margin-top: 4px; }
+    .ok { color: #4ade80; }
+    .fail { color: #f87171; }
+  </style>
+</head>
+<body>
+  <h1>Diagram Test Page</h1>
+  <p>Checking all image diagrams load correctly. Green = loaded, Red = broken.</p>
+
+  <h2>Batch 1 — G20 Pythagoras & Trig</h2>
+  <div class="grid" id="batch1"></div>
+
+  <h2>Batch 2 — G10 Circle Theorems</h2>
+  <div class="grid" id="batch2"></div>
+
+  <h2>Batch 3 — G17 Sectors & Circles</h2>
+  <div class="grid" id="batch3"></div>
+
+  <h2>Original Diagrams</h2>
+  <div class="grid" id="original"></div>
+
+  <script>
+    const batches = {
+      batch1: [
+        { file: 'pythag-3-4.png', q: 'Pythagoras 3-4-5' },
+        { file: 'pythag-5-13.png', q: 'Pythagoras 5-13' },
+        { file: 'trig-30-hyp10.png', q: 'Trig sin 30° hyp 10' },
+        { file: 'trig-opp5-adj12.png', q: 'Trig tan⁻¹ opp5 adj12' },
+      ],
+      batch2: [
+        { file: 'G10-semicircle-35.png', q: 'Semicircle angle 35°' },
+        { file: 'G10-centre-circum-140.png', q: 'Centre 140° circumference' },
+        { file: 'G10-cyclic-quad-85.png', q: 'Cyclic quad 85°' },
+        { file: 'G10-centre-circum-130.png', q: 'Centre 130° circumference' },
+        { file: 'G10-cyclic-quad-110.png', q: 'Cyclic quad 110°' },
+        { file: 'G10-alt-segment-65.png', q: 'Alternate segment 65°' },
+        { file: 'G10-tangent-chord-55.png', q: 'Tangent chord 55°' },
+        { file: 'G10-tangent-chord-72.png', q: 'Tangent chord 72°' },
+        { file: 'G10-two-tangents-60.png', q: 'Two tangents 60°' },
+        { file: 'G10-tangent-length.png', q: 'Tangent length P(0,10) r=6' },
+      ],
+      batch3: [
+        { file: 'G17-semicircle-r7.png', q: 'Semicircle r=7' },
+        { file: 'G17-semicircle-d10.png', q: 'Semicircle d=10' },
+        { file: 'G17-quarter-circle-r4.png', q: 'Quarter circle r=4' },
+        { file: 'G17-sector-45-r8.png', q: 'Sector 45° r=8' },
+        { file: 'G17-sector-60-r6.png', q: 'Sector 60° r=6' },
+        { file: 'G17-sector-120-r9.png', q: 'Sector 120° r=9' },
+        { file: 'G17-sector-36-r10.png', q: 'Sector 36° r=10' },
+        { file: 'G17-segment-90-r6.png', q: 'Segment 90° r=6' },
+      ],
+      original: [
+        { file: 'distane time graph 1.png', q: 'Distance-time 1' },
+        { file: 'distance time graph 2.png', q: 'Distance-time 2' },
+        { file: 'distance time graph 3.png', q: 'Distance-time 3' },
+        { file: 'Plot a graph.png', q: 'Plot a graph' },
+        { file: 'Scatter graph.png', q: 'Scatter graph' },
+        { file: 'Pythagoras.png', q: 'Pythagoras original' },
+        { file: 'pythagoras 2.png', q: 'Pythagoras 2' },
+        { file: 'Pythagoras 3.png', q: 'Pythagoras 3' },
+        { file: 'Isoceles triangle missing angle.png', q: 'Isosceles missing angle' },
+        { file: 'Isoceles 40.png', q: 'Isosceles 40°' },
+        { file: 'Isoceles 50.png', q: 'Isosceles 50°' },
+        { file: 'pythagoras shorter side.png', q: 'Pythagoras shorter side' },
+      ],
+    };
+
+    Object.entries(batches).forEach(([batchId, images]) => {
+      const container = document.getElementById(batchId);
+      images.forEach(({ file, q }) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const img = document.createElement('img');
+        img.src = '/images/' + file;
+        img.alt = q;
+        const label = document.createElement('p');
+        label.textContent = file;
+        const status = document.createElement('div');
+        status.className = 'status';
+        status.textContent = 'Loading...';
+        img.onload = () => { status.textContent = 'Loaded'; status.className = 'status ok'; };
+        img.onerror = () => { status.textContent = 'BROKEN'; status.className = 'status fail'; };
+        card.appendChild(img);
+        card.appendChild(label);
+        card.appendChild(status);
+        container.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>
