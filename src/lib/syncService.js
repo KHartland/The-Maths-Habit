@@ -245,12 +245,19 @@ export const loadFromCloud = async (userId) => {
     const streakRow = streakRows && streakRows.length > 0 ? streakRows[0] : null;
 
     if (streakRow) {
-      const streakData = streakRow.streak_data || {};
-      streakData.currentStreak = streakRow.current_streak;
-      streakData.longestStreak = streakRow.longest_streak;
-      streakData.freezesAvailable = streakRow.freezes_available;
-      streakData.lastActivityDate = streakRow.last_activity_date;
-      localStorage.setItem(STREAK_DATA_KEY, JSON.stringify(streakData));
+      const cloudStreak = streakRow.streak_data || {};
+      cloudStreak.currentStreak = streakRow.current_streak;
+      cloudStreak.longestStreak = streakRow.longest_streak;
+      cloudStreak.freezesAvailable = streakRow.freezes_available;
+      cloudStreak.lastActivityDate = streakRow.last_activity_date;
+      // Merge with local — if local has repairNeeded=false but cloud has true, keep local (repair was completed locally)
+      const existingStreak = JSON.parse(localStorage.getItem(STREAK_DATA_KEY) || '{}');
+      if (existingStreak.repairNeeded === false && cloudStreak.repairNeeded === true) {
+        // Local repair completion hasn't synced yet — keep local state
+        console.log('Keeping local streak data (repair completed locally, cloud stale)');
+      } else {
+        localStorage.setItem(STREAK_DATA_KEY, JSON.stringify(cloudStreak));
+      }
     }
 
     // 4. Load settings
@@ -279,13 +286,22 @@ export const loadFromCloud = async (userId) => {
     );
 
     if (dailyRows && dailyRows.length > 0) {
-      const daily = {};
+      // Merge cloud data with local — keep local if it has MORE questions (avoids overwriting recent sessions)
+      const existingDaily = JSON.parse(localStorage.getItem(DAILY_ACTIVITY_KEY) || '{}');
+      const daily = { ...existingDaily };
       dailyRows.forEach(row => {
-        daily[row.date] = {
+        const cloudEntry = {
           questions: row.questions_answered,
           correct: row.correct_answers,
-          masteryGained: row.mastery_gained
+          mastery: row.mastery_gained,
+          sessions: existingDaily[row.date]?.sessions || 0,
+          firstPractice: existingDaily[row.date]?.firstPractice || null,
+          lastPractice: existingDaily[row.date]?.lastPractice || null
         };
+        // Keep whichever has more questions (local might have newer data not yet synced)
+        if (!daily[row.date] || cloudEntry.questions > (daily[row.date].questions || 0)) {
+          daily[row.date] = { ...daily[row.date], ...cloudEntry };
+        }
       });
       localStorage.setItem(DAILY_ACTIVITY_KEY, JSON.stringify(daily));
     }
@@ -446,7 +462,7 @@ export const saveDailyActivityToCloud = async (userId, date, activity) => {
         date: date,
         questions_answered: activity.questions || 0,
         correct_answers: activity.correct || 0,
-        mastery_gained: activity.masteryGained || 0,
+        mastery_gained: activity.mastery || activity.masteryGained || 0,
         updated_at: new Date().toISOString()
       }),
       prefer: 'resolution=merge-duplicates',
