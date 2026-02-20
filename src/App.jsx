@@ -6784,15 +6784,8 @@ What is the student's answer?`
       const totalQuestions = sessionResults.length + 1;
       const topicsCovered = [...new Set(sessionResults.map(r => r.topic))];
       
-<<<<<<< HEAD
-      // Record daily activity
-      const updatedActivity = recordDailyActivity(totalQuestions, correctCount, masteryGained);
-
-      // Sync daily activity to cloud
-=======
       // Record daily activity and sync to cloud
       const updatedActivity = recordDailyActivity(totalQuestions, correctCount, masteryGained);
->>>>>>> cb71326273ad4ec8a389b02c052d723f8d07b8fc
       if (practiceUser) {
         const todayKey = getTodayKey();
         saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
@@ -6802,18 +6795,12 @@ What is the student's answer?`
       const updatedStreak = calculateStreak();
       const freezeEarned = checkStreakMilestone(updatedStreak.streak);
 
-<<<<<<< HEAD
-      // Sync streak data to cloud
-      if (practiceUser) {
-        saveStreakToCloud(practiceUser.id, loadStreakData());
-=======
       // Sync streak data to cloud (merge calculated streak with saved data)
       if (practiceUser) {
         const savedStreak = loadStreakData();
         savedStreak.currentStreak = updatedStreak.streak;
         savedStreak.lastActivityDate = new Date().toISOString().split('T')[0];
         saveStreakToCloud(practiceUser.id, savedStreak);
->>>>>>> cb71326273ad4ec8a389b02c052d723f8d07b8fc
       }
       
       // Check if streak was repaired
