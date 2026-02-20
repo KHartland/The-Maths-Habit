@@ -5,7 +5,19 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/((?!api/|images/|icons/|\.well-known/|manifest\\.json|sw\\.js|logo\\.svg|privacy-policy\\.html).*)",
+      "source": "/images/:path*",
+      "destination": "/images/:path*"
+    },
+    {
+      "source": "/icons/:path*",
+      "destination": "/icons/:path*"
+    },
+    {
+      "source": "/.well-known/:path*",
+      "destination": "/.well-known/:path*"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
