@@ -3425,16 +3425,16 @@ questionBank['G20'][0].push(
   { q: "In a right-angled triangle, what is the name of the longest side?", type: "mcq", options: ["Hypotenuse", "Adjacent", "Opposite", "Base"], a: "Hypotenuse", worked: ["In a right-angled triangle, the longest side is opposite the right angle", "This is called the hypotenuse"] },
 );
 questionBank['G20'][1].push(
-  { q: "Use Pythagoras' theorem to find the hypotenuse c when a = 3 and b = 4.", a: "5", worked: ["c² = a² + b²", "c² = 3² + 4² = 9 + 16 = 25", "c = √25 = 5"] },
+  { q: "Use Pythagoras' theorem to find the hypotenuse c when a = 3 and b = 4.", a: "5", diagram: "pythag-3-4", worked: ["c² = a² + b²", "c² = 3² + 4² = 9 + 16 = 25", "c = √25 = 5"] },
 );
 questionBank['G20'][2].push(
-  { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 5 cm. Find the missing side.", a: "12", calculator: true, worked: ["Using c² = a² + b²", "13² = 5² + b²", "169 = 25 + b²", "b² = 144, so b = 12 cm"] },
+  { q: "A right-angled triangle has a hypotenuse of 13 cm and one side of 5 cm. Find the missing side.", a: "12", diagram: "pythag-5-13", calculator: true, worked: ["Using c² = a² + b²", "13² = 5² + b²", "169 = 25 + b²", "b² = 144, so b = 12 cm"] },
 );
 questionBank['G20'][3].push(
-  { q: "In a right-angled triangle, the angle is 30° and the hypotenuse is 10 cm. Use sin to find the length of the opposite side.", a: "5", calculator: true, worked: ["sin(angle) = opposite / hypotenuse", "sin(30°) = opposite / 10", "opposite = sin(30°) × 10 = 0.5 × 10 = 5 cm"] },
+  { q: "In a right-angled triangle, the angle is 30° and the hypotenuse is 10 cm. Use sin to find the length of the opposite side.", a: "5", diagram: "trig-30-hyp10", calculator: true, worked: ["sin(angle) = opposite / hypotenuse", "sin(30°) = opposite / 10", "opposite = sin(30°) × 10 = 0.5 × 10 = 5 cm"] },
 );
 questionBank['G20'][4].push(
-  { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 12 cm. Use tan⁻¹ to find the angle. Give your answer to 1 d.p.", a: "22.6", calculator: true, worked: ["tan(angle) = opposite / adjacent", "tan(angle) = 5 / 12", "angle = tan⁻¹(5/12) = tan⁻¹(0.4167) ≈ 22.6°"] },
+  { q: "In a right-angled triangle, the opposite side is 5 cm and the adjacent side is 12 cm. Use tan⁻¹ to find the angle. Give your answer to 1 d.p.", a: "22.6", diagram: "trig-opp5-adj12", calculator: true, worked: ["tan(angle) = opposite / adjacent", "tan(angle) = 5 / 12", "angle = tan⁻¹(5/12) = tan⁻¹(0.4167) ≈ 22.6°"] },
 );
 
 // P4: Relative Frequency
@@ -4098,32 +4098,32 @@ const higherQuestionBank = {
     // Level 1 (Grade 4/5) — Angle in a semicircle and angle at centre
     [
       { q: "The angle in a semicircle is always...", type: "mcq", options: ["45°", "90°", "180°", "360°"], a: "90°", worked: ["The angle subtended by a diameter at the circumference is always 90°", "This is one of the key circle theorems"], hint: "Think about a triangle inscribed in a semicircle" },
-      { q: "Triangle ABC is inscribed in a circle where AC is a diameter. Angle BAC = 35°. Find angle ABC.", a: "90", worked: ["AC is a diameter, so angle ABC is an angle in a semicircle", "Angle in a semicircle = 90°"], hint: "If one side of the triangle is a diameter, the angle opposite it is 90°" },
-      { q: "An arc subtends an angle of 140° at the centre. Find the angle subtended at the circumference.", a: "70", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 140° ÷ 2 = 70°"], hint: "Angle at centre = 2 × angle at circumference" },
+      { q: "Triangle ABC is inscribed in a circle where AC is a diameter. Angle BAC = 35°. Find angle ABC.", a: "90", worked: ["AC is a diameter, so angle ABC is an angle in a semicircle", "Angle in a semicircle = 90°"], hint: "If one side of the triangle is a diameter, the angle opposite it is 90°", diagram: "G10-semicircle-35" },
+      { q: "An arc subtends an angle of 140° at the centre. Find the angle subtended at the circumference.", a: "70", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 140° ÷ 2 = 70°"], hint: "Angle at centre = 2 × angle at circumference", diagram: "G10-centre-circum-140" },
     ],
     // Level 2 (Grade 6) — Cyclic quadrilateral and angle at centre
     [
-      { q: "In a cyclic quadrilateral, one angle is 85°. Calculate the opposite angle.", a: "95", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 85° = 95°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
-      { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference" },
-      { q: "A cyclic quadrilateral has an angle of 110°. Find the opposite angle.", a: "70", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 110° = 70°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
+      { q: "In a cyclic quadrilateral, one angle is 85°. Calculate the opposite angle.", a: "95", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 85° = 95°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°", diagram: "G10-cyclic-quad-85" },
+      { q: "An angle at the centre of a circle is 130°. What is the angle at the circumference standing on the same arc?", a: "65", worked: ["The angle at the centre is twice the angle at the circumference", "Angle at circumference = 130° ÷ 2 = 65°"], hint: "Angle at centre = 2 × angle at circumference", diagram: "G10-centre-circum-130" },
+      { q: "A cyclic quadrilateral has an angle of 110°. Find the opposite angle.", a: "70", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Opposite angle = 180° − 110° = 70°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°", diagram: "G10-cyclic-quad-110" },
     ],
     // Level 3 (Grade 7) — Tangent-radius and alternate segment
     [
       { q: "Find the angle between a tangent and a radius at the point of contact.", a: "90", worked: ["A tangent to a circle is perpendicular to the radius at the point of contact", "The angle is always 90°"], hint: "Tangent is perpendicular to the radius" },
       { q: "In a cyclic quadrilateral ABCD, angle A = 115°. Find angle C.", a: "65", worked: ["Opposite angles in a cyclic quadrilateral sum to 180°", "Angle C = 180° − 115° = 65°"], hint: "Opposite angles in a cyclic quadrilateral add up to 180°" },
-      { q: "The angle in the alternate segment is 65°. Calculate the angle between the chord and the tangent.", a: "65", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals the angle in the alternate segment", "Angle = 65°"], hint: "Alternate Segment Theorem works both ways" },
+      { q: "The angle in the alternate segment is 65°. Calculate the angle between the chord and the tangent.", a: "65", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals the angle in the alternate segment", "Angle = 65°"], hint: "Alternate Segment Theorem works both ways", diagram: "G10-alt-segment-65" },
     ],
     // Level 4 (Grade 8) — Proving cyclic quadrilateral property
     [
-      { q: "A tangent to a circle meets chord AB at point A. The angle between the tangent and chord AB is 55°. Use the Alternate Segment Theorem to find the angle ACB where C is a point on the major arc.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So angle ACB = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment" },
-      { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem" },
+      { q: "A tangent to a circle meets chord AB at point A. The angle between the tangent and chord AB is 55°. Use the Alternate Segment Theorem to find the angle ACB where C is a point on the major arc.", a: "55", worked: ["By the Alternate Segment Theorem:", "The angle between a tangent and a chord equals", "the angle in the alternate segment", "So angle ACB = 55°"], hint: "Alternate Segment Theorem: angle between tangent and chord = angle in alternate segment", diagram: "G10-tangent-chord-55" },
+      { q: "In a circle, a tangent at point A makes an angle of 72° with chord AB. Find the angle ACB where C is on the major arc.", a: "72", worked: ["By the Alternate Segment Theorem:", "Angle ACB = angle between tangent and chord = 72°"], hint: "Alternate Segment Theorem", diagram: "G10-tangent-chord-72" },
       { q: "Prove that opposite angles in a cyclic quadrilateral sum to 180°. What theorem does this use?", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Pythagoras"], worked: ["Each pair of opposite angles subtends the full circle at the centre", "The two angles at the centre sum to 360°", "Each angle at circumference = half the angle at centre", "So opposite angles at circumference sum to 360°/2 = 180°"], hint: "Use the fact that the angle at the centre is twice the angle at the circumference" },
     ],
     // Level 5 (Grade 9) — Combined problems and tangent lengths
     [
       { q: "Prove that the angle subtended by an arc at the centre is twice the angle subtended at the circumference. (What is the name of this theorem?)", a: "Angle at centre theorem", type: "mcq", options: ["Angle at centre theorem", "Alternate segment theorem", "Tangent-radius theorem"], worked: ["Draw a radius to the point on the circumference to create two isosceles triangles", "In each isosceles triangle, the base angles are equal", "The angle at the centre = sum of the two exterior angles of the isosceles triangles", "This equals twice the angle at the circumference"], hint: "Create isosceles triangles using radii, then use exterior angle = sum of interior opposite angles" },
-      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP.", a: "10", worked: ["The tangent is perpendicular to the radius: angle OAP = 90°", "Angle APO = 30° (half of 60° by symmetry)", "sin(30°) = OA/OP", "½ = 5/OP", "OP = 10 cm"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true },
-      { q: "Find the length of a tangent from point P(0, 10) to a circle centred at (0, 0) with radius 6.", a: "8", worked: ["OP = 10 (distance from origin to P)", "The tangent is perpendicular to the radius at the point of contact", "By Pythagoras: tangent² + 6² = 10²", "tangent² = 100 − 36 = 64", "tangent = 8"], hint: "The tangent, radius and OP form a right triangle. Use Pythagoras.", calculator: true },
+      { q: "Two tangents are drawn from point P to a circle with centre O and radius 5 cm. The angle between the tangents is 60°. Find the length OP.", a: "10", worked: ["The tangent is perpendicular to the radius: angle OAP = 90°", "Angle APO = 30° (half of 60° by symmetry)", "sin(30°) = OA/OP", "½ = 5/OP", "OP = 10 cm"], hint: "Split into two right triangles. Use sin(30°) = radius/OP", calculator: true, diagram: "G10-two-tangents-60" },
+      { q: "Find the length of a tangent from point P(0, 10) to a circle centred at (0, 0) with radius 6.", a: "8", worked: ["OP = 10 (distance from origin to P)", "The tangent is perpendicular to the radius at the point of contact", "By Pythagoras: tangent² + 6² = 10²", "tangent² = 100 − 36 = 64", "tangent = 8"], hint: "The tangent, radius and OP form a right triangle. Use Pythagoras.", calculator: true, diagram: "G10-tangent-length" },
     ],
   ],
 
@@ -4386,31 +4386,31 @@ const higherQuestionBank = {
     [
       { q: "Calculate the area of a circle with a radius of 6 cm. Give your answer in terms of π.", a: "36π cm²", worked: ["Area = πr²", "Area = π × 6²", "Area = 36π cm²"], hint: "Use the formula Area = πr². Leave your answer as a multiple of π." },
       { q: "Find the area of a circle with r = 5 cm. Give your answer in terms of π.", a: "25π cm²", worked: ["Area = πr²", "= π × 5² = 25π cm²"], hint: "Use Area = πr²" },
-      { q: "Find the perimeter of a semicircle with r = 7 cm. Give your answer in terms of π.", a: "7π + 14 cm", worked: ["Curved part = half circumference = πr = 7π", "Straight edge = diameter = 14", "Perimeter = 7π + 14 cm"], hint: "Perimeter = half the circumference + the diameter" },
+      { q: "Find the perimeter of a semicircle with r = 7 cm. Give your answer in terms of π.", a: "7π + 14 cm", worked: ["Curved part = half circumference = πr = 7π", "Straight edge = diameter = 14", "Perimeter = 7π + 14 cm"], hint: "Perimeter = half the circumference + the diameter", diagram: "G17-semicircle-r7" },
     ],
     // Level 2 (Grade 5) — Perimeter of a semicircle
     [
-      { q: "Find the perimeter of a semicircle with a diameter of 10 cm. Give your answer to 1 d.p.", a: "25.7 cm", calculator: true, worked: ["Curved part = half the circumference = πd/2 = 10π/2 = 5π", "Straight part = diameter = 10", "Perimeter = 5π + 10 ≈ 15.71 + 10 = 25.7 cm"], hint: "Perimeter = half the circumference + the diameter. Don't forget the straight edge!" },
+      { q: "Find the perimeter of a semicircle with a diameter of 10 cm. Give your answer to 1 d.p.", a: "25.7 cm", calculator: true, worked: ["Curved part = half the circumference = πd/2 = 10π/2 = 5π", "Straight part = diameter = 10", "Perimeter = 5π + 10 ≈ 15.71 + 10 = 25.7 cm"], hint: "Perimeter = half the circumference + the diameter. Don't forget the straight edge!", diagram: "G17-semicircle-d10" },
       { q: "Find the circumference of a circle with d = 10 cm. Give your answer in terms of π.", a: "10π cm", worked: ["Circumference = πd", "= π × 10 = 10π cm"], hint: "Use C = πd" },
-      { q: "Find the area of a quarter-circle with r = 4 cm. Give your answer in terms of π.", a: "4π cm²", worked: ["Full circle area = π × 4² = 16π", "Quarter circle = 16π ÷ 4 = 4π cm²"], hint: "Find the full circle area and divide by 4" },
+      { q: "Find the area of a quarter-circle with r = 4 cm. Give your answer in terms of π.", a: "4π cm²", worked: ["Full circle area = π × 4² = 16π", "Quarter circle = 16π ÷ 4 = 4π cm²"], hint: "Find the full circle area and divide by 4", diagram: "G17-quarter-circle-r4" },
     ],
     // Level 3 (Grade 7) — Area of a sector
     [
-      { q: "Calculate the area of a sector with radius 8 cm and central angle 45°. Give your answer in terms of π.", a: "8π cm²", worked: ["Area of sector = (θ/360) × πr²", "= (45/360) × π × 8²", "= (1/8) × 64π", "= 8π cm²"], hint: "Sector area = (angle/360) × πr²" },
-      { q: "Find the area of a sector with r = 6 cm and angle 60°. Give your answer in terms of π.", a: "6π cm²", worked: ["Area = (60/360) × π × 6²", "= (1/6) × 36π = 6π cm²"], hint: "Sector area = (angle/360) × πr²" },
+      { q: "Calculate the area of a sector with radius 8 cm and central angle 45°. Give your answer in terms of π.", a: "8π cm²", worked: ["Area of sector = (θ/360) × πr²", "= (45/360) × π × 8²", "= (1/8) × 64π", "= 8π cm²"], hint: "Sector area = (angle/360) × πr²", diagram: "G17-sector-45-r8" },
+      { q: "Find the area of a sector with r = 6 cm and angle 60°. Give your answer in terms of π.", a: "6π cm²", worked: ["Area = (60/360) × π × 6²", "= (1/6) × 36π = 6π cm²"], hint: "Sector area = (angle/360) × πr²", diagram: "G17-sector-60-r6" },
       { q: "Find the angle of a sector if the area is 10π cm² and r = 5 cm.", a: "144°", worked: ["10π = (θ/360) × π × 25", "10 = 25θ/360", "θ = 10 × 360/25 = 144°"], hint: "Substitute into the sector area formula and solve for θ" },
     ],
     // Level 4 (Grade 8) — Reverse sector problems
     [
       { q: "The area of a sector is 20π cm² and the radius is 10 cm. Find the central angle.", a: "72°", worked: ["Area = (θ/360) × πr²", "20π = (θ/360) × π × 100", "20π = 100πθ/360", "20 = 100θ/360", "θ = 20 × 360/100 = 72°"], hint: "Substitute into the sector area formula and solve for θ" },
-      { q: "Find the arc length of a sector with r = 9 cm and angle 120°.", a: "6π cm", worked: ["Arc length = (θ/360) × 2πr", "= (120/360) × 2π × 9", "= (1/3) × 18π = 6π cm"], hint: "Arc length = (angle/360) × 2πr" },
-      { q: "Find the perimeter of a sector with r = 10 cm and angle 36°. Give your answer in terms of π.", a: "2π + 20 cm", worked: ["Arc length = (36/360) × 2π × 10 = (1/10) × 20π = 2π", "Perimeter = arc + 2 radii = 2π + 20 cm"], hint: "Perimeter = arc length + 2 × radius" },
+      { q: "Find the arc length of a sector with r = 9 cm and angle 120°.", a: "6π cm", worked: ["Arc length = (θ/360) × 2πr", "= (120/360) × 2π × 9", "= (1/3) × 18π = 6π cm"], hint: "Arc length = (angle/360) × 2πr", diagram: "G17-sector-120-r9" },
+      { q: "Find the perimeter of a sector with r = 10 cm and angle 36°. Give your answer in terms of π.", a: "2π + 20 cm", worked: ["Arc length = (36/360) × 2π × 10 = (1/10) × 20π = 2π", "Perimeter = arc + 2 radii = 2π + 20 cm"], hint: "Perimeter = arc length + 2 × radius", diagram: "G17-sector-36-r10" },
     ],
     // Level 5 (Grade 9) — Composite sector problems
     [
       { q: "A shape is made from a sector of a circle with radius r. If the radius is increased by 50%, find the percentage increase in the area of the sector.", a: "125%", worked: ["Original area = (θ/360) × πr²", "New radius = 1.5r", "New area = (θ/360) × π(1.5r)² = (θ/360) × 2.25πr²", "New area = 2.25 × original area", "Percentage increase = (2.25 − 1) × 100% = 125%"], hint: "If the radius is multiplied by k, the area is multiplied by k². What is 1.5²?" },
       { q: "Find the radius of a sector with area 15π cm² and angle 150°.", a: "6 cm", worked: ["15π = (150/360) × πr²", "15 = (5/12) × r²", "r² = 15 × 12/5 = 36", "r = 6 cm"], hint: "Substitute into the area formula and solve for r" },
-      { q: "Find the area of a segment with r = 6 cm and angle 90°. Give your answer in terms of π.", a: "9π − 18 cm²", worked: ["Sector area = (90/360) × π × 36 = 9π", "Triangle area = ½ × 6 × 6 = 18", "Segment = sector − triangle = 9π − 18 cm²"], hint: "Segment = sector area − triangle area. The triangle is right-angled with both sides = r" },
+      { q: "Find the area of a segment with r = 6 cm and angle 90°. Give your answer in terms of π.", a: "9π − 18 cm²", worked: ["Sector area = (90/360) × π × 36 = 9π", "Triangle area = ½ × 6 × 6 = 18", "Segment = sector − triangle = 9π − 18 cm²"], hint: "Segment = sector area − triangle area. The triangle is right-angled with both sides = r", diagram: "G17-segment-90-r6" },
     ],
   ],
 
@@ -5924,6 +5924,29 @@ const generateDiagram = (type) => {
     'isosceles-40': 'Isoceles 40.png',
     'isosceles-50': 'Isoceles 50.png',
     'pythagoras-shorter': 'pythagoras shorter side.png',
+    'pythag-3-4': 'pythag-3-4.png',
+    'pythag-5-13': 'pythag-5-13.png',
+    'trig-30-hyp10': 'trig-30-hyp10.png',
+    'trig-opp5-adj12': 'trig-opp5-adj12.png',
+    'G10-semicircle-35': 'G10-semicircle-35.png',
+    'G10-centre-circum-140': 'G10-centre-circum-140.png',
+    'G10-cyclic-quad-85': 'G10-cyclic-quad-85.png',
+    'G10-centre-circum-130': 'G10-centre-circum-130.png',
+    'G10-cyclic-quad-110': 'G10-cyclic-quad-110.png',
+    'G10-alt-segment-65': 'G10-alt-segment-65.png',
+    'G10-tangent-chord-55': 'G10-tangent-chord-55.png',
+    'G10-tangent-chord-72': 'G10-tangent-chord-72.png',
+    'G10-two-tangents-60': 'G10-two-tangents-60.png',
+    'G10-tangent-length': 'G10-tangent-length.png',
+    // Batch 3: G17 Sectors & Circles
+    'G17-semicircle-r7': 'G17-semicircle-r7.png',
+    'G17-semicircle-d10': 'G17-semicircle-d10.png',
+    'G17-quarter-circle-r4': 'G17-quarter-circle-r4.png',
+    'G17-sector-45-r8': 'G17-sector-45-r8.png',
+    'G17-sector-60-r6': 'G17-sector-60-r6.png',
+    'G17-sector-120-r9': 'G17-sector-120-r9.png',
+    'G17-sector-36-r10': 'G17-sector-36-r10.png',
+    'G17-segment-90-r6': 'G17-segment-90-r6.png',
   };
 
   // Check for image-based diagram first
