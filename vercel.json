@@ -5,7 +5,7 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/((?!api/|images/|icons/|\.well-known/|manifest\\.json|sw\\.js|logo\\.svg|privacy-policy\\.html).*)",
       "destination": "/index.html"
     }
   ],
