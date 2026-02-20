@@ -9638,13 +9638,6 @@ function AppContent() {
     }
   }, [settings, user]);
 
-  // Sync FSRS data to cloud when it changes
-  useEffect(() => {
-    if (user) {
-      saveFsrsToCloud(user.id, fsrsData);
-    }
-  }, [fsrsData, user]);
-
   // Handle onboarding completion
   const completeOnboarding = () => {
     setOnboardingComplete();

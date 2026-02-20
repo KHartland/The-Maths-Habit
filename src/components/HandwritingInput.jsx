@@ -199,13 +199,10 @@ const HandwritingInput = ({
 
         const data = await response.json();
 
-        // Extract the recognized text - prefer latex for maths accuracy
+        // Extract the recognized text - always use LaTeX for maths accuracy
         let recognized = '';
-
-        // Always use LaTeX path if available (better for superscripts, fractions, etc.)
-        {
-          let latex = data.latex_simplified || data.latex || data.text || '';
-          recognized = latex
+        const latex = data.latex_simplified || data.latex || data.text || '';
+        recognized = latex
             // Remove LaTeX delimiters
             .replace(/\\\(/g, '')
             .replace(/\\\)/g, '')
@@ -246,7 +243,6 @@ const HandwritingInput = ({
             // Clean up whitespace
             .replace(/\s+/g, '')
             .trim();
-        }
 
         setRecognizedText(recognized || '');
       } catch (err) {
