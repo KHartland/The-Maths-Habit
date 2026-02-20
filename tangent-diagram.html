@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<body style="background: white; margin: 40px; display: flex; justify-content: center;">
+<svg width="400" height="500" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg" style="font-family: Arial, sans-serif;">
+  <!-- Circle -->
+  <circle cx="200" cy="300" r="120" fill="none" stroke="black" stroke-width="2"/>
+
+  <!-- Centre O -->
+  <circle cx="200" cy="300" r="3" fill="black"/>
+  <text x="210" y="310" font-size="18" font-weight="bold">O</text>
+
+  <!-- Point P above -->
+  <circle cx="200" cy="80" r="3" fill="black"/>
+  <text x="210" y="78" font-size="18" font-weight="bold">P</text>
+
+  <!-- Line O to P (dashed) -->
+  <line x1="200" y1="300" x2="200" y2="80" stroke="black" stroke-width="1.5" stroke-dasharray="8,5"/>
+
+  <!-- Point T on circle (tangent point - where tangent touches) -->
+  <!-- T is where the tangent from P meets the circle -->
+  <!-- With O at (200,300), r=120, P at (200,80), OP=220 -->
+  <!-- angle at O = acos(120/220) = 56.9° from vertical -->
+  <!-- T position: 200 + 120*sin(56.9°) = 200+100.6 = 300.6, 300 - 120*cos(56.9°) = 300-65.5 = 234.5 -->
+  <circle cx="301" cy="235" r="3" fill="black"/>
+  <text x="312" y="235" font-size="18" font-weight="bold">T</text>
+
+  <!-- Radius O to T -->
+  <line x1="200" y1="300" x2="301" y2="235" stroke="black" stroke-width="2"/>
+
+  <!-- Tangent line P to T -->
+  <line x1="200" y1="80" x2="301" y2="235" stroke="black" stroke-width="2"/>
+
+  <!-- Right angle at T -->
+  <!-- We need a small square at T perpendicular to both OT and PT -->
+  <!-- Direction OT: (101, -65) normalised -->
+  <!-- Direction PT: (101, 155) normalised -->
+  <polygon points="289,227 281,240 294,248 301,235" fill="none" stroke="black" stroke-width="1.5"/>
+
+  <!-- Label radius "6" on OT -->
+  <text x="235" y="285" font-size="16" font-style="italic">6</text>
+
+  <!-- Label tangent "x" on PT -->
+  <text x="260" y="148" font-size="18" font-style="italic">x</text>
+
+  <!-- Label OP -->
+  <text x="170" y="195" font-size="16">10</text>
+</svg>
+</body>
+</html>
