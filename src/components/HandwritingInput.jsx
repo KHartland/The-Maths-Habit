@@ -199,14 +199,11 @@ const HandwritingInput = ({
 
         const data = await response.json();
 
-        // Extract the recognized text - prefer text, fallback to latex
+        // Extract the recognized text - prefer latex for maths accuracy
         let recognized = '';
 
-        // Try to get clean text first
-        if (data.text && !data.text.includes('\\')) {
-          recognized = data.text.trim();
-        } else {
-          // Convert LaTeX to readable format
+        // Always use LaTeX path if available (better for superscripts, fractions, etc.)
+        {
           let latex = data.latex_simplified || data.latex || data.text || '';
           recognized = latex
             // Remove LaTeX delimiters
@@ -233,10 +230,19 @@ const HandwritingInput = ({
             .replace(/\\div/g, '÷')
             .replace(/\\sqrt\{([^}]+)\}/g, '√$1')
             .replace(/\\pi/g, 'π')
-            // Convert powers
+            // Convert powers (strip braces first, then convert common superscripts)
+            .replace(/\^\{([^}]+)\}/g, '^$1')
             .replace(/\^2/g, '²')
             .replace(/\^3/g, '³')
-            .replace(/\^\{([^}]+)\}/g, '^$1')
+            .replace(/\^4/g, '⁴')
+            .replace(/\^5/g, '⁵')
+            .replace(/\^6/g, '⁶')
+            .replace(/\^7/g, '⁷')
+            .replace(/\^8/g, '⁸')
+            .replace(/\^9/g, '⁹')
+            .replace(/\^0/g, '⁰')
+            .replace(/\^n/g, 'ⁿ')
+            .replace(/\^{1}/g, '¹')
             // Clean up whitespace
             .replace(/\s+/g, '')
             .trim();
