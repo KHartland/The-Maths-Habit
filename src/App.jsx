@@ -722,7 +722,7 @@ const revisionHints = {
   S6: 'Revise scatter graphs: positive correlation = both increase, negative = one increases as other decreases. Correlation does not mean causation.'
 };
 
-const levelLabels = ['Not started', '1/5 done', '2/5 done', '3/5 done', '4/5 nearly there!', '✓ Mastered'];
+const levelLabels = ['Not started', '1/5 done', '2/5 done', '3/5 done', '4/5 nearly there!', '⭐ Mastered'];
 
 const TOPIC_HEX = {
   Number: "#A78BFA",      // Soft violet
@@ -854,7 +854,7 @@ function TileDetailModal({ open, objective, progress, onClose }) {
             level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
             'bg-white/10 text-secondary-text border border-white/10'
           }`}>
-            {level >= 5 ? '✓ Mastered' :
+            {level >= 5 ? '⭐ Mastered' :
              level >= 4 ? '🔥 Nearly there' :
              level > 0 ? '📚 Learning' :
              '○ Not started'}
@@ -6990,7 +6990,7 @@ What is the student's answer?`
                       <span className="font-medium text-white">{r.code}</span>
                       {r.newMastery && (
                         <span className="ml-auto text-xs bg-violet/20 text-violet-light px-2 py-0.5 rounded-full font-semibold border border-violet/30">
-                          ✓ Mastered!
+                          ⭐ Mastered!
                         </span>
                       )}
                     </div>
