@@ -10397,7 +10397,7 @@ function AppContent() {
                 >
                   <Check className="w-3 h-3 text-white" strokeWidth={3} />
                 </div>
-                <span>Mastered</span>
+                <span>⭐ Mastered</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
@@ -10714,7 +10714,7 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   if (!current) return null;
 
   const topicColor = TOPIC_HEX[current.topic] || '#A78BFA';
-  const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Nearly there', 'Mastered!'];
+  const levelLabels = ['Not started', 'Getting started', 'Building knowledge', 'Good progress', 'Nearly there', '⭐ Mastered!'];
   const levelLabel = levelLabels[current.level] || 'Learning';
   const progressPct = (current.level / 5) * 100;
   const isLast = currentIndex >= objectives.length - 1;
