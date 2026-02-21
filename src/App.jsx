@@ -3264,7 +3264,7 @@ questionBank['N13'][3].push(
   { q: "A pack of 9 toilet rolls costs £4.23. A pack of 4 costs £1.96. Which pack is better value?", type: "mcq", options: ["Pack of 9", "Pack of 4"], a: "Pack of 9", calculator: true, worked: ["Pack of 9: £4.23 ÷ 9 = £0.47 per roll", "Pack of 4: £1.96 ÷ 4 = £0.49 per roll", "Pack of 9 is cheaper"] },
 );
 questionBank['N13'][4].push(
-  { q: "£500 is invested at 2% simple interest per year for 3 years. Work out the total interest earned.", a: "30", worked: ["Simple interest = Principal × Rate × Time ÷ 100", "Interest = £500 × 2 × 3 ÷ 100 = £30"] },
+  { q: "A shop offers 20% off in a sale. The next day, they take a further 15% off the sale price. What is the overall percentage discount?", a: "32", calculator: true, worked: ["Start with £100", "After 20% off: £100 × 0.80 = £80", "After 15% off the sale price: £80 × 0.85 = £68", "Overall discount = £100 − £68 = £32", "Overall percentage discount = 32%"], hint: "Apply each discount one after the other. Two successive discounts are NOT the same as adding them." },
 );
 
 // N14: Rounding & Estimation

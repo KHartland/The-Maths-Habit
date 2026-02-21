@@ -705,10 +705,10 @@ input[type="email"],
 input[type="password"],
 textarea,
 select {
-  background: linear-gradient(135deg, rgba(255,255,255,0.97) 0%, rgba(248,246,255,0.97) 100%);
-  border: 1px solid rgba(139, 168, 217, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  color: var(--text-primary);
+  color: #FFFFFF;
   transition: all 0.2s ease;
 }
 
@@ -716,8 +716,8 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  border-color: var(--metallic-base);
-  box-shadow: 0 0 0 3px rgba(91, 127, 199, 0.2),
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2),
               0 0 15px rgba(139, 92, 246, 0.1);
 }
 
