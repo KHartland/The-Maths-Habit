@@ -9754,7 +9754,7 @@ function AppContent() {
 
             <div className="glass-panel rounded-2xl p-8">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
                   {onboardingAuthMode === 'signin' ? 'Welcome back' : 'Create your account'}
                 </h2>
                 <p className="text-secondary-text">
@@ -10264,7 +10264,7 @@ function AppContent() {
                 {['foundation', 'higher'].map(t => (
                   <button key={t} onClick={() => setTier(t)}
                     className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-white'
+                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
                     }`}>{t}</button>
                 ))}
               </div>
@@ -10294,10 +10294,10 @@ function AppContent() {
               <div className="flex items-start gap-3">
                 <span className="text-lg shrink-0">🗺️</span>
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-white mb-2">How the heatmap works</p>
+                  <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm bg-white/10 border border-white/20 shrink-0" />
+                      <span className="w-4 h-4 rounded-sm bg-gray-300 border border-gray-400 shrink-0" />
                       <span>Dark = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -10317,7 +10317,7 @@ function AppContent() {
                 </div>
                 <button
                   onClick={(e) => { e.currentTarget.closest('.animate-fade-in').remove(); markTipShown('heatmapExplainer'); }}
-                  className="text-secondary-text/60 hover:text-white shrink-0 p-1"
+                  className="text-secondary-text/60 hover:text-gray-800 shrink-0 p-1"
                 >
                   <X className="w-4 h-4" />
                 </button>
