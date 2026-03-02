@@ -63,7 +63,7 @@ const AvatarCircle = ({ avatarUrl, name, size = 'md', colorClass = 'bg-metallic-
   );
 };
 
-const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUrl }) => {
+const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   const [gameState, setGameState] = useState(STATES.MENU);
   const [match, setMatch] = useState(null);
   const [joinCode, setJoinCode] = useState('');
@@ -175,7 +175,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
       );
 
       const newMatch = await Promise.race([
-        createMatch(user.id, displayName, { questionCount, tier }, userAvatarUrl),
+        createMatch(user.id, displayName, { questionCount, tier }),
         timeoutPromise
       ]);
 
@@ -205,7 +205,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
       );
 
       const joinedMatch = await Promise.race([
-        joinMatch(joinCode, user.id, displayName, userAvatarUrl),
+        joinMatch(joinCode, user.id, displayName),
         timeoutPromise
       ]);
 
@@ -311,7 +311,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                   <select
                     value={questionCount}
                     onChange={(e) => setQuestionCount(Number(e.target.value))}
-                    className="w-full p-2 rounded-lg border border-gray-200 bg-white"
+                    className="w-full p-2 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800"
                   >
                     <option value={5}>5 questions (Quick)</option>
                     <option value={10}>10 questions (Standard)</option>
@@ -324,7 +324,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                   <select
                     value={tier}
                     onChange={(e) => setTier(e.target.value)}
-                    className="w-full p-2 rounded-lg border border-gray-200 bg-white"
+                    className="w-full p-2 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800"
                   >
                     <option value="foundation">Foundation</option>
                     <option value="higher">Higher</option>
@@ -354,7 +354,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                   onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                   placeholder="Enter 6-digit code"
                   maxLength={6}
-                  className="w-full p-3 rounded-lg border border-gray-200 text-center text-2xl font-mono tracking-widest uppercase"
+                  className="w-full p-3 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800 text-center text-2xl font-mono tracking-widest uppercase"
                 />
 
                 <button
@@ -427,7 +427,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                 <div className="text-center">
                   <div className="mb-2 flex justify-center">
                     <AvatarCircle
-                      avatarUrl={match.host_avatar}
+                      avatarUrl={null}
                       name={sanitiseName(match.host_name)}
                       size="lg"
                       colorClass="bg-metallic-base/20"
@@ -443,7 +443,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                 <div className="text-center">
                   <div className="mb-2 flex justify-center">
                     <AvatarCircle
-                      avatarUrl={match.guest_avatar}
+                      avatarUrl={null}
                       name={sanitiseName(match.guest_name)}
                       size="lg"
                       colorClass="bg-mint/20"
@@ -550,7 +550,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                   onChange={(e) => setUserAnswer(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                   placeholder="Your answer..."
-                  className="w-full p-3 rounded-lg border border-gray-200 text-lg"
+                  className="w-full p-3 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800 text-lg"
                   autoFocus
                 />
               )}
@@ -603,7 +603,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                 <div className="text-center">
                   <div className="flex justify-center mb-2">
                     <AvatarCircle
-                      avatarUrl={match.host_avatar}
+                      avatarUrl={null}
                       name={sanitiseName(match.host_name)}
                       size="md"
                       colorClass="bg-metallic-base/20"
@@ -624,7 +624,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, userAvatarUr
                 <div className="text-center">
                   <div className="flex justify-center mb-2">
                     <AvatarCircle
-                      avatarUrl={match.guest_avatar}
+                      avatarUrl={null}
                       name={sanitiseName(match.guest_name)}
                       size="md"
                       colorClass="bg-mint/20"

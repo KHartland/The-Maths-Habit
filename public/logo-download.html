@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Square One Maths Logo - Download</title>
+  <title>The Maths Habit Logo - Download</title>
   <style>
     body {
       display: flex;
@@ -41,7 +41,7 @@
   </style>
 </head>
 <body>
-  <h1>Square One Maths Logo</h1>
+  <h1>The Maths Habit Logo</h1>
   <div class="logo-container">
     <canvas id="logo" width="512" height="512"></canvas>
   </div>
@@ -115,7 +115,7 @@
     function downloadLogo(size) {
       drawLogo(size);
       const link = document.createElement('a');
-      link.download = `square-one-maths-logo-${size}x${size}.png`;
+      link.download = `the-maths-habit-logo-${size}x${size}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       drawLogo(512); // Reset to display size

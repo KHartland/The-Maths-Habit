@@ -68,7 +68,7 @@ const generateCode = () => {
 };
 
 // Create a new match
-export const createMatch = async (hostId, hostName, settings = {}, hostAvatar = null) => {
+export const createMatch = async (hostId, hostName, settings = {}) => {
   const {
     questionCount = 10,
     tier = 'foundation',
@@ -87,7 +87,6 @@ export const createMatch = async (hostId, hostName, settings = {}, hostAvatar = 
           code,
           host_id: hostId,
           host_name: hostName,
-          host_avatar: hostAvatar || null,
           question_count: questionCount,
           tier,
           topics,
@@ -116,7 +115,7 @@ export const createMatch = async (hostId, hostName, settings = {}, hostAvatar = 
 };
 
 // Join a match by code
-export const joinMatch = async (code, guestId, guestName, guestAvatar = null) => {
+export const joinMatch = async (code, guestId, guestName) => {
   const upperCode = code.toUpperCase().trim();
 
   // First, find the match
@@ -141,7 +140,6 @@ export const joinMatch = async (code, guestId, guestName, guestAvatar = null) =>
       body: JSON.stringify({
         guest_id: guestId,
         guest_name: guestName,
-        guest_avatar: guestAvatar || null,
         status: 'ready'
       }),
       headers: { 'Prefer': 'return=representation' },

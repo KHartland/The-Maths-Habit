@@ -1,4 +1,4 @@
-const CACHE_NAME = 'square-one-maths-v1';
+const CACHE_NAME = 'the-maths-habit-v1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

@@ -1,10 +1,10 @@
-# Square One Maths - Project Notes
+# The Maths Habit - Project Notes
 
 **Last Updated:** February 2026
 
 ## Project Overview
 
-**Square One Maths** is a GCSE Maths practice app built with React. It provides exam-style questions for students aged 14-16, covering Foundation and Higher tier content aligned with AQA specification.
+**The Maths Habit** is a GCSE Maths practice app built with React. It provides exam-style questions for students aged 14-16, covering Foundation and Higher tier content aligned with AQA specification.
 
 ---
 

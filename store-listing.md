@@ -1,14 +1,14 @@
-# App Store Listing — Square One Maths
+# App Store Listing — The Maths Habit
 
 ## App Name
-Square One Maths
+The Maths Habit
 
 ## Short Description (80 chars — Google Play)
 Daily GCSE Maths practice powered by spaced repetition. Build streaks. Get results.
 
 ## Full Description
 
-Square One Maths helps GCSE students build a daily maths habit that actually works.
+The Maths Habit helps GCSE students build a daily maths habit that actually works.
 
 Every question is mapped to the AQA specification and uses spaced repetition — the same technique used by medical students — to make sure you remember what you've learned. The app adapts to you: topics you struggle with come back more often, while topics you've nailed fade into the background.
 
@@ -26,7 +26,7 @@ FEATURES:
 - Accessibility features including OpenDyslexic font and adjustable text size
 - Works offline — practice anywhere, anytime
 
-Whether you're aiming for a Grade 5 pass or pushing for a Grade 9, Square One Maths gives you the daily practice that makes the difference.
+Whether you're aiming for a Grade 5 pass or pushing for a Grade 9, The Maths Habit gives you the daily practice that makes the difference.
 
 ## Category
 Education
