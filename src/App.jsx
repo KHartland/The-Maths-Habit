@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -10365,7 +10365,12 @@ function AppContent() {
                         zIndex: 9,
                       }} />
                     )}
-                    {(isMastered || isExamReady) && (
+                    {isMastered && (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <Star className="w-4 h-4 text-yellow-300 drop-shadow-md" fill="currentColor" strokeWidth={1} />
+                      </span>
+                    )}
+                    {isExamReady && !isMastered && (
                       <span className="absolute inset-0 flex items-center justify-center">
                         <Check className="w-4 h-4 text-white drop-shadow-md" strokeWidth={3} />
                       </span>
@@ -10394,7 +10399,7 @@ function AppContent() {
                   }}
                   className="flex items-center justify-center"
                 >
-                  <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                  <Star className="w-3 h-3 text-yellow-300" fill="currentColor" strokeWidth={1} />
                 </div>
                 <span>⭐ Mastered</span>
               </div>
