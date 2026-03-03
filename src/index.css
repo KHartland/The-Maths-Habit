@@ -699,25 +699,29 @@ body.high-contrast .text-primary-text {
 
 /* ==================== FORM INPUTS ==================== */
 
+/* Force light color scheme on all form inputs so browsers don't
+   auto-apply dark mode text color even when body has dark background */
 input[type="text"],
 input[type="number"],
 input[type="email"],
 input[type="password"],
 textarea,
 select {
+  color-scheme: light;
+  color: #1f2937;
   border-radius: 8px;
   transition: all 0.2s ease;
 }
 
-/* Dark-themed inputs — only inside elements with the .dark-inputs class */
-.dark-inputs input[type="text"],
-.dark-inputs input[type="number"],
-.dark-inputs input[type="email"],
-.dark-inputs input[type="password"],
-.dark-inputs textarea,
-.dark-inputs select {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Override back to white text ONLY for inputs that have explicit text-white class
+   or are inside containers that explicitly want dark-themed inputs */
+input.text-white,
+textarea.text-white,
+select.text-white,
+.text-white input,
+.text-white textarea,
+.text-white select {
+  color-scheme: dark;
   color: #FFFFFF;
 }
 
