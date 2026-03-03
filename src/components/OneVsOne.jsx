@@ -391,7 +391,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Share this code with your friend:</h3>
 
               <div className="flex items-center justify-center gap-2 my-6">
-                <div className="text-4xl font-mono font-bold tracking-widest text-metallic-base bg-gray-100 px-6 py-4 rounded-xl">
+                <div className="text-4xl font-mono font-bold tracking-widest text-gray-800 bg-gray-100 px-6 py-4 rounded-xl">
                   {match.code}
                 </div>
                 <button
