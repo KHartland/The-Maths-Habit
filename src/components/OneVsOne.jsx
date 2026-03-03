@@ -288,8 +288,13 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   };
 
   // Submit answer
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async () => {
     if (!userAnswer.trim()) return;
+    if (myFinished) return; // Already finished — don't allow more submissions
+    if (isSubmitting) return; // Prevent double-submission
+    setIsSubmitting(true);
 
     try {
       const questions = match?.questions;
@@ -335,6 +340,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
         setCurrentQuestionIndex(prev => prev + 1);
         setUserAnswer('');
         setQuestionStartTime(Date.now());
+        setIsSubmitting(false);
       } else {
         // Finished all questions
         setMyFinished(true);
@@ -343,10 +349,12 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
         } catch (finishErr) {
           console.error('Failed to finish match on server:', finishErr);
         }
+        // Don't reset isSubmitting — player is done
       }
     } catch (err) {
       console.error('handleSubmit error:', err);
       setError(err.message || 'Something went wrong');
+      setIsSubmitting(false);
     }
   };
 
@@ -561,6 +569,25 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
         );
 
       case STATES.PLAYING:
+        // Show waiting screen if player has finished all questions
+        if (myFinished) {
+          return (
+            <div className="text-center space-y-6">
+              <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm">
+                <div className="text-4xl mb-4">✅</div>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">You're done!</h3>
+                <p className="text-gray-500 mb-4">
+                  You scored {myScore} out of {match.questions?.length || 0}
+                </p>
+                <div className="flex items-center justify-center gap-2 text-gray-400">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>Waiting for opponent to finish...</span>
+                </div>
+              </div>
+            </div>
+          );
+        }
+
         const question = match.questions?.[currentQuestionIndex];
         if (!question) return null;
 
@@ -633,10 +660,10 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
 
               <button
                 onClick={handleSubmit}
-                disabled={!userAnswer.trim()}
+                disabled={!userAnswer.trim() || isSubmitting}
                 className="w-full mt-4 py-3 btn-gradient-mint text-gray-800 font-semibold rounded-xl disabled:opacity-50"
               >
-                Submit Answer
+                {isSubmitting ? 'Submitting...' : 'Submit Answer'}
               </button>
             </div>
           </div>
