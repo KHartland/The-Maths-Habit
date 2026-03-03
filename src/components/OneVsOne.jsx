@@ -1,6 +1,40 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Component } from 'react';
 import { Users, Copy, Check, Play, Trophy, Clock, X, Loader2, Swords } from 'lucide-react';
 import { sanitiseName } from '../lib/profanityFilter';
+
+// Error boundary to prevent white screen crashes
+class BattleErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('Battle crash:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-8 border border-gray-200 shadow-sm text-center max-w-md">
+            <div className="text-4xl mb-4">😵</div>
+            <h2 className="text-xl font-bold text-gray-800 mb-2">Battle Crashed!</h2>
+            <p className="text-gray-500 mb-6">Something went wrong during the match. This has been logged so we can fix it.</p>
+            <button
+              onClick={() => { this.setState({ hasError: false }); this.props.onClose?.(); }}
+              className="px-6 py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700"
+            >
+              Back to Menu
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 import {
   createMatch,
   joinMatch,
@@ -96,7 +130,21 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
       // Merge with existing match to preserve fields not included in realtime payload
       // (Supabase Realtime only sends changed columns by default, so fields like
       // 'questions' would be lost if we replace the whole object)
-      setMatch(prev => prev ? { ...prev, ...updatedMatch } : updatedMatch);
+      // Also filter out null/undefined values from the update to prevent overwriting
+      // existing data with nulls from partial realtime payloads
+      setMatch(prev => {
+        if (!prev) return updatedMatch;
+        const merged = { ...prev };
+        for (const [key, value] of Object.entries(updatedMatch)) {
+          if (value !== undefined && value !== null) {
+            merged[key] = value;
+          } else if (key === 'winner_id' || key === 'guest_id' || key === 'guest_name') {
+            // Allow these specific fields to be null (valid states)
+            merged[key] = value;
+          }
+        }
+        return merged;
+      });
 
       // Update opponent score
       if (playerType === 'host') {
@@ -243,37 +291,62 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   const handleSubmit = async () => {
     if (!userAnswer.trim()) return;
 
-    const question = match.questions[currentQuestionIndex];
-    const isCorrect = answersEquivalent(userAnswer, question.a);
-    const timeSpent = Date.now() - questionStartTime;
-
     try {
-      await submitAnswer(
-        match.id,
-        user.id,
-        playerType,
-        currentQuestionIndex,
-        userAnswer,
-        isCorrect,
-        timeSpent
-      );
+      const questions = match?.questions;
+      if (!questions || !questions[currentQuestionIndex]) {
+        console.error('Questions missing from match state', { hasMatch: !!match, hasQuestions: !!questions, index: currentQuestionIndex });
+        setError('Something went wrong. Please try leaving and creating a new match.');
+        return;
+      }
+
+      const question = questions[currentQuestionIndex];
+      let isCorrect = false;
+      try {
+        isCorrect = answersEquivalent(userAnswer, question.a || '');
+      } catch (e) {
+        console.error('Answer comparison error:', e);
+        // Fall back to simple string comparison
+        isCorrect = userAnswer.trim().toLowerCase() === (question.a || '').trim().toLowerCase();
+      }
+      const timeSpent = Date.now() - (questionStartTime || Date.now());
+
+      // Submit to server but don't crash if it fails — still advance locally
+      try {
+        await submitAnswer(
+          match.id,
+          user.id,
+          playerType,
+          currentQuestionIndex,
+          userAnswer,
+          isCorrect,
+          timeSpent
+        );
+      } catch (submitErr) {
+        console.error('Failed to submit answer to server:', submitErr);
+        // Continue locally even if server submit fails
+      }
 
       if (isCorrect) {
         setMyScore(prev => prev + 1);
       }
 
       // Move to next question or finish
-      if (currentQuestionIndex < match.questions.length - 1) {
+      if (currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
         setUserAnswer('');
         setQuestionStartTime(Date.now());
       } else {
         // Finished all questions
         setMyFinished(true);
-        await finishMatch(match.id, user.id, playerType);
+        try {
+          await finishMatch(match.id, user.id, playerType);
+        } catch (finishErr) {
+          console.error('Failed to finish match on server:', finishErr);
+        }
       }
     } catch (err) {
-      setError(err.message);
+      console.error('handleSubmit error:', err);
+      setError(err.message || 'Something went wrong');
     }
   };
 
@@ -707,4 +780,11 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   );
 };
 
-export default OneVsOne;
+// Wrap in error boundary so crashes show a friendly message instead of white screen
+const OneVsOneWithErrorBoundary = (props) => (
+  <BattleErrorBoundary onClose={props.onClose}>
+    <OneVsOne {...props} />
+  </BattleErrorBoundary>
+);
+
+export default OneVsOneWithErrorBoundary;
