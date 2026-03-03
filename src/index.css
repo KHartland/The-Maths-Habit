@@ -709,19 +709,13 @@ select {
   transition: all 0.2s ease;
 }
 
-/* Dark-themed inputs (default for glass-panel/void backgrounds) */
-.glass-panel input[type="text"],
-.glass-panel input[type="number"],
-.glass-panel input[type="email"],
-.glass-panel input[type="password"],
-.glass-panel textarea,
-.glass-panel select,
-.bg-void input[type="text"],
-.bg-void input[type="number"],
-.bg-void input[type="email"],
-.bg-void input[type="password"],
-.bg-void textarea,
-.bg-void select {
+/* Dark-themed inputs — only inside elements with the .dark-inputs class */
+.dark-inputs input[type="text"],
+.dark-inputs input[type="number"],
+.dark-inputs input[type="email"],
+.dark-inputs input[type="password"],
+.dark-inputs textarea,
+.dark-inputs select {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
