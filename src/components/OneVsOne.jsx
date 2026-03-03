@@ -93,7 +93,10 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
     if (!match?.id) return;
 
     const unsubscribe = subscribeToMatch(match.id, (updatedMatch) => {
-      setMatch(updatedMatch);
+      // Merge with existing match to preserve fields not included in realtime payload
+      // (Supabase Realtime only sends changed columns by default, so fields like
+      // 'questions' would be lost if we replace the whole object)
+      setMatch(prev => prev ? { ...prev, ...updatedMatch } : updatedMatch);
 
       // Update opponent score
       if (playerType === 'host') {
