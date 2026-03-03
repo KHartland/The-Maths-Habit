@@ -533,7 +533,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
                     <button
                       key={idx}
                       onClick={() => setUserAnswer(option)}
-                      className={`p-3 rounded-lg border-2 transition-all ${
+                      className={`p-3 rounded-lg border-2 transition-all text-gray-800 ${
                         userAnswer === option
                           ? 'border-metallic-base bg-metallic-base/10'
                           : 'border-gray-200 hover:border-metallic-base/50'
@@ -550,7 +550,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
                   onChange={(e) => setUserAnswer(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
                   placeholder="Your answer..."
-                  className="w-full p-3 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800 text-lg"
+                  className="w-full p-3 rounded-lg border-2 border-gray-300 bg-gray-50 text-gray-800 placeholder-gray-500 text-lg"
                   autoFocus
                 />
               )}
