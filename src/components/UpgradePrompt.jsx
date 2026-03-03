@@ -2,6 +2,65 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { redirectToCheckout, STRIPE_PRICES } from '../lib/stripe';
 
+function PromoCodeSection({ onSuccess }) {
+  const [showInput, setShowInput] = useState(false);
+  const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const { redeemPromoCode } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!code.trim()) return;
+    setIsLoading(true);
+    setError('');
+    const result = await redeemPromoCode(code);
+    if (result.error) {
+      setError(result.error.message);
+      setIsLoading(false);
+    } else {
+      setSuccess(result.message);
+      setTimeout(() => onSuccess(), 1500);
+    }
+  };
+
+  if (!showInput) {
+    return (
+      <button
+        onClick={() => setShowInput(true)}
+        className="text-purple-500 hover:text-purple-700 text-sm transition-colors"
+      >
+        Have a class code? Enter it here
+      </button>
+    );
+  }
+
+  return (
+    <div className="text-left">
+      {error && <div className="mb-2 p-2 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">{error}</div>}
+      {success && <div className="mb-2 p-2 bg-green-50 border border-green-200 rounded-lg text-green-600 text-sm">{success}</div>}
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="text"
+          value={code}
+          onChange={(e) => setCode(e.target.value.toUpperCase())}
+          placeholder="e.g. MATHS2026"
+          className="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent uppercase tracking-wider text-sm"
+          disabled={isLoading || !!success}
+        />
+        <button
+          type="submit"
+          disabled={isLoading || !code.trim() || !!success}
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {isLoading ? '...' : 'Apply'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
   const { user, questionsRemaining, FREE_DAILY_LIMIT, dailyQuestionsUsed } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState('yearly');
@@ -194,6 +253,13 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
                 {isLimitReached ? 'Come back tomorrow' : 'Maybe later'}
               </button>
             </>
+          )}
+
+          {/* Promo code option */}
+          {user && (
+            <div className="mt-4 text-center">
+              <PromoCodeSection onSuccess={() => window.location.reload()} />
+            </div>
           )}
 
           {/* Secure payment badge */}

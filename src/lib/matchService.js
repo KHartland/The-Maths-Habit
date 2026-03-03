@@ -1,17 +1,13 @@
 import { supabase } from './supabase';
 import { supabaseUrl, supabaseAnonKey } from './supabase';
 
-// Helper: get auth token directly from localStorage (bypasses Supabase JS client)
-const getAuthToken = () => {
+// Helper: get auth token from Supabase client session
+const getAuthToken = async () => {
   try {
-    const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-    const raw = localStorage.getItem(storageKey);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed?.access_token) return parsed.access_token;
-    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.access_token) return session.access_token;
   } catch (e) {
-    console.error('Failed to read auth token:', e);
+    console.error('Failed to get auth session:', e);
   }
   return supabaseAnonKey;
 };
@@ -20,7 +16,7 @@ const getAuthToken = () => {
 const restFetch = async (path, options = {}) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   try {
     const response = await fetch(`${supabaseUrl}/rest/v1/${path}`, {

@@ -8496,6 +8496,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   )}
                 </div>
 
+                {/* Promo code input for free users */}
+                {!isSubscribed && (
+                  <PromoCodeInput onSuccess={() => window.location.reload()} />
+                )}
+
                 {/* Sync status */}
                 <div className="flex items-center gap-2 text-sm text-mint">
                   <Check className="w-4 h-4" />
@@ -9484,7 +9489,7 @@ function PromoCodeInput({ onSuccess }) {
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="e.g. MATHS2024"
+          placeholder="e.g. MATHS2026"
           className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
