@@ -7185,9 +7185,9 @@ What is the student's answer?`
                         ? 'linear-gradient(to right, #f97316, #ef4444)'
                         : practiceMode === 'exam'
                           ? 'linear-gradient(to right, #ef4444, #f43f5e)'
-                          : 'linear-gradient(180deg, #8BA8D9, #5B7FC7, #3D5A8A)'
+                          : 'linear-gradient(180deg, #8BA8D9, #5B7FC7, #3D5A8A)',
+                      width: `${progressPct}%`
                     }}
-                    style={{ width: `${progressPct}%` }}
                   />
                 </div>
 
