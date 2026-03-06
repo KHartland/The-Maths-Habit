@@ -725,18 +725,23 @@ const revisionHints = {
 const levelLabels = ['Not started', '1/5 done', '2/5 done', '3/5 done', '4/5 nearly there!', '⭐ Mastered'];
 
 const TOPIC_HEX = {
-  Number: "#A78BFA",      // Soft violet
-  Algebra: "#38E6A2",     // Mint green
-  Ratio: "#F0ABFC",       // Light orchid
-  Geometry: "#81D4FA",    // Light blue
-  Probability: "#818CF8", // Indigo
-  Statistics: "#C084FC",  // Purple
+  Number: "#513A6F",      // Deep purple
+  Algebra: "#2F4858",     // Cool teal
+  Ratio: "#A845A2",       // Magenta
+  Geometry: "#31456A",    // Secondary blue
+  Probability: "#76235E", // Accent magenta
+  Statistics: "#8E0039",  // Accent crimson
 };
 
-// Exponential curve — bigger jumps at higher levels so progress is visible
-const INTENSITY = { 0: 0.15, 1: 0.25, 2: 0.38, 3: 0.55, 4: 0.75, 5: 1.0 };
-// At higher levels, blend toward white so tiles don't just get "more saturated"
-const WHITE_BLEND = { 0: 0, 1: 0, 2: 0, 3: 0.08, 4: 0.22, 5: 0.4 };
+// Heatmap mastery palette: cool to warm to gold
+const HEATMAP_COLORS = {
+  0: '#1a1525',   // Near-dark (unpracticed)
+  1: '#2F4858',   // Cool teal
+  2: '#513A6F',   // Deep purple
+  3: '#A845A2',   // Magenta
+  4: '#B00053',   // Crimson
+  5: '#D4AF37',   // Gold (mastery - sacred)
+};
 
 function mixWithWhite(hex, intensity) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -757,34 +762,17 @@ function getRecencyFactor(lastPracticed) {
   return 0.35; // Older = faded (needs revisiting)
 }
 
-// Mix color with dark background for progress AND recency
+// Level-based heatmap: cool teal to warm gold based on mastery
 function getTileColor(hex, progressLevel, recencyFactor) {
-  const baseIntensity = INTENSITY[progressLevel] || 0.05;
-  const whiteBlend = WHITE_BLEND[progressLevel] || 0;
-  // Dark background RGB (void: #0E0307)
-  const bgR = 14, bgG = 3, bgB = 7;
+  const baseColor = HEATMAP_COLORS[progressLevel] || HEATMAP_COLORS[0];
+  const r = parseInt(baseColor.slice(1, 3), 16);
+  const g = parseInt(baseColor.slice(3, 5), 16);
+  const b = parseInt(baseColor.slice(5, 7), 16);
 
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  // Mix with dark background based on progress (brighter = more progress)
-  const progressMix = (c, bg) => Math.round(bg + (c - bg) * baseIntensity);
-  let pr = progressMix(r, bgR);
-  let pg = progressMix(g, bgG);
-  let pb = progressMix(b, bgB);
-
-  // At higher levels, blend toward white so top tiles look distinctly brighter
-  if (whiteBlend > 0) {
-    pr = Math.round(pr + (255 - pr) * whiteBlend);
-    pg = Math.round(pg + (255 - pg) * whiteBlend);
-    pb = Math.round(pb + (255 - pb) * whiteBlend);
-  }
-
-  // Apply recency (desaturate old topics toward darker)
+  // Apply recency dimming (fade old topics toward darker)
   const dim = (c) => Math.round(c * (0.4 + 0.6 * recencyFactor));
 
-  return `#${[dim(pr), dim(pg), dim(pb)].map(c =>
+  return `#${[dim(r), dim(g), dim(b)].map(c =>
     Math.min(255, Math.max(0, c)).toString(16).padStart(2, "0")
   ).join("")}`;
 }
@@ -10265,12 +10253,23 @@ function AppContent() {
             </div>
           </div>
 
-          {/* Topic Legend - Top */}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
-            {Object.entries(TOPIC_HEX).map(([name, color]) => (
-              <div key={name} className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }} />
-                <span className="text-sm text-secondary-text">{name}</span>
+          {/* Mastery Level Legend - Top */}
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
+            <span className="text-xs text-secondary-text mr-1">Progress:</span>
+            {[
+              { level: 0, label: 'New' },
+              { level: 1, label: 'Started' },
+              { level: 2, label: 'Learning' },
+              { level: 3, label: 'Confident' },
+              { level: 4, label: 'Exam ready' },
+              { level: 5, label: 'Mastered' },
+            ].map(({ level, label }) => (
+              <div key={level} className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-sm" style={{
+                  backgroundColor: HEATMAP_COLORS[level],
+                  border: level === 5 ? '1px solid #D4AF37' : level === 4 ? '1px solid #B00053' : '1px solid rgba(255,255,255,0.1)',
+                }} />
+                <span className="text-xs text-secondary-text">{label}</span>
               </div>
             ))}
           </div>
@@ -10336,12 +10335,12 @@ function AppContent() {
                       aspectRatio: '1',
                       borderRadius: 8,
                       background: getTileColor(TOPIC_HEX[obj.topic], level, recency),
-                      border: isMastered ? '2px solid rgba(255,255,255,0.9)' :
-                              isExamReady ? '2px solid rgba(56,230,162,0.8)' :
-                              needsRevisit ? '1px dashed rgba(255,255,255,0.2)' :
+                      border: isMastered ? '2px solid #D4AF37' :
+                              isExamReady ? '2px solid #B00053' :
+                              needsRevisit ? '1px dashed rgba(255,255,255,0.15)' :
                               '1px solid rgba(255,255,255,0.06)',
-                      boxShadow: isMastered ? '0 0 10px rgba(255,255,255,0.25)' :
-                                 isExamReady ? '0 0 10px rgba(56,230,162,0.3)' : 'none',
+                      boxShadow: isMastered ? '0 0 10px rgba(212,175,55,0.35)' :
+                                 isExamReady ? '0 0 8px rgba(176,0,83,0.3)' : 'none',
                     }}
                     className="w-full transition-all duration-200 hover:scale-110 hover:z-20 relative cursor-pointer active:scale-95"
                   >
@@ -10373,30 +10372,28 @@ function AppContent() {
             </div>
           </div>
 
-          {/* Legend - Readiness & Recency */}
+          {/* Legend - Tile Icons */}
           <div className="mt-6 pt-6 border-t border-white/10">
             <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
-              {/* Readiness indicators */}
               <div className="flex items-center gap-2">
                 <div
                   style={{
                     width: 18, height: 18, borderRadius: 4,
-                    background: '#8B5CF6', border: '2px solid rgba(255,255,255,0.9)',
-                    boxShadow: '0 0 8px rgba(255,255,255,0.2)',
+                    background: '#D4AF37', border: '2px solid #D4AF37',
+                    boxShadow: '0 0 8px rgba(212,175,55,0.3)',
                   }}
                   className="flex items-center justify-center"
                 >
-                  <Star className="w-3 h-3 text-yellow-300" fill="currentColor" strokeWidth={1} />
+                  <Star className="w-3 h-3 text-white" fill="currentColor" strokeWidth={1} />
                 </div>
-                <span>⭐ Mastered</span>
+                <span>Mastered</span>
               </div>
               <div className="flex items-center gap-2">
                 <div
                   style={{
                     width: 18, height: 18, borderRadius: 4,
-                    background: mixWithWhite('#8B5CF6', 0.75),
-                    border: '2px solid rgba(56,230,162,0.8)',
-                    boxShadow: '0 0 6px rgba(56,230,162,0.25)',
+                    background: '#B00053',
+                    border: '2px solid #B00053',
                   }}
                   className="flex items-center justify-center"
                 >
@@ -10408,18 +10405,18 @@ function AppContent() {
                 <div
                   style={{
                     width: 18, height: 18, borderRadius: 4,
-                    background: mixWithWhite('#8B5CF6', 0.4),
-                    border: '2px dashed rgba(255,255,255,0.2)',
+                    background: '#2F4858',
+                    border: '1px dashed rgba(255,255,255,0.2)',
                   }}
                   className="flex items-center justify-center opacity-60"
                 >
-                  <span className="text-[8px] text-white">↻</span>
+                  <span className="text-[8px] text-white">&#8635;</span>
                 </div>
                 <span>Needs revisit</span>
               </div>
             </div>
             <p className="text-center text-[10px] text-secondary-text/60 mt-2">
-              Tiles fade when topics haven't been practiced recently · Questions are scheduled using cognitive science
+              Tiles fade when topics haven't been practiced recently
             </p>
           </div>
           </div>
