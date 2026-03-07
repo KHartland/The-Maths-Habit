@@ -896,6 +896,7 @@ const SESSION_HISTORY_KEY = 'maths-habit-session-history';
 const DAILY_ACTIVITY_KEY = 'maths-habit-daily-activity';
 const STREAK_DATA_KEY = 'maths-habit-streak-data';
 const TOTAL_QUESTIONS_KEY = 'maths-habit-total-questions';
+const PIRO_KEY = 'maths-habit-piro';
 const ONBOARDING_COMPLETE_KEY = 'maths-habit-onboarding-complete';
 const FSRS_DATA_KEY = 'maths-habit-fsrs';
 const MIGRATION_VERSION_KEY = 'maths-habit-migration-version';
@@ -1549,6 +1550,161 @@ const checkStreakMilestone = (streak) => {
     }
   }
   return { earned: false };
+};
+
+// ==================== PI-RO EVOLUTION SYSTEM ====================
+// Tamagotchi-style dragon that evolves with streak milestones
+// Miss 2 days after reaching Gold and Pi-ro ages to Old Dragon
+
+const PIRO_STAGES = [
+  { name: 'Egg',           minStreak: 0,  image: '/images/Piro/egg.png' },
+  { name: 'Hatchling',     minStreak: 10, image: '/images/Piro/hatchling.png' },
+  { name: 'Smoke Flame',   minStreak: 20, image: '/images/Piro/smoke-flame.png' },
+  { name: 'Teal Flame',    minStreak: 30, image: '/images/Piro/teal-flame.png' },
+  { name: 'Magenta Flame', minStreak: 40, image: '/images/Piro/magenta-flame.png' },
+  { name: 'Gold Flames',   minStreak: 50, image: '/images/Piro/gold-flames.png' },
+];
+
+const PIRO_OLD = { name: 'Old Pi-ro', image: '/images/Piro/old-piro.png' };
+const PIRO_DECAY_DAYS = 2; // Miss 2 days after Gold and Pi-ro ages
+
+// Get stage index based on highest streak ever reached
+const getPiroStageFromStreak = (highestStreak) => {
+  for (let i = PIRO_STAGES.length - 1; i >= 0; i--) {
+    if (highestStreak >= PIRO_STAGES[i].minStreak) return i;
+  }
+  return 0;
+};
+
+const loadPiro = () => {
+  try {
+    const saved = localStorage.getItem(PIRO_KEY);
+    return saved ? JSON.parse(saved) : {
+      stage: 0,
+      highestStreak: 0,  // Best streak ever (determines max evolution reached)
+      reachedGold: false, // Has ever reached Gold Flames
+      decayed: false,     // Currently in Old Pi-ro state
+      evolvedAt: [],      // Evolution history
+    };
+  } catch {
+    return { stage: 0, highestStreak: 0, reachedGold: false, decayed: false, evolvedAt: [] };
+  }
+};
+
+const savePiro = (piro) => {
+  try { localStorage.setItem(PIRO_KEY, JSON.stringify(piro)); } catch {}
+};
+
+// Update Pi-ro based on current streak. Called after each session.
+// Returns { piro, evolved, decayed, newStage, oldStage }
+const updatePiro = (currentStreak, daysMissed) => {
+  const piro = loadPiro();
+  const oldStage = piro.stage;
+
+  // Track highest streak ever
+  if (currentStreak > piro.highestStreak) {
+    piro.highestStreak = currentStreak;
+  }
+
+  // Check if reached Gold Flames
+  if (piro.highestStreak >= 50) {
+    piro.reachedGold = true;
+  }
+
+  // Calculate current stage from highest streak
+  const earnedStage = getPiroStageFromStreak(piro.highestStreak);
+
+  // Decay check: if reached Gold and missed 2+ days, age to Old
+  if (piro.reachedGold && daysMissed >= PIRO_DECAY_DAYS) {
+    piro.decayed = true;
+    piro.stage = earnedStage; // Keep earned stage tracked
+    savePiro(piro);
+    return { piro, evolved: false, decayed: true, newStage: earnedStage, oldStage };
+  }
+
+  // If practising again, reverse decay
+  if (piro.decayed && currentStreak >= 1) {
+    piro.decayed = false;
+  }
+
+  // Evolution check
+  const newStage = earnedStage;
+  piro.stage = newStage;
+
+  if (newStage > oldStage) {
+    piro.evolvedAt.push({ stage: newStage, name: PIRO_STAGES[newStage].name, date: Date.now() });
+  }
+
+  savePiro(piro);
+  return { piro, evolved: newStage > oldStage, decayed: false, newStage, oldStage };
+};
+
+// Get current display info for Pi-ro
+const getPiroDisplay = (piro) => {
+  if (piro.decayed) {
+    return { name: PIRO_OLD.name, image: PIRO_OLD.image, isDecayed: true };
+  }
+  const stage = PIRO_STAGES[piro.stage] || PIRO_STAGES[0];
+  return { name: stage.name, image: stage.image, isDecayed: false };
+};
+
+// Get progress toward next evolution
+const getPiroProgress = (piro) => {
+  const currentStageIdx = piro.stage;
+  if (currentStageIdx >= PIRO_STAGES.length - 1) {
+    return { needed: 0, total: 0, progress: 1, nextName: null }; // Max stage (Gold)
+  }
+  const nextStage = PIRO_STAGES[currentStageIdx + 1];
+  const currentThreshold = PIRO_STAGES[currentStageIdx].minStreak;
+  const nextThreshold = nextStage.minStreak;
+  const range = nextThreshold - currentThreshold;
+  const progressInRange = piro.highestStreak - currentThreshold;
+  return {
+    needed: nextThreshold - piro.highestStreak,
+    total: range,
+    progress: Math.min(1, progressInRange / range),
+    nextName: nextStage.name,
+  };
+};
+
+// Near-miss nudge messages
+const getPiroNudge = (piro, dayStreak, todayQuestions, dailyGoal) => {
+  const display = getPiroDisplay(piro);
+  const progressInfo = getPiroProgress(piro);
+
+  // Decayed state - urgent
+  if (display.isDecayed) {
+    return "Pi-ro has aged! Practice today to restore your dragon.";
+  }
+
+  // Egg stage - encourage first streak
+  if (piro.stage === 0 && piro.highestStreak === 0) {
+    return "Build a 10-day streak to hatch Pi-ro!";
+  }
+
+  // Evolution is close (within 3 days)
+  if (progressInfo.needed > 0 && progressInfo.needed <= 3) {
+    return `${progressInfo.needed} more day${progressInfo.needed !== 1 ? 's' : ''} to evolve into ${progressInfo.nextName}!`;
+  }
+
+  // At Gold - maintain message
+  if (piro.stage >= PIRO_STAGES.length - 1) {
+    return "Pi-ro is at full power! Keep your streak alive.";
+  }
+
+  // Haven't practised today
+  if (todayQuestions === 0) {
+    return `Pi-ro is waiting! ${dailyGoal} questions to keep your streak.`;
+  }
+
+  // Goal complete
+  if (todayQuestions >= dailyGoal) {
+    return `Pi-ro is thriving! ${dayStreak} day streak.`;
+  }
+
+  // Mid-session
+  const remaining = dailyGoal - todayQuestions;
+  return `${remaining} more question${remaining !== 1 ? 's' : ''} to complete today's goal!`;
 };
 
 const getWeeklyMastery = (progress) => {
@@ -6830,7 +6986,20 @@ What is the student's answer?`
       }
       
       setAchievements(newAchievements);
-      
+
+      // ---- Pi-ro Evolution ----
+      // Calculate days missed (0 if practised yesterday or today)
+      const daysMissed = updatedStreak.streak > 0 ? 0 :
+        updatedStreak.needsRepair ? 2 : 1;
+      const piroResult = updatePiro(updatedStreak.streak, daysMissed);
+      setPiro(loadPiro());
+      if (piroResult.evolved) {
+        setPiroEvolution({ oldStage: piroResult.oldStage, newStage: piroResult.newStage });
+      }
+      if (piroResult.decayed) {
+        setPiroDecayed(true);
+      }
+
       // Extract practiced objective codes with full data for celebration
       const allResults = [...sessionResults, { correct: isCorrect, code: current.objective.code, topic: current.objective.topic }];
       const practicedCodes = [...new Set(allResults.map(r => r.code))];
@@ -9505,6 +9674,9 @@ function AppContent() {
   const [authModalMode, setAuthModalMode] = useState('signin');
   const [showOneVsOne, setShowOneVsOne] = useState(false);
   const [userSchool, setUserSchool] = useState(null); // { id, name } or null
+  const [piro, setPiro] = useState(() => loadPiro());
+  const [piroEvolution, setPiroEvolution] = useState(null); // { oldStage, newStage } when evolution happens
+  const [piroDecayed, setPiroDecayed] = useState(false); // Show decay warning
 
   // 1v1 daily limit for free users (1 per day)
   const FREE_1V1_LIMIT = 1;
@@ -9882,6 +10054,21 @@ function AppContent() {
   const potentialStreak = streakInfo.potentialStreak;
   const freezesAvailable = streakInfo.freezesAvailable;
   const longestStreak = streakInfo.longestStreak;
+
+  // Update Pi-ro decay state on every render (catches returning after missed days)
+  useMemo(() => {
+    const daysMissed = dayStreak > 0 ? 0 : needsRepair ? 2 : 1;
+    const currentPiro = loadPiro();
+    if (currentPiro.reachedGold && daysMissed >= PIRO_DECAY_DAYS && !currentPiro.decayed) {
+      currentPiro.decayed = true;
+      savePiro(currentPiro);
+      setPiro({ ...currentPiro });
+    } else if (currentPiro.decayed && dayStreak >= 1) {
+      currentPiro.decayed = false;
+      savePiro(currentPiro);
+      setPiro({ ...currentPiro });
+    }
+  }, [dayStreak, needsRepair]);
   
   // Today's progress towards daily goal
   const dailyActivity = loadDailyActivity();
@@ -10205,10 +10392,113 @@ function AppContent() {
         }}
       />
 
+      {/* Pi-ro Evolution Celebration Modal */}
+      {piroEvolution && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
+          <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
+            <div className="text-6xl mb-4">🐉</div>
+            <h2 className="text-2xl font-bold text-primary-text mb-2">Pi-ro Evolved!</h2>
+            <p className="text-secondary-text mb-4">
+              {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
+            </p>
+            <div className="w-40 h-40 mx-auto mb-4 rounded-2xl overflow-hidden bg-white/5 flex items-center justify-center">
+              <img
+                src={PIRO_STAGES[piroEvolution.newStage].image}
+                alt={PIRO_STAGES[piroEvolution.newStage].name}
+                className="w-full h-full object-contain p-2"
+                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+              />
+              <div className="hidden items-center justify-center text-5xl">🐉</div>
+            </div>
+            <button
+              onClick={() => setPiroEvolution(null)}
+              className="btn-gradient-mint px-8 py-3 text-white font-bold rounded-full"
+            >
+              Amazing!
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
 
-      {/* Hero Heatmap Card - Glassmorphism */}
+      {/* Pi-ro Dragon Card - Home Screen Hero */}
+      <div className="max-w-4xl mx-auto px-2 sm:px-4 mb-4">
+        <div className={`glass-panel rounded-3xl p-4 sm:p-6 shadow-glass ${piro.decayed ? 'border-[#8F0000]/40' : ''}`}>
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Dragon Image */}
+            <div className={`w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0 rounded-2xl overflow-hidden bg-white/5 flex items-center justify-center ${piro.decayed ? 'piro-decay' : 'piro-idle'}`}>
+              {(() => {
+                const display = getPiroDisplay(piro);
+                return (
+                  <>
+                    <img
+                      src={display.image}
+                      alt={display.name}
+                      className="w-full h-full object-contain p-1"
+                      onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                    />
+                    <div className="hidden items-center justify-center text-5xl">
+                      {piro.decayed ? '🐉' : piro.stage === 0 ? '🥚' : piro.stage === 1 ? '🐣' : '🐲'}
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-lg sm:text-xl font-bold text-primary-text">Pi-ro</h2>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${piro.decayed ? 'bg-[#8F0000]/20 text-[#8F0000]' : 'bg-white/10 text-secondary-text'}`}>
+                  {getPiroDisplay(piro).name}
+                </span>
+              </div>
+
+              {/* Streak Progress Bar */}
+              {(() => {
+                const progressInfo = getPiroProgress(piro);
+                const isMaxStage = piro.stage >= PIRO_STAGES.length - 1;
+                return (
+                  <div className="mb-2">
+                    <div className="flex justify-between text-xs text-secondary-text mb-1">
+                      <span>{dayStreak} day streak</span>
+                      {!isMaxStage && progressInfo.nextName && (
+                        <span>{progressInfo.needed} day{progressInfo.needed !== 1 ? 's' : ''} to {progressInfo.nextName}</span>
+                      )}
+                      {isMaxStage && !piro.decayed && <span className="text-[#D4AF37]">Max Evolution</span>}
+                      {piro.decayed && <span className="text-[#8F0000]">Needs care!</span>}
+                    </div>
+                    <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{
+                          width: `${isMaxStage ? 100 : Math.max(2, progressInfo.progress * 100)}%`,
+                          background: piro.decayed
+                            ? '#8F0000'
+                            : isMaxStage
+                              ? 'linear-gradient(90deg, #D4AF37, #B00053)'
+                              : piro.stage >= 3
+                                ? 'linear-gradient(90deg, #B00053, #A845A2)'
+                                : 'linear-gradient(90deg, #A845A2, #513A6F)',
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Nudge Message */}
+              <p className={`text-xs sm:text-sm ${piro.decayed ? 'text-[#8F0000]' : 'text-secondary-text'}`}>
+                {getPiroNudge(piro, dayStreak, todayQuestions, dailyGoal)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Heatmap Card */}
       <div className="max-w-4xl mx-auto px-2 sm:px-4">
         <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
 
