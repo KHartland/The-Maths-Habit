@@ -6075,24 +6075,19 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     const questions = qBank[obj.code] || [];
     if (questions.length === 0) return;
 
-    // Use the highest quickCorrect across all codes sharing this question bank
-    // This handles legacy data where aliases may have different progress levels
-    const primary = questionBankPrimary[obj.code] || obj.code;
-    const bankGroup = questionBankGroups[primary] || [obj.code];
-    const qc = Math.max(0, ...bankGroup.map(c => progress[c]?.quickCorrect ?? 0));
+    // Use this objective's own progress only
+    const qc = objProg?.quickCorrect ?? 0;
     if (qc >= 5) return; // Mastered — skip
 
-    // Skip if ANY code in the bank group is still in cooldown
-    const maxSkip = Math.max(0, ...bankGroup.map(c => progress[c]?.skipUntilSession ?? 0));
-    if (maxSkip > sessionCount) return;
+    // Skip if this objective is still in cooldown
+    if ((objProg?.skipUntilSession ?? 0) > sessionCount) return;
 
     const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
 
     // Priority: never-practiced objectives first, then least-recently-practiced
-    const anyPracticed = bankGroup.some(c => progress[c]?.quickCorrect !== undefined);
-    const neverPracticed = !anyPracticed;
-    const lastPracticed = Math.max(0, ...bankGroup.map(c => progress[c]?.lastPracticed ?? 0));
+    const neverPracticed = objProg?.quickCorrect === undefined;
+    const lastPracticed = objProg?.lastPracticed ?? 0;
 
     candidates.push({
       objective: obj,
@@ -6661,25 +6656,16 @@ What is the student's answer?`
           )
         : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
 
-      // Sync progress across ALL codes sharing the same question bank
-      // This prevents aliased objectives from repeating the same questions
-      const primaryCode = questionBankPrimary[code] || code;
-      const bankGroupCodes = questionBankGroups[primaryCode] || [code];
-
-      bankGroupCodes.forEach(groupCode => {
-        const groupProg = prev[groupCode] || {};
-        const groupQC = groupProg.quickCorrect ?? 0;
-        // Use max of existing and new quickCorrect — never regress any code
-        const syncedQC = Math.max(groupQC, newQuickCorrect);
-        updated[groupCode] = {
-          ...groupProg,
-          quickCorrect: syncedQC,
-          lastPracticed: now,
-          nextDue: getNextDueTime(syncedQC, correct),
-          skipUntilSession: skipUntil,
-          masteredAt: (syncedQC >= 5 && groupQC < 5) ? now : groupProg.masteredAt,
-        };
-      });
+      // Update only the specific objective being practiced
+      const oldProg = prev[code] || {};
+      updated[code] = {
+        ...oldProg,
+        quickCorrect: newQuickCorrect,
+        lastPracticed: now,
+        nextDue: getNextDueTime(newQuickCorrect, correct),
+        skipUntilSession: skipUntil,
+        masteredAt: (newQuickCorrect >= 5 && (oldProg.quickCorrect ?? 0) < 5) ? now : oldProg.masteredAt,
+      };
 
       saveProgress(updated);
       return updated;
