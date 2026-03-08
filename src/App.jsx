@@ -10997,6 +10997,8 @@ function AppContent() {
         ) : null}
       </div>
 
+      </div>
+
       {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
