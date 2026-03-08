@@ -23,6 +23,7 @@ const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
 const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
+const HeatmapIcon = BrainIcon;      // Brain for Heatmap/Journey
 
 // ==================== ANIMATED LOGO COMPONENT ====================
 // Landing page logo using the app icon image
@@ -9232,6 +9233,7 @@ function StreakDisplay({ streak }) {
 function NavBar({ currentPage, setCurrentPage, streak }) {
   const navItems = [
     { id: 'home', label: 'Home', icon: HomeIcon },
+    { id: 'heatmap', label: 'Journey', icon: HeatmapIcon },
     { id: 'practice', label: 'Practice', icon: PracticeIcon },
     { id: 'stats', label: 'Stats', icon: StatsIcon },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
@@ -10473,6 +10475,208 @@ function AppContent() {
     );
   }
 
+  if (currentPage === 'heatmap') {
+    return (
+      <div className="min-h-screen bg-void relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-96 h-96 -top-48 -right-48 opacity-70 fixed pointer-events-none" />
+        <div className="orb-mint w-64 h-64 top-1/2 -left-32 opacity-60 fixed pointer-events-none" />
+
+        <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
+
+        {/* Gold tile glow animations */}
+        <style>{`
+          .gold-tile-glow {
+            animation: goldPulse 3s ease-in-out infinite;
+          }
+          @keyframes goldPulse {
+            0%, 100% { filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
+            50% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.6)); }
+          }
+          .gold-tile-shimmer {
+            animation: goldShimmer 4s ease-in-out infinite;
+          }
+          @keyframes goldShimmer {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+          }
+        `}</style>
+
+        <div className="pt-20 pb-28 md:pb-10 relative z-10">
+          {/* Hero Heatmap Card */}
+          <div className="max-w-4xl mx-auto px-2 sm:px-4">
+            <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
+
+              {/* Header with stats */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">Your Maths Journey</h1>
+                  <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Tier toggle */}
+                  <div className="flex glass-panel rounded-lg p-1">
+                    {['foundation', 'higher'].map(t => (
+                      <button key={t} onClick={() => setTier(t)}
+                        className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
+                          tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
+                        }`}>{t}</button>
+                    ))}
+                  </div>
+
+                  {/* Mastery badge */}
+                  <div className="flex items-center gap-2 glass-panel px-4 py-2 rounded-xl">
+                    <TrophyIcon className="w-5 h-5 text-[#FBBF24]" />
+                    <span className="font-bold text-[#FBBF24]">{totalMastered}</span>
+                    <span className="text-secondary-text text-sm">/ {allObjectives.length}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mastery Level Legend - Top */}
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
+                <span className="text-sm text-secondary-text mr-1">Progress:</span>
+                {[
+                  { level: 0, label: 'New' },
+                  { level: 1, label: 'Started' },
+                  { level: 2, label: 'Learning' },
+                  { level: 3, label: 'Confident' },
+                  { level: 4, label: 'Exam ready' },
+                  { level: 5, label: 'Mastered' },
+                ].map(({ level, label }) => (
+                  <div key={level} className="flex items-center gap-2">
+                    <img src={TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
+                    <span className="text-sm text-secondary-text">{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Heatmap Explainer - shows for new users */}
+              {!loadShownTips().includes('heatmapExplainer') && (
+                <div className="mb-4 p-4 glass-panel rounded-xl border border-violet/30 animate-fade-in">
+                  <div className="flex items-start gap-3">
+                    <span className="text-lg shrink-0">🗺️</span>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
+                      <div className="space-y-1.5 text-xs text-secondary-text">
+                        <div className="flex items-center gap-2">
+                          <img src={TILE_IMAGES[0]} alt="Stone" className="w-5 h-5 rounded-sm object-cover shrink-0" />
+                          <span>Stone = not started yet</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <img src={TILE_IMAGES[2]} alt="Gem" className="w-5 h-5 rounded-sm object-cover shrink-0" />
+                          <span>Coloured gems = making progress</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <img src={TILE_IMAGES[4]} alt="Crimson" className="w-5 h-5 rounded-sm object-cover shrink-0" />
+                          <span>Bright gem = nearly there</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <img src={TILE_IMAGES[5]} alt="Gold" className="w-5 h-5 rounded-sm object-cover shrink-0" />
+                          <span>Gold = mastered!</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-secondary-text/60 mt-2">Tap any tile to see its objective details</p>
+                    </div>
+                    <button
+                      onClick={(e) => { e.currentTarget.closest('.animate-fade-in').remove(); markTipShown('heatmapExplainer'); }}
+                      className="text-secondary-text/60 hover:text-gray-800 shrink-0 p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* THE HEATMAP - Hero Element */}
+              <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                  gap: window.innerWidth < 480 ? 3 : 6,
+                  width: '100%',
+                  maxWidth: `${cols * 36 + (cols - 1) * 6}px`
+                }}>
+                  {allObjectives.map((obj) => {
+                    const level = getLevel(obj.code);
+                    const objProg = progress[obj.code];
+                    const isMastered = level >= 5;
+                    const isExamReady = level === 4;
+                    const recency = getRecencyFactor(objProg?.lastPracticed);
+                    const needsRevisit = recency < 0.6 && level > 0 && level < 5;
+                    const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
+                    return (
+                      <div
+                        key={obj.code}
+                        onClick={() => handleTileTap(obj)}
+                        style={{
+                          aspectRatio: '1',
+                          borderRadius: 4,
+                          position: 'relative',
+                          overflow: 'visible',
+                          opacity: tileOpacity,
+                        }}
+                        className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMastered ? 'gold-tile-glow' : ''}`}
+                      >
+                        {/* Gold outer glow for mastered tiles */}
+                        {isMastered && (
+                          <div style={{
+                            position: 'absolute', inset: -2, borderRadius: 6,
+                            boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
+                            pointerEvents: 'none', zIndex: 0,
+                          }} />
+                        )}
+                        {/* Tile image */}
+                        <img
+                          src={TILE_IMAGES[level] || TILE_IMAGES[0]}
+                          alt=""
+                          className="w-full h-full object-cover relative z-[1]"
+                          style={{ borderRadius: 4, filter: isMastered ? 'brightness(1.15) saturate(1.2)' : 'none' }}
+                          loading="lazy"
+                          draggable={false}
+                        />
+                        {/* Gold shimmer overlay for mastered tiles */}
+                        {isMastered && (
+                          <div className="gold-tile-shimmer" style={{
+                            position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
+                            background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
+                          }} />
+                        )}
+                        {/* Gentle glow on recently practiced tiles (after celebration) */}
+                        {recentSessionCodes.includes(obj.code) && (
+                          <div className="heatmap-glow-afterpulse" style={{
+                            position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
+                            zIndex: 9,
+                          }} />
+                        )}
+                        {/* Revisit indicator overlay */}
+                        {needsRevisit && !isExamReady && (
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
+                            <span className="text-[8px] text-white/70">↻</span>
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        {/* Tile Detail Modal */}
+        <TileDetailModal
+          open={tooltip.open}
+          objective={tooltip.objective}
+          progress={tooltip.objective ? progress[tooltip.objective.code] : null}
+          onClose={closeTileDetail}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
       {/* Ambient background glow */}
@@ -10615,187 +10819,6 @@ function AppContent() {
                 </button>
               )}
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Gold tile glow animations */}
-      <style>{`
-        .gold-tile-glow {
-          animation: goldPulse 3s ease-in-out infinite;
-        }
-        @keyframes goldPulse {
-          0%, 100% { filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
-          50% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.6)); }
-        }
-        .gold-tile-shimmer {
-          animation: goldShimmer 4s ease-in-out infinite;
-        }
-        @keyframes goldShimmer {
-          0%, 100% { opacity: 0; }
-          50% { opacity: 1; }
-        }
-      `}</style>
-
-      {/* Hero Heatmap Card */}
-      <div className="max-w-4xl mx-auto px-2 sm:px-4">
-        <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
-
-          {/* Header with stats */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">Your Maths Journey</h1>
-              <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3">
-              {/* Tier toggle */}
-              <div className="flex glass-panel rounded-lg p-1">
-                {['foundation', 'higher'].map(t => (
-                  <button key={t} onClick={() => setTier(t)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                      tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
-                    }`}>{t}</button>
-                ))}
-              </div>
-
-              {/* Mastery badge */}
-              <div className="flex items-center gap-2 glass-panel px-4 py-2 rounded-xl">
-                <TrophyIcon className="w-5 h-5 text-[#FBBF24]" />
-                <span className="font-bold text-[#FBBF24]">{totalMastered}</span>
-                <span className="text-secondary-text text-sm">/ {allObjectives.length}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Mastery Level Legend - Top */}
-          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
-            <span className="text-sm text-secondary-text mr-1">Progress:</span>
-            {[
-              { level: 0, label: 'New' },
-              { level: 1, label: 'Started' },
-              { level: 2, label: 'Learning' },
-              { level: 3, label: 'Confident' },
-              { level: 4, label: 'Exam ready' },
-              { level: 5, label: 'Mastered' },
-            ].map(({ level, label }) => (
-              <div key={level} className="flex items-center gap-2">
-                <img src={TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
-                <span className="text-sm text-secondary-text">{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Heatmap Explainer - shows for new users */}
-          {!loadShownTips().includes('heatmapExplainer') && (
-            <div className="mb-4 p-4 glass-panel rounded-xl border border-violet/30 animate-fade-in">
-              <div className="flex items-start gap-3">
-                <span className="text-lg shrink-0">🗺️</span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
-                  <div className="space-y-1.5 text-xs text-secondary-text">
-                    <div className="flex items-center gap-2">
-                      <img src={TILE_IMAGES[0]} alt="Stone" className="w-5 h-5 rounded-sm object-cover shrink-0" />
-                      <span>Stone = not started yet</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <img src={TILE_IMAGES[2]} alt="Gem" className="w-5 h-5 rounded-sm object-cover shrink-0" />
-                      <span>Coloured gems = making progress</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <img src={TILE_IMAGES[4]} alt="Crimson" className="w-5 h-5 rounded-sm object-cover shrink-0" />
-                      <span>Bright gem = nearly there</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <img src={TILE_IMAGES[5]} alt="Gold" className="w-5 h-5 rounded-sm object-cover shrink-0" />
-                      <span>Gold = mastered!</span>
-                    </div>
-                  </div>
-                  <p className="text-xs text-secondary-text/60 mt-2">Tap any tile to see its objective details</p>
-                </div>
-                <button
-                  onClick={(e) => { e.currentTarget.closest('.animate-fade-in').remove(); markTipShown('heatmapExplainer'); }}
-                  className="text-secondary-text/60 hover:text-gray-800 shrink-0 p-1"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* THE HEATMAP - Hero Element */}
-          <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(${cols}, 1fr)`,
-              gap: window.innerWidth < 480 ? 3 : 6,
-              width: '100%',
-              maxWidth: `${cols * 36 + (cols - 1) * 6}px`
-            }}>
-              {allObjectives.map((obj) => {
-                const level = getLevel(obj.code);
-                const objProg = progress[obj.code];
-                const isMastered = level >= 5;
-                const isExamReady = level === 4;
-                const recency = getRecencyFactor(objProg?.lastPracticed);
-                const needsRevisit = recency < 0.6 && level > 0 && level < 5;
-                const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
-                return (
-                  <div
-                    key={obj.code}
-                    onClick={() => handleTileTap(obj)}
-                    style={{
-                      aspectRatio: '1',
-                      borderRadius: 4,
-                      position: 'relative',
-                      overflow: 'visible',
-                      opacity: tileOpacity,
-                    }}
-                    className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMastered ? 'gold-tile-glow' : ''}`}
-                  >
-                    {/* Gold outer glow for mastered tiles */}
-                    {isMastered && (
-                      <div style={{
-                        position: 'absolute', inset: -2, borderRadius: 6,
-                        boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
-                        pointerEvents: 'none', zIndex: 0,
-                      }} />
-                    )}
-                    {/* Tile image */}
-                    <img
-                      src={TILE_IMAGES[level] || TILE_IMAGES[0]}
-                      alt=""
-                      className="w-full h-full object-cover relative z-[1]"
-                      style={{ borderRadius: 4, filter: isMastered ? 'brightness(1.15) saturate(1.2)' : 'none' }}
-                      loading="lazy"
-                      draggable={false}
-                    />
-                    {/* Gold shimmer overlay for mastered tiles */}
-                    {isMastered && (
-                      <div className="gold-tile-shimmer" style={{
-                        position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
-                        background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
-                      }} />
-                    )}
-                    {/* Gentle glow on recently practiced tiles (after celebration) */}
-                    {recentSessionCodes.includes(obj.code) && (
-                      <div className="heatmap-glow-afterpulse" style={{
-                        position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
-                        zIndex: 9,
-                      }} />
-                    )}
-                    {/* Revisit indicator overlay */}
-                    {needsRevisit && !isExamReady && (
-                      <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
-                        <span className="text-[8px] text-white/70">↻</span>
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
           </div>
         </div>
       </div>
@@ -10965,14 +10988,6 @@ function AppContent() {
           </div>
         ) : null}
       </div>
-
-      {/* Tile Detail Modal */}
-      <TileDetailModal
-        open={tooltip.open}
-        objective={tooltip.objective}
-        progress={tooltip.objective ? progress[tooltip.objective.code] : null}
-        onClose={closeTileDetail}
-      />
 
       {/* Auth Modal */}
       <AuthModal
