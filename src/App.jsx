@@ -733,53 +733,15 @@ const HEATMAP_COLORS = {
   5: '#D4AF37',   // Gold (mastery - sacred)
 };
 
-// 3D Tile styles for the heatmap — stone, gem, and gold treatments
-const TILE_3D_STYLES = {
-  // Level 0: Grey stone — dark, inert, textured
-  0: {
-    background: 'linear-gradient(145deg, #3a3a52 0%, #2a2a3e 50%, #1e1e30 100%)',
-    boxShadow: 'inset 1px 1px 2px rgba(255,255,255,0.08), inset -1px -1px 3px rgba(0,0,0,0.6), 2px 3px 6px rgba(0,0,0,0.5)',
-    border: '1px solid rgba(60,60,80,0.6)',
-  },
-  // Level 1: Teal gem — cool, subtle inner glow
-  1: {
-    background: 'linear-gradient(145deg, #4a7a8a 0%, #2F4858 40%, #1a3040 100%)',
-    boxShadow: 'inset 1px 1px 3px rgba(120,200,220,0.3), inset -1px -1px 3px rgba(0,0,0,0.5), 2px 3px 6px rgba(0,0,0,0.4), 0 0 8px rgba(47,72,88,0.3)',
-    border: '1px solid rgba(80,140,160,0.4)',
-  },
-  // Level 2: Purple gem — deeper, richer glow
-  2: {
-    background: 'linear-gradient(145deg, #7a5a9f 0%, #513A6F 40%, #3a2050 100%)',
-    boxShadow: 'inset 1px 1px 3px rgba(160,120,220,0.35), inset -1px -1px 3px rgba(0,0,0,0.5), 2px 3px 6px rgba(0,0,0,0.4), 0 0 10px rgba(81,58,111,0.35)',
-    border: '1px solid rgba(120,90,170,0.4)',
-  },
-  // Level 3: Magenta gem — vibrant, catching the eye
-  3: {
-    background: 'linear-gradient(145deg, #d06ac0 0%, #A845A2 40%, #7a2878 100%)',
-    boxShadow: 'inset 1px 1px 3px rgba(230,140,220,0.35), inset -1px -1px 3px rgba(0,0,0,0.45), 2px 3px 6px rgba(0,0,0,0.4), 0 0 12px rgba(168,69,162,0.35)',
-    border: '1px solid rgba(200,100,190,0.4)',
-  },
-  // Level 4: Crimson gem — intense, almost there
-  4: {
-    background: 'linear-gradient(145deg, #e0307a 0%, #B00053 40%, #800038 100%)',
-    boxShadow: 'inset 1px 1px 3px rgba(240,100,150,0.35), inset -1px -1px 3px rgba(0,0,0,0.45), 2px 3px 6px rgba(0,0,0,0.4), 0 0 14px rgba(176,0,83,0.4)',
-    border: '1px solid rgba(220,60,120,0.5)',
-  },
-  // Level 5: Gold mastered — radiant, precious, achieved
-  5: {
-    background: 'linear-gradient(145deg, #f5d970 0%, #D4AF37 35%, #b8922a 65%, #9a7a20 100%)',
-    boxShadow: 'inset 1px 1px 4px rgba(255,240,160,0.5), inset -1px -1px 3px rgba(100,70,0,0.4), 2px 3px 6px rgba(0,0,0,0.4), 0 0 16px rgba(212,175,55,0.45)',
-    border: '1px solid rgba(240,210,80,0.6)',
-  },
+// Tile image assets for the heatmap — stone, gems, and gold
+const TILE_IMAGES = {
+  0: '/images/tiles/stone-tile.jpeg',     // Grey stone (not started)
+  1: '/images/tiles/teal-gem.jpeg',       // Teal gem (started)
+  2: '/images/tiles/purple-gem.jpeg',     // Purple gem (learning)
+  3: '/images/tiles/magenta-gem.jpeg',    // Magenta gem (confident)
+  4: '/images/tiles/crimson-gem.jpeg',    // Crimson gem (exam ready)
+  5: '/images/tiles/gold-tile.jpeg',      // Gold pi tile (mastered)
 };
-
-// Get 3D tile style with recency dimming
-function get3DTileStyle(level, recency) {
-  const base = TILE_3D_STYLES[level] || TILE_3D_STYLES[0];
-  // Apply subtle opacity reduction for stale tiles (but keep 3D effect)
-  const opacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
-  return { ...base, opacity };
-}
 
 function mixWithWhite(hex, intensity) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -10700,10 +10662,7 @@ function AppContent() {
               { level: 5, label: 'Mastered' },
             ].map(({ level, label }) => (
               <div key={level} className="flex items-center gap-1.5">
-                <span className="w-3.5 h-3.5 rounded-sm" style={{
-                  ...TILE_3D_STYLES[level],
-                  borderRadius: 3,
-                }} />
+                <img src={TILE_IMAGES[level]} alt={label} className="w-4 h-4 rounded-sm object-cover" />
                 <span className="text-xs text-secondary-text">{label}</span>
               </div>
             ))}
@@ -10718,19 +10677,19 @@ function AppContent() {
                   <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
                   <div className="space-y-1.5 text-xs text-secondary-text">
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm shrink-0" style={TILE_3D_STYLES[0]} />
+                      <img src={TILE_IMAGES[0]} alt="Stone" className="w-5 h-5 rounded-sm object-cover shrink-0" />
                       <span>Stone = not started yet</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm shrink-0" style={TILE_3D_STYLES[2]} />
+                      <img src={TILE_IMAGES[2]} alt="Gem" className="w-5 h-5 rounded-sm object-cover shrink-0" />
                       <span>Coloured gems = making progress</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm shrink-0" style={TILE_3D_STYLES[4]} />
+                      <img src={TILE_IMAGES[4]} alt="Crimson" className="w-5 h-5 rounded-sm object-cover shrink-0" />
                       <span>Bright gem = nearly there</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-sm shrink-0" style={TILE_3D_STYLES[5]} />
+                      <img src={TILE_IMAGES[5]} alt="Gold" className="w-5 h-5 rounded-sm object-cover shrink-0" />
                       <span>Gold = mastered!</span>
                     </div>
                   </div>
@@ -10762,52 +10721,39 @@ function AppContent() {
                 const isExamReady = level === 4;
                 const recency = getRecencyFactor(objProg?.lastPracticed);
                 const needsRevisit = recency < 0.6 && level > 0 && level < 5;
-                const tileStyle = get3DTileStyle(level, recency);
+                const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
                 return (
                   <div
                     key={obj.code}
                     onClick={() => handleTileTap(obj)}
                     style={{
                       aspectRatio: '1',
-                      borderRadius: 6,
-                      ...tileStyle,
+                      borderRadius: 4,
                       position: 'relative',
+                      overflow: 'hidden',
+                      opacity: tileOpacity,
                     }}
-                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-125 cursor-pointer active:scale-95"
+                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95"
                   >
+                    {/* Tile image */}
+                    <img
+                      src={TILE_IMAGES[level] || TILE_IMAGES[0]}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      draggable={false}
+                    />
                     {/* Gentle glow on recently practiced tiles (after celebration) */}
                     {recentSessionCodes.includes(obj.code) && (
                       <div className="heatmap-glow-afterpulse" style={{
-                        position: 'absolute', inset: -1, borderRadius: 8, pointerEvents: 'none',
+                        position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
                         zIndex: 9,
                       }} />
                     )}
-                    {/* Inner gem highlight for levels 1-4 */}
-                    {level > 0 && level < 5 && (
-                      <span className="absolute inset-0 flex items-center justify-center" style={{ pointerEvents: 'none' }}>
-                        <span style={{
-                          width: '45%', height: '45%', borderRadius: 3,
-                          background: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 100%)',
-                          boxShadow: 'inset 0 0 2px rgba(255,255,255,0.2)',
-                        }} />
-                      </span>
-                    )}
-                    {/* Gold star for mastered */}
-                    {isMastered && (
-                      <span className="absolute inset-0 flex items-center justify-center" style={{ filter: 'drop-shadow(0 0 3px rgba(255,220,80,0.6))' }}>
-                        <Star className="w-4 h-4 text-yellow-100" fill="currentColor" strokeWidth={1} />
-                      </span>
-                    )}
-                    {/* Check for exam ready */}
-                    {isExamReady && !isMastered && (
-                      <span className="absolute inset-0 flex items-center justify-center" style={{ filter: 'drop-shadow(0 0 2px rgba(255,255,255,0.4))' }}>
-                        <Check className="w-3.5 h-3.5 text-white/90" strokeWidth={3} />
-                      </span>
-                    )}
-                    {/* Revisit indicator */}
+                    {/* Revisit indicator overlay */}
                     {needsRevisit && !isExamReady && (
-                      <span className="absolute inset-0 flex items-center justify-center opacity-40">
-                        <span className="text-[8px] text-white">↻</span>
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <span className="text-[8px] text-white/70">↻</span>
                       </span>
                     )}
                   </div>
@@ -10820,45 +10766,20 @@ function AppContent() {
           <div className="mt-6 pt-6 border-t border-white/10">
             <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
               <div className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: 18, height: 18, borderRadius: 4,
-                    ...TILE_3D_STYLES[5],
-                  }}
-                  className="flex items-center justify-center"
-                >
-                  <Star className="w-3 h-3 text-yellow-100 drop-shadow-sm" fill="currentColor" strokeWidth={1} />
-                </div>
+                <img src={TILE_IMAGES[5]} alt="Mastered" style={{ width: 20, height: 20, borderRadius: 3 }} className="object-cover" />
                 <span>Mastered</span>
               </div>
               <div className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: 18, height: 18, borderRadius: 4,
-                    ...TILE_3D_STYLES[4],
-                  }}
-                  className="flex items-center justify-center"
-                >
-                  <Check className="w-3 h-3 text-white/90" strokeWidth={3} />
-                </div>
+                <img src={TILE_IMAGES[4]} alt="Nearly there" style={{ width: 20, height: 20, borderRadius: 3 }} className="object-cover" />
                 <span>Nearly there</span>
               </div>
               <div className="flex items-center gap-2">
-                <div
-                  style={{
-                    width: 18, height: 18, borderRadius: 4,
-                    ...TILE_3D_STYLES[1],
-                    opacity: 0.6,
-                  }}
-                  className="flex items-center justify-center"
-                >
-                  <span className="text-[8px] text-white">&#8635;</span>
-                </div>
+                <img src={TILE_IMAGES[0]} alt="Needs revisit" style={{ width: 20, height: 20, borderRadius: 3, opacity: 0.6 }} className="object-cover" />
                 <span>Needs revisit</span>
               </div>
             </div>
             <p className="text-center text-[10px] text-secondary-text/60 mt-2">
-              Tiles fade when topics haven't been practiced recently
+              Gems fade when topics haven't been practiced recently
             </p>
           </div>
           </div>
