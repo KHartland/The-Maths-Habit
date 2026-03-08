@@ -11,7 +11,7 @@ import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
-import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, BrainIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
+import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
 
@@ -23,7 +23,15 @@ const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
 const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
-const HeatmapIcon = BrainIcon;      // Brain for Heatmap/Journey
+// Grid icon for Heatmap/Journey page
+const HeatmapIcon = ({ className }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1" />
+    <rect x="14" y="3" width="7" height="7" rx="1" />
+    <rect x="3" y="14" width="7" height="7" rx="1" />
+    <rect x="14" y="14" width="7" height="7" rx="1" />
+  </svg>
+);
 
 // ==================== ANIMATED LOGO COMPONENT ====================
 // Landing page logo using the app icon image
