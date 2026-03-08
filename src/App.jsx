@@ -10619,6 +10619,24 @@ function AppContent() {
         </div>
       </div>
 
+      {/* Gold tile glow animations */}
+      <style>{`
+        .gold-tile-glow {
+          animation: goldPulse 3s ease-in-out infinite;
+        }
+        @keyframes goldPulse {
+          0%, 100% { filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
+          50% { filter: drop-shadow(0 0 8px rgba(212,175,55,0.6)); }
+        }
+        .gold-tile-shimmer {
+          animation: goldShimmer 4s ease-in-out infinite;
+        }
+        @keyframes goldShimmer {
+          0%, 100% { opacity: 0; }
+          50% { opacity: 1; }
+        }
+      `}</style>
+
       {/* Hero Heatmap Card */}
       <div className="max-w-4xl mx-auto px-2 sm:px-4">
         <div className="glass-panel rounded-3xl p-3 sm:p-6 md:p-10 shadow-glass card-hover">
@@ -10730,19 +10748,35 @@ function AppContent() {
                       aspectRatio: '1',
                       borderRadius: 4,
                       position: 'relative',
-                      overflow: 'hidden',
+                      overflow: 'visible',
                       opacity: tileOpacity,
                     }}
-                    className="w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95"
+                    className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMastered ? 'gold-tile-glow' : ''}`}
                   >
+                    {/* Gold outer glow for mastered tiles */}
+                    {isMastered && (
+                      <div style={{
+                        position: 'absolute', inset: -2, borderRadius: 6,
+                        boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
+                        pointerEvents: 'none', zIndex: 0,
+                      }} />
+                    )}
                     {/* Tile image */}
                     <img
                       src={TILE_IMAGES[level] || TILE_IMAGES[0]}
                       alt=""
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover relative z-[1]"
+                      style={{ borderRadius: 4, filter: isMastered ? 'brightness(1.15) saturate(1.2)' : 'none' }}
                       loading="lazy"
                       draggable={false}
                     />
+                    {/* Gold shimmer overlay for mastered tiles */}
+                    {isMastered && (
+                      <div className="gold-tile-shimmer" style={{
+                        position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
+                        background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
+                      }} />
+                    )}
                     {/* Gentle glow on recently practiced tiles (after celebration) */}
                     {recentSessionCodes.includes(obj.code) && (
                       <div className="heatmap-glow-afterpulse" style={{
@@ -10752,7 +10786,7 @@ function AppContent() {
                     )}
                     {/* Revisit indicator overlay */}
                     {needsRevisit && !isExamReady && (
-                      <span className="absolute inset-0 flex items-center justify-center bg-black/30">
+                      <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
                         <span className="text-[8px] text-white/70">↻</span>
                       </span>
                     )}
