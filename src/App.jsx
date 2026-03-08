@@ -25,24 +25,14 @@ const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
 
 // ==================== ANIMATED LOGO COMPONENT ====================
-// Landing page logo with squares that pulse/glow using CSS animations
+// Landing page logo using the app icon image
 const AnimatedLogo = () => {
-  const baseOpacities = [0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95];
-  const delays = [0, 0.8, 0.4, 1.2, 0.2, 1.0, 0.6, 1.4, 0.3]; // Staggered delays
-
   return (
-    <div className="grid grid-cols-3 gap-1.5 w-full h-full">
-      {baseOpacities.map((baseOpacity, i) => (
-        <div
-          key={i}
-          className="rounded-sm animate-logo-pulse"
-          style={{
-            backgroundColor: `rgba(176, 0, 83, ${baseOpacity})`,
-            animationDelay: `${delays[i]}s`,
-          }}
-        />
-      ))}
-    </div>
+    <img
+      src="/images/the-maths-habit-logo-hires.jpeg"
+      alt="The Maths Habit logo"
+      className="w-full h-full object-contain rounded-lg"
+    />
   );
 };
 
@@ -9245,13 +9235,11 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
             <button onClick={() => setCurrentPage('home')} className="flex items-center gap-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#8E0039] via-[#B00053] to-[#76235E] rounded-xl flex items-center justify-center p-1.5 shadow-glow-celebration group-hover:scale-105 transition-transform nav-logo">
-                <div className="grid grid-cols-3 gap-0.5 w-full h-full">
-                  {[0.3, 0.6, 0.9, 0.5, 0.2, 0.8, 0.7, 0.4, 0.95].map((opacity, i) => (
-                    <div key={i} className="rounded-sm" style={{ backgroundColor: `rgba(255,255,255,${opacity})` }} />
-                  ))}
-                </div>
-              </div>
+              <img
+                src="/images/the-maths-habit-logo-hires.jpeg"
+                alt="The Maths Habit logo"
+                className="w-10 h-10 rounded-xl shadow-glow-celebration group-hover:scale-105 transition-transform nav-logo object-cover"
+              />
               <span className="font-bold text-xl hidden sm:block gradient-text-celebration">The Maths Habit</span>
             </button>
 
@@ -9899,8 +9887,8 @@ function AppContent() {
           <div className="orb-pink w-52 h-52 top-10 -left-20 opacity-70 pointer-events-none" />
 
           <div className="max-w-md w-full text-center relative z-10">
-            {/* Animated Heatmap Logo */}
-            <div className="w-24 h-24 glass-panel-strong rounded-2xl flex items-center justify-center mx-auto mb-8 shadow-glow-violet p-3 animate-float">
+            {/* App Logo */}
+            <div className="w-24 h-24 rounded-2xl mx-auto mb-8 shadow-glow-violet animate-float overflow-hidden">
               <AnimatedLogo />
             </div>
 
