@@ -9240,7 +9240,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   return (
     <>
       {/* Desktop Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/10 top-nav-bar" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 12px)' }}>
         <div className="max-w-4xl mx-auto px-4 h-full">
           <div className="flex items-center justify-between h-full">
             {/* Logo */}
@@ -10669,8 +10669,8 @@ function AppContent() {
           </div>
 
           {/* Mastery Level Legend - Top */}
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
-            <span className="text-xs text-secondary-text mr-1">Progress:</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
+            <span className="text-sm text-secondary-text mr-1">Progress:</span>
             {[
               { level: 0, label: 'New' },
               { level: 1, label: 'Started' },
@@ -10679,9 +10679,9 @@ function AppContent() {
               { level: 4, label: 'Exam ready' },
               { level: 5, label: 'Mastered' },
             ].map(({ level, label }) => (
-              <div key={level} className="flex items-center gap-1.5">
-                <img src={TILE_IMAGES[level]} alt={label} className="w-4 h-4 rounded-sm object-cover" />
-                <span className="text-xs text-secondary-text">{label}</span>
+              <div key={level} className="flex items-center gap-2">
+                <img src={TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
+                <span className="text-sm text-secondary-text">{label}</span>
               </div>
             ))}
           </div>
@@ -10796,26 +10796,6 @@ function AppContent() {
             </div>
           </div>
 
-          {/* Legend - Tile Icons */}
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <div className="flex flex-wrap justify-center gap-4 text-xs text-secondary-text">
-              <div className="flex items-center gap-2">
-                <img src={TILE_IMAGES[5]} alt="Mastered" style={{ width: 20, height: 20, borderRadius: 3 }} className="object-cover" />
-                <span>Mastered</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <img src={TILE_IMAGES[4]} alt="Nearly there" style={{ width: 20, height: 20, borderRadius: 3 }} className="object-cover" />
-                <span>Nearly there</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <img src={TILE_IMAGES[0]} alt="Needs revisit" style={{ width: 20, height: 20, borderRadius: 3, opacity: 0.6 }} className="object-cover" />
-                <span>Needs revisit</span>
-              </div>
-            </div>
-            <p className="text-center text-[10px] text-secondary-text/60 mt-2">
-              Gems fade when topics haven't been practiced recently
-            </p>
-          </div>
           </div>
         </div>
       </div>
