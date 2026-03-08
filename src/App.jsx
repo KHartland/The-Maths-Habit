@@ -738,7 +738,7 @@ const TILE_IMAGES = {
   0: '/images/tiles/stone-tile.jpeg',     // Grey stone (not started)
   1: '/images/tiles/teal-gem.jpeg',       // Teal gem (started)
   2: '/images/tiles/purple-gem.jpeg',     // Purple gem (learning)
-  3: '/images/tiles/magenta-gem.jpeg',    // Magenta gem (confident)
+  3: '/images/tiles/magenta-jem.jpeg',    // Magenta gem (confident)
   4: '/images/tiles/crimson-gem.jpeg',    // Crimson gem (exam ready)
   5: '/images/tiles/gold-tile.jpeg',      // Gold pi tile (mastered)
 };
