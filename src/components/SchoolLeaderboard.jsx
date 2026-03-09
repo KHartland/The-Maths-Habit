@@ -67,12 +67,12 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-[#FBBF24]" />
-            <h3 className="font-bold text-primary-text">{schoolName}</h3>
+            <h3 className="font-bold text-white">{schoolName}</h3>
             <span className="text-xs text-secondary-text">({memberCount} {memberCount === 1 ? 'member' : 'members'})</span>
           </div>
           <button
             onClick={fetchLeaderboard}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             title="Refresh"
           >
             <RefreshCw className="w-4 h-4 text-secondary-text" />
@@ -101,7 +101,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
                 isCurrentUser
                   ? 'bg-metallic-base/15 border border-metallic-base/30'
-                  : 'bg-gray-50 hover:bg-gray-100'
+                  : 'bg-white/5 hover:bg-white/10'
               }`}
             >
               {/* Rank */}
@@ -141,7 +141,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
 
               <div className="flex-1 min-w-0">
                 <span className={`text-sm font-medium truncate block ${
-                  isCurrentUser ? 'text-metallic-base' : 'text-primary-text'
+                  isCurrentUser ? 'text-metallic-base' : 'text-white/90'
                 }`}>
                   {sanitiseName(entry.displayName)}
                   {isCurrentUser && <span className="text-xs text-secondary-text ml-1">(you)</span>}
@@ -151,7 +151,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
               {/* Score */}
               <div className="text-right flex-shrink-0">
                 <span className={`text-sm font-bold ${
-                  entry.rank === 1 ? 'text-[#FBBF24]' : 'text-primary-text'
+                  entry.rank === 1 ? 'text-[#FBBF24]' : 'text-white/90'
                 }`}>
                   {entry.totalCorrect}
                 </span>
