@@ -11,7 +11,7 @@ import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
-import { supabase } from './lib/supabase';
+import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
@@ -7022,9 +7022,24 @@ What is the student's answer?`
 
         // Increment total_correct in profiles for school leaderboard
         if (correctCount > 0) {
-          supabase.rpc('increment_total_correct', { p_user_id: practiceUser.id, p_amount: correctCount }).catch(err => {
-            console.error('Failed to update leaderboard score:', err);
-          });
+          try {
+            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+            const raw = localStorage.getItem(storageKey);
+            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+            fetch(`${supabaseUrl}/rest/v1/rpc/increment_total_correct`, {
+              method: 'POST',
+              headers: {
+                'apikey': supabaseAnonKey,
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ p_user_id: practiceUser.id, p_amount: correctCount }),
+            }).then(res => {
+              if (!res.ok) res.text().then(t => console.error('Leaderboard update failed:', t));
+            }).catch(err => console.error('Leaderboard update error:', err));
+          } catch (e) {
+            console.error('Leaderboard token error:', e);
+          }
         }
       }
 
@@ -8084,19 +8099,31 @@ What is the student's answer?`
                     onClick={async () => {
                       const current = sessionQueue[currentIndex];
                       try {
-                        await supabase.from('question_reports').insert({
-                          question_code: current?.code || null,
-                          question_text: current?.q || null,
-                          expected_answer: String(current?.a ?? ''),
-                          difficulty_level: current?.difficultyLevel || null,
-                          tier: current?.tier || null,
-                          issue_type: option.value,
-                          user_id: practiceUser?.id || null,
+                        const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+                        const raw = localStorage.getItem(storageKey);
+                        const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+                        await fetch(`${supabaseUrl}/rest/v1/question_reports`, {
+                          method: 'POST',
+                          headers: {
+                            'apikey': supabaseAnonKey,
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                            'Prefer': 'return=minimal',
+                          },
+                          body: JSON.stringify({
+                            question_code: current?.code || null,
+                            question_text: current?.q || null,
+                            expected_answer: String(current?.a ?? ''),
+                            difficulty_level: current?.difficultyLevel || null,
+                            tier: current?.tier || null,
+                            issue_type: option.value,
+                            user_id: practiceUser?.id || null,
+                          }),
                         });
                         setReportSent(true);
                       } catch (err) {
                         console.error('Report failed:', err);
-                        setReportSent(true); // Still show success to not frustrate students
+                        setReportSent(true);
                       }
                     }}
                     className="w-full text-left px-4 py-3 mb-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-400/30 text-white/80 text-sm transition-all"
