@@ -293,7 +293,7 @@ const HandwritingInput = ({
           <button
             onClick={handleUndo}
             disabled={strokes.length === 0}
-            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 text-gray-500"
             title="Undo"
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -301,7 +301,7 @@ const HandwritingInput = ({
           <button
             onClick={handleClear}
             disabled={strokes.length === 0}
-            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30"
+            className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-30 text-gray-500"
             title="Clear"
           >
             <Eraser className="w-3.5 h-3.5" />
