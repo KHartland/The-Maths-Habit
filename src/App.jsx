@@ -8,7 +8,7 @@ import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
-import { checkProfanity, sanitiseName } from './lib/profanityFilter';
+import { checkProfanity, sanitiseName } from './lib/profanityFilter';å
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
@@ -7034,8 +7034,31 @@ What is the student's answer?`
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify({ p_user_id: practiceUser.id, p_amount: correctCount }),
-            }).then(res => {
-              if (!res.ok) res.text().then(t => console.error('Leaderboard update failed:', t));
+            }).then(async (res) => {
+              if (!res.ok) { res.text().then(t => console.error('Leaderboard update failed:', t)); return; }
+              // Check if user is now #1 on school leaderboard → dragon naming reward
+              if (userSchool && !profile?.piro_name) {
+                try {
+                  const lbRes = await fetch(`${supabaseUrl}/rest/v1/rpc/get_school_leaderboard`, {
+                    method: 'POST',
+                    headers: {
+                      'apikey': supabaseAnonKey,
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ p_school_id: userSchool.id }),
+                  });
+                  if (lbRes.ok) {
+                    const leaderboard = await lbRes.json();
+                    if (leaderboard.length > 0 && leaderboard[0].user_id === practiceUser.id) {
+                      // They're #1! Show the naming modal
+                      setShowPiroNaming(true);
+                    }
+                  }
+                } catch (lbErr) {
+                  console.error('Leaderboard rank check error:', lbErr);
+                }
+              }
             }).catch(err => console.error('Leaderboard update error:', err));
           } catch (e) {
             console.error('Leaderboard token error:', e);
@@ -10000,6 +10023,10 @@ function AppContent() {
   const [piro, setPiro] = useState(() => loadPiro());
   const [piroEvolution, setPiroEvolution] = useState(null); // { oldStage, newStage } when evolution happens
   const [piroDecayed, setPiroDecayed] = useState(false); // Show decay warning
+  const [showPiroNaming, setShowPiroNaming] = useState(false); // First place reward: name your dragon
+  const [piroCustomName, setPiroCustomName] = useState('');
+  const [piroNamingSaving, setPiroNamingSaving] = useState(false);
+  const [piroNamingError, setPiroNamingError] = useState('');
   const [showNamePrompt, setShowNamePrompt] = useState(false);
   const [promptDisplayName, setPromptDisplayName] = useState('');
   const [promptNameSaving, setPromptNameSaving] = useState(false);
@@ -10634,6 +10661,147 @@ function AppContent() {
     );
   }
 
+  // ==================== PIRO NAMING MODAL (First Place Reward) ====================
+  const handlePiroNamingSave = async () => {
+    const trimmed = piroCustomName.trim();
+    if (!trimmed) { setPiroNamingError('Give your dragon a name!'); return; }
+    if (trimmed.length < 2) { setPiroNamingError('Name must be at least 2 characters'); return; }
+    if (trimmed.length > 20) { setPiroNamingError('Name must be 20 characters or less'); return; }
+    const profanityResult = checkProfanity(trimmed);
+    if (!profanityResult.clean) { setPiroNamingError(profanityResult.reason || 'That name is not allowed'); return; }
+
+    setPiroNamingSaving(true);
+    setPiroNamingError('');
+    try {
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ piro_name: trimmed }),
+      });
+
+      if (!res.ok) throw new Error('Failed to save dragon name');
+      await refreshProfile();
+      setShowPiroNaming(false);
+      setPiroCustomName('');
+    } catch (err) {
+      console.error('Piro naming save error:', err);
+      setPiroNamingError('Could not save name. Try again.');
+    } finally {
+      setPiroNamingSaving(false);
+    }
+  };
+
+  if (showPiroNaming) {
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+        <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+
+        {/* Celebration confetti */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          {[...Array(30)].map((_, i) => {
+            const colors = ['#D4AF37', '#ec4899', '#8B5CF6', '#38E6A2', '#F59E0B'];
+            const color = colors[i % colors.length];
+            const left = Math.random() * 100;
+            const delay = Math.random() * 3;
+            const duration = 3 + Math.random() * 2;
+            return (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: color,
+                  left: `${left}%`,
+                  top: '-10px',
+                  animation: `tileFall ${duration}s ${delay}s ease-in-out infinite`,
+                  opacity: 0.7,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          {/* Dragon trophy image */}
+          <div className="w-32 h-32 mx-auto mb-4">
+            <img
+              src="/images/dragontrophy.png"
+              alt="Dragon Trophy"
+              className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+              onError={(e) => {
+                // Fallback to icon if image not found
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>';
+              }}
+            />
+          </div>
+
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-2">
+            You're #1!
+          </h2>
+          <p className="text-secondary-text text-sm mb-1">
+            You've reached the top of your school leaderboard!
+          </p>
+          <p className="text-white font-medium mb-6">
+            As a reward, you can name your dragon.
+          </p>
+
+          {/* Dragon preview */}
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden piro-idle">
+            <PiroMedia display={getPiroDisplay(piro)} className="w-full h-full object-cover rounded-2xl" />
+          </div>
+
+          <input
+            type="text"
+            value={piroCustomName}
+            onChange={(e) => { setPiroCustomName(e.target.value); setPiroNamingError(''); }}
+            placeholder="Name your dragon..."
+            maxLength={20}
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-500/30 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !piroNamingSaving) handlePiroNamingSave(); }}
+          />
+
+          {piroNamingError && (
+            <p className="text-red-400 text-xs mt-2">{piroNamingError}</p>
+          )}
+
+          <button
+            onClick={handlePiroNamingSave}
+            disabled={piroNamingSaving || !piroCustomName.trim()}
+            className="mt-5 w-full py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {piroNamingSaving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
+            ) : (
+              <><Star className="w-4 h-4" /> Name My Dragon</>
+            )}
+          </button>
+
+          <button
+            onClick={() => { setShowPiroNaming(false); setPiroCustomName(''); }}
+            className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
+          >
+            Maybe later
+          </button>
+
+          <p className="text-white/30 text-xs mt-3">{piroCustomName.trim().length}/20 characters</p>
+        </div>
+      </div>
+    );
+  }
+
   // ==================== NAME PROMPT MODAL ====================
   // Blocks users without a display name until they add one
   const handleNamePromptSave = async () => {
@@ -11049,7 +11217,7 @@ function AppContent() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
           <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
             <div className="text-6xl mb-4">🐉</div>
-            <h2 className="text-2xl font-bold text-primary-text mb-2">Piro Evolved!</h2>
+            <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
             <p className="text-secondary-text mb-4">
               {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
             </p>
@@ -11081,7 +11249,7 @@ function AppContent() {
             {/* Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h2 className="text-lg sm:text-xl font-bold text-primary-text">Piro</h2>
+                <h2 className="text-lg sm:text-xl font-bold text-primary-text">{profile?.piro_name || 'Piro'}</h2>
                 <span className={`text-xs px-2 py-0.5 rounded-full ${piro.dead ? 'bg-red-900/30 text-red-500' : piro.dying ? 'bg-red-800/20 text-red-400' : piro.decayed ? 'bg-[#8F0000]/20 text-[#8F0000]' : 'bg-white/10 text-secondary-text'}`}>
                   {getPiroDisplay(piro).name}
                 </span>
