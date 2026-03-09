@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
@@ -1734,20 +1734,21 @@ const PiroMedia = ({ display, className = '' }) => {
 };
 
 // Get progress toward next evolution
-const getPiroProgress = (piro) => {
+const getPiroProgress = (piro, currentStreak) => {
   const currentStageIdx = piro.stage;
   if (currentStageIdx >= PIRO_STAGES.length - 1) {
     return { needed: 0, total: 0, progress: 1, nextName: null }; // Max stage (Legendary)
   }
+  const streak = currentStreak ?? piro.highestStreak; // Use current streak if provided
   const nextStage = PIRO_STAGES[currentStageIdx + 1];
   const currentThreshold = PIRO_STAGES[currentStageIdx].minStreak;
   const nextThreshold = nextStage.minStreak;
   const range = nextThreshold - currentThreshold;
-  const progressInRange = piro.highestStreak - currentThreshold;
+  const progressInRange = streak - currentThreshold;
   return {
-    needed: nextThreshold - piro.highestStreak,
+    needed: nextThreshold - streak,
     total: range,
-    progress: Math.min(1, progressInRange / range),
+    progress: Math.min(1, Math.max(0, progressInRange / range)),
     nextName: nextStage.name,
   };
 };
@@ -1755,7 +1756,7 @@ const getPiroProgress = (piro) => {
 // Near-miss nudge messages
 const getPiroNudge = (piro, dayStreak, todayQuestions, dailyGoal) => {
   const display = getPiroDisplay(piro);
-  const progressInfo = getPiroProgress(piro);
+  const progressInfo = getPiroProgress(piro, dayStreak);
 
   // Dead - game over
   if (display.isDead) {
@@ -2638,11 +2639,11 @@ const questionBank = {
       { q: "Work out 2/5 + 1/10", a: "1/2", worked: ["Common denominator is 10", "2/5 = 4/10", "4/10 + 1/10 = 5/10 = 1/2"] },
       { q: "Work out 5/6 − 1/3", a: "1/2", worked: ["Common denominator is 6", "1/3 = 2/6", "5/6 − 2/6 = 3/6 = 1/2"] },
     ],
-    // Level 1 (2 marks) — Square root of a mixed number (N5)
+    // Level 1 (2 marks) — Square roots and squares (N5)
     [
       { q: "A square garden has an area of 144 m². Find the length of one side.", a: "12", worked: ["Side² = 144", "Side = √144 = 12 m"] },
-      { q: "Find the square root of 1 7/9", a: "4/3", worked: ["Convert: 1 7/9 = 16/9", "√(16/9) = √16 ÷ √9 = 4 ÷ 3 = 4/3"] },
-      { q: "Find the square root of 6 1/4", a: "2.5", worked: ["Convert: 6 1/4 = 25/4", "√(25/4) = 5/2 = 2.5"] },
+      { q: "A square has an area of 64 cm². What is the length of one side?", a: "8", worked: ["Side² = 64", "Side = √64 = 8 cm"] },
+      { q: "Work out √81 + √25", a: "14", worked: ["√81 = 9", "√25 = 5", "9 + 5 = 14"] },
     ],
     // Level 2 (3 marks) — Simple interest (N13)
     [
@@ -3786,7 +3787,7 @@ questionBank['N5'][0].push(
   { q: "Work out 1/3 + 1/6", a: "1/2", worked: ["Common denominator is 6", "1/3 = 2/6", "2/6 + 1/6 = 3/6 = 1/2"] },
 );
 questionBank['N5'][1].push(
-  { q: "Find the square root of 2 1/4", a: "1.5", worked: ["Convert: 2 1/4 = 9/4", "√(9/4) = √9 ÷ √4 = 3 ÷ 2 = 1.5"] },
+  { q: "A square tile has an area of 196 cm². What is the length of one side?", a: "14", worked: ["Side² = 196", "Side = √196 = 14 cm"] },
 );
 questionBank['N5'][2].push(
   { q: "A savings account pays 5% simple interest per year. If £1000 is deposited, how much interest is earned after 3 years?", a: "150", worked: ["Interest per year: 5% of £1000 = 0.05 × £1000 = £50", "Interest after 3 years: £50 × 3 = £150"] },
@@ -6447,6 +6448,8 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [userAnswer, setUserAnswer] = useState('');
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(null);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportSent, setReportSent] = useState(false);
   const [sessionResults, setSessionResults] = useState([]);
   const [questionCount, setQuestionCount] = useState(() => {
     const requested = settings?.questionsPerSession ?? 5;
@@ -6987,6 +6990,8 @@ What is the student's answer?`
       setUserConfidence(null);
       setShowConfidenceRating(false);
       setShowDelayedFeedback(false);
+      setShowReportModal(false);
+      setReportSent(false);
 
       setCurrentIndex(prev => prev + 1);
       // Restart timer for Quick Fire mode
@@ -7453,6 +7458,15 @@ What is the student's answer?`
                 <span className="text-xs font-bold text-mint shrink-0">
                   {sessionResults.filter(r => r.correct).length}✓
                 </span>
+
+                {/* Report flag */}
+                <button
+                  onClick={() => { setShowReportModal(true); setReportSent(false); }}
+                  className="shrink-0 p-1 rounded-lg hover:bg-white/10 transition-colors"
+                  title="Report an issue with this question"
+                >
+                  <Flag className="w-4 h-4 text-red-400" />
+                </button>
               </div>
 
               {/* Question content */}
@@ -8022,7 +8036,69 @@ What is the student's answer?`
           )}
         </div>
       </div>
-      
+
+      {/* Report Question Modal */}
+      {showReportModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowReportModal(false)}>
+          <div className="bg-[#1a1a2e] border border-white/10 rounded-2xl p-6 w-full max-w-sm" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Flag className="w-5 h-5 text-red-400" />
+                <h3 className="text-lg font-bold text-white">Report Question</h3>
+              </div>
+              <button onClick={() => setShowReportModal(false)} className="p-1 rounded-lg hover:bg-white/10">
+                <X className="w-5 h-5 text-white/60" />
+              </button>
+            </div>
+
+            {reportSent ? (
+              <div className="text-center py-4">
+                <div className="text-3xl mb-2">✅</div>
+                <p className="text-white/80 text-sm">Thanks for reporting! We'll review this question.</p>
+                <button
+                  onClick={() => setShowReportModal(false)}
+                  className="mt-4 px-6 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <>
+                <p className="text-white/60 text-sm mb-4">What's wrong with this question?</p>
+                {[
+                  { label: '❌ Wrong answer shown', value: 'Wrong answer' },
+                  { label: '😕 Question is unclear', value: 'Question unclear' },
+                  { label: '📐 Wrong topic or tier', value: 'Wrong topic/tier' },
+                  { label: '🐛 Other issue', value: 'Other issue' },
+                ].map(option => (
+                  <button
+                    key={option.value}
+                    onClick={() => {
+                      const current = sessionQueue[currentIndex];
+                      const subject = encodeURIComponent(`Question Report: ${current?.code || 'Unknown'} — ${option.value}`);
+                      const body = encodeURIComponent(
+                        `Issue: ${option.value}\n\n` +
+                        `Question Code: ${current?.code || 'N/A'}\n` +
+                        `Question: ${current?.q || 'N/A'}\n` +
+                        `Expected Answer: ${current?.a ?? 'N/A'}\n` +
+                        `Difficulty Level: ${current?.difficultyLevel || 'N/A'}\n` +
+                        `Tier: ${current?.tier || 'N/A'}\n\n` +
+                        `Additional notes:\n`
+                      );
+                      window.open(`mailto:info@themathshabit.co.uk?subject=${subject}&body=${body}`, '_blank');
+                      setReportSent(true);
+                    }}
+                    className="w-full text-left px-4 py-3 mb-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-400/30 text-white/80 text-sm transition-all"
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
@@ -10777,7 +10853,7 @@ function AppContent() {
 
               {/* Streak Progress Bar */}
               {(() => {
-                const progressInfo = getPiroProgress(piro);
+                const progressInfo = getPiroProgress(piro, dayStreak);
                 const isMaxStage = piro.stage >= PIRO_STAGES.length - 1;
                 return (
                   <div className="mb-2">
