@@ -11,6 +11,7 @@ import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
+import { supabase } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
@@ -8073,20 +8074,23 @@ What is the student's answer?`
                 ].map(option => (
                   <button
                     key={option.value}
-                    onClick={() => {
+                    onClick={async () => {
                       const current = sessionQueue[currentIndex];
-                      const subject = encodeURIComponent(`Question Report: ${current?.code || 'Unknown'} — ${option.value}`);
-                      const body = encodeURIComponent(
-                        `Issue: ${option.value}\n\n` +
-                        `Question Code: ${current?.code || 'N/A'}\n` +
-                        `Question: ${current?.q || 'N/A'}\n` +
-                        `Expected Answer: ${current?.a ?? 'N/A'}\n` +
-                        `Difficulty Level: ${current?.difficultyLevel || 'N/A'}\n` +
-                        `Tier: ${current?.tier || 'N/A'}\n\n` +
-                        `Additional notes:\n`
-                      );
-                      window.open(`mailto:info@themathshabit.co.uk?subject=${subject}&body=${body}`, '_blank');
-                      setReportSent(true);
+                      try {
+                        await supabase.from('question_reports').insert({
+                          question_code: current?.code || null,
+                          question_text: current?.q || null,
+                          expected_answer: String(current?.a ?? ''),
+                          difficulty_level: current?.difficultyLevel || null,
+                          tier: current?.tier || null,
+                          issue_type: option.value,
+                          user_id: practiceUser?.id || null,
+                        });
+                        setReportSent(true);
+                      } catch (err) {
+                        console.error('Report failed:', err);
+                        setReportSent(true); // Still show success to not frustrate students
+                      }
                     }}
                     className="w-full text-left px-4 py-3 mb-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-red-400/30 text-white/80 text-sm transition-all"
                   >
