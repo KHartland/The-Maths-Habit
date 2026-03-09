@@ -7019,6 +7019,13 @@ What is the student's answer?`
       if (practiceUser) {
         const todayKey = getTodayKey();
         saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
+
+        // Increment total_correct in profiles for school leaderboard
+        if (correctCount > 0) {
+          supabase.rpc('increment_total_correct', { p_user_id: practiceUser.id, p_amount: correctCount }).catch(err => {
+            console.error('Failed to update leaderboard score:', err);
+          });
+        }
       }
 
       // Check for streak milestones (earns freezes)
