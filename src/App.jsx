@@ -10002,16 +10002,6 @@ function AppContent() {
               <span className="text-violet-light">Every square counts.</span>
             </p>
 
-            {/* Trust indicators */}
-            <div className="flex justify-center gap-6 mb-10 text-secondary-text text-sm">
-              <div className="flex items-center gap-1.5">
-                <span className="text-mint">✓</span> 90+ objectives
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-mint">✓</span> AI-powered learning
-              </div>
-            </div>
-
             <button
               onClick={() => { setOnboardingAuthMode('signup'); setOnboardingStep(2); }}
               className="w-full py-5 btn-gradient-mint font-bold text-xl rounded-2xl transition-all active:scale-[0.98]"
