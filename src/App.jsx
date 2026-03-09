@@ -7115,7 +7115,31 @@ What is the student's answer?`
       const daysMissed = updatedStreak.streak > 0 ? 0 :
         updatedStreak.needsRepair ? 2 : 1;
       const piroResult = updatePiro(updatedStreak.streak, daysMissed);
-      setPiro(loadPiro());
+      const updatedPiro = loadPiro();
+      setPiro(updatedPiro);
+
+      // Sync Piro stage to cloud for leaderboard
+      if (practiceUser) {
+        const piroDisplay = getPiroDisplay(updatedPiro);
+        const stageName = piroDisplay.name || 'Egg';
+        try {
+          const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+          const raw = localStorage.getItem(storageKey);
+          const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+          fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${practiceUser.id}`, {
+            method: 'PATCH',
+            headers: {
+              'apikey': supabaseAnonKey,
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal',
+            },
+            body: JSON.stringify({ piro_stage: stageName }),
+          }).catch(err => console.error('Piro stage sync error:', err));
+        } catch (e) {
+          console.error('Piro stage token error:', e);
+        }
+      }
       if (piroResult.evolved) {
         setPiroEvolution({ oldStage: piroResult.oldStage, newStage: piroResult.newStage });
       }
@@ -8464,6 +8488,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [newSchoolName, setNewSchoolName] = useState('');
   const [newSchoolTown, setNewSchoolTown] = useState('');
   const [summaryStatus, setSummaryStatus] = useState(''); // '', 'copied', 'shared'
+  const [editingName, setEditingName] = useState(false);
+  const [newDisplayName, setNewDisplayName] = useState('');
+  const [nameSaving, setNameSaving] = useState(false);
+  const [nameError, setNameError] = useState('');
   
   // Generate plain-English weekly summary for teachers/parents
   const generateWeeklySummary = () => {
@@ -8781,7 +8809,15 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       )}
                     </div>
                     <div>
-                      <div className="font-medium text-white">{profile?.display_name || 'User'}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="font-medium text-white">{profile?.display_name || 'Anonymous'}</div>
+                        <button
+                          onClick={() => { setEditingName(true); setNewDisplayName(profile?.display_name || ''); setNameError(''); }}
+                          className="text-xs text-violet-light hover:text-white transition-colors"
+                        >
+                          {profile?.display_name ? 'Edit' : 'Add name'}
+                        </button>
+                      </div>
                       <div className="text-sm text-secondary-text">{user.email}</div>
                       {isSubscribed && (
                         <div className="flex items-center gap-2 mt-1">
@@ -8832,6 +8868,70 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     Sign out
                   </button>
                 </div>
+
+                {/* Edit display name */}
+                {editingName && (
+                  <div className="p-4 bg-white/5 rounded-xl border border-violet/30">
+                    <label className="text-sm text-secondary-text block mb-2">Display name (visible on leaderboard)</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newDisplayName}
+                        onChange={(e) => setNewDisplayName(e.target.value)}
+                        placeholder="Enter your name..."
+                        maxLength={20}
+                        className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-xl text-white text-sm placeholder-white/30 focus:outline-none focus:border-violet/50"
+                      />
+                      <button
+                        disabled={nameSaving || !newDisplayName.trim()}
+                        onClick={async () => {
+                          const trimmed = newDisplayName.trim();
+                          if (!trimmed) return;
+                          const profanityCheck = checkProfanity(trimmed);
+                          if (profanityCheck.isProfane) {
+                            setNameError('That name is not allowed. Please choose another.');
+                            return;
+                          }
+                          setNameSaving(true);
+                          setNameError('');
+                          try {
+                            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+                            const raw = localStorage.getItem(storageKey);
+                            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+                            const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
+                              method: 'PATCH',
+                              headers: {
+                                'apikey': supabaseAnonKey,
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json',
+                                'Prefer': 'return=minimal',
+                              },
+                              body: JSON.stringify({ display_name: sanitiseName(trimmed) }),
+                            });
+                            if (!res.ok) throw new Error('Failed to save');
+                            await refreshProfile();
+                            setEditingName(false);
+                          } catch (err) {
+                            console.error('Name update failed:', err);
+                            setNameError('Failed to save. Please try again.');
+                          } finally {
+                            setNameSaving(false);
+                          }
+                        }}
+                        className="px-4 py-2 btn-gradient-mint text-void font-semibold rounded-xl text-sm disabled:opacity-40"
+                      >
+                        {nameSaving ? '...' : 'Save'}
+                      </button>
+                      <button
+                        onClick={() => setEditingName(false)}
+                        className="px-3 py-2 text-secondary-text hover:text-white text-sm transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    {nameError && <p className="text-red-400 text-xs mt-2">{nameError}</p>}
+                  </div>
+                )}
 
                 {/* Subscription status */}
                 <div className="flex items-center justify-between p-4 bg-violet/20 rounded-xl border border-violet/30">
