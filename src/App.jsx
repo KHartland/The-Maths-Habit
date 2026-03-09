@@ -7139,17 +7139,17 @@ What is the student's answer?`
         practicedObjectives,
       });
 
-      // Navigate to home — celebration overlay will show immediately
+      // Navigate to Journey page so students see their updated progress
       setSessionResults([]);
       setSessionStarted(false);
-      setCurrentPage('home');
+      setCurrentPage('heatmap');
       } catch (err) {
         console.error('Session complete error:', err);
-        // Ensure we still navigate home even if stats fail
+        // Ensure we still navigate even if stats fail
         setShowFeedback(false);
         setSessionResults([]);
         setSessionStarted(false);
-        setCurrentPage('home');
+        setCurrentPage('heatmap');
       }
     }
   };
@@ -7283,10 +7283,10 @@ What is the student's answer?`
                   View Progress Stats
                 </button>
                 <button
-                  onClick={() => { setSessionResults([]); setCurrentPage('home'); }}
+                  onClick={() => { setSessionResults([]); setCurrentPage('heatmap'); }}
                   className="w-full py-2 text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors"
                 >
-                  Back to Home
+                  View Journey
                 </button>
               </div>
             </div>
