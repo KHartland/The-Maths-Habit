@@ -9565,6 +9565,13 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         if (error) throw error;
         onSuccess();
       } else {
+        // Require a display name
+        if (!displayName.trim()) {
+          throw new Error('Please enter a display name');
+        }
+        if (displayName.trim().length < 2) {
+          throw new Error('Display name must be at least 2 characters');
+        }
         // Check display name for profanity
         const profanityCheck = checkProfanity(displayName);
         if (!profanityCheck.clean) {
@@ -9930,7 +9937,7 @@ function PromoCodeInput({ onSuccess }) {
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="e.g. MATHS2026"
+          placeholder="e.g. ABC-1234"
           className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
@@ -9993,6 +10000,10 @@ function AppContent() {
   const [piro, setPiro] = useState(() => loadPiro());
   const [piroEvolution, setPiroEvolution] = useState(null); // { oldStage, newStage } when evolution happens
   const [piroDecayed, setPiroDecayed] = useState(false); // Show decay warning
+  const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [promptDisplayName, setPromptDisplayName] = useState('');
+  const [promptNameSaving, setPromptNameSaving] = useState(false);
+  const [promptNameError, setPromptNameError] = useState('');
 
   // 1v1 daily limit for free users (1 per day)
   const FREE_1V1_LIMIT = 1;
@@ -10023,8 +10034,16 @@ function AppContent() {
     incrementDailyQuestions,
     isSubscribed,
     dailyQuestionsUsed,
-    FREE_DAILY_LIMIT
+    FREE_DAILY_LIMIT,
+    refreshProfile
   } = useAuth();
+
+  // Prompt users without a display name to add one
+  useEffect(() => {
+    if (user && !authLoading && profile && !profile.display_name && !showOnboarding) {
+      setShowNamePrompt(true);
+    }
+  }, [user, authLoading, profile, showOnboarding]);
 
   // Sync data when user logs in
   useEffect(() => {
@@ -10612,6 +10631,95 @@ function AppContent() {
         onClose={() => setShowOneVsOne(false)}
         answersEquivalent={answersEquivalent}
       />
+    );
+  }
+
+  // ==================== NAME PROMPT MODAL ====================
+  // Blocks users without a display name until they add one
+  const handleNamePromptSave = async () => {
+    const trimmed = promptDisplayName.trim();
+    if (!trimmed) { setPromptNameError('Please enter a display name'); return; }
+    if (trimmed.length < 2) { setPromptNameError('Name must be at least 2 characters'); return; }
+    if (trimmed.length > 20) { setPromptNameError('Name must be 20 characters or less'); return; }
+    if (checkProfanity(trimmed)) { setPromptNameError('That name is not allowed'); return; }
+
+    setPromptNameSaving(true);
+    setPromptNameError('');
+    try {
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ display_name: trimmed }),
+      });
+
+      if (!res.ok) throw new Error('Failed to save name');
+      await refreshProfile();
+      setShowNamePrompt(false);
+      setPromptDisplayName('');
+    } catch (err) {
+      console.error('Name prompt save error:', err);
+      setPromptNameError('Could not save name. Try again.');
+    } finally {
+      setPromptNameSaving(false);
+    }
+  };
+
+  if (showNamePrompt) {
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-5 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-glow-violet">
+            <User className="w-8 h-8 text-white" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-white mb-2">Choose a display name</h2>
+          <p className="text-secondary-text text-sm mb-6">
+            This will show on the school leaderboard and in battles. You can change it later in Settings.
+          </p>
+
+          <input
+            type="text"
+            value={promptDisplayName}
+            onChange={(e) => { setPromptDisplayName(e.target.value); setPromptNameError(''); }}
+            placeholder="Enter your name..."
+            maxLength={20}
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !promptNameSaving) handleNamePromptSave(); }}
+          />
+
+          {promptNameError && (
+            <p className="text-red-400 text-xs mt-2">{promptNameError}</p>
+          )}
+
+          <button
+            onClick={handleNamePromptSave}
+            disabled={promptNameSaving || !promptDisplayName.trim()}
+            className="mt-5 w-full py-3 btn-gradient-mint text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {promptNameSaving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
+            ) : (
+              <><Check className="w-4 h-4" /> Continue</>
+            )}
+          </button>
+
+          <p className="text-white/30 text-xs mt-3">{promptDisplayName.trim().length}/20 characters</p>
+        </div>
+      </div>
     );
   }
 
