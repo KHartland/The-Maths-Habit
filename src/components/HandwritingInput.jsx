@@ -176,6 +176,9 @@ const HandwritingInput = ({
         exportCtx.drawImage(canvas, 0, 0);
         const imageData = exportCanvas.toDataURL('image/png');
 
+        // Log Mathpix API call for monitoring (dev only)
+        if (import.meta.env.DEV) console.log('[Mathpix] API call triggered', { timestamp: new Date().toISOString() });
+
         // Send image to Mathpix text endpoint
         const response = await fetch('https://api.mathpix.com/v3/text', {
           method: 'POST',

@@ -351,6 +351,7 @@ export const AuthProvider = ({ children }) => {
     dailyQuestionsUsed,
     FREE_DAILY_LIMIT,
     isSubscribed: profile?.subscription_status === 'active',
+    isHandwritingEnabled: true, // Feature flag: set to profile?.subscription_status === 'active' when ready to gate
     refreshProfile: () => user?.id ? fetchProfile(user.id) : null,
   };
 

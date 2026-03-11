@@ -183,7 +183,7 @@ export const migrateLocalToCloud = async (userId) => {
       }
     }
 
-    console.log('Migration to cloud complete!');
+    if (import.meta.env.DEV) console.log('Migration to cloud complete!');
     return { success: true };
   } catch (error) {
     console.error('Migration error:', error);
@@ -254,7 +254,7 @@ export const loadFromCloud = async (userId) => {
       const existingStreak = JSON.parse(localStorage.getItem(STREAK_DATA_KEY) || '{}');
       if (existingStreak.repairNeeded === false && cloudStreak.repairNeeded === true) {
         // Local repair completion hasn't synced yet — keep local state
-        console.log('Keeping local streak data (repair completed locally, cloud stale)');
+        if (import.meta.env.DEV) console.log('Keeping local streak data (repair completed locally, cloud stale)');
       } else {
         localStorage.setItem(STREAK_DATA_KEY, JSON.stringify(cloudStreak));
       }
@@ -312,7 +312,7 @@ export const loadFromCloud = async (userId) => {
                      !!settingsRow ||
                      (dailyRows && dailyRows.length > 0);
 
-    console.log('Loaded data from cloud!', hasData ? '(found data)' : '(empty)');
+    if (import.meta.env.DEV) console.log('Loaded data from cloud!', hasData ? '(found data)' : '(empty)');
     return { success: true, hasData };
   } catch (error) {
     console.error('Load from cloud error:', error);

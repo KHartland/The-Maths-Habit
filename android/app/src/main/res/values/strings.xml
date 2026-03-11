@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">The Maths Habit</string>
+    <string name="title_activity_main">The Maths Habit</string>
+    <string name="package_name">uk.co.themathshabit.app</string>
+    <string name="custom_url_scheme">uk.co.themathshabit.app</string>
+</resources>

@@ -98,7 +98,7 @@ const AvatarCircle = ({ avatarUrl, name, size = 'md', colorClass = 'bg-metallic-
   );
 };
 
-const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
+const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, isHandwritingEnabled = true }) => {
   const [gameState, setGameState] = useState(STATES.MENU);
   const [match, setMatch] = useState(null);
   const [joinCode, setJoinCode] = useState('');
@@ -117,7 +117,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
   const [myFinished, setMyFinished] = useState(false);
 
   // Input mode for answer entry
-  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('type'); // 'type' or 'handwriting'
 
   // Settings
   const [questionCount, setQuestionCount] = useState(10);
@@ -689,18 +689,26 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent }) => {
                 <div className="space-y-3">
                   {/* Input mode toggle */}
                   <div className="flex glass-panel rounded-lg p-1">
-                    {['handwriting', 'type'].map(mode => (
+                    {['type', 'handwriting'].map(mode => (
                       <button
                         key={mode}
                         type="button"
-                        onClick={() => setInputMode(mode)}
+                        onClick={() => {
+                          if (mode === 'handwriting' && !isHandwritingEnabled) {
+                            alert('Handwriting input is available with a school subscription');
+                            return;
+                          }
+                          setInputMode(mode);
+                        }}
                         className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
                           inputMode === mode
                             ? 'bg-gradient-violet text-white shadow-glow-violet'
                             : 'text-secondary-text hover:text-white'
                         }`}
                       >
-                        {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
+                        {mode === 'handwriting' ? (
+                          <>✏️ Write{!isHandwritingEnabled && ' 🔒'}</>
+                        ) : '⌨️ Type'}
                       </button>
                     ))}
                   </div>

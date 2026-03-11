@@ -186,30 +186,21 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
 
           {/* Features */}
           <div className="text-left mb-6 space-y-2">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Unlimited daily questions
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Sync progress across devices
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              All 700+ GCSE questions
-            </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              AI-powered explanations
-            </div>
+            {[
+              'Unlimited daily questions',
+              'Unlimited battles',
+              'Handwriting input',
+              'All 700+ GCSE questions',
+              'AI-powered explanations',
+              'Weekly parent progress summary',
+            ].map((feature) => (
+              <div key={feature} className="flex items-center gap-2 text-sm text-gray-600">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                {feature}
+              </div>
+            ))}
           </div>
 
           {/* Error message */}

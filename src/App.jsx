@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { initPushNotifications } from './lib/pushNotifications';
+import { hapticCorrect, hapticWrong, hapticStreakMilestone } from './lib/haptics';
+import OfflineIndicator from './components/OfflineIndicator';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
@@ -10,6 +13,7 @@ import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } f
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
+import DOMPurify from 'dompurify';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
@@ -1227,11 +1231,11 @@ const runMigration = (progress, questionBank) => {
     const currentVersion = parseInt(localStorage.getItem(MIGRATION_VERSION_KEY) || '1');
     if (currentVersion >= CURRENT_MIGRATION_VERSION) return loadFsrsData();
 
-    console.log(`Migrating FSRS data from v${currentVersion} to v${CURRENT_MIGRATION_VERSION}`);
+    if (import.meta.env.DEV) console.log(`Migrating FSRS data from v${currentVersion} to v${CURRENT_MIGRATION_VERSION}`);
     const fsrsData = migrateToFSRS(progress, questionBank);
     saveFsrsData(fsrsData);
     localStorage.setItem(MIGRATION_VERSION_KEY, CURRENT_MIGRATION_VERSION.toString());
-    console.log(`Migration complete: ${Object.keys(fsrsData.questionCards).length} cards`);
+    if (import.meta.env.DEV) console.log(`Migration complete: ${Object.keys(fsrsData.questionCards).length} cards`);
     return fsrsData;
   } catch (e) {
     console.error('Migration failed:', e);
@@ -1556,6 +1560,7 @@ const checkStreakMilestone = (streak) => {
       streakData.freezesAvailable++;
       streakData.lastStreakMilestone = milestone;
       saveStreakData(streakData);
+      hapticStreakMilestone();
       return { earned: true, milestone, total: streakData.freezesAvailable };
     }
   }
@@ -6441,7 +6446,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, isHandwritingEnabled, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -6499,7 +6504,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('type'); // 'type' or 'handwriting'
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -6775,8 +6780,8 @@ What is the student's answer?`
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
-    setInputMode('handwriting');
-    
+    setInputMode('type');
+
     // Reset scaffolding state
     setFailureCounts({});
     setCurrentDiagnosis(null);
@@ -6845,6 +6850,13 @@ What is the student's answer?`
 
     setIsCorrect(correct);
     setShowFeedback(true);
+
+    // Haptic feedback on native platforms
+    if (correct) {
+      hapticCorrect();
+    } else {
+      hapticWrong();
+    }
 
     // Show tips for new users on first correct/incorrect
     if (correct) {
@@ -6986,7 +6998,7 @@ What is the student's answer?`
       setShowMathKeyboard(false);
       setCapturedImage(null);
       setShowCalculator(false);
-      setInputMode('handwriting');
+      setInputMode('type');
       setQuestionStartTime(Date.now());
       setUserConfidence(null);
       setShowConfidenceRating(false);
@@ -7545,7 +7557,7 @@ What is the student's answer?`
                 <div className="question-side">
                 {/* Diagram if applicable */}
                 {current.diagram && (
-                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: generateDiagram(current.diagram) }} />
+                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generateDiagram(current.diagram), { USE_PROFILES: { svg: true, html: true } }) }} />
                 )}
 
                 {/* Question text */}
@@ -7669,18 +7681,26 @@ What is the student's answer?`
                       <div className="space-y-3 answer-section">
                         {/* Input mode toggle */}
                         <div className="flex glass-panel rounded-lg p-1">
-                          {['handwriting', 'type'].map(mode => (
+                          {['type', 'handwriting'].map(mode => (
                             <button
                               key={mode}
                               type="button"
-                              onClick={() => setInputMode(mode)}
+                              onClick={() => {
+                                if (mode === 'handwriting' && !isHandwritingEnabled) {
+                                  alert('Handwriting input is available with a school subscription');
+                                  return;
+                                }
+                                setInputMode(mode);
+                              }}
                               className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
                                 inputMode === mode
                                   ? 'bg-gradient-violet text-white shadow-glow-violet'
                                   : 'text-secondary-text hover:text-white'
                               }`}
                             >
-                              {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
+                              {mode === 'handwriting' ? (
+                                <>✏️ Write{!isHandwritingEnabled && ' 🔒'}</>
+                              ) : '⌨️ Type'}
                             </button>
                           ))}
                         </div>
@@ -9595,6 +9615,12 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         if (displayName.trim().length < 2) {
           throw new Error('Display name must be at least 2 characters');
         }
+        if (displayName.trim().length > 20) {
+          throw new Error('Display name must be 20 characters or less');
+        }
+        if (!/\S/.test(displayName)) {
+          throw new Error('Display name cannot be only spaces');
+        }
         // Check display name for profanity
         const profanityCheck = checkProfanity(displayName);
         if (!profanityCheck.clean) {
@@ -9675,6 +9701,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
+              maxLength={20}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
               placeholder="Your name"
               required
@@ -10060,10 +10087,16 @@ function AppContent() {
     questionsRemaining,
     incrementDailyQuestions,
     isSubscribed,
+    isHandwritingEnabled,
     dailyQuestionsUsed,
     FREE_DAILY_LIMIT,
     refreshProfile
   } = useAuth();
+
+  // Initialise push notifications on native platforms
+  useEffect(() => {
+    initPushNotifications();
+  }, []);
 
   // Prompt users without a display name to add one
   useEffect(() => {
@@ -10657,6 +10690,7 @@ function AppContent() {
         questionBank={questionBank}
         onClose={() => setShowOneVsOne(false)}
         answersEquivalent={answersEquivalent}
+        isHandwritingEnabled={isHandwritingEnabled}
       />
     );
   }
@@ -10742,7 +10776,7 @@ function AppContent() {
               onError={(e) => {
                 // Fallback to icon if image not found
                 e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = '<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>';
+                e.target.parentElement.innerHTML = DOMPurify.sanitize('<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>', { USE_PROFILES: { svg: true, html: true } });
               }}
             />
           </div>
@@ -10904,6 +10938,7 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
         allObjectives={allObjectives}
         settings={settings}
         isSubscribed={isSubscribed}
+        isHandwritingEnabled={isHandwritingEnabled}
         FREE_DAILY_LIMIT={FREE_DAILY_LIMIT}
         tier={tier}
         setRecentSessionCodes={setRecentSessionCodes}
@@ -11688,6 +11723,7 @@ function PortraitPrompt({ onDismiss }) {
 export default function App() {
   return (
     <AuthProvider>
+      <OfflineIndicator />
       <AppContent />
     </AuthProvider>
   );
