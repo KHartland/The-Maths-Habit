@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Maths Habit — Student Monitor</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     /* ========== CSS CUSTOM PROPERTIES ========== */
     :root {
@@ -422,7 +422,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     // ═══════════════════════════════════════════
     // STATE
     // ═══════════════════════════════════════════
-    let supabase = null;
+    let sbClient = null;
     let currentUser = null;
     let allStudentData = [];
     let schools = [];
@@ -453,10 +453,10 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         announce('Connecting...');
-        supabase = window.supabase.createClient(url, anonKey);
+        sbClient = window.supabase.createClient(url, anonKey);
 
         // Test by fetching 1 school (public table)
-        const { data, error } = await supabase.from('schools').select('id').limit(1);
+        const { data, error } = await sbClient.from('schools').select('id').limit(1);
         if (error) throw error;
 
         // Save for session
@@ -471,7 +471,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         $('#input-email').focus();
 
         // Check if already logged in
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session } } = await sbClient.auth.getSession();
         if (session) {
           currentUser = session.user;
           await showDashboard();
@@ -500,7 +500,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         announce('Signing in...');
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
         currentUser = data.user;
@@ -534,7 +534,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     async function loadUserSchoolAndStudents() {
       try {
         // Find user's school
-        const { data: membership, error: memErr } = await supabase
+        const { data: membership, error: memErr } = await sbClient
           .from('school_members')
           .select('school_id')
           .eq('user_id', currentUser.id)
@@ -549,7 +549,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         }
 
         // Get school info
-        const { data: school } = await supabase
+        const { data: school } = await sbClient
           .from('schools')
           .select('id, name, town')
           .eq('id', membership.school_id)
@@ -566,7 +566,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     }
 
     async function loadAllSchools() {
-      const { data: allSchools } = await supabase
+      const { data: allSchools } = await sbClient
         .from('schools')
         .select('id, name, town')
         .order('name', { ascending: true })
@@ -602,7 +602,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         // Get members
-        const { data: members, error: memErr } = await supabase
+        const { data: members, error: memErr } = await sbClient
           .from('school_members')
           .select('user_id')
           .eq('school_id', schoolId);
@@ -620,13 +620,13 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
         // Fetch all data in parallel
         const [profiles, streaks, dailyActivity, progressData, matchesHost, matchesGuest, leaderboard] = await Promise.all([
-          supabase.from('profiles').select('id, display_name').in('id', userIds).then(r => r.data || []),
-          supabase.from('user_streaks').select('user_id, current_streak, longest_streak, last_activity_date').in('user_id', userIds).then(r => r.data || []),
-          supabase.from('daily_activity').select('user_id, date, questions_answered, correct_answers').in('user_id', userIds).order('date', { ascending: false }).then(r => r.data || []),
-          supabase.from('user_progress').select('user_id, objective_code, quick_correct, exam_passed').in('user_id', userIds).then(r => r.data || []),
-          supabase.from('matches').select('id, host_id').in('host_id', userIds).eq('status', 'finished').then(r => r.data || []),
-          supabase.from('matches').select('id, guest_id').in('guest_id', userIds).eq('status', 'finished').then(r => r.data || []),
-          supabase.rpc('get_school_leaderboard', { p_school_id: schoolId }).then(r => r.data || []),
+          sbClient.from('profiles').select('id, display_name').in('id', userIds).then(r => r.data || []),
+          sbClient.from('user_streaks').select('user_id, current_streak, longest_streak, last_activity_date').in('user_id', userIds).then(r => r.data || []),
+          sbClient.from('daily_activity').select('user_id, date, questions_answered, correct_answers').in('user_id', userIds).order('date', { ascending: false }).then(r => r.data || []),
+          sbClient.from('user_progress').select('user_id, objective_code, quick_correct, exam_passed').in('user_id', userIds).then(r => r.data || []),
+          sbClient.from('matches').select('id, host_id').in('host_id', userIds).eq('status', 'finished').then(r => r.data || []),
+          sbClient.from('matches').select('id, guest_id').in('guest_id', userIds).eq('status', 'finished').then(r => r.data || []),
+          sbClient.rpc('get_school_leaderboard', { p_school_id: schoolId }).then(r => r.data || []),
         ]);
 
         // Check if we got any data back (RLS might be blocking)
@@ -837,7 +837,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     });
 
     $('#btn-logout').addEventListener('click', async () => {
-      if (supabase) await supabase.auth.signOut();
+      if (sbClient) await sbClient.auth.signOut();
       sessionStorage.clear();
       location.reload();
     });
@@ -881,8 +881,8 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         $('#input-url').value = url;
         $('#input-anon-key').value = key;
         try {
-          supabase = window.supabase.createClient(url, key);
-          const { data: { session } } = await supabase.auth.getSession();
+          sbClient = window.supabase.createClient(url, key);
+          const { data: { session } } = await sbClient.auth.getSession();
           if (session) {
             currentUser = session.user;
             await showDashboard();
