@@ -167,7 +167,56 @@ export const getUserSchool = async (userId) => {
   return schools && schools.length > 0 ? schools[0] : null;
 };
 
-// Get leaderboard for a school via RPC function
+// Get MONTHLY leaderboard for a school via RPC function
+// Sums correct_answers from daily_activity for the given month
+export const getSchoolLeaderboardMonthly = async (schoolId, year, month) => {
+  if (!schoolId) throw new Error('School ID is required');
+  const token = getAuthToken();
+
+  const now = new Date();
+  const y = year || now.getFullYear();
+  const m = month || (now.getMonth() + 1); // JS months are 0-indexed
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/get_school_leaderboard_monthly`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_school_id: schoolId, p_year: y, p_month: m }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`HTTP ${response.status}: ${body.slice(0, 200)}`);
+    }
+
+    const data = await response.json();
+    return (data || []).map((entry, index) => ({
+      rank: index + 1,
+      userId: entry.user_id,
+      displayName: entry.display_name,
+      avatarUrl: entry.avatar_url || null,
+      totalCorrect: entry.total_correct,
+    }));
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Leaderboard request timed out');
+    }
+    throw err;
+  }
+};
+
+// Get ALL-TIME leaderboard for a school via RPC function
 export const getSchoolLeaderboard = async (schoolId) => {
   if (!schoolId) throw new Error('School ID is required');
   const token = getAuthToken();

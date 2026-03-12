@@ -1625,6 +1625,73 @@ const savePiro = (piro) => {
   try { localStorage.setItem(PIRO_KEY, JSON.stringify(piro)); } catch {}
 };
 
+// ==================== NATIVE WIDGET BRIDGE ====================
+// Writes key stats to a well-known localStorage key that native app wrappers
+// (iOS WidgetKit / Android App Widget) can read via shared storage bridges.
+// Call this after any state change that should be reflected in the widget.
+const WIDGET_DATA_KEY = 'maths-habit-widget-data';
+
+const updateWidgetData = (overrides = {}) => {
+  try {
+    const streak = calculateStreak();
+    const piro = loadPiro();
+    const activity = loadDailyActivity();
+    const todayKey = getTodayKey();
+    const todayActivity = activity[todayKey] || {};
+    const progress = loadProgress();
+
+    // Count mastered objectives
+    const allCodes = Object.keys(questionBank);
+    const primaryCodes = allCodes.filter(c => (questionBankPrimary[c] || c) === c);
+    const masteredCount = primaryCodes.filter(c => (progress[c]?.quickCorrect ?? 0) >= 5).length;
+
+    const piroStage = PIRO_STAGES[piro.stage] || PIRO_STAGES[0];
+    const piroDisplay = piro.dead ? PIRO_DEAD
+      : piro.dying ? PIRO_CLOSE_TO_DEATH
+      : piro.decayed ? PIRO_OLD
+      : piroStage;
+
+    const widgetData = {
+      // Streak
+      streak: streak.streak,
+      longestStreak: streak.longestStreak,
+      practicedToday: streak.practicedToday,
+      needsRepair: streak.needsRepair,
+      freezesAvailable: streak.freezesAvailable,
+      // Today's activity
+      questionsToday: todayActivity.questions || 0,
+      correctToday: todayActivity.correct || 0,
+      sessionsToday: todayActivity.sessions || 0,
+      // Progress
+      masteredCount,
+      totalObjectives: primaryCodes.length,
+      // Piro
+      piroName: piro.customName || piroDisplay.name,
+      piroStageName: piroDisplay.name,
+      piroStageIndex: piro.stage,
+      piroImage: piroDisplay.image,
+      piroDead: piro.dead || false,
+      piroDecayed: piro.decayed || false,
+      piroDying: piro.dying || false,
+      // Metadata
+      lastUpdated: Date.now(),
+      ...overrides,
+    };
+
+    localStorage.setItem(WIDGET_DATA_KEY, JSON.stringify(widgetData));
+
+    // Also post to native bridge if available (iOS/Android WebView)
+    if (window.webkit?.messageHandlers?.widgetData) {
+      window.webkit.messageHandlers.widgetData.postMessage(widgetData);
+    }
+    if (window.AndroidBridge?.updateWidgetData) {
+      window.AndroidBridge.updateWidgetData(JSON.stringify(widgetData));
+    }
+  } catch (e) {
+    console.error('Widget data update failed:', e);
+  }
+};
+
 // Update Piro based on current streak. Called after each session.
 // Returns { piro, evolved, decayed, dying, dead, newStage, oldStage }
 const updatePiro = (currentStreak, daysMissed) => {
@@ -7239,7 +7306,10 @@ What is the student's answer?`
       
       // Check if streak was repaired
       const streakRepaired = updatedStreak.repairCompleted;
-      
+
+      // Update native widget with latest stats
+      updateWidgetData();
+
       // Save session to history
       const sessionData = {
         date: Date.now(),
@@ -8930,6 +9000,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   // Handle reset
   const handleReset = async () => {
     resetAllProgress();
+    // Clear widget data so native widget reflects the reset
+    try { localStorage.removeItem(WIDGET_DATA_KEY); } catch {}
     // Also clear cloud data so it doesn't sync back
     if (user?.id) {
       try { await clearCloudData(user.id); } catch {}
@@ -10377,6 +10449,8 @@ function AppContent() {
             await migrateLocalToCloud(user.id);
           }
         }
+        // Update native widget with latest data after sync
+        updateWidgetData();
       }
     };
     syncOnLogin();

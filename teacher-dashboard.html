@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Maths Habit — Student Monitor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    /* ========== CSS CUSTOM PROPERTIES ========== */
+    :root {
+      --colour-primary: #1a56db;
+      --colour-primary-dark: #1340a8;
+      --colour-primary-light: #e8effc;
+      --colour-success: #047857;
+      --colour-success-light: #d1fae5;
+      --colour-warning: #92400e;
+      --colour-warning-light: #fef3c7;
+      --colour-danger: #b91c1c;
+      --colour-danger-light: #fee2e2;
+      --colour-text: #1f2937;
+      --colour-text-muted: #4b5563;
+      --colour-border: #d1d5db;
+      --colour-bg: #f9fafb;
+      --colour-card: #ffffff;
+      --colour-focus: #2563eb;
+      --colour-streak: #d97706;
+      --colour-streak-light: #fef3c7;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      --radius: 8px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.06);
+      --transition: 150ms ease-in-out;
+      --max-width: 1280px;
+    }
+
+    /* ========== HIGH CONTRAST MODE ========== */
+    .high-contrast {
+      --colour-primary: #0033cc;
+      --colour-primary-dark: #002299;
+      --colour-primary-light: #cce0ff;
+      --colour-success: #005c3e;
+      --colour-success-light: #b3f0d8;
+      --colour-warning: #7a3300;
+      --colour-warning-light: #ffe0b3;
+      --colour-danger: #990000;
+      --colour-danger-light: #ffcccc;
+      --colour-text: #000000;
+      --colour-text-muted: #333333;
+      --colour-border: #666666;
+      --colour-bg: #ffffff;
+      --colour-card: #ffffff;
+      --colour-focus: #0000ff;
+      --shadow-md: 0 0 0 2px #000;
+    }
+    .high-contrast .card { border: 2px solid #000; }
+    .high-contrast .data-table th, .high-contrast .data-table td { border: 2px solid #000; }
+
+    /* ========== DYSLEXIA FONT ========== */
+    .dyslexia-font, .dyslexia-font * {
+      font-family: 'OpenDyslexic', 'Comic Sans MS', 'Comic Sans', cursive !important;
+      letter-spacing: 0.05em;
+      word-spacing: 0.1em;
+    }
+
+    /* ========== LARGE TEXT MODE ========== */
+    .large-text { font-size: 120%; }
+    .large-text .data-table { font-size: 105%; }
+
+    /* ========== RESET & BASE ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--colour-bg);
+      color: var(--colour-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ========== SKIP LINK ========== */
+    .skip-link {
+      position: absolute; top: -100%; left: 16px;
+      background: var(--colour-primary); color: #fff;
+      padding: 8px 16px; border-radius: var(--radius);
+      z-index: 9999; font-weight: 600; text-decoration: none;
+    }
+    .skip-link:focus { top: 16px; outline: 3px solid var(--colour-focus); outline-offset: 2px; }
+
+    /* ========== FOCUS STYLES ========== */
+    :focus-visible { outline: 3px solid var(--colour-focus); outline-offset: 2px; }
+
+    /* ========== LAYOUT ========== */
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 24px 16px; }
+    header {
+      background: var(--colour-card); border-bottom: 1px solid var(--colour-border);
+      padding: 16px 0; position: sticky; top: 0; z-index: 100;
+    }
+    .header-inner {
+      max-width: var(--max-width); margin: 0 auto; padding: 0 16px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .header-title {
+      font-size: 1.25rem; font-weight: 700; color: var(--colour-primary);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* ========== BUTTONS ========== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border: 2px solid transparent; border-radius: var(--radius);
+      font-size: 0.875rem; font-weight: 600; cursor: pointer;
+      transition: background var(--transition), border-color var(--transition);
+      text-decoration: none; white-space: nowrap; min-height: 44px;
+    }
+    .btn-primary { background: var(--colour-primary); color: #fff; }
+    .btn-primary:hover { background: var(--colour-primary-dark); }
+    .btn-outline { background: transparent; color: var(--colour-text); border-color: var(--colour-border); }
+    .btn-outline:hover { background: var(--colour-bg); }
+    .btn-sm { padding: 4px 10px; font-size: 0.8rem; min-height: 36px; }
+    .btn[aria-pressed="true"] { background: var(--colour-primary); color: #fff; border-color: var(--colour-primary); }
+
+    /* ========== CARDS ========== */
+    .card {
+      background: var(--colour-card); border: 1px solid var(--colour-border);
+      border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--colour-text-muted); margin-bottom: 4px;
+    }
+    .card-value { font-size: 1.75rem; font-weight: 700; color: var(--colour-text); }
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; margin-bottom: 24px;
+    }
+
+    /* ========== FORMS ========== */
+    label { display: block; font-weight: 600; font-size: 0.875rem; margin-bottom: 4px; color: var(--colour-text); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="url"], select {
+      width: 100%; padding: 10px 12px; border: 2px solid var(--colour-border);
+      border-radius: var(--radius); font-size: 1rem; color: var(--colour-text);
+      background: #fff; min-height: 44px; transition: border-color var(--transition);
+    }
+    input:focus, select:focus { border-color: var(--colour-focus); outline: none; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+    .form-group { margin-bottom: 16px; }
+    .form-help { font-size: 0.8rem; color: var(--colour-text-muted); margin-top: 4px; }
+
+    /* ========== LOGIN SCREEN ========== */
+    .login-screen { max-width: 480px; margin: 60px auto; padding: 0 16px; }
+    .login-screen h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    .login-screen p { color: var(--colour-text-muted); margin-bottom: 24px; }
+    .login-step { margin-bottom: 32px; padding: 20px; border-radius: var(--radius); border: 1px solid var(--colour-border); background: var(--colour-card); }
+    .login-step h2 { font-size: 1rem; margin-bottom: 12px; color: var(--colour-primary); }
+    .step-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--colour-primary); color: #fff;
+      font-size: 0.8rem; font-weight: 700; margin-right: 8px;
+    }
+    .step-done { background: var(--colour-success); }
+
+    /* ========== DATA TABLE ========== */
+    .table-wrapper {
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--colour-border); border-radius: var(--radius); background: var(--colour-card);
+    }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .data-table caption {
+      text-align: left; padding: 12px 16px; font-weight: 700;
+      font-size: 1rem; border-bottom: 1px solid var(--colour-border); caption-side: top;
+    }
+    .data-table th, .data-table td {
+      padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--colour-border); vertical-align: middle;
+    }
+    .data-table th {
+      background: var(--colour-bg); font-weight: 700; color: var(--colour-text);
+      position: sticky; top: 0; z-index: 1; white-space: nowrap;
+    }
+    .data-table th[aria-sort] { cursor: pointer; user-select: none; }
+    .data-table th[aria-sort]:hover { background: var(--colour-primary-light); }
+    .data-table th[aria-sort]::after { content: ' ↕'; font-size: 0.75rem; opacity: 0.5; }
+    .data-table th[aria-sort="ascending"]::after { content: ' ↑'; opacity: 1; }
+    .data-table th[aria-sort="descending"]::after { content: ' ↓'; opacity: 1; }
+    .data-table tbody tr:hover { background: var(--colour-primary-light); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* ========== BADGES ========== */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+    }
+    .badge-success { background: var(--colour-success-light); color: var(--colour-success); }
+    .badge-warning { background: var(--colour-warning-light); color: var(--colour-warning); }
+    .badge-danger  { background: var(--colour-danger-light);  color: var(--colour-danger); }
+    .badge-streak  { background: var(--colour-streak-light);  color: var(--colour-streak); }
+    .badge-neutral { background: #f3f4f6; color: var(--colour-text-muted); }
+
+    /* ========== PROGRESS BAR ========== */
+    .progress-bar-container {
+      background: #e5e7eb; border-radius: 9999px; height: 20px;
+      overflow: hidden; min-width: 100px; position: relative;
+    }
+    .progress-bar-fill {
+      height: 100%; border-radius: 9999px; background: var(--colour-primary);
+      transition: width 0.3s ease; min-width: 2px;
+    }
+    .progress-bar-label {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      font-size: 0.7rem; font-weight: 700; color: var(--colour-text);
+      text-shadow: 0 0 2px #fff, 0 0 4px #fff;
+    }
+
+    /* ========== TOOLBAR ========== */
+    .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .search-input { flex: 1; min-width: 200px; }
+
+    .status-dot {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle;
+    }
+    .status-dot.active   { background: var(--colour-success); }
+    .status-dot.inactive { background: var(--colour-border); }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); border: 0;
+    }
+
+    .loading-spinner {
+      display: inline-block; width: 20px; height: 20px;
+      border: 3px solid var(--colour-border); border-top-color: var(--colour-primary);
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-overlay {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; padding: 60px 20px; color: var(--colour-text-muted);
+    }
+
+    .error-banner {
+      background: var(--colour-danger-light); color: var(--colour-danger);
+      padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--colour-danger);
+      margin-bottom: 16px; font-weight: 500;
+    }
+
+    .info-banner {
+      background: var(--colour-primary-light); color: var(--colour-primary-dark);
+      padding: 12px 16px; border-radius: var(--radius); border: 1px solid var(--colour-primary);
+      margin-bottom: 16px; font-weight: 500;
+    }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--colour-text-muted); }
+
+    @media (max-width: 640px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .container { padding: 16px 8px; }
+      .data-table th, .data-table td { padding: 8px 10px; font-size: 0.8rem; }
+    }
+    @media print {
+      header { position: static; }
+      .btn, .header-controls, .toolbar { display: none; }
+      .card { box-shadow: none; border: 1px solid #ccc; }
+    }
+
+    .mb-24 { margin-bottom: 24px; }
+    .mt-8 { margin-top: 8px; }
+    .text-muted { color: var(--colour-text-muted); }
+    .text-sm { font-size: 0.8rem; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
+  </style>
+</head>
+
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div id="live-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ============ HEADER ============ -->
+  <header role="banner">
+    <div class="header-inner">
+      <div class="header-title" aria-label="The Maths Habit Student Monitor">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        The Maths Habit — Student Monitor
+      </div>
+      <div class="header-controls" id="header-controls" style="display:none;">
+        <button class="btn btn-outline btn-sm" id="btn-refresh" aria-label="Refresh student data">
+          &#x21bb; Refresh
+        </button>
+        <button class="btn btn-outline btn-sm" id="btn-high-contrast" aria-pressed="false" aria-label="Toggle high contrast mode">Contrast</button>
+        <button class="btn btn-outline btn-sm" id="btn-dyslexia" aria-pressed="false" aria-label="Toggle dyslexia-friendly font">Aa</button>
+        <button class="btn btn-outline btn-sm" id="btn-large-text" aria-pressed="false" aria-label="Toggle large text">Large</button>
+        <button class="btn btn-outline btn-sm" id="btn-logout" aria-label="Sign out">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" role="main">
+    <div class="container">
+
+      <!-- ====== STEP 1: CONNECT ====== -->
+      <section id="connect-section" class="login-screen" aria-labelledby="connect-heading">
+        <h1 id="connect-heading">Student Monitor</h1>
+        <p>Log in with your Maths Habit account to see how your students are doing.</p>
+
+        <div class="login-step" id="step-connect">
+          <h2><span class="step-number" id="step1-badge">1</span>Your Supabase Project</h2>
+          <div class="form-group">
+            <label for="input-url">Supabase URL</label>
+            <input type="url" id="input-url" placeholder="https://xxxxxxxxxxx.supabase.co" required aria-describedby="url-help">
+            <p class="form-help" id="url-help">Supabase Dashboard &rarr; Settings &rarr; API &rarr; Project URL</p>
+          </div>
+          <div class="form-group">
+            <label for="input-anon-key">Anon / Public Key</label>
+            <input type="text" id="input-anon-key" placeholder="eyJhbGci..." required aria-describedby="anonkey-help">
+            <p class="form-help" id="anonkey-help">Same page &rarr; Project API keys &rarr; <code>anon</code> <code>public</code>. This is the public key that's already in your app.</p>
+          </div>
+          <div id="connect-error" class="error-banner" style="display:none;" role="alert"></div>
+          <button class="btn btn-primary" id="btn-connect" style="width:100%;">Connect</button>
+        </div>
+
+        <div class="login-step" id="step-login" style="display:none;">
+          <h2><span class="step-number" id="step2-badge">2</span>Sign In</h2>
+          <p class="text-sm text-muted mb-24">Use the same email and password you use in the app.</p>
+          <div class="form-group">
+            <label for="input-email">Email</label>
+            <input type="email" id="input-email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="input-password">Password</label>
+            <input type="password" id="input-password" placeholder="Your password" required>
+          </div>
+          <div id="login-error" class="error-banner" style="display:none;" role="alert"></div>
+          <button class="btn btn-primary" id="btn-login" style="width:100%;">Sign In</button>
+        </div>
+      </section>
+
+      <!-- ====== DASHBOARD ====== -->
+      <section id="dashboard-section" style="display:none;" aria-labelledby="dashboard-heading">
+        <h1 id="dashboard-heading" class="sr-only">Student Dashboard</h1>
+
+        <div id="rls-warning" class="info-banner" style="display:none;" role="alert">
+          <strong>Heads up:</strong> Your account needs teacher-level access to see student data.
+          Run the SQL script provided (<code>supabase-teacher-rls.sql</code>) in your Supabase SQL Editor,
+          then set your account role to <code>teacher</code>. See instructions below the table.
+        </div>
+
+        <!-- School selector -->
+        <div class="mb-24">
+          <label for="school-select">Your School</label>
+          <select id="school-select" aria-describedby="school-help">
+            <option value="">— Loading... —</option>
+          </select>
+          <p class="form-help" id="school-help">Showing students in your school</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div id="summary-cards" class="summary-grid" role="group" aria-label="School summary statistics">
+          <div class="card"><div class="card-title">Total Students</div><div class="card-value" id="stat-students">—</div></div>
+          <div class="card"><div class="card-title">Active Today</div><div class="card-value" id="stat-active-today">—</div></div>
+          <div class="card"><div class="card-title">Questions This Week</div><div class="card-value" id="stat-questions-week">—</div></div>
+          <div class="card"><div class="card-title">Avg Streak</div><div class="card-value" id="stat-avg-streak">—</div></div>
+          <div class="card"><div class="card-title">Total Battles</div><div class="card-value" id="stat-total-battles">—</div></div>
+          <div class="card"><div class="card-title">Avg Grid Completion</div><div class="card-value" id="stat-avg-grid">—</div></div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar" role="toolbar" aria-label="Student table controls">
+          <input type="text" id="search-students" class="search-input" placeholder="Search students by name..." aria-label="Search students by name">
+          <button class="btn btn-outline btn-sm" id="btn-export-csv" aria-label="Export table data as CSV">Export CSV</button>
+        </div>
+
+        <div id="table-loading" class="loading-overlay" style="display:none;" role="status">
+          <div class="loading-spinner" aria-hidden="true"></div>
+          <span>Loading student data...</span>
+        </div>
+        <div id="table-error" class="error-banner" style="display:none;" role="alert"></div>
+
+        <!-- Student Table -->
+        <div class="table-wrapper" tabindex="0" role="region" aria-label="Student data table — scroll horizontally if needed">
+          <table class="data-table" id="student-table">
+            <caption>Student Activity &amp; Progress</caption>
+            <thead>
+              <tr>
+                <th scope="col" aria-sort="none" data-sort="rank" class="num">#</th>
+                <th scope="col" aria-sort="none" data-sort="name">Student</th>
+                <th scope="col" aria-sort="none" data-sort="lastLogin">Last Active</th>
+                <th scope="col" aria-sort="none" data-sort="questions" class="num">Questions</th>
+                <th scope="col" aria-sort="none" data-sort="grid">Grid Progress</th>
+                <th scope="col" aria-sort="none" data-sort="battles" class="num">1v1 Battles</th>
+                <th scope="col" aria-sort="none" data-sort="sessions" class="num">Sessions</th>
+                <th scope="col" aria-sort="none" data-sort="streak" class="num">Streak</th>
+                <th scope="col" aria-sort="none" data-sort="leaderboard" class="num">Leaderboard</th>
+              </tr>
+            </thead>
+            <tbody id="student-tbody">
+              <tr><td colspan="9" class="empty-state">Select a school to view students</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="text-sm text-muted mt-8" id="table-description">
+          Click any column header to sort. Grid progress shows mastered objectives out of total available.
+        </p>
+
+        <!-- Setup instructions (collapsed by default) -->
+        <details class="mt-8" id="setup-instructions">
+          <summary style="cursor:pointer;font-weight:600;padding:8px 0;">Setup Instructions (if student data isn't showing)</summary>
+          <div class="card mt-8" style="font-size:0.9rem;">
+            <p style="margin-bottom:12px;">Your current database policies only let users see their own data. To let your account see students in your school, run these two things in Supabase SQL Editor:</p>
+            <p style="margin-bottom:8px;"><strong>1. Run the <code>supabase-teacher-rls.sql</code> file</strong> — this creates teacher-level read policies.</p>
+            <p style="margin-bottom:8px;"><strong>2. Promote your account to teacher:</strong></p>
+            <pre style="background:#f3f4f6;padding:12px;border-radius:6px;overflow-x:auto;font-size:0.85rem;margin-bottom:12px;"><code>-- Replace YOUR_USER_ID with your actual user ID from Supabase Auth
+UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
+            <p class="text-sm text-muted">You can find your user ID in Supabase Dashboard &rarr; Authentication &rarr; Users. It's the UUID next to your email.</p>
+          </div>
+        </details>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // ═══════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════
+    let supabase = null;
+    let currentUser = null;
+    let allStudentData = [];
+    let schools = [];
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const announcer = $('#live-announcer');
+
+    function announce(msg) {
+      announcer.textContent = '';
+      requestAnimationFrame(() => { announcer.textContent = msg; });
+    }
+
+    // ═══════════════════════════════════════════
+    // STEP 1: CONNECT TO SUPABASE
+    // ═══════════════════════════════════════════
+    $('#btn-connect').addEventListener('click', async () => {
+      const url = $('#input-url').value.trim().replace(/\/$/, '');
+      const anonKey = $('#input-anon-key').value.trim();
+      const errEl = $('#connect-error');
+      errEl.style.display = 'none';
+
+      if (!url || !anonKey) {
+        errEl.textContent = 'Both fields are required.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        announce('Connecting...');
+        supabase = window.supabase.createClient(url, anonKey);
+
+        // Test by fetching 1 school (public table)
+        const { data, error } = await supabase.from('schools').select('id').limit(1);
+        if (error) throw error;
+
+        // Save for session
+        sessionStorage.setItem('mh_url', url);
+        sessionStorage.setItem('mh_anon', anonKey);
+
+        // Show step 2
+        $('#step1-badge').classList.add('step-done');
+        $('#step1-badge').textContent = '✓';
+        $('#step-login').style.display = 'block';
+        announce('Connected. Please sign in.');
+        $('#input-email').focus();
+
+        // Check if already logged in
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          currentUser = session.user;
+          await showDashboard();
+        }
+      } catch (err) {
+        errEl.textContent = `Connection failed: ${err.message || err}. Check URL and key.`;
+        errEl.style.display = 'block';
+        announce('Connection failed.');
+      }
+    });
+
+    // ═══════════════════════════════════════════
+    // STEP 2: SIGN IN
+    // ═══════════════════════════════════════════
+    $('#btn-login').addEventListener('click', async () => {
+      const email = $('#input-email').value.trim();
+      const password = $('#input-password').value;
+      const errEl = $('#login-error');
+      errEl.style.display = 'none';
+
+      if (!email || !password) {
+        errEl.textContent = 'Email and password are required.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        announce('Signing in...');
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        currentUser = data.user;
+        await showDashboard();
+      } catch (err) {
+        errEl.textContent = `Sign in failed: ${err.message || err}`;
+        errEl.style.display = 'block';
+        announce('Sign in failed.');
+      }
+    });
+
+    // Enter key support on password field
+    $('#input-password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); $('#btn-login').click(); }
+    });
+    $('#input-anon-key').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); $('#btn-connect').click(); }
+    });
+
+    // ═══════════════════════════════════════════
+    // DASHBOARD
+    // ═══════════════════════════════════════════
+    async function showDashboard() {
+      $('#connect-section').style.display = 'none';
+      $('#dashboard-section').style.display = 'block';
+      $('#header-controls').style.display = 'flex';
+      announce('Signed in. Loading your school...');
+      await loadUserSchoolAndStudents();
+    }
+
+    async function loadUserSchoolAndStudents() {
+      try {
+        // Find user's school
+        const { data: membership, error: memErr } = await supabase
+          .from('school_members')
+          .select('school_id')
+          .eq('user_id', currentUser.id)
+          .limit(1)
+          .single();
+
+        if (memErr || !membership) {
+          // User not in a school — let them pick
+          await loadAllSchools();
+          announce('You\'re not in a school yet. Select one from the dropdown.');
+          return;
+        }
+
+        // Get school info
+        const { data: school } = await supabase
+          .from('schools')
+          .select('id, name, town')
+          .eq('id', membership.school_id)
+          .single();
+
+        if (school) {
+          $('#school-select').innerHTML = `<option value="${school.id}">${school.name}${school.town ? ' (' + school.town + ')' : ''}</option>`;
+          await loadStudentsForSchool(school.id);
+        }
+      } catch (err) {
+        console.error('Load school error:', err);
+        await loadAllSchools();
+      }
+    }
+
+    async function loadAllSchools() {
+      const { data: allSchools } = await supabase
+        .from('schools')
+        .select('id, name, town')
+        .order('name', { ascending: true })
+        .limit(1000);
+
+      schools = allSchools || [];
+      const sel = $('#school-select');
+      sel.innerHTML = '<option value="">— Select a school (' + schools.length + ') —</option>';
+      schools.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = s.name + (s.town ? ` (${s.town})` : '');
+        sel.appendChild(opt);
+      });
+    }
+
+    $('#school-select').addEventListener('change', async () => {
+      const id = $('#school-select').value;
+      if (id) await loadStudentsForSchool(id);
+    });
+
+    // ═══════════════════════════════════════════
+    // LOAD STUDENTS
+    // ═══════════════════════════════════════════
+    async function loadStudentsForSchool(schoolId) {
+      const loading = $('#table-loading');
+      const errEl = $('#table-error');
+      const tbody = $('#student-tbody');
+      loading.style.display = 'flex';
+      errEl.style.display = 'none';
+      tbody.innerHTML = '';
+      announce('Loading student data...');
+
+      try {
+        // Get members
+        const { data: members, error: memErr } = await supabase
+          .from('school_members')
+          .select('user_id')
+          .eq('school_id', schoolId);
+
+        if (memErr) throw memErr;
+        if (!members || members.length === 0) {
+          loading.style.display = 'none';
+          tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No students found in this school</td></tr>';
+          clearSummary();
+          announce('No students found.');
+          return;
+        }
+
+        const userIds = members.map(m => m.user_id);
+
+        // Fetch all data in parallel
+        const [profiles, streaks, dailyActivity, progressData, matchesHost, matchesGuest, leaderboard] = await Promise.all([
+          supabase.from('profiles').select('id, display_name').in('id', userIds).then(r => r.data || []),
+          supabase.from('user_streaks').select('user_id, current_streak, longest_streak, last_activity_date').in('user_id', userIds).then(r => r.data || []),
+          supabase.from('daily_activity').select('user_id, date, questions_answered, correct_answers').in('user_id', userIds).order('date', { ascending: false }).then(r => r.data || []),
+          supabase.from('user_progress').select('user_id, objective_code, quick_correct, exam_passed').in('user_id', userIds).then(r => r.data || []),
+          supabase.from('matches').select('id, host_id').in('host_id', userIds).eq('status', 'finished').then(r => r.data || []),
+          supabase.from('matches').select('id, guest_id').in('guest_id', userIds).eq('status', 'finished').then(r => r.data || []),
+          supabase.rpc('get_school_leaderboard', { p_school_id: schoolId }).then(r => r.data || []),
+        ]);
+
+        // Check if we got any data back (RLS might be blocking)
+        const gotData = streaks.length > 0 || dailyActivity.length > 0 || progressData.length > 0;
+        if (!gotData && members.length > 1) {
+          // Probably RLS is blocking — show warning
+          $('#rls-warning').style.display = 'block';
+          $('#setup-instructions').open = true;
+        } else {
+          $('#rls-warning').style.display = 'none';
+        }
+
+        // Index data
+        const profileMap = {}; profiles.forEach(p => { profileMap[p.id] = p; });
+        const streakMap = {}; streaks.forEach(s => { streakMap[s.user_id] = s; });
+        const dailyMap = {}; dailyActivity.forEach(d => { if (!dailyMap[d.user_id]) dailyMap[d.user_id] = []; dailyMap[d.user_id].push(d); });
+        const progressMap = {}; progressData.forEach(p => { if (!progressMap[p.user_id]) progressMap[p.user_id] = []; progressMap[p.user_id].push(p); });
+        const battleMap = {};
+        matchesHost.forEach(m => { battleMap[m.host_id] = (battleMap[m.host_id] || 0) + 1; });
+        matchesGuest.forEach(m => { battleMap[m.guest_id] = (battleMap[m.guest_id] || 0) + 1; });
+        const lbMap = {}; leaderboard.forEach((e, i) => { lbMap[e.user_id] = { rank: i + 1, totalCorrect: e.total_correct }; });
+
+        // Total objectives
+        const allObj = new Set(); progressData.forEach(p => allObj.add(p.objective_code));
+        const totalObj = allObj.size || 1;
+
+        const today = new Date().toISOString().split('T')[0];
+        const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+
+        allStudentData = userIds.map(uid => {
+          const profile = profileMap[uid] || {};
+          const streak = streakMap[uid] || {};
+          const daily = dailyMap[uid] || [];
+          const progress = progressMap[uid] || [];
+          const battles = battleMap[uid] || 0;
+          const lb = lbMap[uid] || { rank: '—', totalCorrect: 0 };
+
+          const lastActivity = streak.last_activity_date || (daily.length > 0 ? daily[0].date : null);
+          const totalQ = daily.reduce((s, d) => s + (d.questions_answered || 0), 0);
+          const weekQ = daily.filter(d => d.date >= weekAgo).reduce((s, d) => s + (d.questions_answered || 0), 0);
+          const sessions = daily.length;
+          const mastered = progress.filter(p => p.exam_passed || (p.quick_correct >= 5)).length;
+          const gridPct = Math.round((mastered / totalObj) * 100);
+          const isToday = daily.some(d => d.date === today);
+
+          return {
+            userId: uid, name: profile.display_name || 'Unknown',
+            lastLogin: lastActivity, totalQuestions: totalQ, questionsThisWeek: weekQ,
+            gridPercent: gridPct, masteredCount: mastered, totalObjectives: totalObj,
+            battles, sessions, streak: streak.current_streak || 0,
+            longestStreak: streak.longest_streak || 0,
+            leaderboardRank: lb.rank, leaderboardScore: lb.totalCorrect, isActiveToday: isToday,
+          };
+        });
+
+        allStudentData.sort((a, b) => {
+          const ra = typeof a.leaderboardRank === 'number' ? a.leaderboardRank : 9999;
+          const rb = typeof b.leaderboardRank === 'number' ? b.leaderboardRank : 9999;
+          return ra - rb;
+        });
+
+        updateSummary();
+        renderTable(allStudentData);
+        loading.style.display = 'none';
+        announce(`Loaded ${allStudentData.length} students.`);
+      } catch (err) {
+        loading.style.display = 'none';
+        errEl.textContent = `Error: ${err.message}`;
+        errEl.style.display = 'block';
+        announce('Error loading data.');
+        console.error(err);
+      }
+    }
+
+    // ═══════════════════════════════════════════
+    // RENDER TABLE
+    // ═══════════════════════════════════════════
+    function renderTable(data) {
+      const tbody = $('#student-tbody');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No students match your search</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.map((s, i) => {
+        const lastLabel = formatDate(s.lastLogin);
+        const days = daysAgo(s.lastLogin);
+        const lastBadge = days === 0 ? 'badge-success' : days <= 3 ? 'badge-warning' : days <= 7 ? 'badge-neutral' : 'badge-danger';
+        const gridCol = s.gridPercent >= 80 ? '#047857' : s.gridPercent >= 50 ? '#1a56db' : s.gridPercent >= 25 ? '#d97706' : '#9ca3af';
+        const streakBadge = s.streak >= 7 ? 'badge-streak' : s.streak >= 3 ? 'badge-success' : s.streak >= 1 ? 'badge-warning' : 'badge-neutral';
+        const lbDisplay = typeof s.leaderboardRank === 'number'
+          ? (s.leaderboardRank <= 3 ? ['',' \u{1F947}',' \u{1F948}',' \u{1F949}'][s.leaderboardRank] : '') + ' #' + s.leaderboardRank
+          : '—';
+
+        return `<tr>
+          <td class="num">${i + 1}</td>
+          <td><strong>${esc(s.name)}</strong>${s.isActiveToday ? ' <span class="status-dot active" title="Active today" aria-label="Active today"></span>' : ''}</td>
+          <td><span class="badge ${lastBadge}" aria-label="Last active ${lastLabel}">${lastLabel}</span></td>
+          <td class="num">${s.totalQuestions.toLocaleString()}<div class="text-sm text-muted">${s.questionsThisWeek} this week</div></td>
+          <td>
+            <div class="progress-bar-container" role="progressbar" aria-valuenow="${s.gridPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="Grid ${s.gridPercent}% — ${s.masteredCount}/${s.totalObjectives} mastered">
+              <div class="progress-bar-fill" style="width:${Math.max(s.gridPercent,2)}%;background:${gridCol};"></div>
+              <span class="progress-bar-label">${s.gridPercent}%</span>
+            </div>
+            <div class="text-sm text-muted mt-8">${s.masteredCount}/${s.totalObjectives}</div>
+          </td>
+          <td class="num">${s.battles}</td>
+          <td class="num">${s.sessions}</td>
+          <td class="num">
+            <span class="badge ${streakBadge}" aria-label="Streak: ${s.streak} days, best: ${s.longestStreak}">${s.streak} day${s.streak !== 1 ? 's' : ''}</span>
+            <div class="text-sm text-muted">Best: ${s.longestStreak}</div>
+          </td>
+          <td class="num">${lbDisplay}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ═══════════════════════════════════════════
+    // SUMMARY
+    // ═══════════════════════════════════════════
+    function updateSummary() {
+      $('#stat-students').textContent = allStudentData.length;
+      $('#stat-active-today').textContent = allStudentData.filter(s => s.isActiveToday).length;
+      $('#stat-questions-week').textContent = allStudentData.reduce((s, d) => s + d.questionsThisWeek, 0).toLocaleString();
+      const avg = allStudentData.length ? (allStudentData.reduce((s, d) => s + d.streak, 0) / allStudentData.length).toFixed(1) : '0';
+      $('#stat-avg-streak').textContent = avg + ' days';
+      $('#stat-total-battles').textContent = allStudentData.reduce((s, d) => s + d.battles, 0);
+      const avgG = allStudentData.length ? Math.round(allStudentData.reduce((s, d) => s + d.gridPercent, 0) / allStudentData.length) : 0;
+      $('#stat-avg-grid').textContent = avgG + '%';
+    }
+
+    function clearSummary() {
+      ['stat-students','stat-active-today','stat-questions-week','stat-avg-streak','stat-total-battles','stat-avg-grid']
+        .forEach(id => $(`#${id}`).textContent = '—');
+    }
+
+    // ═══════════════════════════════════════════
+    // SEARCH
+    // ═══════════════════════════════════════════
+    $('#search-students').addEventListener('input', () => {
+      const q = $('#search-students').value.toLowerCase().trim();
+      const f = q ? allStudentData.filter(s => s.name.toLowerCase().includes(q)) : allStudentData;
+      renderTable(f);
+      announce(`${f.length} student${f.length !== 1 ? 's' : ''} found.`);
+    });
+
+    // ═══════════════════════════════════════════
+    // SORTING
+    // ═══════════════════════════════════════════
+    $$('.data-table th[data-sort]').forEach(th => {
+      th.addEventListener('click', () => doSort(th));
+      th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doSort(th); } });
+      th.setAttribute('tabindex', '0');
+    });
+
+    function doSort(th) {
+      const key = th.dataset.sort;
+      const newDir = th.getAttribute('aria-sort') === 'ascending' ? 'descending' : 'ascending';
+      $$('.data-table th[aria-sort]').forEach(h => h.setAttribute('aria-sort', 'none'));
+      th.setAttribute('aria-sort', newDir);
+      const dir = newDir === 'ascending' ? 1 : -1;
+
+      allStudentData.sort((a, b) => {
+        let va, vb;
+        switch (key) {
+          case 'rank': case 'leaderboard':
+            va = typeof a.leaderboardRank === 'number' ? a.leaderboardRank : 9999;
+            vb = typeof b.leaderboardRank === 'number' ? b.leaderboardRank : 9999; break;
+          case 'name': va = a.name.toLowerCase(); vb = b.name.toLowerCase(); break;
+          case 'lastLogin': va = a.lastLogin || '0'; vb = b.lastLogin || '0'; break;
+          case 'questions': va = a.totalQuestions; vb = b.totalQuestions; break;
+          case 'grid': va = a.gridPercent; vb = b.gridPercent; break;
+          case 'battles': va = a.battles; vb = b.battles; break;
+          case 'sessions': va = a.sessions; vb = b.sessions; break;
+          case 'streak': va = a.streak; vb = b.streak; break;
+          default: return 0;
+        }
+        if (typeof va === 'string') return va.localeCompare(vb) * dir;
+        return (va - vb) * dir;
+      });
+
+      const q = $('#search-students').value.toLowerCase().trim();
+      renderTable(q ? allStudentData.filter(s => s.name.toLowerCase().includes(q)) : allStudentData);
+      announce(`Sorted by ${key}, ${newDir}.`);
+    }
+
+    // ═══════════════════════════════════════════
+    // EXPORT CSV
+    // ═══════════════════════════════════════════
+    $('#btn-export-csv').addEventListener('click', () => {
+      if (!allStudentData.length) { announce('No data to export.'); return; }
+      const h = ['Name','Last Active','Total Questions','This Week','Grid %','Mastered','Total Obj','1v1 Battles','Sessions','Streak','Best Streak','Leaderboard #','Score'];
+      const rows = allStudentData.map(s => [s.name,s.lastLogin||'',s.totalQuestions,s.questionsThisWeek,s.gridPercent,s.masteredCount,s.totalObjectives,s.battles,s.sessions,s.streak,s.longestStreak,s.leaderboardRank,s.leaderboardScore]);
+      const csv = [h,...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a.download = `maths-habit-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      announce('CSV downloaded.');
+    });
+
+    // ═══════════════════════════════════════════
+    // REFRESH / LOGOUT
+    // ═══════════════════════════════════════════
+    $('#btn-refresh').addEventListener('click', () => {
+      const id = $('#school-select').value;
+      if (id) loadStudentsForSchool(id);
+    });
+
+    $('#btn-logout').addEventListener('click', async () => {
+      if (supabase) await supabase.auth.signOut();
+      sessionStorage.clear();
+      location.reload();
+    });
+
+    // ═══════════════════════════════════════════
+    // ACCESSIBILITY TOGGLES
+    // ═══════════════════════════════════════════
+    function toggle(btnId, cls) {
+      $(`#${btnId}`).addEventListener('click', () => {
+        const on = document.body.classList.toggle(cls);
+        $(`#${btnId}`).setAttribute('aria-pressed', on);
+        announce(`${cls.replace(/-/g,' ')} ${on ? 'on' : 'off'}.`);
+      });
+    }
+    toggle('btn-high-contrast', 'high-contrast');
+    toggle('btn-dyslexia', 'dyslexia-font');
+    toggle('btn-large-text', 'large-text');
+
+    // ═══════════════════════════════════════════
+    // UTILS
+    // ═══════════════════════════════════════════
+    function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+    function formatDate(ds) {
+      if (!ds) return 'Never';
+      const d = daysAgo(ds);
+      if (d === 0) return 'Today';
+      if (d === 1) return 'Yesterday';
+      if (d < 7) return d + 'd ago';
+      if (d < 30) return Math.floor(d/7) + 'w ago';
+      return new Date(ds+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+    }
+    function daysAgo(ds) { if(!ds) return 999; return Math.floor((new Date()-new Date(ds+'T00:00:00'))/86400000); }
+
+    // ═══════════════════════════════════════════
+    // AUTO-RESTORE SESSION
+    // ═══════════════════════════════════════════
+    (async function() {
+      const url = sessionStorage.getItem('mh_url');
+      const key = sessionStorage.getItem('mh_anon');
+      if (url && key) {
+        $('#input-url').value = url;
+        $('#input-anon-key').value = key;
+        try {
+          supabase = window.supabase.createClient(url, key);
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session) {
+            currentUser = session.user;
+            await showDashboard();
+          } else {
+            $('#step1-badge').classList.add('step-done');
+            $('#step1-badge').textContent = '✓';
+            $('#step-login').style.display = 'block';
+          }
+        } catch(e) { console.error(e); }
+      }
+    })();
+  </script>
+</body>
+</html>
