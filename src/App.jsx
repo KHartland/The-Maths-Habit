@@ -4218,6 +4218,23 @@ Object.entries(questionBankPrimary).forEach(([code, primary]) => {
   questionBankGroups[primary].push(code);
 });
 
+// Thematic bank groups: objectives that use DIFFERENT question banks but cover
+// the same thematic area and should not appear together in a single session.
+// Each primary code maps to all primary codes in the same thematic group.
+const thematicBankGroups = (() => {
+  const groups = [
+    // All probability objectives share a theme — max 1 per session
+    ['P1', 'P4', 'P7'],
+  ];
+  const map = {};
+  groups.forEach(group => {
+    group.forEach(code => {
+      map[code] = group;
+    });
+  });
+  return map;
+})();
+
 // Friendly labels for mixed question banks (shown in celebration screen)
 const questionBankLabel = {
   'N5': 'Mixed Number Practice',
@@ -6443,12 +6460,24 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     const questions = qBank[obj.code] || [];
     if (questions.length === 0) return;
 
-    // Use this objective's own progress only
-    const qc = objProg?.quickCorrect ?? 0;
-    if (qc >= 5) return; // Mastered — skip
+    // Use the MAX quickCorrect across all aliases sharing this question bank.
+    // This prevents alias objectives (e.g. P2 sharing P1's bank) from re-serving
+    // questions the student already got correct via another alias.
+    const primary = questionBankPrimary[obj.code] || obj.code;
+    const bankGroup = questionBankGroups[primary] || [obj.code];
+    let qc = objProg?.quickCorrect ?? 0;
+    let effectiveSkipUntil = objProg?.skipUntilSession ?? 0;
+    bankGroup.forEach(aliasCode => {
+      const aliasProg = progress[aliasCode];
+      if (aliasProg) {
+        qc = Math.max(qc, aliasProg.quickCorrect ?? 0);
+        effectiveSkipUntil = Math.max(effectiveSkipUntil, aliasProg.skipUntilSession ?? 0);
+      }
+    });
+    if (qc >= 5) return; // Mastered (by any alias) — skip
 
-    // Skip if this objective is still in cooldown
-    if ((objProg?.skipUntilSession ?? 0) > sessionCount) return;
+    // Skip if this objective (or any alias) is still in cooldown
+    if (effectiveSkipUntil > sessionCount) return;
 
     const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
@@ -6516,6 +6545,14 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     const primary = questionBankPrimary[next.objective.code] || next.objective.code;
     const bankGroup = questionBankGroups[primary] || [next.objective.code];
     bankGroup.forEach(c => usedObjectives.add(c));
+    // Also block thematically related banks (e.g. all probability banks)
+    const thematicGroup = thematicBankGroups[primary];
+    if (thematicGroup) {
+      thematicGroup.forEach(themPrimary => {
+        const relatedCodes = questionBankGroups[themPrimary] || [themPrimary];
+        relatedCodes.forEach(c => usedObjectives.add(c));
+      });
+    }
     topicCount[next.topic] = (topicCount[next.topic] || 0) + 1;
     queue.push(next);
   }
@@ -7355,6 +7392,109 @@ What is the student's answer?`
           <PracticeIcon className="w-16 h-16 text-secondary-text/40 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white">No questions available</h2>
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ==================== PIRO NAMING MODAL (First Place Reward) ====================
+  // Must be checked before the main page return so it can render over everything
+  if (showPiroNaming) {
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+        <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+
+        {/* Celebration confetti */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          {[...Array(30)].map((_, i) => {
+            const colors = ['#D4AF37', '#ec4899', '#8B5CF6', '#38E6A2', '#F59E0B'];
+            const color = colors[i % colors.length];
+            const left = Math.random() * 100;
+            const delay = Math.random() * 3;
+            const duration = 3 + Math.random() * 2;
+            return (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: color,
+                  left: `${left}%`,
+                  top: '-10px',
+                  animation: `tileFall ${duration}s ${delay}s ease-in-out infinite`,
+                  opacity: 0.7,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          {/* Dragon trophy image */}
+          <div className="w-32 h-32 mx-auto mb-4">
+            <img
+              src="/images/dragontrophy.png"
+              alt="Dragon Trophy"
+              className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = DOMPurify.sanitize('<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>', { USE_PROFILES: { svg: true, html: true } });
+              }}
+            />
+          </div>
+
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-2">
+            You're #1!
+          </h2>
+          <p className="text-secondary-text text-sm mb-1">
+            You've reached the top of your school leaderboard!
+          </p>
+          <p className="text-white font-medium mb-6">
+            As a reward, you can name your dragon.
+          </p>
+
+          {/* Dragon preview */}
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden piro-idle">
+            <PiroMedia display={getPiroDisplay(piro)} className="w-full h-full object-cover rounded-2xl" />
+          </div>
+
+          <input
+            type="text"
+            value={piroCustomName}
+            onChange={(e) => { setPiroCustomName(e.target.value); setPiroNamingError(''); }}
+            placeholder="Name your dragon..."
+            maxLength={20}
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-500/30 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !piroNamingSaving) handlePiroNamingSave(); }}
+          />
+
+          {piroNamingError && (
+            <p className="text-red-400 text-xs mt-2">{piroNamingError}</p>
+          )}
+
+          <button
+            onClick={handlePiroNamingSave}
+            disabled={piroNamingSaving || !piroCustomName.trim()}
+            className="mt-5 w-full py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {piroNamingSaving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
+            ) : (
+              <><Star className="w-4 h-4" /> Name My Dragon</>
+            )}
+          </button>
+
+          <button
+            onClick={() => { setShowPiroNaming(false); setPiroCustomName(''); }}
+            className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
+          >
+            Maybe later
+          </button>
+
+          <p className="text-white/30 text-xs mt-3">{piroCustomName.trim().length}/20 characters</p>
         </div>
       </div>
     );
@@ -10847,108 +10987,6 @@ function AppContent() {
       setPiroNamingSaving(false);
     }
   };
-
-  if (showPiroNaming) {
-    return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
-        <div className="ambient-glow" />
-        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
-        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
-        <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
-
-        {/* Celebration confetti */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          {[...Array(30)].map((_, i) => {
-            const colors = ['#D4AF37', '#ec4899', '#8B5CF6', '#38E6A2', '#F59E0B'];
-            const color = colors[i % colors.length];
-            const left = Math.random() * 100;
-            const delay = Math.random() * 3;
-            const duration = 3 + Math.random() * 2;
-            return (
-              <div
-                key={i}
-                className="absolute w-2 h-2 rounded-full"
-                style={{
-                  backgroundColor: color,
-                  left: `${left}%`,
-                  top: '-10px',
-                  animation: `tileFall ${duration}s ${delay}s ease-in-out infinite`,
-                  opacity: 0.7,
-                }}
-              />
-            );
-          })}
-        </div>
-
-        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
-          {/* Dragon trophy image */}
-          <div className="w-32 h-32 mx-auto mb-4">
-            <img
-              src="/images/dragontrophy.png"
-              alt="Dragon Trophy"
-              className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
-              onError={(e) => {
-                // Fallback to icon if image not found
-                e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = DOMPurify.sanitize('<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>', { USE_PROFILES: { svg: true, html: true } });
-              }}
-            />
-          </div>
-
-          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-2">
-            You're #1!
-          </h2>
-          <p className="text-secondary-text text-sm mb-1">
-            You've reached the top of your school leaderboard!
-          </p>
-          <p className="text-white font-medium mb-6">
-            As a reward, you can name your dragon.
-          </p>
-
-          {/* Dragon preview */}
-          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden piro-idle">
-            <PiroMedia display={getPiroDisplay(piro)} className="w-full h-full object-cover rounded-2xl" />
-          </div>
-
-          <input
-            type="text"
-            value={piroCustomName}
-            onChange={(e) => { setPiroCustomName(e.target.value); setPiroNamingError(''); }}
-            placeholder="Name your dragon..."
-            maxLength={20}
-            autoFocus
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-500/30 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-            onKeyDown={(e) => { if (e.key === 'Enter' && !piroNamingSaving) handlePiroNamingSave(); }}
-          />
-
-          {piroNamingError && (
-            <p className="text-red-400 text-xs mt-2">{piroNamingError}</p>
-          )}
-
-          <button
-            onClick={handlePiroNamingSave}
-            disabled={piroNamingSaving || !piroCustomName.trim()}
-            className="mt-5 w-full py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {piroNamingSaving ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
-            ) : (
-              <><Star className="w-4 h-4" /> Name My Dragon</>
-            )}
-          </button>
-
-          <button
-            onClick={() => { setShowPiroNaming(false); setPiroCustomName(''); }}
-            className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
-          >
-            Maybe later
-          </button>
-
-          <p className="text-white/30 text-xs mt-3">{piroCustomName.trim().length}/20 characters</p>
-        </div>
-      </div>
-    );
-  }
 
   // ==================== NAME PROMPT MODAL ====================
   // Blocks users without a display name until they add one
