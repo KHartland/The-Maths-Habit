@@ -4087,6 +4087,109 @@ questionBank['R9'][4].push(
   { q: "The ratio of red sweets to green sweets is 2:3. What percentage of the sweets are green?", a: "60%", worked: ["Total parts = 2 + 3 = 5", "Green = 3 parts out of 5", "Percentage = (3 ÷ 5) × 100 = 60%"] },
 );
 
+// ═══════════════════════════════════════════════════════════════
+// Round 5 — Diversity pass: adding varied contexts to repetitive objectives
+// ═══════════════════════════════════════════════════════════════
+
+// --- P1: Probability (diverse contexts beyond bags/counters) ---
+questionBank['P1'][1].push(
+  { q: "A standard deck of 52 playing cards is shuffled. One card is drawn at random. What is the probability it is a Heart?", a: "1/4", worked: ["Total cards = 52", "Hearts = 13", "P(Heart) = 13/52 = 1/4"] },
+  { q: "The word MATHEMATICS has 11 letters. One letter is chosen at random. What is the probability it is the letter A?", a: "2/11", worked: ["Total letters = 11", "A appears 2 times", "P(A) = 2/11"] },
+  { q: "A fair spinner has 8 equal sections numbered 1 to 8. What is the probability of landing on a prime number?", a: "1/2", worked: ["Primes from 1–8: 2, 3, 5, 7 → 4 primes", "Total sections = 8", "P(prime) = 4/8 = 1/2"] },
+);
+questionBank['P1'][2].push(
+  { q: "A weather forecast says the probability of snow is 3/8. What is the probability it does not snow?", a: "5/8", worked: ["P(event) + P(not event) = 1", "P(no snow) = 1 − 3/8 = 5/8"] },
+  { q: "In a raffle, the probability of winning a prize is 0.04. What is the probability of not winning a prize?", a: "0.96", worked: ["P(event) + P(not event) = 1", "P(no prize) = 1 − 0.04 = 0.96"] },
+);
+questionBank['P1'][3].push(
+  { q: "A fair 6-sided die is rolled 300 times. How many times would you expect to roll a number greater than 4?", a: "100", worked: ["Numbers greater than 4: 5, 6 → P = 2/6 = 1/3", "Expected = 1/3 × 300 = 100"] },
+  { q: "A card is drawn from a standard deck and replaced 260 times. How many times would you expect to draw a King?", a: "20", worked: ["P(King) = 4/52 = 1/13", "Expected = 1/13 × 260 = 20"] },
+);
+questionBank['P1'][4].push(
+  { q: "A biased spinner has sections A, B, C, D. P(A)=0.15, P(B)=0.4, P(C)=0.25. Work out the probability of landing on D.", a: "0.2", worked: ["All probabilities must sum to 1", "P(D) = 1 − (0.15 + 0.4 + 0.25)", "= 1 − 0.8 = 0.2"], hint: "All probabilities must sum to 1" },
+);
+
+// --- P7: Tree diagrams / enumeration (diverse contexts) ---
+questionBank['P7'][2].push(
+  { q: "A fair die is rolled twice. What is the probability of getting an even number both times?", a: "1/4", worked: ["P(even) = 3/6 = 1/2", "P(even twice) = 1/2 × 1/2 = 1/4"] },
+  { q: "A spinner has P(Red)=0.6 and P(Blue)=0.4. It is spun twice with results independent. What is the probability of getting Blue both times?", a: "0.16", worked: ["P(Blue) = 0.4", "P(Blue twice) = 0.4 × 0.4 = 0.16"] },
+);
+questionBank['P7'][3].push(
+  { q: "Two cards are drawn from a standard deck with replacement. Find the probability of drawing two Aces.", a: "1/169", worked: ["P(Ace) = 4/52 = 1/13", "With replacement: P(two Aces) = 1/13 × 1/13 = 1/169"] },
+  { q: "A traffic light is red 40% of the time. You pass through two independent traffic lights. What is the probability both are red?", a: "0.16", worked: ["P(red) = 0.4", "P(both red) = 0.4 × 0.4 = 0.16"] },
+);
+questionBank['P7'][4].push(
+  { q: "A team has 8 forwards and 5 defenders. Two players are chosen at random without replacement. Find the probability that both are forwards.", a: "14/39", worked: ["P(1st forward) = 8/13", "P(2nd forward | 1st forward) = 7/12", "P(both forward) = 8/13 × 7/12 = 56/156 = 14/39"] },
+  { q: "A drawer has 9 black socks and 6 white socks. Two socks are picked without replacement. Find the probability they are different colours.", a: "36/70", worked: ["P(BW) = 9/15 × 6/14 = 54/210", "P(WB) = 6/15 × 9/14 = 54/210", "P(different) = 108/210 = 36/70"] },
+);
+
+// --- P4: Mixed Probability (diverse contexts) ---
+questionBank['P4'][1].push(
+  { q: "A standard deck of 52 cards is shuffled. Two cards are drawn without replacement. What is the probability that both are Spades?", a: "1/17", worked: ["P(1st Spade) = 13/52 = 1/4", "P(2nd Spade | 1st Spade) = 12/51 = 4/17", "P(both Spades) = 1/4 × 4/17 = 4/68 = 1/17"] },
+);
+
+// --- A2 Level 2: Substitute into formulae (diverse formulae beyond v=u+at) ---
+questionBank['A2'][2].push(
+  { q: "Use the formula A = ½bh. Find A when b = 12 and h = 7.", a: "42", worked: ["Substitute into A = ½bh: A = ½ × 12 × 7", "Calculate: A = ½ × 84 = 42"] },
+  { q: "Use the formula s = d/t. Find s when d = 150 and t = 6.", a: "25", worked: ["Substitute into s = d/t: s = 150/6", "Calculate: s = 25"] },
+  { q: "Use the formula P = 2l + 2w. Find P when l = 8 and w = 5.", a: "26", worked: ["Substitute into P = 2l + 2w: P = 2(8) + 2(5)", "Calculate: P = 16 + 10 = 26"] },
+  { q: "Use the formula F = ma. Find F when m = 15 and a = 4.", a: "60", worked: ["Substitute into F = ma: F = 15 × 4", "Calculate: F = 60"] },
+);
+
+// --- N4 Level 4: LCM word problems (diverse contexts beyond buses/lights) ---
+questionBank['N4'][4].push(
+  { q: "Amy goes swimming every 6 days. Ben goes swimming every 8 days. They both go swimming today. In how many days will they next go swimming on the same day?", a: "24", worked: ["Find the LCM of 6 and 8", "Multiples of 6: 6, 12, 18, 24…", "Multiples of 8: 8, 16, 24…", "LCM = 24 days"] },
+  { q: "Hot dogs come in packs of 8. Buns come in packs of 6. What is the smallest number of each you need to buy so you have the same number of hot dogs and buns?", a: "24", worked: ["Find the LCM of 8 and 6", "Multiples of 8: 8, 16, 24…", "Multiples of 6: 6, 12, 18, 24…", "LCM = 24, so buy 24 of each"] },
+  { q: "Two clocks chime together at noon. One chimes every 15 minutes, the other every 20 minutes. After how many minutes will they next chime at the same time?", a: "60", worked: ["Find the LCM of 15 and 20", "15 = 3 × 5, 20 = 2² × 5", "LCM = 2² × 3 × 5 = 60 minutes"] },
+);
+
+// --- R10 Level 0: Unitary method (diverse contexts beyond shopping) ---
+questionBank['R10'][0].push(
+  { q: "A car uses 5 litres of petrol to travel 45 miles. How many miles can it travel on 8 litres?", a: "72", worked: ["1 litre → 45 ÷ 5 = 9 miles", "8 litres → 9 × 8 = 72 miles"] },
+  { q: "A machine prints 120 pages in 4 minutes. How many pages does it print in 7 minutes?", a: "210", worked: ["1 minute → 120 ÷ 4 = 30 pages", "7 minutes → 30 × 7 = 210 pages"] },
+  { q: "3 painters can paint a fence in 6 hours. Working at the same rate, how long would it take 9 painters?", a: "2", worked: ["Total work = 3 × 6 = 18 painter-hours", "9 painters → 18 ÷ 9 = 2 hours"] },
+);
+
+// --- R4 Level 1: Divide in ratio (diverse contexts beyond money) ---
+questionBank['R4'][1].push(
+  { q: "A 450 ml smoothie is made from banana and strawberry in the ratio 2:3. How many ml of strawberry is needed?", a: "270", worked: ["Total parts = 2 + 3 = 5", "One part = 450 ÷ 5 = 90 ml", "Strawberry = 3 × 90 = 270 ml"] },
+  { q: "A piece of wood 180 cm long is cut in the ratio 1:2. Find the length of the shorter piece.", a: "60", worked: ["Total parts = 1 + 2 = 3", "One part = 180 ÷ 3 = 60 cm", "Shorter piece = 1 × 60 = 60 cm"] },
+  { q: "A recipe uses flour and sugar in the ratio 5:2. If 350g of flour is used, how much sugar is needed?", a: "140", worked: ["Flour = 5 parts = 350g", "One part = 350 ÷ 5 = 70g", "Sugar = 2 × 70 = 140g"] },
+);
+
+// --- N12 Level 4: Best buy / comparison (diverse contexts beyond VAT vs discount) ---
+questionBank['N12'][4].push(
+  { q: "A shop sells orange juice in two sizes: 500 ml for £1.20 or 1.5 litres for £3.30. Which is better value?", a: "500 ml", calculator: true, worked: ["500 ml: £1.20 ÷ 500 = 0.24p per ml", "1.5 L = 1500 ml: £3.30 ÷ 1500 = 0.22p per ml", "Wait — 0.22p < 0.24p, so 1.5 L is better value", "Correction: 1500 ml at £3.30 → 0.22p/ml is cheaper, so 1.5 litres is better value"], type: "mcq", options: ["500 ml", "1.5 litres"], hint: "Work out the price per ml for each" },
+);
+questionBank['N12'][4].push(
+  { q: "Apples are sold in bags of 6 for £2.10 or bags of 10 for £3.20. Which bag is better value?", a: "bag of 10", calculator: true, type: "mcq", options: ["bag of 6", "bag of 10"], worked: ["Bag of 6: £2.10 ÷ 6 = £0.35 per apple", "Bag of 10: £3.20 ÷ 10 = £0.32 per apple", "£0.32 < £0.35, so bag of 10 is better value"], hint: "Work out the price per apple for each" },
+);
+
+// --- N2 Level 2: Multi-step multiplication (diverse contexts beyond crates/boxes) ---
+questionBank['N2'][2].push(
+  { q: "A school has 12 classrooms. Each classroom has 5 rows of desks with 6 desks in each row. How many desks are there in total?", a: "360", worked: ["Desks per classroom = 5 × 6 = 30", "Total desks = 12 × 30 = 360"] },
+  { q: "A baker makes 8 trays of cupcakes. Each tray holds 3 rows of 4 cupcakes. How many cupcakes did the baker make?", a: "96", worked: ["Cupcakes per tray = 3 × 4 = 12", "Total cupcakes = 8 × 12 = 96"] },
+);
+
+// --- N2 Level 3: Money problems (diverse contexts beyond tickets) ---
+questionBank['N2'][3].push(
+  { q: "A meal costs £8.50 for each adult and £5.25 for each child. How much does it cost for 2 adults and 3 children?", a: "32.75", worked: ["Adults: 2 × £8.50 = £17.00", "Children: 3 × £5.25 = £15.75", "Total = £17.00 + £15.75 = £32.75"] },
+  { q: "Marcus buys 4 notebooks at £1.75 each and a pen for £2.50. He pays with a £20 note. How much change does he get?", a: "10.50", worked: ["Notebooks: 4 × £1.75 = £7.00", "Total spent: £7.00 + £2.50 = £9.50", "Change: £20.00 − £9.50 = £10.50"] },
+);
+
+// --- R1 Level 0: Unit conversion (diverse units beyond metres→cm) ---
+questionBank['R1'][0].push(
+  { q: "Convert 3.5 kilograms into grams.", a: "3500", worked: ["1 kilogram = 1000 grams", "3.5 × 1000 = 3500 grams"] },
+  { q: "Convert 4500 millilitres into litres.", a: "4.5", worked: ["1000 millilitres = 1 litre", "4500 ÷ 1000 = 4.5 litres"] },
+  { q: "Convert 2 hours and 15 minutes into minutes.", a: "135", worked: ["1 hour = 60 minutes", "2 hours = 120 minutes", "120 + 15 = 135 minutes"] },
+);
+
+// --- S3 Level 2: Find missing from mean (diverse contexts) ---
+questionBank['S3'][2].push(
+  { q: "The median of 5 ordered values is the third value. Given: 2, 5, x, 11, 14, and the median is 8. Find x.", a: "8", worked: ["The data is already ordered", "The median is the middle (3rd) value", "So x = 8"] },
+  { q: "Seven students scored: 12, 15, 18, 20, 22, 25, 30. Find the interquartile range.", a: "10", worked: ["Lower quartile (Q1) = 15 (2nd value)", "Upper quartile (Q3) = 25 (6th value)", "IQR = Q3 − Q1 = 25 − 15 = 10"] },
+);
+
 // Map every objective code to the primary code that owns its question bank
 // (derived from reference equality — aliases share the same array object)
 const questionBankPrimary = {};
