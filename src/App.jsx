@@ -14,7 +14,7 @@ import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import DOMPurify from 'dompurify';
-import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
+import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud, clearCloudData } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
@@ -1872,6 +1872,13 @@ const resetAllProgress = () => {
     localStorage.removeItem(SESSION_HISTORY_KEY);
     localStorage.removeItem(DAILY_ACTIVITY_KEY);
     localStorage.removeItem(STREAK_DATA_KEY);
+    localStorage.removeItem(RECENT_QUESTIONS_KEY);
+    localStorage.removeItem(TOTAL_QUESTIONS_KEY);
+    localStorage.removeItem(FSRS_DATA_KEY);
+    localStorage.removeItem(PIRO_KEY);
+    localStorage.removeItem(TIPS_STORAGE_KEY);
+    localStorage.removeItem('maths-habit-1v1-daily');
+    localStorage.removeItem('maths_habit_recent_daily');
   } catch {}
 };
 
@@ -8781,10 +8788,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   };
 
   // Handle reset
-  const handleReset = () => {
+  const handleReset = async () => {
     resetAllProgress();
-    setProgress({});
-    setShowResetConfirm(false);
+    // Also clear cloud data so it doesn't sync back
+    if (user?.id) {
+      try { await clearCloudData(user.id); } catch {}
+    }
+    // Reload to reset all React state from now-empty localStorage
+    window.location.reload();
   };
 
   // Update setting

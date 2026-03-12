@@ -451,6 +451,26 @@ export const saveSettingsToCloud = async (userId, settings) => {
 /**
  * Save daily activity to cloud
  */
+/**
+ * Delete ALL user data from cloud (for reset)
+ */
+export const clearCloudData = async (userId) => {
+  if (!userId) return;
+
+  try {
+    await Promise.all([
+      restFetch(`user_progress?user_id=eq.${userId}`, { method: 'DELETE' }),
+      restFetch(`user_fsrs_cards?user_id=eq.${userId}`, { method: 'DELETE' }),
+      restFetch(`user_streaks?user_id=eq.${userId}`, { method: 'DELETE' }),
+      restFetch(`user_settings?user_id=eq.${userId}`, { method: 'DELETE' }),
+      restFetch(`daily_activity?user_id=eq.${userId}`, { method: 'DELETE' }),
+    ]);
+    if (import.meta.env.DEV) console.log('Cloud data cleared for user', userId);
+  } catch (error) {
+    console.error('Error clearing cloud data:', error);
+  }
+};
+
 export const saveDailyActivityToCloud = async (userId, date, activity) => {
   if (!userId) return;
 
