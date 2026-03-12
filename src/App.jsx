@@ -10385,6 +10385,21 @@ function AppContent() {
   const [promptNameSaving, setPromptNameSaving] = useState(false);
   const [promptNameError, setPromptNameError] = useState('');
 
+  // Real name prompt (first_name + surname for teacher records)
+  const [showRealNamePrompt, setShowRealNamePrompt] = useState(false);
+  const [realNameFirst, setRealNameFirst] = useState('');
+  const [realNameSurname, setRealNameSurname] = useState('');
+  const [realNameSaving, setRealNameSaving] = useState(false);
+  const [realNameError, setRealNameError] = useState('');
+
+  // School selection prompt
+  const [showSchoolPrompt, setShowSchoolPrompt] = useState(false);
+  const [schoolPromptFilter, setSchoolPromptFilter] = useState('');
+  const [schoolPromptList, setSchoolPromptList] = useState([]);
+  const [schoolPromptLoaded, setSchoolPromptLoaded] = useState(false);
+  const [schoolPromptJoining, setSchoolPromptJoining] = useState(false);
+  const [schoolPromptError, setSchoolPromptError] = useState('');
+
   // 1v1 daily limit for free users (1 per day)
   const FREE_1V1_LIMIT = 1;
   const get1v1TodayCount = () => {
@@ -10430,6 +10445,33 @@ function AppContent() {
       setShowNamePrompt(true);
     }
   }, [user, authLoading, profile, showOnboarding]);
+
+  // Prompt for real name (first_name + surname) if missing — for teacher records
+  useEffect(() => {
+    if (user && !authLoading && profile && profile.display_name && !profile.first_name && !showOnboarding && !showNamePrompt) {
+      setShowRealNamePrompt(true);
+    }
+  }, [user, authLoading, profile, showOnboarding, showNamePrompt]);
+
+  // Prompt for school if not a member of any — after real name is collected
+  useEffect(() => {
+    if (user && !authLoading && profile && profile.first_name && !userSchool && !showOnboarding && !showNamePrompt && !showRealNamePrompt) {
+      setShowSchoolPrompt(true);
+    }
+  }, [user, authLoading, profile, userSchool, showOnboarding, showNamePrompt, showRealNamePrompt]);
+
+  // Load schools list when school prompt appears
+  useEffect(() => {
+    if (showSchoolPrompt && !schoolPromptLoaded) {
+      getAllSchools().then(schools => {
+        setSchoolPromptList(schools || []);
+        setSchoolPromptLoaded(true);
+      }).catch(err => {
+        console.error('Failed to load schools:', err);
+        setSchoolPromptError('Could not load schools.');
+      });
+    }
+  }, [showSchoolPrompt, schoolPromptLoaded]);
 
   // Sync data when user logs in
   useEffect(() => {
@@ -11101,6 +11143,62 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
     }
   };
 
+  // ==================== REAL NAME PROMPT HANDLER ====================
+  const handleRealNameSave = async () => {
+    const first = realNameFirst.trim();
+    const last = realNameSurname.trim();
+    if (!first) { setRealNameError('Please enter your first name'); return; }
+    if (!last) { setRealNameError('Please enter your surname'); return; }
+    if (first.length < 2 || last.length < 2) { setRealNameError('Names must be at least 2 characters'); return; }
+
+    setRealNameSaving(true);
+    setRealNameError('');
+    try {
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+
+      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
+        method: 'PATCH',
+        headers: {
+          'apikey': supabaseAnonKey,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ first_name: first, surname: last }),
+      });
+
+      if (!res.ok) throw new Error('Failed to save name');
+      await refreshProfile();
+      setShowRealNamePrompt(false);
+      setRealNameFirst('');
+      setRealNameSurname('');
+    } catch (err) {
+      console.error('Real name save error:', err);
+      setRealNameError('Could not save. Please try again.');
+    } finally {
+      setRealNameSaving(false);
+    }
+  };
+
+  // ==================== SCHOOL PROMPT HANDLER ====================
+  const handleSchoolPromptSelect = async (school) => {
+    if (!user) return;
+    setSchoolPromptJoining(true);
+    setSchoolPromptError('');
+    try {
+      await joinSchool(user.id, school.id);
+      setUserSchool(school);
+      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
+      setShowSchoolPrompt(false);
+    } catch (err) {
+      setSchoolPromptError(err.message || 'Failed to join school');
+    } finally {
+      setSchoolPromptJoining(false);
+    }
+  };
+
   if (showNamePrompt) {
     return (
       <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
@@ -11146,6 +11244,139 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
           </button>
 
           <p className="text-white/30 text-xs mt-3">{promptDisplayName.trim().length}/20 characters</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ==================== REAL NAME PROMPT MODAL ====================
+  if (showRealNamePrompt) {
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-5 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-glow-violet">
+            <User className="w-8 h-8 text-white" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-white mb-2">One more thing!</h2>
+          <p className="text-secondary-text text-sm mb-6">
+            Please enter your real name so we know who you are.
+          </p>
+          <p className="text-white/50 text-xs mb-6">
+            Only your display name will ever show in the app — your real name stays private.
+          </p>
+
+          <input
+            type="text"
+            value={realNameFirst}
+            onChange={(e) => { setRealNameFirst(e.target.value); setRealNameError(''); }}
+            placeholder="First name"
+            maxLength={50}
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="text"
+            value={realNameSurname}
+            onChange={(e) => { setRealNameSurname(e.target.value); setRealNameError(''); }}
+            placeholder="Surname"
+            maxLength={50}
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !realNameSaving) handleRealNameSave(); }}
+          />
+
+          {realNameError && (
+            <p className="text-red-400 text-xs mt-2">{realNameError}</p>
+          )}
+
+          <button
+            onClick={handleRealNameSave}
+            disabled={realNameSaving || !realNameFirst.trim() || !realNameSurname.trim()}
+            className="mt-5 w-full py-3 btn-gradient-mint text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {realNameSaving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
+            ) : (
+              <><Check className="w-4 h-4" /> Continue</>
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ==================== SCHOOL SELECTION PROMPT MODAL ====================
+  if (showSchoolPrompt) {
+    const filteredSchoolsPrompt = schoolPromptFilter.trim().length < 2
+      ? []
+      : schoolPromptList.filter(s =>
+          (s.name || '').toLowerCase().includes(schoolPromptFilter.toLowerCase()) ||
+          (s.town || '').toLowerCase().includes(schoolPromptFilter.toLowerCase())
+        );
+
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          <div className="w-16 h-16 rounded-2xl mx-auto mb-5 bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-glow-violet">
+            <School className="w-8 h-8 text-white" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-white mb-2">Select your school</h2>
+          <p className="text-secondary-text text-sm mb-6">
+            This helps your teacher track your progress. You can change it later in Settings.
+          </p>
+
+          <input
+            type="text"
+            value={schoolPromptFilter}
+            onChange={(e) => setSchoolPromptFilter(e.target.value)}
+            placeholder="Search by school name or town..."
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-500 mb-3"
+          />
+
+          {schoolPromptError && (
+            <p className="text-red-400 text-xs mb-3">{schoolPromptError}</p>
+          )}
+
+          {schoolPromptFilter.trim().length < 2 ? (
+            <p className="text-secondary-text text-sm py-4">Start typing to search...</p>
+          ) : !schoolPromptLoaded ? (
+            <p className="text-secondary-text text-sm py-4">Loading schools...</p>
+          ) : filteredSchoolsPrompt.length === 0 ? (
+            <p className="text-secondary-text text-sm py-4">No schools found for "{schoolPromptFilter}"</p>
+          ) : (
+            <div className="max-h-48 overflow-y-auto space-y-2 mb-3 text-left">
+              {filteredSchoolsPrompt.map(school => (
+                <button
+                  key={school.id}
+                  onClick={() => handleSchoolPromptSelect(school)}
+                  disabled={schoolPromptJoining}
+                  className="w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors disabled:opacity-50"
+                >
+                  <div className="font-medium">{school.name}</div>
+                  {school.town && <div className="text-xs text-secondary-text">{school.town}</div>}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <button
+            onClick={() => setShowSchoolPrompt(false)}
+            disabled={schoolPromptJoining}
+            className="w-full py-2 text-secondary-text text-sm hover:text-white transition-colors mt-2"
+          >
+            Skip for now
+          </button>
         </div>
       </div>
     );

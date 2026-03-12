@@ -198,12 +198,18 @@ end $$;
 create table if not exists public.profiles (
   id                  uuid primary key references auth.users(id) on delete cascade,
   display_name        text,
+  first_name          text,
+  surname             text,
   subscription_status text default 'free',
   subscription_type   text,
   promo_code_used     text,
   created_at          timestamptz default now(),
   updated_at          timestamptz default now()
 );
+
+-- Add first_name/surname to existing profiles table (safe to re-run)
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS first_name text;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS surname text;
 
 alter table public.profiles enable row level security;
 
@@ -355,10 +361,15 @@ end $$;
 -- 10. SCHOOL LEADERBOARD RPC FUNCTION
 -- Sums quick_correct from user_progress for each school member
 -- ═══════════════════════════════════════════════════════════
+-- Drop first because return type changed (added first_name, surname)
+drop function if exists public.get_school_leaderboard(uuid);
+
 create or replace function public.get_school_leaderboard(p_school_id uuid)
 returns table (
   user_id       uuid,
   display_name  text,
+  first_name    text,
+  surname       text,
   total_correct bigint
 )
 language sql
@@ -368,15 +379,53 @@ as $$
   select
     sm.user_id,
     coalesce(p.display_name, split_part(u.email, '@', 1)) as display_name,
+    p.first_name,
+    p.surname,
     coalesce(sum(up.quick_correct), 0) as total_correct
   from public.school_members sm
   join auth.users u on u.id = sm.user_id
   left join public.profiles p on p.id = sm.user_id
   left join public.user_progress up on up.user_id = sm.user_id
   where sm.school_id = p_school_id
-  group by sm.user_id, p.display_name, u.email
+  group by sm.user_id, p.display_name, u.email, p.first_name, p.surname
   order by total_correct desc, display_name asc;
 $$;
+
+
+-- ═══════════════════════════════════════════════════════════
+-- 11. TEACHER ROLE & READ-ACCESS POLICIES
+-- Lets a teacher see student data within their school.
+-- Safe to re-run. Does NOT affect students — they still
+-- only see their own data.
+-- After running, promote yourself:
+--   UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR-UUID';
+-- ═══════════════════════════════════════════════════════════
+
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS role text DEFAULT 'student';
+
+CREATE OR REPLACE FUNCTION public.is_teacher_for_user(target_user_id uuid)
+RETURNS boolean LANGUAGE sql SECURITY DEFINER STABLE AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM public.profiles p
+    JOIN public.school_members sm_teacher ON sm_teacher.user_id = auth.uid()
+    JOIN public.school_members sm_student ON sm_student.user_id = target_user_id
+    WHERE p.id = auth.uid() AND p.role = 'teacher'
+      AND sm_teacher.school_id = sm_student.school_id
+  );
+$$;
+
+-- Replace the 3 restrictive SELECT policies with teacher-aware ones
+DROP POLICY IF EXISTS "user_progress_select" ON public.user_progress;
+CREATE POLICY "user_progress_select" ON public.user_progress FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR public.is_teacher_for_user(user_id));
+
+DROP POLICY IF EXISTS "daily_activity_select" ON public.daily_activity;
+CREATE POLICY "daily_activity_select" ON public.daily_activity FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR public.is_teacher_for_user(user_id));
+
+DROP POLICY IF EXISTS "user_streaks_select" ON public.user_streaks;
+CREATE POLICY "user_streaks_select" ON public.user_streaks FOR SELECT TO authenticated
+  USING (user_id = auth.uid() OR public.is_teacher_for_user(user_id));
 
 
 -- ═══════════════════════════════════════════════════════════

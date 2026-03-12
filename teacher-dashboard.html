@@ -420,9 +420,11 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
   <script>
     // ═══════════════════════════════════════════
-    // STATE
+    // STATE (no Supabase JS client — pure fetch)
     // ═══════════════════════════════════════════
-    let sbClient = null;
+    let API_URL = '';       // e.g. https://xyz.supabase.co
+    let ANON_KEY = '';      // project anon key
+    let ACCESS_TOKEN = '';  // JWT from sign-in
     let currentUser = null;
     let allStudentData = [];
     let schools = [];
@@ -434,6 +436,47 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     function announce(msg) {
       announcer.textContent = '';
       requestAnimationFrame(() => { announcer.textContent = msg; });
+    }
+
+    // ═══════════════════════════════════════════
+    // RAW FETCH HELPERS (PostgREST + GoTrue)
+    // ═══════════════════════════════════════════
+    async function restGet(path) {
+      const r = await fetch(`${API_URL}/rest/v1/${path}`, {
+        headers: {
+          'apikey': ANON_KEY,
+          'Authorization': `Bearer ${ACCESS_TOKEN || ANON_KEY}`,
+        },
+      });
+      if (!r.ok) {
+        const body = await r.text();
+        if (r.status === 406 || body.includes('PGRST116')) return [];
+        throw new Error(`HTTP ${r.status}: ${body.slice(0, 200)}`);
+      }
+      const text = await r.text();
+      return text ? JSON.parse(text) : [];
+    }
+
+    async function restRpc(fnName, params) {
+      const r = await fetch(`${API_URL}/rest/v1/rpc/${fnName}`, {
+        method: 'POST',
+        headers: {
+          'apikey': ANON_KEY,
+          'Authorization': `Bearer ${ACCESS_TOKEN || ANON_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+      });
+      if (!r.ok) {
+        const body = await r.text();
+        throw new Error(`RPC ${fnName} failed: ${body.slice(0, 200)}`);
+      }
+      return r.json();
+    }
+
+    // PostgREST "in" filter helper: column=in.(val1,val2,...)
+    function inFilter(col, arr) {
+      return `${col}=in.(${arr.join(',')})`;
     }
 
     // ═══════════════════════════════════════════
@@ -453,27 +496,32 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         announce('Connecting...');
-        sbClient = window.supabase.createClient(url, anonKey);
 
-        // Test by fetching 1 school (public table)
-        const { data, error } = await sbClient.from('schools').select('id').limit(1);
-        if (error) throw error;
+        // Test by fetching 1 school (public table) using raw fetch
+        const testR = await fetch(`${url}/rest/v1/schools?select=id&limit=1`, {
+          headers: { 'apikey': anonKey, 'Authorization': `Bearer ${anonKey}` },
+        });
+        if (!testR.ok) throw new Error(`HTTP ${testR.status}`);
 
-        // Save for session
+        // Connection works — save
+        API_URL = url;
+        ANON_KEY = anonKey;
         sessionStorage.setItem('mh_url', url);
         sessionStorage.setItem('mh_anon', anonKey);
 
         // Show step 2
         $('#step1-badge').classList.add('step-done');
-        $('#step1-badge').textContent = '✓';
+        $('#step1-badge').textContent = '\u2713';
         $('#step-login').style.display = 'block';
         announce('Connected. Please sign in.');
         $('#input-email').focus();
 
-        // Check if already logged in
-        const { data: { session } } = await sbClient.auth.getSession();
-        if (session) {
-          currentUser = session.user;
+        // Check if we have a stored token from a previous sign-in
+        const storedToken = sessionStorage.getItem('mh_token');
+        const storedUser = sessionStorage.getItem('mh_user');
+        if (storedToken && storedUser) {
+          ACCESS_TOKEN = storedToken;
+          currentUser = JSON.parse(storedUser);
           await showDashboard();
         }
       } catch (err) {
@@ -484,7 +532,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     });
 
     // ═══════════════════════════════════════════
-    // STEP 2: SIGN IN
+    // STEP 2: SIGN IN (GoTrue REST API)
     // ═══════════════════════════════════════════
     $('#btn-login').addEventListener('click', async () => {
       const email = $('#input-email').value.trim();
@@ -500,10 +548,29 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         announce('Signing in...');
-        const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-        if (error) throw error;
 
-        currentUser = data.user;
+        const r = await fetch(`${API_URL}/auth/v1/token?grant_type=password`, {
+          method: 'POST',
+          headers: {
+            'apikey': ANON_KEY,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (!r.ok) {
+          const body = await r.json().catch(() => ({}));
+          throw new Error(body.error_description || body.msg || `HTTP ${r.status}`);
+        }
+
+        const session = await r.json();
+        ACCESS_TOKEN = session.access_token;
+        currentUser = session.user;
+
+        // Persist for page refresh
+        sessionStorage.setItem('mh_token', ACCESS_TOKEN);
+        sessionStorage.setItem('mh_user', JSON.stringify(currentUser));
+
         await showDashboard();
       } catch (err) {
         errEl.textContent = `Sign in failed: ${err.message || err}`;
@@ -534,28 +601,25 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     async function loadUserSchoolAndStudents() {
       try {
         // Find user's school
-        const { data: membership, error: memErr } = await sbClient
-          .from('school_members')
-          .select('school_id')
-          .eq('user_id', currentUser.id)
-          .limit(1)
-          .single();
+        const members = await restGet(
+          `school_members?select=school_id&user_id=eq.${currentUser.id}&limit=1`
+        );
 
-        if (memErr || !membership) {
-          // User not in a school — let them pick
+        if (!members || members.length === 0) {
           await loadAllSchools();
           announce('You\'re not in a school yet. Select one from the dropdown.');
           return;
         }
 
-        // Get school info
-        const { data: school } = await sbClient
-          .from('schools')
-          .select('id, name, town')
-          .eq('id', membership.school_id)
-          .single();
+        const schoolId = members[0].school_id;
 
-        if (school) {
+        // Get school info
+        const schoolArr = await restGet(
+          `schools?select=id,name,town&id=eq.${schoolId}&limit=1`
+        );
+
+        if (schoolArr && schoolArr.length > 0) {
+          const school = schoolArr[0];
           $('#school-select').innerHTML = `<option value="${school.id}">${school.name}${school.town ? ' (' + school.town + ')' : ''}</option>`;
           await loadStudentsForSchool(school.id);
         }
@@ -566,15 +630,13 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     }
 
     async function loadAllSchools() {
-      const { data: allSchools } = await sbClient
-        .from('schools')
-        .select('id, name, town')
-        .order('name', { ascending: true })
-        .limit(1000);
+      const allSchools = await restGet(
+        'schools?select=id,name,town&order=name.asc&limit=1000'
+      );
 
       schools = allSchools || [];
       const sel = $('#school-select');
-      sel.innerHTML = '<option value="">— Select a school (' + schools.length + ') —</option>';
+      sel.innerHTML = '<option value="">\u2014 Select a school (' + schools.length + ') \u2014</option>';
       schools.forEach(s => {
         const opt = document.createElement('option');
         opt.value = s.id;
@@ -602,12 +664,10 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
       try {
         // Get members
-        const { data: members, error: memErr } = await sbClient
-          .from('school_members')
-          .select('user_id')
-          .eq('school_id', schoolId);
+        const members = await restGet(
+          `school_members?select=user_id&school_id=eq.${schoolId}`
+        );
 
-        if (memErr) throw memErr;
         if (!members || members.length === 0) {
           loading.style.display = 'none';
           tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No students found in this school</td></tr>';
@@ -617,29 +677,37 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         }
 
         const userIds = members.map(m => m.user_id);
+        const inList = inFilter('user_id', userIds);
+        const idInList = inFilter('id', userIds);
 
-        // Fetch all data in parallel
+        // Fetch all data in parallel using raw PostgREST
         const [profiles, streaks, dailyActivity, progressData, matchesHost, matchesGuest, leaderboard] = await Promise.all([
-          sbClient.from('profiles').select('id, display_name').in('id', userIds).then(r => r.data || []),
-          sbClient.from('user_streaks').select('user_id, current_streak, longest_streak, last_activity_date').in('user_id', userIds).then(r => r.data || []),
-          sbClient.from('daily_activity').select('user_id, date, questions_answered, correct_answers').in('user_id', userIds).order('date', { ascending: false }).then(r => r.data || []),
-          sbClient.from('user_progress').select('user_id, objective_code, quick_correct, exam_passed').in('user_id', userIds).then(r => r.data || []),
-          sbClient.from('matches').select('id, host_id').in('host_id', userIds).eq('status', 'finished').then(r => r.data || []),
-          sbClient.from('matches').select('id, guest_id').in('guest_id', userIds).eq('status', 'finished').then(r => r.data || []),
-          sbClient.rpc('get_school_leaderboard', { p_school_id: schoolId }).then(r => r.data || []),
+          restGet(`profiles?select=id,display_name&${idInList}`),
+          restGet(`user_streaks?select=user_id,current_streak,longest_streak,last_activity_date&${inList}`),
+          restGet(`daily_activity?select=user_id,date,questions_answered,correct_answers&${inList}&order=date.desc`),
+          restGet(`user_progress?select=user_id,objective_code,quick_correct,exam_passed&${inList}`),
+          restGet(`matches?select=id,host_id&${inFilter('host_id', userIds)}&status=eq.finished`),
+          restGet(`matches?select=id,guest_id&${inFilter('guest_id', userIds)}&status=eq.finished`),
+          restRpc('get_school_leaderboard', { p_school_id: schoolId }),
         ]);
 
         // Check if we got any data back (RLS might be blocking)
         const gotData = streaks.length > 0 || dailyActivity.length > 0 || progressData.length > 0;
         if (!gotData && members.length > 1) {
-          // Probably RLS is blocking — show warning
           $('#rls-warning').style.display = 'block';
           $('#setup-instructions').open = true;
         } else {
           $('#rls-warning').style.display = 'none';
         }
 
-        // Index data
+        // Index data — use leaderboard RPC for names (it bypasses RLS via SECURITY DEFINER)
+        const lbData = leaderboard || [];
+        const nameMap = {}; lbData.forEach(e => {
+          // Prefer real name (first_name + surname) over display_name
+          nameMap[e.user_id] = (e.first_name && e.surname)
+            ? `${e.first_name} ${e.surname}`
+            : e.display_name;
+        });
         const profileMap = {}; profiles.forEach(p => { profileMap[p.id] = p; });
         const streakMap = {}; streaks.forEach(s => { streakMap[s.user_id] = s; });
         const dailyMap = {}; dailyActivity.forEach(d => { if (!dailyMap[d.user_id]) dailyMap[d.user_id] = []; dailyMap[d.user_id].push(d); });
@@ -647,7 +715,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         const battleMap = {};
         matchesHost.forEach(m => { battleMap[m.host_id] = (battleMap[m.host_id] || 0) + 1; });
         matchesGuest.forEach(m => { battleMap[m.guest_id] = (battleMap[m.guest_id] || 0) + 1; });
-        const lbMap = {}; leaderboard.forEach((e, i) => { lbMap[e.user_id] = { rank: i + 1, totalCorrect: e.total_correct }; });
+        const lbMap = {}; lbData.forEach((e, i) => { lbMap[e.user_id] = { rank: i + 1, totalCorrect: e.total_correct }; });
 
         // Total objectives
         const allObj = new Set(); progressData.forEach(p => allObj.add(p.objective_code));
@@ -662,7 +730,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
           const daily = dailyMap[uid] || [];
           const progress = progressMap[uid] || [];
           const battles = battleMap[uid] || 0;
-          const lb = lbMap[uid] || { rank: '—', totalCorrect: 0 };
+          const lb = lbMap[uid] || { rank: '\u2014', totalCorrect: 0 };
 
           const lastActivity = streak.last_activity_date || (daily.length > 0 ? daily[0].date : null);
           const totalQ = daily.reduce((s, d) => s + (d.questions_answered || 0), 0);
@@ -673,7 +741,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
           const isToday = daily.some(d => d.date === today);
 
           return {
-            userId: uid, name: profile.display_name || 'Unknown',
+            userId: uid, name: nameMap[uid] || profile.display_name || 'Unknown',
             lastLogin: lastActivity, totalQuestions: totalQ, questionsThisWeek: weekQ,
             gridPercent: gridPct, masteredCount: mastered, totalObjectives: totalObj,
             battles, sessions, streak: streak.current_streak || 0,
@@ -719,7 +787,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         const streakBadge = s.streak >= 7 ? 'badge-streak' : s.streak >= 3 ? 'badge-success' : s.streak >= 1 ? 'badge-warning' : 'badge-neutral';
         const lbDisplay = typeof s.leaderboardRank === 'number'
           ? (s.leaderboardRank <= 3 ? ['',' \u{1F947}',' \u{1F948}',' \u{1F949}'][s.leaderboardRank] : '') + ' #' + s.leaderboardRank
-          : '—';
+          : '\u2014';
 
         return `<tr>
           <td class="num">${i + 1}</td>
@@ -727,7 +795,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
           <td><span class="badge ${lastBadge}" aria-label="Last active ${lastLabel}">${lastLabel}</span></td>
           <td class="num">${s.totalQuestions.toLocaleString()}<div class="text-sm text-muted">${s.questionsThisWeek} this week</div></td>
           <td>
-            <div class="progress-bar-container" role="progressbar" aria-valuenow="${s.gridPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="Grid ${s.gridPercent}% — ${s.masteredCount}/${s.totalObjectives} mastered">
+            <div class="progress-bar-container" role="progressbar" aria-valuenow="${s.gridPercent}" aria-valuemin="0" aria-valuemax="100" aria-label="Grid ${s.gridPercent}% \u2014 ${s.masteredCount}/${s.totalObjectives} mastered">
               <div class="progress-bar-fill" style="width:${Math.max(s.gridPercent,2)}%;background:${gridCol};"></div>
               <span class="progress-bar-label">${s.gridPercent}%</span>
             </div>
@@ -760,7 +828,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
     function clearSummary() {
       ['stat-students','stat-active-today','stat-questions-week','stat-avg-streak','stat-total-battles','stat-avg-grid']
-        .forEach(id => $(`#${id}`).textContent = '—');
+        .forEach(id => $(`#${id}`).textContent = '\u2014');
     }
 
     // ═══════════════════════════════════════════
@@ -837,7 +905,15 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     });
 
     $('#btn-logout').addEventListener('click', async () => {
-      if (sbClient) await sbClient.auth.signOut();
+      // Sign out via GoTrue API (best-effort)
+      try {
+        if (ACCESS_TOKEN) {
+          await fetch(`${API_URL}/auth/v1/logout`, {
+            method: 'POST',
+            headers: { 'apikey': ANON_KEY, 'Authorization': `Bearer ${ACCESS_TOKEN}` },
+          });
+        }
+      } catch (e) { /* ignore */ }
       sessionStorage.clear();
       location.reload();
     });
@@ -878,17 +954,20 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
       const url = sessionStorage.getItem('mh_url');
       const key = sessionStorage.getItem('mh_anon');
       if (url && key) {
+        API_URL = url;
+        ANON_KEY = key;
         $('#input-url').value = url;
         $('#input-anon-key').value = key;
         try {
-          sbClient = window.supabase.createClient(url, key);
-          const { data: { session } } = await sbClient.auth.getSession();
-          if (session) {
-            currentUser = session.user;
+          const storedToken = sessionStorage.getItem('mh_token');
+          const storedUser = sessionStorage.getItem('mh_user');
+          if (storedToken && storedUser) {
+            ACCESS_TOKEN = storedToken;
+            currentUser = JSON.parse(storedUser);
             await showDashboard();
           } else {
             $('#step1-badge').classList.add('step-done');
-            $('#step1-badge').textContent = '✓';
+            $('#step1-badge').textContent = '\u2713';
             $('#step-login').style.display = 'block';
           }
         } catch(e) { console.error(e); }

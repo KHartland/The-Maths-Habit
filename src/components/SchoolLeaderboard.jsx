@@ -15,6 +15,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('monthly'); // 'monthly' (default) or 'alltime'
+  const [monthlyAvailable, setMonthlyAvailable] = useState(true); // false if RPC not deployed yet
 
   const fetchLeaderboard = async () => {
     if (!schoolId) return;
@@ -23,7 +24,14 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
     try {
       let data;
       if (view === 'monthly') {
-        data = await getSchoolLeaderboardMonthly(schoolId);
+        try {
+          data = await getSchoolLeaderboardMonthly(schoolId);
+        } catch (monthlyErr) {
+          // Monthly RPC may not be deployed yet — fall back to all-time
+          console.warn('Monthly leaderboard not available, falling back to all-time:', monthlyErr.message);
+          data = await getSchoolLeaderboard(schoolId);
+          setMonthlyAvailable(false);
+        }
       } else {
         data = await getSchoolLeaderboard(schoolId);
       }
@@ -95,7 +103,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
       )}
 
       {/* Monthly / All Time toggle */}
-      {!compact && (
+      {!compact && monthlyAvailable && (
         <div className="flex items-center gap-1 mb-4 p-1 bg-white/5 rounded-xl">
           <button
             onClick={() => setView('monthly')}
@@ -123,7 +131,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
       )}
 
       {/* Monthly info banner */}
-      {!compact && view === 'monthly' && (
+      {!compact && monthlyAvailable && view === 'monthly' && (
         <div className="mb-3 px-3 py-2 bg-violet/10 border border-violet/20 rounded-lg">
           <p className="text-xs text-secondary-text text-center">
             Resets on the 1st of each month — everyone starts fresh!
@@ -136,7 +144,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
         <div className="mb-4 p-3 bg-metallic-base/10 border border-metallic-base/30 rounded-xl text-center">
           <span className="text-sm text-primary-text">
             You are <span className="font-bold text-metallic-base">#{userEntry.rank}</span> of {memberCount}
-            {view === 'monthly' && <span className="text-secondary-text text-xs ml-1">this month</span>}
+            {monthlyAvailable && view === 'monthly' && <span className="text-secondary-text text-xs ml-1">this month</span>}
           </span>
         </div>
       )}
