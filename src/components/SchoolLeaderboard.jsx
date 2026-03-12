@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, RefreshCw, Users } from 'lucide-react';
-import { getSchoolLeaderboard } from '../lib/leaderboardService';
+import { Trophy, RefreshCw, Users, Calendar, Clock } from 'lucide-react';
+import { getSchoolLeaderboard, getSchoolLeaderboardMonthly } from '../lib/leaderboardService';
 import { sanitiseName } from '../lib/profanityFilter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
+
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
 const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = false }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [view, setView] = useState('monthly'); // 'monthly' (default) or 'alltime'
 
   const fetchLeaderboard = async () => {
     if (!schoolId) return;
     setLoading(true);
     setError('');
     try {
-      const data = await getSchoolLeaderboard(schoolId);
+      let data;
+      if (view === 'monthly') {
+        data = await getSchoolLeaderboardMonthly(schoolId);
+      } else {
+        data = await getSchoolLeaderboard(schoolId);
+      }
       setLeaderboard(data);
     } catch (err) {
       console.error('Leaderboard fetch error:', err);
@@ -27,11 +38,14 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
 
   useEffect(() => {
     fetchLeaderboard();
-  }, [schoolId]);
+  }, [schoolId, view]);
 
   const displayData = compact ? leaderboard.slice(0, 5) : leaderboard;
   const userEntry = leaderboard.find(e => e.userId === currentUserId);
   const memberCount = leaderboard.length;
+
+  const now = new Date();
+  const currentMonthName = MONTH_NAMES[now.getMonth()];
 
   if (loading) {
     return (
@@ -51,7 +65,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
     );
   }
 
-  if (leaderboard.length === 0) {
+  if (leaderboard.length === 0 && view === 'alltime') {
     return (
       <div className="text-center py-6">
         <Users className="w-8 h-8 text-secondary-text mx-auto mb-2" />
@@ -64,7 +78,7 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
     <div>
       {/* Header (full mode only) */}
       {!compact && (
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-[#FBBF24]" />
             <h3 className="font-bold text-white">{schoolName}</h3>
@@ -80,95 +94,144 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
         </div>
       )}
 
+      {/* Monthly / All Time toggle */}
+      {!compact && (
+        <div className="flex items-center gap-1 mb-4 p-1 bg-white/5 rounded-xl">
+          <button
+            onClick={() => setView('monthly')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
+              view === 'monthly'
+                ? 'bg-violet/30 text-white border border-violet/40 shadow-sm'
+                : 'text-secondary-text hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            {currentMonthName}
+          </button>
+          <button
+            onClick={() => setView('alltime')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
+              view === 'alltime'
+                ? 'bg-violet/30 text-white border border-violet/40 shadow-sm'
+                : 'text-secondary-text hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5" />
+            All Time
+          </button>
+        </div>
+      )}
+
+      {/* Monthly info banner */}
+      {!compact && view === 'monthly' && (
+        <div className="mb-3 px-3 py-2 bg-violet/10 border border-violet/20 rounded-lg">
+          <p className="text-xs text-secondary-text text-center">
+            Resets on the 1st of each month — everyone starts fresh!
+          </p>
+        </div>
+      )}
+
       {/* User's rank callout (full mode) */}
       {!compact && userEntry && (
         <div className="mb-4 p-3 bg-metallic-base/10 border border-metallic-base/30 rounded-xl text-center">
           <span className="text-sm text-primary-text">
             You are <span className="font-bold text-metallic-base">#{userEntry.rank}</span> of {memberCount}
+            {view === 'monthly' && <span className="text-secondary-text text-xs ml-1">this month</span>}
           </span>
         </div>
       )}
 
-      {/* Leaderboard rows */}
-      <div className="space-y-1.5">
-        {displayData.map((entry) => {
-          const isCurrentUser = entry.userId === currentUserId;
-          const medal = entry.rank <= 3 ? MEDALS[entry.rank - 1] : null;
+      {/* Empty state for monthly when no one has scored yet */}
+      {leaderboard.length === 0 && view === 'monthly' ? (
+        <div className="text-center py-6">
+          <Calendar className="w-8 h-8 text-secondary-text mx-auto mb-2" />
+          <p className="text-secondary-text text-sm">No scores yet for {currentMonthName}.</p>
+          <p className="text-secondary-text text-xs mt-1">Be the first to practise this month!</p>
+        </div>
+      ) : (
+        <>
+          {/* Leaderboard rows */}
+          <div className="space-y-1.5">
+            {displayData.map((entry) => {
+              const isCurrentUser = entry.userId === currentUserId;
+              const medal = entry.rank <= 3 ? MEDALS[entry.rank - 1] : null;
 
-          return (
-            <div
-              key={entry.userId}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                isCurrentUser
-                  ? 'bg-metallic-base/15 border border-metallic-base/30'
-                  : 'bg-white/5 hover:bg-white/10'
-              }`}
-            >
-              {/* Rank */}
-              <div className="w-8 text-center flex-shrink-0">
-                {medal ? (
-                  <span className="text-lg">{medal}</span>
-                ) : (
-                  <span className="text-sm font-bold text-secondary-text">{entry.rank}</span>
-                )}
-              </div>
-
-              {/* Avatar + Name */}
-              {entry.avatarUrl ? (
-                <img
-                  src={entry.avatarUrl}
-                  alt=""
-                  className={`w-8 h-8 rounded-full object-cover flex-shrink-0 ring-2 ${
-                    entry.rank === 1 ? 'ring-[#FBBF24]' :
-                    entry.rank === 2 ? 'ring-gray-400' :
-                    entry.rank === 3 ? 'ring-amber-600' :
-                    'ring-transparent'
+              return (
+                <div
+                  key={entry.userId}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+                    isCurrentUser
+                      ? 'bg-metallic-base/15 border border-metallic-base/30'
+                      : 'bg-white/5 hover:bg-white/10'
                   }`}
-                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-                />
-              ) : null}
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${
-                  entry.rank === 1 ? 'bg-gradient-to-br from-[#FBBF24] to-amber-600' :
-                  entry.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
-                  entry.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-800' :
-                  'bg-metallic-base/40'
-                }`}
-                style={entry.avatarUrl ? { display: 'none' } : {}}
-              >
-                {sanitiseName(entry.displayName)?.[0]?.toUpperCase() || '?'}
-              </div>
+                >
+                  {/* Rank */}
+                  <div className="w-8 text-center flex-shrink-0">
+                    {medal ? (
+                      <span className="text-lg">{medal}</span>
+                    ) : (
+                      <span className="text-sm font-bold text-secondary-text">{entry.rank}</span>
+                    )}
+                  </div>
 
-              <div className="flex-1 min-w-0">
-                <span className={`text-sm font-medium truncate block ${
-                  isCurrentUser ? 'text-metallic-base' : 'text-white/90'
-                }`}>
-                  {sanitiseName(entry.displayName)}
-                  {isCurrentUser && <span className="text-xs text-secondary-text ml-1">(you)</span>}
-                </span>
-              </div>
+                  {/* Avatar + Name */}
+                  {entry.avatarUrl ? (
+                    <img
+                      src={entry.avatarUrl}
+                      alt=""
+                      className={`w-8 h-8 rounded-full object-cover flex-shrink-0 ring-2 ${
+                        entry.rank === 1 ? 'ring-[#FBBF24]' :
+                        entry.rank === 2 ? 'ring-gray-400' :
+                        entry.rank === 3 ? 'ring-amber-600' :
+                        'ring-transparent'
+                      }`}
+                      onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                    />
+                  ) : null}
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0 ${
+                      entry.rank === 1 ? 'bg-gradient-to-br from-[#FBBF24] to-amber-600' :
+                      entry.rank === 2 ? 'bg-gradient-to-br from-gray-300 to-gray-500' :
+                      entry.rank === 3 ? 'bg-gradient-to-br from-amber-600 to-amber-800' :
+                      'bg-metallic-base/40'
+                    }`}
+                    style={entry.avatarUrl ? { display: 'none' } : {}}
+                  >
+                    {sanitiseName(entry.displayName)?.[0]?.toUpperCase() || '?'}
+                  </div>
 
-              {/* Score */}
-              <div className="text-right flex-shrink-0">
-                <span className={`text-sm font-bold ${
-                  entry.rank === 1 ? 'text-[#FBBF24]' : 'text-white/90'
-                }`}>
-                  {entry.totalCorrect}
-                </span>
-                {!compact && (
-                  <span className="text-xs text-secondary-text ml-1">correct</span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+                  <div className="flex-1 min-w-0">
+                    <span className={`text-sm font-medium truncate block ${
+                      isCurrentUser ? 'text-metallic-base' : 'text-white/90'
+                    }`}>
+                      {sanitiseName(entry.displayName)}
+                      {isCurrentUser && <span className="text-xs text-secondary-text ml-1">(you)</span>}
+                    </span>
+                  </div>
 
-      {/* "View more" hint in compact mode */}
-      {compact && leaderboard.length > 5 && (
-        <p className="text-center text-xs text-secondary-text mt-3">
-          +{leaderboard.length - 5} more · View full leaderboard in Stats
-        </p>
+                  {/* Score */}
+                  <div className="text-right flex-shrink-0">
+                    <span className={`text-sm font-bold ${
+                      entry.rank === 1 ? 'text-[#FBBF24]' : 'text-white/90'
+                    }`}>
+                      {entry.totalCorrect}
+                    </span>
+                    {!compact && (
+                      <span className="text-xs text-secondary-text ml-1">correct</span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* "View more" hint in compact mode */}
+          {compact && leaderboard.length > 5 && (
+            <p className="text-center text-xs text-secondary-text mt-3">
+              +{leaderboard.length - 5} more · View full leaderboard in Stats
+            </p>
+          )}
+        </>
       )}
     </div>
   );
