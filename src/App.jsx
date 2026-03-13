@@ -6521,6 +6521,7 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // ── Step 1: Collect all eligible objectives ──
   const candidates = [];
+  const reviewCandidates = []; // Mastered objectives for review mode fallback
 
   allObjectives.forEach(obj => {
     const objProg = progress[obj.code];
@@ -6541,7 +6542,26 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
         effectiveSkipUntil = Math.max(effectiveSkipUntil, aliasProg.skipUntilSession ?? 0);
       }
     });
-    if (qc >= 5) return; // Mastered (by any alias) — skip
+
+    if (qc >= 5) {
+      // Mastered — add to review pool (only primary codes to avoid duplicate questions)
+      if (obj.code === primary) {
+        const questionIdx = Math.floor(Math.random() * questions.length);
+        const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
+        reviewCandidates.push({
+          objective: obj,
+          question: q,
+          questionIndex: questionIdx,
+          questionId: getQuestionId(obj.code, questionIdx, q),
+          level: qc,
+          topic: obj.topic,
+          neverPracticed: false,
+          lastPracticed: objProg?.lastPracticed ?? 0,
+          isReview: true,
+        });
+      }
+      return;
+    }
 
     // Skip if this objective (or any alias) is still in cooldown
     if (effectiveSkipUntil > sessionCount) return;
@@ -6564,6 +6584,19 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
       lastPracticed,
     });
   });
+
+  // If ALL objectives are mastered, serve review questions instead of an empty queue
+  if (candidates.length === 0 && reviewCandidates.length > 0) {
+    // Shuffle and pick up to `count` review questions
+    const shuffled = shuffle(reviewCandidates);
+    return shuffled.slice(0, count).map(q => ({
+      objective: q.objective,
+      question: q.question,
+      questionId: q.questionId,
+      questionIndex: q.questionIndex,
+      isReview: true,
+    }));
+  }
 
   // ── Step 2: Sort within each topic — unseen objectives first, then oldest-practiced ──
   const byTopic = {};
@@ -7803,7 +7836,29 @@ What is the student's answer?`
     );
   }
 
-  // Active session
+  // Active session — guard against empty queue (all mastered, no review questions available)
+  if (sessionQueue.length === 0) {
+    return (
+      <div className="min-h-screen bg-void relative overflow-hidden">
+        <div className="ambient-glow" />
+        <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
+        <div className="pt-24 pb-24 px-4 text-center relative z-10 page-content">
+          <div className="text-6xl mb-4">🎉</div>
+          <h2 className="text-2xl font-bold text-white">Grid Complete!</h2>
+          <p className="text-secondary-text mt-2">You've mastered all objectives — amazing work!</p>
+          <p className="text-secondary-text mt-1">Start a new session to practise review questions.</p>
+          <button
+            onClick={() => { setSessionStarted(false); setCurrentPage('home'); }}
+            className="mt-6 px-6 py-3 rounded-xl font-semibold text-white"
+            style={{ background: 'linear-gradient(135deg, #8BA8D9, #5B7FC7)' }}
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const current = sessionQueue[currentIndex];
   const progressPct = ((currentIndex + (showFeedback ? 1 : 0)) / sessionQueue.length) * 100;
 
