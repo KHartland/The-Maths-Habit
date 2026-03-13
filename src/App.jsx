@@ -1328,36 +1328,7 @@ const defaultSettings = {
 const loadProgress = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return {};
-    const progress = JSON.parse(saved);
-
-    // One-time migration: propagate mastery to alias objectives
-    // (fixes bug where mastering N2 didn't mark N3 as mastered)
-    let patched = false;
-    if (typeof questionBankPrimary !== 'undefined' && typeof questionBankGroups !== 'undefined') {
-      Object.entries(progress).forEach(([code, data]) => {
-        if ((data.quickCorrect ?? 0) >= 5) {
-          const primary = questionBankPrimary[code] || code;
-          const bankGroup = questionBankGroups[primary] || [code];
-          bankGroup.forEach(aliasCode => {
-            if (aliasCode !== code && (!progress[aliasCode] || (progress[aliasCode].quickCorrect ?? 0) < 5)) {
-              progress[aliasCode] = {
-                ...(progress[aliasCode] || {}),
-                quickCorrect: 5,
-                lastPracticed: data.lastPracticed || Date.now(),
-                masteredAt: data.masteredAt || Date.now(),
-              };
-              patched = true;
-            }
-          });
-        }
-      });
-      if (patched) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-      }
-    }
-
-    return progress;
+    return saved ? JSON.parse(saved) : {};
   } catch { return {}; }
 };
 
@@ -10575,6 +10546,37 @@ function AppContent() {
       setUserSchool(null);
     }
   }, [user, authLoading]);
+
+  // One-time migration: propagate mastery to alias objectives
+  // (fixes bug where mastering N2 didn't mark N3 as mastered)
+  useEffect(() => {
+    setProgress(prev => {
+      const updated = { ...prev };
+      let patched = false;
+      Object.entries(prev).forEach(([code, data]) => {
+        if ((data.quickCorrect ?? 0) >= 5) {
+          const primary = questionBankPrimary[code] || code;
+          const bankGroup = questionBankGroups[primary] || [code];
+          bankGroup.forEach(aliasCode => {
+            if (aliasCode !== code && (!updated[aliasCode] || (updated[aliasCode].quickCorrect ?? 0) < 5)) {
+              updated[aliasCode] = {
+                ...(updated[aliasCode] || {}),
+                quickCorrect: 5,
+                lastPracticed: data.lastPracticed || Date.now(),
+                masteredAt: data.masteredAt || Date.now(),
+              };
+              patched = true;
+            }
+          });
+        }
+      });
+      if (patched) {
+        saveProgress(updated);
+        return updated;
+      }
+      return prev; // no change — skip re-render
+    });
+  }, []); // runs once on mount
 
   // Sync progress to cloud when it changes
   useEffect(() => {
