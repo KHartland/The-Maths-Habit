@@ -321,38 +321,46 @@ export const loadFromCloud = async (userId) => {
 };
 
 /**
- * Save progress to cloud (debounced - call this after updates)
+ * Save progress to cloud (debounced by default, immediate when flush=true)
  */
 let saveTimeout = null;
-export const saveProgressToCloud = async (userId, progress) => {
+const _doSaveProgress = async (userId, progress) => {
+  try {
+    const progressRows = Object.entries(progress).map(([code, data]) => ({
+      user_id: userId,
+      objective_code: code,
+      quick_correct: data.quickCorrect || 0,
+      exam_passed: data.examPassed || false,
+      last_practiced: data.lastPracticed ? new Date(data.lastPracticed).toISOString() : null,
+      updated_at: new Date().toISOString()
+    }));
+
+    if (progressRows.length > 0) {
+      await restFetch('user_progress?on_conflict=user_id,objective_code', {
+        method: 'POST',
+        body: JSON.stringify(progressRows),
+        prefer: 'resolution=merge-duplicates',
+        headers: { 'Prefer': 'resolution=merge-duplicates' },
+      });
+    }
+  } catch (error) {
+    console.error('Error saving progress to cloud:', error);
+  }
+};
+
+export const saveProgressToCloud = async (userId, progress, flush = false) => {
   if (!userId) return;
 
-  // Debounce saves to batch updates
+  // Flush mode: save immediately (used at session end / beforeunload)
+  if (flush) {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = null;
+    return _doSaveProgress(userId, progress);
+  }
+
+  // Debounce saves to batch rapid updates during practice
   if (saveTimeout) clearTimeout(saveTimeout);
-
-  saveTimeout = setTimeout(async () => {
-    try {
-      const progressRows = Object.entries(progress).map(([code, data]) => ({
-        user_id: userId,
-        objective_code: code,
-        quick_correct: data.quickCorrect || 0,
-        exam_passed: data.examPassed || false,
-        last_practiced: data.lastPracticed ? new Date(data.lastPracticed).toISOString() : null,
-        updated_at: new Date().toISOString()
-      }));
-
-      if (progressRows.length > 0) {
-        await restFetch('user_progress?on_conflict=user_id,objective_code', {
-          method: 'POST',
-          body: JSON.stringify(progressRows),
-          prefer: 'resolution=merge-duplicates',
-          headers: { 'Prefer': 'resolution=merge-duplicates' },
-        });
-      }
-    } catch (error) {
-      console.error('Error saving progress to cloud:', error);
-    }
-  }, 2000); // Wait 2 seconds before saving
+  saveTimeout = setTimeout(() => _doSaveProgress(userId, progress), 2000);
 };
 
 /**

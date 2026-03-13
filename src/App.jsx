@@ -1328,7 +1328,36 @@ const defaultSettings = {
 const loadProgress = () => {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
+    if (!saved) return {};
+    const progress = JSON.parse(saved);
+
+    // One-time migration: propagate mastery to alias objectives
+    // (fixes bug where mastering N2 didn't mark N3 as mastered)
+    let patched = false;
+    if (typeof questionBankPrimary !== 'undefined' && typeof questionBankGroups !== 'undefined') {
+      Object.entries(progress).forEach(([code, data]) => {
+        if ((data.quickCorrect ?? 0) >= 5) {
+          const primary = questionBankPrimary[code] || code;
+          const bankGroup = questionBankGroups[primary] || [code];
+          bankGroup.forEach(aliasCode => {
+            if (aliasCode !== code && (!progress[aliasCode] || (progress[aliasCode].quickCorrect ?? 0) < 5)) {
+              progress[aliasCode] = {
+                ...(progress[aliasCode] || {}),
+                quickCorrect: 5,
+                lastPracticed: data.lastPracticed || Date.now(),
+                masteredAt: data.masteredAt || Date.now(),
+              };
+              patched = true;
+            }
+          });
+        }
+      });
+      if (patched) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
+    }
+
+    return progress;
   } catch { return {}; }
 };
 
@@ -7137,7 +7166,7 @@ What is the student's answer?`
           )
         : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
 
-      // Update only the specific objective being practiced
+      // Update the specific objective being practiced
       const oldProg = prev[code] || {};
       updated[code] = {
         ...oldProg,
@@ -7147,6 +7176,27 @@ What is the student's answer?`
         skipUntilSession: skipUntil,
         masteredAt: (newQuickCorrect >= 5 && (oldProg.quickCorrect ?? 0) < 5) ? now : oldProg.masteredAt,
       };
+
+      // Propagate mastery to all aliases sharing the same question bank
+      // (e.g. mastering N2 also marks N3 as mastered since they share questions)
+      if (newQuickCorrect >= 5) {
+        const primary = questionBankPrimary[code] || code;
+        const bankGroup = questionBankGroups[primary] || [code];
+        bankGroup.forEach(aliasCode => {
+          if (aliasCode !== code) {
+            const aliasProg = updated[aliasCode] || {};
+            if ((aliasProg.quickCorrect ?? 0) < 5) {
+              updated[aliasCode] = {
+                ...aliasProg,
+                quickCorrect: 5,
+                lastPracticed: now,
+                masteredAt: now,
+                skipUntilSession: sessionCount + 10,
+              };
+            }
+          }
+        });
+      }
 
       saveProgress(updated);
       return updated;
@@ -7245,6 +7295,10 @@ What is the student's answer?`
       if (practiceUser) {
         const todayKey = getTodayKey();
         saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
+
+        // CRITICAL: Also sync progress immediately at session end
+        // (the debounced useEffect may not fire if user navigates away quickly)
+        saveProgressToCloud(practiceUser.id, progress, true);
 
         // Increment total_correct in profiles for school leaderboard
         if (correctCount > 0) {
@@ -10529,6 +10583,49 @@ function AppContent() {
     }
   }, [progress, user]);
 
+  // Flush pending progress sync when user leaves / closes the tab
+  useEffect(() => {
+    if (!user) return;
+    const flushProgress = () => {
+      const prog = loadProgress();
+      if (Object.keys(prog).length > 0) {
+        // Use fetch with keepalive so it survives page close
+        const token = (() => {
+          try {
+            const raw = localStorage.getItem(`sb-kxvtiqkmxhqwqckjikje-auth-token`);
+            return raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+          } catch { return supabaseAnonKey; }
+        })();
+        const rows = Object.entries(prog).map(([code, data]) => ({
+          user_id: user.id,
+          objective_code: code,
+          quick_correct: data.quickCorrect || 0,
+          exam_passed: data.examPassed || false,
+          last_practiced: data.lastPracticed ? new Date(data.lastPracticed).toISOString() : null,
+          updated_at: new Date().toISOString()
+        }));
+        fetch(`${supabaseUrl}/rest/v1/user_progress?on_conflict=user_id,objective_code`, {
+          method: 'POST',
+          headers: {
+            'apikey': supabaseAnonKey,
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates',
+          },
+          body: JSON.stringify(rows),
+          keepalive: true, // survives page unload
+        }).catch(() => {}); // fire-and-forget
+      }
+    };
+    window.addEventListener('beforeunload', flushProgress);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') flushProgress();
+    });
+    return () => {
+      window.removeEventListener('beforeunload', flushProgress);
+    };
+  }, [user]);
+
   // Sync settings to cloud when they change
   useEffect(() => {
     if (user) {
@@ -11332,7 +11429,7 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
 
           <h2 className="text-2xl font-bold text-white mb-2">Select your school</h2>
           <p className="text-secondary-text text-sm mb-6">
-            This helps your teacher track your progress. You can change it later in Settings.
+            Which school are you at? You can change this later in Settings.
           </p>
 
           <input

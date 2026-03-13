@@ -383,6 +383,7 @@
               <tr>
                 <th scope="col" aria-sort="none" data-sort="rank" class="num">#</th>
                 <th scope="col" aria-sort="none" data-sort="name">Student</th>
+                <th scope="col" aria-sort="none" data-sort="school">School</th>
                 <th scope="col" aria-sort="none" data-sort="lastLogin">Last Active</th>
                 <th scope="col" aria-sort="none" data-sort="questions" class="num">Questions</th>
                 <th scope="col" aria-sort="none" data-sort="grid">Grid Progress</th>
@@ -393,7 +394,7 @@
               </tr>
             </thead>
             <tbody id="student-tbody">
-              <tr><td colspan="9" class="empty-state">Select a school to view students</td></tr>
+              <tr><td colspan="10" class="empty-state">Select a school to view students</td></tr>
             </tbody>
           </table>
         </div>
@@ -653,6 +654,14 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     // ═══════════════════════════════════════════
     // LOAD STUDENTS
     // ═══════════════════════════════════════════
+    // Look up school name from the select dropdown or schools array
+    function getSchoolName(schoolId) {
+      const s = schools.find(x => x.id === schoolId);
+      if (s) return s.name + (s.town ? ` (${s.town})` : '');
+      const opt = $('#school-select').selectedOptions?.[0];
+      return opt ? opt.textContent : '';
+    }
+
     async function loadStudentsForSchool(schoolId) {
       const loading = $('#table-loading');
       const errEl = $('#table-error');
@@ -670,7 +679,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
         if (!members || members.length === 0) {
           loading.style.display = 'none';
-          tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No students found in this school</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No students found in this school</td></tr>';
           clearSummary();
           announce('No students found.');
           return;
@@ -742,6 +751,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
 
           return {
             userId: uid, name: nameMap[uid] || profile.display_name || 'Unknown',
+            schoolName: getSchoolName(schoolId),
             lastLogin: lastActivity, totalQuestions: totalQ, questionsThisWeek: weekQ,
             gridPercent: gridPct, masteredCount: mastered, totalObjectives: totalObj,
             battles, sessions, streak: streak.current_streak || 0,
@@ -775,7 +785,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     function renderTable(data) {
       const tbody = $('#student-tbody');
       if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="empty-state">No students match your search</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No students match your search</td></tr>';
         return;
       }
 
@@ -792,6 +802,7 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
         return `<tr>
           <td class="num">${i + 1}</td>
           <td><strong>${esc(s.name)}</strong>${s.isActiveToday ? ' <span class="status-dot active" title="Active today" aria-label="Active today"></span>' : ''}</td>
+          <td>${esc(s.schoolName || '—')}</td>
           <td><span class="badge ${lastBadge}" aria-label="Last active ${lastLabel}">${lastLabel}</span></td>
           <td class="num">${s.totalQuestions.toLocaleString()}<div class="text-sm text-muted">${s.questionsThisWeek} this week</div></td>
           <td>
@@ -886,8 +897,8 @@ UPDATE profiles SET role = 'teacher' WHERE id = 'YOUR_USER_ID';</code></pre>
     // ═══════════════════════════════════════════
     $('#btn-export-csv').addEventListener('click', () => {
       if (!allStudentData.length) { announce('No data to export.'); return; }
-      const h = ['Name','Last Active','Total Questions','This Week','Grid %','Mastered','Total Obj','1v1 Battles','Sessions','Streak','Best Streak','Leaderboard #','Score'];
-      const rows = allStudentData.map(s => [s.name,s.lastLogin||'',s.totalQuestions,s.questionsThisWeek,s.gridPercent,s.masteredCount,s.totalObjectives,s.battles,s.sessions,s.streak,s.longestStreak,s.leaderboardRank,s.leaderboardScore]);
+      const h = ['Name','School','Last Active','Total Questions','This Week','Grid %','Mastered','Total Obj','1v1 Battles','Sessions','Streak','Best Streak','Leaderboard #','Score'];
+      const rows = allStudentData.map(s => [s.name,s.schoolName||'',s.lastLogin||'',s.totalQuestions,s.questionsThisWeek,s.gridPercent,s.masteredCount,s.totalObjectives,s.battles,s.sessions,s.streak,s.longestStreak,s.leaderboardRank,s.leaderboardScore]);
       const csv = [h,...rows].map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
