@@ -6660,7 +6660,7 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, isHandwritingEnabled, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, isHandwritingEnabled, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, showPiroNaming, setShowPiroNaming, piroCustomName, setPiroCustomName, piroNamingSaving, piroNamingError, setPiroNamingError, handlePiroNamingSave }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -11503,6 +11503,14 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
         setShowUpgradePrompt={setShowUpgradePrompt}
+        showPiroNaming={showPiroNaming}
+        setShowPiroNaming={setShowPiroNaming}
+        piroCustomName={piroCustomName}
+        setPiroCustomName={setPiroCustomName}
+        piroNamingSaving={piroNamingSaving}
+        piroNamingError={piroNamingError}
+        setPiroNamingError={setPiroNamingError}
+        handlePiroNamingSave={handlePiroNamingSave}
       />
     );
   }
