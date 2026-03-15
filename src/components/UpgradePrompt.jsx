@@ -45,7 +45,7 @@ function PromoCodeSection({ onSuccess }) {
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="e.g. MATHS2026"
+          placeholder="e.g. ABC123"
           className="flex-1 px-3 py-2 border-2 border-gray-300 rounded-lg text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent uppercase tracking-wider text-sm"
           disabled={isLoading || !!success}
         />
