@@ -16,6 +16,7 @@ create or replace function public.get_school_leaderboard_monthly(
 returns table (
   user_id       uuid,
   display_name  text,
+  avatar_url    text,
   total_correct bigint
 )
 language sql
@@ -25,6 +26,7 @@ as $$
   select
     sm.user_id,
     coalesce(p.display_name, split_part(u.email, '@', 1)) as display_name,
+    p.avatar_url,
     coalesce(sum(da.correct_answers), 0) as total_correct
   from public.school_members sm
   join auth.users u on u.id = sm.user_id
@@ -34,6 +36,6 @@ as $$
     and extract(year from da.date) = p_year
     and extract(month from da.date) = p_month
   where sm.school_id = p_school_id
-  group by sm.user_id, p.display_name, u.email
+  group by sm.user_id, p.display_name, u.email, p.avatar_url
   order by total_correct desc, display_name asc;
 $$;

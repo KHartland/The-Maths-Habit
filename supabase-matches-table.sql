@@ -370,6 +370,7 @@ returns table (
   display_name  text,
   first_name    text,
   surname       text,
+  avatar_url    text,
   total_correct bigint
 )
 language sql
@@ -381,13 +382,14 @@ as $$
     coalesce(p.display_name, split_part(u.email, '@', 1)) as display_name,
     p.first_name,
     p.surname,
+    p.avatar_url,
     coalesce(sum(up.quick_correct), 0) as total_correct
   from public.school_members sm
   join auth.users u on u.id = sm.user_id
   left join public.profiles p on p.id = sm.user_id
   left join public.user_progress up on up.user_id = sm.user_id
   where sm.school_id = p_school_id
-  group by sm.user_id, p.display_name, u.email, p.first_name, p.surname
+  group by sm.user_id, p.display_name, u.email, p.first_name, p.surname, p.avatar_url
   order by total_correct desc, display_name asc;
 $$;
 
