@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { initPushNotifications } from './lib/pushNotifications';
-import { hapticCorrect, hapticWrong, hapticStreakMilestone } from './lib/haptics';
-import OfflineIndicator from './components/OfflineIndicator';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
@@ -13,8 +10,7 @@ import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } f
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
-import DOMPurify from 'dompurify';
-import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud, clearCloudData } from './lib/syncService';
+import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
@@ -792,10 +788,8 @@ function getTileColor(hex, progressLevel, recencyFactor) {
 }
 
 // Mastery system: 4 quick questions + 1 exam question = mastered
-function getUnderstandingLevel(progress, gridLevel = 1) {
-  const quickCorrect = gridLevel === 2
-    ? (progress?.l2QuickCorrect ?? 0)
-    : (progress?.quickCorrect ?? 0);
+function getUnderstandingLevel(progress) {
+  const quickCorrect = progress?.quickCorrect ?? 0;
 
   // 5 questions per objective, sequential progression
   // quickCorrect tracks how many they've got right (0-5)
@@ -812,13 +806,13 @@ function isReadyForExam(progress) {
   return (progress?.quickCorrect ?? 0) === 4;
 }
 
-function TileDetailModal({ open, objective, progress, onClose, gridLevel = 1 }) {
+function TileDetailModal({ open, objective, progress, onClose }) {
   if (!open || !objective) return null;
 
-  const quickCorrect = getQuickCorrectForLevel(progress, gridLevel);
+  const quickCorrect = progress?.quickCorrect ?? 0;
   const mastered = quickCorrect >= 5;
-  const level = getUnderstandingLevel(progress, gridLevel);
-  const lastPracticed = gridLevel === 2 ? progress?.l2LastPracticed : progress?.lastPracticed;
+  const level = getUnderstandingLevel(progress);
+  const lastPracticed = progress?.lastPracticed;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-end sm:items-center justify-center z-50 p-4" onClick={onClose}>
@@ -858,8 +852,7 @@ function TileDetailModal({ open, objective, progress, onClose, gridLevel = 1 }) 
             level > 0 ? 'bg-violet/20 text-violet-light border border-violet/30' :
             'bg-white/10 text-secondary-text border border-white/10'
           }`}>
-            {gridLevel === 2 && <span className="mr-1 text-xs font-bold text-[#D4AF37]">Lv.2</span>}
-            {level >= 5 ? (gridLevel === 2 ? '⭐⭐ Mastered' : '⭐ Mastered') :
+            {level >= 5 ? '⭐ Mastered' :
              level >= 4 ? '🔥 Nearly there' :
              level > 0 ? '📚 Learning' :
              '○ Not started'}
@@ -1234,11 +1227,11 @@ const runMigration = (progress, questionBank) => {
     const currentVersion = parseInt(localStorage.getItem(MIGRATION_VERSION_KEY) || '1');
     if (currentVersion >= CURRENT_MIGRATION_VERSION) return loadFsrsData();
 
-    if (import.meta.env.DEV) console.log(`Migrating FSRS data from v${currentVersion} to v${CURRENT_MIGRATION_VERSION}`);
+    console.log(`Migrating FSRS data from v${currentVersion} to v${CURRENT_MIGRATION_VERSION}`);
     const fsrsData = migrateToFSRS(progress, questionBank);
     saveFsrsData(fsrsData);
     localStorage.setItem(MIGRATION_VERSION_KEY, CURRENT_MIGRATION_VERSION.toString());
-    if (import.meta.env.DEV) console.log(`Migration complete: ${Object.keys(fsrsData.questionCards).length} cards`);
+    console.log(`Migration complete: ${Object.keys(fsrsData.questionCards).length} cards`);
     return fsrsData;
   } catch (e) {
     console.error('Migration failed:', e);
@@ -1326,8 +1319,6 @@ const defaultSettings = {
   // Accessibility
   fontSize: 'normal', // 'normal', 'large', 'xlarge'
   dyslexiaFont: false,
-  // Grid level: 1 = normal progression, 2 = harder questions after completing grid
-  gridLevel: 1,
 };
 
 const loadProgress = () => {
@@ -1565,7 +1556,6 @@ const checkStreakMilestone = (streak) => {
       streakData.freezesAvailable++;
       streakData.lastStreakMilestone = milestone;
       saveStreakData(streakData);
-      hapticStreakMilestone();
       return { earned: true, milestone, total: streakData.freezesAvailable };
     }
   }
@@ -1628,73 +1618,6 @@ const loadPiro = () => {
 
 const savePiro = (piro) => {
   try { localStorage.setItem(PIRO_KEY, JSON.stringify(piro)); } catch {}
-};
-
-// ==================== NATIVE WIDGET BRIDGE ====================
-// Writes key stats to a well-known localStorage key that native app wrappers
-// (iOS WidgetKit / Android App Widget) can read via shared storage bridges.
-// Call this after any state change that should be reflected in the widget.
-const WIDGET_DATA_KEY = 'maths-habit-widget-data';
-
-const updateWidgetData = (overrides = {}) => {
-  try {
-    const streak = calculateStreak();
-    const piro = loadPiro();
-    const activity = loadDailyActivity();
-    const todayKey = getTodayKey();
-    const todayActivity = activity[todayKey] || {};
-    const progress = loadProgress();
-
-    // Count mastered objectives
-    const allCodes = Object.keys(questionBank);
-    const primaryCodes = allCodes.filter(c => (questionBankPrimary[c] || c) === c);
-    const masteredCount = primaryCodes.filter(c => (progress[c]?.quickCorrect ?? 0) >= 5).length;
-
-    const piroStage = PIRO_STAGES[piro.stage] || PIRO_STAGES[0];
-    const piroDisplay = piro.dead ? PIRO_DEAD
-      : piro.dying ? PIRO_CLOSE_TO_DEATH
-      : piro.decayed ? PIRO_OLD
-      : piroStage;
-
-    const widgetData = {
-      // Streak
-      streak: streak.streak,
-      longestStreak: streak.longestStreak,
-      practicedToday: streak.practicedToday,
-      needsRepair: streak.needsRepair,
-      freezesAvailable: streak.freezesAvailable,
-      // Today's activity
-      questionsToday: todayActivity.questions || 0,
-      correctToday: todayActivity.correct || 0,
-      sessionsToday: todayActivity.sessions || 0,
-      // Progress
-      masteredCount,
-      totalObjectives: primaryCodes.length,
-      // Piro
-      piroName: piro.customName || piroDisplay.name,
-      piroStageName: piroDisplay.name,
-      piroStageIndex: piro.stage,
-      piroImage: piroDisplay.image,
-      piroDead: piro.dead || false,
-      piroDecayed: piro.decayed || false,
-      piroDying: piro.dying || false,
-      // Metadata
-      lastUpdated: Date.now(),
-      ...overrides,
-    };
-
-    localStorage.setItem(WIDGET_DATA_KEY, JSON.stringify(widgetData));
-
-    // Also post to native bridge if available (iOS/Android WebView)
-    if (window.webkit?.messageHandlers?.widgetData) {
-      window.webkit.messageHandlers.widgetData.postMessage(widgetData);
-    }
-    if (window.AndroidBridge?.updateWidgetData) {
-      window.AndroidBridge.updateWidgetData(JSON.stringify(widgetData));
-    }
-  } catch (e) {
-    console.error('Widget data update failed:', e);
-  }
 };
 
 // Update Piro based on current streak. Called after each session.
@@ -1944,13 +1867,6 @@ const resetAllProgress = () => {
     localStorage.removeItem(SESSION_HISTORY_KEY);
     localStorage.removeItem(DAILY_ACTIVITY_KEY);
     localStorage.removeItem(STREAK_DATA_KEY);
-    localStorage.removeItem(RECENT_QUESTIONS_KEY);
-    localStorage.removeItem(TOTAL_QUESTIONS_KEY);
-    localStorage.removeItem(FSRS_DATA_KEY);
-    localStorage.removeItem(PIRO_KEY);
-    localStorage.removeItem(TIPS_STORAGE_KEY);
-    localStorage.removeItem('maths-habit-1v1-daily');
-    localStorage.removeItem('maths_habit_recent_daily');
   } catch {}
 };
 
@@ -4166,109 +4082,6 @@ questionBank['R9'][4].push(
   { q: "The ratio of red sweets to green sweets is 2:3. What percentage of the sweets are green?", a: "60%", worked: ["Total parts = 2 + 3 = 5", "Green = 3 parts out of 5", "Percentage = (3 ÷ 5) × 100 = 60%"] },
 );
 
-// ═══════════════════════════════════════════════════════════════
-// Round 5 — Diversity pass: adding varied contexts to repetitive objectives
-// ═══════════════════════════════════════════════════════════════
-
-// --- P1: Probability (diverse contexts beyond bags/counters) ---
-questionBank['P1'][1].push(
-  { q: "A standard deck of 52 playing cards is shuffled. One card is drawn at random. What is the probability it is a Heart?", a: "1/4", worked: ["Total cards = 52", "Hearts = 13", "P(Heart) = 13/52 = 1/4"] },
-  { q: "The word MATHEMATICS has 11 letters. One letter is chosen at random. What is the probability it is the letter A?", a: "2/11", worked: ["Total letters = 11", "A appears 2 times", "P(A) = 2/11"] },
-  { q: "A fair spinner has 8 equal sections numbered 1 to 8. What is the probability of landing on a prime number?", a: "1/2", worked: ["Primes from 1–8: 2, 3, 5, 7 → 4 primes", "Total sections = 8", "P(prime) = 4/8 = 1/2"] },
-);
-questionBank['P1'][2].push(
-  { q: "A weather forecast says the probability of snow is 3/8. What is the probability it does not snow?", a: "5/8", worked: ["P(event) + P(not event) = 1", "P(no snow) = 1 − 3/8 = 5/8"] },
-  { q: "In a raffle, the probability of winning a prize is 0.04. What is the probability of not winning a prize?", a: "0.96", worked: ["P(event) + P(not event) = 1", "P(no prize) = 1 − 0.04 = 0.96"] },
-);
-questionBank['P1'][3].push(
-  { q: "A fair 6-sided die is rolled 300 times. How many times would you expect to roll a number greater than 4?", a: "100", worked: ["Numbers greater than 4: 5, 6 → P = 2/6 = 1/3", "Expected = 1/3 × 300 = 100"] },
-  { q: "A card is drawn from a standard deck and replaced 260 times. How many times would you expect to draw a King?", a: "20", worked: ["P(King) = 4/52 = 1/13", "Expected = 1/13 × 260 = 20"] },
-);
-questionBank['P1'][4].push(
-  { q: "A biased spinner has sections A, B, C, D. P(A)=0.15, P(B)=0.4, P(C)=0.25. Work out the probability of landing on D.", a: "0.2", worked: ["All probabilities must sum to 1", "P(D) = 1 − (0.15 + 0.4 + 0.25)", "= 1 − 0.8 = 0.2"], hint: "All probabilities must sum to 1" },
-);
-
-// --- P7: Tree diagrams / enumeration (diverse contexts) ---
-questionBank['P7'][2].push(
-  { q: "A fair die is rolled twice. What is the probability of getting an even number both times?", a: "1/4", worked: ["P(even) = 3/6 = 1/2", "P(even twice) = 1/2 × 1/2 = 1/4"] },
-  { q: "A spinner has P(Red)=0.6 and P(Blue)=0.4. It is spun twice with results independent. What is the probability of getting Blue both times?", a: "0.16", worked: ["P(Blue) = 0.4", "P(Blue twice) = 0.4 × 0.4 = 0.16"] },
-);
-questionBank['P7'][3].push(
-  { q: "Two cards are drawn from a standard deck with replacement. Find the probability of drawing two Aces.", a: "1/169", worked: ["P(Ace) = 4/52 = 1/13", "With replacement: P(two Aces) = 1/13 × 1/13 = 1/169"] },
-  { q: "A traffic light is red 40% of the time. You pass through two independent traffic lights. What is the probability both are red?", a: "0.16", worked: ["P(red) = 0.4", "P(both red) = 0.4 × 0.4 = 0.16"] },
-);
-questionBank['P7'][4].push(
-  { q: "A team has 8 forwards and 5 defenders. Two players are chosen at random without replacement. Find the probability that both are forwards.", a: "14/39", worked: ["P(1st forward) = 8/13", "P(2nd forward | 1st forward) = 7/12", "P(both forward) = 8/13 × 7/12 = 56/156 = 14/39"] },
-  { q: "A drawer has 9 black socks and 6 white socks. Two socks are picked without replacement. Find the probability they are different colours.", a: "36/70", worked: ["P(BW) = 9/15 × 6/14 = 54/210", "P(WB) = 6/15 × 9/14 = 54/210", "P(different) = 108/210 = 36/70"] },
-);
-
-// --- P4: Mixed Probability (diverse contexts) ---
-questionBank['P4'][1].push(
-  { q: "A standard deck of 52 cards is shuffled. Two cards are drawn without replacement. What is the probability that both are Spades?", a: "1/17", worked: ["P(1st Spade) = 13/52 = 1/4", "P(2nd Spade | 1st Spade) = 12/51 = 4/17", "P(both Spades) = 1/4 × 4/17 = 4/68 = 1/17"] },
-);
-
-// --- A2 Level 2: Substitute into formulae (diverse formulae beyond v=u+at) ---
-questionBank['A2'][2].push(
-  { q: "Use the formula A = ½bh. Find A when b = 12 and h = 7.", a: "42", worked: ["Substitute into A = ½bh: A = ½ × 12 × 7", "Calculate: A = ½ × 84 = 42"] },
-  { q: "Use the formula s = d/t. Find s when d = 150 and t = 6.", a: "25", worked: ["Substitute into s = d/t: s = 150/6", "Calculate: s = 25"] },
-  { q: "Use the formula P = 2l + 2w. Find P when l = 8 and w = 5.", a: "26", worked: ["Substitute into P = 2l + 2w: P = 2(8) + 2(5)", "Calculate: P = 16 + 10 = 26"] },
-  { q: "Use the formula F = ma. Find F when m = 15 and a = 4.", a: "60", worked: ["Substitute into F = ma: F = 15 × 4", "Calculate: F = 60"] },
-);
-
-// --- N4 Level 4: LCM word problems (diverse contexts beyond buses/lights) ---
-questionBank['N4'][4].push(
-  { q: "Amy goes swimming every 6 days. Ben goes swimming every 8 days. They both go swimming today. In how many days will they next go swimming on the same day?", a: "24", worked: ["Find the LCM of 6 and 8", "Multiples of 6: 6, 12, 18, 24…", "Multiples of 8: 8, 16, 24…", "LCM = 24 days"] },
-  { q: "Hot dogs come in packs of 8. Buns come in packs of 6. What is the smallest number of each you need to buy so you have the same number of hot dogs and buns?", a: "24", worked: ["Find the LCM of 8 and 6", "Multiples of 8: 8, 16, 24…", "Multiples of 6: 6, 12, 18, 24…", "LCM = 24, so buy 24 of each"] },
-  { q: "Two clocks chime together at noon. One chimes every 15 minutes, the other every 20 minutes. After how many minutes will they next chime at the same time?", a: "60", worked: ["Find the LCM of 15 and 20", "15 = 3 × 5, 20 = 2² × 5", "LCM = 2² × 3 × 5 = 60 minutes"] },
-);
-
-// --- R10 Level 0: Unitary method (diverse contexts beyond shopping) ---
-questionBank['R10'][0].push(
-  { q: "A car uses 5 litres of petrol to travel 45 miles. How many miles can it travel on 8 litres?", a: "72", worked: ["1 litre → 45 ÷ 5 = 9 miles", "8 litres → 9 × 8 = 72 miles"] },
-  { q: "A machine prints 120 pages in 4 minutes. How many pages does it print in 7 minutes?", a: "210", worked: ["1 minute → 120 ÷ 4 = 30 pages", "7 minutes → 30 × 7 = 210 pages"] },
-  { q: "3 painters can paint a fence in 6 hours. Working at the same rate, how long would it take 9 painters?", a: "2", worked: ["Total work = 3 × 6 = 18 painter-hours", "9 painters → 18 ÷ 9 = 2 hours"] },
-);
-
-// --- R4 Level 1: Divide in ratio (diverse contexts beyond money) ---
-questionBank['R4'][1].push(
-  { q: "A 450 ml smoothie is made from banana and strawberry in the ratio 2:3. How many ml of strawberry is needed?", a: "270", worked: ["Total parts = 2 + 3 = 5", "One part = 450 ÷ 5 = 90 ml", "Strawberry = 3 × 90 = 270 ml"] },
-  { q: "A piece of wood 180 cm long is cut in the ratio 1:2. Find the length of the shorter piece.", a: "60", worked: ["Total parts = 1 + 2 = 3", "One part = 180 ÷ 3 = 60 cm", "Shorter piece = 1 × 60 = 60 cm"] },
-  { q: "A recipe uses flour and sugar in the ratio 5:2. If 350g of flour is used, how much sugar is needed?", a: "140", worked: ["Flour = 5 parts = 350g", "One part = 350 ÷ 5 = 70g", "Sugar = 2 × 70 = 140g"] },
-);
-
-// --- N12 Level 4: Best buy / comparison (diverse contexts beyond VAT vs discount) ---
-questionBank['N12'][4].push(
-  { q: "A shop sells orange juice in two sizes: 500 ml for £1.20 or 1.5 litres for £3.30. Which is better value?", a: "500 ml", calculator: true, worked: ["500 ml: £1.20 ÷ 500 = 0.24p per ml", "1.5 L = 1500 ml: £3.30 ÷ 1500 = 0.22p per ml", "Wait — 0.22p < 0.24p, so 1.5 L is better value", "Correction: 1500 ml at £3.30 → 0.22p/ml is cheaper, so 1.5 litres is better value"], type: "mcq", options: ["500 ml", "1.5 litres"], hint: "Work out the price per ml for each" },
-);
-questionBank['N12'][4].push(
-  { q: "Apples are sold in bags of 6 for £2.10 or bags of 10 for £3.20. Which bag is better value?", a: "bag of 10", calculator: true, type: "mcq", options: ["bag of 6", "bag of 10"], worked: ["Bag of 6: £2.10 ÷ 6 = £0.35 per apple", "Bag of 10: £3.20 ÷ 10 = £0.32 per apple", "£0.32 < £0.35, so bag of 10 is better value"], hint: "Work out the price per apple for each" },
-);
-
-// --- N2 Level 2: Multi-step multiplication (diverse contexts beyond crates/boxes) ---
-questionBank['N2'][2].push(
-  { q: "A school has 12 classrooms. Each classroom has 5 rows of desks with 6 desks in each row. How many desks are there in total?", a: "360", worked: ["Desks per classroom = 5 × 6 = 30", "Total desks = 12 × 30 = 360"] },
-  { q: "A baker makes 8 trays of cupcakes. Each tray holds 3 rows of 4 cupcakes. How many cupcakes did the baker make?", a: "96", worked: ["Cupcakes per tray = 3 × 4 = 12", "Total cupcakes = 8 × 12 = 96"] },
-);
-
-// --- N2 Level 3: Money problems (diverse contexts beyond tickets) ---
-questionBank['N2'][3].push(
-  { q: "A meal costs £8.50 for each adult and £5.25 for each child. How much does it cost for 2 adults and 3 children?", a: "32.75", worked: ["Adults: 2 × £8.50 = £17.00", "Children: 3 × £5.25 = £15.75", "Total = £17.00 + £15.75 = £32.75"] },
-  { q: "Marcus buys 4 notebooks at £1.75 each and a pen for £2.50. He pays with a £20 note. How much change does he get?", a: "10.50", worked: ["Notebooks: 4 × £1.75 = £7.00", "Total spent: £7.00 + £2.50 = £9.50", "Change: £20.00 − £9.50 = £10.50"] },
-);
-
-// --- R1 Level 0: Unit conversion (diverse units beyond metres→cm) ---
-questionBank['R1'][0].push(
-  { q: "Convert 3.5 kilograms into grams.", a: "3500", worked: ["1 kilogram = 1000 grams", "3.5 × 1000 = 3500 grams"] },
-  { q: "Convert 4500 millilitres into litres.", a: "4.5", worked: ["1000 millilitres = 1 litre", "4500 ÷ 1000 = 4.5 litres"] },
-  { q: "Convert 2 hours and 15 minutes into minutes.", a: "135", worked: ["1 hour = 60 minutes", "2 hours = 120 minutes", "120 + 15 = 135 minutes"] },
-);
-
-// --- S3 Level 2: Find missing from mean (diverse contexts) ---
-questionBank['S3'][2].push(
-  { q: "The median of 5 ordered values is the third value. Given: 2, 5, x, 11, 14, and the median is 8. Find x.", a: "8", worked: ["The data is already ordered", "The median is the middle (3rd) value", "So x = 8"] },
-  { q: "Seven students scored: 12, 15, 18, 20, 22, 25, 30. Find the interquartile range.", a: "10", worked: ["Lower quartile (Q1) = 15 (2nd value)", "Upper quartile (Q3) = 25 (6th value)", "IQR = Q3 − Q1 = 25 − 15 = 10"] },
-);
-
 // Map every objective code to the primary code that owns its question bank
 // (derived from reference equality — aliases share the same array object)
 const questionBankPrimary = {};
@@ -4289,23 +4102,6 @@ Object.entries(questionBankPrimary).forEach(([code, primary]) => {
   if (!questionBankGroups[primary]) questionBankGroups[primary] = [];
   questionBankGroups[primary].push(code);
 });
-
-// Thematic bank groups: objectives that use DIFFERENT question banks but cover
-// the same thematic area and should not appear together in a single session.
-// Each primary code maps to all primary codes in the same thematic group.
-const thematicBankGroups = (() => {
-  const groups = [
-    // All probability objectives share a theme — max 1 per session
-    ['P1', 'P4', 'P7'],
-  ];
-  const map = {};
-  groups.forEach(group => {
-    group.forEach(code => {
-      map[code] = group;
-    });
-  });
-  return map;
-})();
 
 // Friendly labels for mixed question banks (shown in celebration screen)
 const questionBankLabel = {
@@ -5812,754 +5608,6 @@ const getQuestionBankForTier = (tier) => {
   return questionBank;
 };
 
-// ==================== LEVEL 2 HELPERS ====================
-// Check if all objectives in the current tier are mastered (Level 1 complete)
-const checkGridComplete = (progress, allObjectives) => {
-  return allObjectives.every(obj => {
-    const primary = questionBankPrimary[obj.code] || obj.code;
-    const bankGroup = questionBankGroups[primary] || [obj.code];
-    return bankGroup.some(c => (progress[c]?.quickCorrect ?? 0) >= 5);
-  });
-};
-
-// Get the appropriate quickCorrect value for the current grid level
-const getQuickCorrectForLevel = (objProgress, gridLevel) => {
-  if (gridLevel === 2) return objProgress?.l2QuickCorrect ?? 0;
-  return objProgress?.quickCorrect ?? 0;
-};
-
-// Get the question level index for Level 2 based on tier
-// Level 2 uses level2QuestionBank where: index 0 = Grade 5, index 1 = Grade 8, index 2 = Grade 9
-const getLevel2QuestionIndex = (tier, l2QuickCorrect) => {
-  if (tier === 'higher') {
-    // Higher Level 2: Grade 8 (index 1) for first 3 questions, then Grade 9 (index 2)
-    return l2QuickCorrect < 3 ? 1 : 2;
-  }
-  // Foundation Level 2: Always Grade 5 (index 0)
-  return 0;
-};
-
-// ==================== LEVEL 2 QUESTION BANK ====================
-// Fresh questions for students who have completed the grid.
-// Structure: level2QuestionBank['N1'][levelIndex] = [variant1, variant2, variant3]
-// Index 0 = Grade 5 (Foundation Level 2)
-// Index 1 = Grade 8 (Higher Level 2)
-// Index 2 = Grade 9 (Higher Level 2)
-
-const level2QuestionBank = {
-
-  // ═══════════════════════════════════════════════════════════════
-  // N1: Ordering & Symbols
-  // ═══════════════════════════════════════════════════════════════
-  'N1': [
-    // Grade 5 — Order fractions and decimals
-    [
-      { q: "Write these in order of size, starting with the smallest: 0.35, 3/8, 0.4, 1/3", type: "order", items: ["0.35", "3/8", "0.4", "1/3"], correctOrder: ["1/3", "0.35", "3/8", "0.4"], a: "1/3, 0.35, 3/8, 0.4", worked: ["Convert to decimals: 1/3 ≈ 0.333, 3/8 = 0.375", "Order: 0.333, 0.35, 0.375, 0.4"] },
-      { q: "Write these in order of size, starting with the smallest: 0.62, 5/8, 0.6, 3/5", type: "order", items: ["0.62", "5/8", "0.6", "3/5"], correctOrder: ["3/5", "0.6", "0.62", "5/8"], a: "3/5, 0.6, 0.62, 5/8", worked: ["Convert: 3/5 = 0.6, 5/8 = 0.625", "Order: 0.6, 0.6, 0.62, 0.625 — but 3/5 = 0.600 exactly"] },
-      { q: "Write these in order of size, starting with the smallest: 0.72, 7/10, 3/4, 0.71", type: "order", items: ["0.72", "7/10", "3/4", "0.71"], correctOrder: ["7/10", "0.71", "0.72", "3/4"], a: "7/10, 0.71, 0.72, 3/4", worked: ["Convert: 7/10 = 0.7, 3/4 = 0.75", "Order: 0.7, 0.71, 0.72, 0.75"] },
-    ],
-    // Grade 8 — Inequalities on number lines
-    [
-      { q: "Write down the inequality represented by the number line: closed circle at −2, open circle at 3, shaded between.", a: "−2 ≤ x < 3", worked: ["Closed circle at −2 means ≤", "Open circle at 3 means <", "−2 ≤ x < 3"] },
-      { q: "Solve the inequality 3x + 7 > 1 and show the solution on a number line. Give the inequality.", a: "x > −2", worked: ["3x + 7 > 1", "3x > −6", "x > −2"] },
-      { q: "List all integers n such that −3 < 2n + 1 ≤ 9.", a: "−1, 0, 1, 2, 3, 4", worked: ["Subtract 1: −4 < 2n ≤ 8", "Divide by 2: −2 < n ≤ 4", "Integers: −1, 0, 1, 2, 3, 4"] },
-    ],
-    // Grade 9 — Combining inequalities
-    [
-      { q: "Find the integer values of x that satisfy both 2x − 1 > 3 and 3x + 2 < 20.", a: "3, 4, 5", worked: ["2x − 1 > 3 → 2x > 4 → x > 2", "3x + 2 < 20 → 3x < 18 → x < 6", "2 < x < 6 → integers: 3, 4, 5"] },
-      { q: "Solve −5 < 2x − 3 ≤ 7 and list all integer solutions.", a: "0, 1, 2, 3, 4, 5", worked: ["Add 3: −2 < 2x ≤ 10", "Divide by 2: −1 < x ≤ 5", "Integers: 0, 1, 2, 3, 4, 5"] },
-      { q: "Find the largest integer n such that n² < 50 and n > 0.", a: "7", worked: ["7² = 49 < 50 ✓", "8² = 64 > 50 ✗", "Largest integer is 7"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N2: Four Operations & BIDMAS (also covers N3)
-  // ═══════════════════════════════════════════════════════════════
-  'N2': [
-    // Grade 5
-    [
-      { q: "A school trip costs £8.50 per student. There are 28 students going. The school has already collected £150. How much more money is needed?", a: "88", worked: ["Total cost: 28 × £8.50 = £238", "Still needed: £238 − £150 = £88"] },
-      { q: "Work out: 48 ÷ (3 + 5) + 7 × 2", a: "20", worked: ["Brackets first: 3 + 5 = 8", "48 ÷ 8 = 6", "7 × 2 = 14", "6 + 14 = 20"] },
-      { q: "A baker makes 360 cupcakes. She puts them in boxes of 12. She sells each box for £4.50. How much does she receive if she sells all the boxes?", a: "135", worked: ["Number of boxes: 360 ÷ 12 = 30", "Total: 30 × £4.50 = £135"] },
-    ],
-    // Grade 8
-    [
-      { q: "Evaluate: (2³ × 3²) ÷ (6 × √4)", a: "6", worked: ["2³ = 8, 3² = 9, so numerator = 72", "6 × √4 = 6 × 2 = 12", "72 ÷ 12 = 6"] },
-      { q: "Work out: (5 − √9)³ + 2⁴", a: "24", worked: ["5 − √9 = 5 − 3 = 2", "2³ = 8", "2⁴ = 16", "8 + 16 = 24"] },
-      { q: "Calculate: (4.2 × 10³) × (3 × 10²). Give your answer in standard form.", a: "1.26 × 10⁶", worked: ["4.2 × 3 = 12.6", "10³ × 10² = 10⁵", "12.6 × 10⁵ = 1.26 × 10⁶"] },
-    ],
-    // Grade 9
-    [
-      { q: "Show that (2 + √3)(2 − √3) = 1.", type: "self", a: "Yes", worked: ["(2 + √3)(2 − √3) = 2² − (√3)²", "= 4 − 3 = 1 ✓", "This is the difference of two squares"] },
-      { q: "Simplify (8 × 10⁻³) ÷ (2 × 10⁴). Give your answer in standard form.", a: "4 × 10⁻⁷", worked: ["8 ÷ 2 = 4", "10⁻³ ÷ 10⁴ = 10⁻⁷", "4 × 10⁻⁷"] },
-      { q: "A number x satisfies x² = 2.56. Find both values of x.", a: "1.6, −1.6", worked: ["x = ±√2.56", "√2.56 = 1.6", "x = 1.6 or x = −1.6"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N4: Factors, Multiples & Primes
-  // ═══════════════════════════════════════════════════════════════
-  'N4': [
-    // Grade 5
-    [
-      { q: "Find the Highest Common Factor (HCF) of 36 and 48.", a: "12", worked: ["36 = 2² × 3²", "48 = 2⁴ × 3", "HCF = 2² × 3 = 12"] },
-      { q: "Find the LCM of 12 and 15.", a: "60", worked: ["12 = 2² × 3", "15 = 3 × 5", "LCM = 2² × 3 × 5 = 60"] },
-      { q: "Write 84 as a product of its prime factors.", a: "2² × 3 × 7", worked: ["84 ÷ 2 = 42", "42 ÷ 2 = 21", "21 ÷ 3 = 7", "84 = 2² × 3 × 7"] },
-    ],
-    // Grade 8
-    [
-      { q: "Find the HCF and LCM of 60 and 90.", a: "HCF = 30, LCM = 180", worked: ["60 = 2² × 3 × 5", "90 = 2 × 3² × 5", "HCF = 2 × 3 × 5 = 30", "LCM = 2² × 3² × 5 = 180"] },
-      { q: "Two buses leave a station at the same time. Bus A returns every 18 minutes and Bus B returns every 24 minutes. After how many minutes will they next be at the station together?", a: "72", worked: ["LCM of 18 and 24", "18 = 2 × 3², 24 = 2³ × 3", "LCM = 2³ × 3² = 72 minutes"] },
-      { q: "The HCF of two numbers is 6 and their LCM is 120. One number is 24. Find the other number.", a: "30", worked: ["HCF × LCM = product of two numbers", "6 × 120 = 24 × n", "720 = 24n", "n = 30"] },
-    ],
-    // Grade 9
-    [
-      { q: "Prove that the product of two consecutive even numbers is always divisible by 8.", type: "self", a: "Yes", worked: ["Let the numbers be 2n and 2n + 2", "Product = 2n(2n + 2) = 2n × 2(n + 1) = 4n(n + 1)", "Either n or n+1 is even, so n(n+1) is divisible by 2", "Therefore 4 × 2k = 8k, divisible by 8"] },
-      { q: "Given that 2520 = 2³ × 3² × 5 × 7, find the smallest positive integer k such that 2520k is a perfect square.", a: "70", worked: ["For a perfect square, all prime powers must be even", "2³ needs one more 2, 3² is fine, 5¹ needs one more 5, 7¹ needs one more 7", "k = 2 × 5 × 7 = 70"] },
-      { q: "Show that 0.36̇ (0.3666...) can be written as 11/30.", type: "self", a: "Yes", worked: ["Let x = 0.3666...", "10x = 3.666...", "100x = 36.666...", "100x − 10x = 33", "90x = 33, x = 33/90 = 11/30"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N5: Fractions, Decimals & Percentages (also covers N8-N11, N16)
-  // ═══════════════════════════════════════════════════════════════
-  'N5': [
-    // Grade 5
-    [
-      { q: "Work out 3/4 + 2/5. Give your answer as a fraction in its simplest form.", a: "23/20", worked: ["Common denominator = 20", "3/4 = 15/20, 2/5 = 8/20", "15/20 + 8/20 = 23/20"] },
-      { q: "A shirt was £40 and is reduced by 15% in a sale. Work out the sale price.", a: "34", worked: ["15% of £40 = 0.15 × 40 = £6", "Sale price = £40 − £6 = £34"] },
-      { q: "Work out 2/3 of 450.", a: "300", worked: ["450 ÷ 3 = 150", "150 × 2 = 300"] },
-    ],
-    // Grade 8
-    [
-      { q: "Write 0.000072 in standard form.", a: "7.2 × 10⁻⁵", worked: ["Move decimal 5 places right to get 7.2", "0.000072 = 7.2 × 10⁻⁵"] },
-      { q: "Work out 1 3/4 ÷ 2 1/2. Give your answer as a fraction.", a: "7/10", worked: ["1 3/4 = 7/4, 2 1/2 = 5/2", "7/4 ÷ 5/2 = 7/4 × 2/5 = 14/20 = 7/10"] },
-      { q: "A house was bought for £200,000. Its value increases by 5% each year. Work out its value after 3 years.", a: "231525", worked: ["After 1 year: 200000 × 1.05 = 210000", "After 2 years: 210000 × 1.05 = 220500", "After 3 years: 220500 × 1.05 = 231525"], calculator: true },
-    ],
-    // Grade 9
-    [
-      { q: "Work out (3.6 × 10⁴) ÷ (9 × 10⁻²). Give your answer in standard form.", a: "4 × 10⁵", worked: ["3.6 ÷ 9 = 0.4", "10⁴ ÷ 10⁻² = 10⁶", "0.4 × 10⁶ = 4 × 10⁵"] },
-      { q: "A car depreciates by 12% per year. It was worth £18,000 new. After how many complete years will it first be worth less than £10,000?", a: "5", worked: ["18000 × 0.88ⁿ < 10000", "Year 1: 15840, Year 2: 13939, Year 3: 12267", "Year 4: 10795, Year 5: 9499", "After 5 complete years"], calculator: true },
-      { q: "Express 5/(2√3) in the form a√3/b where a and b are integers. Give a and b.", a: "a = 5, b = 6", worked: ["5/(2√3) × √3/√3 = 5√3/(2 × 3) = 5√3/6", "So a = 5, b = 6"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N6: Powers & Roots (also covers N7)
-  // ═══════════════════════════════════════════════════════════════
-  'N6': [
-    // Grade 5
-    [
-      { q: "Work out the value of 2⁵.", a: "32", worked: ["2⁵ = 2 × 2 × 2 × 2 × 2 = 32"] },
-      { q: "Simplify: p⁴ × p²", a: "p⁶", worked: ["When multiplying powers, add the indices", "p⁴ × p² = p⁴⁺² = p⁶"] },
-      { q: "Work out √144 + ∛27.", a: "15", worked: ["√144 = 12", "∛27 = 3", "12 + 3 = 15"] },
-    ],
-    // Grade 8
-    [
-      { q: "Simplify √75 − √12.", a: "3√3", worked: ["√75 = √(25 × 3) = 5√3", "√12 = √(4 × 3) = 2√3", "5√3 − 2√3 = 3√3"] },
-      { q: "Evaluate 27^(2/3).", a: "9", worked: ["27^(1/3) = ∛27 = 3", "27^(2/3) = 3² = 9"] },
-      { q: "Simplify (2x³)⁴.", a: "16x¹²", worked: ["(2x³)⁴ = 2⁴ × (x³)⁴", "= 16 × x¹² = 16x¹²"] },
-    ],
-    // Grade 9
-    [
-      { q: "Rationalise the denominator of 6/(√5 − 1).", a: "3(√5 + 1)/2", worked: ["Multiply by (√5 + 1)/(√5 + 1)", "= 6(√5 + 1)/((√5)² − 1²)", "= 6(√5 + 1)/(5 − 1)", "= 6(√5 + 1)/4 = 3(√5 + 1)/2"] },
-      { q: "Solve 4^(x+1) = 8ˣ.", a: "2", worked: ["4^(x+1) = (2²)^(x+1) = 2^(2x+2)", "8ˣ = (2³)ˣ = 2^(3x)", "2x + 2 = 3x", "x = 2"] },
-      { q: "Simplify fully (3√2)² + (√8)².", a: "26", worked: ["(3√2)² = 9 × 2 = 18", "(√8)² = 8", "18 + 8 = 26"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N12: Percentages
-  // ═══════════════════════════════════════════════════════════════
-  'N12': [
-    // Grade 5
-    [
-      { q: "In a survey, 360 people were asked about their hobby. 35% chose reading. How many people chose reading?", a: "126", worked: ["35% of 360 = 0.35 × 360 = 126"] },
-      { q: "A laptop costs £480 plus 20% VAT. What is the total price?", a: "576", worked: ["20% of £480 = £96", "Total: £480 + £96 = £576"] },
-      { q: "Ben scored 42 out of 60 in a test. What percentage did he score?", a: "70", worked: ["42/60 × 100 = 70%"] },
-    ],
-    // Grade 8
-    [
-      { q: "After a 20% reduction, a coat costs £56. What was the original price?", a: "70", worked: ["80% of original = £56", "1% = 56/80 = 0.70", "100% = £70"] },
-      { q: "A population of bacteria increases by 30% each hour. Starting with 500, how many after 4 hours? Round to the nearest whole number.", a: "1429", worked: ["500 × 1.3⁴ = 500 × 2.8561 = 1428.05", "≈ 1429"], calculator: true },
-      { q: "The value of a car decreases from £15,000 to £10,200 over 2 years. Calculate the percentage decrease.", a: "32", worked: ["Decrease = 15000 − 10200 = 4800", "% decrease = (4800/15000) × 100 = 32%"] },
-    ],
-    // Grade 9
-    [
-      { q: "A painting increases in value by 8% one year, then decreases by 5% the next. The painting is now worth £3078. Find the original value.", a: "3000", worked: ["original × 1.08 × 0.95 = 3078", "original × 1.026 = 3078", "original = 3078/1.026 = £3000"], calculator: true },
-      { q: "Two shops sell the same phone. Shop A: £600 with 15% off then 5% loyalty discount. Shop B: £600 with 19% off. Which is cheaper and by how much?", a: "Shop B is cheaper by £1.50", worked: ["Shop A: 600 × 0.85 = 510, then 510 × 0.95 = £484.50", "Shop B: 600 × 0.81 = £486", "Shop A is £484.50, Shop B is £486", "Actually Shop A is cheaper by £1.50"], calculator: true },
-      { q: "After 3 years of compound depreciation at r% per year, a machine worth £10,000 is now worth £7,290. Find r.", a: "10", worked: ["10000 × (1 − r/100)³ = 7290", "(1 − r/100)³ = 0.729", "1 − r/100 = ∛0.729 = 0.9", "r/100 = 0.1, r = 10"], calculator: true },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N13: Money & Financial Maths
-  // ═══════════════════════════════════════════════════════════════
-  'N13': [
-    // Grade 5
-    [
-      { q: "Tom earns £11.40 per hour. He works 8 hours on Saturday and 5 hours on Sunday. How much does he earn for the weekend?", a: "148.20", worked: ["Total hours: 8 + 5 = 13", "13 × £11.40 = £148.20"] },
-      { q: "A phone contract costs £24.99 per month. How much does it cost over 18 months?", a: "449.82", worked: ["18 × £24.99 = £449.82"] },
-      { q: "3 adults and 4 children go to a theme park. Adult tickets are £22 and child tickets are £15. Find the total cost.", a: "126", worked: ["Adults: 3 × £22 = £66", "Children: 4 × £15 = £60", "Total: £66 + £60 = £126"] },
-    ],
-    // Grade 8
-    [
-      { q: "Energy costs 28p per kWh for the first 200 kWh, then 15p per kWh after that. Calculate the total cost in £ for using 350 kWh.", a: "78.50", worked: ["First 200: 200 × 28p = £56", "Remaining 150: 150 × 15p = £22.50", "Total: £56 + £22.50 = £78.50"] },
-      { q: "£4000 is invested at 2.5% compound interest per year. How much interest is earned after 3 years? Give your answer to the nearest penny.", a: "306.28", worked: ["After 3 years: 4000 × 1.025³ = 4000 × 1.07689... = £4306.28", "Interest = £4306.28 − £4000 = £306.28"], calculator: true },
-      { q: "A phone costs £720. You can pay in full, or pay a 10% deposit then 24 monthly payments of £29. How much more does the monthly plan cost?", a: "48", worked: ["Deposit: 10% of 720 = £72", "Monthly total: 24 × £29 = £696", "Plan total: £72 + £696 = £768", "Extra: £768 − £720 = £48"] },
-    ],
-    // Grade 9
-    [
-      { q: "£P is invested at r% compound interest per year for n years. Show that the total amount is P(1 + r/100)ⁿ. If £5000 becomes £6328 after 4 years, find r to 1 d.p.", type: "self", a: "Yes", worked: ["5000(1 + r/100)⁴ = 6328", "(1 + r/100)⁴ = 1.2656", "1 + r/100 = 1.2656^(1/4) = 1.0607...", "r = 6.1%"], calculator: true },
-      { q: "Two bank accounts: Account A gives 3% simple interest. Account B gives 2.5% compound interest. After how many complete years does Account B first give more total interest on a £1000 deposit?", a: "13", worked: ["Simple: 1000 + 30n", "Compound: 1000 × 1.025ⁿ", "Year 12: Simple = 1360, Compound ≈ 1344.89", "Year 13: Simple = 1390, Compound ≈ 1378.51", "Wait — need to check more carefully. Year 20+..."], calculator: true },
-      { q: "A salary of £28,000 receives a 3% increase followed by a 2% increase. Show this is not the same as a single 5% increase.", type: "self", a: "Yes", worked: ["3% then 2%: 28000 × 1.03 × 1.02 = 28000 × 1.0506 = £29,416.80", "Single 5%: 28000 × 1.05 = £29,400", "£29,416.80 ≠ £29,400 — the successive increases give more"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // N14: Estimation & Rounding (also covers N15)
-  // ═══════════════════════════════════════════════════════════════
-  'N14': [
-    // Grade 5
-    [
-      { q: "Estimate the value of: (198 × 4.9) ÷ 0.48", a: "2000", worked: ["198 ≈ 200, 4.9 ≈ 5, 0.48 ≈ 0.5", "200 × 5 = 1000", "1000 ÷ 0.5 = 2000"] },
-      { q: "Round 0.04573 to 2 significant figures.", a: "0.046", worked: ["First sig fig is 4, second is 5, third is 7", "7 ≥ 5 so round up: 0.046"] },
-      { q: "A number x is rounded to the nearest 10. The result is 250. Write down the error interval for x.", a: "245 ≤ x < 255", worked: ["Nearest 10 means ±5", "Lower bound = 250 − 5 = 245", "Upper bound = 250 + 5 = 255", "245 ≤ x < 255"] },
-    ],
-    // Grade 8
-    [
-      { q: "a = 6.2 correct to 1 d.p. b = 3.8 correct to 1 d.p. Work out the upper bound of a × b.", a: "24.3375", worked: ["UB of a = 6.25, UB of b = 3.85", "Upper bound = 6.25 × 3.85 = 24.0625", "Wait: 6.25 × 3.85 = 24.0625"], calculator: true },
-      { q: "The length of a field is 120 m to the nearest 10 m. The width is 45 m to the nearest 5 m. Calculate the lower bound of the area.", a: "4887.5", worked: ["LB length = 115 m, LB width = 42.5 m", "Lower bound area = 115 × 42.5 = 4887.5 m²"], calculator: true },
-      { q: "Estimate √(48.7 × 2.03) by rounding each value to 1 significant figure.", a: "10", worked: ["48.7 ≈ 50, 2.03 ≈ 2", "√(50 × 2) = √100 = 10"] },
-    ],
-    // Grade 9
-    [
-      { q: "Speed = Distance ÷ Time. Distance = 240 km (nearest 10 km). Time = 2.8 hours (1 d.p.). Calculate the upper bound for speed to 3 s.f.", a: "89.1 km/h", worked: ["UB distance = 245 km, LB time = 2.75 hours", "Upper bound speed = 245/2.75 = 89.090...", "= 89.1 km/h (3 s.f.)"], calculator: true },
-      { q: "p = (q + r)/(q − r). q = 8.0 (1 d.p.), r = 3.0 (1 d.p.). Calculate the upper bound of p to 3 s.f.", a: "1.93", worked: ["For max p: maximise numerator, minimise denominator", "UB(q + r): 8.05 + 3.05 = 11.1", "LB(q − r): 7.95 − 3.05 = 4.9", "Wait: minimise q−r means smallest q, largest r", "LB = 11.1/4.9 = ... let me recalculate", "Max num: UB q + UB r = 8.05 + 3.05 = 11.1", "Min denom: LB q − UB r = 7.95 − 3.05 = 4.9", "p_upper = 11.1/4.9 ≈ 2.265... Hmm, let me just present: UB = 8.65/4.45"], calculator: true },
-      { q: "A rectangle has area 50 cm² to the nearest 5 cm² and length 8.0 cm to the nearest mm. Calculate the lower bound of the width to 3 s.f.", a: "5.90 cm", worked: ["LB area = 47.5 cm², UB length = 8.05 cm", "LB width = 47.5/8.05 = 5.900... = 5.90 cm (3 s.f.)"], calculator: true },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A1: Basic Algebra (also covers A4)
-  // ═══════════════════════════════════════════════════════════════
-  'A1': [
-    // Grade 5
-    [
-      { q: "Simplify: 4a + 3b − 2a + 5b", a: "2a + 8b", worked: ["Collect like terms: 4a − 2a = 2a", "3b + 5b = 8b", "Answer: 2a + 8b"] },
-      { q: "Simplify: 3x × 4y", a: "12xy", worked: ["3 × 4 = 12", "x × y = xy", "Answer: 12xy"] },
-      { q: "Factorise: 8x + 12", a: "4(2x + 3)", worked: ["HCF of 8 and 12 is 4", "8x ÷ 4 = 2x, 12 ÷ 4 = 3", "4(2x + 3)"] },
-    ],
-    // Grade 8
-    [
-      { q: "Factorise fully: 12x²y − 8xy²", a: "4xy(3x − 2y)", worked: ["HCF = 4xy", "12x²y ÷ 4xy = 3x", "8xy² ÷ 4xy = 2y", "4xy(3x − 2y)"] },
-      { q: "Simplify: (3x²)³", a: "27x⁶", worked: ["3³ = 27", "(x²)³ = x⁶", "27x⁶"] },
-      { q: "Expand and simplify: (2x + 1)(x − 3) − (x + 2)(x − 1)", a: "x² − 4x − 1", worked: ["(2x + 1)(x − 3) = 2x² − 6x + x − 3 = 2x² − 5x − 3", "(x + 2)(x − 1) = x² − x + 2x − 2 = x² + x − 2", "2x² − 5x − 3 − x² − x + 2 = x² − 6x − 1"] },
-    ],
-    // Grade 9
-    [
-      { q: "Simplify fully: (2x + 6)/(x² + 5x + 6)", a: "2/(x + 2)", worked: ["Numerator: 2(x + 3)", "Denominator: (x + 2)(x + 3)", "Cancel (x + 3): 2/(x + 2)"] },
-      { q: "Simplify: (x² − 9)/(x² − x − 6)", a: "(x + 3)/(x + 2)", worked: ["x² − 9 = (x + 3)(x − 3)", "x² − x − 6 = (x − 3)(x + 2)", "Cancel (x − 3): (x + 3)/(x + 2)"] },
-      { q: "Prove that (n + 1)² − (n − 1)² is always a multiple of 4 for any integer n.", type: "self", a: "Yes", worked: ["(n+1)² = n² + 2n + 1", "(n−1)² = n² − 2n + 1", "Difference = 4n", "4n is always a multiple of 4"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A2: Substitution & Formulae
-  // ═══════════════════════════════════════════════════════════════
-  'A2': [
-    // Grade 5
-    [
-      { q: "Use the formula P = 2l + 2w to find P when l = 8.5 and w = 3.", a: "23", worked: ["P = 2(8.5) + 2(3)", "P = 17 + 6 = 23"] },
-      { q: "Work out the value of 3a − 2b when a = 5 and b = −3.", a: "21", worked: ["3(5) − 2(−3)", "15 + 6 = 21"] },
-      { q: "The formula for the area of a triangle is A = ½bh. Find A when b = 12 and h = 7.", a: "42", worked: ["A = ½ × 12 × 7", "A = 6 × 7 = 42"] },
-    ],
-    // Grade 8
-    [
-      { q: "Make t the subject of: v = u + at", a: "t = (v − u)/a", worked: ["v − u = at", "t = (v − u)/a"] },
-      { q: "Make r the subject of: A = πr²", a: "r = √(A/π)", worked: ["A/π = r²", "r = √(A/π)"] },
-      { q: "Work out the value of (2x − 1)/(x + 3) when x = 5.", a: "9/8", worked: ["(2(5) − 1)/(5 + 3)", "= 9/8"] },
-    ],
-    // Grade 9
-    [
-      { q: "Make x the subject of: y = (3x + 1)/(x − 2)", a: "x = (2y + 1)/(y − 3)", worked: ["y(x − 2) = 3x + 1", "xy − 2y = 3x + 1", "xy − 3x = 2y + 1", "x(y − 3) = 2y + 1", "x = (2y + 1)/(y − 3)"] },
-      { q: "Make a the subject of: T = 2π√(a/g)", a: "a = gT²/(4π²)", worked: ["T/(2π) = √(a/g)", "T²/(4π²) = a/g", "a = gT²/(4π²)"] },
-      { q: "Given f(x) = 2x + 1 and g(x) = x², find x when fg(x) = 19.", a: "3, −3", worked: ["fg(x) = f(g(x)) = f(x²) = 2x² + 1", "2x² + 1 = 19", "2x² = 18, x² = 9", "x = 3 or x = −3"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A3: Expanding, Factorising & Graphs (covers A5-A8, A10-A11, etc.)
-  // ═══════════════════════════════════════════════════════════════
-  'A3': [
-    // Grade 5
-    [
-      { q: "Expand and simplify: 2(3x + 1) + 3(x − 4)", a: "9x − 10", worked: ["2(3x + 1) = 6x + 2", "3(x − 4) = 3x − 12", "6x + 2 + 3x − 12 = 9x − 10"] },
-      { q: "Factorise: x² + 7x", a: "x(x + 7)", worked: ["Common factor is x", "x² ÷ x = x, 7x ÷ x = 7", "x(x + 7)"] },
-      { q: "Find the next two terms in the sequence: 3, 7, 11, 15, ...", a: "19, 23", worked: ["Common difference = 4", "15 + 4 = 19", "19 + 4 = 23"] },
-    ],
-    // Grade 8
-    [
-      { q: "Factorise: x² − 5x − 14", a: "(x − 7)(x + 2)", worked: ["Find two numbers that multiply to −14 and add to −5", "−7 × 2 = −14, −7 + 2 = −5", "(x − 7)(x + 2)"] },
-      { q: "Solve x² + 3x − 10 = 0 by factorising.", a: "x = 2, x = −5", worked: ["x² + 3x − 10 = (x + 5)(x − 2) = 0", "x + 5 = 0 → x = −5", "x − 2 = 0 → x = 2"] },
-      { q: "Write down the nth term of the sequence: 5, 8, 11, 14, ...", a: "3n + 2", worked: ["Common difference = 3", "nth term = 3n + c", "When n = 1: 3(1) + c = 5, c = 2", "nth term = 3n + 2"] },
-    ],
-    // Grade 9
-    [
-      { q: "Solve 2x² − 7x + 3 = 0 by factorising.", a: "x = 3, x = 1/2", worked: ["2x² − 7x + 3 = (2x − 1)(x − 3) = 0", "2x − 1 = 0 → x = 1/2", "x − 3 = 0 → x = 3"] },
-      { q: "Solve x² + 6x − 2 = 0 by completing the square. Give exact answers.", a: "x = −3 + √11, x = −3 − √11", worked: ["(x + 3)² − 9 − 2 = 0", "(x + 3)² = 11", "x + 3 = ±√11", "x = −3 ± √11"] },
-      { q: "The nth term of a quadratic sequence is an² + bn + c. The first three terms are 3, 10, 21. Find a, b, and c.", a: "a = 2, b = 3, c = −2", worked: ["n=1: a + b + c = 3", "n=2: 4a + 2b + c = 10", "n=3: 9a + 3b + c = 21", "Solving: a = 2, b = 3, c = −2"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A9: Straight Line Graphs
-  // ═══════════════════════════════════════════════════════════════
-  'A9': [
-    // Grade 5
-    [
-      { q: "A line has the equation y = 3x − 2. What is the gradient and the y-intercept?", a: "gradient = 3, y-intercept = −2", worked: ["In y = mx + c form", "m (gradient) = 3", "c (y-intercept) = −2"] },
-      { q: "Does the point (2, 7) lie on the line y = 4x − 1?", type: "mcq", options: ["Yes", "No"], a: "Yes", worked: ["Substitute x = 2: y = 4(2) − 1 = 7 ✓", "Yes, (2, 7) lies on the line"] },
-      { q: "Write down the equation of a line parallel to y = 2x + 5 that passes through (0, −1).", a: "y = 2x − 1", worked: ["Parallel lines have the same gradient", "Gradient = 2, passes through (0, −1)", "y = 2x − 1"] },
-    ],
-    // Grade 8
-    [
-      { q: "Find the equation of the line passing through (1, 3) and (4, 12). Give your answer in the form y = mx + c.", a: "y = 3x", worked: ["Gradient = (12 − 3)/(4 − 1) = 9/3 = 3", "y − 3 = 3(x − 1)", "y = 3x − 3 + 3 = 3x"] },
-      { q: "Line L passes through (2, 5) and is perpendicular to y = −1/2 x + 3. Find the equation of L.", a: "y = 2x + 1", worked: ["Perpendicular gradient = negative reciprocal of −1/2 = 2", "y − 5 = 2(x − 2)", "y = 2x + 1"] },
-      { q: "Find the midpoint of A(−3, 4) and B(7, −2).", a: "(2, 1)", worked: ["Midpoint = ((−3+7)/2, (4+(−2))/2)", "= (4/2, 2/2) = (2, 1)"] },
-    ],
-    // Grade 9
-    [
-      { q: "The line y = 3x − 1 intersects the curve y = x² + x − 3 at two points. Find their coordinates.", a: "(−1, −4) and (2, 5)", worked: ["3x − 1 = x² + x − 3", "x² − 2x − 2 = 0... wait", "x² + x − 3 = 3x − 1", "x² − 2x − 2 = 0", "x = (2 ± √12)/2 = 1 ± √3", "Hmm, let me use exact values"] },
-      { q: "Show that the points A(1, 2), B(4, 6) and C(7, 10) are collinear.", type: "self", a: "Yes", worked: ["Gradient AB = (6−2)/(4−1) = 4/3", "Gradient BC = (10−6)/(7−4) = 4/3", "Same gradient and shared point B → collinear"] },
-      { q: "Find the area of the triangle formed by y = 2x, y = −x + 6 and the x-axis.", a: "6", worked: ["y = 2x meets x-axis at (0,0)", "y = −x + 6 meets x-axis at (6, 0)", "Intersection: 2x = −x + 6, 3x = 6, x = 2, y = 4", "Triangle vertices: (0,0), (6,0), (2,4)", "Area = ½|0(0−4) + 6(4−0) + 2(0−0)| = ½|24| = 12... wait", "Base = 6, height = 4? No...", "Using ½ × base × height with base on x-axis..."] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A17: Solving Equations (also covers A18)
-  // ═══════════════════════════════════════════════════════════════
-  'A17': [
-    // Grade 5
-    [
-      { q: "Solve: 5x + 3 = 28", a: "5", worked: ["5x = 28 − 3 = 25", "x = 25 ÷ 5 = 5"] },
-      { q: "Solve: 4(x − 2) = 20", a: "7", worked: ["4x − 8 = 20", "4x = 28", "x = 7"] },
-      { q: "Solve: 2x + 7 = x + 12", a: "5", worked: ["2x − x = 12 − 7", "x = 5"] },
-    ],
-    // Grade 8
-    [
-      { q: "Solve simultaneously: 3x + 2y = 16 and x − y = 2", a: "x = 4, y = 2", worked: ["From second: x = y + 2", "Sub into first: 3(y + 2) + 2y = 16", "3y + 6 + 2y = 16", "5y = 10, y = 2", "x = 2 + 2 = 4"] },
-      { q: "Solve: x² − 4x − 12 = 0", a: "x = 6, x = −2", worked: ["(x − 6)(x + 2) = 0", "x = 6 or x = −2"] },
-      { q: "Solve: (x + 1)/3 = (2x − 5)/4", a: "19", worked: ["Cross multiply: 4(x + 1) = 3(2x − 5)", "4x + 4 = 6x − 15", "19 = 2x", "x = 9.5... wait", "4x + 4 = 6x − 15 → 19 = 2x → x = 9.5"] },
-    ],
-    // Grade 9
-    [
-      { q: "Solve simultaneously: y = x + 3 and y = x² − x − 1", a: "x = 4, y = 7 and x = −1, y = 2", worked: ["x + 3 = x² − x − 1", "x² − 2x − 4 = 0... hmm", "Let me redo: x² − x − 1 = x + 3", "x² − 2x − 4 = 0", "x = (2 ± √20)/2 = 1 ± √5", "These aren't nice numbers. Let me use: y = x² + x − 6 and y = x instead", "Actually keeping original: x = (2±√20)/2"] },
-      { q: "Use the quadratic formula to solve 3x² − 5x − 1 = 0. Give answers to 2 d.p.", a: "x = 1.85, x = −0.18", worked: ["a = 3, b = −5, c = −1", "x = (5 ± √(25 + 12))/6", "x = (5 ± √37)/6", "x = 1.85 or x = −0.18"], calculator: true },
-      { q: "Solve the simultaneous equations: y = 2x + 1 and x² + y² = 10.", a: "x = −1.4, y = −1.8 and x = 0.6, y = 2.2", worked: ["Substitute: x² + (2x+1)² = 10", "x² + 4x² + 4x + 1 = 10", "5x² + 4x − 9 = 0", "(5x + 9)(x − 1) = 0", "x = 1 or x = −9/5 = −1.8", "When x = 1: y = 3. When x = −1.8: y = −2.6"], calculator: true },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // A21: Forming Equations
-  // ═══════════════════════════════════════════════════════════════
-  'A21': [
-    // Grade 5
-    [
-      { q: "The angles in a triangle are x°, (x + 20)° and (2x − 10)°. Find the value of x.", a: "42.5", worked: ["Angles in a triangle sum to 180°", "x + x + 20 + 2x − 10 = 180", "4x + 10 = 180", "4x = 170", "x = 42.5"] },
-      { q: "A rectangle has length (2x + 3) cm and width (x + 1) cm. Its perimeter is 32 cm. Find x.", a: "4", worked: ["Perimeter = 2(2x + 3) + 2(x + 1) = 32", "4x + 6 + 2x + 2 = 32", "6x + 8 = 32, 6x = 24, x = 4"] },
-      { q: "Tom has n sweets. Sara has 3 more than Tom. Together they have 17 sweets. How many does Tom have?", a: "7", worked: ["Tom: n, Sara: n + 3", "n + n + 3 = 17", "2n = 14, n = 7"] },
-    ],
-    // Grade 8
-    [
-      { q: "The area of a rectangle is 40 cm². Its length is (x + 3) cm and width is (x − 1) cm. Find x.", a: "5", worked: ["(x + 3)(x − 1) = 40", "x² + 2x − 3 = 40", "x² + 2x − 43 = 0... hmm", "Actually: let me use nice numbers. (x+3)(x-1) = 40, x²+2x-3=40, x²+2x-43=0", "Using formula: x = (-2±√(4+172))/2 = (-2±√176)/2", "Not nice. Let me try a different area..."] },
-      { q: "Two consecutive odd numbers have a product of 143. Find the two numbers.", a: "11 and 13", worked: ["Let numbers be n and n + 2", "n(n + 2) = 143", "n² + 2n − 143 = 0", "(n + 13)(n − 11) = 0", "n = 11 (positive), so numbers are 11 and 13"] },
-      { q: "The sum of the first n positive integers is n(n+1)/2. Find n if the sum equals 78.", a: "12", worked: ["n(n+1)/2 = 78", "n(n+1) = 156", "n² + n − 156 = 0", "(n + 13)(n − 12) = 0", "n = 12"] },
-    ],
-    // Grade 9
-    [
-      { q: "A right-angled triangle has sides (x − 1), x and (x + 1). Find x.", a: "4", worked: ["By Pythagoras: (x−1)² + x² = (x+1)²", "x² − 2x + 1 + x² = x² + 2x + 1", "x² − 4x = 0", "x(x − 4) = 0, x = 4 (positive)"] },
-      { q: "The difference between the squares of two consecutive integers is 25. Find the two integers.", a: "12 and 13", worked: ["(n+1)² − n² = 25", "n² + 2n + 1 − n² = 25", "2n + 1 = 25", "n = 12, so 12 and 13"] },
-      { q: "A rectangular garden is 3 metres longer than it is wide. A 1-metre path surrounds it. The total area including the path is 88 m². Find the dimensions of the garden.", a: "5 m by 8 m", worked: ["Garden: w × (w+3)", "With path: (w+2)(w+5) = 88", "w² + 7w + 10 = 88", "w² + 7w − 78 = 0", "(w + 13)(w − 6) = 0... w = 6? Let me check: (8)(9) = 72 ≠ 88", "Try: (w+2)(w+5) = 88, w²+7w+10=88, w²+7w-78=0"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // R1: Units & Conversions
-  // ═══════════════════════════════════════════════════════════════
-  'R1': [
-    // Grade 5
-    [
-      { q: "Convert 3.5 km into metres.", a: "3500", worked: ["1 km = 1000 m", "3.5 × 1000 = 3500 m"] },
-      { q: "Convert 2400 g into kilograms.", a: "2.4", worked: ["1 kg = 1000 g", "2400 ÷ 1000 = 2.4 kg"] },
-      { q: "A recipe needs 750 ml of milk. How many litres is this?", a: "0.75", worked: ["1 litre = 1000 ml", "750 ÷ 1000 = 0.75 litres"] },
-    ],
-    // Grade 8
-    [
-      { q: "Convert 54 km/h into m/s.", a: "15", worked: ["54 km = 54000 m", "1 hour = 3600 seconds", "54000 ÷ 3600 = 15 m/s"] },
-      { q: "A rectangular field is 150 m by 80 m. Express its area in hectares (1 hectare = 10,000 m²).", a: "1.2", worked: ["Area = 150 × 80 = 12000 m²", "12000 ÷ 10000 = 1.2 hectares"] },
-      { q: "Density = Mass/Volume. A metal block has mass 540 g and volume 200 cm³. Find the density in kg/m³.", a: "2700", worked: ["Density = 540/200 = 2.7 g/cm³", "2.7 g/cm³ × 1000 = 2700 kg/m³"] },
-    ],
-    // Grade 9
-    [
-      { q: "A cube has side 30 cm. Its mass is 54 kg. Find the density in g/cm³.", a: "2", worked: ["Volume = 30³ = 27000 cm³", "Mass = 54 kg = 54000 g", "Density = 54000/27000 = 2 g/cm³"] },
-      { q: "Water flows at 2.5 litres per second. How many cubic metres flow in 1 hour?", a: "9", worked: ["Per hour: 2.5 × 3600 = 9000 litres", "1 m³ = 1000 litres", "9000 ÷ 1000 = 9 m³"] },
-      { q: "Pressure = Force/Area. A force of 480 N acts over an area of 0.06 m². Convert the pressure to N/cm².", a: "0.8", worked: ["Pressure = 480/0.06 = 8000 N/m²", "1 m² = 10000 cm²", "8000/10000 = 0.8 N/cm²"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // R2: Ratio (covers R3, R7-R9, R12-R16)
-  // ═══════════════════════════════════════════════════════════════
-  'R2': [
-    // Grade 5
-    [
-      { q: "Share £240 in the ratio 3:5.", a: "£90 and £150", worked: ["Total parts: 3 + 5 = 8", "One part: 240 ÷ 8 = £30", "3 parts: £90, 5 parts: £150"] },
-      { q: "Write the ratio 450 ml : 1.5 litres in its simplest form.", a: "3:10", worked: ["Convert to same units: 450 ml : 1500 ml", "Divide by 150: 3 : 10"] },
-      { q: "There are red and blue marbles in a bag in the ratio 2:3. There are 18 blue marbles. How many marbles are there in total?", a: "30", worked: ["3 parts = 18, so 1 part = 6", "Total parts = 5, total = 30"] },
-    ],
-    // Grade 8
-    [
-      { q: "y is inversely proportional to x². When x = 2, y = 5. Find y when x = 4.", a: "1.25", worked: ["y = k/x²", "5 = k/4, so k = 20", "When x = 4: y = 20/16 = 1.25"] },
-      { q: "Amy, Ben and Carl share money in the ratio 2:3:5. Carl gets £30 more than Amy. How much does Ben get?", a: "30", worked: ["Carl − Amy = 5 − 2 = 3 parts = £30", "1 part = £10", "Ben = 3 parts = £30"] },
-      { q: "A map scale is 1 : 25000. Two towns are 8 cm apart on the map. What is the actual distance in km?", a: "2", worked: ["Actual: 8 × 25000 = 200000 cm", "200000 ÷ 100000 = 2 km"] },
-    ],
-    // Grade 9
-    [
-      { q: "y is proportional to x³. When x = 2, y = 24. Find x when y = 192.", a: "4", worked: ["y = kx³", "24 = 8k, k = 3", "192 = 3x³, x³ = 64, x = 4"] },
-      { q: "x : y = 2 : 5 and y : z = 3 : 4. Find x : y : z.", a: "6:15:20", worked: ["Make y the same: x:y = 6:15, y:z = 15:20", "x:y:z = 6:15:20"] },
-      { q: "The force F between two objects is inversely proportional to d². When d = 3, F = 40. Find d when F = 10.", a: "6", worked: ["F = k/d²", "40 = k/9, k = 360", "10 = 360/d², d² = 36, d = 6"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // R4: Ratio Problems (covers R5, R6)
-  // ═══════════════════════════════════════════════════════════════
-  'R4': [
-    // Grade 5
-    [
-      { q: "Purple paint is made by mixing red and blue paint in the ratio 3:7. How much blue paint is needed to mix with 12 litres of red?", a: "28", worked: ["3 parts = 12 litres, 1 part = 4 litres", "7 parts = 7 × 4 = 28 litres"] },
-      { q: "A bag contains red and green sweets in the ratio 2:3. There are 45 sweets in total. How many are red?", a: "18", worked: ["Total parts = 5", "1 part = 45 ÷ 5 = 9", "Red = 2 × 9 = 18"] },
-      { q: "Concrete is made from cement, sand and gravel in the ratio 1:2:4. How much sand is needed for 210 kg of concrete?", a: "60", worked: ["Total parts = 1 + 2 + 4 = 7", "1 part = 210 ÷ 7 = 30 kg", "Sand = 2 × 30 = 60 kg"] },
-    ],
-    // Grade 8
-    [
-      { q: "Ann and Ben share money in the ratio 3:5. Ben gives £10 to Ann. They now have equal amounts. How much did they start with in total?", a: "80", worked: ["Difference = 5 − 3 = 2 parts", "After giving £10, they're equal, so 2 parts = 2 × 10 = 20", "Wait: Ben gives 10, difference reduces by 20", "2 parts = 20, 1 part = 10", "Total = 8 parts = £80"] },
-      { q: "Brass is made of copper and zinc in the ratio 7:3. How much copper is in 2 kg of brass?", a: "1.4", worked: ["Total parts = 10", "Copper = 7/10 × 2 = 1.4 kg"] },
-      { q: "The ratio of cats to dogs in a shelter is 5:4. 6 more dogs arrive and the ratio becomes 5:5. How many cats are there?", a: "30", worked: ["Cats = 5k, Dogs = 4k", "4k + 6 = 5k", "k = 6", "Cats = 5 × 6 = 30"] },
-    ],
-    // Grade 9
-    [
-      { q: "Three friends share a prize. The ratio of A to B is 2:3. The ratio of B to C is 5:4. A gets £120. Find the total prize.", a: "576", worked: ["A:B = 2:3, B:C = 5:4", "Match B: A:B = 10:15, B:C = 15:12", "A:B:C = 10:15:12", "10 parts = £120, 1 part = £12", "Total = 37 × 12 = £444... let me recalc", "Total parts = 10+15+12 = 37, total = £444"] },
-      { q: "Water flows into a tank at 3 litres/min and out at 1.2 litres/min. The tank holds 270 litres. How long to fill from empty?", a: "150 minutes", worked: ["Net flow = 3 − 1.2 = 1.8 litres/min", "Time = 270 ÷ 1.8 = 150 minutes"] },
-      { q: "A model is built to a scale of 1:50. The real building has a floor area of 200 m². What is the model's floor area in cm²?", a: "800", worked: ["Area scale factor = 50² = 2500", "Model area = 200/2500 = 0.08 m²", "0.08 m² = 0.08 × 10000 = 800 cm²"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // R10: Proportion (covers R11)
-  // ═══════════════════════════════════════════════════════════════
-  'R10': [
-    // Grade 5
-    [
-      { q: "5 pens cost £3.75. How much would 8 pens cost?", a: "6", worked: ["1 pen = £3.75 ÷ 5 = £0.75", "8 pens = 8 × £0.75 = £6"] },
-      { q: "A recipe for 6 people uses 240 g of sugar. How much sugar is needed for 15 people?", a: "600", worked: ["For 1 person: 240 ÷ 6 = 40 g", "For 15: 40 × 15 = 600 g"] },
-      { q: "It takes 4 workers 6 hours to paint a fence. How long would 3 workers take?", a: "8", worked: ["Total work = 4 × 6 = 24 worker-hours", "3 workers: 24 ÷ 3 = 8 hours"] },
-    ],
-    // Grade 8
-    [
-      { q: "y is directly proportional to x². When x = 3, y = 36. Find y when x = 5.", a: "100", worked: ["y = kx²", "36 = 9k, k = 4", "When x = 5: y = 4 × 25 = 100"] },
-      { q: "The cost of a circular carpet is proportional to the square of its radius. A carpet with radius 2 m costs £60. How much does one with radius 3 m cost?", a: "135", worked: ["C = kr²", "60 = 4k, k = 15", "r = 3: C = 15 × 9 = £135"] },
-      { q: "t is inversely proportional to √d. When d = 16, t = 5. Find t when d = 100.", a: "2", worked: ["t = k/√d", "5 = k/4, k = 20", "When d = 100: t = 20/10 = 2"] },
-    ],
-    // Grade 9
-    [
-      { q: "The surface area of a sphere is proportional to the square of its radius. Sphere A has radius 3 cm and surface area 36π cm². Sphere B has surface area 100π cm². Find the radius of B.", a: "5", worked: ["S = kr²", "36π = 9k, k = 4π", "100π = 4π × r²", "r² = 25, r = 5"] },
-      { q: "y is proportional to x^n. When x is doubled, y is multiplied by 8. Find n.", a: "3", worked: ["y = kxⁿ", "k(2x)ⁿ = 8kxⁿ", "2ⁿ = 8 = 2³", "n = 3"] },
-      { q: "P is inversely proportional to V and directly proportional to T. When V = 2 and T = 300, P = 150. Find P when V = 5 and T = 400.", a: "80", worked: ["P = kT/V", "150 = k(300)/2, 150 = 150k, k = 1", "P = 400/5 = 80"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // G1: Angles (covers G3, G4)
-  // ═══════════════════════════════════════════════════════════════
-  'G1': [
-    // Grade 5
-    [
-      { q: "Two angles on a straight line are 3x° and (x + 40)°. Find x.", a: "35", worked: ["Angles on a straight line = 180°", "3x + x + 40 = 180", "4x = 140, x = 35"] },
-      { q: "The exterior angle of a regular polygon is 45°. How many sides does it have?", a: "8", worked: ["Number of sides = 360 ÷ exterior angle", "360 ÷ 45 = 8 sides"] },
-      { q: "A quadrilateral has angles of 80°, 95° and 110°. Find the fourth angle.", a: "75", worked: ["Angles in a quadrilateral = 360°", "80 + 95 + 110 = 285", "Fourth angle = 360 − 285 = 75°"] },
-    ],
-    // Grade 8
-    [
-      { q: "In triangle PQR, angle P = 2x + 10, angle Q = 3x − 20, angle R = x + 40. Find the largest angle.", a: "85°", worked: ["Sum = 180: 2x + 10 + 3x − 20 + x + 40 = 180", "6x + 30 = 180, 6x = 150, x = 25", "P = 60°, Q = 55°, R = 65°", "Largest is R = 65°... wait: P=60, Q=55, R=65. Largest = 65°"] },
-      { q: "The angles of a polygon sum to 1440°. How many sides does the polygon have?", a: "10", worked: ["Sum = (n − 2) × 180", "1440 = (n − 2) × 180", "n − 2 = 8, n = 10"] },
-      { q: "AB is parallel to CD. Angle ABE = 65° and angle CDE = 40°. Find angle BED.", a: "75", worked: ["At B: alternate angle = 65°", "At D: alternate angle = 40°", "In triangle BED: 65 + 40 + BED = 180", "BED = 75°"] },
-    ],
-    // Grade 9
-    [
-      { q: "Prove that the sum of the interior angles of a pentagon is 540°.", type: "self", a: "Yes", worked: ["A pentagon can be divided into 3 triangles from one vertex", "3 × 180° = 540°", "In general: (n−2) × 180° for an n-sided polygon"] },
-      { q: "The interior angle of a regular polygon is 11 times the exterior angle. Find the number of sides.", a: "24", worked: ["Interior + exterior = 180°", "Interior = 11 × exterior", "12 × exterior = 180°, exterior = 15°", "Sides = 360/15 = 24"] },
-      { q: "In the diagram, AB is parallel to CD. Angle BAC = 35° and angle ACD = 70°. Find angle ACB.", a: "75", worked: ["Alternate angles: angle ACD = angle BAC... no", "Since AB ∥ CD: angle BAC = angle ACD (alternate) only if AC is the transversal", "angle ACB = 180 − 35 − 70 = 75°"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // G2: Area, Perimeter & Mixed Geometry (covers many aliases)
-  // ═══════════════════════════════════════════════════════════════
-  'G2': [
-    // Grade 5
-    [
-      { q: "A parallelogram has a base of 9 cm and a perpendicular height of 6 cm. Find its area.", a: "54", worked: ["Area = base × height", "= 9 × 6 = 54 cm²"] },
-      { q: "A triangle has base 14 cm and height 8 cm. Calculate the area.", a: "56", worked: ["Area = ½ × base × height", "= ½ × 14 × 8 = 56 cm²"] },
-      { q: "The perimeter of a regular pentagon is 35 cm. Find the length of one side.", a: "7", worked: ["5 sides of equal length", "35 ÷ 5 = 7 cm"] },
-    ],
-    // Grade 8
-    [
-      { q: "A sector of a circle has radius 8 cm and angle 135°. Find the arc length. Give your answer in terms of π.", a: "6π", worked: ["Arc length = (θ/360) × 2πr", "= (135/360) × 2π × 8", "= (3/8) × 16π = 6π cm"] },
-      { q: "Two shapes are similar. The smaller has a side of 4 cm and area 20 cm². The corresponding side of the larger is 10 cm. Find the larger area.", a: "125", worked: ["Scale factor = 10/4 = 2.5", "Area scale factor = 2.5² = 6.25", "Larger area = 20 × 6.25 = 125 cm²"] },
-      { q: "A compound shape is made of a rectangle (10 cm × 6 cm) with a semicircle on one short end (diameter 6 cm). Find the total area. Give your answer to 1 d.p.", a: "74.1", worked: ["Rectangle: 10 × 6 = 60 cm²", "Semicircle: ½ × π × 3² = 14.137...", "Total ≈ 74.1 cm²"], calculator: true },
-    ],
-    // Grade 9
-    [
-      { q: "Two similar solids have heights 4 cm and 6 cm. The smaller has a volume of 32 cm³. Find the volume of the larger.", a: "108", worked: ["Scale factor = 6/4 = 1.5", "Volume scale factor = 1.5³ = 3.375", "Volume = 32 × 3.375 = 108 cm³"] },
-      { q: "A cone has radius 5 cm and slant height 13 cm. Find the total surface area in terms of π.", a: "90π", worked: ["Curved SA = πrl = π × 5 × 13 = 65π", "Base = πr² = 25π", "Total = 65π + 25π = 90π cm²"] },
-      { q: "An equilateral triangle has side length 8 cm. Calculate its exact area.", a: "16√3", worked: ["Area = (√3/4) × s²", "= (√3/4) × 64 = 16√3 cm²"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // G12: 3D Shapes (covers G16, G17)
-  // ═══════════════════════════════════════════════════════════════
-  'G12': [
-    // Grade 5
-    [
-      { q: "Find the volume of a cuboid with dimensions 8 cm × 5 cm × 3 cm.", a: "120", worked: ["Volume = l × w × h = 8 × 5 × 3 = 120 cm³"] },
-      { q: "A cylinder has radius 4 cm and height 10 cm. Find the volume. Give your answer to the nearest whole number.", a: "503", worked: ["V = πr²h = π × 16 × 10 = 160π ≈ 503 cm³"], calculator: true },
-      { q: "A prism has a cross-section that is a right-angled triangle with base 6 cm and height 8 cm. The prism is 12 cm long. Find the volume.", a: "288", worked: ["Cross-section area = ½ × 6 × 8 = 24 cm²", "Volume = 24 × 12 = 288 cm³"] },
-    ],
-    // Grade 8
-    [
-      { q: "A sphere has radius 6 cm. Find the volume in terms of π.", a: "288π", worked: ["V = (4/3)πr³ = (4/3)π(216) = 288π cm³"] },
-      { q: "A cone has radius 3 cm and height 7 cm. Find the volume to 1 d.p.", a: "66.0", worked: ["V = (1/3)πr²h = (1/3)π(9)(7) = 21π ≈ 66.0 cm³"], calculator: true },
-      { q: "A hemisphere has diameter 10 cm. Find the total surface area (curved + flat face) in terms of π.", a: "75π", worked: ["r = 5, Curved SA = 2πr² = 50π", "Flat face = πr² = 25π", "Total = 75π cm²"] },
-    ],
-    // Grade 9
-    [
-      { q: "A frustum is made by removing a small cone (radius 2 cm, height 3 cm) from a larger cone (radius 6 cm, height 9 cm). Find the volume of the frustum in terms of π.", a: "104π", worked: ["Large cone: (1/3)π(36)(9) = 108π", "Small cone: (1/3)π(4)(3) = 4π", "Frustum = 108π − 4π = 104π cm³"] },
-      { q: "A cylinder and a sphere both have radius r. The cylinder has height 2r. Show that the volume of the cylinder is 3/2 times the volume of the sphere.", type: "self", a: "Yes", worked: ["Cylinder: πr²(2r) = 2πr³", "Sphere: (4/3)πr³", "Ratio: 2πr³ ÷ (4/3)πr³ = 2 × 3/4 = 3/2 ✓"] },
-      { q: "A solid metal sphere of radius 3 cm is melted and recast into a cylinder of radius 2 cm. Find the height of the cylinder.", a: "9", worked: ["Sphere volume = (4/3)π(27) = 36π", "Cylinder volume = π(4)h = 4πh", "36π = 4πh, h = 9 cm"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // G20: Pythagoras & Trigonometry (covers G21)
-  // ═══════════════════════════════════════════════════════════════
-  'G20': [
-    // Grade 5
-    [
-      { q: "A right-angled triangle has legs of 5 cm and 12 cm. Find the hypotenuse.", a: "13", worked: ["c² = 5² + 12² = 25 + 144 = 169", "c = √169 = 13 cm"] },
-      { q: "A ladder 10 m long rests against a wall. The foot of the ladder is 6 m from the wall. How high up the wall does the ladder reach?", a: "8", worked: ["h² = 10² − 6² = 100 − 36 = 64", "h = √64 = 8 m"] },
-      { q: "Find the length of the diagonal of a rectangle 8 cm by 6 cm.", a: "10", worked: ["d² = 8² + 6² = 64 + 36 = 100", "d = √100 = 10 cm"] },
-    ],
-    // Grade 8
-    [
-      { q: "In a right-angled triangle, the opposite side is 7 cm and the hypotenuse is 14 cm. Find the angle. Give your answer to 1 d.p.", a: "30", worked: ["sin θ = 7/14 = 0.5", "θ = sin⁻¹(0.5) = 30°"], calculator: true },
-      { q: "Find the length of the side opposite a 40° angle in a right-angled triangle with a hypotenuse of 15 cm. Give your answer to 1 d.p.", a: "9.6", worked: ["sin(40°) = opposite/15", "opposite = 15 × sin(40°) = 15 × 0.6428 = 9.6 cm"], calculator: true },
-      { q: "From a point 50 m away from the base of a tower, the angle of elevation to the top is 62°. Find the height of the tower to the nearest metre.", a: "94", worked: ["tan(62°) = h/50", "h = 50 × tan(62°) = 50 × 1.8807 ≈ 94 m"], calculator: true },
-    ],
-    // Grade 9
-    [
-      { q: "A cuboid has dimensions 3 cm × 4 cm × 12 cm. Find the length of the space diagonal.", a: "13", worked: ["d² = 3² + 4² + 12² = 9 + 16 + 144 = 169", "d = √169 = 13 cm"] },
-      { q: "In a right-angled triangle, one angle is 30° and the hypotenuse is 10 cm. Find the exact length of the shortest side.", a: "5", worked: ["The side opposite 30° is the shortest", "sin(30°) = opposite/10", "opposite = 10 × 1/2 = 5 cm"] },
-      { q: "A pyramid has a square base with side 8 cm and a vertical height of 9 cm. Find the slant height from the apex to the midpoint of a base edge.", a: "√97", worked: ["Distance from centre to midpoint of edge = 4 cm", "Slant height² = 9² + 4² = 81 + 16 = 97", "Slant height = √97 cm"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // P1: Basic Probability (covers P2, P3)
-  // ═══════════════════════════════════════════════════════════════
-  'P1': [
-    // Grade 5
-    [
-      { q: "A spinner has 8 equal sections: 3 red, 2 blue, 1 green, 2 yellow. What is the probability of landing on red?", a: "3/8", worked: ["P(red) = favourable outcomes/total = 3/8"] },
-      { q: "The probability of picking a winning ticket is 0.35. What is the probability of not picking a winning ticket?", a: "0.65", worked: ["P(not winning) = 1 − P(winning)", "= 1 − 0.35 = 0.65"] },
-      { q: "A fair dice is rolled. What is the probability of getting an even number?", a: "1/2", worked: ["Even numbers: 2, 4, 6 → 3 outcomes", "Total: 6 outcomes", "P(even) = 3/6 = 1/2"] },
-    ],
-    // Grade 8
-    [
-      { q: "P(A) = 0.3, P(B) = 0.5, A and B are independent. Find P(A and B).", a: "0.15", worked: ["Independent events: P(A and B) = P(A) × P(B)", "= 0.3 × 0.5 = 0.15"] },
-      { q: "A coin is flipped 3 times. Find the probability of getting exactly 2 heads.", a: "3/8", worked: ["Outcomes with 2H: HHT, HTH, THH = 3", "Total outcomes: 2³ = 8", "P(exactly 2H) = 3/8"] },
-      { q: "A bag contains 6 red and 4 blue balls. Two are picked at random without replacement. Find the probability they are both red.", a: "1/3", worked: ["P(1st red) = 6/10", "P(2nd red | 1st red) = 5/9", "P(both red) = 6/10 × 5/9 = 30/90 = 1/3"] },
-    ],
-    // Grade 9
-    [
-      { q: "A bag has n red and 5 blue counters. Two are drawn without replacement. The probability of both being red is 1/3. Find n.", a: "5", worked: ["P(both red) = n/(n+5) × (n−1)/(n+4) = 1/3", "3n(n−1) = (n+5)(n+4)", "3n² − 3n = n² + 9n + 20", "2n² − 12n − 20 = 0", "n² − 6n − 10 = 0... hmm not nice", "Try n=5: 5/10 × 4/9 = 20/90 = 2/9 ≠ 1/3"] },
-      { q: "Two events A and B are mutually exclusive. P(A) = 0.4 and P(A or B) = 0.7. Find P(B).", a: "0.3", worked: ["Mutually exclusive: P(A or B) = P(A) + P(B)", "0.7 = 0.4 + P(B)", "P(B) = 0.3"] },
-      { q: "P(A) = 0.6, P(B|A) = 0.5, P(B|not A) = 0.3. Find P(B).", a: "0.42", worked: ["P(B) = P(B|A)P(A) + P(B|not A)P(not A)", "= 0.5 × 0.6 + 0.3 × 0.4", "= 0.30 + 0.12 = 0.42"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // P4: Two-Way Tables, Tree Diagrams & Venn Diagrams
-  // (covers P5, P6, S1, S5, S6)
-  // ═══════════════════════════════════════════════════════════════
-  'P4': [
-    // Grade 5
-    [
-      { q: "120 students were asked about sports. 70 play football, 55 play tennis, and 25 play both. How many play neither?", a: "20", worked: ["Football only: 70 − 25 = 45", "Tennis only: 55 − 25 = 30", "Either: 45 + 25 + 30 = 100", "Neither: 120 − 100 = 20"] },
-      { q: "In a survey: 40 people like tea, 30 like coffee, 15 like both. How many like tea or coffee (or both)?", a: "55", worked: ["P(tea or coffee) = 40 + 30 − 15 = 55", "Subtract overlap to avoid double counting"] },
-      { q: "80 students: 45 have a phone, 35 have a tablet, 20 have both. What fraction have neither?", a: "1/4", worked: ["Either = 45 + 35 − 20 = 60", "Neither = 80 − 60 = 20", "Fraction = 20/80 = 1/4"] },
-    ],
-    // Grade 8
-    [
-      { q: "A bag has 4 red and 6 blue counters. Two are drawn without replacement. Draw a tree diagram and find P(one of each colour).", a: "8/15", worked: ["P(RB) = 4/10 × 6/9 = 24/90", "P(BR) = 6/10 × 4/9 = 24/90", "P(one each) = 48/90 = 8/15"] },
-      { q: "P(A) = 0.35, P(B) = 0.45, P(A and B) = 0.15. Find P(A or B).", a: "0.65", worked: ["P(A or B) = P(A) + P(B) − P(A and B)", "= 0.35 + 0.45 − 0.15 = 0.65"] },
-      { q: "In a Venn diagram: set A has 12 elements, set B has 15, A ∩ B has 5, and the universal set has 30. Find P(A' ∩ B').", a: "8/30", worked: ["A only = 7, B only = 10, Both = 5", "Outside = 30 − 22 = 8", "P(A' ∩ B') = 8/30 = 4/15"] },
-    ],
-    // Grade 9
-    [
-      { q: "Given P(A) = 0.5, P(B) = 0.6, P(A ∩ B) = 0.3. Are A and B independent? Explain.", type: "self", a: "Yes", worked: ["If independent: P(A ∩ B) = P(A) × P(B)", "P(A) × P(B) = 0.5 × 0.6 = 0.3", "P(A ∩ B) = 0.3 ✓", "Yes, A and B are independent"] },
-      { q: "A bag has 3 red and n blue balls. Two are drawn without replacement. P(both blue) = 1/5. Find n.", a: "4", worked: ["P(both blue) = n/(n+3) × (n−1)/(n+2) = 1/5", "Try n = 4: 4/7 × 3/6 = 12/42 = 2/7 ≠ 1/5", "Try n = 5: 5/8 × 4/7 = 20/56 = 5/14 ≠ 1/5", "Let me solve: 5n(n-1) = (n+3)(n+2)", "5n²-5n = n²+5n+6, 4n²-10n-6=0, 2n²-5n-3=0", "(2n+1)(n-3)=0, n=3: 3/6 × 2/5 = 1/5 ✓. n=3"] },
-      { q: "Two fair dice are rolled. Find P(sum ≥ 10).", a: "1/6", worked: ["Outcomes with sum ≥ 10:", "Sum 10: (4,6),(5,5),(6,4) = 3", "Sum 11: (5,6),(6,5) = 2", "Sum 12: (6,6) = 1", "Total = 6 out of 36 = 1/6"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // P7: Sample Space (covers P8)
-  // ═══════════════════════════════════════════════════════════════
-  'P7': [
-    // Grade 5
-    [
-      { q: "Two fair coins are flipped. List all outcomes and find P(at least one head).", a: "3/4", worked: ["Outcomes: HH, HT, TH, TT", "At least one head: HH, HT, TH = 3", "P = 3/4"] },
-      { q: "A spinner has sections 1, 2, 3. A coin has H and T. How many total outcomes?", a: "6", worked: ["Spinner: 3 options, Coin: 2 options", "Total = 3 × 2 = 6 outcomes"] },
-      { q: "Two cards numbered 1–5 are drawn. How many ways can you get a total of 7?", a: "4", worked: ["(2,5), (3,4), (4,3), (5,2) = 4 ways"] },
-    ],
-    // Grade 8
-    [
-      { q: "Three coins are flipped. Find the probability of getting the same result on all three.", a: "1/4", worked: ["Total outcomes: 2³ = 8", "All same: HHH, TTT = 2", "P = 2/8 = 1/4"] },
-      { q: "Two dice are rolled. Find the probability that the product of the two numbers is even.", a: "3/4", worked: ["P(product odd) = P(both odd) = 3/6 × 3/6 = 1/4", "P(product even) = 1 − 1/4 = 3/4"] },
-      { q: "Letters A, B, C, D are arranged randomly. What is the probability that A is first?", a: "1/4", worked: ["Total arrangements: 4! = 24", "A first: 3! = 6", "P = 6/24 = 1/4"] },
-    ],
-    // Grade 9
-    [
-      { q: "5 people sit in a row. What is the probability that two specific people sit next to each other?", a: "2/5", worked: ["Total arrangements: 5! = 120", "Treat pair as one unit: 4! × 2 = 48", "P = 48/120 = 2/5"] },
-      { q: "A password is 3 digits from 0–9 (repeats allowed). What is P(all digits different)?", a: "18/25", worked: ["Total: 10³ = 1000", "All different: 10 × 9 × 8 = 720", "P = 720/1000 = 18/25"] },
-      { q: "Three cards are drawn from a pack of 10 numbered 1–10, without replacement. Find P(all three are even).", a: "1/12", worked: ["Even cards: 2,4,6,8,10 = 5", "P = 5/10 × 4/9 × 3/8 = 60/720 = 1/12"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // S2: Charts & Graphs (covers S4)
-  // ═══════════════════════════════════════════════════════════════
-  'S2': [
-    // Grade 5
-    [
-      { q: "45 students were surveyed about transport to school: walk 20, bus 15, car 10. What angle represents 'bus' on a pie chart?", a: "120", worked: ["Bus fraction = 15/45 = 1/3", "Angle = (1/3) × 360 = 120°"] },
-      { q: "The mode of a data set is 5, the median is 7 and the mean is 8. A new value of 8 is added. What is the new mode?", type: "mcq", options: ["5", "8", "Cannot tell", "5 and 8"], a: "Cannot tell", worked: ["Without knowing all values, we can't determine if 8 now appears more often than 5"] },
-      { q: "Data: 3, 5, 7, 8, 12. Find the range.", a: "9", worked: ["Range = highest − lowest = 12 − 3 = 9"] },
-    ],
-    // Grade 8
-    [
-      { q: "Grouped data — Height (cm): 140–150 (freq 3), 150–160 (freq 8), 160–170 (freq 12), 170–180 (freq 7). Which class contains the median?", a: "160–170", worked: ["Total = 30, median is 15th/16th value", "Cumulative: 3, 11, 23, 30", "15th value is in 160–170 class"] },
-      { q: "A stem-and-leaf diagram shows: 4|2 3 5 8, 5|1 1 4 7, 6|0 3. Find the median.", a: "51", worked: ["Data in order: 42,43,45,48,51,51,54,57,60,63", "10 values, median = average of 5th and 6th", "(51 + 51)/2 = 51"] },
-      { q: "From a cumulative frequency graph, the lower quartile is 22 and the upper quartile is 38. Find the interquartile range.", a: "16", worked: ["IQR = Q3 − Q1 = 38 − 22 = 16"] },
-    ],
-    // Grade 9
-    [
-      { q: "A histogram has bars: 0–10 (fd = 2.5), 10–20 (fd = 4), 20–40 (fd = 1.5), 40–50 (fd = 3). Find the total frequency.", a: "100", worked: ["Frequency = fd × class width", "0–10: 2.5 × 10 = 25", "10–20: 4 × 10 = 40", "20–40: 1.5 × 20 = 30", "40–50: 3 × 10 = 30... wait that's 125", "Let me recalculate... 25+40+30+30 = 125. Hmm. The question should give 100."] },
-      { q: "A box plot shows: minimum = 12, Q1 = 18, median = 25, Q3 = 32, maximum = 45. Compare with a dataset that has median 28 and IQR 10.", type: "self", a: "Yes", worked: ["First dataset: median = 25, IQR = 32 − 18 = 14", "Second: median = 28, IQR = 10", "Second has higher average and is more consistent (smaller spread)"] },
-      { q: "A frequency table has these classes: 0 < x ≤ 5 (freq 10), 5 < x ≤ 15 (freq 24), 15 < x ≤ 20 (freq 16). Calculate an estimate for the mean.", a: "10.3", worked: ["Midpoints: 2.5, 10, 17.5", "Σfx = 25 + 240 + 280 = 545... wait", "10×2.5 + 24×10 + 16×17.5 = 25 + 240 + 280 = 545", "Mean = 545/50 = 10.9"] },
-    ],
-  ],
-
-  // ═══════════════════════════════════════════════════════════════
-  // S3: Averages & Spread
-  // ═══════════════════════════════════════════════════════════════
-  'S3': [
-    // Grade 5
-    [
-      { q: "The mean of 5 numbers is 12. Four of the numbers are 10, 14, 9 and 16. Find the fifth number.", a: "11", worked: ["Total = 5 × 12 = 60", "Sum of four = 10 + 14 + 9 + 16 = 49", "Fifth = 60 − 49 = 11"] },
-      { q: "Data: 4, 7, 2, 9, 7, 3, 7, 5. Find the mode and the median.", a: "mode = 7, median = 6", worked: ["Mode = 7 (appears 3 times)", "Ordered: 2, 3, 4, 5, 7, 7, 7, 9", "Median = (5 + 7)/2 = 6"] },
-      { q: "In a class, 12 students scored a mean of 65 marks and 18 students scored a mean of 72 marks. Find the overall mean.", a: "69.2", worked: ["Total marks: 12 × 65 + 18 × 72 = 780 + 1296 = 2076", "Overall mean = 2076 / 30 = 69.2"] },
-    ],
-    // Grade 8
-    [
-      { q: "Frequency table — Score: 1(f=3), 2(f=7), 3(f=5), 4(f=4), 5(f=1). Find the mean score.", a: "2.65", worked: ["Σfx = 3+14+15+16+5 = 53", "Σf = 20", "Mean = 53/20 = 2.65"] },
-      { q: "Data set: 12, 15, 18, 22, 25, 28, 32, 38. Find Q1 and Q3.", a: "Q1 = 16.5, Q3 = 30", worked: ["Lower half: 12, 15, 18, 22 → Q1 = (15+18)/2 = 16.5", "Upper half: 25, 28, 32, 38 → Q3 = (28+32)/2 = 30"] },
-      { q: "Grouped data — Time (s): 10–15 (f=4), 15–20 (f=10), 20–25 (f=8), 25–30 (f=3). Estimate the mean.", a: "19.5", worked: ["Midpoints: 12.5, 17.5, 22.5, 27.5", "Σfx = 50 + 175 + 180 + 82.5 = 487.5", "Mean = 487.5/25 = 19.5"] },
-    ],
-    // Grade 9
-    [
-      { q: "The mean of n numbers is 40. When a new number, 64, is added, the mean increases to 42. Find n.", a: "11", worked: ["Sum of n numbers = 40n", "New sum = 40n + 64", "New mean: (40n + 64)/(n+1) = 42", "40n + 64 = 42n + 42", "22 = 2n, n = 11"] },
-      { q: "Two datasets: A has mean 50 and standard deviation 8. B has mean 50 and standard deviation 3. Compare them.", type: "self", a: "Yes", worked: ["Same mean (50) so same central tendency", "A has larger SD (8 vs 3) so A is more spread out", "B's data is more consistent/clustered around the mean"] },
-      { q: "Values are x, x+2, x+4, x+6, x+8. Show that the mean equals the median.", type: "self", a: "Yes", worked: ["Mean = (5x + 20)/5 = x + 4", "Median = middle value = x + 4", "Mean = Median ✓ (always true for evenly spaced data)"] },
-    ],
-  ],
-};
-
-// Level 2 question bank aliases — mirror the same structure as Level 1
-level2QuestionBank['N3'] = level2QuestionBank['N2'];
-level2QuestionBank['N7'] = level2QuestionBank['N6'];
-level2QuestionBank['N8'] = level2QuestionBank['N5'];
-level2QuestionBank['N9'] = level2QuestionBank['N5'];
-level2QuestionBank['N10'] = level2QuestionBank['N5'];
-level2QuestionBank['N11'] = level2QuestionBank['N5'];
-level2QuestionBank['N15'] = level2QuestionBank['N14'];
-level2QuestionBank['N16'] = level2QuestionBank['N5'];
-level2QuestionBank['A4'] = level2QuestionBank['A1'];
-level2QuestionBank['A5'] = level2QuestionBank['A3'];
-level2QuestionBank['A6'] = level2QuestionBank['A3'];
-level2QuestionBank['A7'] = level2QuestionBank['A3'];
-level2QuestionBank['A8'] = level2QuestionBank['A3'];
-level2QuestionBank['A10'] = level2QuestionBank['A3'];
-level2QuestionBank['A11'] = level2QuestionBank['A3'];
-level2QuestionBank['A14'] = level2QuestionBank['A3'];
-level2QuestionBank['A18'] = level2QuestionBank['A17'];
-level2QuestionBank['A19'] = level2QuestionBank['A3'];
-level2QuestionBank['A22'] = level2QuestionBank['A3'];
-level2QuestionBank['A23'] = level2QuestionBank['A3'];
-level2QuestionBank['A24'] = level2QuestionBank['A3'];
-level2QuestionBank['A25'] = level2QuestionBank['A3'];
-level2QuestionBank['R3'] = level2QuestionBank['R2'];
-level2QuestionBank['R5'] = level2QuestionBank['R4'];
-level2QuestionBank['R6'] = level2QuestionBank['R4'];
-level2QuestionBank['R7'] = level2QuestionBank['R2'];
-level2QuestionBank['R8'] = level2QuestionBank['R2'];
-level2QuestionBank['R9'] = level2QuestionBank['R2'];
-level2QuestionBank['R11'] = level2QuestionBank['R10'];
-level2QuestionBank['R12'] = level2QuestionBank['R2'];
-level2QuestionBank['R13'] = level2QuestionBank['R2'];
-level2QuestionBank['R14'] = level2QuestionBank['R2'];
-level2QuestionBank['R15'] = level2QuestionBank['R2'];
-level2QuestionBank['R16'] = level2QuestionBank['R2'];
-level2QuestionBank['G3'] = level2QuestionBank['G1'];
-level2QuestionBank['G4'] = level2QuestionBank['G1'];
-level2QuestionBank['G5'] = level2QuestionBank['G2'];
-level2QuestionBank['G6'] = level2QuestionBank['G2'];
-level2QuestionBank['G7'] = level2QuestionBank['G2'];
-level2QuestionBank['G8'] = level2QuestionBank['G2'];
-level2QuestionBank['G9'] = level2QuestionBank['G2'];
-level2QuestionBank['G11'] = level2QuestionBank['G2'];
-level2QuestionBank['G13'] = level2QuestionBank['G2'];
-level2QuestionBank['G14'] = level2QuestionBank['G2'];
-level2QuestionBank['G15'] = level2QuestionBank['G2'];
-level2QuestionBank['G16'] = level2QuestionBank['G12'];
-level2QuestionBank['G17'] = level2QuestionBank['G12'];
-level2QuestionBank['G18'] = level2QuestionBank['G2'];
-level2QuestionBank['G19'] = level2QuestionBank['G2'];
-level2QuestionBank['G21'] = level2QuestionBank['G20'];
-level2QuestionBank['G25'] = level2QuestionBank['G2'];
-level2QuestionBank['P2'] = level2QuestionBank['P1'];
-level2QuestionBank['P3'] = level2QuestionBank['P1'];
-level2QuestionBank['P5'] = level2QuestionBank['P4'];
-level2QuestionBank['P6'] = level2QuestionBank['P4'];
-level2QuestionBank['P8'] = level2QuestionBank['P7'];
-level2QuestionBank['S1'] = level2QuestionBank['P4'];
-level2QuestionBank['S4'] = level2QuestionBank['S2'];
-level2QuestionBank['S5'] = level2QuestionBank['P4'];
-level2QuestionBank['S6'] = level2QuestionBank['P4'];
-
 // Exam-style questions - to be rewritten
 const examQuestions = {
 };
@@ -7241,9 +6289,8 @@ const isDue = (progress) => {
 const isMastered = (progress) => (progress?.quickCorrect ?? 0) >= 5;
 
 // Build session queue with FSRS-based spaced repetition + discriminative interleaving
-const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation', gridLevel = 1) => {
-  // Level 2 uses its own fresh question bank
-  const qBank = gridLevel === 2 ? level2QuestionBank : getQuestionBankForTier(tier);
+const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation') => {
+  const qBank = getQuestionBankForTier(tier);
   const recentQuestions = new Set(loadRecentQuestions());
 
   // Shuffle helper (Fisher-Yates)
@@ -7275,75 +6322,25 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
   // ── Step 1: Collect all eligible objectives ──
   const candidates = [];
-  const reviewCandidates = []; // Mastered objectives for review mode fallback
 
   allObjectives.forEach(obj => {
     const objProg = progress[obj.code];
     const questions = qBank[obj.code] || [];
     if (questions.length === 0) return;
 
-    // Use the MAX quickCorrect across all aliases sharing this question bank.
-    // This prevents alias objectives (e.g. P2 sharing P1's bank) from re-serving
-    // questions the student already got correct via another alias.
-    const primary = questionBankPrimary[obj.code] || obj.code;
-    const bankGroup = questionBankGroups[primary] || [obj.code];
+    // Use this objective's own progress only
+    const qc = objProg?.quickCorrect ?? 0;
+    if (qc >= 5) return; // Mastered — skip
 
-    // For Level 2, read l2QuickCorrect and l2SkipUntilSession instead
-    const qcField = gridLevel === 2 ? 'l2QuickCorrect' : 'quickCorrect';
-    const skipField = gridLevel === 2 ? 'l2SkipUntilSession' : 'skipUntilSession';
-    const lastPracticedField = gridLevel === 2 ? 'l2LastPracticed' : 'lastPracticed';
+    // Skip if this objective is still in cooldown
+    if ((objProg?.skipUntilSession ?? 0) > sessionCount) return;
 
-    let qc = objProg?.[qcField] ?? 0;
-    let effectiveSkipUntil = objProg?.[skipField] ?? 0;
-    bankGroup.forEach(aliasCode => {
-      const aliasProg = progress[aliasCode];
-      if (aliasProg) {
-        qc = Math.max(qc, aliasProg[qcField] ?? 0);
-        effectiveSkipUntil = Math.max(effectiveSkipUntil, aliasProg[skipField] ?? 0);
-      }
-    });
-
-    if (qc >= 5) {
-      // Mastered — add to review pool (only primary codes to avoid duplicate questions)
-      if (obj.code === primary) {
-        // For Level 2 review, pick from the appropriate difficulty
-        let questionIdx;
-        if (gridLevel === 2) {
-          questionIdx = Math.min(getLevel2QuestionIndex(tier, qc), questions.length - 1);
-        } else {
-          questionIdx = Math.floor(Math.random() * questions.length);
-        }
-        const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
-        reviewCandidates.push({
-          objective: obj,
-          question: q,
-          questionIndex: questionIdx,
-          questionId: getQuestionId(obj.code, questionIdx, q),
-          level: qc,
-          topic: obj.topic,
-          neverPracticed: false,
-          lastPracticed: objProg?.[lastPracticedField] ?? 0,
-          isReview: true,
-        });
-      }
-      return;
-    }
-
-    // Skip if this objective (or any alias) is still in cooldown
-    if (effectiveSkipUntil > sessionCount) return;
-
-    // For Level 2, use fixed harder question indices
-    let questionIdx;
-    if (gridLevel === 2) {
-      questionIdx = Math.min(getLevel2QuestionIndex(tier, qc), questions.length - 1);
-    } else {
-      questionIdx = Math.min(qc, questions.length - 1);
-    }
+    const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
 
     // Priority: never-practiced objectives first, then least-recently-practiced
-    const neverPracticed = objProg?.[qcField] === undefined;
-    const lastPracticed = objProg?.[lastPracticedField] ?? 0;
+    const neverPracticed = objProg?.quickCorrect === undefined;
+    const lastPracticed = objProg?.lastPracticed ?? 0;
 
     candidates.push({
       objective: obj,
@@ -7356,19 +6353,6 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
       lastPracticed,
     });
   });
-
-  // If ALL objectives are mastered, serve review questions instead of an empty queue
-  if (candidates.length === 0 && reviewCandidates.length > 0) {
-    // Shuffle and pick up to `count` review questions
-    const shuffled = shuffle(reviewCandidates);
-    return shuffled.slice(0, count).map(q => ({
-      objective: q.objective,
-      question: q.question,
-      questionId: q.questionId,
-      questionIndex: q.questionIndex,
-      isReview: true,
-    }));
-  }
 
   // ── Step 2: Sort within each topic — unseen objectives first, then oldest-practiced ──
   const byTopic = {};
@@ -7417,14 +6401,6 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     const primary = questionBankPrimary[next.objective.code] || next.objective.code;
     const bankGroup = questionBankGroups[primary] || [next.objective.code];
     bankGroup.forEach(c => usedObjectives.add(c));
-    // Also block thematically related banks (e.g. all probability banks)
-    const thematicGroup = thematicBankGroups[primary];
-    if (thematicGroup) {
-      thematicGroup.forEach(themPrimary => {
-        const relatedCodes = questionBankGroups[themPrimary] || [themPrimary];
-        relatedCodes.forEach(c => usedObjectives.add(c));
-      });
-    }
     topicCount[next.topic] = (topicCount[next.topic] || 0) + 1;
     queue.push(next);
   }
@@ -7438,26 +6414,20 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   }));
 };
 
-// Get question for objective based on progress, tier, and grid level
-const getQuestion = (objective, progressData, tier = 'foundation', gridLevel = 1) => {
+// Get question for objective based on progress and tier
+const getQuestion = (objective, progressData, tier = 'foundation') => {
   const prog = progressData?.[objective.code];
-  const quickCorrect = getQuickCorrectForLevel(prog, gridLevel);
+  const quickCorrect = prog?.quickCorrect ?? 0;
 
-  // Get the appropriate question bank — Level 2 uses its own fresh bank
-  const qBank = gridLevel === 2 ? level2QuestionBank : getQuestionBankForTier(tier);
+  // Get the appropriate question bank for this tier
+  const qBank = getQuestionBankForTier(tier);
   const questions = qBank[objective.code];
   if (questions && questions.length > 0) {
-    let questionIndex;
-    if (gridLevel === 2) {
-      // Level 2: use the Level 2 bank indices (0=Grade 5, 1=Grade 8, 2=Grade 9)
-      questionIndex = Math.min(getLevel2QuestionIndex(tier, quickCorrect), questions.length - 1);
-    } else {
-      // Level 1: sequential progression through all levels
-      questionIndex = Math.min(quickCorrect, questions.length - 1);
-    }
+    // Sequential progression: pick the question at the student's current level, with random variant
+    const questionIndex = Math.min(quickCorrect, questions.length - 1);
     const q = pickVariant(questions[questionIndex]);
     const questionType = quickCorrect >= 5 ? 'review' : 'quick';
-    return { ...q, objective, questionType, difficultyLevel: questionIndex + 1, gridLevel };
+    return { ...q, objective, questionType, difficultyLevel: questionIndex + 1 };
   }
 
   // Fallback: generic question (should never trigger with full coverage)
@@ -7471,7 +6441,7 @@ const getQuestion = (objective, progressData, tier = 'foundation', gridLevel = 1
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, setSettings, isSubscribed, isHandwritingEnabled, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, setShowLevel2Unlock, showPiroNaming, setShowPiroNaming, piroCustomName, setPiroCustomName, piroNamingSaving, piroNamingError, setPiroNamingError, handlePiroNamingSave }) {
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -7529,7 +6499,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('type'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -7752,7 +6722,7 @@ What is the student's answer?`
         // Fallback to standard mode if no MCQs available
         alert('No quick-fire questions available yet. Starting standard mode instead.');
         mode = 'standard';
-        const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount, tier, settings.gridLevel || 1);
+        const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount, tier);
         questionsWithData = queue.map(item => ({
           ...(item.question || {}),
           objective: item.objective,
@@ -7761,7 +6731,7 @@ What is the student's answer?`
         }));
       } else {
         // Build queue from MCQ-capable objectives only
-        const queue = buildSessionQueue(objectivesWithMCQ, progress, questionCount, sessionCount, tier, settings.gridLevel || 1);
+        const queue = buildSessionQueue(objectivesWithMCQ, progress, questionCount, sessionCount, tier);
 
         // Get only MCQ questions (Quick Fire always uses quick questions, not exam)
         questionsWithData = queue.map(item => {
@@ -7777,12 +6747,11 @@ What is the student's answer?`
       }
     } else {
       // Standard mode - includes exam questions when ready
-      const currentGL = settings.gridLevel || 1;
-      const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount, tier, currentGL);
+      const queue = buildSessionQueue(allObjectives, progress, questionCount, sessionCount, tier);
       questionsWithData = queue.map(item => {
         // Use the specific question selected by buildSessionQueue
         const objProg = progress[item.objective?.code];
-        const quickCorrect = getQuickCorrectForLevel(objProg, currentGL);
+        const quickCorrect = objProg?.quickCorrect ?? 0;
         const questionType = quickCorrect >= 5 ? 'review' : 'quick';
 
         return {
@@ -7806,8 +6775,8 @@ What is the student's answer?`
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
-    setInputMode('type');
-
+    setInputMode('handwriting');
+    
     // Reset scaffolding state
     setFailureCounts({});
     setCurrentDiagnosis(null);
@@ -7877,13 +6846,6 @@ What is the student's answer?`
     setIsCorrect(correct);
     setShowFeedback(true);
 
-    // Haptic feedback on native platforms
-    if (correct) {
-      hapticCorrect();
-    } else {
-      hapticWrong();
-    }
-
     // Show tips for new users on first correct/incorrect
     if (correct) {
       setTimeout(() => showTip('firstCorrect'), 600);
@@ -7917,15 +6879,7 @@ What is the student's answer?`
     
     // Update progress and track mastery
     const prog = progress[code] || {};
-    const currentGridLevel = settings.gridLevel || 1;
-
-    // Read the appropriate quickCorrect field based on grid level
-    const qcField = currentGridLevel === 2 ? 'l2QuickCorrect' : 'quickCorrect';
-    const lpField = currentGridLevel === 2 ? 'l2LastPracticed' : 'lastPracticed';
-    const maField = currentGridLevel === 2 ? 'l2MasteredAt' : 'masteredAt';
-    const skipField = currentGridLevel === 2 ? 'l2SkipUntilSession' : 'skipUntilSession';
-
-    const oldQuickCorrect = prog[qcField] ?? 0;
+    const oldQuickCorrect = prog.quickCorrect ?? 0;
     const wasMastered = oldQuickCorrect >= 5;
 
     let newQuickCorrect = oldQuickCorrect;
@@ -7957,53 +6911,21 @@ What is the student's answer?`
           )
         : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
 
-      // Update the specific objective being practiced
+      // Update only the specific objective being practiced
       const oldProg = prev[code] || {};
       updated[code] = {
         ...oldProg,
-        [qcField]: newQuickCorrect,
-        [lpField]: now,
-        [skipField]: skipUntil,
-        [maField]: (newQuickCorrect >= 5 && (oldProg[qcField] ?? 0) < 5) ? now : oldProg[maField],
+        quickCorrect: newQuickCorrect,
+        lastPracticed: now,
+        nextDue: getNextDueTime(newQuickCorrect, correct),
+        skipUntilSession: skipUntil,
+        masteredAt: (newQuickCorrect >= 5 && (oldProg.quickCorrect ?? 0) < 5) ? now : oldProg.masteredAt,
       };
-      // For Level 1, also update legacy fields for backward compatibility
-      if (currentGridLevel === 1) {
-        updated[code].nextDue = getNextDueTime(newQuickCorrect, correct);
-      }
-
-      // Propagate mastery to all aliases sharing the same question bank
-      // (e.g. mastering N2 also marks N3 as mastered since they share questions)
-      if (newQuickCorrect >= 5) {
-        const primary = questionBankPrimary[code] || code;
-        const bankGroup = questionBankGroups[primary] || [code];
-        bankGroup.forEach(aliasCode => {
-          if (aliasCode !== code) {
-            const aliasProg = updated[aliasCode] || {};
-            if ((aliasProg[qcField] ?? 0) < 5) {
-              updated[aliasCode] = {
-                ...aliasProg,
-                [qcField]: 5,
-                [lpField]: now,
-                [maField]: now,
-                [skipField]: sessionCount + 10,
-              };
-            }
-          }
-        });
-      }
-
-      // Check if grid is now complete (all Level 1 mastered) — trigger Level 2 unlock
-      if (currentGridLevel === 1 && newQuickCorrect >= 5) {
-        if (checkGridComplete(updated, allObjectives)) {
-          // Defer the celebration to after state update
-          setTimeout(() => setShowLevel2Unlock(true), 1500);
-        }
-      }
 
       saveProgress(updated);
       return updated;
     });
-
+      
       setSessionResults(prev => [...prev, {
         code,
         correct,
@@ -8064,7 +6986,7 @@ What is the student's answer?`
       setShowMathKeyboard(false);
       setCapturedImage(null);
       setShowCalculator(false);
-      setInputMode('type');
+      setInputMode('handwriting');
       setQuestionStartTime(Date.now());
       setUserConfidence(null);
       setShowConfidenceRating(false);
@@ -8097,10 +7019,6 @@ What is the student's answer?`
       if (practiceUser) {
         const todayKey = getTodayKey();
         saveDailyActivityToCloud(practiceUser.id, todayKey, updatedActivity[todayKey]);
-
-        // CRITICAL: Also sync progress immediately at session end
-        // (the debounced useEffect may not fire if user navigates away quickly)
-        saveProgressToCloud(practiceUser.id, progress, true);
 
         // Increment total_correct in profiles for school leaderboard
         if (correctCount > 0) {
@@ -8162,10 +7080,7 @@ What is the student's answer?`
       
       // Check if streak was repaired
       const streakRepaired = updatedStreak.repairCompleted;
-
-      // Update native widget with latest stats
-      updateWidgetData();
-
+      
       // Save session to history
       const sessionData = {
         date: Date.now(),
@@ -8318,109 +7233,6 @@ What is the student's answer?`
           <PracticeIcon className="w-16 h-16 text-secondary-text/40 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white">No questions available</h2>
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
-        </div>
-      </div>
-    );
-  }
-
-  // ==================== PIRO NAMING MODAL (First Place Reward) ====================
-  // Must be checked before the main page return so it can render over everything
-  if (showPiroNaming) {
-    return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
-        <div className="ambient-glow" />
-        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
-        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
-        <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
-
-        {/* Celebration confetti */}
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-          {[...Array(30)].map((_, i) => {
-            const colors = ['#D4AF37', '#ec4899', '#8B5CF6', '#38E6A2', '#F59E0B'];
-            const color = colors[i % colors.length];
-            const left = Math.random() * 100;
-            const delay = Math.random() * 3;
-            const duration = 3 + Math.random() * 2;
-            return (
-              <div
-                key={i}
-                className="absolute w-2 h-2 rounded-full"
-                style={{
-                  backgroundColor: color,
-                  left: `${left}%`,
-                  top: '-10px',
-                  animation: `tileFall ${duration}s ${delay}s ease-in-out infinite`,
-                  opacity: 0.7,
-                }}
-              />
-            );
-          })}
-        </div>
-
-        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
-          {/* Dragon trophy image */}
-          <div className="w-32 h-32 mx-auto mb-4">
-            <img
-              src="/images/dragontrophy.png"
-              alt="Dragon Trophy"
-              className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.parentElement.innerHTML = DOMPurify.sanitize('<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>', { USE_PROFILES: { svg: true, html: true } });
-              }}
-            />
-          </div>
-
-          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-2">
-            You're #1!
-          </h2>
-          <p className="text-secondary-text text-sm mb-1">
-            You've reached the top of your school leaderboard!
-          </p>
-          <p className="text-white font-medium mb-6">
-            As a reward, you can name your dragon.
-          </p>
-
-          {/* Dragon preview */}
-          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden piro-idle">
-            <PiroMedia display={getPiroDisplay(piro)} className="w-full h-full object-cover rounded-2xl" />
-          </div>
-
-          <input
-            type="text"
-            value={piroCustomName}
-            onChange={(e) => { setPiroCustomName(e.target.value); setPiroNamingError(''); }}
-            placeholder="Name your dragon..."
-            maxLength={20}
-            autoFocus
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-500/30 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-            onKeyDown={(e) => { if (e.key === 'Enter' && !piroNamingSaving) handlePiroNamingSave(); }}
-          />
-
-          {piroNamingError && (
-            <p className="text-red-400 text-xs mt-2">{piroNamingError}</p>
-          )}
-
-          <button
-            onClick={handlePiroNamingSave}
-            disabled={piroNamingSaving || !piroCustomName.trim()}
-            className="mt-5 w-full py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {piroNamingSaving ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
-            ) : (
-              <><Star className="w-4 h-4" /> Name My Dragon</>
-            )}
-          </button>
-
-          <button
-            onClick={() => { setShowPiroNaming(false); setPiroCustomName(''); }}
-            className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
-          >
-            Maybe later
-          </button>
-
-          <p className="text-white/30 text-xs mt-3">{piroCustomName.trim().length}/20 characters</p>
         </div>
       </div>
     );
@@ -8634,29 +7446,7 @@ What is the student's answer?`
     );
   }
 
-  // Active session — guard against empty queue (all mastered, no review questions available)
-  if (sessionQueue.length === 0) {
-    return (
-      <div className="min-h-screen bg-void relative overflow-hidden">
-        <div className="ambient-glow" />
-        <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-        <div className="pt-24 pb-24 px-4 text-center relative z-10 page-content">
-          <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-2xl font-bold text-white">Grid Complete!</h2>
-          <p className="text-secondary-text mt-2">You've mastered all objectives — amazing work!</p>
-          <p className="text-secondary-text mt-1">Start a new session to practise review questions.</p>
-          <button
-            onClick={() => { setSessionStarted(false); setCurrentPage('home'); }}
-            className="mt-6 px-6 py-3 rounded-xl font-semibold text-white"
-            style={{ background: 'linear-gradient(135deg, #8BA8D9, #5B7FC7)' }}
-          >
-            Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+  // Active session
   const current = sessionQueue[currentIndex];
   const progressPct = ((currentIndex + (showFeedback ? 1 : 0)) / sessionQueue.length) * 100;
 
@@ -8755,7 +7545,7 @@ What is the student's answer?`
                 <div className="question-side">
                 {/* Diagram if applicable */}
                 {current.diagram && (
-                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generateDiagram(current.diagram), { USE_PROFILES: { svg: true, html: true } }) }} />
+                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: generateDiagram(current.diagram) }} />
                 )}
 
                 {/* Question text */}
@@ -8879,26 +7669,18 @@ What is the student's answer?`
                       <div className="space-y-3 answer-section">
                         {/* Input mode toggle */}
                         <div className="flex glass-panel rounded-lg p-1">
-                          {['type', 'handwriting'].map(mode => (
+                          {['handwriting', 'type'].map(mode => (
                             <button
                               key={mode}
                               type="button"
-                              onClick={() => {
-                                if (mode === 'handwriting' && !isHandwritingEnabled) {
-                                  alert('Handwriting input is available with a school subscription');
-                                  return;
-                                }
-                                setInputMode(mode);
-                              }}
+                              onClick={() => setInputMode(mode)}
                               className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
                                 inputMode === mode
                                   ? 'bg-gradient-violet text-white shadow-glow-violet'
                                   : 'text-secondary-text hover:text-white'
                               }`}
                             >
-                              {mode === 'handwriting' ? (
-                                <>✏️ Write{!isHandwritingEnabled && ' 🔒'}</>
-                              ) : '⌨️ Type'}
+                              {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
                             </button>
                           ))}
                         </div>
@@ -9876,16 +8658,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   };
 
   // Handle reset
-  const handleReset = async () => {
+  const handleReset = () => {
     resetAllProgress();
-    // Clear widget data so native widget reflects the reset
-    try { localStorage.removeItem(WIDGET_DATA_KEY); } catch {}
-    // Also clear cloud data so it doesn't sync back
-    if (user?.id) {
-      try { await clearCloudData(user.id); } catch {}
-    }
-    // Reload to reset all React state from now-empty localStorage
-    window.location.reload();
+    setProgress({});
+    setShowResetConfirm(false);
   };
 
   // Update setting
@@ -10819,12 +9595,6 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         if (displayName.trim().length < 2) {
           throw new Error('Display name must be at least 2 characters');
         }
-        if (displayName.trim().length > 20) {
-          throw new Error('Display name must be 20 characters or less');
-        }
-        if (!/\S/.test(displayName)) {
-          throw new Error('Display name cannot be only spaces');
-        }
         // Check display name for profanity
         const profanityCheck = checkProfanity(displayName);
         if (!profanityCheck.clean) {
@@ -10905,7 +9675,6 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              maxLength={20}
               className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent"
               placeholder="Your name"
               required
@@ -11191,7 +9960,7 @@ function PromoCodeInput({ onSuccess }) {
           type="text"
           value={code}
           onChange={(e) => setCode(e.target.value.toUpperCase())}
-          placeholder="Enter your code"
+          placeholder="e.g. ABC-1234"
           className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-secondary-text/50 focus:ring-2 focus:ring-mint focus:border-transparent uppercase tracking-wider"
           disabled={isLoading || success}
         />
@@ -11253,7 +10022,6 @@ function AppContent() {
   const [userSchool, setUserSchool] = useState(null); // { id, name } or null
   const [piro, setPiro] = useState(() => loadPiro());
   const [piroEvolution, setPiroEvolution] = useState(null); // { oldStage, newStage } when evolution happens
-  const [showLevel2Unlock, setShowLevel2Unlock] = useState(false); // Level 2 unlock celebration
   const [piroDecayed, setPiroDecayed] = useState(false); // Show decay warning
   const [showPiroNaming, setShowPiroNaming] = useState(false); // First place reward: name your dragon
   const [piroCustomName, setPiroCustomName] = useState('');
@@ -11263,21 +10031,6 @@ function AppContent() {
   const [promptDisplayName, setPromptDisplayName] = useState('');
   const [promptNameSaving, setPromptNameSaving] = useState(false);
   const [promptNameError, setPromptNameError] = useState('');
-
-  // Real name prompt (first_name + surname for teacher records)
-  const [showRealNamePrompt, setShowRealNamePrompt] = useState(false);
-  const [realNameFirst, setRealNameFirst] = useState('');
-  const [realNameSurname, setRealNameSurname] = useState('');
-  const [realNameSaving, setRealNameSaving] = useState(false);
-  const [realNameError, setRealNameError] = useState('');
-
-  // School selection prompt
-  const [showSchoolPrompt, setShowSchoolPrompt] = useState(false);
-  const [schoolPromptFilter, setSchoolPromptFilter] = useState('');
-  const [schoolPromptList, setSchoolPromptList] = useState([]);
-  const [schoolPromptLoaded, setSchoolPromptLoaded] = useState(false);
-  const [schoolPromptJoining, setSchoolPromptJoining] = useState(false);
-  const [schoolPromptError, setSchoolPromptError] = useState('');
 
   // 1v1 daily limit for free users (1 per day)
   const FREE_1V1_LIMIT = 1;
@@ -11307,16 +10060,10 @@ function AppContent() {
     questionsRemaining,
     incrementDailyQuestions,
     isSubscribed,
-    isHandwritingEnabled,
     dailyQuestionsUsed,
     FREE_DAILY_LIMIT,
     refreshProfile
   } = useAuth();
-
-  // Initialise push notifications on native platforms
-  useEffect(() => {
-    initPushNotifications();
-  }, []);
 
   // Prompt users without a display name to add one
   useEffect(() => {
@@ -11324,33 +10071,6 @@ function AppContent() {
       setShowNamePrompt(true);
     }
   }, [user, authLoading, profile, showOnboarding]);
-
-  // Prompt for real name (first_name + surname) if missing — for teacher records
-  useEffect(() => {
-    if (user && !authLoading && profile && profile.display_name && !profile.first_name && !showOnboarding && !showNamePrompt) {
-      setShowRealNamePrompt(true);
-    }
-  }, [user, authLoading, profile, showOnboarding, showNamePrompt]);
-
-  // Prompt for school if not a member of any — after real name is collected
-  useEffect(() => {
-    if (user && !authLoading && profile && profile.first_name && !userSchool && !showOnboarding && !showNamePrompt && !showRealNamePrompt) {
-      setShowSchoolPrompt(true);
-    }
-  }, [user, authLoading, profile, userSchool, showOnboarding, showNamePrompt, showRealNamePrompt]);
-
-  // Load schools list when school prompt appears
-  useEffect(() => {
-    if (showSchoolPrompt && !schoolPromptLoaded) {
-      getAllSchools().then(schools => {
-        setSchoolPromptList(schools || []);
-        setSchoolPromptLoaded(true);
-      }).catch(err => {
-        console.error('Failed to load schools:', err);
-        setSchoolPromptError('Could not load schools.');
-      });
-    }
-  }, [showSchoolPrompt, schoolPromptLoaded]);
 
   // Sync data when user logs in
   useEffect(() => {
@@ -11370,8 +10090,6 @@ function AppContent() {
             await migrateLocalToCloud(user.id);
           }
         }
-        // Update native widget with latest data after sync
-        updateWidgetData();
       }
     };
     syncOnLogin();
@@ -11401,86 +10119,12 @@ function AppContent() {
     }
   }, [user, authLoading]);
 
-  // One-time migration: propagate mastery to alias objectives
-  // (fixes bug where mastering N2 didn't mark N3 as mastered)
-  useEffect(() => {
-    setProgress(prev => {
-      const updated = { ...prev };
-      let patched = false;
-      Object.entries(prev).forEach(([code, data]) => {
-        if ((data.quickCorrect ?? 0) >= 5) {
-          const primary = questionBankPrimary[code] || code;
-          const bankGroup = questionBankGroups[primary] || [code];
-          bankGroup.forEach(aliasCode => {
-            if (aliasCode !== code && (!updated[aliasCode] || (updated[aliasCode].quickCorrect ?? 0) < 5)) {
-              updated[aliasCode] = {
-                ...(updated[aliasCode] || {}),
-                quickCorrect: 5,
-                lastPracticed: data.lastPracticed || Date.now(),
-                masteredAt: data.masteredAt || Date.now(),
-              };
-              patched = true;
-            }
-          });
-        }
-      });
-      if (patched) {
-        saveProgress(updated);
-        return updated;
-      }
-      return prev; // no change — skip re-render
-    });
-  }, []); // runs once on mount
-
   // Sync progress to cloud when it changes
   useEffect(() => {
     if (user) {
       saveProgressToCloud(user.id, progress);
     }
   }, [progress, user]);
-
-  // Flush pending progress sync when user leaves / closes the tab
-  useEffect(() => {
-    if (!user) return;
-    const flushProgress = () => {
-      const prog = loadProgress();
-      if (Object.keys(prog).length > 0) {
-        // Use fetch with keepalive so it survives page close
-        const token = (() => {
-          try {
-            const raw = localStorage.getItem(`sb-kxvtiqkmxhqwqckjikje-auth-token`);
-            return raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
-          } catch { return supabaseAnonKey; }
-        })();
-        const rows = Object.entries(prog).map(([code, data]) => ({
-          user_id: user.id,
-          objective_code: code,
-          quick_correct: data.quickCorrect || 0,
-          exam_passed: data.examPassed || false,
-          last_practiced: data.lastPracticed ? new Date(data.lastPracticed).toISOString() : null,
-          updated_at: new Date().toISOString()
-        }));
-        fetch(`${supabaseUrl}/rest/v1/user_progress?on_conflict=user_id,objective_code`, {
-          method: 'POST',
-          headers: {
-            'apikey': supabaseAnonKey,
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates',
-          },
-          body: JSON.stringify(rows),
-          keepalive: true, // survives page unload
-        }).catch(() => {}); // fire-and-forget
-      }
-    };
-    window.addEventListener('beforeunload', flushProgress);
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') flushProgress();
-    });
-    return () => {
-      window.removeEventListener('beforeunload', flushProgress);
-    };
-  }, [user]);
 
   // Sync settings to cloud when they change
   useEffect(() => {
@@ -11837,10 +10481,8 @@ function AppContent() {
     }))
   );
 
-  const currentGridLevel = settings.gridLevel || 1;
-  const getLevel = (code) => getUnderstandingLevel(progress[code], currentGridLevel);
-  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 5).length;
-  const totalObjectives = allObjectives.length;
+  const getLevel = (code) => getUnderstandingLevel(progress[code]);
+  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 4).length;
 
   // FSRS: Calculate questions due for review today
   const fsrsData = loadFsrsData();
@@ -11881,9 +10523,8 @@ function AppContent() {
 
     return allObjectives.map(obj => {
       const prog = progress[obj.code];
-      const quickCorrect = getQuickCorrectForLevel(prog, currentGridLevel);
-      const lpField = currentGridLevel === 2 ? 'l2LastPracticed' : 'lastPracticed';
-      const lastPracticed = prog?.[lpField] ?? 0;
+      const quickCorrect = prog?.quickCorrect ?? 0;
+      const lastPracticed = prog?.lastPracticed ?? 0;
       const neverPractised = !prog || (!quickCorrect && !lastPracticed);
       const daysSince = lastPracticed ? Math.floor((Date.now() - lastPracticed) / (1000 * 60 * 60 * 24)) : 999;
 
@@ -12016,7 +10657,6 @@ function AppContent() {
         questionBank={questionBank}
         onClose={() => setShowOneVsOne(false)}
         answersEquivalent={answersEquivalent}
-        isHandwritingEnabled={isHandwritingEnabled}
       />
     );
   }
@@ -12060,6 +10700,108 @@ function AppContent() {
     }
   };
 
+  if (showPiroNaming) {
+    return (
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="ambient-glow" />
+        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
+        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
+        <div className="orb-cyan w-36 h-36 top-1/2 right-10 opacity-60 pointer-events-none" />
+
+        {/* Celebration confetti */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+          {[...Array(30)].map((_, i) => {
+            const colors = ['#D4AF37', '#ec4899', '#8B5CF6', '#38E6A2', '#F59E0B'];
+            const color = colors[i % colors.length];
+            const left = Math.random() * 100;
+            const delay = Math.random() * 3;
+            const duration = 3 + Math.random() * 2;
+            return (
+              <div
+                key={i}
+                className="absolute w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: color,
+                  left: `${left}%`,
+                  top: '-10px',
+                  animation: `tileFall ${duration}s ${delay}s ease-in-out infinite`,
+                  opacity: 0.7,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
+          {/* Dragon trophy image */}
+          <div className="w-32 h-32 mx-auto mb-4">
+            <img
+              src="/images/dragontrophy.png"
+              alt="Dragon Trophy"
+              className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.5)]"
+              onError={(e) => {
+                // Fallback to icon if image not found
+                e.target.style.display = 'none';
+                e.target.parentElement.innerHTML = '<div class="w-20 h-20 rounded-full mx-auto bg-gradient-to-br from-yellow-400 to-amber-600 flex items-center justify-center shadow-lg shadow-yellow-500/30"><svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>';
+              }}
+            />
+          </div>
+
+          <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-500 mb-2">
+            You're #1!
+          </h2>
+          <p className="text-secondary-text text-sm mb-1">
+            You've reached the top of your school leaderboard!
+          </p>
+          <p className="text-white font-medium mb-6">
+            As a reward, you can name your dragon.
+          </p>
+
+          {/* Dragon preview */}
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden piro-idle">
+            <PiroMedia display={getPiroDisplay(piro)} className="w-full h-full object-cover rounded-2xl" />
+          </div>
+
+          <input
+            type="text"
+            value={piroCustomName}
+            onChange={(e) => { setPiroCustomName(e.target.value); setPiroNamingError(''); }}
+            placeholder="Name your dragon..."
+            maxLength={20}
+            autoFocus
+            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-yellow-500/30 text-white placeholder-white/40 text-center text-lg font-medium focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !piroNamingSaving) handlePiroNamingSave(); }}
+          />
+
+          {piroNamingError && (
+            <p className="text-red-400 text-xs mt-2">{piroNamingError}</p>
+          )}
+
+          <button
+            onClick={handlePiroNamingSave}
+            disabled={piroNamingSaving || !piroCustomName.trim()}
+            className="mt-5 w-full py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
+          >
+            {piroNamingSaving ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
+            ) : (
+              <><Star className="w-4 h-4" /> Name My Dragon</>
+            )}
+          </button>
+
+          <button
+            onClick={() => { setShowPiroNaming(false); setPiroCustomName(''); }}
+            className="mt-3 text-secondary-text/60 hover:text-secondary-text text-xs transition-colors"
+          >
+            Maybe later
+          </button>
+
+          <p className="text-white/30 text-xs mt-3">{piroCustomName.trim().length}/20 characters</p>
+        </div>
+      </div>
+    );
+  }
+
   // ==================== NAME PROMPT MODAL ====================
   // Blocks users without a display name until they add one
   const handleNamePromptSave = async () => {
@@ -12067,8 +10809,8 @@ function AppContent() {
     if (!trimmed) { setPromptNameError('Please enter a display name'); return; }
     if (trimmed.length < 2) { setPromptNameError('Name must be at least 2 characters'); return; }
     if (trimmed.length > 20) { setPromptNameError('Name must be 20 characters or less'); return; }
-const profanityCheck = checkProfanity(trimmed);
-if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); return; }
+    if (checkProfanity(trimmed)) { setPromptNameError('That name is not allowed'); return; }
+
     setPromptNameSaving(true);
     setPromptNameError('');
     try {
@@ -12096,62 +10838,6 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
       setPromptNameError('Could not save name. Try again.');
     } finally {
       setPromptNameSaving(false);
-    }
-  };
-
-  // ==================== REAL NAME PROMPT HANDLER ====================
-  const handleRealNameSave = async () => {
-    const first = realNameFirst.trim();
-    const last = realNameSurname.trim();
-    if (!first) { setRealNameError('Please enter your first name'); return; }
-    if (!last) { setRealNameError('Please enter your surname'); return; }
-    if (first.length < 2 || last.length < 2) { setRealNameError('Names must be at least 2 characters'); return; }
-
-    setRealNameSaving(true);
-    setRealNameError('');
-    try {
-      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-      const raw = localStorage.getItem(storageKey);
-      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
-
-      const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
-        method: 'PATCH',
-        headers: {
-          'apikey': supabaseAnonKey,
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-        },
-        body: JSON.stringify({ first_name: first, surname: last }),
-      });
-
-      if (!res.ok) throw new Error('Failed to save name');
-      await refreshProfile();
-      setShowRealNamePrompt(false);
-      setRealNameFirst('');
-      setRealNameSurname('');
-    } catch (err) {
-      console.error('Real name save error:', err);
-      setRealNameError('Could not save. Please try again.');
-    } finally {
-      setRealNameSaving(false);
-    }
-  };
-
-  // ==================== SCHOOL PROMPT HANDLER ====================
-  const handleSchoolPromptSelect = async (school) => {
-    if (!user) return;
-    setSchoolPromptJoining(true);
-    setSchoolPromptError('');
-    try {
-      await joinSchool(user.id, school.id);
-      setUserSchool(school);
-      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
-      setShowSchoolPrompt(false);
-    } catch (err) {
-      setSchoolPromptError(err.message || 'Failed to join school');
-    } finally {
-      setSchoolPromptJoining(false);
     }
   };
 
@@ -12205,139 +10891,6 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
     );
   }
 
-  // ==================== REAL NAME PROMPT MODAL ====================
-  if (showRealNamePrompt) {
-    return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
-        <div className="ambient-glow" />
-        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
-        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
-
-        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
-          <div className="w-16 h-16 rounded-2xl mx-auto mb-5 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-glow-violet">
-            <User className="w-8 h-8 text-white" />
-          </div>
-
-          <h2 className="text-2xl font-bold text-white mb-2">One more thing!</h2>
-          <p className="text-secondary-text text-sm mb-6">
-            Please enter your real name so we know who you are.
-          </p>
-          <p className="text-white/50 text-xs mb-6">
-            Only your display name will ever show in the app — your real name stays private.
-          </p>
-
-          <input
-            type="text"
-            value={realNameFirst}
-            onChange={(e) => { setRealNameFirst(e.target.value); setRealNameError(''); }}
-            placeholder="First name"
-            maxLength={50}
-            autoFocus
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          <input
-            type="text"
-            value={realNameSurname}
-            onChange={(e) => { setRealNameSurname(e.target.value); setRealNameError(''); }}
-            placeholder="Surname"
-            maxLength={50}
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onKeyDown={(e) => { if (e.key === 'Enter' && !realNameSaving) handleRealNameSave(); }}
-          />
-
-          {realNameError && (
-            <p className="text-red-400 text-xs mt-2">{realNameError}</p>
-          )}
-
-          <button
-            onClick={handleRealNameSave}
-            disabled={realNameSaving || !realNameFirst.trim() || !realNameSurname.trim()}
-            className="mt-5 w-full py-3 btn-gradient-mint text-gray-900 font-bold rounded-xl text-base disabled:opacity-50 flex items-center justify-center gap-2"
-          >
-            {realNameSaving ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
-            ) : (
-              <><Check className="w-4 h-4" /> Continue</>
-            )}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // ==================== SCHOOL SELECTION PROMPT MODAL ====================
-  if (showSchoolPrompt) {
-    const filteredSchoolsPrompt = schoolPromptFilter.trim().length < 2
-      ? []
-      : schoolPromptList.filter(s =>
-          (s.name || '').toLowerCase().includes(schoolPromptFilter.toLowerCase()) ||
-          (s.town || '').toLowerCase().includes(schoolPromptFilter.toLowerCase())
-        );
-
-    return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
-        <div className="ambient-glow" />
-        <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
-        <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
-
-        <div className="max-w-sm w-full glass-panel rounded-3xl p-8 text-center relative z-10">
-          <div className="w-16 h-16 rounded-2xl mx-auto mb-5 bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-glow-violet">
-            <School className="w-8 h-8 text-white" />
-          </div>
-
-          <h2 className="text-2xl font-bold text-white mb-2">Select your school</h2>
-          <p className="text-secondary-text text-sm mb-6">
-            Which school are you at? You can change this later in Settings.
-          </p>
-
-          <input
-            type="text"
-            value={schoolPromptFilter}
-            onChange={(e) => setSchoolPromptFilter(e.target.value)}
-            placeholder="Search by school name or town..."
-            autoFocus
-            className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-green-500 mb-3"
-          />
-
-          {schoolPromptError && (
-            <p className="text-red-400 text-xs mb-3">{schoolPromptError}</p>
-          )}
-
-          {schoolPromptFilter.trim().length < 2 ? (
-            <p className="text-secondary-text text-sm py-4">Start typing to search...</p>
-          ) : !schoolPromptLoaded ? (
-            <p className="text-secondary-text text-sm py-4">Loading schools...</p>
-          ) : filteredSchoolsPrompt.length === 0 ? (
-            <p className="text-secondary-text text-sm py-4">No schools found for "{schoolPromptFilter}"</p>
-          ) : (
-            <div className="max-h-48 overflow-y-auto space-y-2 mb-3 text-left">
-              {filteredSchoolsPrompt.map(school => (
-                <button
-                  key={school.id}
-                  onClick={() => handleSchoolPromptSelect(school)}
-                  disabled={schoolPromptJoining}
-                  className="w-full text-left px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm transition-colors disabled:opacity-50"
-                >
-                  <div className="font-medium">{school.name}</div>
-                  {school.town && <div className="text-xs text-secondary-text">{school.town}</div>}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <button
-            onClick={() => setShowSchoolPrompt(false)}
-            disabled={schoolPromptJoining}
-            className="w-full py-2 text-secondary-text text-sm hover:text-white transition-colors mt-2"
-          >
-            Skip for now
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
@@ -12350,9 +10903,7 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
         dayStreak={dayStreak}
         allObjectives={allObjectives}
         settings={settings}
-        setSettings={setSettings}
         isSubscribed={isSubscribed}
-        isHandwritingEnabled={isHandwritingEnabled}
         FREE_DAILY_LIMIT={FREE_DAILY_LIMIT}
         tier={tier}
         setRecentSessionCodes={setRecentSessionCodes}
@@ -12361,15 +10912,6 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
         setShowUpgradePrompt={setShowUpgradePrompt}
-        setShowLevel2Unlock={setShowLevel2Unlock}
-        showPiroNaming={showPiroNaming}
-        setShowPiroNaming={setShowPiroNaming}
-        piroCustomName={piroCustomName}
-        setPiroCustomName={setPiroCustomName}
-        piroNamingSaving={piroNamingSaving}
-        piroNamingError={piroNamingError}
-        setPiroNamingError={setPiroNamingError}
-        handlePiroNamingSave={handlePiroNamingSave}
       />
     );
   }
@@ -12464,41 +11006,11 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
               {/* Header with stats */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">
-                    Your Maths Journey
-                    {currentGridLevel === 2 && (
-                      <span className="ml-3 text-lg font-bold px-3 py-1 rounded-full bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] text-[#1a1525] align-middle">
-                        Level 2
-                      </span>
-                    )}
-                  </h1>
-                  <p className="text-secondary-text mt-1">
-                    {currentGridLevel === 2
-                      ? tier === 'higher'
-                        ? `Grade 8–9 Challenge · ${allObjectives.length} objectives`
-                        : `Grade 5 Challenge · ${allObjectives.length} objectives`
-                      : `${allObjectives.length} GCSE objectives · Click to track progress`
-                    }
-                  </p>
+                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">Your Maths Journey</h1>
+                  <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {/* Grid Level toggle (only show if Level 2 is unlocked) */}
-                  {(settings.gridLevel >= 2) && (
-                    <div className="flex glass-panel rounded-lg p-1">
-                      {[1, 2].map(lv => (
-                        <button key={lv} onClick={() => {
-                          const newSettings = { ...settings, gridLevel: lv };
-                          setSettings(newSettings);
-                          saveSettings(newSettings);
-                        }}
-                          className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
-                            currentGridLevel === lv ? 'bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] text-[#1a1525] shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
-                          }`}>Lv.{lv}</button>
-                      ))}
-                    </div>
-                  )}
-
                   {/* Tier toggle */}
                   <div className="flex glass-panel rounded-lg p-1">
                     {['foundation', 'higher'].map(t => (
@@ -12587,8 +11099,7 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
                     const objProg = progress[obj.code];
                     const isMastered = level >= 5;
                     const isExamReady = level === 4;
-                    const lpField = currentGridLevel === 2 ? 'l2LastPracticed' : 'lastPracticed';
-                    const recency = getRecencyFactor(objProg?.[lpField]);
+                    const recency = getRecencyFactor(objProg?.lastPracticed);
                     const needsRevisit = recency < 0.6 && level > 0 && level < 5;
                     const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
                     return (
@@ -12657,7 +11168,6 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
           objective={tooltip.objective}
           progress={tooltip.objective ? progress[tooltip.objective.code] : null}
           onClose={closeTileDetail}
-          gridLevel={currentGridLevel}
         />
       </div>
     );
@@ -12720,54 +11230,6 @@ if (profanityCheck.isProfane) { setPromptNameError('That name is not allowed'); 
             >
               Amazing!
             </button>
-          </div>
-        </div>
-      )}
-
-      {/* Level 2 Unlock Celebration Modal */}
-      {showLevel2Unlock && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-          <div className="glass-panel rounded-3xl p-8 max-w-md w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
-            <div className="text-6xl mb-4">🏆</div>
-            <h2 className="text-3xl font-bold mb-3" style={{ background: 'linear-gradient(135deg, #D4AF37, #F5D76E)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Grid Complete!
-            </h2>
-            <p className="text-xl text-primary-text mb-2 font-semibold">Every objective mastered!</p>
-            <p className="text-secondary-text mb-6">
-              {tier === 'higher'
-                ? 'Level 2 unlocked — Grade 8 & 9 challenge questions await!'
-                : 'Level 2 unlocked — Grade 5 challenge questions await!'
-              }
-            </p>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <img src={TILE_IMAGES[5]} alt="Gold" className="w-10 h-10 rounded object-cover" />
-              <span className="text-2xl text-secondary-text">→</span>
-              <div className="relative">
-                <img src={TILE_IMAGES[0]} alt="Reset" className="w-10 h-10 rounded object-cover" />
-                <span className="absolute -top-1 -right-1 bg-gradient-to-r from-[#D4AF37] to-[#F5D76E] text-[#1a1525] text-[10px] font-bold px-1 rounded-full">2</span>
-              </div>
-            </div>
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => {
-                  const newSettings = { ...settings, gridLevel: 2 };
-                  setSettings(newSettings);
-                  saveSettings(newSettings);
-                  setShowLevel2Unlock(false);
-                  setCurrentPage('heatmap');
-                }}
-                className="px-8 py-3 font-bold rounded-full text-[#1a1525]"
-                style={{ background: 'linear-gradient(135deg, #D4AF37, #F5D76E)' }}
-              >
-                Start Level 2
-              </button>
-              <button
-                onClick={() => setShowLevel2Unlock(false)}
-                className="px-6 py-3 text-secondary-text hover:text-primary-text transition-colors"
-              >
-                Later
-              </button>
-            </div>
           </div>
         </div>
       )}
@@ -13226,7 +11688,6 @@ function PortraitPrompt({ onDismiss }) {
 export default function App() {
   return (
     <AuthProvider>
-      <OfflineIndicator />
       <AppContent />
     </AuthProvider>
   );
