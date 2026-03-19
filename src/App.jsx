@@ -2939,6 +2939,63 @@ questionBank['S5'] = questionBank['P4'];
 questionBank['S6'] = questionBank['P4'];
 
 // ═══════════════════════════════════════════════════════════════
+// DIAMOND QUESTION BANK — Level 2 (unlocked after completing Level 1 grid)
+// 3 questions per objective, each objective has a single level
+// Structure: diamondQuestionBank['N16'] = [variant1, variant2, variant3]
+// ═══════════════════════════════════════════════════════════════
+const diamondQuestionBank = {
+
+  // N16: Limits of accuracy — error intervals for multiple measurements
+  'N16': [
+    { q: "A length is measured as 24 cm, correct to the nearest centimetre. A second length is measured as 18 cm, correct to the nearest centimetre. Write down the error interval for each measurement.", a: "23.5 ≤ first < 24.5 and 17.5 ≤ second < 18.5", worked: ["First: half of 1 cm = 0.5 cm", "23.5 ≤ first length < 24.5", "Second: half of 1 cm = 0.5 cm", "17.5 ≤ second length < 18.5"] },
+    { q: "A weight is measured as 350 g, correct to the nearest 10 g. Write down the error interval for the weight.", a: "345 ≤ weight < 355", worked: ["Correct to nearest 10 g: half of 10 = 5 g", "Lower bound: 350 − 5 = 345 g", "Upper bound: 350 + 5 = 355 g", "345 ≤ weight < 355"] },
+    { q: "A time is recorded as 12.5 seconds, correct to the nearest tenth of a second. Write down the error interval for the time.", a: "12.45 ≤ time < 12.55", worked: ["Correct to nearest 0.1 s: half of 0.1 = 0.05 s", "Lower bound: 12.5 − 0.05 = 12.45 s", "Upper bound: 12.5 + 0.05 = 12.55 s", "12.45 ≤ time < 12.55"] },
+  ],
+
+  // A11: Quadratic graphs — reading turning points from graphs
+  'A11': [
+    { q: "The graph of y = x² − 4x + 3 is shown. Write down the coordinates of the lowest point on the curve.", a: "(2, −1)", worked: ["The lowest point (turning point) is read directly from the graph", "The vertex is at x = 2", "When x = 2: y = 4 − 8 + 3 = −1", "Turning point = (2, −1)"], hint: "Look for the bottom of the U-shape on the graph" },
+    { q: "The graph of y = x² − 2x − 3 is shown. Write down the coordinates of the turning point of the curve.", a: "(1, −4)", worked: ["Read the turning point from the graph", "The vertex is at x = 1", "When x = 1: y = 1 − 2 − 3 = −4", "Turning point = (1, −4)"], hint: "The turning point is the lowest point on a U-shaped graph" },
+    { q: "The graph of y = x² + 6x + 5 is shown. Write down the y-intercept and the coordinates of the turning point.", a: "y-intercept = 5, turning point = (−3, −4)", worked: ["y-intercept: set x = 0 → y = 0 + 0 + 5 = 5", "Turning point is the lowest point on the curve", "x = −6/(2×1) = −3", "When x = −3: y = 9 − 18 + 5 = −4", "Turning point = (−3, −4)"], hint: "The y-intercept is where the curve crosses the y-axis. The turning point is the lowest point." },
+  ],
+
+  // G13: Constructions of triangles — knowledge of construction methods
+  'G13': [
+    { q: "A triangle is to be constructed with sides 5 cm, 7 cm, and 8 cm. Which construction tool must be used to ensure the sides are the correct length — ruler, protractor, or compasses?", type: "mcq", options: ["Ruler", "Protractor", "Compasses"], a: "Compasses", worked: ["When constructing a triangle with three known sides (SSS)", "You draw one side with a ruler", "Then use compasses to draw arcs of the exact lengths for the other two sides", "The intersection of the arcs gives the third vertex"] },
+    { q: "A student constructs a triangle with sides 6 cm, 8 cm and 10 cm. What type of triangle have they constructed?", type: "mcq", options: ["Equilateral", "Isosceles", "Right-angled", "Scalene"], a: "Right-angled", worked: ["Check if it satisfies Pythagoras' theorem:", "6² + 8² = 36 + 64 = 100", "10² = 100", "Since 6² + 8² = 10², it is a right-angled triangle"] },
+    { q: "An accurate triangle is constructed with AB = 8 cm, angle BAC = 40°, and AC = 6 cm. The length BC is measured from the construction. Which range should BC fall in?", type: "mcq", options: ["4–5 cm", "5–6 cm", "6–7 cm", "7–8 cm"], a: "5–6 cm", worked: ["Using the cosine rule: BC² = 8² + 6² − 2(8)(6)cos(40°)", "= 64 + 36 − 96 × 0.766", "= 100 − 73.5 = 26.5", "BC = √26.5 ≈ 5.1 cm", "This falls in the range 5–6 cm"] },
+  ],
+
+  // G19: Similarity — length scale factor problems
+  'G19': [
+    { q: "Two similar triangles have a length scale factor of 3. The base of the smaller triangle is 4 cm. Work out the base of the larger triangle.", a: "12", worked: ["Scale factor = 3", "Larger base = smaller base × scale factor", "= 4 × 3 = 12 cm"] },
+    { q: "Two similar pentagons have corresponding sides of 6 cm and 15 cm. Work out the scale factor. A third side of the smaller pentagon is 4 cm. Work out the corresponding side of the larger pentagon.", a: "Scale factor = 2.5, corresponding side = 10 cm", worked: ["Scale factor = 15 ÷ 6 = 2.5", "Corresponding side = 4 × 2.5 = 10 cm"] },
+    { q: "Two similar rectangles have corresponding widths of 5 cm and 20 cm. The length of the smaller rectangle is 8 cm. Work out the length of the larger rectangle.", a: "32", worked: ["Scale factor = 20 ÷ 5 = 4", "Larger length = 8 × 4 = 32 cm"] },
+  ],
+
+  // P8: Tree diagrams — independent combined events
+  'P8': [
+    { q: "A fair coin is flipped and a fair spinner with sections Red, Blue, and Green (all equally likely) is spun. Work out the probability of getting Tails and Blue.", a: "1/6", worked: ["P(Tails) = 1/2", "P(Blue) = 1/3", "Events are independent", "P(Tails and Blue) = 1/2 × 1/3 = 1/6"] },
+    { q: "A biased coin has P(Heads) = 0.7. It is flipped twice. Work out the probability of getting two Tails.", a: "0.09", worked: ["P(Tails) = 1 − 0.7 = 0.3", "P(Tails and Tails) = 0.3 × 0.3 = 0.09", "The events are independent (each flip doesn't affect the other)"] },
+    { q: "A fair six-sided die is rolled and a fair coin is flipped. Work out the probability of getting an even number and Heads.", a: "1/4", worked: ["P(Even) = 3/6 = 1/2 (three even numbers: 2, 4, 6)", "P(Heads) = 1/2", "Events are independent", "P(Even and Heads) = 1/2 × 1/2 = 1/4"] },
+  ],
+
+  // G20: Pythagoras & Trigonometry — advanced trig applications
+  'G20': [
+    { q: "In a right-angled triangle, the side opposite an angle of 40° is 5 cm. Work out the length of the hypotenuse to 1 d.p.", a: "7.8", worked: ["sin(40°) = opposite ÷ hypotenuse", "sin(40°) = 5 ÷ hypotenuse", "hypotenuse = 5 ÷ sin(40°)", "= 5 ÷ 0.6428 = 7.8 cm (1 d.p.)"], calculator: true },
+    { q: "A ramp is 3 metres long and rises 0.8 metres vertically. Work out the angle the ramp makes with the horizontal to 1 d.p.", a: "15.5", worked: ["sin(θ) = opposite ÷ hypotenuse", "sin(θ) = 0.8 ÷ 3", "θ = sin⁻¹(0.2667)", "θ = 15.5° (1 d.p.)"], calculator: true },
+    { q: "A ladder 6 m long leans against a wall, making an angle of 65° with the ground. How high up the wall does the ladder reach? Give your answer to 1 d.p.", a: "5.4", worked: ["sin(65°) = height ÷ hypotenuse", "sin(65°) = height ÷ 6", "height = 6 × sin(65°)", "= 6 × 0.9063 = 5.4 m (1 d.p.)"], calculator: true },
+  ],
+
+  // G21 shares G20's diamond questions
+  'G21': [
+    { q: "In a right-angled triangle, the side opposite an angle of 40° is 5 cm. Work out the length of the hypotenuse to 1 d.p.", a: "7.8", worked: ["sin(40°) = opposite ÷ hypotenuse", "sin(40°) = 5 ÷ hypotenuse", "hypotenuse = 5 ÷ sin(40°)", "= 5 ÷ 0.6428 = 7.8 cm (1 d.p.)"], calculator: true },
+    { q: "A ramp is 3 metres long and rises 0.8 metres vertically. Work out the angle the ramp makes with the horizontal to 1 d.p.", a: "15.5", worked: ["sin(θ) = opposite ÷ hypotenuse", "sin(θ) = 0.8 ÷ 3", "θ = sin⁻¹(0.2667)", "θ = 15.5° (1 d.p.)"], calculator: true },
+    { q: "A ladder 6 m long leans against a wall, making an angle of 65° with the ground. How high up the wall does the ladder reach? Give your answer to 1 d.p.", a: "5.4", worked: ["sin(65°) = height ÷ hypotenuse", "sin(65°) = height ÷ 6", "height = 6 × sin(65°)", "= 6 × 0.9063 = 5.4 m (1 d.p.)"], calculator: true },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════════
 // ADDITIONAL TOPIC-SPECIFIC QUESTIONS — pushed into existing banks
 // ═══════════════════════════════════════════════════════════════
 
@@ -6441,7 +6498,21 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+// Diamond question getter — picks from diamondQuestionBank based on diamond progress
+const getDiamondQuestion = (objective, diamondProg) => {
+  const dp = diamondProg?.[objective.code];
+  const quickCorrect = dp?.quickCorrect ?? 0;
+  const questions = diamondQuestionBank[objective.code];
+  if (questions && questions.length > 0) {
+    // Pick a random variant from the flat array (all 3 are same difficulty)
+    const idx = Math.floor(Math.random() * questions.length);
+    const q = questions[idx];
+    return { ...q, objective, questionType: 'diamond', difficultyLevel: 'diamond', _diamondVariantIndex: idx };
+  }
+  return null;
+};
+
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, gameLevel = 1, diamondProgress, setDiamondProgress, saveDiamondProgress, diamondObjectives = [] }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -6711,6 +6782,25 @@ What is the student's answer?`
 
     let questionsWithData;
 
+    // Diamond mode (Level 2): build queue from diamond objectives
+    if (gameLevel === 2) {
+      const unmastered = diamondObjectives.filter(o => (diamondProgress[o.code]?.quickCorrect ?? 0) < 3);
+      const pool = unmastered.length > 0 ? unmastered : diamondObjectives;
+      // Shuffle and pick up to questionCount
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+      questionsWithData = selected.map(obj => {
+        const q = getDiamondQuestion(obj, diamondProgress);
+        return q || { q: `Diamond question for ${obj.code}`, a: "—", objective: obj, questionType: 'diamond' };
+      });
+      setSessionQueue(questionsWithData);
+      setCurrentIndex(0);
+      setSessionStarted(true);
+      setSessionResults([]);
+      setPracticeMode('standard');
+      return;
+    }
+
     if (mode === 'quickfire') {
       // Quick Fire mode: ONLY use objectives that have MCQ questions
       const objectivesWithMCQ = allObjectives.filter(obj => {
@@ -6877,6 +6967,26 @@ What is the student's answer?`
         setFailureCounts(prev => ({ ...prev, [code]: 0 }));
     }
     
+    // Diamond mode: update diamond progress separately and return early
+    if (gameLevel === 2 && current.questionType === 'diamond') {
+      const dp = diamondProgress[code] || {};
+      const oldDQ = dp.quickCorrect ?? 0;
+      const newDQ = correct ? Math.min(oldDQ + 1, 3) : oldDQ; // max 3 = diamond mastered
+      const updatedDP = {
+        ...diamondProgress,
+        [code]: { ...dp, quickCorrect: newDQ, lastPracticed: Date.now() }
+      };
+      setDiamondProgress(updatedDP);
+      saveDiamondProgress(updatedDP);
+
+      setSessionResults(prev => [...prev, {
+        code, correct, question: current.q, topic: current.objective.topic,
+        questionType: 'diamond', oldQuickCorrect: oldDQ, newQuickCorrect: newDQ,
+        newMastery: correct && newDQ >= 3 && oldDQ < 3
+      }]);
+      return;
+    }
+
     // Update progress and track mastery
     const prog = progress[code] || {};
     const oldQuickCorrect = prog.quickCorrect ?? 0;
@@ -10008,6 +10118,11 @@ function AppContent() {
   }, [settings.dyslexiaFont, settings.fontSize]);
 
   const [currentPage, setCurrentPage] = useState('home');
+  const [gameLevel, setGameLevel] = useState(1); // 1 = Stone→Gold grid, 2 = Diamond grid
+  const [diamondProgress, setDiamondProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('maths-habit-diamond-progress') || '{}'); } catch { return {}; }
+  });
+  const saveDiamondProgress = (dp) => { localStorage.setItem('maths-habit-diamond-progress', JSON.stringify(dp)); };
   const [recentSessionCodes, setRecentSessionCodes] = useState([]);
   const [sessionToastData, setSessionToastData] = useState(null);
   const [celebrationIndex, setCelebrationIndex] = useState(0);
@@ -10484,6 +10599,29 @@ function AppContent() {
   const getLevel = (code) => getUnderstandingLevel(progress[code]);
   const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 4).length;
 
+  // Level 2 (Diamond) helpers
+  const level1Complete = allObjectives.every(o => getLevel(o.code) >= 5);
+  const diamondObjectives = allObjectives.filter(o => diamondQuestionBank[o.code]);
+  const getDiamondLevel = (code) => {
+    const dp = diamondProgress[code];
+    return dp?.quickCorrect ?? 0; // 0-3 (3 = diamond mastered)
+  };
+  const totalDiamondMastered = diamondObjectives.filter(o => getDiamondLevel(o.code) >= 3).length;
+
+  // Diamond Level 2 heatmap: stone → gold → diamond
+  const DIAMOND_HEATMAP = {
+    0: '#1a1525',   // Stone (not started)
+    1: '#D4AF37',   // Gold (in progress)
+    2: '#D4AF37',   // Gold (nearly there)
+    3: '#E8E8E8',   // Diamond (mastered)
+  };
+  const DIAMOND_TILE_IMAGES = {
+    0: '/images/tiles/stone-tile.jpeg',     // Stone — not started
+    1: '/images/tiles/gold-tile.jpeg',      // Gold — in progress
+    2: '/images/tiles/gold-tile.jpeg',      // Gold — nearly there
+    3: '/images/tiles/diamond-tile.jpeg',   // Diamond — mastered
+  };
+
   // FSRS: Calculate questions due for review today
   const fsrsData = loadFsrsData();
   const now = Date.now();
@@ -10912,6 +11050,11 @@ function AppContent() {
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
         setShowUpgradePrompt={setShowUpgradePrompt}
+        gameLevel={gameLevel}
+        diamondProgress={diamondProgress}
+        setDiamondProgress={setDiamondProgress}
+        saveDiamondProgress={saveDiamondProgress}
+        diamondObjectives={diamondObjectives}
       />
     );
   }
@@ -10980,7 +11123,7 @@ function AppContent() {
 
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-        {/* Gold tile glow animations */}
+        {/* Tile glow animations (Gold + Diamond) */}
         <style>{`
           .gold-tile-glow {
             animation: goldPulse 3s ease-in-out infinite;
@@ -10996,6 +11139,13 @@ function AppContent() {
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
           }
+          .diamond-tile-glow {
+            animation: diamondPulse 3s ease-in-out infinite;
+          }
+          @keyframes diamondPulse {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+            50% { filter: drop-shadow(0 0 12px rgba(255,255,255,0.7)); }
+          }
         `}</style>
 
         <div className="pt-20 pb-28 md:pb-10 relative z-10">
@@ -11006,34 +11156,57 @@ function AppContent() {
               {/* Header with stats */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">Your Maths Journey</h1>
-                  <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
+                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">
+                    {gameLevel === 1 ? 'Your Maths Journey' : '💎 Diamond Level'}
+                  </h1>
+                  <p className="text-secondary-text mt-1">
+                    {gameLevel === 1
+                      ? `${allObjectives.length} GCSE objectives · Click to track progress`
+                      : `${diamondObjectives.length} diamond challenges · Master them all`}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {/* Tier toggle */}
+                  {/* Game Level toggle: Level 1 (Gold) / Level 2 (Diamond) */}
                   <div className="flex glass-panel rounded-lg p-1">
-                    {['foundation', 'higher'].map(t => (
-                      <button key={t} onClick={() => setTier(t)}
-                        className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                          tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
-                        }`}>{t}</button>
-                    ))}
+                    <button onClick={() => setGameLevel(1)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                        gameLevel === 1 ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
+                      }`}>⭐ Gold</button>
+                    <button onClick={() => { if (level1Complete) setGameLevel(2); }}
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                        gameLevel === 2 ? 'bg-white/90 text-slate-900 shadow-[0_0_12px_rgba(255,255,255,0.4)]' :
+                        level1Complete ? 'text-secondary-text hover:text-gray-800' : 'text-secondary-text/30 cursor-not-allowed'
+                      }`}>{level1Complete ? '💎' : '🔒'} Diamond</button>
                   </div>
+
+                  {/* Tier toggle */}
+                  {gameLevel === 1 && (
+                    <div className="flex glass-panel rounded-lg p-1">
+                      {['foundation', 'higher'].map(t => (
+                        <button key={t} onClick={() => setTier(t)}
+                          className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
+                            tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
+                          }`}>{t}</button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Mastery badge */}
                   <div className="flex items-center gap-2 glass-panel px-4 py-2 rounded-xl">
                     <TrophyIcon className="w-5 h-5 text-[#FBBF24]" />
-                    <span className="font-bold text-[#FBBF24]">{totalMastered}</span>
-                    <span className="text-secondary-text text-sm">/ {allObjectives.length}</span>
+                    <span className="font-bold text-[#FBBF24]">{gameLevel === 1 ? totalMastered : totalDiamondMastered}</span>
+                    <span className="text-secondary-text text-sm">/ {gameLevel === 1 ? allObjectives.length : diamondObjectives.length}</span>
                   </div>
                 </div>
               </div>
 
               {/* Mastery Level Legend - Top */}
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: gameLevel === 2
+                ? 'linear-gradient(90deg, transparent, #888, #FFF, #888, transparent) 1'
+                : 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
                 <span className="text-sm text-secondary-text mr-1">Progress:</span>
-                {[
+                {gameLevel === 1 ? [
                   { level: 0, label: 'New' },
                   { level: 1, label: 'Started' },
                   { level: 2, label: 'Learning' },
@@ -11043,6 +11216,15 @@ function AppContent() {
                 ].map(({ level, label }) => (
                   <div key={level} className="flex items-center gap-2">
                     <img src={TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
+                    <span className="text-sm text-secondary-text">{label}</span>
+                  </div>
+                )) : [
+                  { level: 0, label: 'Stone' },
+                  { level: 1, label: 'Gold' },
+                  { level: 3, label: 'Diamond' },
+                ].map(({ level, label }) => (
+                  <div key={level} className="flex items-center gap-2">
+                    <img src={DIAMOND_TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
                     <span className="text-sm text-secondary-text">{label}</span>
                   </div>
                 ))}
@@ -11087,75 +11269,134 @@ function AppContent() {
 
               {/* THE HEATMAP - Hero Element */}
               <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                  gap: window.innerWidth < 480 ? 3 : 6,
-                  width: '100%',
-                  maxWidth: `${cols * 36 + (cols - 1) * 6}px`
-                }}>
-                  {allObjectives.map((obj) => {
-                    const level = getLevel(obj.code);
-                    const objProg = progress[obj.code];
-                    const isMastered = level >= 5;
-                    const isExamReady = level === 4;
-                    const recency = getRecencyFactor(objProg?.lastPracticed);
-                    const needsRevisit = recency < 0.6 && level > 0 && level < 5;
-                    const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
-                    return (
-                      <div
-                        key={obj.code}
-                        onClick={() => handleTileTap(obj)}
-                        style={{
-                          aspectRatio: '1',
-                          borderRadius: 4,
-                          position: 'relative',
-                          overflow: 'visible',
-                          opacity: tileOpacity,
-                        }}
-                        className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMastered ? 'gold-tile-glow' : ''}`}
-                      >
-                        {/* Gold outer glow for mastered tiles */}
-                        {isMastered && (
-                          <div style={{
-                            position: 'absolute', inset: -2, borderRadius: 6,
-                            boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
-                            pointerEvents: 'none', zIndex: 0,
-                          }} />
-                        )}
-                        {/* Tile image */}
-                        <img
-                          src={TILE_IMAGES[level] || TILE_IMAGES[0]}
-                          alt=""
-                          className="w-full h-full object-cover relative z-[1]"
-                          style={{ borderRadius: 4, filter: isMastered ? 'brightness(1.15) saturate(1.2)' : 'none' }}
-                          loading="lazy"
-                          draggable={false}
-                        />
-                        {/* Gold shimmer overlay for mastered tiles */}
-                        {isMastered && (
-                          <div className="gold-tile-shimmer" style={{
-                            position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
-                            background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
-                          }} />
-                        )}
-                        {/* Gentle glow on recently practiced tiles (after celebration) */}
-                        {recentSessionCodes.includes(obj.code) && (
-                          <div className="heatmap-glow-afterpulse" style={{
-                            position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
-                            zIndex: 9,
-                          }} />
-                        )}
-                        {/* Revisit indicator overlay */}
-                        {needsRevisit && !isExamReady && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
-                            <span className="text-[8px] text-white/70">↻</span>
+                {gameLevel === 1 ? (
+                  /* LEVEL 1 GRID (Stone → Gold) */
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                    gap: window.innerWidth < 480 ? 3 : 6,
+                    width: '100%',
+                    maxWidth: `${cols * 36 + (cols - 1) * 6}px`
+                  }}>
+                    {allObjectives.map((obj) => {
+                      const level = getLevel(obj.code);
+                      const objProg = progress[obj.code];
+                      const isMasteredTile = level >= 5;
+                      const isExamReady = level === 4;
+                      const recency = getRecencyFactor(objProg?.lastPracticed);
+                      const needsRevisit = recency < 0.6 && level > 0 && level < 5;
+                      const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
+                      return (
+                        <div
+                          key={obj.code}
+                          onClick={() => handleTileTap(obj)}
+                          style={{
+                            aspectRatio: '1',
+                            borderRadius: 4,
+                            position: 'relative',
+                            overflow: 'visible',
+                            opacity: tileOpacity,
+                          }}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMasteredTile ? 'gold-tile-glow' : ''}`}
+                        >
+                          {/* Gold outer glow for mastered tiles */}
+                          {isMasteredTile && (
+                            <div style={{
+                              position: 'absolute', inset: -2, borderRadius: 6,
+                              boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
+                              pointerEvents: 'none', zIndex: 0,
+                            }} />
+                          )}
+                          {/* Tile image */}
+                          <img
+                            src={TILE_IMAGES[level] || TILE_IMAGES[0]}
+                            alt=""
+                            className="w-full h-full object-cover relative z-[1]"
+                            style={{ borderRadius: 4, filter: isMasteredTile ? 'brightness(1.15) saturate(1.2)' : 'none' }}
+                            loading="lazy"
+                            draggable={false}
+                          />
+                          {/* Gold shimmer overlay for mastered tiles */}
+                          {isMasteredTile && (
+                            <div className="gold-tile-shimmer" style={{
+                              position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
+                              background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
+                            }} />
+                          )}
+                          {/* Gentle glow on recently practiced tiles (after celebration) */}
+                          {recentSessionCodes.includes(obj.code) && (
+                            <div className="heatmap-glow-afterpulse" style={{
+                              position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
+                              zIndex: 9,
+                            }} />
+                          )}
+                          {/* Revisit indicator overlay */}
+                          {needsRevisit && !isExamReady && (
+                            <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
+                              <span className="text-[8px] text-white/70">↻</span>
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  /* LEVEL 2 GRID (Diamond) */
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: `repeat(${Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols)}, 1fr)`,
+                    gap: window.innerWidth < 480 ? 4 : 8,
+                    width: '100%',
+                    maxWidth: `${Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols) * 50 + (Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols) - 1) * 8}px`
+                  }}>
+                    {diamondObjectives.map((obj) => {
+                      const dLevel = getDiamondLevel(obj.code);
+                      const isDiamondMastered = dLevel >= 3;
+                      return (
+                        <div
+                          key={obj.code}
+                          onClick={() => handleTileTap(obj)}
+                          style={{
+                            aspectRatio: '1',
+                            borderRadius: 6,
+                            position: 'relative',
+                            overflow: 'visible',
+                          }}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isDiamondMastered ? 'diamond-tile-glow' : ''}`}
+                        >
+                          {/* Diamond outer glow for mastered tiles — clear white sparkle */}
+                          {isDiamondMastered && (
+                            <div style={{
+                              position: 'absolute', inset: -2, borderRadius: 8,
+                              boxShadow: '0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.3)',
+                              pointerEvents: 'none', zIndex: 0,
+                            }} />
+                          )}
+                          {/* Tile image */}
+                          <img
+                            src={DIAMOND_TILE_IMAGES[dLevel] || DIAMOND_TILE_IMAGES[0]}
+                            alt=""
+                            className="w-full h-full object-cover relative z-[1]"
+                            style={{ borderRadius: 6, filter: isDiamondMastered ? 'brightness(1.2) saturate(1.3)' : 'none' }}
+                            loading="lazy"
+                            draggable={false}
+                          />
+                          {/* Diamond shimmer overlay — clear white sparkle */}
+                          {isDiamondMastered && (
+                            <div className="gold-tile-shimmer" style={{
+                              position: 'absolute', inset: 0, borderRadius: 6, pointerEvents: 'none', zIndex: 2,
+                              background: 'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)',
+                            }} />
+                          )}
+                          {/* Objective code label */}
+                          <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] font-bold text-white/80 z-[3] pb-0.5" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                            {obj.code}
                           </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
             </div>
