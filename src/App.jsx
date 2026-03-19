@@ -2921,7 +2921,7 @@ const goldQuestionBank = {
     [{ q: 'Which of these is 4,000 in standard form? A) 4×10³  B) 40×10²  C) 0.4×10⁴', a: '4×10^3', type: 'mcq' }], // Grade 1
     [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500' }], // Grade 2
     [{ q: 'Which is 0.00072 in standard form? A) 7.2×10⁻⁴  B) 72×10⁻⁵  C) 0.72×10⁻³', a: '7.2×10^-4', type: 'mcq' }], // Grade 3
-    [{ q: 'Work out (2×10⁴)×(4×10³). Write your answer in standard form.', a: '7' }], // Grade 4
+    [{ q: 'Work out (2×10⁴)×(4×10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
     [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10 in your answer?', a: '4' }], // Grade 5
   ],
   'N10': [ // Obj 3: Decimals
@@ -2969,7 +2969,7 @@ const goldQuestionBank = {
   'N16': [ // Obj 41: Error Intervals
     [{ q: 'A length is measured as 7 cm to the nearest cm. What is the smallest possible length?', a: '6.5' }], // Grade 1
     [{ q: 'A weight is recorded as 34 kg to the nearest kg. What is the lower bound?', a: '33.5' }], // Grade 2
-    [{ q: 'A number y, truncated to 1 decimal place, gives 6.3. What is the upper bound?', a: '8.45' }], // Grade 3
+    [{ q: 'A length is rounded to the nearest integer and gives 8. What is the upper bound?', a: '8.5' }], // Grade 3
     [{ q: 'A rectangle measures 12 cm × 5 cm, both to the nearest cm. Work out the lowest possible perimeter.', a: '32' }], // Grade 4
     [{ q: 'A square has side length 6.5 cm to 1 decimal place. Work out the upper bound for its area.', a: '42.9025' }], // Grade 5
   ],
@@ -2995,16 +2995,16 @@ const goldQuestionBank = {
     [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4' }], // Grade 5
   ],
   'A4': [ // Obj 81: Advanced Algebra
-    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12' }], // Grade 1
-    [{ q: 'Factorise 12a + 15b. What is the HCF that goes outside the bracket?', a: '3' }], // Grade 2
-    [{ q: 'Expand (x + 5)(x − 1). What is the coefficient of x?', a: '4' }], // Grade 3
-    [{ q: 'Simplify 4(2x + 3) + 3(x + b) = ax + 21. Work out the value of a.', a: '11' }], // Grade 4
+    [{ q: 'Simplify a + a + a.', a: '3a', type: 'text' }], // Grade 1
+    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12' }], // Grade 2
+    [{ q: 'Factorise 12a + 15b. What is the HCF that goes outside the bracket?', a: '3' }], // Grade 3
+    [{ q: 'Expand (x + 5)(x − 1). What is the coefficient of x?', a: '4' }], // Grade 4
     [{ q: 'Factorise x² − 3x − 18 into the form (x + a)(x + b). What is the negative value?', a: '-6' }], // Grade 5
   ],
   'A5': [ // Obj 57: Equations Both Sides
-    [{ q: 'Solve 3x = 2x + 5.', a: '5' }], // Grade 1
-    [{ q: 'Solve 5y + 2 = 3y + 10.', a: '4' }], // Grade 2
-    [{ q: 'Solve 7w − 4 = 2w + 21.', a: '5' }], // Grade 3
+    [{ q: 'I think of a number. I add 5 and get 11. What is my number?', a: '6' }], // Grade 1
+    [{ q: 'Solve x + 8 = 15.', a: '7' }], // Grade 2
+    [{ q: 'Solve 3x = 2x + 5.', a: '5' }], // Grade 3
     [{ q: 'Solve 4(2x − 1) = 3(x + 7).', a: '5' }], // Grade 4
     [{ q: 'Solve (5x + 2)/3 = (3x + 10)/2.', a: '26' }], // Grade 5
   ],
@@ -3051,15 +3051,15 @@ const goldQuestionBank = {
     [{ q: 'For the function y = x² − 4x + 3, find the coordinates of the turning point.', a: '(2, −1)', type: 'text' }], // Grade 5
   ],
   'A14': [ // Obj 84: Non-linear Graphs
-    [{ q: 'Write the reciprocal of 4 as a decimal.', a: '0.25' }], // Grade 1
+    [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq' }], // Grade 1
     [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2' }], // Grade 2
     [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1' }], // Grade 3
     [{ q: 'For the function y = x² − 3, write down the coordinates of the turning point.', a: '(0, −3)', type: 'text' }], // Grade 4
     [{ q: 'A student says that y = 1/x is a straight line. Is this correct? Explain your answer.', a: 'No', type: 'mcq' }], // Grade 5
   ],
   'A17': [ // Obj 13: Solving Linear Equations
-    [{ q: 'Solve x + 7 = 12.', a: '5' }], // Grade 1
-    [{ q: 'Solve 4y = 24.', a: '6' }], // Grade 2
+    [{ q: 'What number added to 3 gives 10?', a: '7' }], // Grade 1
+    [{ q: 'Solve x + 7 = 12.', a: '5' }], // Grade 2
     [{ q: 'Solve 3w − 5 = 16.', a: '7' }], // Grade 3
     [{ q: 'Solve 6z + 2 = 4z + 18.', a: '8' }], // Grade 4
     [{ q: 'Solve (3x − 1)/2 = 7.', a: '5' }], // Grade 5
@@ -3073,8 +3073,8 @@ const goldQuestionBank = {
   ],
   'A19': [ // Obj 34: Simultaneous Equations
     [{ q: 'If x + y = 10 and x = 4, work out the value of y.', a: '6' }], // Grade 1
-    [{ q: 'Solve the simultaneous equations: x + y = 12 and x − y = 4. Work out the value of x.', a: '8' }], // Grade 2
-    [{ q: 'Solve the simultaneous equations: 3x + y = 17 and x + y = 7. Work out the value of y.', a: '2' }], // Grade 3
+    [{ q: 'If 2a = 8 and a + b = 7, work out the value of b.', a: '3' }], // Grade 2
+    [{ q: 'Solve the simultaneous equations: x + y = 12 and x − y = 4. Work out the value of x.', a: '8' }], // Grade 3
     [{ q: 'Solve the simultaneous equations: 2x + 3y = 16 and 4x − y = 11. Work out x.', a: '3.5', calculator: true }], // Grade 4
     [{ q: '3 coffees and 2 teas cost £8.50. 4 coffees and 3 teas cost £11.80. Work out the cost of one coffee.', a: '1.70', calculator: true }], // Grade 5
   ],
@@ -3114,10 +3114,10 @@ const goldQuestionBank = {
     [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' }], // Grade 5
   ],
   'R1': [ // Obj 31: Compound Measures
-    [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4' }], // Grade 1
-    [{ q: 'A piece of metal has a volume of 50 cm³ and a density of 8 g/cm³. Calculate its mass.', a: '400' }], // Grade 2
-    [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100' }], // Grade 3
-    [{ q: 'Liquid A has a density of 1.2 g/cm³ and a volume of 200 cm³. Liquid B has a density of 0.8 g/cm³ and a volume of 300 cm³. The two liquids are mixed. Work out the density of the mixture.', a: '0.96', calculator: true }], // Grade 4
+    [{ q: 'Speed, distance, and time are connected. If a car goes faster, does it take more time or less time to travel the same distance?', a: 'Less', type: 'mcq' }], // Grade 1
+    [{ q: 'A car travels 60 miles in 2 hours. Work out its speed in mph.', a: '30' }], // Grade 2
+    [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4' }], // Grade 3
+    [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100' }], // Grade 4
     [{ q: 'A cylinder has a density of 2.5 g/cm³, a radius of 4 cm, and a height of 10 cm. Work out the mass to 1 decimal place.', a: '1256.6', calculator: true, frozen: true }], // Grade 5
   ],
   'R2': [ // Obj 32: Bearings and Scale
@@ -3151,8 +3151,8 @@ const goldQuestionBank = {
   'R6': [ // Obj 82: Standard Form (Applied)
     [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
     [{ q: 'Write 3.2 × 10⁻³ as an ordinary number.', a: '0.0032' }], // Grade 2
-    [{ q: 'Work out (2 × 10³) × (4 × 10⁴). Give your answer in the form k × 10ⁿ.', a: '7' }], // Grade 3
-    [{ q: 'Work out (8 × 10⁵) ÷ (2 × 10⁻²). Give your answer in the form k × 10ⁿ.', a: '7' }], // Grade 4
+    [{ q: 'Work out (2 × 10³) × (4 × 10⁴). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
+    [{ q: 'Work out (8 × 10⁵) ÷ (2 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
     [{ q: 'A ship has a mass of 2.2 × 10⁶ kg after a 12% reduction. Work out the original mass (not in standard form).', a: '2500000', calculator: true }], // Grade 5
   ],
   'R7': [ // Obj 6: Proportion
@@ -3214,8 +3214,8 @@ const goldQuestionBank = {
   'R16': [ // Obj 68: Interest/Depreciation
     [{ q: 'Work out 10% of £350 and add it to the original amount.', a: '385' }], // Grade 1
     [{ q: 'Work out the simple interest on £600 at 4% per year for 3 years.', a: '72' }], // Grade 2
-    [{ q: 'Work out the total balance when £2,000 is invested at 3% compound interest for 2 years.', a: '2121.80', calculator: true }], // Grade 3
-    [{ q: 'A car costs £14,000 and depreciates by 15% each year. Work out its value after 3 years to the nearest pound.', a: '8598', calculator: true }], // Grade 4
+    [{ q: 'A savings account pays 5% interest per year. £200 is invested. Work out the interest earned after 1 year.', a: '10' }], // Grade 3
+    [{ q: 'Work out the total balance when £2,000 is invested at 3% compound interest for 2 years.', a: '2121.80', calculator: true }], // Grade 4
     [{ q: '£800 is invested at x% compound interest for 2 years and the final balance is £840.50. Find x.', a: '2.5', calculator: true }], // Grade 5
   ],
   'G1': [ // Obj 15: Properties of Shapes
@@ -3275,8 +3275,8 @@ const goldQuestionBank = {
     [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12. Which class\'s results are more consistent?', a: 'Class B', type: 'mcq' }], // Grade 5
   ],
   'G9': [ // Obj 69: Composite Shapes
-    [{ q: 'A rectangle has dimensions 10 cm by 4 cm. Work out its perimeter.', a: '28' }], // Grade 1
-    [{ q: 'An L-shaped figure has a total top width of 12 cm and a cut-out of 5 cm. Work out the bottom width.', a: '7', frozen: true }], // Grade 2
+    [{ q: 'How many sides does an L-shape have?', a: '6' }], // Grade 1
+    [{ q: 'A rectangle has dimensions 10 cm by 4 cm. Work out its perimeter.', a: '28' }], // Grade 2
     [{ q: 'An L-shaped figure is made up of a rectangle 6 cm × 4 cm and another 8 cm × 3 cm. Work out the total area.', a: '48', frozen: true }], // Grade 3
     [{ q: 'A square of side 3 cm is cut from the corner of a square of side 8 cm. Work out the perimeter of the remaining shape.', a: '32', frozen: true }], // Grade 4
     [{ q: 'An L-shaped figure is made from 3 identical rectangles. The perimeter is 56 cm and the length is 3 times the width. Work out the total area.', a: '108', frozen: true }], // Grade 5
@@ -3289,10 +3289,10 @@ const goldQuestionBank = {
     [{ q: 'A and B have coordinates (2, 4) and (8, 12) respectively. Work out the exact length of AB.', a: '10' }], // Grade 5
   ],
   'G12': [ // Obj 21: Volume and Surface Area
-    [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12' }], // Grade 1
-    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200' }], // Grade 2
-    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54' }], // Grade 3
-    [{ q: 'A triangular prism has a cross-sectional area of 24 cm² and a length of 15 cm. Work out its volume.', a: '360', frozen: true }], // Grade 4
+    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq' }], // Grade 1
+    [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12' }], // Grade 2
+    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200' }], // Grade 3
+    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54' }], // Grade 4
     [{ q: 'A cylinder has radius 4 cm and height 12 cm. Write the volume in the form kπ cm³.', a: '192' }], // Grade 5
   ],
   'G13': [ // Obj 52: Plans and Elevations
@@ -3310,31 +3310,31 @@ const goldQuestionBank = {
     [{ q: 'A grouped frequency table shows: 0-10 (frequency 2, midpoint 5), 10-20 (frequency 6, midpoint 15), 20-30 (frequency 2, midpoint 25). Estimate the mean.', a: '15' }], // Grade 5
   ],
   'G15': [ // Obj 78: Volume/SA (Prisms)
-    [{ q: 'A cuboid has dimensions 2 cm × 3 cm × 5 cm. Work out its volume.', a: '30' }], // Grade 1
-    [{ q: 'A cube has side length 4 cm. Work out its total surface area.', a: '96' }], // Grade 2
-    [{ q: 'A triangular prism has a cross-sectional area of 15 cm² and a length of 8 cm. Work out its volume.', a: '120', frozen: true }], // Grade 3
-    [{ q: 'A cylinder has radius 5 cm and height 10 cm. Work out the volume to 1 decimal place.', a: '785.4', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A cube has 6 faces. How many faces does a cuboid have?', a: '6' }], // Grade 1
+    [{ q: 'A cuboid has dimensions 2 cm × 3 cm × 5 cm. Work out its volume.', a: '30' }], // Grade 2
+    [{ q: 'A cube has side length 4 cm. Work out its total surface area.', a: '96' }], // Grade 3
+    [{ q: 'A triangular prism has a cross-sectional area of 15 cm² and a length of 8 cm. Work out its volume.', a: '120', frozen: true }], // Grade 4
     [{ q: 'A cylinder has radius 3 cm and height 8 cm. The total surface area is kπ cm². What is k?', a: '66' }], // Grade 5
   ],
   'G16': [ // Obj 16: Perimeter and Area
-    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24' }], // Grade 1
-    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36' }], // Grade 2
-    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42' }], // Grade 3
-    [{ q: 'The perimeter of a rectangle is 32 cm. Its length is 10 cm. Work out its width.', a: '6', frozen: true }], // Grade 4
+    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq' }], // Grade 1
+    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24' }], // Grade 2
+    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36' }], // Grade 3
+    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42' }], // Grade 4
     [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true }], // Grade 5
   ],
   'G18': [ // Obj 48: Arcs/Sectors/Cylinders
-    [{ q: 'The area of a circle A = πr². If r = 5, work out A ÷ π.', a: '25' }], // Grade 1
-    [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32' }], // Grade 2
-    [{ q: 'A cylinder has radius 5 cm and height 10 cm. Work out the volume to 1 decimal place.', a: '785.4', calculator: true, frozen: true }], // Grade 3
-    [{ q: 'A sector of a circle has radius 9 cm and angle 40°. The arc length is kπ cm. What is k?', a: '2', frozen: true }], // Grade 4
+    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' }], // Grade 1
+    [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' }], // Grade 2
+    [{ q: 'The area of a circle A = πr². If r = 5, work out A ÷ π.', a: '25' }], // Grade 3
+    [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32' }], // Grade 4
     [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5' }], // Grade 5
   ],
   'G19': [ // Obj 83: Spheres/Cylinders
-    [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45' }], // Grade 1
-    [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160' }], // Grade 2
-    [{ q: 'A sphere has radius 6 cm. Using V = (4/3)πr³, the volume is kπ cm³. What is k?', a: '288' }], // Grade 3
-    [{ q: 'A hemisphere has a volume of approximately 3,619 cm³. Water fills 2,600 cm³. What percentage of 3,619 is 2,600? (Give your answer to the nearest whole number.)', a: '72', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere: a football, a box, or a tin can?', a: 'Football', type: 'mcq' }], // Grade 1
+    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'text' }], // Grade 2
+    [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45' }], // Grade 3
+    [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160' }], // Grade 4
     [{ q: 'A sphere has a volume of 36,000π cm³. Work out the exact radius.', a: '30' }], // Grade 5
   ],
   'G20': [ // Obj 30: Pythagoras & Trig
@@ -3345,10 +3345,10 @@ const goldQuestionBank = {
     [{ q: 'A right-angled triangle has an angle of 40° and the adjacent side to this angle is 10 cm. Work out the length of the opposite side to 1 decimal place.', a: '8.4', calculator: true, frozen: true }], // Grade 5
   ],
   'G21': [ // Obj 56: Exact Trig Values
-    [{ q: 'Write down the value of sin(0°).', a: '0' }], // Grade 1
-    [{ q: 'Write down the exact value of cos(60°).', a: '0.5' }], // Grade 2
-    [{ q: 'Calculate sin(30°) + cos(60°).', a: '1' }], // Grade 3
-    [{ q: 'Calculate tan(45°) × sin(30°).', a: '0.5' }], // Grade 4
+    [{ q: 'In a right-angled triangle, the longest side is called the hypotenuse. How many degrees is the largest angle?', a: '90' }], // Grade 1
+    [{ q: 'Write down the value of sin(0°).', a: '0' }], // Grade 2
+    [{ q: 'Write down the exact value of cos(60°).', a: '0.5' }], // Grade 3
+    [{ q: 'Calculate sin(30°) + cos(60°).', a: '1' }], // Grade 4
     [{ q: 'A right-angled triangle has an angle of 30° and a hypotenuse of 12 cm. Work out the exact length of the side opposite the 30° angle.', a: '6', frozen: true }], // Grade 5
   ],
   'G25': [ // Obj 40: Vectors
@@ -3381,7 +3381,7 @@ const goldQuestionBank = {
   ],
   'P4': [ // Obj 64: Venn Diagrams
     [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
-    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. Write down the numbers in A but NOT in B.', a: '2' }], // Grade 2
+    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2' }], // Grade 2
     [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4' }], // Grade 3
     [{ q: 'From the previous question, what is the probability that a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction' }], // Grade 4
     [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2' }], // Grade 5
@@ -3415,8 +3415,8 @@ const goldQuestionBank = {
     [{ q: 'A bag contains 5 red counters and 3 blue counters. A counter is picked at random, replaced, and a second counter is picked. Work out the probability that the two counters are different colours.', a: '15/32', type: 'fraction' }], // Grade 5
   ],
   'S1': [ // Obj 39: Time Series/Pictograms
-    [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14' }], // Grade 1
-    [{ q: 'In a pictogram, one symbol represents 6 apples. How many complete symbols are needed to represent 15 apples?', a: '2' }], // Grade 2
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people do 3 circles represent?', a: '12' }], // Grade 1
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14' }], // Grade 2
     [{ q: 'The quarterly sales figures are: Q1 = £4,200, Q2 = £5,100, Q3 = £6,800, Q4 = £5,900. Which quarter had the highest sales?', a: 'Q3', type: 'mcq' }], // Grade 3
     [{ q: 'The profits over 5 years are: 2020 = £40k, 2021 = £45k, 2022 = £52k, 2023 = £48k, 2024 = £58k. Describe the overall trend.', a: 'Increasing', type: 'mcq' }], // Grade 4
     [{ q: 'What is the main purpose of calculating a moving average on time series data?', a: 'To smooth out seasonal variation', type: 'mcq' }], // Grade 5
@@ -3438,8 +3438,8 @@ const goldQuestionBank = {
   'S5': [ // Obj 66: Standard Form (Calc)
     [{ q: '52,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
     [{ q: 'Write 4.1 × 10⁻³ as an ordinary number.', a: '0.0041' }], // Grade 2
-    [{ q: 'Work out (3 × 10⁴) × (2 × 10³). Give your answer in the form k × 10ⁿ.', a: '7' }], // Grade 3
-    [{ q: 'Work out (9 × 10⁶) ÷ (3 × 10⁻²). Give your answer in the form k × 10ⁿ.', a: '8' }], // Grade 4
+    [{ q: 'Work out (3 × 10⁴) × (2 × 10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
+    [{ q: 'Work out (9 × 10⁶) ÷ (3 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '8' }], // Grade 4
     [{ q: 'Work out (5.2 × 10⁴) + (4 × 10³). Give your answer in the form a × 10⁴.', a: '5.6' }], // Grade 5
   ],
   'S6': [ // Obj 26: Scatter Graphs
