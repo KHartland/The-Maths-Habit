@@ -7572,12 +7572,13 @@ What is the student's answer?`
       const now = Date.now();
       const skipUntil = correct
         ? sessionCount + (
-            newQuickCorrect >= 5 ? 10 : // Mastered — long break
-            newQuickCorrect >= 4 ? 3 :  // Nearly there
-            newQuickCorrect >= 2 ? 2 :  // Making progress
-            1                            // Just started
+            newQuickCorrect >= 5 ? 999 : // Mastered — don't show again
+            newQuickCorrect >= 4 ? 6 :   // Nearly there — long cooldown
+            newQuickCorrect >= 3 ? 5 :   // Good progress
+            newQuickCorrect >= 2 ? 4 :   // Making progress
+            3                             // Just started — still skip a few sessions
           )
-        : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
+        : 0; // Wrong — no cooldown, will reappear naturally
 
       // Update only the specific objective being practiced
       const oldProg = prev[code] || {};
