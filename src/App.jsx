@@ -8297,7 +8297,7 @@ What is the student's answer?`
                           </button>
                         </div>
                       </div>
-                    ) : current.type === 'mcq' ? (
+                    ) : (current.type === 'mcq' && current.options) ? (
                       <div className="space-y-2">
                         {current.options.map((option, i) => (
                           <button
@@ -8324,7 +8324,7 @@ What is the student's answer?`
                           Submit Answer
                         </button>
                       </div>
-                    ) : current.type === 'order' ? (
+                    ) : (current.type === 'order' && current.items) ? (
                       <div className="space-y-4">
                         <p className="text-sm text-white/50">Drag to put in the correct order:</p>
                         <DragDropOrder
@@ -8339,7 +8339,7 @@ What is the student's answer?`
                           Submit Answer
                         </button>
                       </div>
-                    ) : current.type === 'match' ? (
+                    ) : (current.type === 'match' && current.leftItems) ? (
                       <div className="space-y-4">
                         <DragDropMatch
                           leftItems={current.leftItems}
