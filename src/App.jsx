@@ -1659,29 +1659,29 @@ const updatePiro = (currentStreak, daysMissed) => {
     piro.dead = true;
     piro.decayed = false;
     piro.dying = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: false, dying: false, dead: true, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: false, dying: false, dead: true, newStage: piro.stage, oldStage };
   }
 
   if (piro.reachedEpic && daysMissed >= PIRO_DYING_DAYS) {
     piro.dying = true;
     piro.decayed = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: false, dying: true, dead: false, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: false, dying: true, dead: false, newStage: piro.stage, oldStage };
   }
 
   if (piro.reachedEpic && daysMissed >= PIRO_DECAY_DAYS) {
     piro.decayed = true;
     piro.dying = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: true, dying: false, dead: false, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: true, dying: false, dead: false, newStage: piro.stage, oldStage };
   }
 
-  // Evolution check
-  const newStage = earnedStage;
+  // Evolution check — stage can only go UP, never down
+  const newStage = Math.max(oldStage, earnedStage);
   piro.stage = newStage;
 
   if (newStage > oldStage) {
@@ -1693,18 +1693,14 @@ const updatePiro = (currentStreak, daysMissed) => {
 };
 
 // Get current display info for Piro
+// Once evolved, Piro always shows its current evolution stage — never reverts visually.
+// Decay/dying flags only affect styling (borders, nudge text), not the dragon image.
 const getPiroDisplay = (piro) => {
   if (piro.dead) {
     return { name: PIRO_DEAD.name, image: PIRO_DEAD.image, video: PIRO_DEAD.video, isDead: true, isDying: false, isDecayed: false };
   }
-  if (piro.dying) {
-    return { name: PIRO_CLOSE_TO_DEATH.name, image: PIRO_CLOSE_TO_DEATH.image, video: PIRO_CLOSE_TO_DEATH.video, isDead: false, isDying: true, isDecayed: false };
-  }
-  if (piro.decayed) {
-    return { name: PIRO_OLD.name, image: PIRO_OLD.image, video: PIRO_OLD.video, isDead: false, isDying: false, isDecayed: true };
-  }
   const stage = PIRO_STAGES[piro.stage] || PIRO_STAGES[0];
-  return { name: stage.name, image: stage.image, video: stage.video, isDead: false, isDying: false, isDecayed: false };
+  return { name: stage.name, image: stage.image, video: stage.video, isDead: false, isDying: !!piro.dying, isDecayed: !!piro.decayed };
 };
 
 // Render Piro as video (preferred) with image fallback
@@ -1766,12 +1762,12 @@ const getPiroNudge = (piro, dayStreak, todayQuestions, dailyGoal) => {
 
   // Close to death - critical warning
   if (display.isDying) {
-    return "Piro is close to death! Practice NOW to save your dragon!";
+    return "Piro is fading! Practice NOW to save your dragon!";
   }
 
   // Decayed state - urgent
   if (display.isDecayed) {
-    return "Piro has aged! Practice today before it's too late.";
+    return "Piro misses you! Practice today to keep your streak alive.";
   }
 
   // Egg stage - encourage first streak
