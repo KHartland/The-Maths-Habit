@@ -9111,7 +9111,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 </div>
                 <div>
                   <h2 className="font-semibold text-white">Your School</h2>
-                  <p className="text-sm text-secondary-text">Join your school to see the leaderboard</p>
+                  <p className="text-sm text-secondary-text">{userSchool ? 'Change or leave your school here' : 'Join your school to see the leaderboard'}</p>
                 </div>
               </div>
 
@@ -10218,16 +10218,18 @@ function AppContent() {
         const cached = localStorage.getItem('maths-habit-user-school');
         if (cached) setUserSchool(JSON.parse(cached));
       } catch {}
-      // Then fetch fresh from server
+      // Then fetch fresh from server — but never clear cache on null
+      // (only explicit "Leave" in Settings should clear the school)
       getUserSchool(user.id).then(school => {
-        setUserSchool(school);
         if (school) {
+          setUserSchool(school);
           localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
-        } else {
-          localStorage.removeItem('maths-habit-user-school');
         }
+        // If server returns null but we have a cached school, keep the cache —
+        // the server call may have failed silently or have a replication delay
       }).catch(err => {
         console.error('Failed to fetch user school:', err);
+        // Keep cached school on error — don't clear
       });
     } else if (!user) {
       setUserSchool(null);
@@ -11580,24 +11582,6 @@ function AppContent() {
             >
               View Full Leaderboard →
             </button>
-          </div>
-        ) : user ? (
-          <div className="glass-panel rounded-2xl p-5 shadow-glass">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Trophy className="w-5 h-5 text-[#FBBF24]" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-white text-sm">School Leaderboard</h3>
-                <p className="text-xs text-secondary-text">Join your school to compete with classmates</p>
-              </div>
-              <button
-                onClick={() => setCurrentPage('settings')}
-                className="px-4 py-2 btn-gradient-violet text-white text-sm font-medium rounded-xl"
-              >
-                Join
-              </button>
-            </div>
           </div>
         ) : null}
       </div>
