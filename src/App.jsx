@@ -10292,7 +10292,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
       </nav>
 
       {/* Mobile Bottom Nav - Floating Glass Pill */}
-      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden bottom-nav">
+      <nav className="fixed left-4 right-4 z-50 md:hidden bottom-nav" style={{ bottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         <div className="glass-panel-strong rounded-2xl shadow-glass mx-auto max-w-sm">
           <div className="flex items-center justify-around h-16 px-2">
             {navItems.map((item) => {

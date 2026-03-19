@@ -838,13 +838,18 @@ select:focus {
   }
 }
 
-/* ==================== SAFE AREA: push content below notch/status bar ==================== */
+/* ==================== SAFE AREA: push content away from notch/status bar and home bar ==================== */
 @supports (padding-top: env(safe-area-inset-top)) {
   .pt-24 {
     padding-top: calc(6rem + env(safe-area-inset-top, 0px)) !important;
   }
   .pt-20 {
     padding-top: calc(5rem + env(safe-area-inset-top, 0px)) !important;
+  }
+}
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-24 {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
