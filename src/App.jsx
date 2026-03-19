@@ -10614,7 +10614,7 @@ function AppContent() {
   );
 
   const getLevel = (code) => getUnderstandingLevel(progress[code]);
-  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 4).length;
+  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 5).length;
 
   // Level 2 (Diamond) helpers
   const level1Complete = allObjectives.every(o => getLevel(o.code) >= 5);
