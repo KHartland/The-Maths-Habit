@@ -9162,6 +9162,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 schoolId={userSchool.id}
                 schoolName={userSchool.name}
                 currentUserId={user.id}
+                isTeacher={true}
                 compact={false}
               />
             </div>
@@ -12230,6 +12231,7 @@ function AppContent() {
               schoolId={userSchool.id}
               schoolName={userSchool.name}
               currentUserId={user.id}
+              isTeacher={true}
               compact={true}
             />
             <button

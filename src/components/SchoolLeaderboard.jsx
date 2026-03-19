@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, RefreshCw, Users, Calendar, Clock } from 'lucide-react';
-import { getSchoolLeaderboard, getSchoolLeaderboardMonthly } from '../lib/leaderboardService';
+import { Trophy, RefreshCw, Users, Calendar, Clock, Trash2 } from 'lucide-react';
+import { getSchoolLeaderboard, getSchoolLeaderboardMonthly, removeInactiveMembers } from '../lib/leaderboardService';
 import { sanitiseName } from '../lib/profanityFilter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -10,12 +10,13 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = false }) => {
+const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = false, compact = false }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('monthly'); // 'monthly' (default) or 'alltime'
   const [monthlyAvailable, setMonthlyAvailable] = useState(true); // false if RPC not deployed yet
+  const [cleanupStatus, setCleanupStatus] = useState(''); // '', 'cleaning', 'done'
 
   const fetchLeaderboard = async () => {
     if (!schoolId) return;
@@ -92,13 +93,42 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, compact = fals
             <h3 className="font-bold text-white">{schoolName}</h3>
             <span className="text-xs text-secondary-text">({memberCount} {memberCount === 1 ? 'member' : 'members'})</span>
           </div>
-          <button
-            onClick={fetchLeaderboard}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            title="Refresh"
-          >
-            <RefreshCw className="w-4 h-4 text-secondary-text" />
-          </button>
+          <div className="flex items-center gap-1">
+            {isTeacher && (
+              <button
+                onClick={async () => {
+                  setCleanupStatus('cleaning');
+                  try {
+                    const removed = await removeInactiveMembers(schoolId);
+                    setCleanupStatus(`Removed ${removed}`);
+                    setTimeout(() => setCleanupStatus(''), 3000);
+                    fetchLeaderboard();
+                  } catch (err) {
+                    console.error('Cleanup error:', err);
+                    setCleanupStatus('');
+                  }
+                }}
+                disabled={cleanupStatus === 'cleaning'}
+                className="p-2 hover:bg-red-500/20 rounded-lg transition-colors group"
+                title="Remove inactive members (0 correct)"
+              >
+                {cleanupStatus === 'cleaning' ? (
+                  <RefreshCw className="w-4 h-4 text-red-400 animate-spin" />
+                ) : cleanupStatus ? (
+                  <span className="text-xs text-green-400 font-medium">{cleanupStatus}</span>
+                ) : (
+                  <Trash2 className="w-4 h-4 text-secondary-text group-hover:text-red-400" />
+                )}
+              </button>
+            )}
+            <button
+              onClick={fetchLeaderboard}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              title="Refresh"
+            >
+              <RefreshCw className="w-4 h-4 text-secondary-text" />
+            </button>
+          </div>
         </div>
       )}
 

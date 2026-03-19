@@ -289,3 +289,40 @@ export const getSchoolLeaderboard = async (schoolId) => {
     throw err;
   }
 };
+
+// Remove inactive school members (0 correct answers) via RPC
+export const removeInactiveMembers = async (schoolId) => {
+  if (!schoolId) throw new Error('School ID is required');
+  const token = getAuthToken();
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/rpc/remove_inactive_school_members`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_school_id: schoolId }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new Error(`Cleanup failed: ${body.slice(0, 200)}`);
+    }
+
+    return await response.json();
+  } catch (err) {
+    clearTimeout(timeout);
+    if (err.name === 'AbortError') {
+      throw new Error('Cleanup request timed out');
+    }
+    throw err;
+  }
+};
