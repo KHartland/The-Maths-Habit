@@ -838,6 +838,16 @@ select:focus {
   }
 }
 
+/* ==================== SAFE AREA: push content below notch/status bar ==================== */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .pt-24 {
+    padding-top: calc(6rem + env(safe-area-inset-top, 0px)) !important;
+  }
+  .pt-20 {
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px)) !important;
+  }
+}
+
 /* ==================== LANDSCAPE MOBILE ==================== */
 @media (orientation: landscape) and (max-height: 500px) {
 
