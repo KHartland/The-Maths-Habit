@@ -10947,7 +10947,7 @@ function AppContent() {
     if (!trimmed) { setPromptNameError('Please enter a display name'); return; }
     if (trimmed.length < 2) { setPromptNameError('Name must be at least 2 characters'); return; }
     if (trimmed.length > 20) { setPromptNameError('Name must be 20 characters or less'); return; }
-    if (checkProfanity(trimmed)) { setPromptNameError('That name is not allowed'); return; }
+    if (!checkProfanity(trimmed).clean) { setPromptNameError('That name is not allowed'); return; }
 
     setPromptNameSaving(true);
     setPromptNameError('');
