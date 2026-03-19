@@ -7462,13 +7462,7 @@ What is the student's answer?`
   };
 
   // Check answer
-  const checkAnswerLock = useRef(false);
   const checkAnswer = (selfAssessedCorrect = null, answerOverride = null) => {
-    // Prevent double-tap on mobile
-    if (checkAnswerLock.current) return;
-    checkAnswerLock.current = true;
-    setTimeout(() => { checkAnswerLock.current = false; }, 400);
-
     // Stop Quick Fire timer
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -7647,13 +7641,7 @@ What is the student's answer?`
   };
 
   // Next question
-  const nextQuestionLock = useRef(false);
   const nextQuestion = () => {
-    // Prevent double-tap on mobile (touch events can fire twice rapidly)
-    if (nextQuestionLock.current) return;
-    nextQuestionLock.current = true;
-    setTimeout(() => { nextQuestionLock.current = false; }, 400);
-
     // Clear Quick Fire timer
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -8149,12 +8137,6 @@ What is the student's answer?`
 
   // Active session
   const current = sessionQueue[currentIndex];
-  if (!current) {
-    // Safety: if current question is undefined, end session gracefully
-    setSessionStarted(false);
-    setCurrentPage('home');
-    return null;
-  }
   const progressPct = ((currentIndex + (showFeedback ? 1 : 0)) / sessionQueue.length) * 100;
 
   return (
