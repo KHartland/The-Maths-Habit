@@ -6566,7 +6566,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('type'); // 'type' or 'handwriting'
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -6861,7 +6861,7 @@ What is the student's answer?`
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
-    setInputMode('handwriting');
+    setInputMode('type');
     
     // Reset scaffolding state
     setFailureCounts({});
@@ -7092,7 +7092,7 @@ What is the student's answer?`
       setShowMathKeyboard(false);
       setCapturedImage(null);
       setShowCalculator(false);
-      setInputMode('handwriting');
+      setInputMode('type');
       setQuestionStartTime(Date.now());
       setUserConfidence(null);
       setShowConfidenceRating(false);
