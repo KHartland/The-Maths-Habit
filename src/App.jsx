@@ -9635,8 +9635,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
               })}
             </div>
 
-            {/* Streak */}
-            <StreakDisplay streak={streak} />
+            {/* Streak display removed — Piro handles streak motivation */}
           </div>
         </div>
       </nav>
