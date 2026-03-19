@@ -237,11 +237,15 @@ create policy "Users can leave a school" on public.school_members
 
 -- =============================================
 -- FUNCTION: School leaderboard (bypasses RLS on daily_activity)
+-- Sums correct_answers from daily_activity for each school member (all time)
 -- =============================================
 create or replace function get_school_leaderboard(p_school_id uuid)
 returns table (
   user_id uuid,
   display_name text,
+  first_name text,
+  surname text,
+  avatar_url text,
   total_correct bigint
 )
 language sql
@@ -250,15 +254,18 @@ set search_path = public
 as $$
   select
     sm.user_id,
-    coalesce(p.display_name, 'Unknown') as display_name,
+    coalesce(p.display_name, split_part(u.email, '@', 1)) as display_name,
+    p.first_name,
+    p.surname,
+    p.avatar_url,
     coalesce(sum(da.correct_answers), 0) as total_correct
   from school_members sm
-  join profiles p on p.id = sm.user_id
+  join auth.users u on u.id = sm.user_id
+  left join profiles p on p.id = sm.user_id
   left join daily_activity da on da.user_id = sm.user_id
   where sm.school_id = p_school_id
-  group by sm.user_id, p.display_name
-  order by total_correct desc, display_name asc
-  limit 50;
+  group by sm.user_id, p.display_name, u.email, p.first_name, p.surname, p.avatar_url
+  order by total_correct desc, display_name asc;
 $$;
 
 -- =============================================

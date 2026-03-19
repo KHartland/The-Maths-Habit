@@ -2836,103 +2836,653 @@ const questionBank = {
 
 };
 
-// Share question banks for combined objectives
-questionBank['N7'] = questionBank['N6'];
-questionBank['N15'] = questionBank['N14'];
-questionBank['A4'] = questionBank['A1'];
-questionBank['A18'] = questionBank['A17'];
-questionBank['G3'] = questionBank['G1'];
-questionBank['G4'] = questionBank['G1'];
-questionBank['G16'] = questionBank['G12'];
-questionBank['G17'] = questionBank['G12'];
-questionBank['G21'] = questionBank['G20'];
-questionBank['P8'] = questionBank['P7'];
-questionBank['S4'] = questionBank['S2'];
 
-// Shared references for remaining Number objectives → N5
-questionBank['N8'] = questionBank['N5'];
-questionBank['N9'] = questionBank['N5'];
-questionBank['N10'] = questionBank['N5'];
-questionBank['N11'] = questionBank['N5'];
-questionBank['N16'] = questionBank['N5'];
+// Share question banks for combined objectives (ORIGINAL — these are fallbacks)
+// The gold questions below provide unique content for each spec code.
+// These shared references are kept as fallback variants alongside gold questions.
+const _originalSharedRefs = {
+  'N7': 'N6', 'N15': 'N14', 'A4': 'A1', 'A18': 'A17', 'G3': 'G1', 'G4': 'G1',
+  'G16': 'G12', 'G17': 'G12', 'G21': 'G20', 'P8': 'P7', 'S4': 'S2',
+  'N8': 'N5', 'N9': 'N5', 'N10': 'N5', 'N11': 'N5', 'N16': 'N5',
+  'A5': 'A3', 'A6': 'A3', 'A7': 'A3', 'A8': 'A3', 'A10': 'A3', 'A11': 'A3',
+  'A14': 'A3', 'A19': 'A3', 'A22': 'A3', 'A23': 'A3', 'A24': 'A3', 'A25': 'A3',
+  'R3': 'R2', 'R7': 'R2', 'R8': 'R2', 'R9': 'R2', 'R12': 'R2', 'R13': 'R2',
+  'R14': 'R2', 'R15': 'R2', 'R16': 'R2',
+  'G5': 'G2', 'G6': 'G2', 'G7': 'G2', 'G8': 'G2', 'G9': 'G2', 'G11': 'G2',
+  'G13': 'G2', 'G14': 'G2', 'G15': 'G2', 'G18': 'G2', 'G19': 'G2', 'G25': 'G2',
+  'P5': 'P4', 'P6': 'P4', 'S1': 'P4', 'S5': 'P4', 'S6': 'P4',
+};
 
-// Shared references for remaining Algebra objectives → A3
-questionBank['A5'] = questionBank['A3'];
-questionBank['A6'] = questionBank['A3'];
-questionBank['A7'] = questionBank['A3'];
-questionBank['A8'] = questionBank['A3'];
-questionBank['A9'] = [
-  // Level 1 (Grade 2) — Solving x² = k
-  [
-    { q: "Solve x² = 16", a: "x = 4 or x = −4", worked: ["x² = 16", "x = ±√16", "x = 4 or x = −4"], hint: "Take the square root of both sides — don't forget the negative!" },
-    { q: "Solve x² = 49", a: "x = 7 or x = −7", worked: ["x² = 49", "x = ±√49", "x = 7 or x = −7"], hint: "Square root both sides. There are always two answers." },
-    { q: "Solve x² − 9 = 0", a: "x = 3 or x = −3", worked: ["x² − 9 = 0", "x² = 9", "x = ±√9", "x = 3 or x = −3"], hint: "Rearrange to get x² on its own, then square root." },
-  ],
-  // Level 2 (Grade 3) — One bracket already factored: x(x + a) = 0
-  [
-    { q: "Solve x(x + 5) = 0", a: "x = 0 or x = −5", worked: ["Already factorised", "x = 0 or x + 5 = 0", "x = 0 or x = −5"], hint: "If two things multiply to zero, one of them must be zero." },
-    { q: "Solve x(x − 3) = 0", a: "x = 0 or x = 3", worked: ["Already factorised", "x = 0 or x − 3 = 0", "x = 0 or x = 3"], hint: "Set each factor equal to zero." },
-    { q: "Solve 2x(x − 4) = 0", a: "x = 0 or x = 4", worked: ["Already factorised", "2x = 0 → x = 0", "x − 4 = 0 → x = 4"], hint: "The 2 doesn't affect the solutions — just set each bracket to zero." },
-  ],
-  // Level 3 (Grade 4) — Factorise and solve x² + bx + c = 0
-  [
-    { q: "Solve x² + 5x + 6 = 0", a: "x = −2 or x = −3", worked: ["Find two numbers that multiply to 6 and add to 5: 2 and 3", "(x + 2)(x + 3) = 0", "x = −2 or x = −3"], hint: "Find two numbers that multiply to 6 and add to 5" },
-    { q: "Solve x² − 3x − 10 = 0", a: "x = 5 or x = −2", worked: ["Find two numbers that multiply to −10 and add to −3: −5 and 2", "(x − 5)(x + 2) = 0", "x = 5 or x = −2"], hint: "Find two numbers that multiply to −10 and add to −3" },
-    { q: "Solve x² − 8x + 15 = 0", a: "x = 3 or x = 5", worked: ["Find two numbers that multiply to 15 and add to −8: −3 and −5", "(x − 3)(x − 5) = 0", "x = 3 or x = 5"], hint: "Both numbers must be negative (they add to −8 but multiply to +15)" },
-  ],
-  // Level 4 (Grade 5) — Forming and solving from context
-  [
-    { q: "A rectangle has length (x + 3) and width (x − 2). Its area is 6 cm². Find x.", a: "x = 3", worked: ["Area = (x + 3)(x − 2) = 6", "x² + x − 6 = 6", "x² + x − 12 = 0", "(x + 4)(x − 3) = 0", "x = −4 or x = 3", "x must be positive (it's a length), so x = 3"], hint: "Expand, rearrange to = 0, factorise. Reject negative answers for lengths." },
-    { q: "Solve x² − x − 20 = 0", a: "x = 5 or x = −4", worked: ["Find two numbers that multiply to −20 and add to −1: −5 and 4", "(x − 5)(x + 4) = 0", "x = 5 or x = −4"], hint: "Find two numbers that multiply to −20 and add to −1" },
-    { q: "Solve x² + 2x − 15 = 0", a: "x = 3 or x = −5", worked: ["Find two numbers that multiply to −15 and add to 2: 5 and −3", "(x + 5)(x − 3) = 0", "x = −5 or x = 3"], hint: "Find two numbers that multiply to −15 and add to 2" },
-  ],
-  // Level 5 (Grade 5) — Repeated roots and pre-factored with fractions
-  [
-    { q: "Solve x² − 6x + 9 = 0", a: "x = 3 (repeated root)", worked: ["(x − 3)(x − 3) = 0", "(x − 3)² = 0", "x = 3 (repeated root)"], hint: "This is a perfect square trinomial — both brackets are the same." },
-    { q: "Solve x² + 10x + 25 = 0", a: "x = −5 (repeated root)", worked: ["(x + 5)(x + 5) = 0", "(x + 5)² = 0", "x = −5 (repeated root)"], hint: "Can you spot the perfect square? a² + 2ab + b²" },
-    { q: "Solve (2x − 1)(x + 3) = 0", a: "x = 0.5 or x = −3", worked: ["Already factorised:", "2x − 1 = 0 → x = ½ = 0.5", "x + 3 = 0 → x = −3"], hint: "Set each bracket to zero and solve. One answer will be a fraction." },
-  ],
-];
-questionBank['A10'] = questionBank['A3'];
-questionBank['A11'] = questionBank['A3'];
-questionBank['A14'] = questionBank['A3'];
-questionBank['A19'] = questionBank['A3'];
-questionBank['A22'] = questionBank['A3'];
-questionBank['A23'] = questionBank['A3'];
-questionBank['A24'] = questionBank['A3'];
-questionBank['A25'] = questionBank['A3'];
 
-// Shared references for remaining Ratio objectives → R2
-questionBank['R3'] = questionBank['R2'];
-questionBank['R7'] = questionBank['R2'];
-questionBank['R8'] = questionBank['R2'];
-questionBank['R9'] = questionBank['R2'];
-questionBank['R12'] = questionBank['R2'];
-questionBank['R13'] = questionBank['R2'];
-questionBank['R14'] = questionBank['R2'];
-questionBank['R15'] = questionBank['R2'];
-questionBank['R16'] = questionBank['R2'];
+// ═══════════════════════════════════════════════════════════════
+// GOLD LEVEL QUESTIONS — unique questions for each of the 84 foundation objectives
+// Generated from Master-Question-Bank-Gold-Level.xlsx
+// Each spec code has 5 levels (Grade 1–5), 1 gold question per level
+// Questions with frozen: true need images before being served to students
+// ═══════════════════════════════════════════════════════════════
+const goldQuestionBank = {
+  'N1': [ // Obj 11: FDP Equivalence
+    [{ q: 'Write 50% as a fraction in its simplest form.', a: '1/2', type: 'fraction' }], // Grade 1
+    [{ q: 'Write 0.3 as a fraction.', a: '3/10', type: 'fraction' }], // Grade 2
+    [{ q: 'Write 3/4 as a percentage.', a: '75' }], // Grade 3
+    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq' }], // Grade 4
+    [{ q: 'Express 65 out of 80 as a percentage.', a: '81.25' }], // Grade 5
+  ],
+  'N2': [ // Obj 1: Basic Arithmetic
+    [{ q: 'Work out 15 + 28.', a: '43' }], // Grade 1
+    [{ q: 'Work out 144 ÷ 6.', a: '24' }], // Grade 2
+    [{ q: 'Calculate 3 × (8 + 4) − 5.', a: '31' }], // Grade 3
+    [{ q: 'A theatre has 24 rows of seats with 18 seats in each row. How many seats are there in total?', a: '432' }], // Grade 4
+    [{ q: 'What is (12 − 4) × (2 + 1)?', a: '24' }], // Grade 5
+  ],
+  'N3': [ // Obj 60: Multi-step Problems
+    [{ q: 'Cinema £8.50, popcorn £3.20. Change from £20?', a: '8.30' }], // Grade 1
+    [{ q: 'Soup for 4: 200g veg. How much for 10?', a: '500' }], // Grade 2
+    [{ q: 'Car: 8L/100km, fuel £1.45/L. Cost for 250km?', a: '29', calculator: true }], // Grade 3
+    [{ q: 'Tank: 1.2×0.8×0.5m, 20L/min. Minutes to fill?', a: '24', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'Rectangle: length 20% greater than width, area 480cm². Exact perimeter?', a: '88' }], // Grade 5
+  ],
+  'N4': [ // Obj 7: Factors, Multiples & Primes
+    [{ q: 'What is the 5th multiple of 6?', a: '30' }], // Grade 1
+    [{ q: 'How many factors does 24 have?', a: '8' }], // Grade 2
+    [{ q: 'Find the Lowest Common Multiple (LCM) of 8 and 12.', a: '24' }], // Grade 3
+    [{ q: 'Find the Highest Common Factor (HCF) of 36 and 48.', a: '12' }], // Grade 4
+    [{ q: '120 = 2^a × 3 × 5. What is the value of a?', a: '3' }], // Grade 5
+  ],
+  'N5': [ // Obj 50: Combinatorics
+    [{ q: '4 sandwiches, 3 drinks. Total meal combinations?', a: '12' }], // Grade 1
+    [{ q: 'How many 2-digit numbers from 3, 6, 8 (no repeats)?', a: '6' }], // Grade 2
+    [{ q: 'Code: 1 letter (A-D) + 1 digit (1-5). Total codes?', a: '20' }], // Grade 3
+    [{ q: '3 friends, 3 seats. How many seating arrangements?', a: '6' }], // Grade 4
+    [{ q: '4 starters, 6 mains, 3 desserts. Total 3-course meals?', a: '72' }], // Grade 5
+  ],
+  'N6': [ // Obj 8: Indices and Roots
+    [{ q: 'Work out the value of 5².', a: '25' }], // Grade 1
+    [{ q: 'Work out the value of √64.', a: '8' }], // Grade 2
+    [{ q: 'Simplify a⁴ × a³ = aⁿ. What is n?', a: '7' }], // Grade 3
+    [{ q: 'Simplify b⁷ ÷ b² = bⁿ. What is n?', a: '5' }], // Grade 4
+    [{ q: 'Work out 2³ × √81 − 4².', a: '56' }], // Grade 5
+  ],
+  'N7': [ // Obj 71: Index Laws
+    [{ q: 'Work out 3³.', a: '27' }], // Grade 1
+    [{ q: '8×8×8×8×8 = 8ⁿ. What is n?', a: '5' }], // Grade 2
+    [{ q: 'Simplify a⁶ × a³ = aⁿ. What is n?', a: '9' }], // Grade 3
+    [{ q: 'Simplify c⁹ ÷ c² = cⁿ. What is n?', a: '7' }], // Grade 4
+    [{ q: '(2⁴ × 2⁵) ÷ 2⁶. Exact value?', a: '8' }], // Grade 5
+  ],
+  'N8': [ // Obj 2: Fractions
+    [{ q: 'A grid contains 12 identical squares. How many squares is 1/4 of 12?', a: '3' }], // Grade 1
+    [{ q: 'Work out 3/7 + 2/7.', a: '5/7', type: 'fraction' }], // Grade 2
+    [{ q: 'Write 3 2/5 as an improper fraction.', a: '17/5', type: 'fraction' }], // Grade 3
+    [{ q: 'Work out 3/4 × 5/9. Give your answer in its simplest form.', a: '5/12', type: 'fraction' }], // Grade 4
+    [{ q: 'Work out 2 1/3 ÷ 1 3/4. Give your answer as a mixed number in its simplest form.', a: '1 1/3', type: 'fraction' }], // Grade 5
+  ],
+  'N9': [ // Obj 9: Standard Form
+    [{ q: 'Which of these is 4,000 in standard form? A) 4×10^3 B) 40×10^2 C) 0.4×10^4', a: '4×10^3', type: 'mcq' }], // Grade 1
+    [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500' }], // Grade 2
+    [{ q: 'Which is 0.00072 in standard form? A) 7.2×10^-4 B) 72×10^-5 C) 0.72×10^-3', a: '7.2×10^-4', type: 'mcq' }], // Grade 3
+    [{ q: 'Work out (2×10⁴)×(4×10³). What is the power of 10 in your standard form answer?', a: '7' }], // Grade 4
+    [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10?', a: '4' }], // Grade 5
+  ],
+  'N10': [ // Obj 3: Decimals
+    [{ q: 'Write 0.4 as a fraction in its simplest form.', a: '2/5', type: 'fraction' }], // Grade 1
+    [{ q: 'Work out 4.2 + 1.85.', a: '6.05' }], // Grade 2
+    [{ q: 'Work out 0.3 × 0.4.', a: '0.12' }], // Grade 3
+    [{ q: 'Work out 14.5 ÷ 0.5.', a: '29' }], // Grade 4
+    [{ q: 'Work out 3.6 × 4.2 − 1.85.', a: '13.27', calculator: true }], // Grade 5
+  ],
+  'N11': [ // Obj 80: Complex Ratio
+    [{ q: 'Simplify 20:35. First number in simplified ratio?', a: '4' }], // Grade 1
+    [{ q: 'Share £45 ratio 2:7. Smaller share?', a: '10' }], // Grade 2
+    [{ q: 'Boys:girls = 4:5. 25 girls. How many boys?', a: '20' }], // Grade 3
+    [{ q: 'Ali:Ben:Chloe = 3:5:8. Chloe gets £30 more than Ali. Total?', a: '96' }], // Grade 4
+    [{ q: 'Red:blue=2:3, blue:green=4:5. What is the green number in red:blue:green?', a: '15' }], // Grade 5
+  ],
+  'N12': [ // Obj 4: Percentages
+    [{ q: 'Write 25% as a decimal.', a: '0.25' }], // Grade 1
+    [{ q: 'Work out 10% of £450.', a: '45' }], // Grade 2
+    [{ q: 'A television costs £300. It is reduced by 15% in a sale. What is the sale price?', a: '255' }], // Grade 3
+    [{ q: 'A car\'s value increases from £8,000 to £8,400. Calculate the percentage increase.', a: '5' }], // Grade 4
+    [{ q: '£400 is invested at 2.5% simple interest per year. How much interest is earned after 4 years?', a: '40', calculator: true }], // Grade 5
+  ],
+  'N13': [ // Obj 51: Time and Timetables
+    [{ q: 'How many minutes in 2.5 hours?', a: '150' }], // Grade 1
+    [{ q: 'Train departs 14:35, arrives 16:15. Journey in minutes?', a: '100' }], // Grade 2
+    [{ q: 'Film 135 min, finishes 21:10. Start time? (24hr format e.g. 14:30)', a: '18:55', type: 'text' }], // Grade 3
+    [{ q: 'Worker: £9.50/hr, 08:30-17:00, 45min unpaid lunch. Total pay to nearest penny?', a: '73.63', calculator: true }], // Grade 4
+    [{ q: 'Flight London 22:40 to Dubai 08:10 next day. Dubai +3hrs. Flight time in minutes?', a: '390' }], // Grade 5
+  ],
+  'N14': [ // Obj 65: Error Intervals (2)
+    [{ q: 'Length 8cm to nearest cm. Smallest possible?', a: '7.5' }], // Grade 1
+    [{ q: 'Weight 45kg to nearest kg. Lower bound?', a: '44.5' }], // Grade 2
+    [{ q: 'y truncated to 1dp gives 6.3. Upper bound?', a: '6.4' }], // Grade 3
+    [{ q: 'Square side 6cm to nearest cm. Upper bound for perimeter?', a: '26' }], // Grade 4
+    [{ q: 'L=12.45cm, W=4.15cm (lower bounds). Area?', a: '51.6675' }], // Grade 5
+  ],
+  'N15': [ // Obj 10: Rounding and Estimation
+    [{ q: 'Round 462 to the nearest 10.', a: '460' }], // Grade 1
+    [{ q: 'Round 14.56 to 1 decimal place.', a: '14.6' }], // Grade 2
+    [{ q: 'Round 0.0483 to 1 significant figure.', a: '0.05' }], // Grade 3
+    [{ q: 'By rounding to 1 significant figure, estimate the value of 41.3 × 19.8.', a: '800' }], // Grade 4
+    [{ q: 'Estimate 0.5 ÷ (1 × 20). Give your answer as a decimal.', a: '0.025' }], // Grade 5
+  ],
+  'N16': [ // Obj 41: Error Intervals
+    [{ q: 'String measured as 7 cm to nearest cm. Smallest possible length?', a: '6.5' }], // Grade 1
+    [{ q: 'Weight is 34 kg to the nearest kg. What is the lower bound?', a: '33.5' }], // Grade 2
+    [{ q: 'A number rounded to 1dp gives 8.4. What is the upper bound?', a: '8.45' }], // Grade 3
+    [{ q: 'Rectangle: 12cm × 5cm to nearest cm. Lowest possible perimeter?', a: '32' }], // Grade 4
+    [{ q: 'Square sides 6.5cm to 1dp. Upper bound for area?', a: '42.9025' }], // Grade 5
+  ],
+  'A1': [ // Obj 12: Algebraic Expressions
+    [{ q: 'Simplify y + y + y + y.', a: '4y', type: 'text' }], // Grade 1
+    [{ q: 'Simplify 5a + 2b − 3a + 4b. How many a\'s are in the answer?', a: '2' }], // Grade 2
+    [{ q: 'Multiply out 4(3x + 2). What is the coefficient of x?', a: '12' }], // Grade 3
+    [{ q: 'Expand (x+6)(x−2). What is the constant term?', a: '-12' }], // Grade 4
+    [{ q: 'Rearrange v = u + at to make t the subject. t = (v − ?)/a. What goes in place of ?', a: 'u', type: 'text' }], // Grade 5
+  ],
+  'A2': [ // Obj 61: Number Machines (Inv)
+    [{ q: 'Machine: ×4 then +3. Input 5. Output?', a: '23' }], // Grade 1
+    [{ q: 'Machine: +8 then ×2. Output 30. Input?', a: '7' }], // Grade 2
+    [{ q: 'Input x: −4 then ×6. Output when x = 7?', a: '18' }], // Grade 3
+    [{ q: 'Machine A: ×3, −2. Machine B: +5, ×4. Input 3 to A, output to B. Final?', a: '48' }], // Grade 4
+    [{ q: 'Machine: ÷2 then +7. Input 4x, output x+12. Find x.', a: '5' }], // Grade 5
+  ],
+  'A3': [ // Obj 76: Inequalities (2)
+    [{ q: 'Solid circle on number line means the value is:', a: 'Included', type: 'mcq' }], // Grade 1
+    [{ q: 'Hollow circle at −2, arrow right. Does inequality include −2?', a: 'No', type: 'mcq' }], // Grade 2
+    [{ q: 'Solve 3x − 4 > 11. Smallest integer value of x?', a: '6' }], // Grade 3
+    [{ q: 'Solve 5x + 7 ≤ 2x + 22. Largest integer value of x?', a: '5' }], // Grade 4
+    [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4' }], // Grade 5
+  ],
+  'A4': [ // Obj 81: Advanced Algebra
+    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12' }], // Grade 1
+    [{ q: 'Factorise 12a + 15b. HCF outside bracket?', a: '3' }], // Grade 2
+    [{ q: 'Expand (x+5)(x−1). Coefficient of x?', a: '4' }], // Grade 3
+    [{ q: '4(2x+3)+3(x+b) ≡ ax+21. Value of a?', a: '11' }], // Grade 4
+    [{ q: 'Factorise x²−3x−18 = (x+a)(x+b). What is the negative value?', a: '-6' }], // Grade 5
+  ],
+  'A5': [ // Obj 57: Equations Both Sides
+    [{ q: 'Solve 3x = 2x + 5.', a: '5' }], // Grade 1
+    [{ q: 'Solve 5y + 2 = 3y + 10.', a: '4' }], // Grade 2
+    [{ q: 'Solve 7w − 4 = 2w + 21.', a: '5' }], // Grade 3
+    [{ q: 'Solve 4(2x − 1) = 3(x + 7).', a: '5' }], // Grade 4
+    [{ q: 'Solve (5x+2)/3 = (3x+10)/2.', a: '26' }], // Grade 5
+  ],
+  'A6': [ // Obj 55: Forming Expressions
+    [{ q: 'Apples 30p, bananas 25p. Cost of 3 apples and 2 bananas in pence?', a: '140' }], // Grade 1
+    [{ q: 'Rectangle: length (x+5), width x. When x=8, what is the perimeter?', a: '42' }], // Grade 2
+    [{ q: 'Perimeter of rectangle (x+5) by x is 42cm. Find x.', a: '8' }], // Grade 3
+    [{ q: 'Think of number, ×4, −7 = ×2 + 9. Find the number.', a: '8' }], // Grade 4
+    [{ q: 'Three consecutive even numbers sum to 84. What is the smallest?', a: '26' }], // Grade 5
+  ],
+  'A7': [ // Obj 47: Functions/Number Machines
+    [{ q: 'Machine: +8 then ×2. Input 4. Output?', a: '24' }], // Grade 1
+    [{ q: 'Machine: ×5 then −3. Output 22. Input?', a: '5' }], // Grade 2
+    [{ q: 'Input x: ÷3 then +9. Output when x = 12?', a: '13' }], // Grade 3
+    [{ q: '[×3]→[+8]. Find input if output = input.', a: '-4' }], // Grade 4
+    [{ q: 'f(x) = 4x² − 5. Find f(−3).', a: '31' }], // Grade 5
+  ],
+  'A8': [ // Obj 19: Graphs and Coordinates
+    [{ q: 'Write down the coordinates of the origin.', a: '(0, 0)', type: 'text' }], // Grade 1
+    [{ q: 'Point A is at (2, 5). It is translated 3 right and 1 down. What are the new coordinates?', a: '(5, 4)', type: 'text' }], // Grade 2
+    [{ q: 'Find the midpoint of (2, 3) and (6, 9).', a: '(4, 6)', type: 'text' }], // Grade 3
+    [{ q: 'Does the point (3, 11) lie on the line y = 4x − 1?', a: 'Yes', type: 'mcq' }], // Grade 4
+    [{ q: 'A line passes through (0, 2) and (2, 8). What is the gradient?', a: '3' }], // Grade 5
+  ],
+  'A9': [ // Obj 36: Linear Graphs
+    [{ q: 'Write down the y-intercept of the line y = 2x + 5.', a: '5' }], // Grade 1
+    [{ q: 'Write down the gradient of the line y = 4x − 3.', a: '4' }], // Grade 2
+    [{ q: 'For the equation y = 3x − 2, work out the value of y when x = −2.', a: '-8' }], // Grade 3
+    [{ q: 'A line passes through (0, 4) and (2, 10). What is the gradient?', a: '3' }], // Grade 4
+    [{ q: 'A line parallel to y = 5x + 1 passes through (2, 13). What is the y-intercept?', a: '3' }], // Grade 5
+  ],
+  'A10': [ // Obj 25: Real-life Graphs
+    [{ q: 'A currency conversion rate is £1 = $1.30. How many dollars do you get for £20?', a: '26' }], // Grade 1
+    [{ q: 'On a distance-time graph, a horizontal line means the object is:', a: 'Stationary', type: 'mcq' }], // Grade 2
+    [{ q: 'A cyclist travels 15 miles in 1 hour. What is the cyclist\'s speed in mph?', a: '15' }], // Grade 3
+    [{ q: 'A car travels 60 miles in 1.5 hours at constant speed. What is the car\'s speed in mph?', a: '40' }], // Grade 4
+    [{ q: 'Tariff A: no standing charge, 25p per unit. Tariff B: £10 standing charge, 15p per unit. After how many units do both cost the same?', a: '100' }], // Grade 5
+  ],
+  'A11': [ // Obj 37: Non-linear Graphs
+    [{ q: 'There are approximately 1.6 km in 1 mile. Estimate the km in 20 miles.', a: '32' }], // Grade 1
+    [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq' }], // Grade 2
+    [{ q: 'A plumber charges £40 callout + £25/hr. Cost for 3 hours?', a: '115' }], // Grade 3
+    [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'y = x² − 4x + 3. Find the coordinates of the turning point.', a: '(2, −1)', type: 'text' }], // Grade 5
+  ],
+  'A14': [ // Obj 84: Non-linear Graphs
+    [{ q: 'Reciprocal of 4 as decimal?', a: '0.25' }], // Grade 1
+    [{ q: 'y = x² − 3. Work out y when x = −1.', a: '-2' }], // Grade 2
+    [{ q: 'y = x² − 3. Work out y when x = 2.', a: '1' }], // Grade 3
+    [{ q: 'Coordinates of turning point of y = x² − 3.', a: '(0, −3)', type: 'text' }], // Grade 4
+    [{ q: 'A student says y = 1/x is a straight line. Correct?', a: 'No', type: 'mcq' }], // Grade 5
+  ],
+  'A17': [ // Obj 13: Solving Linear Equations
+    [{ q: 'Solve x + 7 = 12.', a: '5' }], // Grade 1
+    [{ q: 'Solve 4y = 24.', a: '6' }], // Grade 2
+    [{ q: 'Solve 3w − 5 = 16.', a: '7' }], // Grade 3
+    [{ q: 'Solve 6z + 2 = 4z + 18.', a: '8' }], // Grade 4
+    [{ q: 'Solve (3x − 1)/2 = 7.', a: '5' }], // Grade 5
+  ],
+  'A18': [ // Obj 35: Quadratics
+    [{ q: 'Multiply out x(x + 4). What is the coefficient of x?', a: '4' }], // Grade 1
+    [{ q: 'Factorise y² + 7y. What goes outside the bracket?', a: 'y', type: 'text' }], // Grade 2
+    [{ q: 'Expand (x+3)(x+5). What is the coefficient of x in the answer?', a: '8' }], // Grade 3
+    [{ q: 'Factorise x² + 8x + 15 into (x+a)(x+b). What is a + b?', a: '8' }], // Grade 4
+    [{ q: 'Solve x² − 2x − 24 = 0. What is the positive solution?', a: '6' }], // Grade 5
+  ],
+  'A19': [ // Obj 34: Simultaneous Equations
+    [{ q: 'If x + y = 10 and x = 4, work out the value of y.', a: '6' }], // Grade 1
+    [{ q: 'Solve: x + y = 12 and x − y = 4. Work out the value of x.', a: '8' }], // Grade 2
+    [{ q: 'Solve: 3x + y = 17 and x + y = 7. Work out the value of y.', a: '2' }], // Grade 3
+    [{ q: 'Solve: 2x + 3y = 16 and 4x − y = 11. Work out x.', a: '3.5', calculator: true }], // Grade 4
+    [{ q: '3 coffees + 2 teas = £8.50. 4 coffees + 3 teas = £11.80. Cost of one coffee?', a: '1.70', calculator: true }], // Grade 5
+  ],
+  'A21': [ // Obj 42: Money and Finance
+    [{ q: 'Notebook costs 85p. Cost of 4 in £?', a: '3.40' }], // Grade 1
+    [{ q: 'Plumber: £15/hr + £25 callout. Cost for 4 hours?', a: '85' }], // Grade 2
+    [{ q: 'Pack A: 6 rolls £2.40. Pack B: 9 rolls £3.15. Which is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 3
+    [{ q: 'Water bill £38/month × 12 + £65 standing charge. Annual cost?', a: '521', calculator: true }], // Grade 4
+    [{ q: 'Salary £24,000, +5%, then 20% tax deducted. Take-home amount?', a: '20160', calculator: true }], // Grade 5
+  ],
+  'A22': [ // Obj 24: Inequalities
+    [{ q: 'The inequality x ≥ 4 uses a solid circle on the number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq' }], // Grade 1
+    [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5' }], // Grade 2
+    [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7' }], // Grade 3
+    [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7' }], // Grade 4
+    [{ q: 'Solve 6x + 4 > 2x + 20. What is the smallest integer value of x?', a: '5' }], // Grade 5
+  ],
+  'A23': [ // Obj 14: Sequences
+    [{ q: 'Write down the next term in the sequence: 3, 7, 11, 15, ...', a: '19' }], // Grade 1
+    [{ q: 'The nth term of a sequence is 4n + 1. Work out the first term.', a: '5' }], // Grade 2
+    [{ q: 'The sequence 5, 8, 11, 14... has nth term = an + b. Work out the value of a.', a: '3' }], // Grade 3
+    [{ q: 'The nth term of a sequence is 6n − 2. Is 54 a term in this sequence?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'The nth term of a sequence is n² + 4. Work out the 3rd term.', a: '13' }], // Grade 5
+  ],
+  'A24': [ // Obj 46: Advanced Sequences
+    [{ q: 'Next term: 2, 4, 8, 16, ...', a: '32' }], // Grade 1
+    [{ q: 'Fibonacci-type: 2, 5, ... What is the 4th term?', a: '12' }], // Grade 2
+    [{ q: 'nth term = n² + 5. Work out the 2nd term.', a: '9' }], // Grade 3
+    [{ q: 'Geometric: 3, 12, 48... What is the common ratio?', a: '4' }], // Grade 4
+    [{ q: 'Quadratic: 2, 6, 12, 20... Work out the 5th term.', a: '30' }], // Grade 5
+  ],
+  'A25': [ // Obj 74: Estimating Mean
+    [{ q: 'Midpoint of class interval 10 < x ≤ 20?', a: '15' }], // Grade 1
+    [{ q: 'Interval 0<t≤10, frequency 6. Midpoint × frequency?', a: '30' }], // Grade 2
+    [{ q: '0<t≤10(3), 10<t≤20(9), 20<t≤30(5), 30<t≤40(3). Modal class?', a: '10<t≤20', type: 'mcq' }], // Grade 3
+    [{ q: '0-5min(4,mid 2.5), 5-10(10,mid 7.5), 10-15(6,mid 12.5). Estimated mean?', a: '8', calculator: true }], // Grade 4
+    [{ q: 'When estimating mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' }], // Grade 5
+  ],
+  'R1': [ // Obj 31: Compound Measures
+    [{ q: 'A block has mass 40g and volume 10cm³. Work out its density.', a: '4' }], // Grade 1
+    [{ q: 'Metal: volume 50cm³, density 8g/cm³. Calculate mass.', a: '400' }], // Grade 2
+    [{ q: 'Pressure 40 N/m², area 2.5 m². Work out the force.', a: '100' }], // Grade 3
+    [{ q: 'Liquid A: 1.2g/cm³ (200cm³), Liquid B: 0.8g/cm³ (300cm³). Mixed density?', a: '0.96', calculator: true }], // Grade 4
+    [{ q: 'Cylinder: density 2.5g/cm³, radius 4cm, height 10cm. Mass to 1dp.', a: '1256.6', calculator: true, frozen: true }], // Grade 5
+  ],
+  'R2': [ // Obj 32: Bearings and Scale
+    [{ q: 'What is the correct 3-figure bearing for 45° clockwise from North?', a: '045', type: 'text' }], // Grade 1
+    [{ q: 'Map scale 1cm = 5km. Towns 8cm apart. Actual distance?', a: '40' }], // Grade 2
+    [{ q: 'Bearing of ship from lighthouse is 115°. Bearing of lighthouse from ship?', a: '295' }], // Grade 3
+    [{ q: 'Scale 1:200. Room length 8m. Length on drawing in cm?', a: '4' }], // Grade 4
+    [{ q: 'Town A 40km from B on 050°, Town C 30km from B on 140°. Distance A to C.', a: '50', calculator: true, frozen: true }], // Grade 5
+  ],
+  'R3': [ // Obj 49: Applied Percentages
+    [{ q: '50% of £94.', a: '47' }], // Grade 1
+    [{ q: 'Jacket £40, increased 15%. New price?', a: '46' }], // Grade 2
+    [{ q: '4% simple interest on £500 for 3 years. Total interest?', a: '60' }], // Grade 3
+    [{ q: 'Computer £1200, depreciates 20% yr1, 10% yr2. Value after 2 years?', a: '864', calculator: true }], // Grade 4
+    [{ q: '£3000 at 2.5% compound interest for 4 years. Total amount to 2dp?', a: '3311.44', calculator: true }], // Grade 5
+  ],
+  'R4': [ // Obj 5: Ratio
+    [{ q: 'Simplify the ratio 10 : 15. What is the first number in the simplified ratio?', a: '2' }], // Grade 1
+    [{ q: 'Share 40 sweets in the ratio 3 : 5. How many sweets does the person with the larger share get?', a: '25' }], // Grade 2
+    [{ q: 'A recipe uses flour and sugar in the ratio 3 : 1. If 120g of flour is used, how much sugar is needed?', a: '40' }], // Grade 3
+    [{ q: 'The ratio of red to blue to green pens is 2 : 4 : 3. If there are 16 blue pens, how many pens are there in total?', a: '36' }], // Grade 4
+    [{ q: 'Ali and Ben share money in the ratio 4 : 7. Ben gets £21 more than Ali. How much money do they share in total?', a: '77' }], // Grade 5
+  ],
+  'R5': [ // Obj 77: Best Buys
+    [{ q: 'Pack A: 4 pens £1.00. Pack B: 1 pen 30p. Cheaper per pen?', a: 'Pack A', type: 'mcq' }], // Grade 1
+    [{ q: '5 apples cost £1.50. Cost of 1?', a: '0.30' }], // Grade 2
+    [{ q: '400g cereal £2.40 or 600g £3.30. Better value per gram?', a: '600g box', type: 'mcq', calculator: true }], // Grade 3
+    [{ q: '300ml £2.10 (BOGOHP) vs 500ml £3.40. Best value?', a: '300ml offer', type: 'mcq', calculator: true }], // Grade 4
+    [{ q: '9 rolls £4.50 vs 16 rolls £7.68 (15% off). Best value per roll?', a: 'Pack of 16', type: 'mcq', calculator: true }], // Grade 5
+  ],
+  'R6': [ // Obj 82: Standard Form (Applied)
+    [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
+    [{ q: 'Write 3.2 × 10⁻³ as ordinary number.', a: '0.0032' }], // Grade 2
+    [{ q: '(2×10³)×(4×10⁴) = k × 10ⁿ. What is n?', a: '7' }], // Grade 3
+    [{ q: '(8×10⁵)÷(2×10⁻²) = k × 10ⁿ. What is n?', a: '7' }], // Grade 4
+    [{ q: 'Ship mass 2.2×10⁶ kg after 12% reduction. Original mass (not std form)?', a: '2500000', calculator: true }], // Grade 5
+  ],
+  'R7': [ // Obj 6: Proportion
+    [{ q: '3 apples cost 60p. How much does 1 apple cost?', a: '20' }], // Grade 1
+    [{ q: '4 pens cost £1.20. Work out the cost of 7 pens.', a: '2.10' }], // Grade 2
+    [{ q: 'A printer prints 150 pages in 5 minutes. How many pages does it print in 12 minutes?', a: '360' }], // Grade 3
+    [{ q: 'Pack A: 6 rolls for £1.50. Pack B: 8 rolls for £1.92. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 4
+    [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8' }], // Grade 5
+  ],
+  'R8': [ // Obj 67: Column Vectors
+    [{ q: 'Vector: 4 right, 2 down.', a: '(4, −2)', type: 'text' }], // Grade 1
+    [{ q: 'a = (5, 3), b = (4, −1). Find a + b.', a: '(9, 2)', type: 'text' }], // Grade 2
+    [{ q: 'p = (−2, 5). Find 4p.', a: '(−8, 20)', type: 'text' }], // Grade 3
+    [{ q: 'c = (1, 4), d = (−3, 2). Find 2c − d.', a: '(5, 6)', type: 'text' }], // Grade 4
+    [{ q: 'x = (k, 4), y = (6, m). 3x+y = (12, 17). Value of k?', a: '2' }], // Grade 5
+  ],
+  'R9': [ // Obj 29: % Increase/Decrease
+    [{ q: 'Work out 10% of £48.', a: '4.80' }], // Grade 1
+    [{ q: 'Increase £60 by 20%.', a: '72' }], // Grade 2
+    [{ q: 'Phone bought for £200, sold for £150. Percentage loss?', a: '25' }], // Grade 3
+    [{ q: 'Car depreciates 15%. Original £12,000. Value after 1 year?', a: '10200', calculator: true }], // Grade 4
+    [{ q: 'Holiday costs £540 after 10% discount. Original price?', a: '600' }], // Grade 5
+  ],
+  'R10': [ // Obj 44: Proportion (D&I)
+    [{ q: '3 cakes cost £4.50. Cost of 1?', a: '1.50' }], // Grade 1
+    [{ q: 'y directly proportional to x. x=10, y=30. Find y when x=4.', a: '12' }], // Grade 2
+    [{ q: '4 decorators take 3 days. How long for 2 decorators?', a: '6' }], // Grade 3
+    [{ q: 'y inversely proportional to x. x=3, y=12. Work out y when x=6.', a: '6' }], // Grade 4
+    [{ q: 'y directly proportional to x². x=2, y=20. Find y when x=5.', a: '125' }], // Grade 5
+  ],
+  'R11': [ // Obj 23: Speed, Distance, Time
+    [{ q: 'A car travels at 40 mph for 2 hours. How far does it travel?', a: '80' }], // Grade 1
+    [{ q: 'A runner covers 15 km at 5 km/h. How long does the run take?', a: '3' }], // Grade 2
+    [{ q: 'Change 150 minutes into hours. Give your answer as a decimal.', a: '2.5' }], // Grade 3
+    [{ q: 'A train travels 120 miles in 2 hours and 30 minutes. Work out its average speed.', a: '48' }], // Grade 4
+    [{ q: 'Sam travels 24 miles in 30 minutes. Work out his average speed in mph.', a: '48' }], // Grade 5
+  ],
+  'R12': [ // Obj 53: Congruence/Similarity
+    [{ q: 'Two triangles are exactly the same size and shape. Mathematical word?', a: 'Congruent', type: 'text' }], // Grade 1
+    [{ q: 'Rectangle A: 3×4cm. Rectangle B: 6×8cm. Are they similar?', a: 'Yes', type: 'mcq' }], // Grade 2
+    [{ q: 'Triangle P: sides 5, 6, 8cm. Q similar, longest side 24cm. Shortest side of Q?', a: '15', frozen: true }], // Grade 3
+    [{ q: 'Condition for congruence: 2 sides and included angle?', a: 'SAS', type: 'text' }], // Grade 4
+    [{ q: 'Similar rectangles: areas 20 and 180cm². Smaller perimeter 18cm. Larger perimeter?', a: '54' }], // Grade 5
+  ],
+  'R13': [ // Obj 79: Multi-step %
+    [{ q: '20% of £80.', a: '16' }], // Grade 1
+    [{ q: 'Increase £150 by 15%.', a: '172.50' }], // Grade 2
+    [{ q: 'TV £400, −20%, then −10%. Final price?', a: '288' }], // Grade 3
+    [{ q: '£2000 at 3% compound, 3 years. Total?', a: '2185.45', calculator: true }], // Grade 4
+    [{ q: 'Car value £11,900 after 15% decrease. Original price?', a: '14000' }], // Grade 5
+  ],
+  'R14': [ // Obj 75: Scatter Graphs (2)
+    [{ q: 'Ice cream sales vs temperature. Expected correlation?', a: 'Positive', type: 'mcq' }], // Grade 1
+    [{ q: 'A point has coordinates (12, 45). What is the y-coordinate?', a: '45' }], // Grade 2
+    [{ q: 'Strong negative correlation. As x increases, y...?', a: 'Decreases', type: 'mcq' }], // Grade 3
+    [{ q: 'Line of best fit through (10,20) and (30,60). Estimate y when x=25.', a: '50' }], // Grade 4
+    [{ q: 'Predicting values outside the data range is called:', a: 'Extrapolation', type: 'mcq' }], // Grade 5
+  ],
+  'R16': [ // Obj 68: Interest/Depreciation
+    [{ q: '10% of £350 added to original.', a: '385' }], // Grade 1
+    [{ q: '£600 at 4% simple interest, 3 years. Total interest?', a: '72' }], // Grade 2
+    [{ q: '£2000 at 3% compound, 2 years. Total balance?', a: '2121.80', calculator: true }], // Grade 3
+    [{ q: 'Car £14000, depreciates 15%/yr, 3 years. Nearest £.', a: '8598', calculator: true }], // Grade 4
+    [{ q: '£800 at x% compound, 2 years = £840.50. Find x.', a: '2.5', calculator: true }], // Grade 5
+  ],
+  'G1': [ // Obj 15: Properties of Shapes
+    [{ q: 'How many sides does a hexagon have?', a: '6' }], // Grade 1
+    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'text' }], // Grade 2
+    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'text' }], // Grade 3
+    [{ q: 'How many edges does a square-based pyramid have?', a: '8' }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 140°. Work out the number of sides.', a: '9' }], // Grade 5
+  ],
+  'G2': [ // Obj 33: Constructions and Loci
+    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'text' }], // Grade 1
+    [{ q: 'A perpendicular bisector of AB crosses at its midpoint. If AB = 14cm, at what distance from A?', a: '7' }], // Grade 2
+    [{ q: 'All angles in an equilateral triangle are equal. What is the size of each angle?', a: '60' }], // Grade 3
+    [{ q: 'All points exactly 4m from a fixed point form what shape?', a: 'Circle', type: 'text' }], // Grade 4
+    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq' }], // Grade 5
+  ],
+  'G3': [ // Obj 22: Angles and Polygons
+    [{ q: 'Three angles on a straight line are 40°, 70°, and x. Work out x.', a: '70' }], // Grade 1
+    [{ q: 'An isosceles triangle has one angle of 50°. The other two are equal. Work out one of the equal angles.', a: '65', frozen: true }], // Grade 2
+    [{ q: 'A quadrilateral has angles 95°, 110°, and 85°. Work out the fourth angle.', a: '70', frozen: true }], // Grade 3
+    [{ q: 'Calculate the size of one exterior angle of a regular decagon.', a: '36' }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 144°. How many sides does it have?', a: '10' }], // Grade 5
+  ],
+  'G4': [ // Obj 58: Symmetry
+    [{ q: 'Lines of symmetry in regular pentagon?', a: '5' }], // Grade 1
+    [{ q: 'Order of rotational symmetry of rectangle?', a: '2' }], // Grade 2
+    [{ q: 'Vertical line of symmetry on 4-column grid. Shaded square in col 1 row 2. Matching column?', a: '4' }], // Grade 3
+    [{ q: 'Interior angle of regular pentagon is 108°. Does 108 divide exactly into 360?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'Regular octagon: 135°. Square: 90°. What is 135 + 135 + 90?', a: '360' }], // Grade 5
+  ],
+  'G5': [ // Obj 73: Trig (Angles)
+    [{ q: 'Which side is opposite the right angle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
+    [{ q: 'SOH CAH TOA: sin(x) = Opposite ÷ which side?', a: 'Hypotenuse', type: 'mcq' }], // Grade 2
+    [{ q: 'Opp=6cm, hyp=10cm. Angle to 1dp.', a: '36.9', calculator: true, frozen: true }], // Grade 3
+    [{ q: 'Adj=7cm, opp=12cm. Angle to 1dp.', a: '59.7', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'Ladder 6m, base 2.5m. Angle with ground to nearest degree?', a: '65', calculator: true, frozen: true }], // Grade 5
+  ],
+  'G6': [ // Obj 43: Angle Reasoning
+    [{ q: 'Angles around a point add up to?', a: '360' }], // Grade 1
+    [{ q: 'Triangle: 45° and 85°. Third angle?', a: '50' }], // Grade 2
+    [{ q: 'Two lines intersect. One angle is 115°. Vertically opposite angle?', a: '115' }], // Grade 3
+    [{ q: 'Parallel lines + transversal. Corresponding angle 108°. Alternate angle?', a: '108', frozen: true }], // Grade 4
+    [{ q: 'Quadrilateral angles: x, 2x, x+30, x−10. Find x.', a: '68' }], // Grade 5
+  ],
+  'G7': [ // Obj 20: Transformations
+    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'text' }], // Grade 1
+    [{ q: 'A triangle with a base of 3 cm is enlarged by scale factor 4. What is the new base length?', a: '12' }], // Grade 2
+    [{ q: 'A plumber charges £40 callout + £25 per hour. What is the cost for 3 hours?', a: '115' }], // Grade 3
+    [{ q: 'A shape is translated by vector (5, −4). How many units does it move to the right?', a: '5' }], // Grade 4
+    [{ q: 'Shape A is reflected in x-axis to give B, then B reflected in y-axis to give C. The single transformation A→C is a rotation of how many degrees?', a: '180' }], // Grade 5
+  ],
+  'G8': [ // Obj 54: Displaying Data
+    [{ q: 'Survey: Red=12, Blue=18, Green=9, Yellow=6. Most chosen?', a: 'Blue', type: 'mcq' }], // Grade 1
+    [{ q: 'Y10: 14 boys, 16 girls. Y11: 18 boys, 12 girls. How many more boys in Y11 than Y10?', a: '4' }], // Grade 2
+    [{ q: 'At 2pm temp=14°C, at 4pm=18°C. Estimated temp at 3pm (steady increase)?', a: '16' }], // Grade 3
+    [{ q: 'Temperature recorded hourly over 24hrs. Most appropriate graph type?', a: 'Line graph', type: 'mcq' }], // Grade 4
+    [{ q: 'Class A: mean=62, range=35. Class B: mean=58, range=12. More consistent?', a: 'Class B', type: 'mcq' }], // Grade 5
+  ],
+  'G9': [ // Obj 69: Composite Shapes
+    [{ q: 'Perimeter of rectangle 10cm by 4cm.', a: '28' }], // Grade 1
+    [{ q: 'L-shape: total top width 12cm, cut-out 5cm. Bottom width?', a: '7', frozen: true }], // Grade 2
+    [{ q: 'L-shape: 6×4cm rect + 8×3cm rect. Total area?', a: '48', frozen: true }], // Grade 3
+    [{ q: 'Square 3cm cut from corner of square 8cm. New perimeter?', a: '32', frozen: true }], // Grade 4
+    [{ q: 'L-shape from 3 identical rects, perimeter 56cm, length=3×width. Total area?', a: '108', frozen: true }], // Grade 5
+  ],
+  'G11': [ // Obj 72: Applied Pythagoras
+    [{ q: 'In a² + b² = c², which letter is the hypotenuse?', a: 'c', type: 'text' }], // Grade 1
+    [{ q: 'Right triangle: sides 5cm and 12cm. Hypotenuse?', a: '13', frozen: true }], // Grade 2
+    [{ q: 'Hypotenuse 15cm, one side 9cm. Other side?', a: '12', frozen: true }], // Grade 3
+    [{ q: 'Ladder 4.5m, base 1.2m from wall. Height up wall to 1dp?', a: '4.3', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A(2,4) and B(8,12). Exact length of AB.', a: '10' }], // Grade 5
+  ],
+  'G12': [ // Obj 21: Volume and Surface Area
+    [{ q: 'A solid shape is made from 1cm cubes: 3 layers of 4 cubes each. What is the volume?', a: '12' }], // Grade 1
+    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200' }], // Grade 2
+    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54' }], // Grade 3
+    [{ q: 'A triangular prism has a cross-sectional area of 24 cm² and a length of 15 cm. Work out its volume.', a: '360', frozen: true }], // Grade 4
+    [{ q: 'A cylinder has radius 4 cm and height 12 cm. Volume is kπ cm³. What is k?', a: '192' }], // Grade 5
+  ],
+  'G13': [ // Obj 52: Plans and Elevations
+    [{ q: 'Name for 2D view from directly above?', a: 'Plan', type: 'text' }], // Grade 1
+    [{ q: 'Cylinder resting on base. What shape seen from above?', a: 'Circle', type: 'text' }], // Grade 2
+    [{ q: 'Plan=2×3, front elevation=2×2. Maximum number of cubes?', a: '12', frozen: true }], // Grade 3
+    [{ q: 'Square-based pyramid viewed from the side. What shape?', a: 'Triangle', type: 'text' }], // Grade 4
+    [{ q: 'Plan=3×2, front=2×2. Maximum cubes for this solid?', a: '12' }], // Grade 5
+  ],
+  'G14': [ // Obj 70: Averages (Freq Tables)
+    [{ q: 'Freq table: Score 1(3), Score 2(7), Score 3(5), Score 4(2). Mode?', a: '2' }], // Grade 1
+    [{ q: 'Frequencies: 5, 8, 12, 4. Total people?', a: '29' }], // Grade 2
+    [{ q: 'Goals table: (0:3), (1:5), (2:2). Mean goals?', a: '0.9' }], // Grade 3
+    [{ q: 'Grouped: 0-10(4), 10-20(8), 20-30(6), 30-40(2). 20 values. Class containing median?', a: '10-20', type: 'text' }], // Grade 4
+    [{ q: 'Grouped: 0-10(2, mid 5), 10-20(6, mid 15), 20-30(2, mid 25). Estimate mean.', a: '15' }], // Grade 5
+  ],
+  'G15': [ // Obj 78: Volume/SA (Prisms)
+    [{ q: 'Cuboid 2×3×5cm. Volume?', a: '30' }], // Grade 1
+    [{ q: 'Cube side 4cm. Total surface area?', a: '96' }], // Grade 2
+    [{ q: 'Triangular prism: cross-section 15cm², length 8cm. Volume?', a: '120', frozen: true }], // Grade 3
+    [{ q: 'Cylinder: radius 5cm, height 10cm. Volume to 1dp.', a: '785.4', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'Cylinder: radius 3cm, height 8cm. Total SA is kπ cm². What is k?', a: '66' }], // Grade 5
+  ],
+  'G16': [ // Obj 16: Perimeter and Area
+    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24' }], // Grade 1
+    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36' }], // Grade 2
+    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42' }], // Grade 3
+    [{ q: 'The perimeter of a rectangle is 32 cm. Its length is 10 cm. Work out its width.', a: '6', frozen: true }], // Grade 4
+    [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true }], // Grade 5
+  ],
+  'G18': [ // Obj 48: Arcs/Sectors/Cylinders
+    [{ q: 'Area of circle A = πr². If r = 5, what is A ÷ π?', a: '25' }], // Grade 1
+    [{ q: 'Semicircle radius 8cm. Area is kπ cm². What is k?', a: '32' }], // Grade 2
+    [{ q: 'Cylinder: radius 5cm, height 10cm. Volume to 1dp.', a: '785.4', calculator: true, frozen: true }], // Grade 3
+    [{ q: 'Sector: radius 9cm, angle 40°. Arc length is kπ cm. What is k?', a: '2', frozen: true }], // Grade 4
+    [{ q: 'Cylinder volume 300π cm³, height 12cm. Exact radius.', a: '5' }], // Grade 5
+  ],
+  'G19': [ // Obj 83: Spheres/Cylinders
+    [{ q: 'Volume of cylinder V=πr²h. If r=3, h=5, what is V÷π?', a: '45' }], // Grade 1
+    [{ q: 'Cylinder: radius 4cm, height 10cm. Volume is kπ cm³. What is k?', a: '160' }], // Grade 2
+    [{ q: 'Sphere radius 6cm. V = (4/3)πr³. Volume is kπ cm³. What is k?', a: '288' }], // Grade 3
+    [{ q: 'Hemisphere vol≈3619cm³. Water=2600cm³. What % is 2600 of 3619 (nearest whole)?', a: '72', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'Sphere volume 36000π cm³. Exact radius.', a: '30' }], // Grade 5
+  ],
+  'G20': [ // Obj 30: Pythagoras & Trig
+    [{ q: 'Which side is always opposite the right angle in a right-angled triangle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
+    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter is the hypotenuse?', a: 'c', type: 'text' }], // Grade 2
+    [{ q: 'The two shorter sides of a right-angled triangle are 6 cm and 8 cm. Hypotenuse?', a: '10', frozen: true }], // Grade 3
+    [{ q: 'Hypotenuse is 13 cm, one side is 5 cm. Third side?', a: '12', frozen: true }], // Grade 4
+    [{ q: 'Right triangle: angle 40°, adjacent 10 cm. Opposite side to 1dp?', a: '8.4', calculator: true, frozen: true }], // Grade 5
+  ],
+  'G21': [ // Obj 56: Exact Trig Values
+    [{ q: 'sin(0°) without calculator?', a: '0' }], // Grade 1
+    [{ q: 'Exact value of cos(60°)?', a: '0.5' }], // Grade 2
+    [{ q: 'sin(30°) + cos(60°)?', a: '1' }], // Grade 3
+    [{ q: 'tan(45°) × sin(30°)?', a: '0.5' }], // Grade 4
+    [{ q: 'Right triangle: 30°, hypotenuse 12cm. Exact opposite side.', a: '6', frozen: true }], // Grade 5
+  ],
+  'G25': [ // Obj 40: Vectors
+    [{ q: 'Column vector for 3 right and 2 down.', a: '(3, −2)', type: 'text' }], // Grade 1
+    [{ q: 'a = (1, 4), b = (5, 2). Work out a + b.', a: '(6, 6)', type: 'text' }], // Grade 2
+    [{ q: 'p = (6, −3). Work out 2p.', a: '(12, −6)', type: 'text' }], // Grade 3
+    [{ q: 'c = (−2, 5), d = (4, 1). Work out 3c − d.', a: '(−10, 14)', type: 'text' }], // Grade 4
+    [{ q: 'Vector A→B is (−7, 4). A = (2, 5). Find coordinates of B.', a: '(−5, 9)', type: 'text' }], // Grade 5
+  ],
+  'P1': [ // Obj 17: Probability
+    [{ q: 'A fair coin is flipped. What is the probability that it lands on Tails?', a: '1/2', type: 'fraction' }], // Grade 1
+    [{ q: 'A bag contains 4 red counters and 5 blue counters. A counter is picked at random. What is the probability it is red?', a: '4/9', type: 'fraction' }], // Grade 2
+    [{ q: 'The probability that a football team wins its next game is 0.55. What is the probability that the team does not win?', a: '0.45' }], // Grade 3
+    [{ q: 'A biased spinner has sections 1-4. P(1)=0.2, P(2)=0.35, P(3)=0.15. Work out P(4).', a: '0.3' }], // Grade 4
+    [{ q: 'There are x green balls and 12 yellow balls in a bag. P(yellow) = 3/5. Work out x.', a: '8' }], // Grade 5
+  ],
+  'P2': [ // Obj 62: Frequency Trees
+    [{ q: '3 mains, 4 drinks. Total meal combinations?', a: '12' }], // Grade 1
+    [{ q: '80 people: 50 adults (35 pass), 30 teens (12 pass). Total who failed?', a: '33' }], // Grade 2
+    [{ q: '120 students: 70 girls (40 Spanish). 50 boys (25 French). Boys who chose Spanish?', a: '25' }], // Grade 3
+    [{ q: 'From above: fraction of French students who were boys, simplest form?', a: '5/11', type: 'fraction' }], // Grade 4
+    [{ q: '4 bases, n toppings, 3 crusts = 84 pizzas. Find n.', a: '7' }], // Grade 5
+  ],
+  'P3': [ // Obj 45: Relative Frequency
+    [{ q: 'Fair coin flipped 40 times. Expected Heads?', a: '20' }], // Grade 1
+    [{ q: 'Biased dice rolled 60 times, lands on 6 eighteen times. Relative frequency?', a: '0.3' }], // Grade 2
+    [{ q: 'P(win) = 0.4, 150 matches. Estimated wins?', a: '60' }], // Grade 3
+    [{ q: 'P(Red)=0.35, P(Blue)=0.25, spun 300 times. Expected Green?', a: '120' }], // Grade 4
+    [{ q: 'Bag A: P(Red)=1/4, 40 drawn. Bag B: P(Red)=2/5, 60 drawn. Total red?', a: '34' }], // Grade 5
+  ],
+  'P4': [ // Obj 64: Venn Diagrams
+    [{ q: '20 is a multiple of 10 but NOT odd. Which Venn region?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
+    [{ q: 'ξ={1-10}, A={Even}, B={Factors of 8}. Numbers in A but NOT in B?', a: '2' }], // Grade 2
+    [{ q: 'Class 30: 18 football, 12 cricket, 4 neither. How many play both?', a: '4' }], // Grade 3
+    [{ q: 'From above: P(football but not cricket)?', a: '14/30', type: 'fraction' }], // Grade 4
+    [{ q: 'P(A)=0.5, P(B)=0.4, P(A∪B)=0.7. Find P(A∩B).', a: '0.2' }], // Grade 5
+  ],
+  'P5': [ // Obj 63: Pictograms/Bar Charts
+    [{ q: '1 square = 12 cars. How many for 2.5 squares?', a: '30' }], // Grade 1
+    [{ q: 'A bar chart axis goes in steps of 4. Frequency 18 is halfway between which gridlines?', a: '16 and 20', type: 'mcq' }], // Grade 2
+    [{ q: 'Football: 15 boys, 8 girls. Drama: 6 boys, 14 girls. Art: 10, 11. Biggest gender difference?', a: 'Drama', type: 'mcq' }], // Grade 3
+    [{ q: 'Monday = 4 circles = 48 people. Tuesday = 2.5 circles. People on Tuesday?', a: '30' }], // Grade 4
+    [{ q: 'A bar chart shows bars of different widths. Is this a valid bar chart?', a: 'No', type: 'mcq' }], // Grade 5
+  ],
+  'P6': [ // Obj 27: Venn Diagrams
+    [{ q: '20 is a multiple of 10 but NOT odd. In a Venn diagram with \'Multiples of 10\' and \'Odd numbers\', which region?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
+    [{ q: 'In set notation, A ∩ B means the elements that are in:', a: 'Both A and B', type: 'mcq' }], // Grade 2
+    [{ q: 'Class of 30: 18 football, 12 cricket, 4 neither. How many play both?', a: '4' }], // Grade 3
+    [{ q: 'From above: what is the probability a student plays football but not cricket?', a: '14/30', type: 'fraction' }], // Grade 4
+    [{ q: 'ξ={1-10}, A={Primes}, B={Odd}. How many numbers are in A ∪ B?', a: '6' }], // Grade 5
+  ],
+  'P7': [ // Obj 59: Further Probability
+    [{ q: 'A fair coin is flipped. How many possible outcomes?', a: '2' }], // Grade 1
+    [{ q: 'P(Head AND rolling 6)?', a: '1/12', type: 'fraction' }], // Grade 2
+    [{ q: '4 red, 6 blue, WITH replacement. P(two red)?', a: '4/25', type: 'fraction' }], // Grade 3
+    [{ q: '5 green, 3 yellow, WITHOUT replacement. P(both yellow)?', a: '3/28', type: 'fraction' }], // Grade 4
+    [{ q: 'P(Art)=0.4, P(Drama)=0.3, independent. P(at least one)?', a: '0.58' }], // Grade 5
+  ],
+  'P8': [ // Obj 28: Tree Diagrams
+    [{ q: '80 people take a test. 50 adults, 30 teens. 35 adults pass, 12 teens pass. How many failed in total?', a: '33' }], // Grade 1
+    [{ q: 'From above: what fraction of all people failed?', a: '33/80', type: 'fraction' }], // Grade 2
+    [{ q: 'A fair coin is flipped twice. How many possible outcomes are there?', a: '4' }], // Grade 3
+    [{ q: 'P(exactly two Heads from two fair coin flips)?', a: '1/4', type: 'fraction' }], // Grade 4
+    [{ q: 'Bag: 5 red, 3 blue, WITH replacement. P(different colours)?', a: '15/32', type: 'fraction' }], // Grade 5
+  ],
+  'S1': [ // Obj 39: Time Series/Pictograms
+    [{ q: 'Pictogram: 1 circle = 4 people. How many for 3.5 circles?', a: '14' }], // Grade 1
+    [{ q: '1 symbol = 6 apples. How many complete symbols for 15 apples?', a: '2' }], // Grade 2
+    [{ q: 'Quarterly sales: Q1=£4200, Q2=£5100, Q3=£6800, Q4=£5900. Highest quarter?', a: 'Q3', type: 'mcq' }], // Grade 3
+    [{ q: 'Profits: 2020=£40k, 2021=£45k, 2022=£52k, 2023=£48k, 2024=£58k. Overall trend?', a: 'Increasing', type: 'mcq' }], // Grade 4
+    [{ q: 'What is the main purpose of a moving average on time series data?', a: 'To smooth out seasonal variation', type: 'mcq' }], // Grade 5
+  ],
+  'S2': [ // Obj 38: Two-way Tables/Pie Charts
+    [{ q: '12 boys hot lunch, 8 packed lunch. 15 girls hot, 9 packed. How many girls chose packed lunch?', a: '9' }], // Grade 1
+    [{ q: '20 men, 30 women surveyed. 12 men prefer tea. 18 women prefer coffee. How many women prefer tea?', a: '12' }], // Grade 2
+    [{ q: 'Pie chart: 120 people, angle for Blue is 90°. How many chose Blue?', a: '30' }], // Grade 3
+    [{ q: '20 Walk, 15 Car, 10 Bus, 15 Cycle out of 60. What angle represents Walk on a pie chart?', a: '120' }], // Grade 4
+    [{ q: 'Pie chart: Dogs = 120°, 45 dogs. Total animals in pie chart?', a: '135' }], // Grade 5
+  ],
+  'S4': [ // Obj 18: Statistics (Averages)
+    [{ q: 'Find the mode of: 4, 7, 7, 9, 12.', a: '7' }], // Grade 1
+    [{ q: 'Find the range of: 15, 3, 11, 22, 8.', a: '19' }], // Grade 2
+    [{ q: 'Find the median of: 8, 2, 10, 1, 6.', a: '6' }], // Grade 3
+    [{ q: 'Calculate the mean of: 5, 9, 12, 6.', a: '8' }], // Grade 4
+    [{ q: 'Four numbers have a mean of 8. Three are 4, 7, and 11. Work out the fourth number.', a: '10' }], // Grade 5
+  ],
+  'S5': [ // Obj 66: Standard Form (Calc)
+    [{ q: '52,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
+    [{ q: 'Write 4.1 × 10⁻³ as ordinary number.', a: '0.0041' }], // Grade 2
+    [{ q: '(3×10⁴)×(2×10³) = k × 10ⁿ. What is n?', a: '7' }], // Grade 3
+    [{ q: '(9×10⁶)÷(3×10⁻²) = k × 10ⁿ. What is n?', a: '8' }], // Grade 4
+    [{ q: '(5.2×10⁴)+(4×10³) = a × 10⁴. Value of a?', a: '5.6' }], // Grade 5
+  ],
+  'S6': [ // Obj 26: Scatter Graphs
+    [{ q: 'A point on a scatter graph has coordinates (15, 30). What is the x-coordinate?', a: '15' }], // Grade 1
+    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' }], // Grade 2
+    [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. What type of correlation?', a: 'Positive', type: 'mcq' }], // Grade 3
+    [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate y when x = 45.', a: '55' }], // Grade 4
+    [{ q: 'A line of best fit covers data from x=10 to x=50. A student uses it to predict y when x=100. Is this reliable?', a: 'No', type: 'mcq' }], // Grade 5
+  ],
+};
 
-// Shared references for remaining Geometry objectives → G2
-questionBank['G5'] = questionBank['G2'];
-questionBank['G6'] = questionBank['G2'];
-questionBank['G7'] = questionBank['G2'];
-questionBank['G8'] = questionBank['G2'];
-questionBank['G9'] = questionBank['G2'];
-questionBank['G11'] = questionBank['G2'];
-questionBank['G13'] = questionBank['G2'];
-questionBank['G14'] = questionBank['G2'];
-questionBank['G15'] = questionBank['G2'];
-questionBank['G18'] = questionBank['G2'];
-questionBank['G19'] = questionBank['G2'];
-questionBank['G25'] = questionBank['G2'];
+// ═══════════════════════════════════════════════════════════════
+// MERGE GOLD QUESTIONS INTO questionBank
+// Gold questions become the PRIMARY variant at each level.
+// Existing shared-bank questions become additional fallback variants.
+// Questions with frozen: true are excluded from variant selection.
+// ═══════════════════════════════════════════════════════════════
+Object.keys(goldQuestionBank).forEach(code => {
+  const goldLevels = goldQuestionBank[code];
+  // Get existing questions for this code (may be shared/aliased)
+  const existingBank = questionBank[code] || (_originalSharedRefs[code] ? questionBank[_originalSharedRefs[code]] : null);
+  
+  // Build new 5-level bank: gold question first, then existing variants
+  const newBank = goldLevels.map((goldVariants, levelIdx) => {
+    const existing = existingBank?.[levelIdx] || [];
+    const existingArray = Array.isArray(existing) ? (Array.isArray(existing[0]) ? existing : [existing].filter(e => e.q)) : [];
+    // Gold question(s) come first, then existing variants
+    return [...goldVariants, ...existingArray.filter(v => v.q)];
+  });
+  
+  questionBank[code] = newBank;
+});
 
-// Shared references for remaining Probability & Statistics objectives → P4
-questionBank['P5'] = questionBank['P4'];
-questionBank['P6'] = questionBank['P4'];
-questionBank['S1'] = questionBank['P4'];
-questionBank['S5'] = questionBank['P4'];
-questionBank['S6'] = questionBank['P4'];
+// Also keep shared references for any spec codes NOT covered by gold questions
+Object.entries(_originalSharedRefs).forEach(([code, primary]) => {
+  if (!goldQuestionBank[code]) {
+    questionBank[code] = questionBank[primary];
+  }
+});
+
+// A9 already had its own bank (quadratics) — gold replaces it
+// (The original A9 quadratic questions move to A18 gold bank if not already there)
+
 
 // ═══════════════════════════════════════════════════════════════
 // DIAMOND QUESTION BANK — Level 2 (unlocked after completing Level 1 grid)
@@ -5639,7 +6189,13 @@ const higherQuestionBank = {
 // Pick a random variant from a question slot (supports both single questions and variant arrays)
 const pickVariant = (questionOrVariants) => {
   if (Array.isArray(questionOrVariants)) {
-    return questionOrVariants[Math.floor(Math.random() * questionOrVariants.length)];
+    // Filter out frozen questions (need images before being served)
+    const available = questionOrVariants.filter(v => !v.frozen);
+    if (available.length > 0) {
+      return available[Math.floor(Math.random() * available.length)];
+    }
+    // All variants are frozen — return null so caller can handle gracefully
+    return questionOrVariants.length > 0 ? { ...questionOrVariants[0], _allFrozen: true } : questionOrVariants[0];
   }
   return questionOrVariants;
 };
@@ -6360,8 +6916,12 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   const pickFreshVariant = (variants, objCode, questionIdx) => {
     if (!Array.isArray(variants) || variants.length <= 1) return pickVariant(variants);
 
-    // Try to find a variant NOT in recent questions
-    const fresh = variants.filter(v => {
+    // Filter out frozen questions (need images before being served)
+    const unfrozen = variants.filter(v => !v.frozen);
+    if (unfrozen.length === 0) return pickVariant(variants); // all frozen — fallback
+
+    // Try to find an unfrozen variant NOT in recent questions
+    const fresh = unfrozen.filter(v => {
       const id = getQuestionId(objCode, questionIdx, v);
       return !recentQuestions.has(id);
     });
@@ -6369,8 +6929,8 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     if (fresh.length > 0) {
       return fresh[Math.floor(Math.random() * fresh.length)];
     }
-    // All variants are recent — just pick randomly
-    return variants[Math.floor(Math.random() * variants.length)];
+    // All unfrozen variants are recent — just pick randomly from unfrozen
+    return unfrozen[Math.floor(Math.random() * unfrozen.length)];
   };
 
   // ── Step 1: Collect all eligible objectives ──
@@ -7133,8 +7693,12 @@ What is the student's answer?`
       });
 
       // Set celebration, stop feedback, clear session
+      console.log('[CELEB DEBUG] celebObjs:', celebObjs.length, 'codes:', codes, 'sessionResults:', sessionResults.length);
       if (celebObjs.length > 0) {
+        console.log('[CELEB DEBUG] Setting localCelebration with', celebObjs.length, 'objectives');
         setLocalCelebration({ objectives: celebObjs, index: 0 });
+      } else {
+        console.log('[CELEB DEBUG] No celebObjs - skipping celebration');
       }
       setRecentSessionCodes(codes);
       setShowFeedback(false);
@@ -7331,6 +7895,7 @@ What is the student's answer?`
   }
 
   // Celebration carousel — shows per-objective progress after session
+  console.log('[CELEB RENDER] localCelebration:', localCelebration ? `${localCelebration.objectives?.length} objs` : 'null', 'sessionStarted:', sessionStarted);
   if (localCelebration) {
     return (
       <CelebrationCarousel

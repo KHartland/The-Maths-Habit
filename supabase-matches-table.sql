@@ -359,7 +359,7 @@ end $$;
 
 -- ═══════════════════════════════════════════════════════════
 -- 10. SCHOOL LEADERBOARD RPC FUNCTION
--- Sums quick_correct from user_progress for each school member
+-- Sums correct_answers from daily_activity for each school member (all time)
 -- ═══════════════════════════════════════════════════════════
 -- Drop first because return type changed (added first_name, surname)
 drop function if exists public.get_school_leaderboard(uuid);
@@ -383,11 +383,11 @@ as $$
     p.first_name,
     p.surname,
     p.avatar_url,
-    coalesce(sum(up.quick_correct), 0) as total_correct
+    coalesce(sum(da.correct_answers), 0) as total_correct
   from public.school_members sm
   join auth.users u on u.id = sm.user_id
   left join public.profiles p on p.id = sm.user_id
-  left join public.user_progress up on up.user_id = sm.user_id
+  left join public.daily_activity da on da.user_id = sm.user_id
   where sm.school_id = p_school_id
   group by sm.user_id, p.display_name, u.email, p.first_name, p.surname, p.avatar_url
   order by total_correct desc, display_name asc;
