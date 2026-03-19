@@ -7281,13 +7281,16 @@ What is the student's answer?`
       const practicedCodes = [...new Set(allResults.map(r => r.code))];
 
       // Build rich data for each practiced objective, mapping to primary bank labels
+      // Use newQuickCorrect from sessionResults (post-answer) since progress state hasn't committed yet
       const practicedObjectives = practicedCodes.map(code => {
         const obj = allObjectives.find(o => o.code === code);
         const primary = questionBankPrimary[code] || code;
-        const prog = progress[code];
-        const level = getUnderstandingLevel(prog);
         const resultsForCode = allResults.filter(r => r.code === code);
         const correctForCode = resultsForCode.filter(r => r.correct).length;
+        // Get the latest quickCorrect from session results (reflects post-answer state)
+        const latestResult = [...resultsForCode].reverse().find(r => r.newQuickCorrect !== undefined);
+        const qc = latestResult?.newQuickCorrect ?? (progress[code]?.quickCorrect ?? 0);
+        const level = qc >= 5 ? 5 : qc;
         // Use friendly bank label for mixed banks, otherwise use primary's description
         const displayTitle = questionBankLabel[primary] || descriptions[primary] || obj?.title || code;
         return {
@@ -7295,8 +7298,8 @@ What is the student's answer?`
           title: displayTitle,
           topic: obj?.topic || 'Unknown',
           level,
-          quickCorrect: prog?.quickCorrect ?? 0,
-          mastered: (prog?.quickCorrect ?? 0) >= 5,
+          quickCorrect: qc,
+          mastered: qc >= 5,
           correctInSession: correctForCode,
           totalInSession: resultsForCode.length,
         };
@@ -7321,6 +7324,29 @@ What is the student's answer?`
       setCurrentPage('home');
       } catch (err) {
         console.error('Session complete error:', err);
+        // Still try to show celebration with whatever data we have
+        const fallbackResults = [...sessionResults];
+        const fallbackCodes = [...new Set(fallbackResults.map(r => r.code))];
+        const fallbackObjectives = fallbackCodes.map(code => {
+          const obj = allObjectives.find(o => o.code === code);
+          const prog = progress[code];
+          return {
+            code,
+            title: descriptions[code] || obj?.title || code,
+            topic: obj?.topic || 'Unknown',
+            level: getUnderstandingLevel(prog),
+            quickCorrect: prog?.quickCorrect ?? 0,
+            mastered: (prog?.quickCorrect ?? 0) >= 5,
+            correctInSession: fallbackResults.filter(r => r.code === code && r.correct).length,
+            totalInSession: fallbackResults.filter(r => r.code === code).length,
+          };
+        });
+        if (fallbackObjectives.length > 0) {
+          setRecentSessionCodes(fallbackCodes);
+          setCelebrationIndex(0);
+          setShowCelebration(true);
+          setSessionToastData({ correctCount: 0, totalQuestions: 0, accuracy: 0, achievements: [], practicedObjectives: fallbackObjectives });
+        }
         setShowFeedback(false);
         setSessionResults([]);
         setSessionStarted(false);
