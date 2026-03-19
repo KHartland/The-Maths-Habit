@@ -7315,6 +7315,7 @@ What is the student's answer?`
       });
 
       // Show the results screen (sessionResults kept intact so results screen renders)
+      setShowFeedback(false);
       setSessionStarted(false);
       } catch (err) {
         console.error('Session complete error:', err);
