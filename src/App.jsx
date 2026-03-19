@@ -7314,17 +7314,13 @@ What is the student's answer?`
         practicedObjectives,
       });
 
-      // Navigate to Journey page so students see their updated progress
-      setSessionResults([]);
+      // Show the results screen (sessionResults kept intact so results screen renders)
       setSessionStarted(false);
-      setCurrentPage('heatmap');
       } catch (err) {
         console.error('Session complete error:', err);
-        // Ensure we still navigate even if stats fail
+        // Still show results screen even if stats fail
         setShowFeedback(false);
-        setSessionResults([]);
         setSessionStarted(false);
-        setCurrentPage('heatmap');
       }
     }
   };
@@ -7403,32 +7399,43 @@ What is the student's answer?`
                 </div>
               </div>
 
-              {/* Question Results - prioritize showing mastery gains */}
+              {/* Question Results with gem level */}
               <div className="space-y-2 text-left mb-6 max-h-60 overflow-y-auto hide-scrollbar">
-                {sessionResults.map((r, i) => (
-                  <div key={i} className={`p-3 rounded-lg ${r.correct ? 'glass-panel' : 'bg-red-500/10 border border-red-500/30'}`}>
-                    <div className="flex items-center gap-3 text-sm">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        r.correct ? 'bg-mint/20 text-mint' : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                {sessionResults.map((r, i) => {
+                  const prog = progress[r.code];
+                  const level = getUnderstandingLevel(prog);
+                  const tileImg = TILE_IMAGES[level] || TILE_IMAGES[0];
+                  const levelLabel = levelLabels[level] || 'Not started';
+                  return (
+                    <div key={i} className={`p-3 rounded-lg ${r.correct ? 'glass-panel' : 'bg-red-500/10 border border-red-500/30'}`}>
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          r.correct ? 'bg-mint/20 text-mint' : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                        </div>
+                        <span className="font-medium text-white flex-1 min-w-0 truncate">{r.code}</span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          {r.newMastery ? (
+                            <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-semibold border border-[#D4AF37]/30">
+                              ⭐ Mastered!
+                            </span>
+                          ) : r.correct ? (
+                            <span className="text-xs text-secondary-text">{levelLabel}</span>
+                          ) : null}
+                          <img src={tileImg} alt="" className="w-6 h-6 rounded" />
+                        </div>
                       </div>
-                      <span className="font-medium text-white">{r.code}</span>
-                      {r.newMastery && (
-                        <span className="ml-auto text-xs bg-violet/20 text-violet-light px-2 py-0.5 rounded-full font-semibold border border-violet/30">
-                          ⭐ Mastered!
-                        </span>
-                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-              
-              {/* Achievements - visually subordinate, smaller */}
+
+              {/* Achievements */}
               {achievements.length > 0 && (
                 <div className="mb-4 flex flex-wrap gap-2 justify-center">
                   {achievements.map((ach, i) => (
-                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs">
+                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 text-secondary-text rounded-full text-xs">
                       <span>{ach.icon}</span>
                       <span>{ach.title}</span>
                     </div>
@@ -7437,9 +7444,9 @@ What is the student's answer?`
               )}
 
               {sessionResults.some(r => !r.correct) && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
-                  <p className="text-sm text-amber-800">
-                    <strong>📖 Time to revise!</strong> The objectives you got wrong won't appear for the next 2 sessions.
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6 text-left">
+                  <p className="text-sm text-amber-300">
+                    <strong>Time to revise!</strong> The objectives you got wrong won't appear for the next 2 sessions.
                   </p>
                 </div>
               )}
@@ -7447,21 +7454,21 @@ What is the student's answer?`
               <div className="space-y-3">
                 <button
                   onClick={startSession}
-                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold rounded-xl transition-all"
+                  className="w-full py-3 btn-gradient-mint text-white font-semibold rounded-xl transition-all"
                 >
                   Practice Again
                 </button>
                 <button
-                  onClick={() => { setSessionResults([]); setCurrentPage('stats'); }}
-                  className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
-                >
-                  View Progress Stats
-                </button>
-                <button
                   onClick={() => { setSessionResults([]); setCurrentPage('heatmap'); }}
-                  className="w-full py-2 text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors"
+                  className="w-full py-3 glass-panel hover:bg-white/10 text-white font-semibold rounded-xl transition-colors"
                 >
                   View Journey
+                </button>
+                <button
+                  onClick={() => { setSessionResults([]); setCurrentPage('stats'); }}
+                  className="w-full py-2 text-secondary-text hover:text-white text-sm font-medium transition-colors"
+                >
+                  View Stats
                 </button>
               </div>
             </div>
@@ -11471,7 +11478,6 @@ function AppContent() {
       {piroEvolution && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
           <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
-            <div className="text-6xl mb-4">🐉</div>
             <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
             <p className="text-secondary-text mb-4">
               {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
