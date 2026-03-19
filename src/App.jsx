@@ -8445,8 +8445,8 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             {/* Readiness bar */}
             <div className="h-4 bg-white/20 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
-                style={{ width: `${readinessScore}%` }}
+                className="h-full rounded-full transition-all duration-1000"
+                style={{ width: `${readinessScore}%`, background: 'linear-gradient(90deg, #7C3AED, #A78BFA)' }}
               />
             </div>
 
