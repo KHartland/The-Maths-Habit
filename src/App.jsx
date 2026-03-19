@@ -10543,6 +10543,26 @@ function AppContent() {
 
     let changed = false;
 
+    // Sync highestStreak & stage with actual streak on every load
+    // (catches milestone changes and any streak/piro drift)
+    if (dayStreak > currentPiro.highestStreak) {
+      currentPiro.highestStreak = dayStreak;
+      changed = true;
+    }
+    const earnedStage = getPiroStageFromStreak(currentPiro.highestStreak);
+    if (earnedStage > currentPiro.stage) {
+      const oldStage = currentPiro.stage;
+      currentPiro.stage = earnedStage;
+      currentPiro.evolvedAt = currentPiro.evolvedAt || [];
+      currentPiro.evolvedAt.push({ stage: earnedStage, name: PIRO_STAGES[earnedStage].name, date: Date.now() });
+      changed = true;
+      // Show evolution celebration
+      setPiroEvolution({ oldStage, newStage: earnedStage });
+    }
+    if (currentPiro.highestStreak >= 35) {
+      currentPiro.reachedEpic = true;
+    }
+
     // Recovery: practising reverses decay/dying
     if (practicedToday && (currentPiro.decayed || currentPiro.dying)) {
       currentPiro.decayed = false;
