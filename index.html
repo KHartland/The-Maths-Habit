@@ -21,6 +21,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>window.onerror=function(m,s,l,c,e){document.body.innerHTML='<div style="padding:20px;color:#fff;background:#1a0a2e;font-family:monospace;min-height:100vh"><h2 style="color:#ff6b6b">CRASH</h2><p style="color:#ffd93d;word-break:break-all">'+m+'</p><p style="color:#aaa">Line: '+l+' Col: '+c+'</p><p style="color:#aaa;font-size:11px;word-break:break-all">'+(e&&e.stack?e.stack:'no stack')+'</p></div>';return true;};</script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
