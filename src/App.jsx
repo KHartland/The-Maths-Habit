@@ -6,7 +6,7 @@ import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
 import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
-import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
+import { getAllSchools, createSchool, joinSchool, joinSchoolByCode, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
@@ -9200,6 +9200,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showAddSchool, setShowAddSchool] = useState(false);
   const [newSchoolName, setNewSchoolName] = useState('');
   const [newSchoolTown, setNewSchoolTown] = useState('');
+  // Maths captcha for bot protection
+  const [captcha, setCaptcha] = useState(() => {
+    const a = Math.floor(Math.random() * 12) + 2;
+    const b = Math.floor(Math.random() * 12) + 2;
+    return { a, b, answer: a * b };
+  });
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [pendingSchool, setPendingSchool] = useState(null); // school waiting for captcha
   const [summaryStatus, setSummaryStatus] = useState(''); // '', 'copied', 'shared'
   const [editingName, setEditingName] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState('');
@@ -9372,9 +9380,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
         if (!cancelled) {
           setAllSchoolsList(schools);
           setSchoolsLoaded(true);
-          if (schools.length === 0) {
-            setSchoolError('No schools in database yet');
-          }
+          if (schools.length === 0) setSchoolError('No schools in database yet');
         }
       } catch (err) {
         console.error('Failed to load schools:', err);
@@ -9387,7 +9393,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     return () => { cancelled = true; };
   }, [schoolDropdownOpen, schoolsLoaded]);
 
-  // Client-side filter (instant, no debounce needed)
   const schoolResults = useMemo(() => {
     if (!schoolFilter.trim() || schoolFilter.trim().length < 2) return [];
     const q = schoolFilter.trim().toLowerCase();
@@ -9396,17 +9401,39 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     );
   }, [schoolFilter, allSchoolsList]);
 
-  // Handle joining a school
-  const handleJoinSchool = async (school) => {
-    if (!user) return;
+  // Generate a new captcha
+  const newCaptcha = () => {
+    const a = Math.floor(Math.random() * 12) + 2;
+    const b = Math.floor(Math.random() * 12) + 2;
+    setCaptcha({ a, b, answer: a * b });
+    setCaptchaInput('');
+  };
+
+  // When user clicks Join on a school, show captcha first
+  const handleJoinSchool = (school) => {
+    setPendingSchool(school);
+    newCaptcha();
+    setSchoolError('');
+  };
+
+  // Verify captcha and actually join
+  const handleCaptchaSubmit = async () => {
+    if (parseInt(captchaInput) !== captcha.answer) {
+      setSchoolError('Incorrect answer — try again');
+      newCaptcha();
+      return;
+    }
+    if (!user || !pendingSchool) return;
     setSchoolJoining(true);
     setSchoolError('');
     try {
-      await joinSchool(user.id, school.id);
-      setUserSchool(school);
-      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
+      await joinSchool(user.id, pendingSchool.id);
+      setUserSchool(pendingSchool);
+      localStorage.setItem('maths-habit-user-school', JSON.stringify(pendingSchool));
+      setPendingSchool(null);
       setSchoolDropdownOpen(false);
       setSchoolFilter('');
+      setCaptchaInput('');
     } catch (err) {
       setSchoolError(err.message || 'Failed to join school');
     } finally {
@@ -9414,8 +9441,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     }
   };
 
-  // Handle creating + joining a new school (with town)
+  // Handle creating + joining a new school (with captcha)
   const handleCreateSchool = async () => {
+    if (parseInt(captchaInput) !== captcha.answer) {
+      setSchoolError('Incorrect answer — try again');
+      newCaptcha();
+      return;
+    }
     if (!user || !newSchoolName.trim() || !newSchoolTown.trim()) return;
     setSchoolJoining(true);
     setSchoolError('');
@@ -9427,7 +9459,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       setShowAddSchool(false);
       setNewSchoolName('');
       setNewSchoolTown('');
-      setSchoolsLoaded(false); // refresh list on next open
+      setCaptchaInput('');
+      setSchoolsLoaded(false);
     } catch (err) {
       setSchoolError(err.message || 'Failed to create school');
     } finally {
@@ -9715,8 +9748,41 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                   </div>
                 </div>
+              ) : pendingSchool ? (
+                /* Maths captcha before joining */
+                <div className="space-y-3">
+                  <div className="p-4 bg-violet/20 rounded-xl border border-violet/30 text-center">
+                    <p className="text-sm text-secondary-text mb-1">Joining <span className="text-white font-medium">{pendingSchool.name}</span></p>
+                    <p className="text-white font-semibold text-lg mb-3">What is {captcha.a} × {captcha.b}?</p>
+                    <div className="flex gap-2 justify-center">
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={captchaInput}
+                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        placeholder="?"
+                        autoFocus
+                        className="w-24 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-center text-lg font-semibold"
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleCaptchaSubmit(); }}
+                      />
+                      <button
+                        onClick={handleCaptchaSubmit}
+                        disabled={schoolJoining || !captchaInput.trim()}
+                        className="px-6 py-3 btn-gradient-mint text-void font-semibold rounded-xl disabled:opacity-50"
+                      >
+                        {schoolJoining ? 'Joining...' : 'Join'}
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setPendingSchool(null); setCaptchaInput(''); setSchoolError(''); }}
+                    className="w-full py-2 text-sm text-secondary-text hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
               ) : showAddSchool ? (
-                /* Add new school form */
+                /* Add new school form with captcha */
                 <div className="space-y-3">
                   <p className="text-sm text-secondary-text">Add your school to the list:</p>
                   <input
@@ -9733,16 +9799,30 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     placeholder="Town / region..."
                     className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/40"
                   />
+                  {newSchoolName.trim() && newSchoolTown.trim() && (
+                    <div className="p-3 bg-violet/20 rounded-xl border border-violet/30 text-center">
+                      <p className="text-sm text-secondary-text mb-1">Quick check: What is {captcha.a} × {captcha.b}?</p>
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={captchaInput}
+                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        placeholder="?"
+                        className="w-24 mx-auto px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-white text-center font-semibold"
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleCreateSchool(); }}
+                      />
+                    </div>
+                  )}
                   <div className="flex gap-2">
                     <button
                       onClick={handleCreateSchool}
-                      disabled={schoolJoining || !newSchoolName.trim() || !newSchoolTown.trim()}
+                      disabled={schoolJoining || !newSchoolName.trim() || !newSchoolTown.trim() || !captchaInput.trim()}
                       className="flex-1 py-3 btn-gradient-mint text-void font-semibold rounded-xl disabled:opacity-50"
                     >
                       {schoolJoining ? 'Adding...' : 'Add & Join'}
                     </button>
                     <button
-                      onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
+                      onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); setCaptchaInput(''); }}
                       className="px-4 py-3 text-secondary-text hover:text-white bg-white/10 rounded-xl transition-colors"
                     >
                       Back
@@ -9762,7 +9842,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
                   {schoolDropdownOpen && (
                     <div className="rounded-xl border border-white/10 bg-white/10 shadow-lg overflow-hidden backdrop-blur-sm">
-                      {/* Search input */}
                       <div className="p-2 border-b border-white/10">
                         <div className="relative">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -9779,21 +9858,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           )}
                         </div>
                       </div>
-
-                      {/* School results */}
                       <div className="max-h-56 overflow-y-auto">
                         {!schoolsLoaded ? (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Loading schools...
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">Loading schools...</div>
                         ) : schoolError && allSchoolsList.length === 0 ? (
-                          <div className="px-4 py-4 text-center text-sm text-red-400">
-                            {schoolError}
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-red-400">{schoolError}</div>
                         ) : schoolFilter.trim().length < 2 ? (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Start typing to search...
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">Start typing to search...</div>
                         ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
                             key={school.id}
@@ -9808,16 +9879,12 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             <span className="text-xs text-metallic-base font-medium shrink-0 ml-3">Join</span>
                           </button>
                         )) : (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            No schools found for "{schoolFilter}"
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">No schools found for "{schoolFilter}"</div>
                         )}
                       </div>
-
-                      {/* Can't find school option */}
                       <div className="p-2 border-t border-white/10">
                         <button
-                          onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); }}
+                          onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); newCaptcha(); }}
                           className="w-full py-2 text-sm text-metallic-base hover:text-mint font-medium transition-colors"
                         >
                           Can't find your school? Add it

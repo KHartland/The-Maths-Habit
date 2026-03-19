@@ -115,7 +115,7 @@ export const createSchool = async (schoolName, town, userId) => {
   return data[0];
 };
 
-// Join a school (leaves current school first)
+// Join a school using a join code (leaves current school first)
 export const joinSchool = async (userId, schoolId) => {
   if (!userId || !schoolId) throw new Error('User ID and School ID are required');
   const token = getAuthToken();
@@ -132,6 +132,36 @@ export const joinSchool = async (userId, schoolId) => {
 
   if (!data || data.length === 0) throw new Error('Failed to join school');
   return data[0];
+};
+
+// Join a school by entering a join code
+export const joinSchoolByCode = async (userId, joinCode) => {
+  if (!userId) throw new Error('User ID is required');
+  if (!joinCode?.trim()) throw new Error('Join code is required');
+  const token = getAuthToken();
+
+  // Look up school by join code
+  const { data: schools } = await restFetch(
+    `schools?select=id,name,town&join_code=eq.${encodeURIComponent(joinCode.trim().toUpperCase())}&limit=1`,
+    { token }
+  );
+
+  if (!schools || schools.length === 0) throw new Error('Invalid join code. Check with your teacher and try again.');
+
+  const school = schools[0];
+
+  // Leave any existing school first
+  await leaveSchool(userId);
+
+  const { data } = await restFetch('school_members?select=*', {
+    method: 'POST',
+    body: JSON.stringify({ user_id: userId, school_id: school.id }),
+    prefer: 'return=representation',
+    token,
+  });
+
+  if (!data || data.length === 0) throw new Error('Failed to join school');
+  return school;
 };
 
 // Leave current school
