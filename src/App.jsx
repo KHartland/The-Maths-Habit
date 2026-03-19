@@ -1568,12 +1568,12 @@ const checkStreakMilestone = (streak) => {
 
 const PIRO_STAGES = [
   { name: 'Egg',           minStreak: 0,  image: '/images/Piro/egg.png',            video: '/images/Piro/egg.mp4' },
-  { name: 'Hatchling',     minStreak: 10, image: '/images/Piro/hatchling.png',      video: '/images/Piro/hatchling.mp4' },
-  { name: 'Smoke Flame',   minStreak: 20, image: '/images/Piro/smoke-flame.png',    video: '/images/Piro/smoke-flame.mp4' },
-  { name: 'Teal Flame',    minStreak: 30, image: '/images/Piro/teal-flame.png',     video: '/images/Piro/teal-flame.mp4' },
-  { name: 'Magenta Flame', minStreak: 40, image: '/images/Piro/magenta-flame.png',  video: '/images/Piro/magenta-flame.mp4' },
-  { name: 'Epic Piro',     minStreak: 50, image: '/images/Piro/gold-flames.png',    video: '/images/Piro/gold-flames.mp4' },
-  { name: 'Legendary Piro', minStreak: 100, image: '/images/Piro/diamond-piro.png', video: '/images/Piro/diamond-piro.mp4' },
+  { name: 'Hatchling',     minStreak: 7,  image: '/images/Piro/hatchling.png',      video: '/images/Piro/hatchling.mp4' },
+  { name: 'Smoke Flame',   minStreak: 14, image: '/images/Piro/smoke-flame.png',    video: '/images/Piro/smoke-flame.mp4' },
+  { name: 'Teal Flame',    minStreak: 21, image: '/images/Piro/teal-flame.png',     video: '/images/Piro/teal-flame.mp4' },
+  { name: 'Magenta Flame', minStreak: 28, image: '/images/Piro/magenta-flame.png',  video: '/images/Piro/magenta-flame.mp4' },
+  { name: 'Epic Piro',     minStreak: 35, image: '/images/Piro/gold-flames.png',    video: '/images/Piro/gold-flames.mp4' },
+  { name: 'Legendary Piro', minStreak: 70, image: '/images/Piro/diamond-piro.png',  video: '/images/Piro/diamond-piro.mp4' },
 ];
 
 const PIRO_OLD = { name: 'Old Piro', image: '/images/Piro/old-piro.png', video: '/images/Piro/old-piro.mp4' };
@@ -1643,8 +1643,8 @@ const updatePiro = (currentStreak, daysMissed) => {
     piro.highestStreak = currentStreak;
   }
 
-  // Check if reached Epic Piro (50-day streak)
-  if (piro.highestStreak >= 50) {
+  // Check if reached Epic Piro (35-day streak)
+  if (piro.highestStreak >= 35) {
     piro.reachedEpic = true;
   }
 
@@ -1772,7 +1772,7 @@ const getPiroNudge = (piro, dayStreak, todayQuestions, dailyGoal) => {
 
   // Egg stage - encourage first streak
   if (piro.stage === 0 && piro.highestStreak === 0) {
-    return "Build a 10-day streak to hatch Piro!";
+    return "Build a 7-day streak to hatch Piro!";
   }
 
   // Evolution is close (within 3 days)
@@ -7558,7 +7558,7 @@ What is the student's answer?`
 
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
-      <LandscapePrompt />
+      {/* Portrait is the default — no orientation prompt */}
       <div className="ambient-glow" style={{ animationPlayState: 'paused' }} />
       <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
       <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
@@ -11423,10 +11423,7 @@ function AppContent() {
       <div className="orb-cyan w-72 h-72 bottom-20 right-10 opacity-60 fixed pointer-events-none hidden md:block" />
       <div className="orb-pink w-48 h-48 top-1/4 left-1/3 opacity-50 fixed pointer-events-none" />
 
-      {/* Portrait Prompt — shown after practice when still in landscape */}
-      {recentSessionCodes.length > 0 && !showCelebration && (
-        <PortraitPrompt onDismiss={() => {}} />
-      )}
+      {/* No orientation prompts — portrait is default */}
 
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
@@ -11605,82 +11602,7 @@ function AppContent() {
   );
 }
 
-// Landscape prompt — asks mobile users to rotate to landscape
-function LandscapePrompt() {
-  const [isPortrait, setIsPortrait] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 1024 && window.innerHeight > window.innerWidth;
-  });
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    const checkOrientation = () => {
-      const isMobile = window.innerWidth < 1024;
-      const portrait = window.innerHeight > window.innerWidth;
-      setIsPortrait(isMobile && portrait);
-    };
-
-    checkOrientation();
-    window.addEventListener('resize', checkOrientation);
-
-    const onOrientationChange = () => setTimeout(checkOrientation, 150);
-    window.addEventListener('orientationchange', onOrientationChange);
-
-    // Try to lock orientation in PWA / fullscreen mode
-    try {
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-      }
-    } catch (e) {}
-
-    return () => {
-      window.removeEventListener('resize', checkOrientation);
-      window.removeEventListener('orientationchange', onOrientationChange);
-    };
-  }, []);
-
-  if (!isPortrait || dismissed) return null;
-
-  return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 99999, backgroundColor: '#0a0a1a',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: '2rem', textAlign: 'center'
-    }}>
-      {/* Phone rotation animation */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Phone in portrait */}
-          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
-          {/* Phone rotated to landscape */}
-          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
-          <circle cx="54" cy="44" r="2" fill="#5B7FC7" />
-          {/* Arrow showing rotation */}
-          <path d="M52 14 C60 14, 66 20, 66 28" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M63 26 L66 28 L68 25" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
-        Turn your phone sideways
-      </h2>
-      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
-        The Maths Habit is designed for landscape mode
-      </p>
-      <button
-        onClick={() => setDismissed(true)}
-        style={{
-          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
-          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
-          cursor: 'pointer'
-        }}
-      >
-        Continue in portrait
-      </button>
-    </div>
-  );
-}
+// LandscapePrompt removed — portrait is now the default orientation
 
 function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   if (!show || !objectives || objectives.length === 0) return null;
@@ -11841,69 +11763,7 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   );
 }
 
-function PortraitPrompt({ onDismiss }) {
-  const [isLandscape, setIsLandscape] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 1024 && window.innerWidth > window.innerHeight;
-  });
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    const check = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsLandscape(mobile && window.innerWidth > window.innerHeight);
-    };
-    check();
-    window.addEventListener('resize', check);
-    const onOr = () => setTimeout(check, 150);
-    window.addEventListener('orientationchange', onOr);
-    return () => {
-      window.removeEventListener('resize', check);
-      window.removeEventListener('orientationchange', onOr);
-    };
-  }, []);
-
-  if (!isLandscape || dismissed) return null;
-
-  return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 99999, backgroundColor: '#0a0a1a',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: '2rem', textAlign: 'center'
-    }}>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Phone in landscape */}
-          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
-          {/* Phone rotated to portrait */}
-          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
-          <circle cx="40" cy="52" r="2" fill="#5B7FC7" />
-          {/* Arrow showing rotation back */}
-          <path d="M14 20 C14 12, 20 6, 28 6" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M26 3 L28 6 L25 8" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
-        Rotate back to portrait
-      </h2>
-      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
-        Turn your phone upright to see your progress on the heatmap
-      </p>
-      <button
-        onClick={() => setDismissed(true)}
-        style={{
-          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
-          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
-          cursor: 'pointer'
-        }}
-      >
-        Continue in landscape
-      </button>
-    </div>
-  );
-}
+// PortraitPrompt removed — portrait is now the default orientation
 
 // Main App wrapper with AuthProvider
 export default function App() {
