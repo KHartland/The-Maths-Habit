@@ -7110,37 +7110,33 @@ What is the student's answer?`
       // Session complete - cleanup timers
       setTimeLeft(null);
 
-      // Build celebration data FIRST — before anything that could throw
-      try {
-        const celebResults = [...sessionResults, { correct: isCorrect, code: current.objective.code, topic: current.objective.topic }];
-        const celebCodes = [...new Set(celebResults.map(r => r.code))];
-        const celebObjectives = celebCodes.map(code => {
-          const obj = allObjectives.find(o => o.code === code);
-          const primary = questionBankPrimary[code] || code;
-          const resultsForCode = celebResults.filter(r => r.code === code);
-          const correctForCode = resultsForCode.filter(r => r.correct).length;
-          const latestResult = [...resultsForCode].reverse().find(r => r.newQuickCorrect !== undefined);
-          const qc = latestResult?.newQuickCorrect ?? (progress[code]?.quickCorrect ?? 0);
-          const level = qc >= 5 ? 5 : qc;
-          const displayTitle = questionBankLabel[primary] || descriptions[primary] || obj?.title || code;
-          return {
-            code: primary !== code ? primary : code,
-            title: displayTitle,
-            topic: obj?.topic || 'Unknown',
-            level,
-            quickCorrect: qc,
-            mastered: qc >= 5,
-            correctInSession: correctForCode,
-            totalInSession: resultsForCode.length,
-          };
-        });
-        setLocalCelebration({ objectives: celebObjectives, index: 0 });
-        setRecentSessionCodes(celebCodes);
-      } catch (celebErr) {
-        console.error('Celebration build error:', celebErr);
-      }
+      // Build celebration from sessionResults — kept simple to avoid errors
+      const lastAnswer = { correct: !!isCorrect, code: current?.objective?.code || '??', topic: current?.objective?.topic || 'Unknown', newQuickCorrect: undefined };
+      const allAnswers = [...sessionResults, lastAnswer];
+      const codes = [...new Set(allAnswers.filter(r => r.code).map(r => r.code))];
+      const celebObjs = codes.map(code => {
+        const rForCode = allAnswers.filter(r => r.code === code);
+        const correctN = rForCode.filter(r => r.correct).length;
+        const totalN = rForCode.length;
+        const last = [...rForCode].reverse().find(r => r.newQuickCorrect !== undefined);
+        const qc = last?.newQuickCorrect ?? (progress[code]?.quickCorrect ?? 0);
+        return {
+          code,
+          title: descriptions[code] || code,
+          topic: rForCode[0]?.topic || 'Unknown',
+          level: Math.min(qc, 5),
+          quickCorrect: qc,
+          mastered: qc >= 5,
+          correctInSession: correctN,
+          totalInSession: totalN,
+        };
+      });
 
-      // Stop feedback and session
+      // Set celebration, stop feedback, clear session
+      if (celebObjs.length > 0) {
+        setLocalCelebration({ objectives: celebObjs, index: 0 });
+      }
+      setRecentSessionCodes(codes);
       setShowFeedback(false);
       setSessionResults([]);
       setSessionStarted(false);
