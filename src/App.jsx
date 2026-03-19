@@ -10683,6 +10683,12 @@ function AppContent() {
       }
     } catch (e) { /* ignore */ }
 
+    // Check if any stone (never-practised) objectives remain
+    const hasStoneGems = allObjectives.some(obj => {
+      const prog = progress[obj.code];
+      return !prog || (!(prog.quickCorrect) && !(prog.lastPracticed));
+    });
+
     return allObjectives.map(obj => {
       const prog = progress[obj.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
@@ -10695,10 +10701,15 @@ function AppContent() {
         return { ...obj, weight: 50 };
       }
 
+      // If there are still stone gems, don't show mastered (gold) objectives
+      if (hasStoneGems && quickCorrect >= 5) {
+        return { ...obj, weight: 0 };
+      }
+
       // Weight: lower progress = higher weight, longer time since practice = higher weight
       let progressWeight;
       if (quickCorrect >= 5) {
-        progressWeight = 1; // Mastered - low priority
+        progressWeight = 1; // Mastered - low priority (only shown when no stone gems left)
       } else if (quickCorrect >= 4) {
         progressWeight = 3; // Nearly there - medium priority
       } else {
@@ -10742,24 +10753,28 @@ function AppContent() {
       }
     }
 
+    // Filter out zero-weight objectives (e.g. mastered when stone gems exist)
+    const pickable = available.filter(o => o.weight > 0);
+
     // Fill remaining slots with weighted random
-    for (let i = selected.length; i < 5 && available.length > 0; i++) {
-      const totalWeight = available.reduce((sum, obj) => sum + obj.weight, 0);
+    for (let i = selected.length; i < 5 && pickable.length > 0; i++) {
+      const totalWeight = pickable.reduce((sum, obj) => sum + obj.weight, 0);
+      if (totalWeight <= 0) break;
       let rand = seededRandom(i + 100) * totalWeight;
 
-      for (let j = 0; j < available.length; j++) {
-        rand -= available[j].weight;
+      for (let j = 0; j < pickable.length; j++) {
+        rand -= pickable[j].weight;
         if (rand <= 0) {
-          selected.push(available[j]);
-          available.splice(j, 1);
+          selected.push(pickable[j]);
+          pickable.splice(j, 1);
           break;
         }
       }
     }
 
-    // Fallback: if selection failed, just take first 5
+    // Fallback: if selection failed, take from non-zero-weight objectives first
     if (selected.length < 5) {
-      const remaining = weighted.filter(w => !selected.find(s => s.code === w.code));
+      const remaining = weighted.filter(w => w.weight > 0 && !selected.find(s => s.code === w.code));
       while (selected.length < 5 && remaining.length > 0) {
         selected.push(remaining.shift());
       }
@@ -11258,9 +11273,8 @@ function AppContent() {
               {!loadShownTips().includes('heatmapExplainer') && (
                 <div className="mb-4 p-4 glass-panel rounded-xl border border-violet/30 animate-fade-in">
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">🗺️</span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
+                      <p className="text-sm font-medium text-white mb-2">How the heatmap works</p>
                       <div className="space-y-1.5 text-xs text-secondary-text">
                         <div className="flex items-center gap-2">
                           <img src={TILE_IMAGES[0]} alt="Stone" className="w-5 h-5 rounded-sm object-cover shrink-0" />
