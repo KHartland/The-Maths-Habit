@@ -7317,36 +7317,12 @@ What is the student's answer?`
         practicedObjectives,
       });
 
-      // Navigate to home where CelebrationCarousel shows per-objective progress
+      // Show celebration overlay (renders on top of practice page)
       setShowFeedback(false);
       setSessionResults([]);
       setSessionStarted(false);
-      setCurrentPage('home');
       } catch (err) {
         console.error('Session complete error:', err);
-        // Still try to show celebration with whatever data we have
-        const fallbackResults = [...sessionResults];
-        const fallbackCodes = [...new Set(fallbackResults.map(r => r.code))];
-        const fallbackObjectives = fallbackCodes.map(code => {
-          const obj = allObjectives.find(o => o.code === code);
-          const prog = progress[code];
-          return {
-            code,
-            title: descriptions[code] || obj?.title || code,
-            topic: obj?.topic || 'Unknown',
-            level: getUnderstandingLevel(prog),
-            quickCorrect: prog?.quickCorrect ?? 0,
-            mastered: (prog?.quickCorrect ?? 0) >= 5,
-            correctInSession: fallbackResults.filter(r => r.code === code && r.correct).length,
-            totalInSession: fallbackResults.filter(r => r.code === code).length,
-          };
-        });
-        if (fallbackObjectives.length > 0) {
-          setRecentSessionCodes(fallbackCodes);
-          setCelebrationIndex(0);
-          setShowCelebration(true);
-          setSessionToastData({ correctCount: 0, totalQuestions: 0, accuracy: 0, achievements: [], practicedObjectives: fallbackObjectives });
-        }
         setShowFeedback(false);
         setSessionResults([]);
         setSessionStarted(false);
@@ -11098,10 +11074,54 @@ function AppContent() {
     );
   }
 
+  // ==================== GLOBAL OVERLAYS (render on ALL pages) ====================
+  const celebrationOverlay = (
+    <>
+      <CelebrationCarousel
+        show={showCelebration}
+        objectives={sessionToastData?.practicedObjectives || []}
+        currentIndex={celebrationIndex}
+        onAdvance={() => {
+          const objs = sessionToastData?.practicedObjectives || [];
+          if (celebrationIndex >= objs.length - 1) {
+            setShowCelebration(false);
+            setCelebrationIndex(0);
+            setCurrentPage('home');
+            setTimeout(() => {
+              setSessionToastData(null);
+              setRecentSessionCodes([]);
+            }, 5000);
+          } else {
+            setCelebrationIndex(prev => prev + 1);
+          }
+        }}
+      />
+      {piroEvolution && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
+          <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
+            <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
+            <p className="text-secondary-text mb-4">
+              {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
+            </p>
+            <div className="w-40 h-40 mx-auto mb-4 rounded-2xl overflow-hidden flex items-center justify-center">
+              <PiroMedia display={PIRO_STAGES[piroEvolution.newStage]} className="w-full h-full object-cover rounded-2xl" />
+            </div>
+            <button
+              onClick={() => setPiroEvolution(null)}
+              className="btn-gradient-mint px-8 py-3 text-white font-bold rounded-full"
+            >
+              Amazing!
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
-      <PracticePage
+      <>{celebrationOverlay}<PracticePage
         dailyObjectives={dailyObjectives}
         progress={progress}
         setProgress={setProgress}
@@ -11124,7 +11144,7 @@ function AppContent() {
         setDiamondProgress={setDiamondProgress}
         saveDiamondProgress={saveDiamondProgress}
         diamondObjectives={diamondObjectives}
-      />
+      /></>
     );
   }
 
@@ -11498,46 +11518,7 @@ function AppContent() {
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      {/* Full-screen celebration carousel */}
-      <CelebrationCarousel
-        show={showCelebration}
-        objectives={sessionToastData?.practicedObjectives || []}
-        currentIndex={celebrationIndex}
-        onAdvance={() => {
-          const objs = sessionToastData?.practicedObjectives || [];
-          if (celebrationIndex >= objs.length - 1) {
-            setShowCelebration(false);
-            setCelebrationIndex(0);
-            setTimeout(() => {
-              setSessionToastData(null);
-              setRecentSessionCodes([]);
-            }, 5000);
-          } else {
-            setCelebrationIndex(prev => prev + 1);
-          }
-        }}
-      />
-
-      {/* Piro Evolution Celebration Modal */}
-      {piroEvolution && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
-          <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
-            <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
-            <p className="text-secondary-text mb-4">
-              {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
-            </p>
-            <div className="w-40 h-40 mx-auto mb-4 rounded-2xl overflow-hidden flex items-center justify-center">
-              <PiroMedia display={PIRO_STAGES[piroEvolution.newStage]} className="w-full h-full object-cover rounded-2xl" />
-            </div>
-            <button
-              onClick={() => setPiroEvolution(null)}
-              className="btn-gradient-mint px-8 py-3 text-white font-bold rounded-full"
-            >
-              Amazing!
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Celebration & Piro evolution now render globally via celebrationOverlay */}
 
       {/* Main Content */}
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
