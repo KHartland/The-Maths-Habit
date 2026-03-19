@@ -7314,14 +7314,17 @@ What is the student's answer?`
         practicedObjectives,
       });
 
-      // Show the results screen (sessionResults kept intact so results screen renders)
+      // Navigate to home where CelebrationCarousel shows per-objective progress
       setShowFeedback(false);
+      setSessionResults([]);
       setSessionStarted(false);
+      setCurrentPage('home');
       } catch (err) {
         console.error('Session complete error:', err);
-        // Still show results screen even if stats fail
         setShowFeedback(false);
+        setSessionResults([]);
         setSessionStarted(false);
+        setCurrentPage('home');
       }
     }
   };
