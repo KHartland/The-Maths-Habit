@@ -6533,6 +6533,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
   const [masteryGained, setMasteryGained] = useState(0);
   const [achievements, setAchievements] = useState([]);
+  const [localCelebration, setLocalCelebration] = useState(null); // { objectives, index }
   const [practiceMode, setPracticeMode] = useState('standard'); // 'standard', 'quickfire', or 'exam'
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
@@ -7305,22 +7306,12 @@ What is the student's answer?`
         };
       });
 
-      // Set celebration data BEFORE navigating (all batched in one render)
+      // Show celebration carousel locally inside PracticePage
       setRecentSessionCodes(practicedCodes);
-      setCelebrationIndex(0);
-      setShowCelebration(true);
-      setSessionToastData({
-        correctCount,
-        totalQuestions,
-        accuracy: Math.round((correctCount / totalQuestions) * 100),
-        achievements: newAchievements,
-        practicedObjectives,
-      });
-
-      // Show celebration overlay (renders on top of practice page)
       setShowFeedback(false);
       setSessionResults([]);
       setSessionStarted(false);
+      setLocalCelebration({ objectives: practicedObjectives, index: 0 });
       } catch (err) {
         console.error('Session complete error:', err);
         setShowFeedback(false);
@@ -7343,6 +7334,26 @@ What is the student's answer?`
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
         </div>
       </div>
+    );
+  }
+
+  // Celebration carousel — shows per-objective progress after session
+  if (localCelebration) {
+    return (
+      <CelebrationCarousel
+        show={true}
+        objectives={localCelebration.objectives}
+        currentIndex={localCelebration.index}
+        onAdvance={() => {
+          const objs = localCelebration.objectives;
+          if (localCelebration.index >= objs.length - 1) {
+            setLocalCelebration(null);
+            setCurrentPage('home');
+          } else {
+            setLocalCelebration(prev => ({ ...prev, index: prev.index + 1 }));
+          }
+        }}
+      />
     );
   }
 
@@ -11074,54 +11085,10 @@ function AppContent() {
     );
   }
 
-  // ==================== GLOBAL OVERLAYS (render on ALL pages) ====================
-  const celebrationOverlay = (
-    <>
-      <CelebrationCarousel
-        show={showCelebration}
-        objectives={sessionToastData?.practicedObjectives || []}
-        currentIndex={celebrationIndex}
-        onAdvance={() => {
-          const objs = sessionToastData?.practicedObjectives || [];
-          if (celebrationIndex >= objs.length - 1) {
-            setShowCelebration(false);
-            setCelebrationIndex(0);
-            setCurrentPage('home');
-            setTimeout(() => {
-              setSessionToastData(null);
-              setRecentSessionCodes([]);
-            }, 5000);
-          } else {
-            setCelebrationIndex(prev => prev + 1);
-          }
-        }}
-      />
-      {piroEvolution && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
-          <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
-            <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
-            <p className="text-secondary-text mb-4">
-              {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
-            </p>
-            <div className="w-40 h-40 mx-auto mb-4 rounded-2xl overflow-hidden flex items-center justify-center">
-              <PiroMedia display={PIRO_STAGES[piroEvolution.newStage]} className="w-full h-full object-cover rounded-2xl" />
-            </div>
-            <button
-              onClick={() => setPiroEvolution(null)}
-              className="btn-gradient-mint px-8 py-3 text-white font-bold rounded-full"
-            >
-              Amazing!
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
-      <>{celebrationOverlay}<PracticePage
+      <PracticePage
         dailyObjectives={dailyObjectives}
         progress={progress}
         setProgress={setProgress}
@@ -11144,7 +11111,7 @@ function AppContent() {
         setDiamondProgress={setDiamondProgress}
         saveDiamondProgress={saveDiamondProgress}
         diamondObjectives={diamondObjectives}
-      /></>
+      />
     );
   }
 
@@ -11518,7 +11485,26 @@ function AppContent() {
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-      {/* Celebration & Piro evolution now render globally via celebrationOverlay */}
+      {/* Piro Evolution Celebration Modal */}
+      {piroEvolution && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
+          <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
+            <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
+            <p className="text-secondary-text mb-4">
+              {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
+            </p>
+            <div className="w-40 h-40 mx-auto mb-4 rounded-2xl overflow-hidden flex items-center justify-center">
+              <PiroMedia display={PIRO_STAGES[piroEvolution.newStage]} className="w-full h-full object-cover rounded-2xl" />
+            </div>
+            <button
+              onClick={() => setPiroEvolution(null)}
+              className="btn-gradient-mint px-8 py-3 text-white font-bold rounded-full"
+            >
+              Amazing!
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="pt-20 pb-28 md:pb-10 relative z-10">
