@@ -8357,8 +8357,6 @@ What is the student's answer?`
                       </div>
                     ) : (
                       <div className="space-y-3 answer-section">
-                        {/* Type input */}
-                          <>
                             {/* Input with math keyboard toggle */}
                             <div className="relative">
                               <input
@@ -8623,7 +8621,6 @@ What is the student's answer?`
                                   ))}
                                 </>
                               )}
-                          </>
 
                         <button
                           onClick={() => checkAnswer()}
@@ -8634,8 +8631,6 @@ What is the student's answer?`
                         </button>
                       </div>
                     )}
-                  </>
-                )}
 
                 {/* Feedback */}
                 {showFeedback && (
