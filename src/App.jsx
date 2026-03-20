@@ -5546,33 +5546,6 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
   }));
 };
 
-// Get question for objective based on progress and tier
-const getQuestion = (objective, progressData, tier = 'foundation') => {
-  const prog = progressData?.[objective.code];
-  const quickCorrect = prog?.quickCorrect ?? 0;
-
-  // Get the appropriate question bank for this tier
-  const qBank = getQuestionBankForTier(tier);
-  const questions = qBank[objective.code];
-  if (questions && questions.length > 0) {
-    // Sequential progression: pick the question at the student's current level, with random variant
-    const questionIndex = Math.min(quickCorrect, questions.length - 1);
-    const q = pickVariant(questions[questionIndex]);
-    const questionType = quickCorrect >= 5 ? 'review' : 'quick';
-    return { ...q, objective, questionType, difficultyLevel: questionIndex + 1 };
-  }
-
-  // Fallback: generic question (should never trigger with full coverage)
-  return {
-    q: `True or false: "${objective.title}" is a GCSE maths topic.`,
-    a: "True",
-    type: "mcq",
-    options: ["True", "False"],
-    objective,
-    questionType: 'quick',
-  };
-};
-
 // Diamond question getter — picks from diamondQuestionBank based on diamond progress
 const getDiamondQuestion = (objective, diamondProg) => {
   const dp = diamondProg?.[objective.code];
@@ -5880,9 +5853,12 @@ What is the student's answer?`
 
     if (mode === 'quickfire') {
       // Quick Fire mode: ONLY use objectives that have MCQ questions
+      // Check nested structure: qBank[code] = [[v1,v2,...], [v1,v2,...], ...] (levels of variants)
       const objectivesWithMCQ = allObjectives.filter(obj => {
-        const questions = qBank[obj.code];
-        return questions && questions.some(q => q.type === 'mcq');
+        const levels = qBank[obj.code];
+        return levels && levels.some(level =>
+          Array.isArray(level) && level.some(v => v.type === 'mcq')
+        );
       });
 
       if (objectivesWithMCQ.length === 0) {
@@ -5906,10 +5882,15 @@ What is the student's answer?`
           if (item.question?.type === 'mcq') {
             return { ...item.question, objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1, _fsrsQuestionId: item.questionId };
           }
-          // Fallback: pick a random MCQ from the objective
-          const mcqQuestions = qBank[item.objective?.code]?.filter(q => q.type === 'mcq') || [];
-          const mcq = mcqQuestions[Math.floor(Math.random() * mcqQuestions.length)];
-          return { ...(mcq || {}), objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1 };
+          // Fallback: pick a random MCQ variant from any level of this objective
+          const levels = qBank[item.objective?.code] || [];
+          const allMcqVariants = levels.flatMap(level =>
+            Array.isArray(level) ? level.filter(v => v.type === 'mcq') : []
+          );
+          const mcq = allMcqVariants.length > 0
+            ? allMcqVariants[Math.floor(Math.random() * allMcqVariants.length)]
+            : null;
+          return { ...(mcq || item.question || {}), objective: item.objective, questionType: 'quick', difficultyLevel: (item.questionIndex ?? 0) + 1, _fsrsQuestionId: item.questionId };
         });
       }
     } else {
