@@ -8142,7 +8142,7 @@ What is the student's answer?`
       <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
       <div className="orb-pink w-40 h-40 top-1/3 right-0 opacity-50 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
 
-      <div className="pt-2 pb-0 px-4 relative z-10 page-content">
+      <div className="pb-0 px-4 relative z-10 page-content" style={{ paddingTop: 'max(env(safe-area-inset-top, 0px), 8px)' }}>
         <div className="max-w-lg mx-auto content-container">
           {/* Question card */}
           {current && (
