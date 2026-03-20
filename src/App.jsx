@@ -3071,7 +3071,7 @@ const goldQuestionBank = {
     [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2' }], // Grade 2
     [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1' }], // Grade 3
     [{ q: 'For the function y = x² − 3, write down the coordinates of the turning point.', a: '(0, −3)', type: 'text' }], // Grade 4
-    [{ q: 'A student says that y = 1/x is a straight line. Is this correct? Explain your answer.', a: 'No', type: 'mcq' }], // Grade 5
+    [{ q: 'What type of graph does y = 1/x produce?', a: 'A curved reciprocal graph', type: 'mcq', options: ['A straight line', 'A parabola', 'A curved reciprocal graph', 'A circle'], worked: ['y = 1/x is a reciprocal function', 'As x increases, y decreases but never reaches 0', 'The graph has two curved branches — it is not a straight line'] }], // Grade 5
   ],
   'A17': [ // Obj 13: Solving Linear Equations
     [{ q: 'What number added to 3 gives 10?', a: '7' }], // Grade 1
@@ -3407,7 +3407,7 @@ const goldQuestionBank = {
     [{ q: 'A bar chart axis increases in steps of 4. Where does a frequency of 18 appear on the axis?', a: '16 and 20', type: 'mcq' }], // Grade 2
     [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. What is the biggest gender difference among these subjects?', a: 'Drama', type: 'mcq' }], // Grade 3
     [{ q: 'On Monday, 4 symbols represent 48 people in a pictogram. On Tuesday, there are 2.5 symbols. How many people are represented on Tuesday?', a: '30' }], // Grade 4
-    [{ q: 'A bar chart shows bars of different widths representing different frequencies. Is this a valid bar chart? Explain your answer.', a: 'No', type: 'mcq' }], // Grade 5
+    [{ q: 'In a valid bar chart, what must be true about the bars?', a: 'They must all have equal width', type: 'mcq', options: ['They must all have equal width', 'They must all have different widths', 'They must touch each other', 'They must be in order of size'], worked: ['In a bar chart, the height represents frequency', 'All bars must have the same width so comparisons are fair', 'If bars had different widths, the visual would be misleading'] }], // Grade 5
   ],
   'P6': [ // Obj 27: Venn Diagrams
     [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
@@ -3463,7 +3463,7 @@ const goldQuestionBank = {
     [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' }], // Grade 2
     [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. Write down the type of correlation.', a: 'Positive', type: 'mcq' }], // Grade 3
     [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate the value of y when x = 45.', a: '55' }], // Grade 4
-    [{ q: 'A line of best fit covers data from x = 10 to x = 50. A student uses it to predict y when x = 100. Is this reliable? Explain your answer.', a: 'No', type: 'mcq' }], // Grade 5
+    [{ q: 'A line of best fit covers data from x = 10 to x = 50. A student uses it to predict y when x = 100. What is this called?', a: 'Extrapolation — it is unreliable', type: 'mcq', options: ['Interpolation — it is reliable', 'Extrapolation — it is unreliable', 'Correlation — it is always accurate', 'Estimation — it is guaranteed'], worked: ['The data only covers x = 10 to x = 50', 'Predicting at x = 100 is far outside this range', 'This is extrapolation and is unreliable because the pattern may not continue'] }], // Grade 5
   ],
 };
 
@@ -5427,7 +5427,7 @@ const higherQuestionBank = {
     ],
     // Level 1 (Grade 7) — Interpret gradients on real-life graphs
     [
-      { q: "Explain why the area under a velocity-time graph represents distance.", a: "Area = velocity × time = distance, since the units are m/s × s = m", worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
+      { q: "What does the area under a velocity-time graph represent?", a: "Distance", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Force"], worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
       { q: "What does the gradient of a velocity-time graph represent?", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], a: "Acceleration", worked: ["Gradient = change in velocity ÷ change in time", "= (m/s) ÷ s = m/s²", "This is acceleration"], hint: "The gradient is the rate of change. Rate of change of velocity is..." },
       { q: "Calculate the distance travelled in 5 seconds from a velocity-time graph showing constant speed of 8 m/s.", a: "40", worked: ["Distance = area under the graph", "= velocity × time = 8 × 5 = 40 m"], hint: "For constant speed, the area is a rectangle" },
     ],
@@ -5729,7 +5729,7 @@ const higherQuestionBank = {
     [
       { q: "Estimate the mean from a grouped frequency table: 0-10 (f=5), 10-20 (f=12), 20-30 (f=8), 30-40 (f=5). Use midpoints.", a: "19", calculator: true, worked: ["Midpoints: 5, 15, 25, 35", "Σfx = 5(5) + 12(15) + 8(25) + 5(35)", "= 25 + 180 + 200 + 175 = 580", "Σf = 30", "Estimated mean = 580 ÷ 30 ≈ 19.3"], hint: "Use midpoints of each class. Estimated mean = Σ(f × midpoint) ÷ Σf" },
       { q: "Find the modal class and the class containing the median for: 0-10 (f=3), 10-20 (f=8), 20-30 (f=12), 30-40 (f=7).", a: "Modal class: 20-30, Median class: 20-30", worked: ["Modal class = highest frequency = 20-30 (f=12)", "Total = 30, median at 15th value", "Cumulative: 3, 11, 23...", "15th value is in the 20-30 class"], hint: "Modal class has the highest frequency. For the median class, use cumulative frequencies" },
-      { q: "Explain why the mean calculated from a grouped frequency table is only an estimate.", a: "Because we use midpoints to represent each class, not the actual data values", worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
+      { q: "Why is the mean from a grouped frequency table only an estimate?", a: "We use midpoints, not the actual data values", type: "mcq", options: ["The frequencies are rounded", "We use midpoints, not the actual data values", "The classes overlap", "The total frequency is approximate"], worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
     ],
     // Level 4 (Grade 8–9) — Box plots, IQR, outliers
     [
@@ -6087,8 +6087,8 @@ const higherQuestionBank = {
     ],
     // Level 4 (Grade 8) — Reasoning about reliability / extended problems
     [
-      { q: "Explain why relative frequency becomes a more reliable estimate of probability as the number of trials increases.", a: "As the number of trials increases, the relative frequency gets closer to the true probability because random variation has less effect on a larger sample", worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
-      { q: "Two people conduct the same experiment: Person A does 10 trials, Person B does 1000 trials. Whose estimate is more reliable and why?", a: "Person B, because more trials reduces the effect of random variation", worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
+      { q: "Why does relative frequency become more reliable as the number of trials increases?", a: "Random variation has less effect on larger samples", type: "mcq", options: ["The experiment changes over time", "Random variation has less effect on larger samples", "The probability itself increases", "The outcomes become more predictable"], worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
+      { q: "Person A does 10 trials and Person B does 1000 trials of the same experiment. Whose probability estimate is more reliable?", a: "Person B — more trials gives a better estimate", type: "mcq", options: ["Person A — fewer trials means less error", "Person B — more trials gives a better estimate", "Both are equally reliable", "Neither — you need the theoretical probability"], worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
       { q: "If the relative frequency of an event is 7/25 over 200 trials, how many more times should it occur in the next 100 trials?", a: "28", worked: ["Estimated probability = 7/25 = 0.28", "Expected in next 100 trials = 0.28 × 100 = 28"], hint: "Use the relative frequency as your probability estimate, then multiply by 100" },
     ],
   ],
@@ -6197,7 +6197,7 @@ const higherQuestionBank = {
     [
       { q: "A dual bar chart shows Group A scored a mean of 65 and Group B scored 72 across 5 tests. Find the difference in their means.", a: "7", worked: ["Mean of Group A = 65", "Mean of Group B = 72", "Difference = 72 − 65 = 7"], hint: "Subtract the smaller mean from the larger" },
       { q: "A frequency polygon has its highest point at the 20-30 class. The frequency is 15. What does this tell you?", a: "The modal class is 20-30 with 15 data values in that interval", worked: ["The highest point on a frequency polygon shows the modal class", "Modal class = 20-30", "15 data values fall in this interval"], hint: "The highest point on a frequency polygon shows the most common class interval" },
-      { q: "A chart has a y-axis starting at 50 instead of 0. Explain why this could be misleading.", a: "It exaggerates differences between bars because the scale doesn't start at zero", worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
+      { q: "A chart has a y-axis starting at 50 instead of 0. Why could this be misleading?", a: "It exaggerates differences between bars", type: "mcq", options: ["It makes all bars look the same height", "It exaggerates differences between bars", "It hides the data completely", "It changes the actual values"], worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
     ],
   ],
 };
