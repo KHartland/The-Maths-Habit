@@ -8785,7 +8785,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                         : "text-secondary-text hover:text-white hover:bg-white/10"
                     }`}
                   >
-                    <Icon className="w-6 h-6" />
+                    <Icon className="w-9 h-9" />
                     {item.label}
                   </button>
                 );
@@ -8814,7 +8814,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                       : "text-secondary-text hover:text-white"
                   }`}
                 >
-                  <Icon className={`w-7 h-7 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : 'opacity-60'}`} />
+                  <Icon className={`w-10 h-10 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : 'opacity-60'}`} />
                   <span className="text-xs font-medium">{item.label}</span>
                 </button>
               );
