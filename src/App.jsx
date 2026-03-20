@@ -10809,43 +10809,62 @@ function AppContent() {
     refreshProfile
   } = useAuth();
 
-  // Auto-logout after 30 minutes of inactivity — ensures fresh updates on next login
-  const signOutRef = useRef(signOut);
-  signOutRef.current = signOut;
+  // Auto-logout after 30 minutes of inactivity — uses localStorage timestamps
+  // so it works across page visibility changes and doesn't interfere with React state
   useEffect(() => {
-    if (!user) return; // Only track when logged in
-
+    const INACTIVITY_KEY = 'maths-habit-last-activity';
     const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-    let lastActivity = Date.now();
 
-    const resetActivity = () => { lastActivity = Date.now(); };
+    // Stamp activity on every interaction
+    const stampActivity = () => {
+      localStorage.setItem(INACTIVITY_KEY, String(Date.now()));
+    };
 
-    const checkInactivity = async () => {
-      if (Date.now() - lastActivity >= INACTIVITY_TIMEOUT) {
-        // Sign out and reload to pull latest app version
-        await signOutRef.current();
+    // Check on visibility change (when user returns to the app)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== 'visible') return;
+      const last = Number(localStorage.getItem(INACTIVITY_KEY) || Date.now());
+      if (Date.now() - last >= INACTIVITY_TIMEOUT) {
+        // Clear auth and reload — supabase will see no session on reload
         localStorage.removeItem('maths-habit-onboarding-complete');
-        window.location.reload();
+        localStorage.removeItem(INACTIVITY_KEY);
+        // Use supabase signOut directly via the global client to avoid React state issues
+        import('./lib/supabase').then(({ supabase }) => {
+          supabase.auth.signOut().finally(() => window.location.reload());
+        }).catch(() => window.location.reload());
       }
     };
 
-    // Track user interactions
-    window.addEventListener('touchstart', resetActivity, { passive: true });
-    window.addEventListener('mousedown', resetActivity);
-    window.addEventListener('keydown', resetActivity);
-    window.addEventListener('scroll', resetActivity, { passive: true });
+    // Stamp on load
+    stampActivity();
 
-    // Check every 60 seconds
-    const checkInterval = setInterval(checkInactivity, 60 * 1000);
+    window.addEventListener('touchstart', stampActivity, { passive: true });
+    window.addEventListener('mousedown', stampActivity);
+    window.addEventListener('keydown', stampActivity);
+    window.addEventListener('scroll', stampActivity, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Also check periodically while app is open
+    const checkInterval = setInterval(() => {
+      const last = Number(localStorage.getItem(INACTIVITY_KEY) || Date.now());
+      if (Date.now() - last >= INACTIVITY_TIMEOUT) {
+        localStorage.removeItem('maths-habit-onboarding-complete');
+        localStorage.removeItem(INACTIVITY_KEY);
+        import('./lib/supabase').then(({ supabase }) => {
+          supabase.auth.signOut().finally(() => window.location.reload());
+        }).catch(() => window.location.reload());
+      }
+    }, 60 * 1000);
 
     return () => {
-      window.removeEventListener('touchstart', resetActivity);
-      window.removeEventListener('mousedown', resetActivity);
-      window.removeEventListener('keydown', resetActivity);
-      window.removeEventListener('scroll', resetActivity);
+      window.removeEventListener('touchstart', stampActivity);
+      window.removeEventListener('mousedown', stampActivity);
+      window.removeEventListener('keydown', stampActivity);
+      window.removeEventListener('scroll', stampActivity);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(checkInterval);
     };
-  }, [user]);
+  }, []); // Empty deps — runs once on mount, never re-runs
 
   // Prompt users without a display name to add one
   useEffect(() => {
@@ -12130,10 +12149,6 @@ function AppContent() {
                               background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
                             }} />
                           )}
-                          {/* Objective code label */}
-                          <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] font-bold text-white/80 z-[3] pb-0.5" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
-                            {obj.code}
-                          </span>
                         </div>
                       );
                     })}
