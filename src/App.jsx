@@ -8710,14 +8710,14 @@ What is the student's answer?`
 
                     
 
-                        {/* Worked Example - show when incorrect and question has worked steps */}
-                        {!isCorrect && current.worked && (
-                          <details className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden">
-                            <summary className="p-4 cursor-pointer font-semibold text-blue-300 hover:bg-blue-500/15 transition-colors flex items-center gap-2">
-                              <BookOpen className="w-5 h-5" />
-                              View Worked Example
-                            </summary>
-                            <div className="p-4 pt-2">
+                        {/* Worked Example - show when incorrect */}
+                        {!isCorrect && (
+                          <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <BookOpen className="w-5 h-5 text-blue-300" />
+                              <span className="font-semibold text-blue-300">Worked Example</span>
+                            </div>
+                            {current.worked && current.worked.length > 0 ? (
                               <div className="text-sm text-blue-200/80 space-y-2">
                                 {current.worked.map((step, i) => (
                                   <p key={i} className={i === current.worked.length - 1 ? 'font-semibold text-blue-300' : ''}>
@@ -8725,8 +8725,13 @@ What is the student's answer?`
                                   </p>
                                 ))}
                               </div>
-                            </div>
-                          </details>
+                            ) : (
+                              <p className="text-sm text-blue-200/80">
+                                The correct answer is <strong className="text-blue-300">{renderRecurring(current.a)}</strong>
+                                {current.hint && <span className="block mt-2 text-blue-200/60">Hint: {current.hint}</span>}
+                              </p>
+                            )}
+                          </div>
                         )}
                     
 
