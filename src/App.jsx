@@ -10799,6 +10799,43 @@ function AppContent() {
     refreshProfile
   } = useAuth();
 
+  // Auto-logout after 30 minutes of inactivity — ensures fresh updates on next login
+  useEffect(() => {
+    if (!user) return; // Only track when logged in
+
+    const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    let lastActivity = Date.now();
+    let checkInterval;
+
+    const resetActivity = () => { lastActivity = Date.now(); };
+
+    const checkInactivity = async () => {
+      if (Date.now() - lastActivity >= INACTIVITY_TIMEOUT) {
+        // Sign out and reload to pull latest app version
+        await signOut();
+        localStorage.removeItem('maths-habit-onboarding-complete');
+        window.location.reload();
+      }
+    };
+
+    // Track user interactions
+    window.addEventListener('touchstart', resetActivity, { passive: true });
+    window.addEventListener('mousedown', resetActivity);
+    window.addEventListener('keydown', resetActivity);
+    window.addEventListener('scroll', resetActivity, { passive: true });
+
+    // Check every 60 seconds
+    checkInterval = setInterval(checkInactivity, 60 * 1000);
+
+    return () => {
+      window.removeEventListener('touchstart', resetActivity);
+      window.removeEventListener('mousedown', resetActivity);
+      window.removeEventListener('keydown', resetActivity);
+      window.removeEventListener('scroll', resetActivity);
+      clearInterval(checkInterval);
+    };
+  }, [user, signOut]);
+
   // Prompt users without a display name to add one
   useEffect(() => {
     if (user && !authLoading && profile && !profile.display_name && !showOnboarding) {
