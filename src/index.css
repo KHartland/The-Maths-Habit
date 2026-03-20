@@ -584,18 +584,42 @@ body.high-contrast .text-primary-text {
   animation: celebrationFill 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
 }
 
-/* Heatmap glow for mastered tiles */
-@keyframes tileAfterPulse {
-  0%, 100% {
-    box-shadow: 0 0 6px 2px rgba(212, 175, 55, 0.3);
+/* Heatmap highlight for recently-progressed tiles */
+@keyframes tileProgressPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 170, 0.7);
+    transform: scale(1);
+  }
+  15% {
+    box-shadow: 0 0 14px 6px rgba(0, 255, 170, 0.5);
+    transform: scale(1.15);
+  }
+  30% {
+    box-shadow: 0 0 6px 2px rgba(0, 255, 170, 0.3);
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 12px 4px rgba(212, 175, 55, 0.5);
+    box-shadow: 0 0 12px 5px rgba(0, 255, 170, 0.45);
+    transform: scale(1.1);
+  }
+  70% {
+    box-shadow: 0 0 4px 2px rgba(0, 255, 170, 0.2);
+    transform: scale(1);
+  }
+  85% {
+    box-shadow: 0 0 8px 3px rgba(0, 255, 170, 0.3);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 0 0 6px 3px rgba(0, 255, 170, 0.25);
+    transform: scale(1);
   }
 }
 
 .heatmap-glow-afterpulse {
-  animation: tileAfterPulse 1.5s ease-in-out infinite;
+  animation: tileProgressPulse 2s ease-in-out forwards;
+  z-index: 30 !important;
+  border-radius: 6px;
 }
 
 /* ==================== TOPIC COLORS ==================== */

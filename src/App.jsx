@@ -7906,7 +7906,7 @@ What is the student's answer?`
           const objs = localCelebration.objectives;
           if (localCelebration.index >= objs.length - 1) {
             setLocalCelebration(null);
-            setCurrentPage('home');
+            setCurrentPage('heatmap');
           } else {
             setLocalCelebration(prev => ({ ...prev, index: prev.index + 1 }));
           }
@@ -10743,6 +10743,12 @@ function AppContent() {
   });
   const saveDiamondProgress = (dp) => { localStorage.setItem('maths-habit-diamond-progress', JSON.stringify(dp)); };
   const [recentSessionCodes, setRecentSessionCodes] = useState([]);
+  // Auto-clear recently-progressed tile highlights after 5 seconds
+  useEffect(() => {
+    if (recentSessionCodes.length === 0) return;
+    const timer = setTimeout(() => setRecentSessionCodes([]), 5000);
+    return () => clearTimeout(timer);
+  }, [recentSessionCodes]);
   const [sessionToastData, setSessionToastData] = useState(null);
   const [celebrationIndex, setCelebrationIndex] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
@@ -11989,7 +11995,7 @@ function AppContent() {
                             overflow: 'visible',
                             opacity: tileOpacity,
                           }}
-                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMasteredTile ? 'gold-tile-glow' : ''}`}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMasteredTile ? 'gold-tile-glow' : ''} ${recentSessionCodes.includes(obj.code) ? 'heatmap-glow-afterpulse' : ''}`}
                         >
                           {/* Gold outer glow for mastered tiles */}
                           {isMasteredTile && (
@@ -12015,13 +12021,6 @@ function AppContent() {
                               background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
                             }} />
                           )}
-                          {/* Gentle glow on recently practiced tiles (after celebration) */}
-                          {recentSessionCodes.includes(obj.code) && (
-                            <div className="heatmap-glow-afterpulse" style={{
-                              position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
-                              zIndex: 9,
-                            }} />
-                          )}
                           {/* Revisit indicator overlay */}
                           {needsRevisit && !isExamReady && (
                             <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
@@ -12044,6 +12043,7 @@ function AppContent() {
                     {diamondObjectives.map((obj) => {
                       const dLevel = getDiamondLevel(obj.code);
                       const isDiamondMastered = dLevel >= 3;
+                      const isGoldTile = dLevel === 1 || dLevel === 2;
                       return (
                         <div
                           key={obj.code}
@@ -12054,13 +12054,21 @@ function AppContent() {
                             position: 'relative',
                             overflow: 'visible',
                           }}
-                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isDiamondMastered ? 'diamond-tile-glow' : ''}`}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isDiamondMastered ? 'diamond-tile-glow' : isGoldTile ? 'gold-tile-glow' : ''} ${recentSessionCodes.includes(obj.code) ? 'heatmap-glow-afterpulse' : ''}`}
                         >
-                          {/* Diamond outer glow for mastered tiles — clear white sparkle */}
+                          {/* Diamond outer glow for mastered diamond tiles — clear white sparkle */}
                           {isDiamondMastered && (
                             <div style={{
                               position: 'absolute', inset: -2, borderRadius: 8,
                               boxShadow: '0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.3)',
+                              pointerEvents: 'none', zIndex: 0,
+                            }} />
+                          )}
+                          {/* Gold outer glow for gold tiles in diamond grid */}
+                          {isGoldTile && (
+                            <div style={{
+                              position: 'absolute', inset: -2, borderRadius: 8,
+                              boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
                               pointerEvents: 'none', zIndex: 0,
                             }} />
                           )}
@@ -12069,7 +12077,7 @@ function AppContent() {
                             src={DIAMOND_TILE_IMAGES[dLevel] || DIAMOND_TILE_IMAGES[0]}
                             alt=""
                             className="w-full h-full object-cover relative z-[1]"
-                            style={{ borderRadius: 6, filter: isDiamondMastered ? 'brightness(1.2) saturate(1.3)' : 'none' }}
+                            style={{ borderRadius: 6, filter: (isDiamondMastered || isGoldTile) ? 'brightness(1.15) saturate(1.2)' : 'none' }}
                             loading="lazy"
                             draggable={false}
                           />
@@ -12078,6 +12086,13 @@ function AppContent() {
                             <div className="gold-tile-shimmer" style={{
                               position: 'absolute', inset: 0, borderRadius: 6, pointerEvents: 'none', zIndex: 2,
                               background: 'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)',
+                            }} />
+                          )}
+                          {/* Gold shimmer overlay for gold tiles in diamond grid */}
+                          {isGoldTile && (
+                            <div className="gold-tile-shimmer" style={{
+                              position: 'absolute', inset: 0, borderRadius: 6, pointerEvents: 'none', zIndex: 2,
+                              background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
                             }} />
                           )}
                           {/* Objective code label */}
