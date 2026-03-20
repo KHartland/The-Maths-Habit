@@ -10890,6 +10890,33 @@ function AppContent() {
         if (school) {
           setUserSchool(school);
           localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
+
+          // Check if user is #1 on startup → show dragon naming reward if eligible
+          if (!profile?.piro_name) {
+            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+            try {
+              const raw = localStorage.getItem(storageKey);
+              const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+              fetch(`${supabaseUrl}/rest/v1/rpc/get_school_leaderboard`, {
+                method: 'POST',
+                headers: {
+                  'apikey': supabaseAnonKey,
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ p_school_id: school.id }),
+              }).then(async (lbRes) => {
+                if (lbRes.ok) {
+                  const leaderboard = await lbRes.json();
+                  if (leaderboard.length > 0 && leaderboard[0].user_id === user.id) {
+                    setShowPiroNaming(true);
+                  }
+                }
+              }).catch(err => console.error('Startup leaderboard rank check error:', err));
+            } catch (e) {
+              console.error('Startup leaderboard token error:', e);
+            }
+          }
         }
         // If server returns null but we have a cached school, keep the cache —
         // the server call may have failed silently or have a replication delay
