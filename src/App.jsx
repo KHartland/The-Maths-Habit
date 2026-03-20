@@ -6766,31 +6766,31 @@ const generateDiagram = (type) => {
 
   // Check for image-based diagram first
   if (imageDiagrams[type]) {
-    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto" /></div>`;
+    return `<div class="rounded-lg p-4 mx-auto max-w-md" style="background:#1a1525"><img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto" style="filter:invert(1) hue-rotate(180deg);opacity:0.9" /></div>`;
   }
 
-  // Fallback SVG diagrams for legacy questions
+  // Fallback SVG diagrams for legacy questions (white-on-dark theme)
   const svgDiagrams = {
     parallel: `<svg viewBox="0 0 200 120" class="w-full h-32">
-      <line x1="20" y1="30" x2="180" y2="30" stroke="#64748b" stroke-width="2"/>
-      <line x1="20" y1="90" x2="180" y2="90" stroke="#64748b" stroke-width="2"/>
-      <line x1="50" y1="10" x2="150" y2="110" stroke="#7c3aed" stroke-width="2"/>
-      <text x="70" y="45" fill="#7c3aed" font-size="14">70°</text>
-      <text x="110" y="85" fill="#64748b" font-size="14">?</text>
+      <line x1="20" y1="30" x2="180" y2="30" stroke="#e2e8f0" stroke-width="2"/>
+      <line x1="20" y1="90" x2="180" y2="90" stroke="#e2e8f0" stroke-width="2"/>
+      <line x1="50" y1="10" x2="150" y2="110" stroke="#a78bfa" stroke-width="2"/>
+      <text x="70" y="45" fill="#a78bfa" font-size="14">70°</text>
+      <text x="110" y="85" fill="#e2e8f0" font-size="14">?</text>
     </svg>`,
     pythagoras: `<svg viewBox="0 0 200 150" class="w-full h-32">
-      <polygon points="30,120 170,120 30,30" fill="none" stroke="#64748b" stroke-width="2"/>
-      <rect x="30" y="110" width="10" height="10" fill="none" stroke="#64748b"/>
-      <text x="90" y="140" fill="#64748b" font-size="14">4 cm</text>
-      <text x="10" y="80" fill="#64748b" font-size="14">3 cm</text>
-      <text x="100" y="70" fill="#7c3aed" font-size="14">?</text>
+      <polygon points="30,120 170,120 30,30" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="30" y="110" width="10" height="10" fill="none" stroke="#e2e8f0"/>
+      <text x="90" y="140" fill="#e2e8f0" font-size="14">4 cm</text>
+      <text x="10" y="80" fill="#e2e8f0" font-size="14">3 cm</text>
+      <text x="100" y="70" fill="#a78bfa" font-size="14">?</text>
     </svg>`,
     triangle: `<svg viewBox="0 0 200 150" class="w-full h-32">
-      <polygon points="30,120 170,120 170,30" fill="none" stroke="#64748b" stroke-width="2"/>
-      <rect x="160" y="110" width="10" height="10" fill="none" stroke="#64748b"/>
-      <text x="90" y="140" fill="#64748b" font-size="14">adj = 3</text>
-      <text x="175" y="80" fill="#64748b" font-size="14">opp = 4</text>
-      <text x="40" y="110" fill="#7c3aed" font-size="14">θ</text>
+      <polygon points="30,120 170,120 170,30" fill="none" stroke="#e2e8f0" stroke-width="2"/>
+      <rect x="160" y="110" width="10" height="10" fill="none" stroke="#e2e8f0"/>
+      <text x="90" y="140" fill="#e2e8f0" font-size="14">adj = 3</text>
+      <text x="175" y="80" fill="#e2e8f0" font-size="14">opp = 4</text>
+      <text x="40" y="110" fill="#a78bfa" font-size="14">θ</text>
     </svg>`,
   };
   // Table-of-values diagrams (AQA style)
