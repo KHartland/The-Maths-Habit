@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, RefreshCw, Users, Calendar, Clock, Trash2 } from 'lucide-react';
-import { getSchoolLeaderboard, getSchoolLeaderboardMonthly, removeInactiveMembers } from '../lib/leaderboardService';
+import { getSchoolLeaderboard, getSchoolLeaderboardMonthly, removeInactiveMembers, getMasteryBadges } from '../lib/leaderboardService';
 import { sanitiseName } from '../lib/profanityFilter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -12,6 +12,7 @@ const MONTH_NAMES = [
 
 const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = false, compact = false }) => {
   const [leaderboard, setLeaderboard] = useState([]);
+  const [badges, setBadges] = useState({}); // { userId: 'gold' | 'diamond' }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('monthly'); // 'monthly' (default) or 'alltime'
@@ -37,6 +38,11 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = fa
         data = await getSchoolLeaderboard(schoolId);
       }
       setLeaderboard(data);
+      // Fetch mastery badges for displayed users
+      if (data && data.length > 0) {
+        const userIds = data.map(e => e.userId);
+        getMasteryBadges(userIds).then(setBadges).catch(() => {});
+      }
     } catch (err) {
       console.error('Leaderboard fetch error:', err);
       setError('Could not load leaderboard');
@@ -238,13 +244,19 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = fa
                     {sanitiseName(entry.displayName)?.[0]?.toUpperCase() || '?'}
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <span className={`text-sm font-medium truncate block ${
+                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
+                    <span className={`text-sm font-medium truncate ${
                       isCurrentUser ? 'text-metallic-base' : 'text-white/90'
                     }`}>
                       {sanitiseName(entry.displayName)}
                       {isCurrentUser && <span className="text-xs text-secondary-text ml-1">(you)</span>}
                     </span>
+                    {badges[entry.userId] === 'diamond' && (
+                      <img src="/images/tiles/diamond-tile.jpeg" alt="Diamond" className="w-5 h-5 rounded-sm flex-shrink-0" title="Completed Diamond Level" />
+                    )}
+                    {badges[entry.userId] === 'gold' && (
+                      <img src="/images/tiles/gold-tile.jpeg" alt="Gold" className="w-5 h-5 rounded-sm flex-shrink-0" title="Completed Gold Level" />
+                    )}
                   </div>
 
                   {/* Score */}

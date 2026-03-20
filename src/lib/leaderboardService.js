@@ -290,6 +290,26 @@ export const getSchoolLeaderboard = async (schoolId) => {
   }
 };
 
+// Fetch mastery badges for a list of user IDs (for leaderboard gem icons)
+export const getMasteryBadges = async (userIds) => {
+  if (!userIds || userIds.length === 0) return {};
+  const token = getAuthToken();
+  try {
+    const idList = userIds.join(',');
+    const { data } = await restFetch(
+      `profiles?id=in.(${idList})&select=id,mastery_badge`,
+      { token }
+    );
+    if (!data) return {};
+    const badges = {};
+    data.forEach(row => { if (row.mastery_badge) badges[row.id] = row.mastery_badge; });
+    return badges;
+  } catch (err) {
+    console.error('getMasteryBadges error:', err);
+    return {};
+  }
+};
+
 // Remove inactive school members (0 correct answers) via RPC
 export const removeInactiveMembers = async (schoolId) => {
   if (!schoolId) throw new Error('School ID is required');

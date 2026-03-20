@@ -7843,10 +7843,14 @@ What is the student's answer?`
       const updatedPiro = loadPiro();
       setPiro(updatedPiro);
 
-      // Sync Piro stage to cloud for leaderboard
+      // Sync Piro stage + mastery badge to cloud for leaderboard
       if (practiceUser) {
         const piroDisplay = getPiroDisplay(updatedPiro);
         const stageName = piroDisplay.name || 'Egg';
+        // Calculate mastery badge: diamond > gold > null
+        const goldComplete = allObjectives.length > 0 && allObjectives.every(o => (progress[o.code]?.quickCorrect ?? 0) >= 5);
+        const diamondComplete = diamondObjectives.length > 0 && diamondObjectives.every(o => (diamondProgress[o.code]?.quickCorrect ?? 0) >= 3);
+        const masteryBadge = diamondComplete ? 'diamond' : goldComplete ? 'gold' : null;
         try {
           const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
           const raw = localStorage.getItem(storageKey);
@@ -7859,10 +7863,10 @@ What is the student's answer?`
               'Content-Type': 'application/json',
               'Prefer': 'return=minimal',
             },
-            body: JSON.stringify({ piro_stage: stageName }),
-          }).catch(err => console.error('Piro stage sync error:', err));
+            body: JSON.stringify({ piro_stage: stageName, mastery_badge: masteryBadge }),
+          }).catch(err => console.error('Piro/badge sync error:', err));
         } catch (e) {
-          console.error('Piro stage token error:', e);
+          console.error('Piro/badge token error:', e);
         }
       }
       if (piroResult.evolved) {
@@ -11588,10 +11592,13 @@ function AppContent() {
             You're #1!
           </h2>
           <p className="text-secondary-text text-sm mb-1">
-            You've reached the top of your school leaderboard!
+            You've conquered your school leaderboard!
           </p>
-          <p className="text-white font-medium mb-6">
-            As a reward, you can name your dragon.
+          <p className="text-white font-medium mb-2">
+            You've earned the right to name your dragon.
+          </p>
+          <p className="text-yellow-400/70 text-xs mb-6">
+            Choose wisely — this name is permanent!
           </p>
 
           {/* Dragon preview */}
@@ -11622,7 +11629,7 @@ function AppContent() {
             {piroNamingSaving ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</>
             ) : (
-              <><Star className="w-4 h-4" /> Name My Dragon</>
+              <><Star className="w-4 h-4" /> Name My Dragon Forever</>
             )}
           </button>
 
