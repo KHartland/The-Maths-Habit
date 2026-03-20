@@ -4,7 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
-import HandwritingInput from './components/HandwritingInput';
+// HandwritingInput removed — Mathpix integration discontinued
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, joinSchoolByCode, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
@@ -7127,7 +7127,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('type'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('type'); // typing only (handwriting removed)
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -8357,26 +8357,7 @@ What is the student's answer?`
                       </div>
                     ) : (
                       <div className="space-y-3 answer-section">
-                        {/* Input mode toggle */}
-                        <div className="flex glass-panel rounded-lg p-1">
-                          {['handwriting', 'type'].map(mode => (
-                            <button
-                              key={mode}
-                              type="button"
-                              onClick={() => setInputMode(mode)}
-                              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                                inputMode === mode
-                                  ? 'bg-gradient-violet text-white shadow-glow-violet'
-                                  : 'text-secondary-text hover:text-white'
-                              }`}
-                            >
-                              {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Type mode */}
-                        {inputMode === 'type' && (
+                        {/* Type input */}
                           <>
                             {/* Input with math keyboard toggle */}
                             <div className="relative">
@@ -8644,24 +8625,7 @@ What is the student's answer?`
                               )}
                             </div>
                           </div>
-                        )}
                           </>
-                        )}
-
-                        {/* Handwriting mode */}
-                        {inputMode === 'handwriting' && (
-                          <HandwritingInput
-                            onSubmit={(recognizedAnswer) => {
-                              setUserAnswer(recognizedAnswer);
-                              // Auto-check the answer immediately — no keyboard popup
-                              setTimeout(() => checkAnswer(null, recognizedAnswer), 100);
-                            }}
-                            onCancel={() => setInputMode('type')}
-                            placeholder="Write your answer here..."
-                            mathpixAppId={import.meta.env.VITE_MATHPIX_APP_ID}
-                            mathpixAppKey={import.meta.env.VITE_MATHPIX_APP_KEY}
-                          />
-                        )}
 
                         <button
                           onClick={() => checkAnswer()}

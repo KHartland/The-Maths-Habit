@@ -189,7 +189,6 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
             {[
               'Unlimited daily questions',
               'Unlimited battles',
-              'Handwriting input',
               'All 700+ GCSE questions',
               'AI-powered explanations',
               'Weekly parent progress summary',

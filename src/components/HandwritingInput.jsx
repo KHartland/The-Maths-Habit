@@ -10,8 +10,8 @@ const HandwritingInput = ({
   onSubmit,
   onCancel,
   placeholder = "Write your answer...",
-  mathpixAppId,
-  mathpixAppKey
+  mathpixAppId,  // kept for backward compat but no longer used client-side
+  mathpixAppKey  // kept for backward compat but no longer used client-side
 }) => {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
@@ -154,12 +154,6 @@ const HandwritingInput = ({
 
     // Debounce - wait 500ms after last stroke
     recognitionTimeoutRef.current = setTimeout(async () => {
-      if (!mathpixAppId || !mathpixAppKey) {
-        console.warn('Mathpix keys missing:', { appId: !!mathpixAppId, appKey: !!mathpixAppKey });
-        setError('Handwriting recognition not configured');
-        return;
-      }
-
       setIsRecognizing(true);
       setError('');
 
@@ -176,24 +170,16 @@ const HandwritingInput = ({
         exportCtx.drawImage(canvas, 0, 0);
         const imageData = exportCanvas.toDataURL('image/png');
 
-        // Log Mathpix API call for monitoring (dev only)
-        if (import.meta.env.DEV) console.log('[Mathpix] API call triggered', { timestamp: new Date().toISOString() });
+        // Log API call for monitoring (dev only)
+        if (import.meta.env.DEV) console.log('[Mathpix] API call triggered via server proxy', { timestamp: new Date().toISOString() });
 
-        // Send image to Mathpix text endpoint
-        const response = await fetch('https://api.mathpix.com/v3/text', {
+        // Send image to our server-side proxy (keys stay secret on server)
+        const response = await fetch('/api/mathpix-recognize', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'app_id': mathpixAppId,
-            'app_key': mathpixAppKey
           },
-          body: JSON.stringify({
-            src: imageData,
-            formats: ['text', 'latex_simplified'],
-            data_options: {
-              include_asciimath: true
-            }
-          })
+          body: JSON.stringify({ src: imageData })
         });
 
         if (!response.ok) {
@@ -255,7 +241,7 @@ const HandwritingInput = ({
         setIsRecognizing(false);
       }
     }, 500);
-  }, [mathpixAppId, mathpixAppKey]);
+  }, []);
 
   // Clear canvas
   const handleClear = () => {

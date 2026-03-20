@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, Component } from 'react';
 import { Users, Copy, Check, Play, Trophy, Clock, X, Loader2, Swords } from 'lucide-react';
 import { sanitiseName } from '../lib/profanityFilter';
-import HandwritingInput from './HandwritingInput';
+// HandwritingInput removed — Mathpix integration discontinued
 
 // Error boundary to prevent white screen crashes
 class BattleErrorBoundary extends Component {
@@ -687,63 +687,19 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, isHandwritin
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {/* Input mode toggle */}
-                  <div className="flex glass-panel rounded-lg p-1">
-                    {['type', 'handwriting'].map(mode => (
-                      <button
-                        key={mode}
-                        type="button"
-                        onClick={() => {
-                          if (mode === 'handwriting' && !isHandwritingEnabled) {
-                            alert('Handwriting input is available with a school subscription');
-                            return;
-                          }
-                          setInputMode(mode);
-                        }}
-                        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                          inputMode === mode
-                            ? 'bg-gradient-violet text-white shadow-glow-violet'
-                            : 'text-secondary-text hover:text-white'
-                        }`}
-                      >
-                        {mode === 'handwriting' ? (
-                          <>✏️ Write{!isHandwritingEnabled && ' 🔒'}</>
-                        ) : '⌨️ Type'}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Type mode */}
-                  {inputMode === 'type' && (
-                    <input
-                      type="text"
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                      placeholder="Your answer..."
-                      className="w-full p-3 rounded-lg border border-white/10 bg-white/5 text-white placeholder-white/30 text-lg"
-                      autoFocus
-                    />
-                  )}
-
-                  {/* Handwriting mode */}
-                  {inputMode === 'handwriting' && (
-                    <HandwritingInput
-                      onSubmit={(recognizedAnswer) => {
-                        setUserAnswer(recognizedAnswer);
-                        // Auto-submit after recognition
-                        setTimeout(() => handleSubmitWithAnswer(recognizedAnswer), 100);
-                      }}
-                      onCancel={() => setInputMode('type')}
-                      placeholder="Write your answer here..."
-                      mathpixAppId={import.meta.env.VITE_MATHPIX_APP_ID}
-                      mathpixAppKey={import.meta.env.VITE_MATHPIX_APP_KEY}
-                    />
-                  )}
+                  <input
+                    type="text"
+                    value={userAnswer}
+                    onChange={(e) => setUserAnswer(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+                    placeholder="Your answer..."
+                    className="w-full p-3 rounded-lg border border-white/10 bg-white/5 text-white placeholder-white/30 text-lg"
+                    autoFocus
+                  />
                 </div>
               )}
 
-              {/* Only show Check Answer button in type mode (handwriting auto-submits) */}
+              {/* Check Answer button */}
               {(question.type === 'mcq' || inputMode === 'type') && (
                 <button
                   onClick={handleSubmit}
