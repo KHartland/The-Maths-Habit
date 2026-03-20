@@ -8621,6 +8621,9 @@ What is the student's answer?`
                                   ))}
                                 </>
                               )}
+                            </div>
+                          </div>
+                        )}
 
                         <button
                           onClick={() => checkAnswer()}
@@ -8631,6 +8634,8 @@ What is the student's answer?`
                         </button>
                       </div>
                     )}
+                  </>
+                )}
 
                 {/* Feedback */}
                 {showFeedback && (
