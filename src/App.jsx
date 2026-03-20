@@ -8623,7 +8623,6 @@ What is the student's answer?`
                                   ))}
                                 </>
                               )}
-                            </div>
                           </>
 
                         <button
