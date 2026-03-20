@@ -8888,23 +8888,19 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
     };
   });
   
-  // Weekly activity chart data (last 7 days)
+  // Weekly activity chart data (last 7 days) — uses dailyActivity (cloud-synced)
+  const dailyActivity = loadDailyActivity();
   const weeklyActivity = [];
   for (let i = 6; i >= 0; i--) {
-    const dayStart = new Date(now - i * 24 * 60 * 60 * 1000);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(dayStart);
-    dayEnd.setHours(23, 59, 59, 999);
-    
-    const daySessions = sessionHistory.filter(s => s.date >= dayStart.getTime() && s.date <= dayEnd.getTime());
-    const dayQuestions = daySessions.reduce((sum, s) => sum + s.total, 0);
-    const dayCorrect = daySessions.reduce((sum, s) => sum + s.correct, 0);
-    
+    const d = new Date(now - i * 24 * 60 * 60 * 1000);
+    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const dayData = dailyActivity[dateKey];
+
     weeklyActivity.push({
-      day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dayStart.getDay()],
-      questions: dayQuestions,
-      correct: dayCorrect,
-      sessions: daySessions.length,
+      day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()],
+      questions: dayData?.questions ?? 0,
+      correct: dayData?.correct ?? 0,
+      sessions: dayData?.sessions ?? 0,
     });
   }
   
