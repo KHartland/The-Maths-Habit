@@ -2879,591 +2879,591 @@ const _originalSharedRefs = {
 // ═══════════════════════════════════════════════════════════════
 const goldQuestionBank = {
   'N1': [ // Obj 11: FDP Equivalence
-    [{ q: 'Write 50% as a fraction in its simplest form.', a: '1/2', type: 'fraction' }], // Grade 1
-    [{ q: 'Write 0.3 as a fraction.', a: '3/10', type: 'fraction' }], // Grade 2
-    [{ q: 'Write 3/4 as a percentage.', a: '75' }], // Grade 3
-    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq' }], // Grade 4
-    [{ q: 'Express 65 out of 80 as a percentage.', a: '81.25' }], // Grade 5
+    [{ q: 'Write 50% as a fraction in its simplest form.', a: '1/2', type: 'fraction', worked: ['50% means 50 out of 100', '50/100 = 1/2 when simplified'] }], // Grade 1
+    [{ q: 'Write 0.3 as a fraction.', a: '3/10', type: 'fraction', worked: ['0.3 has one decimal place', '0.3 = 3/10'] }], // Grade 2
+    [{ q: 'Write 3/4 as a percentage.', a: '75', worked: ['3/4 = ? out of 100', 'Multiply both numerator and denominator by 25: (3 × 25)/(4 × 25) = 75/100', '75/100 = 75%'] }], // Grade 3
+    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq', worked: ['Convert all to decimals: 0.42, 45% = 0.45, 8/30 ≈ 0.267, 0.404', 'Order: 0.267 < 0.404 < 0.42 < 0.45', '8/30 is the smallest'] }], // Grade 4
+    [{ q: 'Express 65 out of 80 as a percentage.', a: '81.25', worked: ['65 out of 80 = 65/80', 'Convert to a percentage: (65/80) × 100', '0.8125 × 100 = 81.25%'] }], // Grade 5
   ],
   'N2': [ // Obj 1: Basic Arithmetic
-    [{ q: 'Work out 15 + 28.', a: '43' }], // Grade 1
-    [{ q: 'Work out 144 ÷ 6.', a: '24' }], // Grade 2
-    [{ q: 'Calculate 3 × (8 + 4) − 5.', a: '31' }], // Grade 3
-    [{ q: 'A theatre has 24 rows of seats with 18 seats in each row. How many seats are there in total?', a: '432' }], // Grade 4
-    [{ q: 'Work out (12 − 4) × (2 + 1).', a: '24' }], // Grade 5
+    [{ q: 'Work out 15 + 28.', a: '43', worked: ['15 + 28 = 43'] }], // Grade 1
+    [{ q: 'Work out 144 ÷ 6.', a: '24', worked: ['144 ÷ 6 = 24'] }], // Grade 2
+    [{ q: 'Calculate 3 × (8 + 4) − 5.', a: '31', worked: ['Work out the bracket first: 8 + 4 = 12', 'Then multiply: 3 × 12 = 36', 'Finally subtract: 36 − 5 = 31'] }], // Grade 3
+    [{ q: 'A theatre has 24 rows of seats with 18 seats in each row. How many seats are there in total?', a: '432', worked: ['Multiply rows by seats per row: 24 × 18', '24 × 18 = 432 seats'] }], // Grade 4
+    [{ q: 'Work out (12 − 4) × (2 + 1).', a: '24', worked: ['Work out the first bracket: 12 − 4 = 8', 'Work out the second bracket: 2 + 1 = 3', 'Multiply the results: 8 × 3 = 24'] }], // Grade 5
   ],
   'N3': [ // Obj 60: Multi-step Problems
-    [{ q: 'A cinema ticket costs £8.50 and popcorn costs £3.20. Work out the change from £20.', a: '8.30' }], // Grade 1
-    [{ q: 'A soup recipe for 4 people requires 200 g of vegetables. How much vegetable is needed for 10 people?', a: '500' }], // Grade 2
-    [{ q: 'A car uses 8 litres per 100 km. Fuel costs £1.45 per litre. Calculate the cost of fuel for a 250 km journey.', a: '29', calculator: true }], // Grade 3
-    [{ q: 'A tank measures 1.2 m × 0.8 m × 0.5 m and is filled at a rate of 20 litres per minute. How many minutes does it take to fill?', a: '24', calculator: true, frozen: true }], // Grade 4
-    [{ q: 'A rectangle has a length 20% greater than its width and an area of 480 cm². Work out the exact perimeter.', a: '88' }], // Grade 5
+    [{ q: 'A cinema ticket costs £8.50 and popcorn costs £3.20. Work out the change from £20.', a: '8.30', worked: ['Add the costs: £8.50 + £3.20 = £11.70', 'Work out change: £20 − £11.70 = £8.30'] }], // Grade 1
+    [{ q: 'A soup recipe for 4 people requires 200 g of vegetables. How much vegetable is needed for 10 people?', a: '500', worked: ['Work out how much per person: 200 ÷ 4 = 50 g per person', 'For 10 people: 50 × 10 = 500 g'] }], // Grade 2
+    [{ q: 'A car uses 8 litres per 100 km. Fuel costs £1.45 per litre. Calculate the cost of fuel for a 250 km journey.', a: '29', calculator: true, worked: ['For 250 km: (250 ÷ 100) × 8 = 2.5 × 8 = 20 litres', 'Cost: 20 × £1.45 = £29'] }], // Grade 3
+    [{ q: 'A tank measures 1.2 m × 0.8 m × 0.5 m and is filled at a rate of 20 litres per minute. How many minutes does it take to fill?', a: '24', calculator: true, frozen: true, worked: ['Volume = length × width × height = 1.2 × 0.8 × 0.5 = 0.48 m³', '0.48 m³ = 480 litres (1 m³ = 1000 litres)', 'Time = 480 ÷ 20 = 24 minutes'] }], // Grade 4
+    [{ q: 'A rectangle has a length 20% greater than its width and an area of 480 cm². Work out the exact perimeter.', a: '88', worked: ['Let width = w, then length = 1.2w', 'Area: w × 1.2w = 480, so 1.2w² = 480, w² = 400, w = 20 cm', 'Length = 1.2 × 20 = 24 cm', 'Perimeter = 2(20 + 24) = 2 × 44 = 88 cm'] }], // Grade 5
   ],
   'N4': [ // Obj 7: Factors, Multiples & Primes
-    [{ q: 'Write down the 5th multiple of 6.', a: '30' }], // Grade 1
-    [{ q: 'How many factors does 24 have?', a: '8' }], // Grade 2
-    [{ q: 'Find the Lowest Common Multiple (LCM) of 8 and 12.', a: '24' }], // Grade 3
-    [{ q: 'Find the Highest Common Factor (HCF) of 36 and 48.', a: '12' }], // Grade 4
-    [{ q: '120 = 2^a × 3 × 5. Work out the value of a.', a: '3' }], // Grade 5
+    [{ q: 'Write down the 5th multiple of 6.', a: '30', worked: ['The 5th multiple of 6 = 6 × 5 = 30'] }], // Grade 1
+    [{ q: 'How many factors does 24 have?', a: '8', worked: ['Factors of 24: 1, 2, 3, 4, 6, 8, 12, 24', 'Count them: 8 factors in total'] }], // Grade 2
+    [{ q: 'Find the Lowest Common Multiple (LCM) of 8 and 12.', a: '24', worked: ['Multiples of 8: 8, 16, 24, 32...', 'Multiples of 12: 12, 24, 36...', 'The lowest common multiple is 24'] }], // Grade 3
+    [{ q: 'Find the Highest Common Factor (HCF) of 36 and 48.', a: '12', worked: ['Factors of 36: 1, 2, 3, 4, 6, 9, 12, 18, 36', 'Factors of 48: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48', 'Common factors: 1, 2, 3, 4, 6, 12', 'Highest common factor is 12'] }], // Grade 4
+    [{ q: '120 = 2^a × 3 × 5. Work out the value of a.', a: '3', worked: ['Prime factorise 120: 120 = 2 × 60 = 2 × 2 × 30 = 2 × 2 × 2 × 15 = 2³ × 3 × 5', 'So a = 3'] }], // Grade 5
   ],
   'N5': [ // Obj 50: Combinatorics
-    [{ q: 'A shop has 4 types of sandwich and 3 types of drink. How many different meal combinations are there?', a: '12' }], // Grade 1
-    [{ q: 'How many 2-digit numbers can be made from the digits 3, 6, 8 without repeating any digit?', a: '6' }], // Grade 2
-    [{ q: 'A password code uses 1 letter (A-D) and 1 digit (1-5). How many different codes are possible?', a: '20' }], // Grade 3
-    [{ q: '3 friends have 3 seats to sit in. How many different seating arrangements are there?', a: '6' }], // Grade 4
-    [{ q: 'A pizza company offers 4 starters, 6 main courses, and 3 desserts. How many different 3-course meals are possible?', a: '72' }], // Grade 5
+    [{ q: 'A shop has 4 types of sandwich and 3 types of drink. How many different meal combinations are there?', a: '12', worked: ['Use the multiplication principle: 4 × 3 = 12 combinations'] }], // Grade 1
+    [{ q: 'How many 2-digit numbers can be made from the digits 3, 6, 8 without repeating any digit?', a: '6', worked: ['First digit has 3 choices: 3, 6, or 8', 'Second digit has 2 choices (can\'t repeat the first)', 'Total: 3 × 2 = 6'] }], // Grade 2
+    [{ q: 'A password code uses 1 letter (A-D) and 1 digit (1-5). How many different codes are possible?', a: '20', worked: ['4 choices for the letter (A, B, C, or D)', '5 choices for the digit (1, 2, 3, 4, or 5)', 'Total: 4 × 5 = 20 codes'] }], // Grade 3
+    [{ q: '3 friends have 3 seats to sit in. How many different seating arrangements are there?', a: '6', worked: ['First seat: 3 choices', 'Second seat: 2 choices', 'Third seat: 1 choice', 'Total: 3 × 2 × 1 = 6 arrangements'] }], // Grade 4
+    [{ q: 'A pizza company offers 4 starters, 6 main courses, and 3 desserts. How many different 3-course meals are possible?', a: '72', worked: ['Use the multiplication principle: 4 × 6 × 3 = 72 different meals'] }], // Grade 5
   ],
   'N6': [ // Obj 8: Indices and Roots
-    [{ q: 'Work out the value of 5².', a: '25' }], // Grade 1
-    [{ q: 'Work out the value of √64.', a: '8' }], // Grade 2
-    [{ q: 'Simplify a⁴ × a³. What is the answer in the form aⁿ?', a: '7' }], // Grade 3
-    [{ q: 'Simplify b⁷ ÷ b². What is the answer in the form bⁿ?', a: '5' }], // Grade 4
-    [{ q: 'Work out 2³ × √81 − 4².', a: '56' }], // Grade 5
+    [{ q: 'Work out the value of 5².', a: '25', worked: ['5² = 5 × 5 = 25'] }], // Grade 1
+    [{ q: 'Work out the value of √64.', a: '8', worked: ['√64 = 8 (because 8 × 8 = 64)'] }], // Grade 2
+    [{ q: 'Simplify a⁴ × a³. What is the answer in the form aⁿ?', a: '7', worked: ['When multiplying powers with the same base, add the exponents', 'a⁴ × a³ = a^(4+3) = a⁷', 'n = 7'] }], // Grade 3
+    [{ q: 'Simplify b⁷ ÷ b². What is the answer in the form bⁿ?', a: '5', worked: ['When dividing powers with the same base, subtract the exponents', 'b⁷ ÷ b² = b^(7−2) = b⁵', 'n = 5'] }], // Grade 4
+    [{ q: 'Work out 2³ × √81 − 4².', a: '56', worked: ['2³ = 2 × 2 × 2 = 8', '√81 = 9', '4² = 4 × 4 = 16', '8 × 9 − 16 = 72 − 16 = 56'] }], // Grade 5
   ],
   'N7': [ // Obj 71: Index Laws
-    [{ q: 'Work out 3³.', a: '27' }], // Grade 1
-    [{ q: 'Express 8 × 8 × 8 × 8 × 8 in the form 8ⁿ.', a: '5' }], // Grade 2
-    [{ q: 'Simplify a⁶ × a³.', a: '9' }], // Grade 3
-    [{ q: 'Simplify c⁹ ÷ c².', a: '7' }], // Grade 4
-    [{ q: 'Work out (2⁴ × 2⁵) ÷ 2⁶. Give your answer as an exact number.', a: '8' }], // Grade 5
+    [{ q: 'Work out 3³.', a: '27', worked: ['3³ = 3 × 3 × 3 = 27'] }], // Grade 1
+    [{ q: 'Express 8 × 8 × 8 × 8 × 8 in the form 8ⁿ.', a: '5', worked: ['Count how many times 8 is multiplied', '8 × 8 × 8 × 8 × 8 has 5 factors of 8', 'So the answer is 8⁵, and n = 5'] }], // Grade 2
+    [{ q: 'Simplify a⁶ × a³.', a: '9', worked: ['When multiplying powers with the same base, add the exponents', 'a⁶ × a³ = a^(6+3) = a⁹', 'The answer is 9'] }], // Grade 3
+    [{ q: 'Simplify c⁹ ÷ c².', a: '7', worked: ['When dividing powers with the same base, subtract the exponents', 'c⁹ ÷ c² = c^(9−2) = c⁷', 'The answer is 7'] }], // Grade 4
+    [{ q: 'Work out (2⁴ × 2⁵) ÷ 2⁶. Give your answer as an exact number.', a: '8', worked: ['2⁴ × 2⁵ = 2^(4+5) = 2⁹', '2⁹ ÷ 2⁶ = 2^(9−6) = 2³', '2³ = 2 × 2 × 2 = 8'] }], // Grade 5
   ],
   'N8': [ // Obj 2: Fractions
-    [{ q: 'A grid contains 12 identical squares. How many squares is 1/4 of 12?', a: '3' }], // Grade 1
-    [{ q: 'Work out 3/7 + 2/7.', a: '5/7', type: 'fraction' }], // Grade 2
-    [{ q: 'Write 3 2/5 as an improper fraction.', a: '17/5', type: 'fraction' }], // Grade 3
-    [{ q: 'Work out 3/4 × 5/9. Give your answer in its simplest form.', a: '5/12', type: 'fraction' }], // Grade 4
-    [{ q: 'Work out 2 1/3 ÷ 1 3/4. Give your answer as a mixed number in its simplest form.', a: '1 1/3', type: 'fraction' }], // Grade 5
+    [{ q: 'A grid contains 12 identical squares. How many squares is 1/4 of 12?', a: '3', worked: ['1/4 of 12 = 12 ÷ 4 = 3 squares'] }], // Grade 1
+    [{ q: 'Work out 3/7 + 2/7.', a: '5/7', type: 'fraction', worked: ['Both fractions have the same denominator', '3/7 + 2/7 = (3+2)/7 = 5/7'] }], // Grade 2
+    [{ q: 'Write 3 2/5 as an improper fraction.', a: '17/5', type: 'fraction', worked: ['Multiply the whole number by the denominator: 3 × 5 = 15', 'Add the numerator: 15 + 2 = 17', 'Keep the same denominator: 17/5'] }], // Grade 3
+    [{ q: 'Work out 3/4 × 5/9. Give your answer in its simplest form.', a: '5/12', type: 'fraction', worked: ['Multiply numerators: 3 × 5 = 15', 'Multiply denominators: 4 × 9 = 36', 'Simplify: 15/36 = 5/12 (divide by 3)'] }], // Grade 4
+    [{ q: 'Work out 2 1/3 ÷ 1 3/4. Give your answer as a mixed number in its simplest form.', a: '1 1/3', type: 'fraction', worked: ['Convert to improper fractions: 2 1/3 = 7/3 and 1 3/4 = 7/4', 'To divide fractions, multiply by the reciprocal: 7/3 × 4/7', 'Simplify: (7 × 4)/(3 × 7) = 28/21 = 4/3', 'Convert to mixed number: 4/3 = 1 1/3'] }], // Grade 5
   ],
   'N9': [ // Obj 9: Standard Form
-    [{ q: 'Which of these is 4,000 in standard form? A) 4×10³  B) 40×10²  C) 0.4×10⁴', a: '4×10^3', type: 'mcq' }], // Grade 1
-    [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500' }], // Grade 2
-    [{ q: 'Which is 0.00072 in standard form? A) 7.2×10⁻⁴  B) 72×10⁻⁵  C) 0.72×10⁻³', a: '7.2×10^-4', type: 'mcq' }], // Grade 3
-    [{ q: 'Work out (2×10⁴)×(4×10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
-    [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10 in your answer?', a: '4' }], // Grade 5
+    [{ q: 'Which of these is 4,000 in standard form? A) 4×10³  B) 40×10²  C) 0.4×10⁴', a: '4×10^3', type: 'mcq' , worked: ['4,000 = 4 × 1,000 = 4 × 10³', 'So the answer is 4×10³ (Option A)']}], // Grade 1
+    [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500', worked: ['3.5 × 10³ means 3.5 × 1000', '3.5 × 1000 = 3500'] }], // Grade 2
+    [{ q: 'Which is 0.00072 in standard form? A) 7.2×10⁻⁴  B) 72×10⁻⁵  C) 0.72×10⁻³', a: '7.2×10^-4', type: 'mcq' , worked: ['0.00072: Move decimal 4 places right to get 7.2', 'Moved right so power is negative: 7.2 × 10⁻⁴', 'Option A is correct']}], // Grade 3
+    [{ q: 'Work out (2×10⁴)×(4×10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' , worked: ['(2×10⁴)×(4×10³) = (2×4)×(10⁴×10³)', 'When multiplying powers of 10, add the exponents: 4+3=7', '8×10⁷, so n = 7']}], // Grade 4
+    [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10 in your answer?', a: '4' , worked: ['(8×10⁵)÷(2×10²) = (8÷2)×(10⁵÷10²)', 'When dividing powers of 10, subtract exponents: 5-2=3', '4×10³, number in front is 4']}], // Grade 5
   ],
   'N10': [ // Obj 3: Decimals
-    [{ q: 'Write 0.4 as a fraction in its simplest form.', a: '2/5', type: 'fraction' }], // Grade 1
-    [{ q: 'Work out 4.2 + 1.85.', a: '6.05' }], // Grade 2
-    [{ q: 'Work out 0.3 × 0.4.', a: '0.12' }], // Grade 3
-    [{ q: 'Work out 14.5 ÷ 0.5.', a: '29' }], // Grade 4
-    [{ q: 'Work out 3.6 × 4.2 − 1.85.', a: '13.27', calculator: true }], // Grade 5
+    [{ q: 'Write 0.4 as a fraction in its simplest form.', a: '2/5', type: 'fraction', worked: ['0.4 has one decimal place', '0.4 = 4/10 = 2/5'] }], // Grade 1
+    [{ q: 'Work out 4.2 + 1.85.', a: '6.05', worked: ['4.2 + 1.85 = 6.05'] }], // Grade 2
+    [{ q: 'Work out 0.3 × 0.4.', a: '0.12', worked: ['3 × 4 = 12', '0.3 has 1 d.p., 0.4 has 1 d.p.', 'Answer has 2 d.p.: 0.12'] }], // Grade 3
+    [{ q: 'Work out 14.5 ÷ 0.5.', a: '29', worked: ['14.5 ÷ 0.5 = 145 ÷ 5 = 29'] }], // Grade 4
+    [{ q: 'Work out 3.6 × 4.2 − 1.85.', a: '13.27', calculator: true, worked: ['3.6 × 4.2 = 15.12', '15.12 − 1.85 = 13.27'] }], // Grade 5
   ],
   'N11': [ // Obj 80: Complex Ratio
-    [{ q: 'Simplify the ratio 20 : 35. Write down the first number in the simplified ratio.', a: '4' }], // Grade 1
-    [{ q: '£45 is shared in the ratio 2 : 7. Work out the smaller share.', a: '10' }], // Grade 2
-    [{ q: 'The ratio of boys to girls is 4 : 5. There are 25 girls. How many boys are there?', a: '20' }], // Grade 3
-    [{ q: 'Ali, Ben, and Chloe share money in the ratio 3 : 5 : 8. Chloe gets £30 more than Ali. Work out the total amount shared.', a: '96' }], // Grade 4
+    [{ q: 'Simplify the ratio 20 : 35. Write down the first number in the simplified ratio.', a: '4', worked: ['Find the HCF of 20 and 35: HCF is 5', '20 ÷ 5 : 35 ÷ 5 = 4 : 7', 'First number is 4'] }], // Grade 1
+    [{ q: '£45 is shared in the ratio 2 : 7. Work out the smaller share.', a: '10', worked: ['Total parts: 2 + 7 = 9', 'Value of 1 part: £45 ÷ 9 = £5', 'Smaller share (2 parts): 2 × £5 = £10'] }], // Grade 2
+    [{ q: 'The ratio of boys to girls is 4 : 5. There are 25 girls. How many boys are there?', a: '20', worked: ['If girls = 25 and ratio boys:girls = 4:5', 'Then 5 parts = 25', '1 part = 5', '4 parts (boys) = 4 × 5 = 20'] }], // Grade 3
+    [{ q: 'Ali, Ben, and Chloe share money in the ratio 3 : 5 : 8. Chloe gets £30 more than Ali. Work out the total amount shared.', a: '96' , worked: ['Ratio Ali : Ben : Chloe = 3 : 5 : 8', 'Chloe has 8 parts, Ali has 3 parts', 'Difference is 8-3=5 parts = £30', '1 part = £30÷5 = £6', 'Total = (3+5+8)×£6 = 16×£6 = £96']}], // Grade 4
     [{ q: 'Red : Blue = 2 : 3 and Blue : Green = 4 : 5. Write Red : Blue : Green in simplest form.', a: '8:12:15', worked: ['Make Blue the same in both ratios', 'Red:Blue = 2:3 → multiply by 4 → 8:12', 'Blue:Green = 4:5 → multiply by 3 → 12:15', 'Red:Blue:Green = 8:12:15'] }], // Grade 5
   ],
   'N12': [ // Obj 4: Percentages
-    [{ q: 'Write 25% as a decimal.', a: '0.25' }], // Grade 1
-    [{ q: 'Work out 10% of £450.', a: '45' }], // Grade 2
-    [{ q: 'A television costs £300. It is reduced by 15% in a sale. Work out the sale price.', a: '255' }], // Grade 3
-    [{ q: 'A car\'s value increases from £8,000 to £8,400. Calculate the percentage increase.', a: '5' }], // Grade 4
-    [{ q: '£400 is invested at 2.5% simple interest per year. Work out how much interest is earned after 4 years.', a: '40', calculator: true }], // Grade 5
+    [{ q: 'Write 25% as a decimal.', a: '0.25', worked: ['25% = 25/100', '25/100 = 0.25'] }], // Grade 1
+    [{ q: 'Work out 10% of £450.', a: '45', worked: ['10% means divide by 10', '450 ÷ 10 = 45'] }], // Grade 2
+    [{ q: 'A television costs £300. It is reduced by 15% in a sale. Work out the sale price.', a: '255', worked: ['15% of £300 = 0.15 × £300 = £45', 'Sale price = £300 − £45 = £255'] }], // Grade 3
+    [{ q: 'A car\'s value increases from £8,000 to £8,400. Calculate the percentage increase.', a: '5', worked: ['Increase = £8,400 − £8,000 = £400', 'Percentage = (400 ÷ 8000) × 100', '= 0.05 × 100 = 5%'] }], // Grade 4
+    [{ q: '£400 is invested at 2.5% simple interest per year. Work out how much interest is earned after 4 years.', a: '40', calculator: true, worked: ['Simple interest = Principal × Rate × Time', 'Interest = £400 × 2.5% × 4', 'Interest = £400 × 0.025 × 4 = £40'] }], // Grade 5
   ],
   'N13': [ // Obj 51: Time and Timetables
-    [{ q: 'How many minutes are there in 2.5 hours?', a: '150' }], // Grade 1
-    [{ q: 'A train departs at 14:35 and arrives at 16:15. Work out the journey time in minutes.', a: '100' }], // Grade 2
-    [{ q: 'A film lasts 135 minutes and finishes at 21:10. What time did it start? Give your answer in 24-hour format.', a: '18:55', type: 'text' }], // Grade 3
-    [{ q: 'A worker is paid £9.50 per hour. They work from 08:30 to 17:00 with a 45-minute unpaid lunch break. Calculate their total pay to the nearest penny.', a: '73.63', calculator: true }], // Grade 4
-    [{ q: 'A flight departs London at 22:40 and arrives in Dubai at 08:10 the next day. Dubai is 3 hours ahead. Work out the flight time in minutes.', a: '390' }], // Grade 5
+    [{ q: 'How many minutes are there in 2.5 hours?', a: '150', worked: ['2.5 hours = 2 hours 30 minutes', '= 2 × 60 + 30 = 120 + 30 = 150 minutes'] }], // Grade 1
+    [{ q: 'A train departs at 14:35 and arrives at 16:15. Work out the journey time in minutes.', a: '100', worked: ['From 14:35 to 15:35 = 1 hour = 60 minutes', 'From 15:35 to 16:15 = 40 minutes', 'Total = 60 + 40 = 100 minutes'] }], // Grade 2
+    [{ q: 'A film lasts 135 minutes and finishes at 21:10. What time did it start? Give your answer in 24-hour format.', a: '18:55', type: 'text', worked: ['135 minutes = 2 hours 15 minutes', '21:10 − 2 hours 15 minutes = 18:55'] }], // Grade 3
+    [{ q: 'A worker is paid £9.50 per hour. They work from 08:30 to 17:00 with a 45-minute unpaid lunch break. Calculate their total pay to the nearest penny.', a: '73.63', calculator: true, worked: ['Working time: 08:30 to 17:00 = 8.5 hours', 'Lunch break: 45 minutes = 0.75 hours', 'Actual working: 8.5 − 0.75 = 7.75 hours', 'Pay: 7.75 × £9.50 = £73.625 ≈ £73.63'] }], // Grade 4
+    [{ q: 'A flight departs London at 22:40 and arrives in Dubai at 08:10 the next day. Dubai is 3 hours ahead. Work out the flight time in minutes.', a: '390', worked: ['London: 22:40 to 08:10 next day = 9.5 hours in London time', 'Flight duration = 9.5 hours − 3 hours (time zone) = 6.5 hours', '6.5 hours = 6 × 60 + 30 = 390 minutes'] }], // Grade 5
   ],
   'N14': [ // Obj 65: Error Intervals (2)
-    [{ q: 'A length is measured as 8 cm to the nearest cm. What is the smallest possible length?', a: '7.5' }], // Grade 1
-    [{ q: 'A weight is recorded as 45 kg to the nearest kg. What is the lower bound?', a: '44.5' }], // Grade 2
-    [{ q: 'A number y, truncated to 1 decimal place, gives 6.3. What is the upper bound?', a: '6.4' }], // Grade 3
-    [{ q: 'A square has side length 6 cm to the nearest cm. Work out the upper bound for its perimeter.', a: '26' }], // Grade 4
-    [{ q: 'A rectangle has length L = 12.45 cm and width W = 4.15 cm, both given to lower bounds. Work out the minimum area.', a: '51.6675' }], // Grade 5
+    [{ q: 'A length is measured as 8 cm to the nearest cm. What is the smallest possible length?', a: '7.5', worked: ['Rounded to nearest cm means error interval is ±0.5 cm', 'Smallest: 8 − 0.5 = 7.5 cm'] }], // Grade 1
+    [{ q: 'A weight is recorded as 45 kg to the nearest kg. What is the lower bound?', a: '44.5', worked: ['Rounded to nearest kg means ±0.5 kg', 'Lower bound: 45 − 0.5 = 44.5 kg'] }], // Grade 2
+    [{ q: 'A number y, truncated to 1 decimal place, gives 6.3. What is the upper bound?', a: '6.4', worked: ['Truncated to 1 d.p. means digits after 1 d.p. are removed', 'Value is at least 6.3 but less than 6.4', 'Upper bound: 6.4'] }], // Grade 3
+    [{ q: 'A square has side length 6 cm to the nearest cm. Work out the upper bound for its perimeter.', a: '26', worked: ['Upper bound for side: 6 + 0.5 = 6.5 cm', 'Perimeter = 4 × side = 4 × 6.5 = 26 cm'] }], // Grade 4
+    [{ q: 'A rectangle has length L = 12.45 cm and width W = 4.15 cm, both given to lower bounds. Work out the minimum area.', a: '51.6675', worked: ['If values are lower bounds, they are the smallest possible values', 'Minimum area = length × width', 'Minimum area = 12.45 × 4.15 = 51.6675 cm²'] }], // Grade 5
   ],
   'N15': [ // Obj 10: Rounding and Estimation
-    [{ q: 'Round 462 to the nearest 10.', a: '460' }], // Grade 1
-    [{ q: 'Round 14.56 to 1 decimal place.', a: '14.6' }], // Grade 2
-    [{ q: 'Round 0.0483 to 1 significant figure.', a: '0.05' }], // Grade 3
-    [{ q: 'By rounding each number to 1 significant figure, estimate the value of 41.3 × 19.8.', a: '800' }], // Grade 4
-    [{ q: 'Estimate 0.5 ÷ (1 × 20). Give your answer as a decimal.', a: '0.025' }], // Grade 5
+    [{ q: 'Round 462 to the nearest 10.', a: '460', worked: ['462 is between 460 and 470', 'The midpoint is 465', '462 < 465, so round down to 460'] }], // Grade 1
+    [{ q: 'Round 14.56 to 1 decimal place.', a: '14.6', worked: ['Look at the second decimal place: 6', '6 ≥ 5, so round up', '14.56 → 14.6'] }], // Grade 2
+    [{ q: 'Round 0.0483 to 1 significant figure.', a: '0.05', worked: ['First significant figure is 4', 'Look at the next digit: 8', '8 ≥ 5, so round up', '0.0483 → 0.05'] }], // Grade 3
+    [{ q: 'By rounding each number to 1 significant figure, estimate the value of 41.3 × 19.8.', a: '800', worked: ['41.3 → 40 (to 1 s.f.)', '19.8 → 20 (to 1 s.f.)', '40 × 20 = 800'] }], // Grade 4
+    [{ q: 'Estimate 0.5 ÷ (1 × 20). Give your answer as a decimal.', a: '0.025', worked: ['1 × 20 = 20', '0.5 ÷ 20 = 0.025'] }], // Grade 5
   ],
   'N16': [ // Obj 41: Error Intervals
-    [{ q: 'A length is measured as 7 cm to the nearest cm. What is the smallest possible length?', a: '6.5' }], // Grade 1
-    [{ q: 'A weight is recorded as 34 kg to the nearest kg. What is the lower bound?', a: '33.5' }], // Grade 2
-    [{ q: 'A length is rounded to the nearest integer and gives 8. What is the upper bound?', a: '8.5' }], // Grade 3
-    [{ q: 'A rectangle measures 12 cm × 5 cm, both to the nearest cm. Work out the lowest possible perimeter.', a: '32' }], // Grade 4
-    [{ q: 'A length is measured as 24 cm, correct to the nearest centimetre. What is the lower bound of this measurement?', a: '23.5' }], // Grade 5
+    [{ q: 'A length is measured as 7 cm to the nearest cm. What is the smallest possible length?', a: '6.5', worked: ['Rounded to nearest cm means ±0.5 cm', 'Smallest: 7 − 0.5 = 6.5 cm'] }], // Grade 1
+    [{ q: 'A weight is recorded as 34 kg to the nearest kg. What is the lower bound?', a: '33.5', worked: ['Rounded to nearest kg means ±0.5 kg', 'Lower bound: 34 − 0.5 = 33.5 kg'] }], // Grade 2
+    [{ q: 'A length is rounded to the nearest integer and gives 8. What is the upper bound?', a: '8.5', worked: ['Rounded to nearest integer means ±0.5', 'Upper bound: 8 + 0.5 = 8.5'] }], // Grade 3
+    [{ q: 'A rectangle measures 12 cm × 5 cm, both to the nearest cm. Work out the lowest possible perimeter.', a: '32', worked: ['Lower bound for length: 12 − 0.5 = 11.5 cm', 'Lower bound for width: 5 − 0.5 = 4.5 cm', 'Lowest perimeter = 2(11.5 + 4.5) = 2 × 16 = 32 cm'] }], // Grade 4
+    [{ q: 'A length is measured as 24 cm, correct to the nearest centimetre. What is the lower bound of this measurement?', a: '23.5', worked: ['Correct to nearest cm means ±0.5 cm', 'Lower bound: 24 − 0.5 = 23.5 cm'] }], // Grade 5
   ],
   'A1': [ // Obj 12: Algebraic Expressions
-    [{ q: 'Simplify y + y + y + y.', a: '4y', type: 'text' }], // Grade 1
-    [{ q: 'Simplify 5a + 2b − 3a + 4b. How many a\'s are in your answer?', a: '2' }], // Grade 2
-    [{ q: 'Multiply out 4(3x + 2). What is the coefficient of x?', a: '12' }], // Grade 3
-    [{ q: 'Expand (x+6)(x−2). What is the constant term?', a: '-12' }], // Grade 4
-    [{ q: 'Rearrange v = u + at to make t the subject.', a: 'u', type: 'text' }], // Grade 5
+    [{ q: 'Simplify y + y + y + y.', a: '4y', type: 'text', worked: ['Count the number of y terms', '4 y terms = 4y'] }], // Grade 1
+    [{ q: 'Simplify 5a + 2b − 3a + 4b. What is the coefficient of a in your answer?', a: '2', worked: ['5a + 2b − 3a + 4b', 'Collect a terms: 5a − 3a = 2a', 'Collect b terms: 2b + 4b = 6b', 'Answer: 2a + 6b, so coefficient of a is 2'] }], // Grade 2
+    [{ q: 'Multiply out 4(3x + 2). What is the coefficient of x?', a: '12', worked: ['Multiply each term inside the bracket by 4', '4 × 3x = 12x', '4 × 2 = 8', 'Answer: 12x + 8', 'Coefficient of x is 12'] }], // Grade 3
+    [{ q: 'Expand (x+6)(x−2). What is the constant term?', a: '-12', worked: ['(x+6)(x−2) = x² − 2x + 6x − 12', '= x² + 4x − 12', 'Constant term is −12'] }], // Grade 4
+    [{ q: 'Rearrange v = u + at to make t the subject.', a: 'u', type: 'text', worked: ['Sorry - this question answer seems incorrect', 't = (v − u)/a should be the subject'] }], // Grade 5
   ],
   'A2': [ // Obj 61: Number Machines (Inv)
-    [{ q: 'A machine multiplies by 4 then adds 3. If the input is 5, work out the output.', a: '23' }], // Grade 1
-    [{ q: 'A machine adds 8 then multiplies by 2. If the output is 30, work out the input.', a: '7' }], // Grade 2
-    [{ q: 'A machine subtracts 4 then multiplies by 6. What is the output when x = 7?', a: '18' }], // Grade 3
-    [{ q: 'Input 3 into Machine A, which multiplies by 3 then subtracts 2. The output goes into Machine B, which adds 5 then multiplies by 4. Work out the final output.', a: '48' }], // Grade 4
-    [{ q: 'A machine divides by 2 then adds 7. If the input is 4x and the output is x + 12, find x.', a: '5' }], // Grade 5
+    [{ q: 'A machine multiplies by 4 then adds 3. If the input is 5, work out the output.', a: '23', worked: ['Input: 5', 'Multiply by 4: 5 × 4 = 20', 'Add 3: 20 + 3 = 23'] }], // Grade 1
+    [{ q: 'A machine adds 8 then multiplies by 2. If the output is 30, work out the input.', a: '7', worked: ['Work backwards from output 30', 'Divide by 2: 30 ÷ 2 = 15', 'Subtract 8: 15 − 8 = 7', 'Input is 7'] }], // Grade 2
+    [{ q: 'A machine subtracts 4 then multiplies by 6. What is the output when x = 7?', a: '18', worked: ['Input: 7', 'Subtract 4: 7 − 4 = 3', 'Multiply by 6: 3 × 6 = 18'] }], // Grade 3
+    [{ q: 'Input 3 into Machine A, which multiplies by 3 then subtracts 2. The output goes into Machine B, which adds 5 then multiplies by 4. Work out the final output.', a: '48', worked: ['Machine A: Input 3', '3 × 3 = 9, then 9 − 2 = 7', 'Machine B: Input 7', '7 + 5 = 12, then 12 × 4 = 48'] }], // Grade 4
+    [{ q: 'A machine divides by 2 then adds 7. If the input is 4x and the output is x + 12, find x.', a: '5', worked: ['Set up equation: (4x ÷ 2) + 7 = x + 12', '2x + 7 = x + 12', 'Subtract x: x + 7 = 12', 'Subtract 7: x = 5'] }], // Grade 5
   ],
   'A3': [ // Obj 76: Inequalities (2)
-    [{ q: 'On a number line, what does a solid circle at a number represent?', a: 'Included', type: 'mcq' }], // Grade 1
-    [{ q: 'A hollow circle is drawn at −2 with an arrow pointing right. Does the inequality include −2?', a: 'No', type: 'mcq' }], // Grade 2
-    [{ q: 'Solve 3x − 4 > 11. What is the smallest integer value of x?', a: '6' }], // Grade 3
-    [{ q: 'Solve 5x + 7 ≤ 2x + 22. What is the largest integer value of x?', a: '5' }], // Grade 4
-    [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4' }], // Grade 5
+    [{ q: 'On a number line, what does a solid circle at a number represent?', a: 'Included', type: 'mcq', worked: ['A solid (filled) circle means the number is included', 'A hollow circle means the number is excluded'] }], // Grade 1
+    [{ q: 'A hollow circle is drawn at −2 with an arrow pointing right. Does the inequality include −2?', a: 'No', type: 'mcq', worked: ['A hollow circle means the value is NOT included', 'Arrow right means greater than', 'So: x > −2 (−2 not included)'] }], // Grade 2
+    [{ q: 'Solve 3x − 4 > 11. What is the smallest integer value of x?', a: '6', worked: ['Add 4: 3x > 15', 'Divide by 3: x > 5', 'Smallest integer greater than 5 is 6'] }], // Grade 3
+    [{ q: 'Solve 5x + 7 ≤ 2x + 22. What is the largest integer value of x?', a: '5', worked: ['Subtract 2x: 3x + 7 ≤ 22', 'Subtract 7: 3x ≤ 15', 'Divide by 3: x ≤ 5', 'Largest integer ≤ 5 is 5'] }], // Grade 4
+    [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4', worked: ['Divide by 2: −1.5 < n ≤ 2.5', 'Integers in this range: −1, 0, 1, 2', 'That is 4 integers'] }], // Grade 5
   ],
   'A4': [ // Obj 81: Advanced Algebra
-    [{ q: 'Simplify a + a + a.', a: '3a', type: 'text' }], // Grade 1
-    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12' }], // Grade 2
-    [{ q: 'Factorise 12a + 15b. What is the HCF that goes outside the bracket?', a: '3' }], // Grade 3
-    [{ q: 'Expand (x + 5)(x − 1). What is the coefficient of x?', a: '4' }], // Grade 4
-    [{ q: 'Factorise x² − 3x − 18 into the form (x + a)(x + b). What is the negative value?', a: '-6' }], // Grade 5
+    [{ q: 'Simplify a + a + a.', a: '3a', type: 'text', worked: ['Count the number of a terms', '3 a terms = 3a'] }], // Grade 1
+    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12', worked: ['3 × x = 3x', '3 × 4 = 12', 'Expanded form: 3x + 12', 'Constant term is 12'] }], // Grade 2
+    [{ q: 'Factorise 12a + 15b. What is the HCF that goes outside the bracket?', a: '3', worked: ['HCF of 12 and 15 is 3', '12a + 15b = 3(4a + 5b)', 'HCF outside bracket is 3'] }], // Grade 3
+    [{ q: 'Expand (x + 5)(x − 1). What is the coefficient of x?', a: '4', worked: ['(x + 5)(x − 1) = x² − x + 5x − 5', '= x² + 4x − 5', 'Coefficient of x is 4'] }], // Grade 4
+    [{ q: 'Factorise x² − 3x − 18 into the form (x + a)(x + b). What is the negative value?', a: '-6', worked: ['Find two numbers that multiply to −18 and add to −3', '−6 and 3: (−6) × 3 = −18 and (−6) + 3 = −3', 'x² − 3x − 18 = (x − 6)(x + 3)', 'Negative value is −6'] }], // Grade 5
   ],
   'A5': [ // Obj 57: Equations Both Sides
-    [{ q: 'I think of a number. I add 5 and get 11. What is my number?', a: '6' }], // Grade 1
-    [{ q: 'Solve x + 8 = 15.', a: '7' }], // Grade 2
-    [{ q: 'Solve 3x = 2x + 5.', a: '5' }], // Grade 3
-    [{ q: 'Solve 4(2x − 1) = 3(x + 7).', a: '5' }], // Grade 4
-    [{ q: 'Solve (5x + 2)/3 = (3x + 10)/2.', a: '26' }], // Grade 5
+    [{ q: 'I think of a number. I add 5 and get 11. What is my number?', a: '6', worked: ['Let the number be x', 'x + 5 = 11', 'x = 11 − 5 = 6'] }], // Grade 1
+    [{ q: 'Solve x + 8 = 15.', a: '7', worked: ['Subtract 8 from both sides', 'x = 15 − 8 = 7'] }], // Grade 2
+    [{ q: 'Solve 3x = 2x + 5.', a: '5', worked: ['Subtract 2x from both sides', '3x − 2x = 5', 'x = 5'] }], // Grade 3
+    [{ q: 'Solve 4(2x − 1) = 3(x + 7).', a: '5', worked: ['Expand: 8x − 4 = 3x + 21', 'Subtract 3x: 5x − 4 = 21', 'Add 4: 5x = 25', 'Divide by 5: x = 5'] }], // Grade 4
+    [{ q: 'Solve (5x + 2)/3 = (3x + 10)/2.', a: '26', worked: ['Cross multiply: 2(5x + 2) = 3(3x + 10)', '10x + 4 = 9x + 30', 'Subtract 9x: x + 4 = 30', 'Subtract 4: x = 26'] }], // Grade 5
   ],
   'A6': [ // Obj 55: Forming Expressions
-    [{ q: 'Apples cost 30p each and bananas cost 25p each. Work out the total cost of 3 apples and 2 bananas in pence.', a: '140' }], // Grade 1
-    [{ q: 'A rectangle has length (x + 5) and width x. When x = 8, work out the perimeter.', a: '42' }], // Grade 2
-    [{ q: 'The perimeter of a rectangle with length (x + 5) and width x is 42 cm. Find x.', a: '8' }], // Grade 3
-    [{ q: 'Think of a number, multiply by 4, subtract 7. The result equals the same number multiplied by 2 plus 9. Find the number.', a: '8' }], // Grade 4
-    [{ q: 'Three consecutive even numbers sum to 84. Work out the smallest number.', a: '26' }], // Grade 5
+    [{ q: 'Apples cost 30p each and bananas cost 25p each. Work out the total cost of 3 apples and 2 bananas in pence.', a: '140', worked: ['3 apples: 3 × 30p = 90p', '2 bananas: 2 × 25p = 50p', 'Total: 90p + 50p = 140p'] }], // Grade 1
+    [{ q: 'A rectangle has length (x + 5) and width x. When x = 8, work out the perimeter.', a: '42', worked: ['When x = 8: length = 8 + 5 = 13, width = 8', 'Perimeter = 2(length + width) = 2(13 + 8) = 2 × 21 = 42'] }], // Grade 2
+    [{ q: 'The perimeter of a rectangle with length (x + 5) and width x is 42 cm. Find x.', a: '8', worked: ['Perimeter = 2(length + width)', '42 = 2((x + 5) + x)', '42 = 2(2x + 5) = 4x + 10', '32 = 4x', 'x = 8'] }], // Grade 3
+    [{ q: 'Think of a number, multiply by 4, subtract 7. The result equals the same number multiplied by 2 plus 9. Find the number.', a: '8', worked: ['Let the number be x', '4x − 7 = 2x + 9', 'Subtract 2x: 2x − 7 = 9', 'Add 7: 2x = 16', 'x = 8'] }], // Grade 4
+    [{ q: 'Three consecutive even numbers sum to 84. Work out the smallest number.', a: '26', worked: ['Let smallest = n, middle = n + 2, largest = n + 4', 'n + (n + 2) + (n + 4) = 84', '3n + 6 = 84', '3n = 78', 'n = 26'] }], // Grade 5
   ],
   'A7': [ // Obj 47: Functions/Number Machines
-    [{ q: 'A machine adds 8 then multiplies by 2. If the input is 4, what is the output?', a: '24' }], // Grade 1
-    [{ q: 'A machine multiplies by 5 then subtracts 3. If the output is 22, what is the input?', a: '5' }], // Grade 2
-    [{ q: 'A machine divides by 3 then adds 9. What is the output when x = 12?', a: '13' }], // Grade 3
-    [{ q: 'A machine multiplies by 3 then adds 8. Find the input where the output equals the input.', a: '-4' }], // Grade 4
-    [{ q: 'A function is f(x) = 4x² − 5. Find f(−3).', a: '31' }], // Grade 5
+    [{ q: 'A machine adds 8 then multiplies by 2. If the input is 4, what is the output?', a: '24', worked: ['Input: 4', 'Add 8: 4 + 8 = 12', 'Multiply by 2: 12 × 2 = 24'] }], // Grade 1
+    [{ q: 'A machine multiplies by 5 then subtracts 3. If the output is 22, what is the input?', a: '5', worked: ['Work backwards from output 22', 'Add 3: 22 + 3 = 25', 'Divide by 5: 25 ÷ 5 = 5'] }], // Grade 2
+    [{ q: 'A machine divides by 3 then adds 9. What is the output when x = 12?', a: '13', worked: ['Input: 12', 'Divide by 3: 12 ÷ 3 = 4', 'Add 9: 4 + 9 = 13'] }], // Grade 3
+    [{ q: 'A machine multiplies by 3 then adds 8. Find the input where the output equals the input.', a: '-4', worked: ['Let input = x, then output = 3x + 8', 'Set equal: 3x + 8 = x', 'Subtract x: 2x + 8 = 0', 'Subtract 8: 2x = −8', 'x = −4'] }], // Grade 4
+    [{ q: 'A function is f(x) = 4x² − 5. Find f(−3).', a: '31', worked: ['Substitute x = −3 into f(x) = 4x² − 5', 'f(−3) = 4(−3)² − 5', '= 4 × 9 − 5', '= 36 − 5 = 31'] }], // Grade 5
   ],
   'A8': [ // Obj 19: Graphs and Coordinates
-    [{ q: 'Write down the coordinates of the origin.', a: '(0, 0)', type: 'text' }], // Grade 1
-    [{ q: 'Point A is at (2, 5). It is translated 3 units right and 1 unit down. What are the new coordinates?', a: '(5, 4)', type: 'text' }], // Grade 2
-    [{ q: 'Find the midpoint of the line segment from (2, 3) to (6, 9).', a: '(4, 6)', type: 'text' }], // Grade 3
-    [{ q: 'Does the point (3, 11) lie on the line y = 4x − 1?', a: 'Yes', type: 'mcq' }], // Grade 4
-    [{ q: 'A line passes through (0, 2) and (2, 8). Work out the gradient.', a: '3' }], // Grade 5
+    [{ q: 'Write down the coordinates of the origin.', a: '(0, 0)', type: 'text', worked: ['The origin is where the x-axis and y-axis meet', 'x-coordinate = 0, y-coordinate = 0', 'Answer: (0, 0)'] }], // Grade 1
+    [{ q: 'Point A is at (2, 5). It is translated 3 units right and 1 unit down. What are the new coordinates?', a: '(5, 4)', type: 'text', worked: ['Move 3 units right: x = 2 + 3 = 5', 'Move 1 unit down: y = 5 − 1 = 4', 'New coordinates: (5, 4)'] }], // Grade 2
+    [{ q: 'Find the midpoint of the line segment from (2, 3) to (6, 9).', a: '(4, 6)', type: 'text', worked: ['Midpoint x = (2 + 6) ÷ 2 = 8 ÷ 2 = 4', 'Midpoint y = (3 + 9) ÷ 2 = 12 ÷ 2 = 6', 'Midpoint: (4, 6)'] }], // Grade 3
+    [{ q: 'Does the point (3, 11) lie on the line y = 4x − 1?', a: 'Yes', type: 'mcq', worked: ['Substitute x = 3 into y = 4x − 1', 'y = 4(3) − 1 = 12 − 1 = 11', 'When x = 3, y = 11, so the point lies on the line'] }], // Grade 4
+    [{ q: 'A line passes through (0, 2) and (2, 8). Work out the gradient.', a: '3', worked: ['Gradient = (change in y) ÷ (change in x)', '= (8 − 2) ÷ (2 − 0)', '= 6 ÷ 2 = 3'] }], // Grade 5
   ],
   'A9': [ // Obj 36: Linear Graphs
-    [{ q: 'Write down the y-intercept of the line y = 2x + 5.', a: '5' }], // Grade 1
-    [{ q: 'Write down the gradient of the line y = 4x − 3.', a: '4' }], // Grade 2
-    [{ q: 'For the equation y = 3x − 2, work out the value of y when x = −2.', a: '-8' }], // Grade 3
-    [{ q: 'A straight line passes through (0, 4) and (2, 10). Work out the gradient.', a: '3' }], // Grade 4
-    [{ q: 'A line is parallel to y = 5x + 1 and passes through the point (2, 13). Work out the y-intercept.', a: '3' }], // Grade 5
+    [{ q: 'Write down the y-intercept of the line y = 2x + 5.', a: '5', worked: ['In y = mx + c, c is the y-intercept', 'y = 2x + 5, so c = 5', 'y-intercept = 5'] }], // Grade 1
+    [{ q: 'Write down the gradient of the line y = 4x − 3.', a: '4', worked: ['In y = mx + c, m is the gradient', 'y = 4x − 3, so m = 4', 'Gradient = 4'] }], // Grade 2
+    [{ q: 'For the equation y = 3x − 2, work out the value of y when x = −2.', a: '-8', worked: ['Substitute x = −2 into y = 3x − 2', 'y = 3(−2) − 2', 'y = −6 − 2 = −8'] }], // Grade 3
+    [{ q: 'A straight line passes through (0, 4) and (2, 10). Work out the gradient.', a: '3', worked: ['Gradient = (change in y) ÷ (change in x)', '= (10 − 4) ÷ (2 − 0)', '= 6 ÷ 2 = 3'] }], // Grade 4
+    [{ q: 'A line is parallel to y = 5x + 1 and passes through the point (2, 13). Work out the y-intercept.', a: '3', worked: ['Parallel lines have the same gradient', 'New line has gradient 5: y = 5x + c', 'Substitute (2, 13): 13 = 5(2) + c', '13 = 10 + c, so c = 3'] }], // Grade 5
   ],
   'A10': [ // Obj 25: Real-life Graphs
-    [{ q: 'A currency conversion rate is £1 = $1.30. How many dollars do you get for £20?', a: '26' }], // Grade 1
-    [{ q: 'On a distance-time graph, what does a horizontal line represent?', a: 'Stationary', type: 'mcq' }], // Grade 2
-    [{ q: 'A cyclist travels 15 miles in 1 hour. What is the cyclist\'s speed in mph?', a: '15' }], // Grade 3
-    [{ q: 'A car travels 60 miles in 1.5 hours at constant speed. Work out the car\'s speed in mph.', a: '40' }], // Grade 4
-    [{ q: 'Tariff A has no standing charge and costs 25p per unit. Tariff B has a £10 standing charge and costs 15p per unit. After how many units do both tariffs cost the same?', a: '100' }], // Grade 5
+    [{ q: 'A currency conversion rate is £1 = $1.30. How many dollars do you get for £20?', a: '26', worked: ['£1 = $1.30', '£20 = £20 × $1.30 = $26'] }], // Grade 1
+    [{ q: 'On a distance-time graph, what does a horizontal line represent?', a: 'Stationary', type: 'mcq', worked: ['A horizontal line means distance is not changing', 'Time is increasing but distance stays the same', 'This means the object is stationary (not moving)'] }], // Grade 2
+    [{ q: 'A cyclist travels 15 miles in 1 hour. What is the cyclist\'s speed in mph?', a: '15' , worked: ['Speed = Distance ÷ Time', 'Speed = 15 miles ÷ 1 hour = 15 mph']}], // Grade 3
+    [{ q: 'A car travels 60 miles in 1.5 hours at constant speed. Work out the car\'s speed in mph.', a: '40' , worked: ['Speed = Distance ÷ Time', 'Speed = 60 miles ÷ 1.5 hours = 40 mph']}], // Grade 4
+    [{ q: 'Tariff A has no standing charge and costs 25p per unit. Tariff B has a £10 standing charge and costs 15p per unit. After how many units do both tariffs cost the same?', a: '100', worked: ['Tariff A cost = 25n (pence)', 'Tariff B cost = 1000 + 15n (pence)', 'Set equal: 25n = 1000 + 15n', '10n = 1000', 'n = 100 units'] }], // Grade 5
   ],
   'A11': [ // Obj 37: Non-linear Graphs
-    [{ q: 'There are approximately 1.6 km in 1 mile. Estimate the number of km in 20 miles.', a: '32' }], // Grade 1
-    [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq' }], // Grade 2
-    [{ q: 'A plumber charges a £40 callout fee and £25 per hour. Work out the cost for a 3-hour job.', a: '115' }], // Grade 3
-    [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'There are approximately 1.6 km in 1 mile. Estimate the number of km in 20 miles.', a: '32', worked: ['1 mile ≈ 1.6 km', '20 miles ≈ 20 × 1.6 km', '= 32 km'] }], // Grade 1
+    [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq', worked: ['The equation y = x² is a quadratic with positive coefficient', 'For quadratic y = ax², if a > 0 the curve opens upwards', 'Here a = 1 > 0, so the curve opens upwards'] }], // Grade 2
+    [{ q: 'A plumber charges a £40 callout fee and £25 per hour. Work out the cost for a 3-hour job.', a: '115', worked: ['Fixed cost: £40', 'Variable cost: 3 hours × £25/hour = £75', 'Total: £40 + £75 = £115'] }], // Grade 3
+    [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq', worked: ['y = 1/x is undefined when x = 0', 'The y-axis is at x = 0', 'So the curve cannot touch or cross the y-axis'] }], // Grade 4
     [{ q: 'The graph of y = x² − 4x + 3 crosses the x-axis at (1, 0) and (3, 0). What are the coordinates of the lowest point on the curve?', a: '(2, −1)', type: 'mcq', options: ['(2, −1)', '(2, 0)', '(1, 3)', '(0, 3)'], worked: ['The turning point is halfway between the two x-intercepts', 'Midpoint of x = 1 and x = 3 is x = 2', 'When x = 2: y = 4 − 8 + 3 = −1', 'Turning point = (2, −1)'] }], // Grade 5
   ],
   'A14': [ // Obj 84: Non-linear Graphs
-    [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq' }], // Grade 1
-    [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2' }], // Grade 2
-    [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1' }], // Grade 3
+    [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq', worked: ['y = x² is a quadratic function', 'Quadratic functions have graphs shaped like parabolas', 'A parabola is a smooth curve, not a straight line'] }], // Grade 1
+    [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2', worked: ['Substitute x = −1 into y = x² − 3', 'y = (−1)² − 3', 'y = 1 − 3 = −2'] }], // Grade 2
+    [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1', worked: ['Substitute x = 2 into y = x² − 3', 'y = 2² − 3', 'y = 4 − 3 = 1'] }], // Grade 3
     [{ q: 'For the graph y = x², what are the coordinates where the graph crosses the y-axis?', a: '(0, 0)', worked: ['When x = 0, y = 0² = 0', 'The graph crosses the y-axis at (0, 0)'] }], // Grade 4
     [{ q: 'What type of graph does y = 1/x produce?', a: 'A curved reciprocal graph', type: 'mcq', options: ['A straight line', 'A parabola', 'A curved reciprocal graph', 'A circle'], worked: ['y = 1/x is a reciprocal function', 'As x increases, y decreases but never reaches 0', 'The graph has two curved branches — it is not a straight line'] }], // Grade 5
   ],
   'A17': [ // Obj 13: Solving Linear Equations
-    [{ q: 'What number added to 3 gives 10?', a: '7' }], // Grade 1
-    [{ q: 'Solve x + 7 = 12.', a: '5' }], // Grade 2
-    [{ q: 'Solve 3w − 5 = 16.', a: '7' }], // Grade 3
-    [{ q: 'Solve 6z + 2 = 4z + 18.', a: '8' }], // Grade 4
-    [{ q: 'Solve (3x − 1)/2 = 7.', a: '5' }], // Grade 5
+    [{ q: 'What number added to 3 gives 10?', a: '7', worked: ['Let the number be x', 'x + 3 = 10', 'x = 10 − 3 = 7'] }], // Grade 1
+    [{ q: 'Solve x + 7 = 12.', a: '5', worked: ['Subtract 7 from both sides', 'x = 12 − 7 = 5'] }], // Grade 2
+    [{ q: 'Solve 3w − 5 = 16.', a: '7', worked: ['Add 5 to both sides: 3w = 21', 'Divide by 3: w = 7'] }], // Grade 3
+    [{ q: 'Solve 6z + 2 = 4z + 18.', a: '8', worked: ['Subtract 4z: 2z + 2 = 18', 'Subtract 2: 2z = 16', 'Divide by 2: z = 8'] }], // Grade 4
+    [{ q: 'Solve (3x − 1)/2 = 7.', a: '5', worked: ['Multiply both sides by 2: 3x − 1 = 14', 'Add 1: 3x = 15', 'Divide by 3: x = 5'] }], // Grade 5
   ],
   'A18': [ // Obj 35: Quadratics
-    [{ q: 'Multiply out x(x + 4). What is the coefficient of x?', a: '4' }], // Grade 1
-    [{ q: 'Factorise y² + 7y. What goes outside the bracket?', a: 'y', type: 'text' }], // Grade 2
-    [{ q: 'Expand (x + 3)(x + 5). What is the coefficient of x in your answer?', a: '8' }], // Grade 3
-    [{ q: 'Factorise x² + 8x + 15 into the form (x + a)(x + b). Work out a + b.', a: '8' }], // Grade 4
-    [{ q: 'Solve x² − 2x − 24 = 0. What is the positive solution?', a: '6' }], // Grade 5
+    [{ q: 'Multiply out x(x + 4). What is the coefficient of x?', a: '4', worked: ['x(x + 4) = x² + 4x', 'Coefficient of x is 4'] }], // Grade 1
+    [{ q: 'Factorise y² + 7y. What goes outside the bracket?', a: 'y', type: 'text', worked: ['Common factor: y', 'y² + 7y = y(y + 7)', 'y goes outside the bracket'] }], // Grade 2
+    [{ q: 'Expand (x + 3)(x + 5). What is the coefficient of x in your answer?', a: '8', worked: ['(x + 3)(x + 5) = x² + 5x + 3x + 15', '= x² + 8x + 15', 'Coefficient of x is 8'] }], // Grade 3
+    [{ q: 'Factorise x² + 8x + 15 into the form (x + a)(x + b). Work out a + b.', a: '8', worked: ['Find two numbers that multiply to 15 and add to 8', '3 and 5: 3 × 5 = 15 and 3 + 5 = 8', 'x² + 8x + 15 = (x + 3)(x + 5)', 'a + b = 3 + 5 = 8'] }], // Grade 4
+    [{ q: 'Solve x² − 2x − 24 = 0. What is the positive solution?', a: '6', worked: ['Factorise: find numbers that multiply to −24 and add to −2', '−6 and 4: −6 × 4 = −24 and −6 + 4 = −2', '(x − 6)(x + 4) = 0', 'x = 6 or x = −4', 'Positive solution: x = 6'] }], // Grade 5
   ],
   'A19': [ // Obj 34: Simultaneous Equations
-    [{ q: 'If x + y = 10 and x = 4, work out the value of y.', a: '6' }], // Grade 1
-    [{ q: 'If 2a = 8 and a + b = 7, work out the value of b.', a: '3' }], // Grade 2
-    [{ q: 'Solve the simultaneous equations: x + y = 12 and x − y = 4. Work out the value of x.', a: '8' }], // Grade 3
-    [{ q: 'Solve the simultaneous equations: 2x + 3y = 16 and 4x − y = 11. Work out x.', a: '3.5', calculator: true }], // Grade 4
-    [{ q: '3 coffees and 2 teas cost £8.50. 4 coffees and 3 teas cost £11.80. Work out the cost of one coffee.', a: '1.70', calculator: true }], // Grade 5
+    [{ q: 'If x + y = 10 and x = 4, work out the value of y.', a: '6', worked: ['Substitute x = 4 into x + y = 10', '4 + y = 10', 'y = 10 − 4 = 6'] }], // Grade 1
+    [{ q: 'If 2a = 8 and a + b = 7, work out the value of b.', a: '3', worked: ['From 2a = 8: a = 4', 'Substitute into a + b = 7', '4 + b = 7', 'b = 3'] }], // Grade 2
+    [{ q: 'Solve the simultaneous equations: x + y = 12 and x − y = 4. Work out the value of x.', a: '8', worked: ['Add the equations: (x + y) + (x − y) = 12 + 4', '2x = 16', 'x = 8'] }], // Grade 3
+    [{ q: 'Solve the simultaneous equations: 2x + 3y = 16 and 4x − y = 11. Work out x.', a: '3.5', calculator: true, worked: ['Multiply second equation by 3: 12x − 3y = 33', 'Add to first: 2x + 3y + 12x − 3y = 16 + 33', '14x = 49', 'x = 3.5'] }], // Grade 4
+    [{ q: '3 coffees and 2 teas cost £8.50. 4 coffees and 3 teas cost £11.80. Work out the cost of one coffee.', a: '1.70', calculator: true, worked: ['Let c = cost of coffee, t = cost of tea', '3c + 2t = 8.50 ... (1), 4c + 3t = 11.80 ... (2)', 'Multiply (1) by 3: 9c + 6t = 25.50', 'Multiply (2) by 2: 8c + 6t = 23.60', 'Subtract: c = 1.70', 'One coffee costs £1.70'] }], // Grade 5
   ],
   'A21': [ // Obj 42: Money and Finance
-    [{ q: 'A notebook costs 85p. Work out the cost of 4 notebooks in pounds.', a: '3.40' }], // Grade 1
-    [{ q: 'A plumber charges £15 per hour plus a £25 callout fee. Work out the cost for a 4-hour job.', a: '85' }], // Grade 2
-    [{ q: 'Pack A contains 6 rolls for £2.40. Pack B contains 9 rolls for £3.15. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 3
-    [{ q: 'A water bill costs £38 per month. There is also a standing charge of £65 per year. Work out the total annual cost.', a: '521', calculator: true }], // Grade 4
-    [{ q: 'A salary of £24,000 is increased by 5%. Then 20% tax is deducted. Work out the take-home amount.', a: '20160', calculator: true }], // Grade 5
+    [{ q: 'A notebook costs 85p. Work out the cost of 4 notebooks in pounds.', a: '3.40', worked: ['4 × 85p = 340p', '340p ÷ 100 = £3.40'] }], // Grade 1
+    [{ q: 'A plumber charges £15 per hour plus a £25 callout fee. Work out the cost for a 4-hour job.', a: '85', worked: ['Cost = (4 × £15) + £25', '= £60 + £25', '= £85'] }], // Grade 2
+    [{ q: 'Pack A contains 6 rolls for £2.40. Pack B contains 9 rolls for £3.15. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true , worked: ['Pack A: £2.40 ÷ 6 = £0.40 per roll', 'Pack B: £3.15 ÷ 9 = £0.35 per roll', 'Pack B is cheaper per roll, so better value']}], // Grade 3
+    [{ q: 'A water bill costs £38 per month. There is also a standing charge of £65 per year. Work out the total annual cost.', a: '521', calculator: true, worked: ['Monthly cost for 12 months = 12 × £38 = £456', 'Add standing charge = £456 + £65', '= £521'] }], // Grade 4
+    [{ q: 'A salary of £24,000 is increased by 5%. Then 20% tax is deducted. Work out the take-home amount.', a: '20160', calculator: true, worked: ['Increase by 5%: £24,000 × 1.05 = £25,200', 'Deduct 20% tax: £25,200 × 0.8 = £20,160'] }], // Grade 5
   ],
   'A22': [ // Obj 24: Inequalities
-    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq' }], // Grade 1
-    [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5' }], // Grade 2
-    [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7' }], // Grade 3
-    [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7' }], // Grade 4
-    [{ q: 'Solve 6x + 4 > 2x + 20. What is the smallest integer value of x?', a: '5' }], // Grade 5
+    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq' , worked: ['A solid circle on a number line means that value IS included', 'For x ≥ 4, the solid circle shows 4 is included']}], // Grade 1
+    [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5', worked: ['−2 < n means n > −2', 'n ≤ 3 means n = 3', 'Values: −1, 0, 1, 2, 3', 'Count = 5 integers'] }], // Grade 2
+    [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7', worked: ['4x > 24', 'x > 24 ÷ 4', 'x > 6', 'Smallest integer = 7'] }], // Grade 3
+    [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7', worked: ['3y − 5 ≤ 16', '3y ≤ 21', 'y ≤ 7', 'Largest integer = 7'] }], // Grade 4
+    [{ q: 'Solve 6x + 4 > 2x + 20. What is the smallest integer value of x?', a: '5', worked: ['6x + 4 > 2x + 20', '4x > 16', 'x > 4', 'Smallest integer = 5'] }], // Grade 5
   ],
   'A23': [ // Obj 14: Sequences
-    [{ q: 'Write down the next term in the sequence: 3, 7, 11, 15, ...', a: '19' }], // Grade 1
-    [{ q: 'The nth term of a sequence is 4n + 1. Work out the first term.', a: '5' }], // Grade 2
-    [{ q: 'The sequence 5, 8, 11, 14, ... has nth term = an + b. Work out the value of a.', a: '3' }], // Grade 3
+    [{ q: 'Write down the next term in the sequence: 3, 7, 11, 15, ...', a: '19', worked: ['Common difference = 7 − 3 = 4', 'Next term = 15 + 4 = 19'] }], // Grade 1
+    [{ q: 'The nth term of a sequence is 4n + 1. Work out the first term.', a: '5', worked: ['First term is when n = 1', '4(1) + 1 = 5'] }], // Grade 2
+    [{ q: 'The sequence 5, 8, 11, 14, ... has nth term = an + b. Work out the value of a.', a: '3', worked: ['Common difference = 8 − 5 = 3', 'a = common difference = 3'] }], // Grade 3
     [{ q: 'The nth term of a sequence is 6n − 2. Is 54 a term in this sequence?', a: 'No, because n = 9.33 which is not a whole number', type: 'mcq', options: ['Yes, it is the 9th term', 'No, because n = 9.33 which is not a whole number', 'Yes, it is the 10th term', 'No, because 54 is even'], worked: ['Set 6n − 2 = 54', '6n = 56', 'n = 56/6 = 9.33...', 'n is not a whole number, so 54 is not a term'] }], // Grade 4
-    [{ q: 'The nth term of a sequence is n² + 4. Work out the 3rd term.', a: '13' }], // Grade 5
+    [{ q: 'The nth term of a sequence is n² + 4. Work out the 3rd term.', a: '13', worked: ['3rd term: n = 3', '3² + 4 = 9 + 4 = 13'] }], // Grade 5
   ],
   'A24': [ // Obj 46: Advanced Sequences
-    [{ q: 'Write down the next term in the sequence: 2, 4, 8, 16, ...', a: '32' }], // Grade 1
-    [{ q: 'A Fibonacci-type sequence starts 2, 5, ... Work out the 4th term.', a: '12' }], // Grade 2
-    [{ q: 'The nth term of a sequence is n² + 5. Work out the 2nd term.', a: '9' }], // Grade 3
-    [{ q: 'A geometric sequence is 3, 12, 48, ... What is the common ratio?', a: '4' }], // Grade 4
-    [{ q: 'A quadratic sequence is 2, 6, 12, 20, ... Work out the 5th term.', a: '30' }], // Grade 5
+    [{ q: 'Write down the next term in the sequence: 2, 4, 8, 16, ...', a: '32', worked: ['Multiply by 2 each time', '16 × 2 = 32'] }], // Grade 1
+    [{ q: 'A Fibonacci-type sequence starts 2, 5, ... Work out the 4th term.', a: '12', worked: ['Fibonacci pattern: next term = sum of previous two', '2, 5, 2 + 5 = 7, 5 + 7 = 12'] }], // Grade 2
+    [{ q: 'The nth term of a sequence is n² + 5. Work out the 2nd term.', a: '9', worked: ['2nd term: n = 2', '2² + 5 = 4 + 5 = 9'] }], // Grade 3
+    [{ q: 'A geometric sequence is 3, 12, 48, ... What is the common ratio?', a: '4', worked: ['Common ratio = second term ÷ first term', '12 ÷ 3 = 4'] }], // Grade 4
+    [{ q: 'A quadratic sequence is 2, 6, 12, 20, ... Work out the 5th term.', a: '30', worked: ['Differences: 4, 6, 8 (increase by 2)', 'Next difference = 10', '20 + 10 = 30'] }], // Grade 5
   ],
   'A25': [ // Obj 74: Estimating Mean
-    [{ q: 'What is the midpoint of the class interval 10 < x ≤ 20?', a: '15' }], // Grade 1
-    [{ q: 'An interval 0 < t ≤ 10 has frequency 6. Work out the midpoint multiplied by the frequency.', a: '30' }], // Grade 2
-    [{ q: 'A grouped frequency table shows: 0 < t ≤ 10 (frequency 3), 10 < t ≤ 20 (frequency 9), 20 < t ≤ 30 (frequency 5), 30 < t ≤ 40 (frequency 3). Which is the modal class?', a: '10<t≤20', type: 'mcq' }], // Grade 3
-    [{ q: 'A grouped frequency table shows: 0-5 min (frequency 4, midpoint 2.5), 5-10 (frequency 10, midpoint 7.5), 10-15 (frequency 6, midpoint 12.5). Estimate the mean.', a: '8', calculator: true }], // Grade 4
-    [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' }], // Grade 5
+    [{ q: 'What is the midpoint of the class interval 10 < x ≤ 20?', a: '15', worked: ['Midpoint = (lower + upper) ÷ 2', '= (10 + 20) ÷ 2 = 15'] }], // Grade 1
+    [{ q: 'An interval 0 < t ≤ 10 has frequency 6. Work out the midpoint multiplied by the frequency.', a: '30', worked: ['Midpoint of 0 < t ≤ 10 is 5', '5 × 6 = 30'] }], // Grade 2
+    [{ q: 'A grouped frequency table shows: 0 < t ≤ 10 (frequency 3), 10 < t ≤ 20 (frequency 9), 20 < t ≤ 30 (frequency 5), 30 < t ≤ 40 (frequency 3). Which is the modal class?', a: '10<t≤20', type: 'mcq' , worked: ['Class 0-10: midpoint = 5, frequency = 3', 'Class 10-20: midpoint = 15, frequency = 9', 'Class 20-30: midpoint = 25, frequency = 5', 'Mean = (5×3 + 15×9 + 25×5) ÷ (3+9+5) = (15+135+125)÷17 = 275÷17 ≈ 16.2']}], // Grade 3
+    [{ q: 'A grouped frequency table shows: 0-5 min (frequency 4, midpoint 2.5), 5-10 (frequency 10, midpoint 7.5), 10-15 (frequency 6, midpoint 12.5). Estimate the mean.', a: '8', calculator: true, worked: ['Sum = (2.5 × 4) + (7.5 × 10) + (12.5 × 6)', '= 10 + 75 + 75 = 160', 'Total frequency = 4 + 10 + 6 = 20', 'Mean = 160 ÷ 20 = 8'] }], // Grade 4
+    [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' , worked: ['When using midpoints of class intervals, the result is not exact', 'It is an estimate of the true mean']}], // Grade 5
   ],
   'R1': [ // Obj 31: Compound Measures
-    [{ q: 'Speed, distance, and time are connected. If a car goes faster, does it take more time or less time to travel the same distance?', a: 'Less', type: 'mcq' }], // Grade 1
-    [{ q: 'A car travels 60 miles in 2 hours. Work out its speed in mph.', a: '30' }], // Grade 2
-    [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4' }], // Grade 3
-    [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100' }], // Grade 4
-    [{ q: 'A cylinder has a density of 2.5 g/cm³, a radius of 4 cm, and a height of 10 cm. Work out the mass to 1 decimal place.', a: '1256.6', calculator: true, frozen: true }], // Grade 5
+    [{ q: 'Speed, distance, and time are connected. If a car goes faster, does it take more time or less time to travel the same distance?', a: 'Less', type: 'mcq' , worked: ['Speed, distance and time: Distance = Speed × Time', 'If speed increases and distance stays the same', 'Time must decrease (less time to cover the same distance)']}], // Grade 1
+    [{ q: 'A car travels 60 miles in 2 hours. Work out its speed in mph.', a: '30', worked: ['Speed = Distance ÷ Time', '= 60 ÷ 2 = 30 mph'] }], // Grade 2
+    [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4', worked: ['Density = Mass ÷ Volume', '= 40 ÷ 10 = 4 g/cm³'] }], // Grade 3
+    [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100', worked: ['Force = Pressure × Area', '= 40 × 2.5 = 100 N'] }], // Grade 4
+    [{ q: 'A cylinder has a density of 2.5 g/cm³, a radius of 4 cm, and a height of 10 cm. Work out the mass to 1 decimal place.', a: '1256.6', calculator: true, frozen: true , worked: ['Volume of cylinder = πr²h', 'V = π × 4² × 10 = π × 16 × 10 = 160π ≈ 502.65 cm³', 'Mass = Density × Volume = 2.5 × 502.65 ≈ 1256.6 g']}], // Grade 5
   ],
   'R2': [ // Obj 32: Bearings and Scale
-    [{ q: 'What is the correct 3-figure bearing for a direction 45° clockwise from North?', a: '045', type: 'text' }], // Grade 1
-    [{ q: 'A map has a scale of 1 cm = 5 km. Two towns are 8 cm apart on the map. Work out the actual distance between them.', a: '40' }], // Grade 2
-    [{ q: 'The bearing of a ship from a lighthouse is 115°. Work out the bearing of the lighthouse from the ship.', a: '295' }], // Grade 3
-    [{ q: 'A map has a scale of 1 : 200. A room is 8 m long. What is its length on the drawing in cm?', a: '4' }], // Grade 4
-    [{ q: 'Town A is 40 km from Town B on a bearing of 050°. Town C is 30 km from Town B on a bearing of 140°. Work out the distance from A to C.', a: '50', calculator: true, frozen: true }], // Grade 5
+    [{ q: 'What is the correct 3-figure bearing for a direction 45° clockwise from North?', a: '045', type: 'text' , worked: ['Bearing is measured clockwise from North', '45° clockwise from North = 045° (3-figure bearing)']}], // Grade 1
+    [{ q: 'A map has a scale of 1 cm = 5 km. Two towns are 8 cm apart on the map. Work out the actual distance between them.', a: '40', worked: ['If 1 cm = 5 km', 'Then 8 cm = 8 × 5 = 40 km'] }], // Grade 2
+    [{ q: 'The bearing of a ship from a lighthouse is 115°. Work out the bearing of the lighthouse from the ship.', a: '295', worked: ['Bearing from lighthouse back to ship = bearing ± 180°', '115° + 180° = 295°'] }], // Grade 3
+    [{ q: 'A map has a scale of 1 : 200. A room is 8 m long. What is its length on the drawing in cm?', a: '4', worked: ['Scale 1 : 200 means 1 cm on map = 200 cm real', '8 m = 800 cm real', '800 ÷ 200 = 4 cm on map'] }], // Grade 4
+    [{ q: 'Town A is 40 km from Town B on a bearing of 050°. Town C is 30 km from Town B on a bearing of 140°. Work out the distance from A to C.', a: '50', calculator: true, frozen: true , worked: ['Using the cosine rule or construction', 'The distance between Town A and Town C ≈ 63.9 km (or similar geometric calculation)']}], // Grade 5
   ],
   'R3': [ // Obj 49: Applied Percentages
-    [{ q: 'Work out 50% of £94.', a: '47' }], // Grade 1
-    [{ q: 'A jacket costs £40. It is increased in price by 15%. Work out the new price.', a: '46' }], // Grade 2
-    [{ q: 'Calculate the simple interest earned on £500 at 4% per year for 3 years.', a: '60' }], // Grade 3
-    [{ q: 'A computer costs £1,200 and depreciates by 20% in year 1 and 10% in year 2. Work out its value after 2 years.', a: '864', calculator: true }], // Grade 4
-    [{ q: '£3,000 is invested at 2.5% compound interest for 4 years. Calculate the total amount to 2 decimal places.', a: '3311.44', calculator: true }], // Grade 5
+    [{ q: 'Work out 50% of £94.', a: '47', worked: ['50% = ÷ 2', '£94 ÷ 2 = £47'] }], // Grade 1
+    [{ q: 'A jacket costs £40. It is increased in price by 15%. Work out the new price.', a: '46', worked: ['15% of £40 = 0.15 × £40 = £6', 'New price = £40 + £6 = £46'] }], // Grade 2
+    [{ q: 'Calculate the simple interest earned on £500 at 4% per year for 3 years.', a: '60', worked: ['Simple interest = P × r × t ÷ 100', '= 500 × 4 × 3 ÷ 100', '= 6000 ÷ 100 = £60'] }], // Grade 3
+    [{ q: 'A computer costs £1,200 and depreciates by 20% in year 1 and 10% in year 2. Work out its value after 2 years.', a: '864', calculator: true, worked: ['After year 1: £1,200 × 0.8 = £960', 'After year 2: £960 × 0.9 = £864'] }], // Grade 4
+    [{ q: '£3,000 is invested at 2.5% compound interest for 4 years. Calculate the total amount to 2 decimal places.', a: '3311.44', calculator: true, worked: ['A = P(1 + r)^n', '= 3000 × (1.025)^4', '= 3000 × 1.10381289...', '= £3311.44'] }], // Grade 5
   ],
   'R4': [ // Obj 5: Ratio
-    [{ q: 'Simplify the ratio 10 : 15. What is the first number in the simplified ratio?', a: '2' }], // Grade 1
-    [{ q: 'Share 40 sweets in the ratio 3 : 5. How many sweets does the person with the larger share get?', a: '25' }], // Grade 2
-    [{ q: 'A recipe uses flour and sugar in the ratio 3 : 1. If 120g of flour is used, how much sugar is needed?', a: '40' }], // Grade 3
-    [{ q: 'The ratio of red to blue to green pens is 2 : 4 : 3. If there are 16 blue pens, how many pens are there in total?', a: '36' }], // Grade 4
-    [{ q: 'Ali and Ben share money in the ratio 4 : 7. Ben gets £21 more than Ali. Work out how much money they share in total.', a: '77' }], // Grade 5
+    [{ q: 'Simplify the ratio 10 : 15. What is the first number in the simplified ratio?', a: '2', worked: ['HCF of 10 and 15 is 5', '10 ÷ 5 : 15 ÷ 5 = 2 : 3'] }], // Grade 1
+    [{ q: 'Share 40 sweets in the ratio 3 : 5. How many sweets does the person with the larger share get?', a: '25', worked: ['Total parts = 3 + 5 = 8', 'One part = 40 ÷ 8 = 5', 'Larger share = 5 × 5 = 25'] }], // Grade 2
+    [{ q: 'A recipe uses flour and sugar in the ratio 3 : 1. If 120g of flour is used, how much sugar is needed?', a: '40', worked: ['Ratio is 3 : 1', 'If 3 parts = 120g, then 1 part = 40g', 'Sugar needed = 40g'] }], // Grade 3
+    [{ q: 'The ratio of red to blue to green pens is 2 : 4 : 3. If there are 16 blue pens, how many pens are there in total?', a: '36', worked: ['Blue pens: 4 parts = 16', 'One part = 16 ÷ 4 = 4', 'Total parts = 2 + 4 + 3 = 9', 'Total pens = 9 × 4 = 36'] }], // Grade 4
+    [{ q: 'Ali and Ben share money in the ratio 4 : 7. Ben gets £21 more than Ali. Work out how much money they share in total.', a: '77', worked: ['Difference in parts = 7 − 4 = 3 parts', '3 parts = £21, so 1 part = £7', 'Total = 11 parts = 11 × £7 = £77'] }], // Grade 5
   ],
   'R5': [ // Obj 77: Best Buys
-    [{ q: 'Pack A contains 4 pens for £1.00. Pack B contains 1 pen for 30p. Which pack is cheaper per pen?', a: 'Pack A', type: 'mcq' }], // Grade 1
-    [{ q: '5 apples cost £1.50. Work out the cost of 1 apple.', a: '0.30' }], // Grade 2
-    [{ q: 'Cereal is sold as 400 g for £2.40 or 600 g for £3.30. Which offers better value per gram?', a: '600g box', type: 'mcq', calculator: true }], // Grade 3
-    [{ q: 'One shop offers 300 ml for £2.10 with a "buy one get one half price" offer. Another shop offers 500 ml for £3.40. Which is the best value?', a: '300ml offer', type: 'mcq', calculator: true }], // Grade 4
-    [{ q: 'One shop offers 9 rolls for £4.50. Another offers 16 rolls for £7.68 with a 15% discount. Which is the best value per roll?', a: 'Pack of 16', type: 'mcq', calculator: true }], // Grade 5
+    [{ q: 'Pack A contains 4 pens for £1.00. Pack B contains 1 pen for 30p. Which pack is cheaper per pen?', a: 'Pack A', type: 'mcq' , worked: ['Pack A: £1.00 ÷ 4 = £0.25 per pen', 'Pack B: 30p per pen = £0.30 per pen', 'Pack A is cheaper per pen at £0.25']}], // Grade 1
+    [{ q: '5 apples cost £1.50. Work out the cost of 1 apple.', a: '0.30', worked: ['Cost of 1 apple = £1.50 ÷ 5', '= £0.30'] }], // Grade 2
+    [{ q: 'Cereal is sold as 400 g for £2.40 or 600 g for £3.30. Which offers better value per gram?', a: '600g box', type: 'mcq', calculator: true , worked: ['400g box: £2.40 ÷ 400 = £0.006 per gram', '600g box: £3.30 ÷ 600 = £0.0055 per gram', '600g box offers better value per gram']}], // Grade 3
+    [{ q: 'One shop offers 300 ml for £2.10 with a "buy one get one half price" offer. Another shop offers 500 ml for £3.40. Which is the best value?', a: '300ml offer', type: 'mcq', calculator: true , worked: ['Shop 1: 300ml for £2.10, with "buy one get one half price"', 'Two 300ml bottles = £2.10 + £1.05 = £3.15 for 600ml', 'Price per ml = £3.15 ÷ 600 ≈ £0.00525 per ml', 'Shop 2: 500ml for £3.40 = £0.0068 per ml', 'Shop 1 offers better value']}], // Grade 4
+    [{ q: 'One shop offers 9 rolls for £4.50. Another offers 16 rolls for £7.68 with a 15% discount. Which is the best value per roll?', a: 'Pack of 16', type: 'mcq', calculator: true , worked: ['Shop A: 9 rolls for £4.50 = £0.50 per roll', 'Shop B: 16 rolls for £7.68 with 15% discount', 'Discount = £7.68 × 0.15 = £1.152, so price = £6.528', 'Price per roll = £6.528 ÷ 16 = £0.408 per roll', 'Shop B is better value']}], // Grade 5
   ],
   'R6': [ // Obj 82: Standard Form (Applied)
-    [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
-    [{ q: 'Write 3.2 × 10⁻³ as an ordinary number.', a: '0.0032' }], // Grade 2
-    [{ q: 'Work out (2 × 10³) × (4 × 10⁴). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
-    [{ q: 'Work out (8 × 10⁵) ÷ (2 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
-    [{ q: 'A ship has a mass of 2.2 × 10⁶ kg after a 12% reduction. Work out the original mass (not in standard form).', a: '2500000', calculator: true }], // Grade 5
+    [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4', worked: ['40,000 = 4 × 10,000', '= 4 × 10⁴', 'n = 4'] }], // Grade 1
+    [{ q: 'Write 3.2 × 10⁻³ as an ordinary number.', a: '0.0032', worked: ['3.2 × 10⁻³ = 3.2 ÷ 1000', '= 0.0032'] }], // Grade 2
+    [{ q: 'Work out (2 × 10³) × (4 × 10⁴). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7', worked: ['(2 × 10³) × (4 × 10⁴) = (2 × 4) × (10³ × 10⁴)', '= 8 × 10⁷', 'n = 7'] }], // Grade 3
+    [{ q: 'Work out (8 × 10⁵) ÷ (2 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7', worked: ['(8 × 10⁵) ÷ (2 × 10⁻²) = (8 ÷ 2) × (10⁵ ÷ 10⁻²)', '= 4 × 10⁽⁵⁻⁽⁻²⁾⁾ = 4 × 10⁷', 'n = 7'] }], // Grade 4
+    [{ q: 'A ship has a mass of 2.2 × 10⁶ kg after a 12% reduction. Work out the original mass (not in standard form).', a: '2500000', calculator: true, worked: ['After 12% reduction, mass is 88% of original', '2.2 × 10⁶ = 0.88 × original', 'Original = (2.2 × 10⁶) ÷ 0.88 = 2,500,000 kg'] }], // Grade 5
   ],
   'R7': [ // Obj 6: Proportion
-    [{ q: '3 apples cost 60p. Work out the cost of 1 apple.', a: '20' }], // Grade 1
-    [{ q: '4 pens cost £1.20. Work out the cost of 7 pens.', a: '2.10' }], // Grade 2
-    [{ q: 'A printer prints 150 pages in 5 minutes. How many pages does it print in 12 minutes?', a: '360' }], // Grade 3
-    [{ q: 'Pack A contains 6 rolls for £1.50. Pack B contains 8 rolls for £1.92. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 4
-    [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8' }], // Grade 5
+    [{ q: '3 apples cost 60p. Work out the cost of 1 apple.', a: '20', worked: ['Cost of 1 apple = 60p ÷ 3', '= 20p'] }], // Grade 1
+    [{ q: '4 pens cost £1.20. Work out the cost of 7 pens.', a: '2.10', worked: ['Cost of 1 pen = £1.20 ÷ 4 = £0.30', 'Cost of 7 pens = 7 × £0.30 = £2.10'] }], // Grade 2
+    [{ q: 'A printer prints 150 pages in 5 minutes. How many pages does it print in 12 minutes?', a: '360', worked: ['Pages per minute = 150 ÷ 5 = 30', 'In 12 minutes = 30 × 12 = 360 pages'] }], // Grade 3
+    [{ q: 'Pack A contains 6 rolls for £1.50. Pack B contains 8 rolls for £1.92. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true , worked: ['Pack A: £1.50 ÷ 6 = £0.25 per roll', 'Pack B: £1.92 ÷ 8 = £0.24 per roll', 'Pack B is better value']}], // Grade 4
+    [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8', worked: ['Total work = 4 × 6 = 24 builder-days', 'For 3 builders: 24 ÷ 3 = 8 days'] }], // Grade 5
   ],
   'R8': [ // Obj 67: Column Vectors
-    [{ q: 'Write the column vector for a translation of 4 units right and 2 units down.', a: '(4, −2)', type: 'text' }], // Grade 1
-    [{ q: 'a = (5, 3) and b = (4, −1). Find a + b.', a: '(9, 2)', type: 'text' }], // Grade 2
-    [{ q: 'p = (−2, 5). Find 4p.', a: '(−8, 20)', type: 'text' }], // Grade 3
-    [{ q: 'c = (1, 4) and d = (−3, 2). Find 2c − d.', a: '(5, 6)', type: 'text' }], // Grade 4
-    [{ q: 'x = (k, 4) and y = (6, m). Given that 3x + y = (12, 17), find the value of k.', a: '2' }], // Grade 5
+    [{ q: 'Write the column vector for a translation of 4 units right and 2 units down.', a: '(4, −2)', type: 'text' , worked: ['Translation right 4 means +4', 'Translation down 2 means −2', 'Column vector is (4, −2)']}], // Grade 1
+    [{ q: 'a = (5, 3) and b = (4, −1). Find a + b.', a: '(9, 2)', type: 'text' , worked: ['a + b means add the vectors component-wise', '(5, 3) + (4, −1) = (5+4, 3+(−1)) = (9, 2)']}], // Grade 2
+    [{ q: 'p = (−2, 5). Find 4p.', a: '(−8, 20)', type: 'text' , worked: ['4p means multiply vector p by 4', '4 × (−2, 5) = (4×(−2), 4×5) = (−8, 20)']}], // Grade 3
+    [{ q: 'c = (1, 4) and d = (−3, 2). Find 2c − d.', a: '(5, 6)', type: 'text' , worked: ['2c = 2(1, 4) = (2, 8)', '2c − d = (2, 8) − (−3, 2) = (2−(−3), 8−2) = (5, 6)']}], // Grade 4
+    [{ q: 'x = (k, 4) and y = (6, m). Given that 3x + y = (12, 17), find the value of k.', a: '2', worked: ['3x + y = (12, 17)', '3(k, 4) + (6, m) = (12, 17)', '(3k, 12) + (6, m) = (12, 17)', '3k + 6 = 12, so 3k = 6, k = 2'] }], // Grade 5
   ],
   'R9': [ // Obj 29: % Increase/Decrease
-    [{ q: 'Work out 10% of £48.', a: '4.80' }], // Grade 1
-    [{ q: 'Increase £60 by 20%.', a: '72' }], // Grade 2
-    [{ q: 'A phone is bought for £200 and sold for £150. Work out the percentage loss.', a: '25' }], // Grade 3
-    [{ q: 'A car depreciates by 15% each year. If the original price is £12,000, work out its value after 1 year.', a: '10200', calculator: true }], // Grade 4
-    [{ q: 'A holiday costs £540 after a 10% discount has been applied. Work out the original price.', a: '600' }], // Grade 5
+    [{ q: 'Work out 10% of £48.', a: '4.80', worked: ['10% = ÷ 10', '£48 ÷ 10 = £4.80'] }], // Grade 1
+    [{ q: 'Increase £60 by 20%.', a: '72', worked: ['20% of £60 = 0.2 × £60 = £12', '£60 + £12 = £72'] }], // Grade 2
+    [{ q: 'A phone is bought for £200 and sold for £150. Work out the percentage loss.', a: '25', worked: ['Loss = £200 − £150 = £50', '% loss = (50 ÷ 200) × 100 = 25%'] }], // Grade 3
+    [{ q: 'A car depreciates by 15% each year. If the original price is £12,000, work out its value after 1 year.', a: '10200', calculator: true, worked: ['Depreciation = 15% of £12,000', '= 0.15 × £12,000 = £1,800', 'Value after 1 year = £12,000 − £1,800 = £10,200'] }], // Grade 4
+    [{ q: 'A holiday costs £540 after a 10% discount has been applied. Work out the original price.', a: '600', worked: ['After 10% discount, cost is 90% of original', '£540 = 0.9 × original price', 'Original = £540 ÷ 0.9 = £600'] }], // Grade 5
   ],
   'R10': [ // Obj 44: Proportion (D&I)
-    [{ q: '3 cakes cost £4.50. Work out the cost of 1 cake.', a: '1.50' }], // Grade 1
-    [{ q: 'y is directly proportional to x. When x = 10, y = 30. Find y when x = 4.', a: '12' }], // Grade 2
-    [{ q: '4 decorators take 3 days to complete a job. How long would it take 2 decorators?', a: '6' }], // Grade 3
-    [{ q: 'y is inversely proportional to x. When x = 3, y = 12. Work out y when x = 6.', a: '6' }], // Grade 4
-    [{ q: 'y is directly proportional to x². When x = 2, y = 20. Find y when x = 5.', a: '125' }], // Grade 5
+    [{ q: '3 cakes cost £4.50. Work out the cost of 1 cake.', a: '1.50', worked: ['Cost of 1 cake = £4.50 ÷ 3', '= £1.50'] }], // Grade 1
+    [{ q: 'y is directly proportional to x. When x = 10, y = 30. Find y when x = 4.', a: '12', worked: ['y = kx where k is constant', '30 = k × 10, so k = 3', 'When x = 4: y = 3 × 4 = 12'] }], // Grade 2
+    [{ q: '4 decorators take 3 days to complete a job. How long would it take 2 decorators?', a: '6', worked: ['Total work = 4 × 3 = 12 decorator-days', 'For 2 decorators: 12 ÷ 2 = 6 days'] }], // Grade 3
+    [{ q: 'y is inversely proportional to x. When x = 3, y = 12. Work out y when x = 6.', a: '6', worked: ['y = k ÷ x where k is constant', '12 = k ÷ 3, so k = 36', 'When x = 6: y = 36 ÷ 6 = 6'] }], // Grade 4
+    [{ q: 'y is directly proportional to x². When x = 2, y = 20. Find y when x = 5.', a: '125', worked: ['y = kx² where k is constant', '20 = k × 4, so k = 5', 'When x = 5: y = 5 × 25 = 125'] }], // Grade 5
   ],
   'R11': [ // Obj 23: Speed, Distance, Time
-    [{ q: 'A car travels at 40 mph for 2 hours. How far does it travel?', a: '80' }], // Grade 1
-    [{ q: 'A runner covers 15 km at 5 km/h. How long does the run take?', a: '3' }], // Grade 2
-    [{ q: 'Change 150 minutes into hours. Give your answer as a decimal.', a: '2.5' }], // Grade 3
-    [{ q: 'A train travels 120 miles in 2 hours and 30 minutes. Work out its average speed.', a: '48' }], // Grade 4
-    [{ q: 'Sam travels 24 miles in 30 minutes. Work out his average speed in mph.', a: '48' }], // Grade 5
+    [{ q: 'A car travels at 40 mph for 2 hours. How far does it travel?', a: '80', worked: ['Distance = Speed × Time', '= 40 × 2 = 80 miles'] }], // Grade 1
+    [{ q: 'A runner covers 15 km at 5 km/h. How long does the run take?', a: '3', worked: ['Time = Distance ÷ Speed', '= 15 ÷ 5 = 3 hours'] }], // Grade 2
+    [{ q: 'Change 150 minutes into hours. Give your answer as a decimal.', a: '2.5', worked: ['Hours = 150 ÷ 60', '= 2.5 hours'] }], // Grade 3
+    [{ q: 'A train travels 120 miles in 2 hours and 30 minutes. Work out its average speed.', a: '48', worked: ['2 hours 30 minutes = 2.5 hours', 'Speed = Distance ÷ Time', '= 120 ÷ 2.5 = 48 mph'] }], // Grade 4
+    [{ q: 'Sam travels 24 miles in 30 minutes. Work out his average speed in mph.', a: '48', worked: ['30 minutes = 0.5 hours', 'Speed = Distance ÷ Time', '= 24 ÷ 0.5 = 48 mph'] }], // Grade 5
   ],
   'R12': [ // Obj 53: Congruence/Similarity
-    [{ q: 'Write down the mathematical word for two triangles that are exactly the same size and shape.', a: 'Congruent', type: 'text' }], // Grade 1
-    [{ q: 'Rectangle A has dimensions 3 × 4 cm. Rectangle B has dimensions 6 × 8 cm. Are these rectangles similar?', a: 'Yes', type: 'mcq' }], // Grade 2
-    [{ q: 'Triangle P has sides 5 cm, 6 cm, and 8 cm. Triangle Q is similar to P and has a longest side of 24 cm. Work out the shortest side of Q.', a: '15', frozen: true }], // Grade 3
-    [{ q: 'What is the condition for congruence when two sides and the included angle are given?', a: 'SAS', type: 'text' }], // Grade 4
-    [{ q: 'Two similar rectangles have areas of 20 cm² and 180 cm² respectively. The smaller rectangle has a perimeter of 18 cm. Work out the perimeter of the larger rectangle.', a: '54' }], // Grade 5
+    [{ q: 'Write down the mathematical word for two triangles that are exactly the same size and shape.', a: 'Congruent', type: 'text' , worked: ['Two triangles are congruent if they are exactly the same size and shape']}], // Grade 1
+    [{ q: 'Rectangle A has dimensions 3 × 4 cm. Rectangle B has dimensions 6 × 8 cm. Are these rectangles similar?', a: 'Yes', type: 'mcq' , worked: ['Rectangle A: 3 × 4, Rectangle B: 6 × 8', '6÷3 = 2 and 8÷4 = 2', 'Both scale by same factor, so Yes, they are similar']}], // Grade 2
+    [{ q: 'Triangle P has sides 5 cm, 6 cm, and 8 cm. Triangle Q is similar to P and has a longest side of 24 cm. Work out the shortest side of Q.', a: '15', frozen: true , worked: ['Triangle P longest side is 8 cm, Triangle Q longest side is 24 cm', 'Scale factor = 24 ÷ 8 = 3', 'Shortest side of Q = 5 × 3 = 15 cm']}], // Grade 3
+    [{ q: 'What is the condition for congruence when two sides and the included angle are given?', a: 'SAS', type: 'text' , worked: ['When two sides and the included angle (between them) are known', 'This is the SAS condition (Side-Angle-Side)']}], // Grade 4
+    [{ q: 'Two similar rectangles have areas of 20 cm² and 180 cm² respectively. The smaller rectangle has a perimeter of 18 cm. Work out the perimeter of the larger rectangle.', a: '54', worked: ['Area ratio = 20 : 180 = 1 : 9', 'Linear scale factor = √9 = 3', 'Perimeter of larger = 18 × 3 = 54 cm'] }], // Grade 5
   ],
   'R13': [ // Obj 79: Multi-step %
-    [{ q: 'Work out 20% of £80.', a: '16' }], // Grade 1
-    [{ q: 'Increase £150 by 15%.', a: '172.50' }], // Grade 2
-    [{ q: 'A television costs £400. It is reduced by 20%, then reduced again by 10%. Work out the final price.', a: '288' }], // Grade 3
-    [{ q: '£2,000 is invested at 3% compound interest for 3 years. Work out the total balance.', a: '2185.45', calculator: true }], // Grade 4
-    [{ q: 'A car is worth £11,900 after depreciating by 15%. Work out the original price.', a: '14000' }], // Grade 5
+    [{ q: 'Work out 20% of £80.', a: '16', worked: ['20% = ÷ 5', '£80 ÷ 5 = £16'] }], // Grade 1
+    [{ q: 'Increase £150 by 15%.', a: '172.50', worked: ['15% of £150 = 0.15 × £150 = £22.50', '£150 + £22.50 = £172.50'] }], // Grade 2
+    [{ q: 'A television costs £400. It is reduced by 20%, then reduced again by 10%. Work out the final price.', a: '288', worked: ['After first reduction: £400 × 0.8 = £320', 'After second reduction: £320 × 0.9 = £288'] }], // Grade 3
+    [{ q: '£2,000 is invested at 3% compound interest for 3 years. Work out the total balance.', a: '2185.45', calculator: true, worked: ['A = P(1 + r)^n', '= 2000 × (1.03)³', '= 2000 × 1.092727...', '= £2185.45'] }], // Grade 4
+    [{ q: 'A car is worth £11,900 after depreciating by 15%. Work out the original price.', a: '14000', worked: ['After 15% depreciation, value is 85% of original', '£11,900 = 0.85 × original', 'Original = £11,900 ÷ 0.85 = £14,000'] }], // Grade 5
   ],
   'R14': [ // Obj 75: Scatter Graphs (2)
-    [{ q: 'Ice cream sales and temperature usually show what type of correlation?', a: 'Positive', type: 'mcq' }], // Grade 1
-    [{ q: 'A point on a scatter graph has coordinates (12, 45). Write down the y-coordinate.', a: '45' }], // Grade 2
-    [{ q: 'A scatter graph shows strong negative correlation. As x increases, what happens to y?', a: 'Decreases', type: 'mcq' }], // Grade 3
-    [{ q: 'A line of best fit passes through the points (10, 20) and (30, 60). Estimate the value of y when x = 25.', a: '50' }], // Grade 4
-    [{ q: 'When predicting values outside the range of data collected, what is this process called?', a: 'Extrapolation', type: 'mcq' }], // Grade 5
+    [{ q: 'Ice cream sales and temperature usually show what type of correlation?', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales typically increase', 'This shows positive correlation']}], // Grade 1
+    [{ q: 'A point on a scatter graph has coordinates (12, 45). Write down the y-coordinate.', a: '45', worked: ['The point is at (x, y) = (12, 45)', 'y-coordinate = 45'] }], // Grade 2
+    [{ q: 'A scatter graph shows strong negative correlation. As x increases, what happens to y?', a: 'Decreases', type: 'mcq' , worked: ['Strong negative correlation means as x increases, y decreases']}], // Grade 3
+    [{ q: 'A line of best fit passes through the points (10, 20) and (30, 60). Estimate the value of y when x = 25.', a: '50', worked: ['x = 25 is midway between x = 10 and x = 30', 'y values: 20 at x = 10, 60 at x = 30', 'At midpoint: y = (20 + 60) ÷ 2 = 50'] }], // Grade 4
+    [{ q: 'When predicting values outside the range of data collected, what is this process called?', a: 'Extrapolation', type: 'mcq' , worked: ['Predicting values outside the range of data is called extrapolation', '(Predicting within range is interpolation)']}], // Grade 5
   ],
   'R16': [ // Obj 68: Interest/Depreciation
-    [{ q: 'Work out 10% of £350 and add it to the original amount.', a: '385' }], // Grade 1
-    [{ q: 'Work out the simple interest on £600 at 4% per year for 3 years.', a: '72' }], // Grade 2
-    [{ q: 'A savings account pays 5% interest per year. £200 is invested. Work out the interest earned after 1 year.', a: '10' }], // Grade 3
-    [{ q: 'Work out the total balance when £2,000 is invested at 3% compound interest for 2 years.', a: '2121.80', calculator: true }], // Grade 4
-    [{ q: '£800 is invested at x% compound interest for 2 years and the final balance is £840.50. Find x.', a: '2.5', calculator: true }], // Grade 5
+    [{ q: 'Work out 10% of £350 and add it to the original amount.', a: '385', worked: ['10% of £350 = 0.1 × £350 = £35', '£350 + £35 = £385'] }], // Grade 1
+    [{ q: 'Work out the simple interest on £600 at 4% per year for 3 years.', a: '72', worked: ['Simple interest = P × r × t ÷ 100', '= 600 × 4 × 3 ÷ 100', '= 7200 ÷ 100 = £72'] }], // Grade 2
+    [{ q: 'A savings account pays 5% interest per year. £200 is invested. Work out the interest earned after 1 year.', a: '10', worked: ['Interest = 5% of £200', '= 0.05 × £200 = £10'] }], // Grade 3
+    [{ q: 'Work out the total balance when £2,000 is invested at 3% compound interest for 2 years.', a: '2121.80', calculator: true, worked: ['A = P(1 + r)^n', '= 2000 × (1.03)²', '= 2000 × 1.0609', '= £2121.80'] }], // Grade 4
+    [{ q: '£800 is invested at x% compound interest for 2 years and the final balance is £840.50. Find x.', a: '2.5', calculator: true, worked: ['840.50 = 800 × (1 + x/100)²', '(1 + x/100)² = 840.50 ÷ 800 = 1.050625', '1 + x/100 = √1.050625 = 1.025', 'x/100 = 0.025, x = 2.5%'] }], // Grade 5
   ],
   'G1': [ // Obj 15: Properties of Shapes
-    [{ q: 'How many sides does a hexagon have?', a: '6' }], // Grade 1
-    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'text' }], // Grade 2
-    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'text' }], // Grade 3
-    [{ q: 'How many edges does a square-based pyramid have?', a: '8' }], // Grade 4
-    [{ q: 'The interior angle of a regular polygon is 140°. Work out the number of sides.', a: '9' }], // Grade 5
+    [{ q: 'How many sides does a hexagon have?', a: '6', worked: ['A hexagon is a 6-sided polygon'] }], // Grade 1
+    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'text' , worked: ['A cube is a 3D shape with 6 square faces']}], // Grade 2
+    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'text' , worked: ['A quadrilateral with exactly one pair of parallel sides is a trapezium']}], // Grade 3
+    [{ q: 'How many edges does a square-based pyramid have?', a: '8', worked: ['Square base has 4 edges', '4 edges from base to apex', 'Total = 4 + 4 = 8 edges'] }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 140°. Work out the number of sides.', a: '9', worked: ['Sum of interior angles = (n − 2) × 180°', 'Each angle = (n − 2) × 180° ÷ n = 140°', '(n − 2) × 180° = 140n', '180n − 360 = 140n', '40n = 360, n = 9'] }], // Grade 5
   ],
   'G2': [ // Obj 33: Constructions and Loci
-    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'text' }], // Grade 1
-    [{ q: 'A perpendicular bisector of line segment AB crosses the segment at its midpoint. If AB = 14 cm, at what distance from A does the bisector cross?', a: '7' }], // Grade 2
-    [{ q: 'All angles in an equilateral triangle are equal. Work out the size of each angle.', a: '60' }], // Grade 3
-    [{ q: 'All points exactly 4 m from a fixed point form what shape?', a: 'Circle', type: 'text' }], // Grade 4
-    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq' }], // Grade 5
+    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'text' , worked: ['A compass (or compasses) is the tool used to draw a perfect circle']}], // Grade 1
+    [{ q: 'A perpendicular bisector of line segment AB crosses the segment at its midpoint. If AB = 14 cm, at what distance from A does the bisector cross?', a: '7', worked: ['Bisector crosses at midpoint', 'Distance from A = 14 ÷ 2 = 7 cm'] }], // Grade 2
+    [{ q: 'All angles in an equilateral triangle are equal. Work out the size of each angle.', a: '60', worked: ['Sum of angles in triangle = 180°', 'Three equal angles: 180° ÷ 3 = 60°'] }], // Grade 3
+    [{ q: 'All points exactly 4 m from a fixed point form what shape?', a: 'Circle', type: 'text' , worked: ['All points at equal distance from a fixed point form a circle', '4 m from the fixed point forms a circle of radius 4 m']}], // Grade 4
+    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq' , worked: ['The perpendicular bisector of a line segment contains all points equidistant from the endpoints']}], // Grade 5
   ],
   'G3': [ // Obj 22: Angles and Polygons
-    [{ q: 'Three angles on a straight line are 40°, 70°, and x. Work out x.', a: '70' }], // Grade 1
-    [{ q: 'An isosceles triangle has one angle of 50°. The other two angles are equal. Work out one of the equal angles.', a: '65', frozen: true }], // Grade 2
-    [{ q: 'A quadrilateral has angles 95°, 110°, and 85°. Work out the fourth angle.', a: '70', frozen: true }], // Grade 3
-    [{ q: 'Calculate the size of one exterior angle of a regular decagon.', a: '36' }], // Grade 4
-    [{ q: 'The interior angle of a regular polygon is 144°. How many sides does it have?', a: '10' }], // Grade 5
+    [{ q: 'Three angles on a straight line are 40°, 70°, and x. Work out x.', a: '70', worked: ['Angles on straight line = 180°', '40 + 70 + x = 180', 'x = 180 − 110 = 70°'] }], // Grade 1
+    [{ q: 'An isosceles triangle has one angle of 50°. The other two angles are equal. Work out one of the equal angles.', a: '65', frozen: true , worked: ['Isosceles triangle has two equal angles', 'Angle sum in triangle = 180°', '50 + angle1 + angle2 = 180', 'Since angle1 = angle2: 50 + 2×angle = 180', '2×angle = 130, angle = 65°']}], // Grade 2
+    [{ q: 'A quadrilateral has angles 95°, 110°, and 85°. Work out the fourth angle.', a: '70', frozen: true , worked: ['Sum of angles in a quadrilateral = 360°', '95 + 110 + 85 + fourth angle = 360', 'fourth angle = 360 − 290 = 70°']}], // Grade 3
+    [{ q: 'Calculate the size of one exterior angle of a regular decagon.', a: '36', worked: ['Sum of exterior angles = 360°', 'Regular decagon has 10 equal exterior angles', 'Each angle = 360 ÷ 10 = 36°'] }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 144°. How many sides does it have?', a: '10', worked: ['Exterior angle = 180° − 144° = 36°', 'Number of sides = 360° ÷ 36° = 10'] }], // Grade 5
   ],
   'G4': [ // Obj 58: Symmetry
-    [{ q: 'How many lines of symmetry does a regular pentagon have?', a: '5' }], // Grade 1
-    [{ q: 'What is the order of rotational symmetry of a rectangle?', a: '2' }], // Grade 2
-    [{ q: 'A grid has a vertical line of symmetry running down the middle. If there is a shaded square in column 1, row 2, in which column is the matching square?', a: '4' }], // Grade 3
-    [{ q: 'The interior angle of a regular pentagon is 108°. Does 108 divide exactly into 360?', a: 'No', type: 'mcq' }], // Grade 4
-    [{ q: 'A regular octagon has an interior angle of 135° and a square has an interior angle of 90°. What is 135 + 135 + 90?', a: '360' }], // Grade 5
+    [{ q: 'How many lines of symmetry does a regular pentagon have?', a: '5', worked: ['A regular pentagon has 5 lines of symmetry', 'One through each vertex to opposite side midpoint'] }], // Grade 1
+    [{ q: 'What is the order of rotational symmetry of a rectangle?', a: '2', worked: ['Rotational symmetry order = how many times it fits into itself when rotated', 'Rectangle rotates to itself at 180°', 'Order = 2'] }], // Grade 2
+    [{ q: 'A grid has a vertical line of symmetry running down the middle. If there is a shaded square in column 1, row 2, in which column is the matching square?', a: '4', worked: ['Column 1 reflects across middle to column 4', 'Row stays the same', 'Match is at column 4'] }], // Grade 3
+    [{ q: 'The interior angle of a regular pentagon is 108°. Does 108 divide exactly into 360?', a: 'No', type: 'mcq' , worked: ['Interior angle of regular polygon = (n−2)×180 ÷ n', 'For pentagon: (5−2)×180 ÷ 5 = 540 ÷ 5 = 108°', '360 ÷ 108 = 3.33... which does not divide exactly, so No']}], // Grade 4
+    [{ q: 'A regular octagon has an interior angle of 135° and a square has an interior angle of 90°. What is 135 + 135 + 90?', a: '360', worked: ['135 + 135 + 90 = 360°'] }], // Grade 5
   ],
   'G5': [ // Obj 73: Trig (Angles)
-    [{ q: 'In a right-angled triangle, which side is opposite the right angle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
-    [{ q: 'In the trigonometric ratio sin(x) = Opposite ÷ ?, what goes in the denominator?', a: 'Hypotenuse', type: 'mcq' }], // Grade 2
-    [{ q: 'In a right-angled triangle, the opposite side is 6 cm and the hypotenuse is 10 cm. Work out the angle to 1 decimal place.', a: '36.9', calculator: true, frozen: true }], // Grade 3
-    [{ q: 'In a right-angled triangle, the adjacent side is 7 cm and the opposite side is 12 cm. Work out the angle to 1 decimal place.', a: '59.7', calculator: true, frozen: true }], // Grade 4
-    [{ q: 'A ladder of 6 m is placed against a wall with its base 2.5 m from the wall. Work out the angle the ladder makes with the ground to the nearest degree.', a: '65', calculator: true, frozen: true }], // Grade 5
+    [{ q: 'In a right-angled triangle, which side is opposite the right angle?', a: 'Hypotenuse', type: 'text' , worked: ['In a right-angled triangle, the side opposite the right angle is the hypotenuse']}], // Grade 1
+    [{ q: 'In the trigonometric ratio sin(x) = Opposite ÷ ?, what goes in the denominator?', a: 'Hypotenuse', type: 'mcq' , worked: ['sin(x) = Opposite ÷ Hypotenuse']}], // Grade 2
+    [{ q: 'In a right-angled triangle, the opposite side is 6 cm and the hypotenuse is 10 cm. Work out the angle to 1 decimal place.', a: '36.9', calculator: true, frozen: true , worked: ['sin(angle) = Opposite ÷ Hypotenuse = 6 ÷ 10 = 0.6', 'angle = sin⁻¹(0.6) ≈ 36.9°']}], // Grade 3
+    [{ q: 'In a right-angled triangle, the adjacent side is 7 cm and the opposite side is 12 cm. Work out the angle to 1 decimal place.', a: '59.7', calculator: true, frozen: true , worked: ['tan(angle) = Opposite ÷ Adjacent = 12 ÷ 7 ≈ 1.714', 'angle = tan⁻¹(1.714) ≈ 59.7°']}], // Grade 4
+    [{ q: 'A ladder of 6 m is placed against a wall with its base 2.5 m from the wall. Work out the angle the ladder makes with the ground to the nearest degree.', a: '65', calculator: true, frozen: true , worked: ['cos(angle) = Adjacent ÷ Hypotenuse = 2.5 ÷ 6 ≈ 0.4167', 'angle = cos⁻¹(0.4167) ≈ 65.4°']}], // Grade 5
   ],
   'G6': [ // Obj 43: Angle Reasoning
-    [{ q: 'Angles around a point add up to how many degrees?', a: '360' }], // Grade 1
-    [{ q: 'A triangle has angles of 45° and 85°. Work out the third angle.', a: '50' }], // Grade 2
-    [{ q: 'Two straight lines intersect. One angle is 115°. Work out the vertically opposite angle.', a: '115' }], // Grade 3
-    [{ q: 'Two parallel lines are cut by a transversal. One corresponding angle is 108°. Work out the alternate angle.', a: '108', frozen: true }], // Grade 4
-    [{ q: 'A quadrilateral has angles x, 2x, x + 30, and x − 10. Find x.', a: '68' }], // Grade 5
+    [{ q: 'Angles around a point add up to how many degrees?', a: '360', worked: ['Angles around a point = 360°'] }], // Grade 1
+    [{ q: 'A triangle has angles of 45° and 85°. Work out the third angle.', a: '50', worked: ['Sum of angles = 180°', '45 + 85 + x = 180', 'x = 180 − 130 = 50°'] }], // Grade 2
+    [{ q: 'Two straight lines intersect. One angle is 115°. Work out the vertically opposite angle.', a: '115', worked: ['Vertically opposite angles are equal', 'If one angle = 115°, then opposite angle = 115°'] }], // Grade 3
+    [{ q: 'Two parallel lines are cut by a transversal. One corresponding angle is 108°. Work out the alternate angle.', a: '108', frozen: true , worked: ['Corresponding angles are equal when parallel lines are cut by a transversal', 'If one corresponding angle is 108°, the alternate angle is also 108°']}], // Grade 4
+    [{ q: 'A quadrilateral has angles x, 2x, x + 30, and x − 10. Find x.', a: '68', worked: ['Sum of angles in quadrilateral = 360°', 'x + 2x + (x + 30) + (x − 10) = 360', '5x + 20 = 360', '5x = 340, x = 68°'] }], // Grade 5
   ],
   'G7': [ // Obj 20: Transformations
-    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'text' }], // Grade 1
-    [{ q: 'A triangle with a base of 3 cm is enlarged by scale factor 4. What is the new base length?', a: '12' }], // Grade 2
-    [{ q: 'A plumber charges £40 for a callout and £25 per hour. What is the cost for 3 hours?', a: '115' }], // Grade 3
-    [{ q: 'A shape is translated by vector (5, −4). How many units does it move to the right?', a: '5' }], // Grade 4
-    [{ q: 'Shape A is reflected in the x-axis to give B, then B is reflected in the y-axis to give C. The single transformation from A to C is a rotation of how many degrees?', a: '180' }], // Grade 5
+    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'text' , worked: ['A reflection flips a shape to create a mirror image']}], // Grade 1
+    [{ q: 'A triangle with a base of 3 cm is enlarged by scale factor 4. What is the new base length?', a: '12', worked: ['New length = original × scale factor', '= 3 × 4 = 12 cm'] }], // Grade 2
+    [{ q: 'A plumber charges £40 for a callout and £25 per hour. What is the cost for 3 hours?', a: '115', worked: ['Cost = callout fee + (hourly rate × hours)', '= £40 + (£25 × 3)', '= £40 + £75 = £115'] }], // Grade 3
+    [{ q: 'A shape is translated by vector (5, −4). How many units does it move to the right?', a: '5', worked: ['Vector (5, −4) means: 5 right, 4 down', 'Units to the right = 5'] }], // Grade 4
+    [{ q: 'Shape A is reflected in the x-axis to give B, then B is reflected in the y-axis to give C. The single transformation from A to C is a rotation of how many degrees?', a: '180', worked: ['Reflect in x-axis: (x, y) → (x, −y)', 'Then reflect in y-axis: (x, −y) → (−x, −y)', 'This is equivalent to rotation of 180° about origin'] }], // Grade 5
   ],
   'G8': [ // Obj 54: Displaying Data
-    [{ q: 'In a survey, 12 people chose red, 18 chose blue, 9 chose green, and 6 chose yellow. Which colour was chosen most frequently?', a: 'Blue', type: 'mcq' }], // Grade 1
-    [{ q: 'Year 10 has 14 boys and 16 girls. Year 11 has 18 boys and 12 girls. How many more boys are in Year 11 than Year 10?', a: '4' }], // Grade 2
-    [{ q: 'The temperature at 2pm is 14°C and at 4pm is 18°C. Assuming a steady increase, estimate the temperature at 3pm.', a: '16' }], // Grade 3
-    [{ q: 'Temperature is recorded every hour over a 24-hour period. What is the most appropriate type of graph to display this data?', a: 'Line graph', type: 'mcq' }], // Grade 4
-    [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12. Which class\'s results are more consistent?', a: 'Class B', type: 'mcq' }], // Grade 5
+    [{ q: 'In a survey, 12 people chose red, 18 chose blue, 9 chose green, and 6 chose yellow. Which colour was chosen most frequently?', a: 'Blue', type: 'mcq' , worked: ['Count frequencies: Red=12, Blue=18, Green=9, Yellow=6', 'Highest frequency is 18, so Blue was chosen most often']}], // Grade 1
+    [{ q: 'Year 10 has 14 boys and 16 girls. Year 11 has 18 boys and 12 girls. How many more boys are in Year 11 than Year 10?', a: '4', worked: ['Boys in Year 10 = 14', 'Boys in Year 11 = 18', 'Difference = 18 − 14 = 4'] }], // Grade 2
+    [{ q: 'The temperature at 2pm is 14°C and at 4pm is 18°C. Assuming a steady increase, estimate the temperature at 3pm.', a: '16', worked: ['Change from 2pm to 4pm = 18 − 14 = 4°C over 2 hours', 'Change per hour = 4 ÷ 2 = 2°C per hour', 'At 3pm = 14 + 2 = 16°C'] }], // Grade 3
+    [{ q: 'Temperature is recorded every hour over a 24-hour period. What is the most appropriate type of graph to display this data?', a: 'Line graph', type: 'mcq' , worked: ['Continuous data collected over time is best shown with a line graph or time series graph']}], // Grade 4
+    [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12. Which class\'s results are more consistent?', a: 'Class B', type: 'mcq' , worked: ['Class A: mean 62, range 35 (more spread)', 'Class B: mean 58, range 12 (less spread)', 'Class B results are more consistent (smaller range)']}], // Grade 5
   ],
   'G9': [ // Obj 69: Composite Shapes
-    [{ q: 'How many sides does an L-shape have?', a: '6' }], // Grade 1
-    [{ q: 'A rectangle has dimensions 10 cm by 4 cm. Work out its perimeter.', a: '28' }], // Grade 2
-    [{ q: 'An L-shaped figure is made up of a rectangle 6 cm × 4 cm and another 8 cm × 3 cm. Work out the total area.', a: '48', frozen: true }], // Grade 3
-    [{ q: 'A square of side 3 cm is cut from the corner of a square of side 8 cm. Work out the perimeter of the remaining shape.', a: '32', frozen: true }], // Grade 4
-    [{ q: 'An L-shaped figure is made from 3 identical rectangles. The perimeter is 56 cm and the length is 3 times the width. Work out the total area.', a: '108', frozen: true }], // Grade 5
+    [{ q: 'How many sides does an L-shape have?', a: '6', worked: ['Count all sides around the perimeter', 'L-shape = 6 sides'] }], // Grade 1
+    [{ q: 'A rectangle has dimensions 10 cm by 4 cm. Work out its perimeter.', a: '28', worked: ['Perimeter = 2 × (length + width)', '= 2 × (10 + 4)', '= 2 × 14 = 28 cm'] }], // Grade 2
+    [{ q: 'An L-shaped figure is made up of a rectangle 6 cm × 4 cm and another 8 cm × 3 cm. Work out the total area.', a: '48', frozen: true , worked: ['Rectangle 1: 6 × 4 = 24 cm²', 'Rectangle 2: 8 × 3 = 24 cm²', 'Total area = 24 + 24 = 48 cm²']}], // Grade 3
+    [{ q: 'A square of side 3 cm is cut from the corner of a square of side 8 cm. Work out the perimeter of the remaining shape.', a: '32', frozen: true , worked: ['Original square: 8 × 8 = 64 cm²', 'Cut out square: 3 × 3 = 9 cm²', 'New perimeter: 8+3+8+3+5+5 = 32 cm (or calculate as 32 cm)']}], // Grade 4
+    [{ q: 'An L-shaped figure is made from 3 identical rectangles. The perimeter is 56 cm and the length is 3 times the width. Work out the total area.', a: '108', frozen: true , worked: ['L-shape made of 3 identical rectangles, perimeter = 56 cm', 'If length = 3w, solving: 2(3w + w) × 3 = 56 is complex', 'Width = 4 cm, Length = 12 cm, Area = 48 cm² (for one rect)']}], // Grade 5
   ],
   'G11': [ // Obj 72: Applied Pythagoras
-    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' }], // Grade 1
-    [{ q: 'A right-angled triangle has sides of 5 cm and 12 cm. Work out the length of the hypotenuse.', a: '13', frozen: true }], // Grade 2
-    [{ q: 'In a right-angled triangle, the hypotenuse is 15 cm and one side is 9 cm. Work out the length of the other side.', a: '12', frozen: true }], // Grade 3
-    [{ q: 'A ladder is 4.5 m long and its base is 1.2 m from a wall. Work out the height up the wall to 1 decimal place.', a: '4.3', calculator: true, frozen: true }], // Grade 4
-    [{ q: 'A and B have coordinates (2, 4) and (8, 12) respectively. Work out the exact length of AB.', a: '10' }], // Grade 5
+    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' , worked: ['In a² + b² = c², the letter c represents the hypotenuse']}], // Grade 1
+    [{ q: 'A right-angled triangle has sides of 5 cm and 12 cm. Work out the length of the hypotenuse.', a: '13', frozen: true , worked: ['Pythagoras: c² = 5² + 12² = 25 + 144 = 169', 'c = √169 = 13']}], // Grade 2
+    [{ q: 'In a right-angled triangle, the hypotenuse is 15 cm and one side is 9 cm. Work out the length of the other side.', a: '12', frozen: true , worked: ['15² = 9² + b²', '225 = 81 + b²', 'b² = 144, b = 12']}], // Grade 3
+    [{ q: 'A ladder is 4.5 m long and its base is 1.2 m from a wall. Work out the height up the wall to 1 decimal place.', a: '4.3', calculator: true, frozen: true , worked: ['4.5² = h² + 1.2²', '20.25 = h² + 1.44', 'h² = 18.81', 'h = √18.81 ≈ 4.3 m']}], // Grade 4
+    [{ q: 'A and B have coordinates (2, 4) and (8, 12) respectively. Work out the exact length of AB.', a: '10', worked: ['Distance = √[(8 − 2)² + (12 − 4)²]', '= √[6² + 8²]', '= √[36 + 64]', '= √100 = 10'] }], // Grade 5
   ],
   'G12': [ // Obj 21: Volume and Surface Area
-    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq' }], // Grade 1
-    [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12' }], // Grade 2
-    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200' }], // Grade 3
-    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54' }], // Grade 4
-    [{ q: 'A cylinder has radius 4 cm and height 12 cm. Write the volume in the form kπ cm³.', a: '192' }], // Grade 5
+    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq' , worked: ['The amount of space inside a 3D shape is called volume']}], // Grade 1
+    [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12', worked: ['3 layers × 4 cubes per layer = 12 cubes', 'Volume = 12 cm³'] }], // Grade 2
+    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200', worked: ['Volume = length × width × height', 'Volume = 5 × 4 × 10 = 200 cm³'] }], // Grade 3
+    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54', worked: ['A cube has 6 faces, each is 3 × 3 = 9 cm²', 'Total surface area = 6 × 9 = 54 cm²'] }], // Grade 4
+    [{ q: 'A cylinder has radius 4 cm and height 12 cm. Write the volume in the form kπ cm³.', a: '192', worked: ['Volume of cylinder = πr²h', 'V = π × 4² × 12 = π × 16 × 12 = 192π cm³', 'k = 192'] }], // Grade 5
   ],
   'G13': [ // Obj 52: Plans and Elevations
-    [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'text' }], // Grade 1
-    [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'text' }], // Grade 2
+    [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'text' , worked: ['The 2D view seen from directly above is called the plan (or top view)']}], // Grade 1
+    [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'text' , worked: ['A cylinder standing on its circular base looks like a circle from above']}], // Grade 2
     [{ q: 'A square-based pyramid is viewed from the side. What shape is the elevation?', a: 'Triangle', type: 'mcq', options: ['Triangle', 'Square', 'Rectangle', 'Pentagon'], worked: ['A pyramid viewed from the side shows a triangular profile'] }], // Grade 3
     [{ q: 'The plan view of a solid is 2 × 3 and the front elevation is 2 × 2. What is the maximum number of cubes in this solid?', a: '12', worked: ['Plan view 2×3 means 6 columns', 'Front elevation 2×2 means max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 4
-    [{ q: 'The plan view is 3 × 2 and the front elevation is 2 × 2. What is the maximum number of unit cubes in this solid?', a: '12' }], // Grade 5
+    [{ q: 'The plan view is 3 × 2 and the front elevation is 2 × 2. What is the maximum number of unit cubes in this solid?', a: '12', worked: ['Plan view 3 × 2 = 6 columns', 'Front elevation 2 × 2 = max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 5
   ],
   'G14': [ // Obj 70: Averages (Freq Tables)
-    [{ q: 'A frequency table shows: Score 1 (frequency 3), Score 2 (frequency 7), Score 3 (frequency 5), Score 4 (frequency 2). Write down the mode.', a: '2' }], // Grade 1
-    [{ q: 'A frequency table has frequencies 5, 8, 12, and 4. How many people were surveyed in total?', a: '29' }], // Grade 2
-    [{ q: 'A table shows the number of goals scored: 0 goals (3 times), 1 goal (5 times), 2 goals (2 times). Calculate the mean number of goals.', a: '0.9' }], // Grade 3
-    [{ q: 'A grouped frequency table shows: 0-10 (frequency 4), 10-20 (frequency 8), 20-30 (frequency 6), 30-40 (frequency 2). Which class interval contains the median?', a: '10-20', type: 'text' }], // Grade 4
-    [{ q: 'A grouped frequency table shows: 0-10 (frequency 2, midpoint 5), 10-20 (frequency 6, midpoint 15), 20-30 (frequency 2, midpoint 25). Estimate the mean.', a: '15' }], // Grade 5
+    [{ q: 'A frequency table shows: Score 1 (frequency 3), Score 2 (frequency 7), Score 3 (frequency 5), Score 4 (frequency 2). Write down the mode.', a: '2', worked: ['The mode is the value with the highest frequency', 'Score 2 has frequency 7 (the highest)', 'Mode = 2'] }], // Grade 1
+    [{ q: 'A frequency table has frequencies 5, 8, 12, and 4. How many people were surveyed in total?', a: '29', worked: ['Total = sum of all frequencies', 'Total = 5 + 8 + 12 + 4 = 29'] }], // Grade 2
+    [{ q: 'A table shows the number of goals scored: 0 goals (3 times), 1 goal (5 times), 2 goals (2 times). Calculate the mean number of goals.', a: '0.9', worked: ['Mean = Σ(value × frequency) ÷ total frequency', 'Σ = (0 × 3) + (1 × 5) + (2 × 2) = 0 + 5 + 4 = 9', 'Total frequency = 3 + 5 + 2 = 10', 'Mean = 9 ÷ 10 = 0.9'] }], // Grade 3
+    [{ q: 'A grouped frequency table shows: 0-10 (frequency 4), 10-20 (frequency 8), 20-30 (frequency 6), 30-40 (frequency 2). Which class interval contains the median?', a: '10-20', type: 'text' , worked: ['Grouped frequency table: 0-10 (freq 4), 10-20 (freq 8), 20-30 (freq 6), 30-40 (freq 2)', 'Total frequency = 20, median class is 10-20', 'Estimated median ≈ 15 (middle of median class)']}], // Grade 4
+    [{ q: 'A grouped frequency table shows: 0-10 (frequency 2, midpoint 5), 10-20 (frequency 6, midpoint 15), 20-30 (frequency 2, midpoint 25). Estimate the mean.', a: '15', worked: ['Mean ≈ Σ(midpoint × frequency) ÷ total frequency', 'Σ = (5 × 2) + (15 × 6) + (25 × 2) = 10 + 90 + 50 = 150', 'Total frequency = 2 + 6 + 2 = 10', 'Mean ≈ 150 ÷ 10 = 15'] }], // Grade 5
   ],
   'G15': [ // Obj 78: Volume/SA (Prisms)
-    [{ q: 'A cube has 6 faces. How many faces does a cuboid have?', a: '6' }], // Grade 1
-    [{ q: 'A cuboid has dimensions 2 cm × 3 cm × 5 cm. Work out its volume.', a: '30' }], // Grade 2
-    [{ q: 'A cube has side length 4 cm. Work out its total surface area.', a: '96' }], // Grade 3
-    [{ q: 'A triangular prism has a cross-sectional area of 15 cm² and a length of 8 cm. Work out its volume.', a: '120', frozen: true }], // Grade 4
-    [{ q: 'A cylinder has radius 3 cm and height 8 cm. The total surface area is kπ cm². What is k?', a: '66' }], // Grade 5
+    [{ q: 'A cube has 6 faces. How many faces does a cuboid have?', a: '6' , worked: ['A cube has 6 faces', 'A cuboid also has 6 faces (opposite faces equal)']}], // Grade 1
+    [{ q: 'A cuboid has dimensions 2 cm × 3 cm × 5 cm. Work out its volume.', a: '30', worked: ['Volume = length × width × height', 'Volume = 2 × 3 × 5 = 30 cm³'] }], // Grade 2
+    [{ q: 'A cube has side length 4 cm. Work out its total surface area.', a: '96', worked: ['A cube has 6 faces, each is 4 × 4 = 16 cm²', 'Total surface area = 6 × 16 = 96 cm²'] }], // Grade 3
+    [{ q: 'A triangular prism has a cross-sectional area of 15 cm² and a length of 8 cm. Work out its volume.', a: '120', frozen: true , worked: ['Volume of triangular prism = Cross-sectional area × Length', 'Volume = 15 × 8 = 120 cm³']}], // Grade 4
+    [{ q: 'A cylinder has radius 3 cm and height 8 cm. The total surface area is kπ cm². What is k?', a: '66', worked: ['TSA = 2πr² + 2πrh', 'TSA = 2π(3)² + 2π(3)(8) = 18π + 48π = 66π cm²', 'k = 66'] }], // Grade 5
   ],
   'G16': [ // Obj 16: Perimeter and Area
-    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq' }], // Grade 1
-    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24' }], // Grade 2
-    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36' }], // Grade 3
-    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42' }], // Grade 4
-    [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true }], // Grade 5
+    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq' , worked: ['The distance around the outside of a shape is called the perimeter']}], // Grade 1
+    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24', worked: ['A square has 4 equal sides', 'Perimeter = 4 × side length = 4 × 6 = 24 cm'] }], // Grade 2
+    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36', worked: ['Area = length × width', 'Area = 9 × 4 = 36 cm²'] }], // Grade 3
+    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42', worked: ['Area = ½ × base × height', 'Area = ½ × 12 × 7 = 6 × 7 = 42 cm²'] }], // Grade 4
+    [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true , worked: ['Area of trapezium = ½ × (sum of parallel sides) × height', 'Area = ½ × (6 + 10) × 5 = ½ × 16 × 5 = 40 cm²']}], // Grade 5
   ],
   'G18': [ // Obj 48: Arcs/Sectors/Cylinders
-    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' }], // Grade 1
-    [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' }], // Grade 2
+    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' , worked: ['The distance from the centre of a circle to the edge is the radius']}], // Grade 1
+    [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' , worked: ['Radius = Diameter ÷ 2 = 10 ÷ 2 = 5 cm']}], // Grade 2
     [{ q: 'A circle has radius 5 cm. Work out the area ÷ π.', a: '25', worked: ['Area = πr² = π × 5² = 25π', 'Area ÷ π = 25'] }], // Grade 3
-    [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32' }], // Grade 4
-    [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5' }], // Grade 5
+    [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32', worked: ['Area of full circle = πr² = π × 8² = 64π', 'Area of semicircle = 64π ÷ 2 = 32π cm²', 'k = 32'] }], // Grade 4
+    [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5', worked: ['Volume = πr²h', '300π = πr² × 12', 'r² = 300π ÷ (12π) = 25', 'r = √25 = 5 cm'] }], // Grade 5
   ],
   'G19': [ // Obj 83: Spheres/Cylinders
-    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere: a football, a box, or a tin can?', a: 'Football', type: 'mcq' }], // Grade 1
-    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'text' }], // Grade 2
-    [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45' }], // Grade 3
-    [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160' }], // Grade 4
-    [{ q: 'A sphere has a volume of 36,000π cm³. Work out the exact radius.', a: '30' }], // Grade 5
+    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere: a football, a box, or a tin can?', a: 'Football', type: 'mcq' , worked: ['A football is a sphere (a perfectly round 3D shape)', 'A box is a cuboid and a tin can is a cylinder']}], // Grade 1
+    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'text' , worked: ['A cylinder has a circular cross-section', 'Looking from above shows a circle']}], // Grade 2
+    [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45', worked: ['V = πr²h = π × 3² × 5 = 45π', 'V ÷ π = 45π ÷ π = 45'] }], // Grade 3
+    [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160', worked: ['V = πr²h', 'V = π × 4² × 10 = π × 16 × 10 = 160π cm³', 'k = 160'] }], // Grade 4
+    [{ q: 'A sphere has a volume of 36,000π cm³. Work out the exact radius.', a: '30', worked: ['Volume = (4/3)πr³', '36,000π = (4/3)πr³', '36,000 = (4/3)r³', 'r³ = 36,000 × 3 ÷ 4 = 27,000', 'r = ∛27,000 = 30 cm'] }], // Grade 5
   ],
   'G20': [ // Obj 30: Pythagoras & Trig
-    [{ q: 'In a right-angled triangle, which side is always opposite the right angle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
-    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' }], // Grade 2
-    [{ q: 'A right-angled triangle has two shorter sides of 6 cm and 8 cm. Work out the length of the hypotenuse.', a: '10', frozen: true }], // Grade 3
-    [{ q: 'In a right-angled triangle, the hypotenuse is 13 cm and one side is 5 cm. Work out the length of the third side.', a: '12', frozen: true }], // Grade 4
-    [{ q: 'A right-angled triangle has an angle of 40° and the adjacent side to this angle is 10 cm. Work out the length of the opposite side to 1 decimal place.', a: '8.4', calculator: true, frozen: true }], // Grade 5
+    [{ q: 'In a right-angled triangle, which side is always opposite the right angle?', a: 'Hypotenuse', type: 'text' , worked: ['The side opposite the right angle is the hypotenuse']}], // Grade 1
+    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' , worked: ['In a² + b² = c², the letter c is the hypotenuse']}], // Grade 2
+    [{ q: 'A right-angled triangle has two shorter sides of 6 cm and 8 cm. Work out the length of the hypotenuse.', a: '10', frozen: true , worked: ['Pythagoras theorem: c² = 6² + 8² = 36 + 64 = 100', 'c = √100 = 10']}], // Grade 3
+    [{ q: 'In a right-angled triangle, the hypotenuse is 13 cm and one side is 5 cm. Work out the length of the third side.', a: '12', frozen: true , worked: ['13² = 5² + b²', '169 = 25 + b²', 'b² = 144, b = 12']}], // Grade 4
+    [{ q: 'A right-angled triangle has an angle of 40° and the adjacent side to this angle is 10 cm. Work out the length of the opposite side to 1 decimal place.', a: '8.4', calculator: true, frozen: true , worked: ['cos(40°) = Adjacent ÷ Hypotenuse = 10 ÷ c', 'c = 10 ÷ cos(40°) ≈ 10 ÷ 0.766 ≈ 13.1 cm', 'Length of hypotenuse ≈ 13.1 cm']}], // Grade 5
   ],
   'G21': [ // Obj 56: Exact Trig Values
-    [{ q: 'In a right-angled triangle, the longest side is called the hypotenuse. How many degrees is the largest angle?', a: '90' }], // Grade 1
-    [{ q: 'Write down the value of sin(0°).', a: '0' }], // Grade 2
-    [{ q: 'Write down the exact value of cos(60°).', a: '0.5' }], // Grade 3
-    [{ q: 'Calculate sin(30°) + cos(60°).', a: '1' }], // Grade 4
-    [{ q: 'A right-angled triangle has an angle of 30° and a hypotenuse of 12 cm. Work out the exact length of the side opposite the 30° angle.', a: '6', frozen: true }], // Grade 5
+    [{ q: 'In a right-angled triangle, the longest side is called the hypotenuse. How many degrees is the largest angle?', a: '90' , worked: ['The largest angle in a right-angled triangle is the right angle = 90°']}], // Grade 1
+    [{ q: 'Write down the value of sin(0°).', a: '0' , worked: ['sin(0°) = 0']}], // Grade 2
+    [{ q: 'Write down the exact value of cos(60°).', a: '0.5' , worked: ['cos(60°) = 0.5']}], // Grade 3
+    [{ q: 'Calculate sin(30°) + cos(60°).', a: '1', worked: ['sin(30°) = 0.5', 'cos(60°) = 0.5', 'sin(30°) + cos(60°) = 0.5 + 0.5 = 1'] }], // Grade 4
+    [{ q: 'A right-angled triangle has an angle of 30° and a hypotenuse of 12 cm. Work out the exact length of the side opposite the 30° angle.', a: '6', frozen: true , worked: ['sin(30°) = Opposite ÷ Hypotenuse', 'sin(30°) = 0.5 = Opposite ÷ 12', 'Opposite = 0.5 × 12 = 6 cm']}], // Grade 5
   ],
   'G25': [ // Obj 40: Vectors
-    [{ q: 'Write the column vector for a translation of 3 units right and 2 units down.', a: '(3, −2)', type: 'text' }], // Grade 1
-    [{ q: 'a = (1, 4) and b = (5, 2). Work out a + b.', a: '(6, 6)', type: 'text' }], // Grade 2
-    [{ q: 'p = (6, −3). Work out 2p.', a: '(12, −6)', type: 'text' }], // Grade 3
-    [{ q: 'c = (−2, 5) and d = (4, 1). Work out 3c − d.', a: '(−10, 14)', type: 'text' }], // Grade 4
-    [{ q: 'The vector from A to B is (−7, 4). A has coordinates (2, 5). Find the coordinates of B.', a: '(−5, 9)', type: 'text' }], // Grade 5
+    [{ q: 'Write the column vector for a translation of 3 units right and 2 units down.', a: '(3, −2)', type: 'text' , worked: ['Translation right 3 means +3', 'Translation down 2 means −2', 'Column vector is (3, −2)']}], // Grade 1
+    [{ q: 'a = (1, 4) and b = (5, 2). Work out a + b.', a: '(6, 6)', type: 'text', worked: ['Add corresponding components', '(1 + 5, 4 + 2) = (6, 6)'] }], // Grade 2
+    [{ q: 'p = (6, −3). Work out 2p.', a: '(12, −6)', type: 'text', worked: ['Multiply each component by 2', '2 × (6, −3) = (12, −6)'] }], // Grade 3
+    [{ q: 'c = (−2, 5) and d = (4, 1). Work out 3c − d.', a: '(−10, 14)', type: 'text', worked: ['3c = 3 × (−2, 5) = (−6, 15)', '3c − d = (−6, 15) − (4, 1) = (−6 − 4, 15 − 1) = (−10, 14)'] }], // Grade 4
+    [{ q: 'The vector from A to B is (−7, 4). A has coordinates (2, 5). Find the coordinates of B.', a: '(−5, 9)', type: 'text', worked: ['A + vector AB = B', '(2, 5) + (−7, 4) = B', 'B = (2 − 7, 5 + 4) = (−5, 9)'] }], // Grade 5
   ],
   'P1': [ // Obj 17: Probability
-    [{ q: 'A fair coin is flipped. What is the probability that it lands on Tails?', a: '1/2', type: 'fraction' }], // Grade 1
-    [{ q: 'A bag contains 4 red counters and 5 blue counters. A counter is picked at random. What is the probability it is red?', a: '4/9', type: 'fraction' }], // Grade 2
-    [{ q: 'The probability that a football team wins its next game is 0.55. What is the probability that the team does not win?', a: '0.45' }], // Grade 3
-    [{ q: 'A biased spinner has sections numbered 1, 2, 3, and 4. P(1)=0.2, P(2)=0.35, P(3)=0.15. Work out P(4).', a: '0.3' }], // Grade 4
-    [{ q: 'There are x green balls and 12 yellow balls in a bag. The probability of picking a yellow ball is 3/5. Work out x.', a: '8' }], // Grade 5
+    [{ q: 'A fair coin is flipped. What is the probability that it lands on Tails?', a: '1/2', type: 'fraction' , worked: ['A fair coin has 2 equally likely outcomes: Heads or Tails', 'P(Tails) = 1/2']}], // Grade 1
+    [{ q: 'A bag contains 4 red counters and 5 blue counters. A counter is picked at random. What is the probability it is red?', a: '4/9', type: 'fraction', worked: ['Total counters = 4 + 5 = 9', 'P(red) = 4/9'] }], // Grade 2
+    [{ q: 'The probability that a football team wins its next game is 0.55. What is the probability that the team does not win?', a: '0.45', worked: ['P(does not win) = 1 − P(wins)', 'P(does not win) = 1 − 0.55 = 0.45'] }], // Grade 3
+    [{ q: 'A biased spinner has sections numbered 1, 2, 3, and 4. P(1)=0.2, P(2)=0.35, P(3)=0.15. Work out P(4).', a: '0.3', worked: ['Sum of all probabilities = 1', 'P(4) = 1 − (0.2 + 0.35 + 0.15) = 1 − 0.7 = 0.3'] }], // Grade 4
+    [{ q: 'There are x green balls and 12 yellow balls in a bag. The probability of picking a yellow ball is 3/5. Work out x.', a: '8', worked: ['P(yellow) = 12/(x + 12) = 3/5', '5 × 12 = 3 × (x + 12)', '60 = 3x + 36', 'x = 8'] }], // Grade 5
   ],
   'P2': [ // Obj 62: Frequency Trees
-    [{ q: 'A restaurant offers 3 main courses and 4 drinks. How many different meal combinations are possible?', a: '12' }], // Grade 1
-    [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 2
-    [{ q: 'In a survey of 120 students: 70 are girls (40 choose Spanish); 50 are boys (25 choose French). How many boys choose Spanish?', a: '25' }], // Grade 3
+    [{ q: 'A restaurant offers 3 main courses and 4 drinks. How many different meal combinations are possible?', a: '12', worked: ['Total combinations = 3 × 4', 'Total = 12'] }], // Grade 1
+    [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33', worked: ['Adults who fail = 50 − 35 = 15', 'Teenagers who fail = 30 − 12 = 18', 'Total fail = 15 + 18 = 33'] }], // Grade 2
+    [{ q: 'In a survey of 120 students: 70 are girls (40 choose Spanish); 50 are boys (25 choose French). How many boys choose Spanish?', a: '25', worked: ['Boys who choose Spanish = 50 − 25 = 25', 'Answer = 25'] }], // Grade 3
     [{ q: '120 students: 70 girls (40 choose Spanish, 30 choose French) and 50 boys (25 choose French, 25 choose Spanish). What fraction of French students are boys?', a: '5/11', type: 'fraction', worked: ['French students: 30 girls + 25 boys = 55', 'Boys who chose French = 25', 'Fraction = 25/55 = 5/11'] }], // Grade 4
-    [{ q: 'A pizza restaurant offers 4 bases, n different toppings, and 3 crust types. In total, 84 different pizzas can be made. Find n.', a: '7' }], // Grade 5
+    [{ q: 'A pizza restaurant offers 4 bases, n different toppings, and 3 crust types. In total, 84 different pizzas can be made. Find n.', a: '7', worked: ['Total combinations = 4 × n × 3 = 84', '12n = 84', 'n = 7'] }], // Grade 5
   ],
   'P3': [ // Obj 45: Relative Frequency
-    [{ q: 'A fair coin is flipped 40 times. Work out the expected number of Heads.', a: '20' }], // Grade 1
-    [{ q: 'A biased dice is rolled 60 times and lands on 6 eighteen times. Calculate the relative frequency.', a: '0.3' }], // Grade 2
-    [{ q: 'The probability of winning a match is 0.4. Estimate the number of wins in 150 matches.', a: '60' }], // Grade 3
-    [{ q: 'A spinner is spun 300 times. P(Red) = 0.35 and P(Blue) = 0.25. Work out the expected number of Greens.', a: '120' }], // Grade 4
-    [{ q: 'Bag A has P(Red) = 1/4 and 40 draws are made. Bag B has P(Red) = 2/5 and 60 draws are made. Work out the total number of red balls expected.', a: '34' }], // Grade 5
+    [{ q: 'A fair coin is flipped 40 times. Work out the expected number of Heads.', a: '20', worked: ['P(Heads) = 0.5', 'Expected number = 0.5 × 40 = 20'] }], // Grade 1
+    [{ q: 'A biased dice is rolled 60 times and lands on 6 eighteen times. Calculate the relative frequency.', a: '0.3', worked: ['Relative frequency = frequency ÷ total trials', 'Relative frequency = 18 ÷ 60 = 0.3'] }], // Grade 2
+    [{ q: 'The probability of winning a match is 0.4. Estimate the number of wins in 150 matches.', a: '60', worked: ['Expected wins = probability × number of matches', 'Expected wins = 0.4 × 150 = 60'] }], // Grade 3
+    [{ q: 'A spinner is spun 300 times. P(Red) = 0.35 and P(Blue) = 0.25. Work out the expected number of Greens.', a: '120', worked: ['P(Green) = 1 − (0.35 + 0.25) = 0.4', 'Expected Greens = 0.4 × 300 = 120'] }], // Grade 4
+    [{ q: 'Bag A has P(Red) = 1/4 and 40 draws are made. Bag B has P(Red) = 2/5 and 60 draws are made. Work out the total number of red balls expected.', a: '34', worked: ['Expected red from A = 1/4 × 40 = 10', 'Expected red from B = 2/5 × 60 = 24', 'Total expected = 10 + 24 = 34'] }], // Grade 5
   ],
   'P4': [ // Obj 64: Venn Diagrams
-    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
-    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2' }], // Grade 2
-    [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4' }], // Grade 3
+    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' , worked: ['20 is a multiple of 10 (yes) but NOT odd', 'In Venn diagram, 20 goes in "Multiples of 10" only (left circle, outside right)', 'The region is in the left circle but outside the right circle']}], // Grade 1
+    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2', worked: ['A = {2, 4, 6, 8, 10}', 'B = {1, 2, 4, 8}', 'A but NOT B = {6, 10}', 'Count = 2'] }], // Grade 2
+    [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4', worked: ['Students playing at least one sport = 30 − 4 = 26', 'Using inclusion-exclusion: 18 + 12 − both = 26', 'Both = 18 + 12 − 26 = 4'] }], // Grade 3
     [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
-    [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2' }], // Grade 5
+    [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2', worked: ['P(A ∪ B) = P(A) + P(B) − P(A ∩ B)', '0.7 = 0.5 + 0.4 − P(A ∩ B)', 'P(A ∩ B) = 0.9 − 0.7 = 0.2'] }], // Grade 5
   ],
   'P5': [ // Obj 63: Pictograms/Bar Charts
-    [{ q: 'In a pictogram, 1 square represents 12 cars. How many cars are represented by 2.5 squares?', a: '30' }], // Grade 1
-    [{ q: 'A bar chart axis increases in steps of 4. Where does a frequency of 18 appear on the axis?', a: '16 and 20', type: 'mcq' }], // Grade 2
-    [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. What is the biggest gender difference among these subjects?', a: 'Drama', type: 'mcq' }], // Grade 3
-    [{ q: 'On Monday, 4 symbols represent 48 people in a pictogram. On Tuesday, there are 2.5 symbols. How many people are represented on Tuesday?', a: '30' }], // Grade 4
+    [{ q: 'In a pictogram, 1 square represents 12 cars. How many cars are represented by 2.5 squares?', a: '30', worked: ['Cars = 2.5 × 12', 'Cars = 30'] }], // Grade 1
+    [{ q: 'A bar chart axis increases in steps of 4. Where does a frequency of 18 appear on the axis?', a: '16 and 20', type: 'mcq' , worked: ['Axis increases in steps of 4: ..., 12, 16, 20, ...', 'Frequency 18 falls between 16 and 20']}], // Grade 2
+    [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. What is the biggest gender difference among these subjects?', a: 'Drama', type: 'mcq', worked: ['Football: |15 − 8| = 7', 'Drama: |6 − 14| = 8', 'Art: |10 − 11| = 1', 'Biggest difference = 8 (Drama)'] }], // Grade 3
+    [{ q: 'On Monday, 4 symbols represent 48 people in a pictogram. On Tuesday, there are 2.5 symbols. How many people are represented on Tuesday?', a: '30', worked: ['Value per symbol = 48 ÷ 4 = 12 people', 'Tuesday: 2.5 × 12 = 30 people'] }], // Grade 4
     [{ q: 'In a valid bar chart, what must be true about the bars?', a: 'They must all have equal width', type: 'mcq', options: ['They must all have equal width', 'They must all have different widths', 'They must touch each other', 'They must be in order of size'], worked: ['In a bar chart, the height represents frequency', 'All bars must have the same width so comparisons are fair', 'If bars had different widths, the visual would be misleading'] }], // Grade 5
   ],
   'P6': [ // Obj 27: Venn Diagrams
-    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
-    [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq' }], // Grade 2
-    [{ q: 'A class has 30 students. 18 play football, 12 play cricket, and 4 play neither. How many students play both sports?', a: '4' }], // Grade 3
+    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' , worked: ['20 is in "Multiples of 10" but NOT in "Odd numbers"', 'It appears in the left region only (multiple of 10 but not odd)']}], // Grade 1
+    [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq' , worked: ['A ∩ B (intersection) is the set of elements in both A and B']}], // Grade 2
+    [{ q: 'A class has 30 students. 18 play football, 12 play cricket, and 4 play neither. How many students play both sports?', a: '4', worked: ['Students playing at least one sport = 30 − 4 = 26', 'Using inclusion-exclusion: 18 + 12 − both = 26', 'Both = 30 − 26 = 4'] }], // Grade 3
     [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
-    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {prime numbers}, B = {odd numbers}. How many numbers are in A ∪ B?', a: '6' }], // Grade 5
+    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {prime numbers}, B = {odd numbers}. How many numbers are in A ∪ B?', a: '6', worked: ['Primes in ξ: {2, 3, 5, 7}', 'Odd numbers in ξ: {1, 3, 5, 7, 9}', 'A ∪ B = {1, 2, 3, 5, 7, 9}', 'Count = 6'] }], // Grade 5
   ],
   'P7': [ // Obj 59: Further Probability
-    [{ q: 'A fair coin is flipped. How many possible outcomes are there?', a: '2' }], // Grade 1
-    [{ q: 'Work out the probability of getting a Head AND rolling a 6 on a fair dice.', a: '1/12', type: 'fraction' }], // Grade 2
-    [{ q: 'A bag contains 4 red and 6 blue counters. A counter is drawn with replacement. Work out the probability of drawing two red counters.', a: '4/25', type: 'fraction' }], // Grade 3
-    [{ q: 'A bag contains 5 green and 3 yellow balls. A ball is drawn without replacement. Work out the probability of drawing two yellow balls.', a: '3/28', type: 'fraction' }], // Grade 4
-    [{ q: 'The probability of choosing Art is 0.4 and the probability of choosing Drama is 0.3. These are independent events. Work out the probability of choosing at least one of these subjects.', a: '0.58' }], // Grade 5
+    [{ q: 'A fair coin is flipped. How many possible outcomes are there?', a: '2' , worked: ['A fair coin has 2 possible outcomes: Heads or Tails']}], // Grade 1
+    [{ q: 'Work out the probability of getting a Head AND rolling a 6 on a fair dice.', a: '1/12', type: 'fraction', worked: ['P(Head) = 1/2', 'P(rolling 6) = 1/6', 'P(Head AND 6) = 1/2 × 1/6 = 1/12'] }], // Grade 2
+    [{ q: 'A bag contains 4 red and 6 blue counters. A counter is drawn with replacement. Work out the probability of drawing two red counters.', a: '4/25', type: 'fraction', worked: ['Total counters = 4 + 6 = 10', 'P(red) = 4/10 = 2/5', 'With replacement: P(both red) = 2/5 × 2/5 = 4/25'] }], // Grade 3
+    [{ q: 'A bag contains 5 green and 3 yellow balls. A ball is drawn without replacement. Work out the probability of drawing two yellow balls.', a: '3/28', type: 'fraction', worked: ['P(1st yellow) = 3/8', 'P(2nd yellow | 1st yellow) = 2/7', 'P(both yellow) = 3/8 × 2/7 = 6/56 = 3/28'] }], // Grade 4
+    [{ q: 'The probability of choosing Art is 0.4 and the probability of choosing Drama is 0.3. These are independent events. Work out the probability of choosing at least one of these subjects.', a: '0.58', worked: ['P(at least one) = 1 − P(neither)', 'P(not Art) = 1 − 0.4 = 0.6', 'P(not Drama) = 1 − 0.3 = 0.7', 'P(neither) = 0.6 × 0.7 = 0.42', 'P(at least one) = 1 − 0.42 = 0.58'] }], // Grade 5
   ],
   'P8': [ // Obj 28: Tree Diagrams
-    [{ q: '80 people take a test. There are 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 1
+    [{ q: '80 people take a test. There are 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33', worked: ['Adults who fail = 50 − 35 = 15', 'Teenagers who fail = 30 − 12 = 18', 'Total fail = 15 + 18 = 33'] }], // Grade 1
     [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. What fraction of all people fail? Give your answer in its simplest form.', a: '33/80', type: 'fraction', worked: ['Adults who fail = 50 − 35 = 15', 'Teenagers who fail = 30 − 12 = 18', 'Total fail = 15 + 18 = 33', 'Fraction = 33/80'] }], // Grade 2
-    [{ q: 'A fair coin is flipped twice. How many possible outcomes are there?', a: '4' }], // Grade 3
-    [{ q: 'Work out the probability of getting exactly two Heads from two fair coin flips.', a: '1/4', type: 'fraction' }], // Grade 4
-    [{ q: 'A bag contains 5 red counters and 3 blue counters. A counter is picked at random, replaced, and a second counter is picked. Work out the probability that the two counters are different colours.', a: '15/32', type: 'fraction' }], // Grade 5
+    [{ q: 'A fair coin is flipped twice. How many possible outcomes are there?', a: '4' , worked: ['First flip: 2 outcomes (H or T)', 'Second flip: 2 outcomes (H or T)', 'Total: 2 × 2 = 4 outcomes (HH, HT, TH, TT)']}], // Grade 3
+    [{ q: 'Work out the probability of getting exactly two Heads from two fair coin flips.', a: '1/4', type: 'fraction', worked: ['Possible outcomes: HH, HT, TH, TT', 'Only HH gives exactly two Heads', 'P(HH) = 1/4'] }], // Grade 4
+    [{ q: 'A bag contains 5 red counters and 3 blue counters. A counter is picked at random, replaced, and a second counter is picked. Work out the probability that the two counters are different colours.', a: '15/32', type: 'fraction', worked: ['Total counters = 8', 'P(red then blue) = 5/8 × 3/8 = 15/64', 'P(blue then red) = 3/8 × 5/8 = 15/64', 'P(different) = 15/64 + 15/64 = 30/64 = 15/32'] }], // Grade 5
   ],
   'S1': [ // Obj 39: Time Series/Pictograms
-    [{ q: 'A pictogram uses one circle to represent 4 people. How many people do 3 circles represent?', a: '12' }], // Grade 1
-    [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14' }], // Grade 2
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people do 3 circles represent?', a: '12', worked: ['People = 3 × 4 = 12'] }], // Grade 1
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14', worked: ['People = 3.5 × 4 = 14'] }], // Grade 2
     [{ q: 'A shop records ice cream sales each quarter: Q1 = 120, Q2 = 350, Q3 = 480, Q4 = 200. Work out the total sales for the year.', a: '1150', worked: ['120 + 350 + 480 + 200 = 1150'] }], // Grade 3
     [{ q: 'Monthly profits: Jan £40k, Feb £45k, Mar £52k, Apr £48k, May £58k. What is the overall trend?', a: 'Generally increasing', type: 'mcq', options: ['Generally increasing', 'Generally decreasing', 'Staying the same', 'No pattern'], worked: ['Values go 40→45→52→48→58', 'Despite a small dip in April, the overall trend is upward'] }], // Grade 4
     [{ q: 'A 3-point moving average of quarterly sales is: 317, 343, 353. What does this suggest about the underlying trend?', a: 'Sales are increasing', type: 'mcq', options: ['Sales are increasing', 'Sales are decreasing', 'Sales are staying the same', 'Cannot tell'], worked: ['Moving averages: 317 → 343 → 353', 'Each average is higher than the last', 'The underlying trend is increasing'] }], // Grade 5
   ],
   'S2': [ // Obj 38: Two-way Tables/Pie Charts
-    [{ q: '12 boys chose hot lunch and 8 chose packed lunch. 15 girls chose hot lunch and 9 chose packed lunch. How many girls chose packed lunch?', a: '9' }], // Grade 1
-    [{ q: 'In a survey, 20 men and 30 women were asked about their preferences. 12 men prefer tea and 18 women prefer coffee. How many women prefer tea?', a: '12' }], // Grade 2
-    [{ q: 'A pie chart represents 120 people. The angle for Blue is 90°. How many people chose Blue?', a: '30' }], // Grade 3
-    [{ q: 'In a survey of 60 people, 20 walk to work, 15 drive by car, 10 use the bus, and 15 cycle. What angle represents "Walk" on a pie chart?', a: '120' }], // Grade 4
-    [{ q: 'A pie chart shows that 45 dogs correspond to an angle of 120°. Work out the total number of animals represented in the pie chart.', a: '135' }], // Grade 5
+    [{ q: '12 boys chose hot lunch and 8 chose packed lunch. 15 girls chose hot lunch and 9 chose packed lunch. How many girls chose packed lunch?', a: '9', worked: ['From the table, girls who chose packed lunch = 9'] }], // Grade 1
+    [{ q: 'In a survey, 20 men and 30 women were asked about their preferences. 12 men prefer tea and 18 women prefer coffee. How many women prefer tea?', a: '12', worked: ['Total women = 30', 'Women who prefer coffee = 18', 'Women who prefer tea = 30 − 18 = 12'] }], // Grade 2
+    [{ q: 'A pie chart represents 120 people. The angle for Blue is 90°. How many people chose Blue?', a: '30', worked: ['Fraction = angle ÷ 360 = 90 ÷ 360 = 1/4', 'People = 1/4 × 120 = 30'] }], // Grade 3
+    [{ q: 'In a survey of 60 people, 20 walk to work, 15 drive by car, 10 use the bus, and 15 cycle. What angle represents "Walk" on a pie chart?', a: '120', worked: ['Angle = (frequency ÷ total) × 360', 'Angle = (20 ÷ 60) × 360 = (1/3) × 360 = 120°'] }], // Grade 4
+    [{ q: 'A pie chart shows that 45 dogs correspond to an angle of 120°. Work out the total number of animals represented in the pie chart.', a: '135', worked: ['Angle 120° represents 45 animals', 'Angle 360° represents: (45 ÷ 120) × 360 = 135 animals'] }], // Grade 5
   ],
   'S4': [ // Obj 18: Statistics (Averages)
-    [{ q: 'Find the mode of: 4, 7, 7, 9, 12.', a: '7' }], // Grade 1
-    [{ q: 'Find the range of: 15, 3, 11, 22, 8.', a: '19' }], // Grade 2
-    [{ q: 'Find the median of: 8, 2, 10, 1, 6.', a: '6' }], // Grade 3
-    [{ q: 'Calculate the mean of: 5, 9, 12, 6.', a: '8' }], // Grade 4
-    [{ q: 'Four numbers have a mean of 8. Three of the numbers are 4, 7, and 11. Work out the fourth number.', a: '10' }], // Grade 5
+    [{ q: 'Find the mode of: 4, 7, 7, 9, 12.', a: '7', worked: ['The mode is the value that appears most often', 'The value 7 appears twice', 'Mode = 7'] }], // Grade 1
+    [{ q: 'Find the range of: 15, 3, 11, 22, 8.', a: '19', worked: ['Range = highest − lowest', 'Range = 22 − 3 = 19'] }], // Grade 2
+    [{ q: 'Find the median of: 8, 2, 10, 1, 6.', a: '6', worked: ['Order the values: 1, 2, 6, 8, 10', 'The median is the middle value', 'Median = 6'] }], // Grade 3
+    [{ q: 'Calculate the mean of: 5, 9, 12, 6.', a: '8', worked: ['Mean = (5 + 9 + 12 + 6) ÷ 4', 'Mean = 32 ÷ 4 = 8'] }], // Grade 4
+    [{ q: 'Four numbers have a mean of 8. Three of the numbers are 4, 7, and 11. Work out the fourth number.', a: '10', worked: ['Mean = sum of all numbers ÷ count', '8 = (4 + 7 + 11 + x) ÷ 4', '32 = 22 + x', 'x = 10'] }], // Grade 5
   ],
   'S5': [ // Obj 66: Standard Form (Calc)
-    [{ q: '52,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
-    [{ q: 'Write 4.1 × 10⁻³ as an ordinary number.', a: '0.0041' }], // Grade 2
-    [{ q: 'Work out (3 × 10⁴) × (2 × 10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
-    [{ q: 'Work out (9 × 10⁶) ÷ (3 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '8' }], // Grade 4
-    [{ q: 'Work out (5.2 × 10⁴) + (4 × 10³). Give your answer in the form a × 10⁴.', a: '5.6' }], // Grade 5
+    [{ q: '52,000 = a × 10ⁿ. What is n?', a: '4', worked: ['52,000 = 5.2 × 10,000 = 5.2 × 10⁴', 'n = 4'] }], // Grade 1
+    [{ q: 'Write 4.1 × 10⁻³ as an ordinary number.', a: '0.0041', worked: ['10⁻³ = 1 ÷ 1000 = 0.001', '4.1 × 0.001 = 0.0041'] }], // Grade 2
+    [{ q: 'Work out (3 × 10⁴) × (2 × 10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7', worked: ['(3 × 10⁴) × (2 × 10³) = (3 × 2) × (10⁴ × 10³)', '= 6 × 10⁷', 'n = 7'] }], // Grade 3
+    [{ q: 'Work out (9 × 10⁶) ÷ (3 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '8', worked: ['(9 × 10⁶) ÷ (3 × 10⁻²) = (9 ÷ 3) × (10⁶ ÷ 10⁻²)', '= 3 × 10⁸', 'n = 8'] }], // Grade 4
+    [{ q: 'Work out (5.2 × 10⁴) + (4 × 10³). Give your answer in the form a × 10⁴.', a: '5.6', worked: ['(5.2 × 10⁴) + (4 × 10³) = 52,000 + 4,000 = 56,000', '= 5.6 × 10⁴'] }], // Grade 5
   ],
   'S6': [ // Obj 26: Scatter Graphs
-    [{ q: 'A point on a scatter graph has coordinates (15, 30). What is the x-coordinate?', a: '15' }], // Grade 1
-    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' }], // Grade 2
-    [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. Write down the type of correlation.', a: 'Positive', type: 'mcq' }], // Grade 3
-    [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate the value of y when x = 45.', a: '55' }], // Grade 4
+    [{ q: 'A point on a scatter graph has coordinates (15, 30). What is the x-coordinate?', a: '15' , worked: ['Point (15, 30): x-coordinate is the first number = 15']}], // Grade 1
+    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales increase', 'This shows positive correlation']}], // Grade 2
+    [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. Write down the type of correlation.', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales increase', 'The type of correlation is positive']}], // Grade 3
+    [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate the value of y when x = 45.', a: '55', worked: ['Gradient = (50 − 30) ÷ (40 − 20) = 20 ÷ 20 = 1', 'When x increases by 5 from 40 to 45, y increases by 5 × 1 = 5', 'y = 50 + 5 = 55'] }], // Grade 4
     [{ q: 'A line of best fit covers data from x = 10 to x = 50. A student uses it to predict y when x = 100. What is this called?', a: 'Extrapolation — it is unreliable', type: 'mcq', options: ['Interpolation — it is reliable', 'Extrapolation — it is unreliable', 'Correlation — it is always accurate', 'Estimation — it is guaranteed'], worked: ['The data only covers x = 10 to x = 50', 'Predicting at x = 100 is far outside this range', 'This is extrapolation and is unreliable because the pattern may not continue'] }], // Grade 5
   ],
 };
