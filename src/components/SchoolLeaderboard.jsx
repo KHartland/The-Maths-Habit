@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, RefreshCw, Users, Calendar, Clock, Trash2 } from 'lucide-react';
-import { getSchoolLeaderboard, getSchoolLeaderboardMonthly, removeInactiveMembers, getMasteryBadges } from '../lib/leaderboardService';
+import { getSchoolLeaderboard, getSchoolLeaderboardMonthly, removeInactiveMembers, getProfileExtras } from '../lib/leaderboardService';
 import { sanitiseName } from '../lib/profanityFilter';
 
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -13,6 +13,7 @@ const MONTH_NAMES = [
 const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = false, compact = false }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [badges, setBadges] = useState({}); // { userId: 'gold' | 'diamond' }
+  const [piroStages, setPiroStages] = useState({}); // { userId: 'Epic Piro' | 'Hatchling' | ... }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [view, setView] = useState('monthly'); // 'monthly' (default) or 'alltime'
@@ -38,10 +39,13 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = fa
         data = await getSchoolLeaderboard(schoolId);
       }
       setLeaderboard(data);
-      // Fetch mastery badges for displayed users
+      // Fetch mastery badges and piro stages for displayed users
       if (data && data.length > 0) {
         const userIds = data.map(e => e.userId);
-        getMasteryBadges(userIds).then(setBadges).catch(() => {});
+        getProfileExtras(userIds).then(({ badges: b, piroStages: p }) => {
+          setBadges(b);
+          setPiroStages(p);
+        }).catch(() => {});
       }
     } catch (err) {
       console.error('Leaderboard fetch error:', err);
@@ -256,6 +260,18 @@ const SchoolLeaderboard = ({ schoolId, schoolName, currentUserId, isTeacher = fa
                     )}
                     {badges[entry.userId] === 'gold' && (
                       <img src="/images/tiles/gold-tile.jpeg" alt="Gold" className="w-5 h-5 rounded-sm flex-shrink-0" title="Completed Gold Level" />
+                    )}
+                    {piroStages[entry.userId] && (
+                      <span className="text-[10px] text-secondary-text flex-shrink-0 bg-white/5 px-1.5 py-0.5 rounded-full" title={`Piro: ${piroStages[entry.userId]}`}>
+                        {piroStages[entry.userId] === 'Egg' && '🥚'}
+                        {piroStages[entry.userId] === 'Hatchling' && '🐣'}
+                        {piroStages[entry.userId] === 'Smoke Flame' && '💨'}
+                        {piroStages[entry.userId] === 'Teal Flame' && '🩵'}
+                        {piroStages[entry.userId] === 'Magenta Flame' && '🩷'}
+                        {piroStages[entry.userId] === 'Epic Piro' && '🔥'}
+                        {piroStages[entry.userId] === 'Legendary Piro' && '💎'}
+                        {' '}{piroStages[entry.userId]}
+                      </span>
                     )}
                   </div>
 

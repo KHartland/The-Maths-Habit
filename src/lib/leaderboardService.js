@@ -310,6 +310,30 @@ export const getMasteryBadges = async (userIds) => {
   }
 };
 
+// Fetch mastery badges AND piro stages for leaderboard display
+export const getProfileExtras = async (userIds) => {
+  if (!userIds || userIds.length === 0) return { badges: {}, piroStages: {} };
+  const token = getAuthToken();
+  try {
+    const idList = userIds.join(',');
+    const { data } = await restFetch(
+      `profiles?id=in.(${idList})&select=id,mastery_badge,piro_stage`,
+      { token }
+    );
+    if (!data) return { badges: {}, piroStages: {} };
+    const badges = {};
+    const piroStages = {};
+    data.forEach(row => {
+      if (row.mastery_badge) badges[row.id] = row.mastery_badge;
+      if (row.piro_stage) piroStages[row.id] = row.piro_stage;
+    });
+    return { badges, piroStages };
+  } catch (err) {
+    console.error('getProfileExtras error:', err);
+    return { badges: {}, piroStages: {} };
+  }
+};
+
 // Remove inactive school members (0 correct answers) via RPC
 export const removeInactiveMembers = async (schoolId) => {
   if (!schoolId) throw new Error('School ID is required');

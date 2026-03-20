@@ -5591,7 +5591,7 @@ const getDiamondQuestion = (objective, diamondProg) => {
   return { ...q, objective, questionType: 'diamond', difficultyLevel: levelIdx + 3, _diamondLevelIndex: levelIdx, _diamondVariantIndex: idx };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, gameLevel = 1, diamondProgress, setDiamondProgress, saveDiamondProgress, diamondObjectives = [] }) {
+function PracticePage({ dailyObjectives, progress, setProgress, saveProgressFn = saveProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, gameLevel = 1, diamondProgress, setDiamondProgress, saveDiamondProgress, diamondObjectives = [] }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -6114,7 +6114,7 @@ What is the student's answer?`
         masteredAt: (newQuickCorrect >= 5 && (oldProg.quickCorrect ?? 0) < 5) ? now : oldProg.masteredAt,
       };
 
-      saveProgress(updated);
+      saveProgressFn(updated);
       return updated;
     });
       
@@ -7419,14 +7419,14 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   const topicStats = {};
   Object.entries(TOPIC_HEX).forEach(([topic]) => {
     const topicObjectives = allObjectives?.filter(o => o.topic === topic) ?? [];
-    const mastered = topicObjectives.filter(o => isMastered(progress[o.code])).length;
+    const mastered = topicObjectives.filter(o => isMastered(activeProgress[o.code])).length;
     const examReady = topicObjectives.filter(o => {
-      const prog = progress[o.code];
+      const prog = activeProgress[o.code];
       const qc = prog?.quickCorrect ?? 0;
       return qc >= 4 && qc < 5;
     }).length;
     const learning = topicObjectives.filter(o => {
-      const prog = progress[o.code];
+      const prog = activeProgress[o.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
       return quickCorrect > 0 && quickCorrect < 4;
     }).length;
@@ -7458,14 +7458,14 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   
   // Calculate exam readiness
   const totalObjectiveCount = allObjectives?.length ?? 0;
-  const masteredCount = allObjectives?.filter(o => isMastered(progress[o.code])).length ?? 0;
+  const masteredCount = allObjectives?.filter(o => isMastered(activeProgress[o.code])).length ?? 0;
   const examReadyCount = allObjectives?.filter(o => {
-    const prog = progress[o.code];
+    const prog = activeProgress[o.code];
     const qc = prog?.quickCorrect ?? 0;
     return qc >= 4 && qc < 5;
   }).length ?? 0;
   const learningCount = allObjectives?.filter(o => {
-    const prog = progress[o.code];
+    const prog = activeProgress[o.code];
     const quickCorrect = prog?.quickCorrect ?? 0;
     return quickCorrect > 0 && quickCorrect < 4;
   }).length ?? 0;
@@ -9278,6 +9278,16 @@ function AppContent() {
     try { return JSON.parse(localStorage.getItem('maths-habit-diamond-progress') || '{}'); } catch { return {}; }
   });
   const saveDiamondProgress = (dp) => { localStorage.setItem('maths-habit-diamond-progress', JSON.stringify(dp)); };
+  const [higherProgress, setHigherProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('maths-habit-higher-progress') || '{}'); } catch { return {}; }
+  });
+  const saveHigherProgress = (hp) => { localStorage.setItem('maths-habit-higher-progress', JSON.stringify(hp)); };
+
+  // Tier-aware progress: Foundation and Higher have completely separate progress tracking
+  const activeProgress = tier === 'higher' ? higherProgress : progress;
+  const setActiveProgress = tier === 'higher' ? setHigherProgress : setProgress;
+  const saveActiveProgress = tier === 'higher' ? saveHigherProgress : saveProgress;
+
   const [recentSessionCodes, setRecentSessionCodes] = useState([]);
   // Auto-clear recently-progressed tile highlights after 5 seconds
   useEffect(() => {
@@ -9863,7 +9873,7 @@ function AppContent() {
     }))
   );
 
-  const getLevel = (code) => getUnderstandingLevel(progress[code]);
+  const getLevel = (code) => getUnderstandingLevel(activeProgress[code]);
   const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 5).length;
 
   // Level 2 (Diamond) helpers
@@ -9928,12 +9938,12 @@ function AppContent() {
 
     // Check if any stone (never-practised) objectives remain
     const hasStoneGems = allObjectives.some(obj => {
-      const prog = progress[obj.code];
+      const prog = activeProgress[obj.code];
       return !prog || (!(prog.quickCorrect) && !(prog.lastPracticed));
     });
 
     return allObjectives.map(obj => {
-      const prog = progress[obj.code];
+      const prog = activeProgress[obj.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
       const lastPracticed = prog?.lastPracticed ?? 0;
       const neverPractised = !prog || (!quickCorrect && !lastPracticed);
@@ -10319,8 +10329,9 @@ function AppContent() {
     return (
       <PracticePage
         dailyObjectives={dailyObjectives}
-        progress={progress}
-        setProgress={setProgress}
+        progress={activeProgress}
+        setProgress={setActiveProgress}
+        saveProgressFn={tier === 'higher' ? saveHigherProgress : saveProgress}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         dayStreak={dayStreak}
@@ -10350,7 +10361,7 @@ function AppContent() {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         dayStreak={dayStreak}
-        progress={progress}
+        progress={activeProgress}
         allObjectives={allObjectives}
         userSchool={userSchool}
         user={user}
@@ -10564,7 +10575,7 @@ function AppContent() {
                   }}>
                     {allObjectives.map((obj) => {
                       const level = getLevel(obj.code);
-                      const objProg = progress[obj.code];
+                      const objProg = activeProgress[obj.code];
                       const isMasteredTile = level >= 5;
                       const isExamReady = level === 4;
                       const recency = getRecencyFactor(objProg?.lastPracticed);
@@ -10696,7 +10707,7 @@ function AppContent() {
         <TileDetailModal
           open={tooltip.open}
           objective={tooltip.objective}
-          progress={tooltip.objective ? progress[tooltip.objective.code] : null}
+          progress={tooltip.objective ? activeProgress[tooltip.objective.code] : null}
           onClose={closeTileDetail}
         />
       </div>
