@@ -6429,6 +6429,10 @@ const normalizeString = (str) => {
     .replace(/['']/g, "'")
     .replace(/[""]/g, '"')
     .replace(/°/g, '')
+    // Normalize superscripts to ^n so x² matches x^2
+    .replace(/⁰/g, '^0').replace(/¹/g, '^1').replace(/²/g, '^2').replace(/³/g, '^3')
+    .replace(/⁴/g, '^4').replace(/⁵/g, '^5').replace(/⁶/g, '^6').replace(/⁷/g, '^7')
+    .replace(/⁸/g, '^8').replace(/⁹/g, '^9')
     .replace(/£|\$|€|p|cm|m|mm|km|kg|g|ml|l|%$/gi, '') // Remove units at end
     .replace(/^[£$€]/gi, '') // Remove currency at start
     .trim();
@@ -8377,7 +8381,14 @@ What is the student's answer?`
                                 <span className="text-sm font-bold">π</span>
                               </button>
                             </div>
-                        
+
+                            {/* Power tip — shown when the answer involves powers */}
+                            {!showFeedback && current && !current.type && /[²³⁴⁵⁶⁷⁸⁹]|\^/.test(current.a) && (
+                              <p className="text-xs text-violet-light/70 mt-1 flex items-center gap-1">
+                                <span>💡</span> Type <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-violet-light font-mono text-[11px]">^</kbd> for powers, e.g. <span className="font-mono text-violet-light">x^2</span> for x². Tap <kbd className="px-1.5 py-0.5 bg-white/10 rounded text-violet-light font-mono text-[11px]">π</kbd> for ² ³ buttons.
+                              </p>
+                            )}
+
                             {/* Math Keyboard */}
                             {showMathKeyboard && (
                               <div className="bg-white/5 border border-white/10 rounded-xl p-2 shadow-lg backdrop-blur-sm">
