@@ -22,11 +22,11 @@ import { higherQuestionBank } from './data/higherQuestionBank.js';
 const NavIcon = ({ src, className = '' }) => (
   <img src={src} alt="" className={`${className} object-contain rounded-md`} draggable={false} />
 );
-const HomeIcon = ({ className }) => <NavIcon src="/images/nav/home.png" className={className} />;
-const HeatmapIcon = ({ className }) => <NavIcon src="/images/nav/journey.png" className={className} />;
-const PracticeIcon = ({ className }) => <NavIcon src="/images/nav/practice.png" className={className} />;
-const StatsIcon = ({ className }) => <NavIcon src="/images/nav/stats.png" className={className} />;
-const SettingsIcon = ({ className }) => <NavIcon src="/images/nav/settings.png" className={className} />;
+const HomeIcon = ({ className }) => <NavIcon src="/images/cube.png" className={className} />;
+const HeatmapIcon = ({ className }) => <NavIcon src="/images/compass.jpeg" className={className} />;
+const PracticeIcon = ({ className }) => <NavIcon src="/images/pi.jpeg" className={className} />;
+const StatsIcon = ({ className }) => <NavIcon src="/images/grid.jpeg" className={className} />;
+const SettingsIcon = ({ className }) => <NavIcon src="/images/root.png" className={className} />;
 
 // Legacy icon aliases (used elsewhere in app)
 const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
