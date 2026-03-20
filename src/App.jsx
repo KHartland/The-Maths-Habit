@@ -8624,7 +8624,6 @@ What is the student's answer?`
                                 </>
                               )}
                             </div>
-                          </div>
                           </>
 
                         <button
