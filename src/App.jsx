@@ -15,6 +15,7 @@ import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
+import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 
 // Custom maths-themed icons for the app
 const HomeIcon = CubeIcon;           // 3D cube for Home
@@ -2987,7 +2988,7 @@ const goldQuestionBank = {
     [{ q: 'A weight is recorded as 34 kg to the nearest kg. What is the lower bound?', a: '33.5' }], // Grade 2
     [{ q: 'A length is rounded to the nearest integer and gives 8. What is the upper bound?', a: '8.5' }], // Grade 3
     [{ q: 'A rectangle measures 12 cm × 5 cm, both to the nearest cm. Work out the lowest possible perimeter.', a: '32' }], // Grade 4
-    [{ q: 'A square has side length 6.5 cm to 1 decimal place. Work out the upper bound for its area.', a: '42.9025' }], // Grade 5
+    [{ q: 'A length is measured as 24 cm, correct to the nearest centimetre. What is the lower bound of this measurement?', a: '23.5' }], // Grade 5
   ],
   'A1': [ // Obj 12: Algebraic Expressions
     [{ q: 'Simplify y + y + y + y.', a: '4y', type: 'text' }], // Grade 1
@@ -3064,7 +3065,7 @@ const goldQuestionBank = {
     [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq' }], // Grade 2
     [{ q: 'A plumber charges a £40 callout fee and £25 per hour. Work out the cost for a 3-hour job.', a: '115' }], // Grade 3
     [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq' }], // Grade 4
-    [{ q: 'For the function y = x² − 4x + 3, find the coordinates of the turning point.', a: '(2, −1)', type: 'text' }], // Grade 5
+    [{ q: 'The graph of y = x² − 4x + 3 crosses the x-axis at (1, 0) and (3, 0). What are the coordinates of the lowest point on the curve?', a: '(2, −1)', type: 'mcq', options: ['(2, −1)', '(2, 0)', '(1, 3)', '(0, 3)'], worked: ['The turning point is halfway between the two x-intercepts', 'Midpoint of x = 1 and x = 3 is x = 2', 'When x = 2: y = 4 − 8 + 3 = −1', 'Turning point = (2, −1)'] }], // Grade 5
   ],
   'A14': [ // Obj 84: Non-linear Graphs
     [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq' }], // Grade 1
@@ -3502,60 +3503,8 @@ Object.entries(_originalSharedRefs).forEach(([code, primary]) => {
 
 // ═══════════════════════════════════════════════════════════════
 // DIAMOND QUESTION BANK — Level 2 (unlocked after completing Level 1 grid)
-// 3 questions per objective, each objective has a single level
-// Structure: diamondQuestionBank['N16'] = [variant1, variant2, variant3]
+// Imported from /src/data/diamondQuestionBank.js — 84 objectives, 3 levels each
 // ═══════════════════════════════════════════════════════════════
-const diamondQuestionBank = {
-
-  // N16: Limits of accuracy — error intervals for multiple measurements
-  'N16': [
-    { q: "A length is measured as 24 cm, correct to the nearest centimetre. A second length is measured as 18 cm, correct to the nearest centimetre. Write down the error interval for each measurement.", a: "23.5 ≤ first < 24.5 and 17.5 ≤ second < 18.5", worked: ["First: half of 1 cm = 0.5 cm", "23.5 ≤ first length < 24.5", "Second: half of 1 cm = 0.5 cm", "17.5 ≤ second length < 18.5"] },
-    { q: "A weight is measured as 350 g, correct to the nearest 10 g. Write down the error interval for the weight.", a: "345 ≤ weight < 355", worked: ["Correct to nearest 10 g: half of 10 = 5 g", "Lower bound: 350 − 5 = 345 g", "Upper bound: 350 + 5 = 355 g", "345 ≤ weight < 355"] },
-    { q: "A time is recorded as 12.5 seconds, correct to the nearest tenth of a second. Write down the error interval for the time.", a: "12.45 ≤ time < 12.55", worked: ["Correct to nearest 0.1 s: half of 0.1 = 0.05 s", "Lower bound: 12.5 − 0.05 = 12.45 s", "Upper bound: 12.5 + 0.05 = 12.55 s", "12.45 ≤ time < 12.55"] },
-  ],
-
-  // A11: Quadratic graphs — reading turning points from graphs
-  'A11': [
-    { q: "The graph of y = x² − 4x + 3 is shown. Write down the coordinates of the lowest point on the curve.", a: "(2, −1)", worked: ["The lowest point (turning point) is read directly from the graph", "The vertex is at x = 2", "When x = 2: y = 4 − 8 + 3 = −1", "Turning point = (2, −1)"], hint: "Look for the bottom of the U-shape on the graph" },
-    { q: "The graph of y = x² − 2x − 3 is shown. Write down the coordinates of the turning point of the curve.", a: "(1, −4)", worked: ["Read the turning point from the graph", "The vertex is at x = 1", "When x = 1: y = 1 − 2 − 3 = −4", "Turning point = (1, −4)"], hint: "The turning point is the lowest point on a U-shaped graph" },
-    { q: "The graph of y = x² + 6x + 5 is shown. Write down the y-intercept and the coordinates of the turning point.", a: "y-intercept = 5, turning point = (−3, −4)", worked: ["y-intercept: set x = 0 → y = 0 + 0 + 5 = 5", "Turning point is the lowest point on the curve", "x = −6/(2×1) = −3", "When x = −3: y = 9 − 18 + 5 = −4", "Turning point = (−3, −4)"], hint: "The y-intercept is where the curve crosses the y-axis. The turning point is the lowest point." },
-  ],
-
-  // G13: Constructions of triangles — knowledge of construction methods
-  'G13': [
-    { q: "A triangle is to be constructed with sides 5 cm, 7 cm, and 8 cm. Which construction tool must be used to ensure the sides are the correct length — ruler, protractor, or compasses?", type: "mcq", options: ["Ruler", "Protractor", "Compasses"], a: "Compasses", worked: ["When constructing a triangle with three known sides (SSS)", "You draw one side with a ruler", "Then use compasses to draw arcs of the exact lengths for the other two sides", "The intersection of the arcs gives the third vertex"] },
-    { q: "A student constructs a triangle with sides 6 cm, 8 cm and 10 cm. What type of triangle have they constructed?", type: "mcq", options: ["Equilateral", "Isosceles", "Right-angled", "Scalene"], a: "Right-angled", worked: ["Check if it satisfies Pythagoras' theorem:", "6² + 8² = 36 + 64 = 100", "10² = 100", "Since 6² + 8² = 10², it is a right-angled triangle"] },
-    { q: "An accurate triangle is constructed with AB = 8 cm, angle BAC = 40°, and AC = 6 cm. The length BC is measured from the construction. Which range should BC fall in?", type: "mcq", options: ["4–5 cm", "5–6 cm", "6–7 cm", "7–8 cm"], a: "5–6 cm", worked: ["Using the cosine rule: BC² = 8² + 6² − 2(8)(6)cos(40°)", "= 64 + 36 − 96 × 0.766", "= 100 − 73.5 = 26.5", "BC = √26.5 ≈ 5.1 cm", "This falls in the range 5–6 cm"] },
-  ],
-
-  // G19: Similarity — length scale factor problems
-  'G19': [
-    { q: "Two similar triangles have a length scale factor of 3. The base of the smaller triangle is 4 cm. Work out the base of the larger triangle.", a: "12", worked: ["Scale factor = 3", "Larger base = smaller base × scale factor", "= 4 × 3 = 12 cm"] },
-    { q: "Two similar pentagons have corresponding sides of 6 cm and 15 cm. Work out the scale factor. A third side of the smaller pentagon is 4 cm. Work out the corresponding side of the larger pentagon.", a: "Scale factor = 2.5, corresponding side = 10 cm", worked: ["Scale factor = 15 ÷ 6 = 2.5", "Corresponding side = 4 × 2.5 = 10 cm"] },
-    { q: "Two similar rectangles have corresponding widths of 5 cm and 20 cm. The length of the smaller rectangle is 8 cm. Work out the length of the larger rectangle.", a: "32", worked: ["Scale factor = 20 ÷ 5 = 4", "Larger length = 8 × 4 = 32 cm"] },
-  ],
-
-  // P8: Tree diagrams — independent combined events
-  'P8': [
-    { q: "A fair coin is flipped and a fair spinner with sections Red, Blue, and Green (all equally likely) is spun. Work out the probability of getting Tails and Blue.", a: "1/6", worked: ["P(Tails) = 1/2", "P(Blue) = 1/3", "Events are independent", "P(Tails and Blue) = 1/2 × 1/3 = 1/6"] },
-    { q: "A biased coin has P(Heads) = 0.7. It is flipped twice. Work out the probability of getting two Tails.", a: "0.09", worked: ["P(Tails) = 1 − 0.7 = 0.3", "P(Tails and Tails) = 0.3 × 0.3 = 0.09", "The events are independent (each flip doesn't affect the other)"] },
-    { q: "A fair six-sided die is rolled and a fair coin is flipped. Work out the probability of getting an even number and Heads.", a: "1/4", worked: ["P(Even) = 3/6 = 1/2 (three even numbers: 2, 4, 6)", "P(Heads) = 1/2", "Events are independent", "P(Even and Heads) = 1/2 × 1/2 = 1/4"] },
-  ],
-
-  // G20: Pythagoras & Trigonometry — advanced trig applications
-  'G20': [
-    { q: "In a right-angled triangle, the side opposite an angle of 40° is 5 cm. Work out the length of the hypotenuse to 1 d.p.", a: "7.8", worked: ["sin(40°) = opposite ÷ hypotenuse", "sin(40°) = 5 ÷ hypotenuse", "hypotenuse = 5 ÷ sin(40°)", "= 5 ÷ 0.6428 = 7.8 cm (1 d.p.)"], calculator: true },
-    { q: "A ramp is 3 metres long and rises 0.8 metres vertically. Work out the angle the ramp makes with the horizontal to 1 d.p.", a: "15.5", worked: ["sin(θ) = opposite ÷ hypotenuse", "sin(θ) = 0.8 ÷ 3", "θ = sin⁻¹(0.2667)", "θ = 15.5° (1 d.p.)"], calculator: true },
-    { q: "A ladder 6 m long leans against a wall, making an angle of 65° with the ground. How high up the wall does the ladder reach? Give your answer to 1 d.p.", a: "5.4", worked: ["sin(65°) = height ÷ hypotenuse", "sin(65°) = height ÷ 6", "height = 6 × sin(65°)", "= 6 × 0.9063 = 5.4 m (1 d.p.)"], calculator: true },
-  ],
-
-  // G21 shares G20's diamond questions
-  'G21': [
-    { q: "In a right-angled triangle, the side opposite an angle of 40° is 5 cm. Work out the length of the hypotenuse to 1 d.p.", a: "7.8", worked: ["sin(40°) = opposite ÷ hypotenuse", "sin(40°) = 5 ÷ hypotenuse", "hypotenuse = 5 ÷ sin(40°)", "= 5 ÷ 0.6428 = 7.8 cm (1 d.p.)"], calculator: true },
-    { q: "A ramp is 3 metres long and rises 0.8 metres vertically. Work out the angle the ramp makes with the horizontal to 1 d.p.", a: "15.5", worked: ["sin(θ) = opposite ÷ hypotenuse", "sin(θ) = 0.8 ÷ 3", "θ = sin⁻¹(0.2667)", "θ = 15.5° (1 d.p.)"], calculator: true },
-    { q: "A ladder 6 m long leans against a wall, making an angle of 65° with the ground. How high up the wall does the ladder reach? Give your answer to 1 d.p.", a: "5.4", worked: ["sin(65°) = height ÷ hypotenuse", "sin(65°) = height ÷ 6", "height = 6 × sin(65°)", "= 6 × 0.9063 = 5.4 m (1 d.p.)"], calculator: true },
-  ],
-};
 
 // ═══════════════════════════════════════════════════════════════
 // ADDITIONAL TOPIC-SPECIFIC QUESTIONS — pushed into existing banks
@@ -7094,14 +7043,15 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
 const getDiamondQuestion = (objective, diamondProg) => {
   const dp = diamondProg?.[objective.code];
   const quickCorrect = dp?.quickCorrect ?? 0;
-  const questions = diamondQuestionBank[objective.code];
-  if (questions && questions.length > 0) {
-    // Pick a random variant from the flat array (all 3 are same difficulty)
-    const idx = Math.floor(Math.random() * questions.length);
-    const q = questions[idx];
-    return { ...q, objective, questionType: 'diamond', difficultyLevel: 'diamond', _diamondVariantIndex: idx };
-  }
-  return null;
+  const levels = diamondQuestionBank[objective.code];
+  if (!levels || levels.length === 0) return null;
+  // quickCorrect 0 → Grade 3 (index 0), 1 → Grade 4 (index 1), 2 → Grade 5 (index 2)
+  const levelIdx = Math.min(quickCorrect, levels.length - 1);
+  const variants = levels[levelIdx];
+  if (!variants || variants.length === 0) return null;
+  const idx = Math.floor(Math.random() * variants.length);
+  const q = variants[idx];
+  return { ...q, objective, questionType: 'diamond', difficultyLevel: levelIdx + 3, _diamondLevelIndex: levelIdx, _diamondVariantIndex: idx };
 };
 
 function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, gameLevel = 1, diamondProgress, setDiamondProgress, saveDiamondProgress, diamondObjectives = [] }) {
