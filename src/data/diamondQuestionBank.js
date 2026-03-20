@@ -180,14 +180,14 @@ export const diamondQuestionBank = {
   A25: [
     [{ q: 'Find the nth term of: 8, 13, 18, 23, …', a: '5n + 3', worked: ['Common difference = 5', 'nth term = 5n + ?', '5(1) + ? = 8, ? = 3', 'nth term = 5n + 3'], calculator: false }],
     [{ q: 'Find the nth term of: 22, 19, 16, 13, …', a: '−3n + 25', worked: ['Common difference = −3', 'nth term = −3n + ?', '−3(1) + ? = 22, ? = 25', 'nth term = −3n + 25'], calculator: false }],
-    [{ q: 'The nth term is 6n − 5. Is 85 a term in the sequence?', a: 'Yes', type: 'mcq', options: ['Yes', 'No'], worked: ['6n − 5 = 85', '6n = 90', 'n = 15', 'Yes, 85 is the 15th term'], calculator: false }]
+    [{ q: 'The nth term is 6n − 5. Is 85 a term in the sequence?', a: 'Yes, it is the 15th term', type: 'mcq', options: ['Yes, it is the 15th term', 'Yes, it is the 14th term', 'No, because n = 14.2', 'No, because n = 15.5'], worked: ['6n − 5 = 85', '6n = 90', 'n = 15', 'Yes, 85 is the 15th term'], calculator: false }]
   ],
 
   // RATIO: R1-R14, R16
   R1: [
     [{ q: 'Convert 4.2 m² into cm².', a: '42000', worked: ['1 m² = 10000 cm²', '4.2 × 10000 = 42000 cm²'], calculator: false }],
     [{ q: 'A tap leaks at 20 ml per minute. What is this rate in litres per hour?', a: '1.2', worked: ['20 ml/min × 60 = 1200 ml/hour', '1200 ml = 1.2 litres'], calculator: false }],
-    [{ q: 'Which is longer: 45 miles or 70 km? (5 miles ≈ 8 km)', a: '45 miles', type: 'mcq', options: ['45 miles', '70 km', 'They are equal'], worked: ['45 miles = 45 × 8/5 = 72 km', '72 km > 70 km', '45 miles is longer'], calculator: false }]
+    [{ q: 'Which is longer: 45 miles or 70 km? (5 miles ≈ 8 km)', a: '45 miles', type: 'mcq', options: ['45 miles', '70 km', 'They are equal', 'Cannot tell without a calculator'], worked: ['45 miles = 45 × 8/5 = 72 km', '72 km > 70 km', '45 miles is longer'], calculator: false }]
   ],
   R2: [
     [{ q: 'Map scale 1:25000. Two villages are 8 cm apart on the map. Actual distance in km?', a: '2', worked: ['8 × 25000 = 200000 cm', '200000 cm = 2000 m = 2 km'], calculator: false }],
@@ -207,7 +207,7 @@ export const diamondQuestionBank = {
   R5: [
     [{ q: 'Ali, Ben, Chloe share £150 in ratio 2:3:5. How much more does Chloe get than Ali?', a: '45', worked: ['Total parts = 10', '1 part = £15', 'Chloe = 5 × 15 = £75', 'Ali = 2 × 15 = £30', 'Difference = £45'], calculator: false }],
     [{ q: 'Paint red:white = 1:4. If 2.5L red used, what is the total amount?', a: '12.5', worked: ['1 part = 2.5 L', '4 parts white = 10 L', 'Total = 2.5 + 10 = 12.5 L'], calculator: false }],
-    [{ q: '400 g cereal costs £2.40, 600 g costs £3.30. Which is better value?', a: '600 g', type: 'mcq', options: ['400 g', '600 g', 'Same value'], worked: ['400g: 240 ÷ 400 = 0.6p/g', '600g: 330 ÷ 600 = 0.55p/g', '600g is better value'], calculator: true }]
+    [{ q: '400 g cereal costs £2.40, 600 g costs £3.30. Which is better value?', a: '600 g', type: 'mcq', options: ['400 g', '600 g', 'Same value', 'Not enough information'], worked: ['400g: 240 ÷ 400 = 0.6p/g', '600g: 330 ÷ 600 = 0.55p/g', '600g is better value'], calculator: true }]
   ],
   R6: [
     [{ q: 'Flour:butter = 5:2. What fraction of the mixture is butter?', a: '2/7', worked: ['Total parts = 5 + 2 = 7', 'Butter = 2/7'], calculator: false }],
@@ -422,10 +422,10 @@ export const diamondQuestionBank = {
   S2: [
     [{ q: '120 people: 0-5 (14), 5-10 (46), 10-15 (42), 15-20 (18). Which interval contains the median?', a: '5-10', type: 'mcq', options: ['0-5', '5-10', '10-15', '15-20'], worked: ['Median position: 120/2 = 60th', 'Cumulative: 14, 60, 102, 120', '60th value is in 5-10 interval'], calculator: false }],
     [{ q: 'Grouped: 0-10 (8), 10-20 (22), 20-30 (18), 30-40 (12). Estimate the mean to 1 d.p.', a: '20.7', worked: ['Midpoints: 5, 15, 25, 35', 'Σfx = 40+330+450+420 = 1240', 'Σf = 60', 'Mean = 1240/60 ≈ 20.7'], calculator: true }],
-    [{ q: 'Same data as above. Which class interval contains the median?', a: '10-20', type: 'mcq', options: ['0-10', '10-20', '20-30', '30-40'], worked: ['Median = 30th/31st value', 'Cumulative: 8, 30, 48, 60', '30th is in 10-20'], calculator: false }]
+    [{ q: 'Grouped data: 0-10 (8), 10-20 (22), 20-30 (18), 30-40 (12). Which class interval contains the median?', a: '10-20', type: 'mcq', options: ['0-10', '10-20', '20-30', '30-40'], worked: ['Total frequency = 60', 'Median = 30th/31st value', 'Cumulative: 8, 30, 48, 60', '30th is in 10-20'], calculator: false }]
   ],
   S4: [
-    [{ q: 'Scatter graph: as car age rises, value falls. What type of correlation?', a: 'Negative', type: 'mcq', options: ['Positive', 'Negative', 'No correlation'], worked: ['As one variable increases, the other decreases', 'This is negative correlation'], calculator: false }],
+    [{ q: 'Scatter graph: as car age rises, value falls. What type of correlation?', a: 'Negative', type: 'mcq', options: ['Positive', 'Negative', 'No correlation', 'Perfect'], worked: ['As one variable increases, the other decreases', 'This is negative correlation'], calculator: false }],
     [{ q: 'Line of best fit through (10, 50) and (30, 90). Estimate y when x = 20.', a: '70', worked: ['Gradient = (90−50)/(30−10) = 2', 'At x=20: y = 50 + 2(20−10) = 70'], calculator: false }],
     [{ q: '19 points show an upward trend, one point is far below the line. What is this point called?', a: 'Outlier', type: 'mcq', options: ['Outlier', 'Anomaly', 'Error', 'All of these'], worked: ['A point far from the general pattern is an outlier'], calculator: false }]
   ],

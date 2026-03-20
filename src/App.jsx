@@ -2386,9 +2386,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Best value comparison
     [
-      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value"], a: "Shop A", worked: ["Shop A: £1.80 ÷ 1200g = £0.0015 per gram", "Shop B: £0.80 ÷ 500g = £0.0016 per gram", "Shop A is cheaper per gram"] },
-      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value"], a: "Shop X", worked: ["Shop X: £2.10 ÷ 1500g = £0.0014 per gram", "Shop Y: £0.60 ÷ 400g = £0.0015 per gram", "Shop X is cheaper per gram"] },
-      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value"], a: "Shop Alpha", worked: ["Shop Alpha: £1.40 ÷ 2000g = £0.0007 per gram", "Shop Beta: £0.60 ÷ 750g = £0.0008 per gram", "Shop Alpha is cheaper per gram"] },
+      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value", "Not enough information"], a: "Shop A", calculator: true, worked: ["Shop A: £1.80 ÷ 1200g = £0.0015 per gram", "Shop B: £0.80 ÷ 500g = £0.0016 per gram", "Shop A is cheaper per gram"] },
+      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value", "Not enough information"], a: "Shop X", calculator: true, worked: ["Shop X: £2.10 ÷ 1500g = £0.0014 per gram", "Shop Y: £0.60 ÷ 400g = £0.0015 per gram", "Shop X is cheaper per gram"] },
+      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value", "Not enough information"], a: "Shop Alpha", calculator: true, worked: ["Shop Alpha: £1.40 ÷ 2000g = £0.0007 per gram", "Shop Beta: £0.60 ÷ 750g = £0.0008 per gram", "Shop Alpha is cheaper per gram"] },
     ],
   ],
 
@@ -2599,15 +2599,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Interpret a scatter graph
     [
-      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"], diagram: "scatter-graph" },
-      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Negative correlation", worked: ["One variable increases, the other decreases", "This indicates negative correlation"] },
-      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"] },
+      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"], diagram: "scatter-graph" },
+      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Negative correlation", worked: ["One variable increases, the other decreases", "This indicates negative correlation"] },
+      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"] },
     ],
     // Level 4 (4 marks) — Stem-and-leaf / dual bar chart comparison
     [
       { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18", worked: ["Room B heights: 14, 16, 18, 19, 21", "n = 5 (odd), so median is the middle value", "Median = 3rd value = 18"] },
       { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23", worked: ["Lowest value: 12 (from 1|2)", "Highest value: 35 (from 3|5)", "Range = 35 − 12 = 23"] },
-      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday", worked: ["Calculate differences for each day from the chart", "Wednesday shows the largest gap between the two bars"], diagram: "dual-bar-chart" },
+      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday", "Thursday"], a: "Wednesday", worked: ["Calculate differences for each day from the chart", "Wednesday shows the largest gap between the two bars"], diagram: "dual-bar-chart" },
     ],
   ],
 
@@ -2953,7 +2953,7 @@ const goldQuestionBank = {
     [{ q: '£45 is shared in the ratio 2 : 7. Work out the smaller share.', a: '10' }], // Grade 2
     [{ q: 'The ratio of boys to girls is 4 : 5. There are 25 girls. How many boys are there?', a: '20' }], // Grade 3
     [{ q: 'Ali, Ben, and Chloe share money in the ratio 3 : 5 : 8. Chloe gets £30 more than Ali. Work out the total amount shared.', a: '96' }], // Grade 4
-    [{ q: 'Red : Blue = 2 : 3 and Blue : Green = 4 : 5. Write Red : Blue : Green in simplest form.', a: '15' }], // Grade 5
+    [{ q: 'Red : Blue = 2 : 3 and Blue : Green = 4 : 5. Write Red : Blue : Green in simplest form.', a: '8:12:15', worked: ['Make Blue the same in both ratios', 'Red:Blue = 2:3 → multiply by 4 → 8:12', 'Blue:Green = 4:5 → multiply by 3 → 12:15', 'Red:Blue:Green = 8:12:15'] }], // Grade 5
   ],
   'N12': [ // Obj 4: Percentages
     [{ q: 'Write 25% as a decimal.', a: '0.25' }], // Grade 1
@@ -3071,7 +3071,7 @@ const goldQuestionBank = {
     [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq' }], // Grade 1
     [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2' }], // Grade 2
     [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1' }], // Grade 3
-    [{ q: 'For the function y = x² − 3, write down the coordinates of the turning point.', a: '(0, −3)', type: 'text' }], // Grade 4
+    [{ q: 'For the graph y = x², what are the coordinates where the graph crosses the y-axis?', a: '(0, 0)', worked: ['When x = 0, y = 0² = 0', 'The graph crosses the y-axis at (0, 0)'] }], // Grade 4
     [{ q: 'What type of graph does y = 1/x produce?', a: 'A curved reciprocal graph', type: 'mcq', options: ['A straight line', 'A parabola', 'A curved reciprocal graph', 'A circle'], worked: ['y = 1/x is a reciprocal function', 'As x increases, y decreases but never reaches 0', 'The graph has two curved branches — it is not a straight line'] }], // Grade 5
   ],
   'A17': [ // Obj 13: Solving Linear Equations
@@ -3113,7 +3113,7 @@ const goldQuestionBank = {
     [{ q: 'Write down the next term in the sequence: 3, 7, 11, 15, ...', a: '19' }], // Grade 1
     [{ q: 'The nth term of a sequence is 4n + 1. Work out the first term.', a: '5' }], // Grade 2
     [{ q: 'The sequence 5, 8, 11, 14, ... has nth term = an + b. Work out the value of a.', a: '3' }], // Grade 3
-    [{ q: 'The nth term of a sequence is 6n − 2. Is 54 a term in this sequence?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'The nth term of a sequence is 6n − 2. Is 54 a term in this sequence?', a: 'No, because n = 9.33 which is not a whole number', type: 'mcq', options: ['Yes, it is the 9th term', 'No, because n = 9.33 which is not a whole number', 'Yes, it is the 10th term', 'No, because 54 is even'], worked: ['Set 6n − 2 = 54', '6n = 56', 'n = 56/6 = 9.33...', 'n is not a whole number, so 54 is not a term'] }], // Grade 4
     [{ q: 'The nth term of a sequence is n² + 4. Work out the 3rd term.', a: '13' }], // Grade 5
   ],
   'A24': [ // Obj 46: Advanced Sequences
@@ -3315,8 +3315,8 @@ const goldQuestionBank = {
   'G13': [ // Obj 52: Plans and Elevations
     [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'text' }], // Grade 1
     [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'text' }], // Grade 2
-    [{ q: 'The plan view of a solid is 2 × 3 and the front elevation is 2 × 2. What is the maximum number of cubes in this solid?', a: '12', frozen: true }], // Grade 3
-    [{ q: 'A square-based pyramid is viewed from the side. What shape is the elevation?', a: 'Triangle', type: 'text' }], // Grade 4
+    [{ q: 'A square-based pyramid is viewed from the side. What shape is the elevation?', a: 'Triangle', type: 'mcq', options: ['Triangle', 'Square', 'Rectangle', 'Pentagon'], worked: ['A pyramid viewed from the side shows a triangular profile'] }], // Grade 3
+    [{ q: 'The plan view of a solid is 2 × 3 and the front elevation is 2 × 2. What is the maximum number of cubes in this solid?', a: '12', worked: ['Plan view 2×3 means 6 columns', 'Front elevation 2×2 means max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 4
     [{ q: 'The plan view is 3 × 2 and the front elevation is 2 × 2. What is the maximum number of unit cubes in this solid?', a: '12' }], // Grade 5
   ],
   'G14': [ // Obj 70: Averages (Freq Tables)
@@ -3343,7 +3343,7 @@ const goldQuestionBank = {
   'G18': [ // Obj 48: Arcs/Sectors/Cylinders
     [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' }], // Grade 1
     [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' }], // Grade 2
-    [{ q: 'The area of a circle A = πr². If r = 5, work out A ÷ π.', a: '25' }], // Grade 3
+    [{ q: 'A circle has radius 5 cm. Work out the area ÷ π.', a: '25', worked: ['Area = πr² = π × 5² = 25π', 'Area ÷ π = 25'] }], // Grade 3
     [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32' }], // Grade 4
     [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5' }], // Grade 5
   ],
@@ -3386,7 +3386,7 @@ const goldQuestionBank = {
     [{ q: 'A restaurant offers 3 main courses and 4 drinks. How many different meal combinations are possible?', a: '12' }], // Grade 1
     [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 2
     [{ q: 'In a survey of 120 students: 70 are girls (40 choose Spanish); 50 are boys (25 choose French). How many boys choose Spanish?', a: '25' }], // Grade 3
-    [{ q: 'From the previous question, what fraction of French students are boys? Give your answer in its simplest form.', a: '5/11', type: 'fraction' }], // Grade 4
+    [{ q: '120 students: 70 girls (40 choose Spanish, 30 choose French) and 50 boys (25 choose French, 25 choose Spanish). What fraction of French students are boys?', a: '5/11', type: 'fraction', worked: ['French students: 30 girls + 25 boys = 55', 'Boys who chose French = 25', 'Fraction = 25/55 = 5/11'] }], // Grade 4
     [{ q: 'A pizza restaurant offers 4 bases, n different toppings, and 3 crust types. In total, 84 different pizzas can be made. Find n.', a: '7' }], // Grade 5
   ],
   'P3': [ // Obj 45: Relative Frequency
@@ -3400,7 +3400,7 @@ const goldQuestionBank = {
     [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
     [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2' }], // Grade 2
     [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4' }], // Grade 3
-    [{ q: 'From the previous question, what is the probability that a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction' }], // Grade 4
+    [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
     [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2' }], // Grade 5
   ],
   'P5': [ // Obj 63: Pictograms/Bar Charts
@@ -3414,7 +3414,7 @@ const goldQuestionBank = {
     [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
     [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq' }], // Grade 2
     [{ q: 'A class has 30 students. 18 play football, 12 play cricket, and 4 play neither. How many students play both sports?', a: '4' }], // Grade 3
-    [{ q: 'Using the information from the previous question, what is the probability that a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction' }], // Grade 4
+    [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
     [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {prime numbers}, B = {odd numbers}. How many numbers are in A ∪ B?', a: '6' }], // Grade 5
   ],
   'P7': [ // Obj 59: Further Probability
@@ -3426,7 +3426,7 @@ const goldQuestionBank = {
   ],
   'P8': [ // Obj 28: Tree Diagrams
     [{ q: '80 people take a test. There are 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 1
-    [{ q: 'Using the information from the previous question, what fraction of all people fail? Give your answer in its simplest form.', a: '33/80', type: 'fraction' }], // Grade 2
+    [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. What fraction of all people fail? Give your answer in its simplest form.', a: '33/80', type: 'fraction', worked: ['Adults who fail = 50 − 35 = 15', 'Teenagers who fail = 30 − 12 = 18', 'Total fail = 15 + 18 = 33', 'Fraction = 33/80'] }], // Grade 2
     [{ q: 'A fair coin is flipped twice. How many possible outcomes are there?', a: '4' }], // Grade 3
     [{ q: 'Work out the probability of getting exactly two Heads from two fair coin flips.', a: '1/4', type: 'fraction' }], // Grade 4
     [{ q: 'A bag contains 5 red counters and 3 blue counters. A counter is picked at random, replaced, and a second counter is picked. Work out the probability that the two counters are different colours.', a: '15/32', type: 'fraction' }], // Grade 5
@@ -3434,9 +3434,9 @@ const goldQuestionBank = {
   'S1': [ // Obj 39: Time Series/Pictograms
     [{ q: 'A pictogram uses one circle to represent 4 people. How many people do 3 circles represent?', a: '12' }], // Grade 1
     [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14' }], // Grade 2
-    [{ q: 'The quarterly sales figures are: Q1 = £4,200, Q2 = £5,100, Q3 = £6,800, Q4 = £5,900. Which quarter had the highest sales?', a: 'Q3', type: 'mcq' }], // Grade 3
-    [{ q: 'The profits over 5 years are: 2020 = £40k, 2021 = £45k, 2022 = £52k, 2023 = £48k, 2024 = £58k. Describe the overall trend.', a: 'Increasing', type: 'mcq' }], // Grade 4
-    [{ q: 'What is the main purpose of calculating a moving average on time series data?', a: 'To smooth out seasonal variation', type: 'mcq' }], // Grade 5
+    [{ q: 'A shop records ice cream sales each quarter: Q1 = 120, Q2 = 350, Q3 = 480, Q4 = 200. Work out the total sales for the year.', a: '1150', worked: ['120 + 350 + 480 + 200 = 1150'] }], // Grade 3
+    [{ q: 'Monthly profits: Jan £40k, Feb £45k, Mar £52k, Apr £48k, May £58k. What is the overall trend?', a: 'Generally increasing', type: 'mcq', options: ['Generally increasing', 'Generally decreasing', 'Staying the same', 'No pattern'], worked: ['Values go 40→45→52→48→58', 'Despite a small dip in April, the overall trend is upward'] }], // Grade 4
+    [{ q: 'A 3-point moving average of quarterly sales is: 317, 343, 353. What does this suggest about the underlying trend?', a: 'Sales are increasing', type: 'mcq', options: ['Sales are increasing', 'Sales are decreasing', 'Sales are staying the same', 'Cannot tell'], worked: ['Moving averages: 317 → 343 → 353', 'Each average is higher than the last', 'The underlying trend is increasing'] }], // Grade 5
   ],
   'S2': [ // Obj 38: Two-way Tables/Pie Charts
     [{ q: '12 boys chose hot lunch and 8 chose packed lunch. 15 girls chose hot lunch and 9 chose packed lunch. How many girls chose packed lunch?', a: '9' }], // Grade 1
@@ -3761,9 +3761,10 @@ questionBank['A4'] = [
     { q: "Simplify: x + x + x + x", a: "4x", worked: ["Count the number of x terms: 4", "Combine: 4x"] },
     { q: "Simplify: y + y + y", a: "3y", worked: ["Count the number of y terms: 3", "Combine: 3y"] },
   ],
-  // Level 1 — Collect like terms (two variables)
+  // Level 1 — Collect like terms (two variables + constants)
   [
     { q: "Simplify: 5a + 3b + 2a − b", a: "7a + 2b", worked: ["Collect a terms: 5a + 2a = 7a", "Collect b terms: 3b − b = 2b", "Answer: 7a + 2b"] },
+    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a", worked: ["Collect number terms: 15 − 5 = 10", "Collect a terms: −4a − a = −5a", "Answer: 10 − 5a"] },
     { q: "Simplify: 8c + 4d − 3c + 2d", a: "5c + 6d", worked: ["Collect c terms: 8c − 3c = 5c", "Collect d terms: 4d + 2d = 6d", "Answer: 5c + 6d"] },
   ],
   // Level 2 — Collect like terms with powers
@@ -3771,10 +3772,10 @@ questionBank['A4'] = [
     { q: "Simplify: 4x² + 3x − 2x² + 5x", a: "2x² + 8x", worked: ["Collect x² terms: 4x² − 2x² = 2x²", "Collect x terms: 3x + 5x = 8x", "Answer: 2x² + 8x"] },
     { q: "Simplify: 5p² − 2p + p² + 7p", a: "6p² + 5p", worked: ["Collect p² terms: 5p² + p² = 6p²", "Collect p terms: −2p + 7p = 5p", "Answer: 6p² + 5p"] },
   ],
-  // Level 3 — Collect constants and terms
+  // Level 3 — Expand single brackets and simplify
   [
     { q: "Simplify: 10 − 3y + 2 − 4y", a: "12 - 7y", worked: ["Collect number terms: 10 + 2 = 12", "Collect y terms: −3y − 4y = −7y", "Answer: 12 − 7y"] },
-    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a", worked: ["Collect number terms: 15 − 5 = 10", "Collect a terms: −4a − a = −5a", "Answer: 10 − 5a"] },
+    { q: "Expand and simplify: 3(2x + 1) + 2(x − 4)", a: "8x - 5", worked: ["3(2x + 1) = 6x + 3", "2(x − 4) = 2x − 8", "6x + 3 + 2x − 8 = 8x − 5"] },
   ],
   // Level 4 — Perimeter expression
   [
@@ -3915,7 +3916,7 @@ questionBank['N13'][3].push(
   { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £1.20 ÷ 500g = £0.0024 per gram", "Shop B: £1.70 ÷ 750g = £0.00227 per gram", "Shop B is cheaper"] },
 );
 questionBank['N13'][4].push(
-  { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240", worked: ["Simple interest = Principal × Rate × Time ÷ 100", "Interest = £2000 × 3 × 4 ÷ 100 = £240"] },
+  { q: "£2000 is invested at 3% compound interest per annum. What is the value after 4 years? Give your answer to the nearest penny.", a: "2251.02", calculator: true, worked: ["Year 1: 2000 × 1.03 = 2060", "Year 2: 2060 × 1.03 = 2121.80", "Year 3: 2121.80 × 1.03 = 2185.45", "Year 4: 2185.45 × 1.03 = 2251.02", "Or: 2000 × 1.03⁴ = £2251.02"] },
 );
 
 // Find Probability → P1
@@ -4188,7 +4189,7 @@ questionBank['G1'][2].push(
   { q: "A triangle has angles of 40° and 70°. Work out the size of the third angle.", a: "70", worked: ["Angles in a triangle sum to 180°", "40 + 70 + third angle = 180", "Third angle = 180 − 110 = 70°"] },
 );
 questionBank['G1'][3].push(
-  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", hint: "Interior angle = (n − 2) × 180 ÷ n", worked: ["Pentagon has 5 sides, so n = 5", "Interior angle = (5 − 2) × 180 ÷ 5", "= 3 × 180 ÷ 5 = 540 ÷ 5 = 108°"] },
+  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", calculator: true, hint: "Interior angle = (n − 2) × 180 ÷ n", worked: ["Pentagon has 5 sides, so n = 5", "Interior angle = (5 − 2) × 180 ÷ 5", "= 3 × 180 ÷ 5 = 540 ÷ 5 = 108°"] },
 );
 questionBank['G1'][4].push(
   { q: "Two angles are vertically opposite. One is 72°. What is the size of the other angle?", a: "72", worked: ["Vertically opposite angles are equal", "Therefore the other angle = 72°"] },
@@ -4566,7 +4567,7 @@ questionBank['P4'][2].push(
   { q: "A survey asks 'Do you think school dinners are healthy?' This is a leading question. Write a better question.", type: "mcq", options: ["What do you think about school dinners?", "Don't you agree school dinners are unhealthy?", "School dinners are great, aren't they?", "Why are school dinners so bad?"], a: "What do you think about school dinners?", worked: ["A good survey question should be unbiased", "It should not lead the person to a particular answer", "'What do you think about school dinners?' is neutral and open"] },
 );
 questionBank['P4'][3].push(
-  { q: "As the temperature increases, the number of coats sold decreases. What type of correlation is this?", type: "mcq", options: ["Negative correlation", "Positive correlation", "No correlation"], a: "Negative correlation", worked: ["As one variable increases, the other decreases", "This is negative correlation"] },
+  { q: "As the temperature increases, the number of coats sold decreases. What type of correlation is this?", type: "mcq", options: ["Negative correlation", "Positive correlation", "No correlation", "Perfect correlation"], a: "Negative correlation", worked: ["As one variable increases, the other decreases", "This is negative correlation"] },
 );
 questionBank['P4'][4].push(
   { q: "A spinner has sections A, B, C. P(A) = 0.5, P(B) = 0.3. The spinner is spun 200 times. How many times would you expect to land on C?", a: "40", worked: ["P(C) = 1 − 0.5 − 0.3 = 0.2", "Expected frequency = P(C) × number of spins", "Expected = 0.2 × 200 = 40"] },
@@ -4995,7 +4996,7 @@ const higherQuestionBank = {
     ],
     // Level 4 (Grade 8) — Comparing distributions using box plots
     [
-      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
+      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same", "Cannot tell from this data"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
       { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
       { q: "A histogram shows classes 0–5 (FD=2), 5–10 (FD=4), 10–20 (FD=3), 20–40 (FD=1). Estimate the total frequency.", a: "80", worked: ["Frequency = FD × class width for each bar:", "0–5: 2 × 5 = 10", "5–10: 4 × 5 = 20", "10–20: 3 × 10 = 30", "20–40: 1 × 20 = 20", "Total = 10 + 20 + 30 + 20 = 80"], hint: "Frequency = frequency density × class width. Add up all the frequencies." },
     ],
