@@ -8979,17 +8979,21 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mt-4">
+            <div className="grid grid-cols-4 gap-3 mt-4">
               <div className="text-center">
                 <div className="text-lg font-bold text-mint">{masteredCount}</div>
                 <div className="text-xs text-secondary-text">Mastered</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-red-400">{examReadyCount}</div>
+                <div className="text-xs text-secondary-text">Exam Ready</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-amber-400">{learningCount}</div>
                 <div className="text-xs text-secondary-text">Learning</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-secondary-text">{totalObjectiveCount - masteredCount - learningCount}</div>
+                <div className="text-lg font-bold text-secondary-text">{totalObjectiveCount - masteredCount - examReadyCount - learningCount}</div>
                 <div className="text-xs text-secondary-text">Not Started</div>
               </div>
             </div>
