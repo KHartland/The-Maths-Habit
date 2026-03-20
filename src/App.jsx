@@ -18,23 +18,20 @@ import DragDropMatch from './components/DragDropMatch';
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 import { higherQuestionBank } from './data/higherQuestionBank.js';
 
-// Custom maths-themed icons for the app
-const HomeIcon = CubeIcon;           // 3D cube for Home
-const PracticeIcon = SquareRootIcon; // Square root √ for Practice
-const SettingsIcon = CompassIcon;    // Drawing compass for Settings
+// Custom maths-themed nav icons (image-based)
+const NavIcon = ({ src, className = '' }) => (
+  <img src={src} alt="" className={`${className} object-contain rounded-md`} draggable={false} />
+);
+const HomeIcon = ({ className }) => <NavIcon src="/images/nav/home.png" className={className} />;
+const HeatmapIcon = ({ className }) => <NavIcon src="/images/nav/journey.png" className={className} />;
+const PracticeIcon = ({ className }) => <NavIcon src="/images/nav/practice.png" className={className} />;
+const StatsIcon = ({ className }) => <NavIcon src="/images/nav/stats.png" className={className} />;
+const SettingsIcon = ({ className }) => <NavIcon src="/images/nav/settings.png" className={className} />;
+
+// Legacy icon aliases (used elsewhere in app)
 const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
-const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
-// Grid icon for Heatmap/Journey page
-const HeatmapIcon = ({ className }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" rx="1" />
-    <rect x="14" y="3" width="7" height="7" rx="1" />
-    <rect x="3" y="14" width="7" height="7" rx="1" />
-    <rect x="14" y="14" width="7" height="7" rx="1" />
-  </svg>
-);
 
 // ==================== ANIMATED LOGO COMPONENT ====================
 // Landing page logo using the app icon image
@@ -8788,7 +8785,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                         : "text-secondary-text hover:text-white hover:bg-white/10"
                     }`}
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-6 h-6" />
                     {item.label}
                   </button>
                 );
@@ -8817,7 +8814,7 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
                       : "text-secondary-text hover:text-white"
                   }`}
                 >
-                  <Icon className={`w-5 h-5 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : ''}`} />
+                  <Icon className={`w-7 h-7 ${isActive ? 'drop-shadow-[0_0_8px_rgba(56,230,162,0.5)]' : 'opacity-60'}`} />
                   <span className="text-xs font-medium">{item.label}</span>
                 </button>
               );
