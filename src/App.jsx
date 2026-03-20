@@ -1380,6 +1380,22 @@ const saveRecentQuestions = (list) => {
   } catch {}
 };
 
+// Permanently answered questions — once correct, never show again
+const ANSWERED_CORRECT_KEY = 'maths-habit-answered-correct';
+
+const loadAnsweredCorrect = () => {
+  try {
+    const saved = localStorage.getItem(ANSWERED_CORRECT_KEY);
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  } catch { return new Set(); }
+};
+
+const saveAnsweredCorrect = (set) => {
+  try {
+    localStorage.setItem(ANSWERED_CORRECT_KEY, JSON.stringify([...set]));
+  } catch {}
+};
+
 // Total questions answered (lifetime) - for AI unlock
 const loadTotalQuestions = () => {
   try {
@@ -6901,6 +6917,7 @@ const isMastered = (progress) => (progress?.quickCorrect ?? 0) >= 5;
 const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation') => {
   const qBank = getQuestionBankForTier(tier);
   const recentQuestions = new Set(loadRecentQuestions());
+  const answeredCorrect = loadAnsweredCorrect();
 
   // Shuffle helper (Fisher-Yates)
   const shuffle = (arr) => {
@@ -6912,16 +6929,32 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     return s;
   };
 
-  // Pick a variant that hasn't been recently answered (falls back to random if all are recent)
+  // Pick a variant that hasn't been correctly answered (permanently excluded) or recently answered
   const pickFreshVariant = (variants, objCode, questionIdx) => {
-    if (!Array.isArray(variants) || variants.length <= 1) return pickVariant(variants);
+    if (!Array.isArray(variants) || variants.length <= 1) {
+      // Even single variants: skip if already answered correctly
+      if (variants && variants.length === 1) {
+        const id = getQuestionId(objCode, questionIdx, variants[0]);
+        if (answeredCorrect.has(id)) return null;
+      }
+      return pickVariant(variants);
+    }
 
     // Filter out frozen questions (need images before being served)
     const unfrozen = variants.filter(v => !v.frozen);
     if (unfrozen.length === 0) return pickVariant(variants); // all frozen — fallback
 
-    // Try to find an unfrozen variant NOT in recent questions
-    const fresh = unfrozen.filter(v => {
+    // First: exclude any variant already answered correctly (permanent filter)
+    const notAnswered = unfrozen.filter(v => {
+      const id = getQuestionId(objCode, questionIdx, v);
+      return !answeredCorrect.has(id);
+    });
+
+    // If all variants at this level have been answered correctly, return null
+    if (notAnswered.length === 0) return null;
+
+    // Then: prefer variants not in recent questions too
+    const fresh = notAnswered.filter(v => {
       const id = getQuestionId(objCode, questionIdx, v);
       return !recentQuestions.has(id);
     });
@@ -6929,8 +6962,8 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     if (fresh.length > 0) {
       return fresh[Math.floor(Math.random() * fresh.length)];
     }
-    // All unfrozen variants are recent — just pick randomly from unfrozen
-    return unfrozen[Math.floor(Math.random() * unfrozen.length)];
+    // All remaining are recent but not yet correctly answered — pick randomly
+    return notAnswered[Math.floor(Math.random() * notAnswered.length)];
   };
 
   // ── Step 1: Collect all eligible objectives ──
@@ -6950,6 +6983,9 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
     const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
+
+    // All variants at this level already answered correctly — skip this objective
+    if (!q) return;
 
     // Priority: never-practiced objectives first, then least-recently-practiced
     const neverPracticed = objProg?.quickCorrect === undefined;
@@ -7639,6 +7675,13 @@ What is the student's answer?`
       const recentList = loadRecentQuestions();
       recentList.push(questionId);
       saveRecentQuestions(recentList);
+
+      // If answered correctly, permanently exclude this question from future sessions
+      if (correct) {
+        const answeredSet = loadAnsweredCorrect();
+        answeredSet.add(questionId);
+        saveAnsweredCorrect(answeredSet);
+      }
   };
 
   // Next question
