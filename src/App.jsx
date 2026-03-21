@@ -9509,6 +9509,85 @@ function AppContent() {
     }
   }, [user, showOnboarding, onboardingStep, profile, authLoading]);
 
+  // Calculate real streak from activity with protection (moved before onboarding returns to keep hooks consistent)
+  const streakInfo = calculateStreak();
+  const dayStreak = streakInfo.streak;
+  const practicedToday = streakInfo.practicedToday;
+  const needsRepair = streakInfo.needsRepair;
+  const repairProgress = streakInfo.repairProgress;
+  const potentialStreak = streakInfo.potentialStreak;
+  const freezesAvailable = streakInfo.freezesAvailable;
+  const longestStreak = streakInfo.longestStreak;
+
+  // Update Piro decay/death state when streak changes
+  useEffect(() => {
+    const currentPiro = loadPiro();
+    if (currentPiro.dead) return; // Dead is permanent
+
+    // Calculate actual days since last practice
+    const activity = loadDailyActivity();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let daysMissed = 0;
+    if (dayStreak === 0 && !practicedToday) {
+      // Find last day they practiced
+      for (let d = 1; d <= 30; d++) {
+        const check = new Date(today);
+        check.setDate(check.getDate() - d);
+        const key = `${check.getFullYear()}-${String(check.getMonth() + 1).padStart(2, '0')}-${String(check.getDate()).padStart(2, '0')}`;
+        if (activity[key]?.questions >= 5) break;
+        daysMissed = d;
+      }
+    }
+
+    let changed = false;
+
+    // Sync highestStreak & stage with actual streak on every load
+    if (dayStreak > currentPiro.highestStreak) {
+      currentPiro.highestStreak = dayStreak;
+      changed = true;
+    }
+    const earnedStage = getPiroStageFromStreak(currentPiro.highestStreak);
+    if (earnedStage > currentPiro.stage) {
+      const oldStage = currentPiro.stage;
+      currentPiro.stage = earnedStage;
+      currentPiro.evolvedAt = currentPiro.evolvedAt || [];
+      currentPiro.evolvedAt.push({ stage: earnedStage, name: PIRO_STAGES[earnedStage].name, date: Date.now() });
+      changed = true;
+      setPiroEvolution({ oldStage, newStage: earnedStage });
+    }
+    if (currentPiro.highestStreak >= 35) {
+      currentPiro.reachedEpic = true;
+    }
+
+    // Recovery: practising reverses decay/dying
+    if (practicedToday && (currentPiro.decayed || currentPiro.dying)) {
+      currentPiro.decayed = false;
+      currentPiro.dying = false;
+      changed = true;
+    }
+
+    // Death ladder (only after reaching Epic)
+    if (currentPiro.reachedEpic && daysMissed >= PIRO_DEATH_DAYS && !currentPiro.dead) {
+      currentPiro.dead = true;
+      currentPiro.decayed = false;
+      currentPiro.dying = false;
+      changed = true;
+    } else if (currentPiro.reachedEpic && daysMissed >= PIRO_DYING_DAYS && !currentPiro.dying) {
+      currentPiro.dying = true;
+      currentPiro.decayed = false;
+      changed = true;
+    } else if (currentPiro.reachedEpic && daysMissed >= PIRO_DECAY_DAYS && !currentPiro.decayed && !currentPiro.dying) {
+      currentPiro.decayed = true;
+      changed = true;
+    }
+
+    if (changed) {
+      savePiro(currentPiro);
+      setPiro({ ...currentPiro });
+    }
+  }, [dayStreak, needsRepair, practicedToday]);
+
   // Multi-step Onboarding Flow - Deep Space Glassmorphism
   if (showOnboarding) {
     // Step 1: Welcome Screen
@@ -9747,87 +9826,6 @@ function AppContent() {
     }
   }
 
-  // Calculate real streak from activity with protection
-  const streakInfo = calculateStreak();
-  const dayStreak = streakInfo.streak;
-  const practicedToday = streakInfo.practicedToday;
-  const needsRepair = streakInfo.needsRepair;
-  const repairProgress = streakInfo.repairProgress;
-  const potentialStreak = streakInfo.potentialStreak;
-  const freezesAvailable = streakInfo.freezesAvailable;
-  const longestStreak = streakInfo.longestStreak;
-
-  // Update Piro decay/death state when streak changes
-  useEffect(() => {
-    const currentPiro = loadPiro();
-    if (currentPiro.dead) return; // Dead is permanent
-
-    // Calculate actual days since last practice
-    const activity = loadDailyActivity();
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    let daysMissed = 0;
-    if (dayStreak === 0 && !practicedToday) {
-      // Find last day they practiced
-      for (let d = 1; d <= 30; d++) {
-        const check = new Date(today);
-        check.setDate(check.getDate() - d);
-        const key = `${check.getFullYear()}-${String(check.getMonth() + 1).padStart(2, '0')}-${String(check.getDate()).padStart(2, '0')}`;
-        if (activity[key]?.questions >= 5) break;
-        daysMissed = d;
-      }
-    }
-
-    let changed = false;
-
-    // Sync highestStreak & stage with actual streak on every load
-    // (catches milestone changes and any streak/piro drift)
-    if (dayStreak > currentPiro.highestStreak) {
-      currentPiro.highestStreak = dayStreak;
-      changed = true;
-    }
-    const earnedStage = getPiroStageFromStreak(currentPiro.highestStreak);
-    if (earnedStage > currentPiro.stage) {
-      const oldStage = currentPiro.stage;
-      currentPiro.stage = earnedStage;
-      currentPiro.evolvedAt = currentPiro.evolvedAt || [];
-      currentPiro.evolvedAt.push({ stage: earnedStage, name: PIRO_STAGES[earnedStage].name, date: Date.now() });
-      changed = true;
-      // Show evolution celebration
-      setPiroEvolution({ oldStage, newStage: earnedStage });
-    }
-    if (currentPiro.highestStreak >= 35) {
-      currentPiro.reachedEpic = true;
-    }
-
-    // Recovery: practising reverses decay/dying
-    if (practicedToday && (currentPiro.decayed || currentPiro.dying)) {
-      currentPiro.decayed = false;
-      currentPiro.dying = false;
-      changed = true;
-    }
-
-    // Death ladder (only after reaching Epic)
-    if (currentPiro.reachedEpic && daysMissed >= PIRO_DEATH_DAYS && !currentPiro.dead) {
-      currentPiro.dead = true;
-      currentPiro.decayed = false;
-      currentPiro.dying = false;
-      changed = true;
-    } else if (currentPiro.reachedEpic && daysMissed >= PIRO_DYING_DAYS && !currentPiro.dying) {
-      currentPiro.dying = true;
-      currentPiro.decayed = false;
-      changed = true;
-    } else if (currentPiro.reachedEpic && daysMissed >= PIRO_DECAY_DAYS && !currentPiro.decayed && !currentPiro.dying) {
-      currentPiro.decayed = true;
-      changed = true;
-    }
-
-    if (changed) {
-      savePiro(currentPiro);
-      setPiro({ ...currentPiro });
-    }
-  }, [dayStreak, needsRepair, practicedToday]);
-  
   // Today's progress towards daily goal
   const dailyActivity = loadDailyActivity();
   const todayKey = getTodayKey();
