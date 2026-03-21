@@ -91,7 +91,7 @@ https://the-maths-habit-clrx.vercel.app
 | **Contact Email** | khartland42@gmail.com |
 | **Contact Phone** | (enter your phone number) |
 | **Demo Account** | Not needed — app works without sign-in |
-| **Notes for Review** | This is an educational app for GCSE students (ages 14-16). The app can be used without signing in for basic practice. Google Sign-In enables cloud sync and leaderboard features. The app targets the UK AQA GCSE Maths specification. |
+| **Notes for Review** | This is an educational app for UK GCSE students (ages 14-16) targeting the AQA Maths specification. The app features: a spaced repetition engine that adapts to each student's strengths and weaknesses, daily streak tracking with push notification reminders, haptic feedback on answers, full offline functionality, and a competitive leaderboard. The app can be used without signing in for basic practice. Sign-in enables cloud sync across devices and leaderboard features. |
 
 ---
 

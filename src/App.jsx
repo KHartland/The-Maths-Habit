@@ -17,6 +17,8 @@ import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 import { higherQuestionBank } from './data/higherQuestionBank.js';
+import { hapticCorrect, hapticWrong, hapticStreakMilestone } from './lib/haptics';
+import { initPushNotifications } from './lib/pushNotifications';
 
 // Custom maths-themed nav icons (image-based)
 const NavIcon = ({ src, className = '' }) => (
@@ -5995,6 +5997,13 @@ What is the student's answer?`
     setIsCorrect(correct);
     setShowFeedback(true);
 
+    // Haptic feedback on native platforms
+    if (correct) {
+      hapticCorrect();
+    } else {
+      hapticWrong();
+    }
+
     // Show tips for new users on first correct/incorrect
     if (correct) {
       setTimeout(() => showTip('firstCorrect'), 600);
@@ -6281,6 +6290,7 @@ What is the student's answer?`
       // Check for streak milestones (earns freezes)
       const updatedStreak = calculateStreak();
       const freezeEarned = checkStreakMilestone(updatedStreak.streak);
+      if (freezeEarned) hapticStreakMilestone();
 
       // Sync streak data to cloud (merge calculated streak with saved data)
       if (practiceUser) {
@@ -9249,6 +9259,11 @@ function AppContent() {
     if (settings.fontSize === 'large') b.classList.add('font-large');
     if (settings.fontSize === 'xlarge') b.classList.add('font-xlarge');
   }, [settings.dyslexiaFont, settings.fontSize]);
+
+  // Initialise push notifications on native platforms
+  useEffect(() => {
+    initPushNotifications();
+  }, []);
 
   const [currentPage, setCurrentPage] = useState('home');
   const [gameLevel, setGameLevel] = useState(1); // 1 = Stone→Gold grid, 2 = Diamond grid

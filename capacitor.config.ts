@@ -5,8 +5,27 @@ const config: CapacitorConfig = {
   appName: 'The Maths Habit',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: 'https',
+    iosScheme: 'https',
+  },
+  ios: {
+    contentInset: 'automatic',
+    allowsLinkPreview: false,
+    scrollEnabled: false,
+    backgroundColor: '#0E0307',
+  },
+  plugins: {
+    LocalNotifications: {
+      smallIcon: 'ic_stat_icon',
+      iconColor: '#F59E0B',
+    },
+    SplashScreen: {
+      launchAutoHide: true,
+      launchShowDuration: 2000,
+      backgroundColor: '#0E0307',
+      showSpinner: false,
+    },
+  },
 };
 
 export default config;
