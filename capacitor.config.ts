@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'uk.co.themathshabit.app',
+  appId: 'com.squareonemaths.app',
   appName: 'The Maths Habit',
   webDir: 'dist',
   server: {
