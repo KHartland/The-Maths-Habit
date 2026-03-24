@@ -175,7 +175,19 @@ export const AuthProvider = ({ children }) => {
     });
     return { data, error };
   };
-
+  const signInWithApple = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      return { data, error };
+    } catch (error) {
+      return { data: null, error };
+    }
+  };
   // Sign out
   const signOut = async () => {
     // Block the auth listener from re-setting the user
@@ -341,6 +353,7 @@ export const AuthProvider = ({ children }) => {
     signUp,
     signIn,
     signInWithGoogle,
+    signInWithApple,
     signOut,
     resetPassword,
     updateProfile,
