@@ -8,7 +8,7 @@ import HandwritingInput from './components/HandwritingInput';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
-import { checkProfanity, sanitiseName } from './lib/profanityFilter';å
+import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
