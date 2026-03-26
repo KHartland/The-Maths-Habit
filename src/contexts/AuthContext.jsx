@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../lib/supabase';
+import { Capacitor } from '@capacitor/core';
+import { SignInWithApple } from '@capacitor-community/apple-sign-in';
 
 const AuthContext = createContext({});
 
@@ -175,8 +177,31 @@ export const AuthProvider = ({ children }) => {
     });
     return { data, error };
   };
+
+  // Sign in with Apple — native on iOS, OAuth redirect on web
   const signInWithApple = async () => {
     try {
+      // On native iOS: use the native Apple Sign In dialog
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        const result = await SignInWithApple.authorize({
+          clientId: 'com.squareonemaths.app',
+          redirectURI: 'https://kxvtiqkmxhqwqckjikje.supabase.co/auth/v1/callback',
+          scopes: 'email name',
+        });
+
+        if (result?.response?.identityToken) {
+          const { data, error } = await supabase.auth.signInWithIdToken({
+            provider: 'apple',
+            token: result.response.identityToken,
+            nonce: result.response.nonce || undefined,
+          });
+          return { data, error };
+        } else {
+          return { data: null, error: new Error('No identity token received from Apple') };
+        }
+      }
+
+      // On web: use the existing OAuth redirect flow
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'apple',
         options: {
@@ -185,9 +210,14 @@ export const AuthProvider = ({ children }) => {
       });
       return { data, error };
     } catch (error) {
+      // User cancelled the native dialog — not a real error
+      if (error?.message?.includes('cancel') || error?.code === '1001') {
+        return { data: null, error: null };
+      }
       return { data: null, error };
     }
   };
+
   // Sign out
   const signOut = async () => {
     // Block the auth listener from re-setting the user
