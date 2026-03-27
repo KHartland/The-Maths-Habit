@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { redirectToCheckout, STRIPE_PRICES } from '../lib/stripe';
+import { Capacitor } from '@capacitor/core';
+
+// Platform detection helper — used to hide promo codes and Stripe on iOS
+const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
 
 function PromoCodeSection({ onSuccess }) {
   const [showInput, setShowInput] = useState(false);
@@ -82,6 +86,17 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
     setError(null);
 
     try {
+      // On native iOS: use StoreKit in-app purchase
+      if (isNativeIOS()) {
+        const { InAppPurchase } = await import('../lib/iapService');
+        const productId = selectedPlan === 'monthly'
+          ? 'com.squareonemaths.premium.monthly'
+          : 'com.squareonemaths.premium.yearly';
+        await InAppPurchase.purchase(productId, user.id);
+        return; // StoreKit handles the rest (reload on success)
+      }
+
+      // On web: use Stripe checkout
       const priceId = selectedPlan === 'monthly'
         ? STRIPE_PRICES.MONTHLY
         : STRIPE_PRICES.YEARLY;
@@ -93,7 +108,11 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
       });
     } catch (err) {
       console.error('Checkout error:', err);
-      setError('Unable to start checkout. Please try again.');
+      setError(
+        isNativeIOS()
+          ? 'Unable to complete purchase. Please try again.'
+          : 'Unable to start checkout. Please try again.'
+      );
       setIsLoading(false);
     }
   };
@@ -245,19 +264,19 @@ const UpgradePrompt = ({ isOpen, onClose, onSignUp }) => {
             </>
           )}
 
-          {/* Promo code option */}
-          {user && (
+          {/* Promo code option — hidden on native iOS (Apple requires IAP only) */}
+          {user && !isNativeIOS() && (
             <div className="mt-4 text-center">
               <PromoCodeSection onSuccess={() => window.location.reload()} />
             </div>
           )}
 
-          {/* Secure payment badge */}
+          {/* Secure payment badge — different text on iOS vs web */}
           <p className="mt-4 text-xs text-gray-400 flex items-center justify-center gap-1">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            Secure payment via Stripe
+            {isNativeIOS() ? 'Secure in-app purchase' : 'Secure payment via Stripe'}
           </p>
         </div>
       </div>
