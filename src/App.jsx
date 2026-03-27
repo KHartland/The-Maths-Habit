@@ -915,6 +915,17 @@ const ONBOARDING_COMPLETE_KEY = 'maths-habit-onboarding-complete';
 const FSRS_DATA_KEY = 'maths-habit-fsrs';
 const MIGRATION_VERSION_KEY = 'maths-habit-migration-version';
 const CURRENT_MIGRATION_VERSION = 2;
+const SUPABASE_AUTH_TOKEN_KEY = 'sb-kxvtiqkmxhqwqckjikje-auth-token';
+
+// Helper to get auth token for Supabase REST calls
+const getSupabaseAuthToken = () => {
+  try {
+    const raw = localStorage.getItem(SUPABASE_AUTH_TOKEN_KEY);
+    return raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+  } catch {
+    return supabaseAnonKey;
+  }
+};
 
 // ==================== FSRS ALGORITHM (Cognitive Science) ====================
 // Based on Free Spaced Repetition Scheduler - 20-30% more efficient than SM-2
@@ -6195,7 +6206,9 @@ const generateDiagram = (type) => {
 
   // Check for image-based diagram first
   if (imageDiagrams[type]) {
-    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto" /></div>`;
+    const safeAlt = String(type).replace(/[<>"&]/g, '');
+    const safeFilename = imageDiagrams[type].replace(/[<>"&]/g, '');
+    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${safeFilename}" alt="${safeAlt}" class="w-full h-auto mx-auto" /></div>`;
   }
 
   // Fallback SVG diagrams for legacy questions
@@ -6473,7 +6486,14 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [practiceMode, setPracticeMode] = useState('standard'); // 'standard', 'quickfire', or 'exam'
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
-  
+
+  // Cleanup Quick Fire timer on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
   // Practice tips state
   const [currentTip, setCurrentTip] = useState(null);
   const shownTipsRef = useRef(loadShownTips());
@@ -6830,14 +6850,22 @@ What is the student's answer?`
     if (current.type !== 'self' && selfAssessedCorrect === null) {
       if (current.type === 'order') {
         // Check if order matches the correct order
-        const userOrder = JSON.parse(answerToCheck || '[]');
-        correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
+        try {
+          const userOrder = JSON.parse(answerToCheck || '[]');
+          correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
+        } catch {
+          correct = false;
+        }
       } else if (current.type === 'match') {
         // Check if all matches are correct
-        const userMatches = JSON.parse(answerToCheck || '{}');
-        correct = Object.entries(current.correctMatches).every(
-          ([left, right]) => userMatches[left] === right
-        );
+        try {
+          const userMatches = JSON.parse(answerToCheck || '{}');
+          correct = Object.entries(current.correctMatches).every(
+            ([left, right]) => userMatches[left] === right
+          );
+        } catch {
+          correct = false;
+        }
       } else {
         // Use forgiving answer checker that accepts mathematical equivalents
         correct = answersEquivalent(answerToCheck, current.a);
@@ -6965,7 +6993,9 @@ What is the student's answer?`
         // Persist to localStorage and cloud
         saveFsrsData(updatedFsrsData);
         if (practiceUser) {
-          saveFsrsToCloud(practiceUser.id, updatedFsrsData);
+          saveFsrsToCloud(practiceUser.id, updatedFsrsData).catch(err => {
+            console.warn('FSRS cloud sync failed — data saved locally:', err);
+          });
         }
         return updatedFsrsData;
       });
@@ -7027,9 +7057,7 @@ What is the student's answer?`
         // Increment total_correct in profiles for school leaderboard
         if (correctCount > 0) {
           try {
-            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-            const raw = localStorage.getItem(storageKey);
-            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+            const token = getSupabaseAuthToken();
             fetch(`${supabaseUrl}/rest/v1/rpc/increment_total_correct`, {
               method: 'POST',
               headers: {
@@ -7150,9 +7178,7 @@ What is the student's answer?`
         const piroDisplay = getPiroDisplay(updatedPiro);
         const stageName = piroDisplay.name || 'Egg';
         try {
-          const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-          const raw = localStorage.getItem(storageKey);
-          const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+          const token = getSupabaseAuthToken();
           fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${practiceUser.id}`, {
             method: 'PATCH',
             headers: {
@@ -7663,7 +7689,7 @@ What is the student's answer?`
                         />
                         <button
                           onClick={() => checkAnswer()}
-                          disabled={!userAnswer || Object.keys(JSON.parse(userAnswer || '{}')).length < current.leftItems.length}
+                          disabled={!userAnswer || (() => { try { return Object.keys(JSON.parse(userAnswer || '{}')).length < current.leftItems.length; } catch { return true; } })()}
                           className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
                         >
                           Submit Answer
@@ -8150,9 +8176,7 @@ What is the student's answer?`
                     onClick={async () => {
                       const current = sessionQueue[currentIndex];
                       try {
-                        const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-                        const raw = localStorage.getItem(storageKey);
-                        const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+                        const token = getSupabaseAuthToken();
                         await fetch(`${supabaseUrl}/rest/v1/question_reports`, {
                           method: 'POST',
                           headers: {
@@ -8922,9 +8946,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           setNameSaving(true);
                           setNameError('');
                           try {
-                            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-                            const raw = localStorage.getItem(storageKey);
-                            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+                            const token = getSupabaseAuthToken();
                             const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
                               method: 'PATCH',
                               headers: {
@@ -9583,9 +9605,7 @@ function DeleteAccountSection({ user, onSignOut }) {
     setDeleting(true);
     setDeleteError('');
     try {
-      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-      const raw = localStorage.getItem(storageKey);
-      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+      const token = getSupabaseAuthToken();
 
       const res = await fetch(`${supabaseUrl}/functions/v1/delete-account`, {
         method: 'POST',
@@ -10827,9 +10847,7 @@ function AppContent() {
     setPiroNamingSaving(true);
     setPiroNamingError('');
     try {
-      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-      const raw = localStorage.getItem(storageKey);
-      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+      const token = getSupabaseAuthToken();
 
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
         method: 'PATCH',
@@ -10968,9 +10986,7 @@ function AppContent() {
     setPromptNameSaving(true);
     setPromptNameError('');
     try {
-      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
-      const raw = localStorage.getItem(storageKey);
-      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+      const token = getSupabaseAuthToken();
 
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
         method: 'PATCH',
@@ -11838,11 +11854,49 @@ function PortraitPrompt({ onDismiss }) {
   );
 }
 
-// Main App wrapper with AuthProvider
+// Error boundary to catch crashes and show a friendly recovery screen
+class AppErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('App crashed:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-void flex items-center justify-center p-6">
+          <div className="glass-panel rounded-2xl p-8 max-w-md text-center space-y-4">
+            <div className="text-4xl">😵</div>
+            <h2 className="text-xl font-bold text-white">Something went wrong</h2>
+            <p className="text-secondary-text text-sm">
+              Don't worry — your progress is saved locally. Try refreshing the page.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 btn-gradient-mint text-void font-semibold rounded-xl"
+            >
+              Refresh App
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+// Main App wrapper with AuthProvider and Error Boundary
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <AppErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </AppErrorBoundary>
   );
 }
