@@ -7855,7 +7855,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     setShowResetConfirm(false);
   };
 
-  // Delete account – removes profile, cloud data, local storage, then signs out
+  // Delete account – calls API route to remove auth record + all data, then clears local
   const handleDeleteAccount = async () => {
     if (!user) return;
     setDeleteAccountStatus('deleting');
@@ -7863,61 +7863,29 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
       const raw = localStorage.getItem(storageKey);
       const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
-      const headers = {
-        'apikey': supabaseAnonKey,
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      };
 
-      // 1. Delete profile row
-      await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
+      // Call the Vercel API route – it deletes all DB rows + the auth.users record
+      const res = await fetch(`/api/delete-account`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
-      // 2. Delete cloud progress
-      await fetch(`${supabaseUrl}/rest/v1/user_progress?user_id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
-      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || 'Delete failed');
+      }
 
-      // 3. Delete cloud settings
-      await fetch(`${supabaseUrl}/rest/v1/user_settings?user_id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
-      });
-
-      // 4. Delete FSRS data
-      await fetch(`${supabaseUrl}/rest/v1/user_fsrs?user_id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
-      });
-
-      // 5. Delete streak data
-      await fetch(`${supabaseUrl}/rest/v1/user_streaks?user_id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
-      });
-
-      // 6. Delete daily activity
-      await fetch(`${supabaseUrl}/rest/v1/user_daily_activity?user_id=eq.${user.id}`, {
-        method: 'DELETE',
-        headers: { ...headers, 'Prefer': 'return=minimal' },
-      });
-
-      // 7. Leave school if in one
+      // Also tidy up client-side things the edge function can't reach
       if (userSchool) {
         try { await leaveSchool(user.id); } catch (e) { /* ignore */ }
       }
-
-      // 8. Delete avatar if any
       try { await deleteAvatar(user.id); } catch (e) { /* ignore */ }
 
-      // 9. Clear all local storage
+      // Clear all local storage and reload
       localStorage.clear();
-
-      // 10. Sign out and reload
-      await onSignOut();
       window.location.reload();
     } catch (err) {
       console.error('Account deletion failed:', err);
