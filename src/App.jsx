@@ -7401,14 +7401,14 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   const topicStats = {};
   Object.entries(TOPIC_HEX).forEach(([topic]) => {
     const topicObjectives = allObjectives?.filter(o => o.topic === topic) ?? [];
-    const mastered = topicObjectives.filter(o => isMastered(activeProgress[o.code])).length;
+    const mastered = topicObjectives.filter(o => isMastered(progress[o.code])).length;
     const examReady = topicObjectives.filter(o => {
-      const prog = activeProgress[o.code];
+      const prog = progress[o.code];
       const qc = prog?.quickCorrect ?? 0;
       return qc >= 4 && qc < 5;
     }).length;
     const learning = topicObjectives.filter(o => {
-      const prog = activeProgress[o.code];
+      const prog = progress[o.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
       return quickCorrect > 0 && quickCorrect < 4;
     }).length;
@@ -7440,14 +7440,14 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   
   // Calculate exam readiness
   const totalObjectiveCount = allObjectives?.length ?? 0;
-  const masteredCount = allObjectives?.filter(o => isMastered(activeProgress[o.code])).length ?? 0;
+  const masteredCount = allObjectives?.filter(o => isMastered(progress[o.code])).length ?? 0;
   const examReadyCount = allObjectives?.filter(o => {
-    const prog = activeProgress[o.code];
+    const prog = progress[o.code];
     const qc = prog?.quickCorrect ?? 0;
     return qc >= 4 && qc < 5;
   }).length ?? 0;
   const learningCount = allObjectives?.filter(o => {
-    const prog = activeProgress[o.code];
+    const prog = progress[o.code];
     const quickCorrect = prog?.quickCorrect ?? 0;
     return quickCorrect > 0 && quickCorrect < 4;
   }).length ?? 0;
