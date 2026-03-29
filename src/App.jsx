@@ -16,7 +16,7 @@ import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, B
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
 import ErrorBoundary from "./components/ErrorBoundary";
-import { safeInitial } from "./lib/safeDisplayName";
+import { safeInitial, safeDisplayName } from "./lib/safeDisplayName";
 import { Capacitor } from "@capacitor/core";
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
@@ -9522,7 +9522,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <div className="font-medium text-white">{profile?.display_name || 'Anonymous'}</div>
+                        <div className="font-medium text-white">{typeof profile?.display_name === 'object' ? JSON.stringify(profile.display_name) : (profile?.display_name || 'Anonymous')}</div>
                         <button
                           onClick={() => { setEditingName(true); setNewDisplayName(profile?.display_name || ''); setNameError(''); }}
                           className="text-xs text-violet-light hover:text-white transition-colors"
