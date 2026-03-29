@@ -21,23 +21,19 @@ import { Capacitor } from "@capacitor/core";
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 
-// Custom maths-themed icons for the app
-const HomeIcon = CubeIcon;           // 3D cube for Home
-const PracticeIcon = SquareRootIcon; // Square root √ for Practice
-const SettingsIcon = CompassIcon;    // Drawing compass for Settings
+// Custom maths-themed nav icons (image-based)
+const NavIcon = ({ src, className = '' }) => (
+  <img src={src} alt="" className={`${className} object-contain rounded-md`} draggable={false} />
+);
+const HomeIcon = ({ className }) => <NavIcon src="/images/nav/home.png" className={className} />;
+const HeatmapIcon = ({ className }) => <NavIcon src="/images/nav/journey.png" className={className} />;
+const PracticeIcon = ({ className }) => <NavIcon src="/images/nav/practice.png" className={className} />;
+const StatsIcon = ({ className }) => <NavIcon src="/images/nav/stats.png" className={className} />;
+const SettingsIcon = ({ className }) => <NavIcon src="/images/nav/settings.png" className={className} />;
+// Legacy icon aliases (used elsewhere in app)
 const StreakIcon = InfinityIcon;     // Infinity ∞ for Streak
-const StatsIcon = PiIcon;            // Pi π for Stats
 const TrophyIcon = CompassStarIcon;  // Compass star for Awards
 const StandardIcon = BooksIcon;      // Stack of books for Standard mode
-// Grid icon for Heatmap/Journey page
-const HeatmapIcon = ({ className }) => (
-  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7" rx="1" />
-    <rect x="14" y="3" width="7" height="7" rx="1" />
-    <rect x="3" y="14" width="7" height="7" rx="1" />
-    <rect x="14" y="14" width="7" height="7" rx="1" />
-  </svg>
-);
 
 // ==================== ANIMATED LOGO COMPONENT ====================
 // Landing page logo using the app icon image
