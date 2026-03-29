@@ -1,25 +1,25 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { safeInitial } from './lib/safeDisplayName';
 import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
 import UpgradePrompt from './components/UpgradePrompt';
 import OneVsOne from './components/OneVsOne';
-import HandwritingInput from './components/HandwritingInput';
+// HandwritingInput removed — Mathpix integration discontinued
 import SchoolLeaderboard from './components/SchoolLeaderboard';
-import { getAllSchools, createSchool, joinSchool, leaveSchool, getUserSchool } from './lib/leaderboardService';
+import { getAllSchools, createSchool, joinSchool, joinSchoolByCode, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
-import { Capacitor } from '@capacitor/core';
-
-// Platform detection helper — used to hide Google OAuth, promo codes, and Stripe on iOS
-const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
 import DragDropMatch from './components/DragDropMatch';
+import ErrorBoundary from "./components/ErrorBoundary";
+import { safeInitial } from "./lib/safeDisplayName";
+import { Capacitor } from "@capacitor/core";
+const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
+import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 
 // Custom maths-themed icons for the app
 const HomeIcon = CubeIcon;           // 3D cube for Home
@@ -916,17 +916,6 @@ const ONBOARDING_COMPLETE_KEY = 'maths-habit-onboarding-complete';
 const FSRS_DATA_KEY = 'maths-habit-fsrs';
 const MIGRATION_VERSION_KEY = 'maths-habit-migration-version';
 const CURRENT_MIGRATION_VERSION = 2;
-const SUPABASE_AUTH_TOKEN_KEY = 'sb-kxvtiqkmxhqwqckjikje-auth-token';
-
-// Helper to get auth token for Supabase REST calls
-const getSupabaseAuthToken = () => {
-  try {
-    const raw = localStorage.getItem(SUPABASE_AUTH_TOKEN_KEY);
-    return raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
-  } catch {
-    return supabaseAnonKey;
-  }
-};
 
 // ==================== FSRS ALGORITHM (Cognitive Science) ====================
 // Based on Free Spaced Repetition Scheduler - 20-30% more efficient than SM-2
@@ -1396,6 +1385,22 @@ const saveRecentQuestions = (list) => {
   } catch {}
 };
 
+// Permanently answered questions — once correct, never show again
+const ANSWERED_CORRECT_KEY = 'maths-habit-answered-correct';
+
+const loadAnsweredCorrect = () => {
+  try {
+    const saved = localStorage.getItem(ANSWERED_CORRECT_KEY);
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  } catch { return new Set(); }
+};
+
+const saveAnsweredCorrect = (set) => {
+  try {
+    localStorage.setItem(ANSWERED_CORRECT_KEY, JSON.stringify([...set]));
+  } catch {}
+};
+
 // Total questions answered (lifetime) - for AI unlock
 const loadTotalQuestions = () => {
   try {
@@ -1584,12 +1589,12 @@ const checkStreakMilestone = (streak) => {
 
 const PIRO_STAGES = [
   { name: 'Egg',           minStreak: 0,  image: '/images/Piro/egg.png',            video: '/images/Piro/egg.mp4' },
-  { name: 'Hatchling',     minStreak: 10, image: '/images/Piro/hatchling.png',      video: '/images/Piro/hatchling.mp4' },
-  { name: 'Smoke Flame',   minStreak: 20, image: '/images/Piro/smoke-flame.png',    video: '/images/Piro/smoke-flame.mp4' },
-  { name: 'Teal Flame',    minStreak: 30, image: '/images/Piro/teal-flame.png',     video: '/images/Piro/teal-flame.mp4' },
-  { name: 'Magenta Flame', minStreak: 40, image: '/images/Piro/magenta-flame.png',  video: '/images/Piro/magenta-flame.mp4' },
-  { name: 'Epic Piro',     minStreak: 50, image: '/images/Piro/gold-flames.png',    video: '/images/Piro/gold-flames.mp4' },
-  { name: 'Legendary Piro', minStreak: 100, image: '/images/Piro/diamond-piro.png', video: '/images/Piro/diamond-piro.mp4' },
+  { name: 'Hatchling',     minStreak: 7,  image: '/images/Piro/hatchling.png',      video: '/images/Piro/hatchling.mp4' },
+  { name: 'Smoke Flame',   minStreak: 14, image: '/images/Piro/smoke-flame.png',    video: '/images/Piro/smoke-flame.mp4' },
+  { name: 'Teal Flame',    minStreak: 21, image: '/images/Piro/teal-flame.png',     video: '/images/Piro/teal-flame.mp4' },
+  { name: 'Magenta Flame', minStreak: 28, image: '/images/Piro/magenta-flame.png',  video: '/images/Piro/magenta-flame.mp4' },
+  { name: 'Epic Piro',     minStreak: 35, image: '/images/Piro/gold-flames.png',    video: '/images/Piro/gold-flames.mp4' },
+  { name: 'Legendary Piro', minStreak: 70, image: '/images/Piro/diamond-piro.png',  video: '/images/Piro/diamond-piro.mp4' },
 ];
 
 const PIRO_OLD = { name: 'Old Piro', image: '/images/Piro/old-piro.png', video: '/images/Piro/old-piro.mp4' };
@@ -1659,8 +1664,8 @@ const updatePiro = (currentStreak, daysMissed) => {
     piro.highestStreak = currentStreak;
   }
 
-  // Check if reached Epic Piro (50-day streak)
-  if (piro.highestStreak >= 50) {
+  // Check if reached Epic Piro (35-day streak)
+  if (piro.highestStreak >= 35) {
     piro.reachedEpic = true;
   }
 
@@ -1675,29 +1680,29 @@ const updatePiro = (currentStreak, daysMissed) => {
     piro.dead = true;
     piro.decayed = false;
     piro.dying = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: false, dying: false, dead: true, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: false, dying: false, dead: true, newStage: piro.stage, oldStage };
   }
 
   if (piro.reachedEpic && daysMissed >= PIRO_DYING_DAYS) {
     piro.dying = true;
     piro.decayed = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: false, dying: true, dead: false, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: false, dying: true, dead: false, newStage: piro.stage, oldStage };
   }
 
   if (piro.reachedEpic && daysMissed >= PIRO_DECAY_DAYS) {
     piro.decayed = true;
     piro.dying = false;
-    piro.stage = earnedStage;
+    piro.stage = Math.max(oldStage, earnedStage);
     savePiro(piro);
-    return { piro, evolved: false, decayed: true, dying: false, dead: false, newStage: earnedStage, oldStage };
+    return { piro, evolved: false, decayed: true, dying: false, dead: false, newStage: piro.stage, oldStage };
   }
 
-  // Evolution check
-  const newStage = earnedStage;
+  // Evolution check — stage can only go UP, never down
+  const newStage = Math.max(oldStage, earnedStage);
   piro.stage = newStage;
 
   if (newStage > oldStage) {
@@ -1709,18 +1714,14 @@ const updatePiro = (currentStreak, daysMissed) => {
 };
 
 // Get current display info for Piro
+// Once evolved, Piro always shows its current evolution stage — never reverts visually.
+// Decay/dying flags only affect styling (borders, nudge text), not the dragon image.
 const getPiroDisplay = (piro) => {
   if (piro.dead) {
     return { name: PIRO_DEAD.name, image: PIRO_DEAD.image, video: PIRO_DEAD.video, isDead: true, isDying: false, isDecayed: false };
   }
-  if (piro.dying) {
-    return { name: PIRO_CLOSE_TO_DEATH.name, image: PIRO_CLOSE_TO_DEATH.image, video: PIRO_CLOSE_TO_DEATH.video, isDead: false, isDying: true, isDecayed: false };
-  }
-  if (piro.decayed) {
-    return { name: PIRO_OLD.name, image: PIRO_OLD.image, video: PIRO_OLD.video, isDead: false, isDying: false, isDecayed: true };
-  }
   const stage = PIRO_STAGES[piro.stage] || PIRO_STAGES[0];
-  return { name: stage.name, image: stage.image, video: stage.video, isDead: false, isDying: false, isDecayed: false };
+  return { name: stage.name, image: stage.image, video: stage.video, isDead: false, isDying: !!piro.dying, isDecayed: !!piro.decayed };
 };
 
 // Render Piro as video (preferred) with image fallback
@@ -1782,17 +1783,17 @@ const getPiroNudge = (piro, dayStreak, todayQuestions, dailyGoal) => {
 
   // Close to death - critical warning
   if (display.isDying) {
-    return "Piro is close to death! Practice NOW to save your dragon!";
+    return "Piro is fading! Practice NOW to save your dragon!";
   }
 
   // Decayed state - urgent
   if (display.isDecayed) {
-    return "Piro has aged! Practice today before it's too late.";
+    return "Piro misses you! Practice today to keep your streak alive.";
   }
 
   // Egg stage - encourage first streak
   if (piro.stage === 0 && piro.highestStreak === 0) {
-    return "Build a 10-day streak to hatch Piro!";
+    return "Build a 7-day streak to hatch Piro!";
   }
 
   // Evolution is close (within 3 days)
@@ -2389,9 +2390,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Best value comparison
     [
-      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value"], a: "Shop A", worked: ["Shop A: £1.80 ÷ 1200g = £0.0015 per gram", "Shop B: £0.80 ÷ 500g = £0.0016 per gram", "Shop A is cheaper per gram"] },
-      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value"], a: "Shop X", worked: ["Shop X: £2.10 ÷ 1500g = £0.0014 per gram", "Shop Y: £0.60 ÷ 400g = £0.0015 per gram", "Shop X is cheaper per gram"] },
-      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value"], a: "Shop Alpha", worked: ["Shop Alpha: £1.40 ÷ 2000g = £0.0007 per gram", "Shop Beta: £0.60 ÷ 750g = £0.0008 per gram", "Shop Alpha is cheaper per gram"] },
+      { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B", "They are the same value", "Not enough information"], a: "Shop A", calculator: true, worked: ["Shop A: £1.80 ÷ 1200g = £0.0015 per gram", "Shop B: £0.80 ÷ 500g = £0.0016 per gram", "Shop A is cheaper per gram"] },
+      { q: "Shop X sells 1.5 kg of pasta for £2.10. Shop Y sells 400 g of pasta for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop X", "Shop Y", "They are the same value", "Not enough information"], a: "Shop X", calculator: true, worked: ["Shop X: £2.10 ÷ 1500g = £0.0014 per gram", "Shop Y: £0.60 ÷ 400g = £0.0015 per gram", "Shop X is cheaper per gram"] },
+      { q: "Shop Alpha sells 2 kg of flour for £1.40. Shop Beta sells 750 g of flour for £0.60. Which shop offers the better value?", type: "mcq", options: ["Shop Alpha", "Shop Beta", "They are the same value", "Not enough information"], a: "Shop Alpha", calculator: true, worked: ["Shop Alpha: £1.40 ÷ 2000g = £0.0007 per gram", "Shop Beta: £0.60 ÷ 750g = £0.0008 per gram", "Shop Alpha is cheaper per gram"] },
     ],
   ],
 
@@ -2602,15 +2603,15 @@ const questionBank = {
     ],
     // Level 3 (3 marks) — Interpret a scatter graph
     [
-      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"], diagram: "scatter-graph" },
-      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Negative correlation", worked: ["One variable increases, the other decreases", "This indicates negative correlation"] },
-      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"] },
+      { q: "A scatter graph shows hours studied on the x-axis and exam scores on the y-axis. As hours increase, scores tend to increase. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"], diagram: "scatter-graph" },
+      { q: "A scatter graph shows the age of a car on the x-axis and its value on the y-axis. As age increases, value tends to decrease. What type of correlation is this?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Negative correlation", worked: ["One variable increases, the other decreases", "This indicates negative correlation"] },
+      { q: "As the temperature increases, ice cream sales tend to increase. What type of correlation would a scatter graph of this data show?", type: "mcq", options: ["Positive correlation", "Negative correlation", "No correlation", "Perfect correlation"], a: "Positive correlation", worked: ["Both variables increase together", "This indicates positive correlation"] },
     ],
     // Level 4 (4 marks) — Stem-and-leaf / dual bar chart comparison
     [
       { q: "Room A plant heights (cm): 12, 14, 15, 16, 18. Room B plant heights (cm): 14, 16, 18, 19, 21. What is the median height of Room B?", a: "18", worked: ["Room B heights: 14, 16, 18, 19, 21", "n = 5 (odd), so median is the middle value", "Median = 3rd value = 18"] },
       { q: "A stem-and-leaf diagram shows ages: 1|2 3 5 8, 2|1 4 6 7 8 9, 3|0 5. Find the range of the ages.", a: "23", worked: ["Lowest value: 12 (from 1|2)", "Highest value: 35 (from 3|5)", "Range = 35 − 12 = 23"] },
-      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday"], a: "Wednesday", worked: ["Calculate differences for each day from the chart", "Wednesday shows the largest gap between the two bars"], diagram: "dual-bar-chart" },
+      { q: "Use the dual bar chart to find: on which day was the difference between Bread and Milk sales greatest?", type: "mcq", options: ["Monday", "Tuesday", "Wednesday", "Thursday"], a: "Wednesday", worked: ["Calculate differences for each day from the chart", "Wednesday shows the largest gap between the two bars"], diagram: "dual-bar-chart" },
     ],
   ],
 
@@ -2856,103 +2857,658 @@ const questionBank = {
 
 };
 
-// Share question banks for combined objectives
-questionBank['N7'] = questionBank['N6'];
-questionBank['N15'] = questionBank['N14'];
-questionBank['A4'] = questionBank['A1'];
-questionBank['A18'] = questionBank['A17'];
-questionBank['G3'] = questionBank['G1'];
-questionBank['G4'] = questionBank['G1'];
-questionBank['G16'] = questionBank['G12'];
-questionBank['G17'] = questionBank['G12'];
-questionBank['G21'] = questionBank['G20'];
-questionBank['P8'] = questionBank['P7'];
-questionBank['S4'] = questionBank['S2'];
 
-// Shared references for remaining Number objectives → N5
-questionBank['N8'] = questionBank['N5'];
-questionBank['N9'] = questionBank['N5'];
-questionBank['N10'] = questionBank['N5'];
-questionBank['N11'] = questionBank['N5'];
-questionBank['N16'] = questionBank['N5'];
+// Share question banks for combined objectives (ORIGINAL — these are fallbacks)
+// The gold questions below provide unique content for each spec code.
+// These shared references are kept as fallback variants alongside gold questions.
+const _originalSharedRefs = {
+  'N7': 'N6', 'N15': 'N14', 'A4': 'A1', 'A18': 'A17', 'G3': 'G1', 'G4': 'G1',
+  'G16': 'G12', 'G17': 'G12', 'G21': 'G20', 'P8': 'P7', 'S4': 'S2',
+  'N8': 'N5', 'N9': 'N5', 'N10': 'N5', 'N11': 'N5', 'N16': 'N5',
+  'A5': 'A3', 'A6': 'A3', 'A7': 'A3', 'A8': 'A3', 'A10': 'A3', 'A11': 'A3',
+  'A14': 'A3', 'A19': 'A3', 'A22': 'A3', 'A23': 'A3', 'A24': 'A3', 'A25': 'A3',
+  'R3': 'R2', 'R7': 'R2', 'R8': 'R2', 'R9': 'R2', 'R12': 'R2', 'R13': 'R2',
+  'R14': 'R2', 'R15': 'R2', 'R16': 'R2',
+  'G5': 'G2', 'G6': 'G2', 'G7': 'G2', 'G8': 'G2', 'G9': 'G2', 'G11': 'G2',
+  'G13': 'G2', 'G14': 'G2', 'G15': 'G2', 'G18': 'G2', 'G19': 'G2', 'G25': 'G2',
+  'P5': 'P4', 'P6': 'P4', 'S1': 'P4', 'S5': 'P4', 'S6': 'P4',
+};
 
-// Shared references for remaining Algebra objectives → A3
-questionBank['A5'] = questionBank['A3'];
-questionBank['A6'] = questionBank['A3'];
-questionBank['A7'] = questionBank['A3'];
-questionBank['A8'] = questionBank['A3'];
-questionBank['A9'] = [
-  // Level 1 (Grade 2) — Solving x² = k
-  [
-    { q: "Solve x² = 16", a: "x = 4 or x = −4", worked: ["x² = 16", "x = ±√16", "x = 4 or x = −4"], hint: "Take the square root of both sides — don't forget the negative!" },
-    { q: "Solve x² = 49", a: "x = 7 or x = −7", worked: ["x² = 49", "x = ±√49", "x = 7 or x = −7"], hint: "Square root both sides. There are always two answers." },
-    { q: "Solve x² − 9 = 0", a: "x = 3 or x = −3", worked: ["x² − 9 = 0", "x² = 9", "x = ±√9", "x = 3 or x = −3"], hint: "Rearrange to get x² on its own, then square root." },
-  ],
-  // Level 2 (Grade 3) — One bracket already factored: x(x + a) = 0
-  [
-    { q: "Solve x(x + 5) = 0", a: "x = 0 or x = −5", worked: ["Already factorised", "x = 0 or x + 5 = 0", "x = 0 or x = −5"], hint: "If two things multiply to zero, one of them must be zero." },
-    { q: "Solve x(x − 3) = 0", a: "x = 0 or x = 3", worked: ["Already factorised", "x = 0 or x − 3 = 0", "x = 0 or x = 3"], hint: "Set each factor equal to zero." },
-    { q: "Solve 2x(x − 4) = 0", a: "x = 0 or x = 4", worked: ["Already factorised", "2x = 0 → x = 0", "x − 4 = 0 → x = 4"], hint: "The 2 doesn't affect the solutions — just set each bracket to zero." },
-  ],
-  // Level 3 (Grade 4) — Factorise and solve x² + bx + c = 0
-  [
-    { q: "Solve x² + 5x + 6 = 0", a: "x = −2 or x = −3", worked: ["Find two numbers that multiply to 6 and add to 5: 2 and 3", "(x + 2)(x + 3) = 0", "x = −2 or x = −3"], hint: "Find two numbers that multiply to 6 and add to 5" },
-    { q: "Solve x² − 3x − 10 = 0", a: "x = 5 or x = −2", worked: ["Find two numbers that multiply to −10 and add to −3: −5 and 2", "(x − 5)(x + 2) = 0", "x = 5 or x = −2"], hint: "Find two numbers that multiply to −10 and add to −3" },
-    { q: "Solve x² − 8x + 15 = 0", a: "x = 3 or x = 5", worked: ["Find two numbers that multiply to 15 and add to −8: −3 and −5", "(x − 3)(x − 5) = 0", "x = 3 or x = 5"], hint: "Both numbers must be negative (they add to −8 but multiply to +15)" },
-  ],
-  // Level 4 (Grade 5) — Forming and solving from context
-  [
-    { q: "A rectangle has length (x + 3) and width (x − 2). Its area is 6 cm². Find x.", a: "x = 3", worked: ["Area = (x + 3)(x − 2) = 6", "x² + x − 6 = 6", "x² + x − 12 = 0", "(x + 4)(x − 3) = 0", "x = −4 or x = 3", "x must be positive (it's a length), so x = 3"], hint: "Expand, rearrange to = 0, factorise. Reject negative answers for lengths." },
-    { q: "Solve x² − x − 20 = 0", a: "x = 5 or x = −4", worked: ["Find two numbers that multiply to −20 and add to −1: −5 and 4", "(x − 5)(x + 4) = 0", "x = 5 or x = −4"], hint: "Find two numbers that multiply to −20 and add to −1" },
-    { q: "Solve x² + 2x − 15 = 0", a: "x = 3 or x = −5", worked: ["Find two numbers that multiply to −15 and add to 2: 5 and −3", "(x + 5)(x − 3) = 0", "x = −5 or x = 3"], hint: "Find two numbers that multiply to −15 and add to 2" },
-  ],
-  // Level 5 (Grade 5) — Repeated roots and pre-factored with fractions
-  [
-    { q: "Solve x² − 6x + 9 = 0", a: "x = 3 (repeated root)", worked: ["(x − 3)(x − 3) = 0", "(x − 3)² = 0", "x = 3 (repeated root)"], hint: "This is a perfect square trinomial — both brackets are the same." },
-    { q: "Solve x² + 10x + 25 = 0", a: "x = −5 (repeated root)", worked: ["(x + 5)(x + 5) = 0", "(x + 5)² = 0", "x = −5 (repeated root)"], hint: "Can you spot the perfect square? a² + 2ab + b²" },
-    { q: "Solve (2x − 1)(x + 3) = 0", a: "x = 0.5 or x = −3", worked: ["Already factorised:", "2x − 1 = 0 → x = ½ = 0.5", "x + 3 = 0 → x = −3"], hint: "Set each bracket to zero and solve. One answer will be a fraction." },
-  ],
-];
-questionBank['A10'] = questionBank['A3'];
-questionBank['A11'] = questionBank['A3'];
-questionBank['A14'] = questionBank['A3'];
-questionBank['A19'] = questionBank['A3'];
-questionBank['A22'] = questionBank['A3'];
-questionBank['A23'] = questionBank['A3'];
-questionBank['A24'] = questionBank['A3'];
-questionBank['A25'] = questionBank['A3'];
 
-// Shared references for remaining Ratio objectives → R2
-questionBank['R3'] = questionBank['R2'];
-questionBank['R7'] = questionBank['R2'];
-questionBank['R8'] = questionBank['R2'];
-questionBank['R9'] = questionBank['R2'];
-questionBank['R12'] = questionBank['R2'];
-questionBank['R13'] = questionBank['R2'];
-questionBank['R14'] = questionBank['R2'];
-questionBank['R15'] = questionBank['R2'];
-questionBank['R16'] = questionBank['R2'];
+// ═══════════════════════════════════════════════════════════════
+// GOLD LEVEL QUESTIONS — unique questions for each of the 84 foundation objectives
+// Generated from Master-Question-Bank-Gold-Level.xlsx
+// Each spec code has 5 levels (Grade 1–5), 1 gold question per level
+// Questions with frozen: true need images before being served to students
+// ═══════════════════════════════════════════════════════════════
+const goldQuestionBank = {
+  'N1': [ // Obj 11: FDP Equivalence
+    [{ q: 'Write 50% as a fraction in its simplest form.', a: '1/2', type: 'fraction', worked: ['50% means 50 out of 100', '50/100 = 1/2 when simplified'] }], // Grade 1
+    [{ q: 'Write 0.3 as a fraction.', a: '3/10', type: 'fraction', worked: ['0.3 has one decimal place', '0.3 = 3/10'] }], // Grade 2
+    [{ q: 'Write 3/4 as a percentage.', a: '75', worked: ['3/4 = ? out of 100', 'Multiply both numerator and denominator by 25: (3 × 25)/(4 × 25) = 75/100', '75/100 = 75%'] }], // Grade 3
+    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq', worked: ['Convert all to decimals: 0.42, 45% = 0.45, 8/30 ≈ 0.267, 0.404', 'Order: 0.267 < 0.404 < 0.42 < 0.45', '8/30 is the smallest'] }], // Grade 4
+    [{ q: 'Express 65 out of 80 as a percentage.', a: '81.25', worked: ['65 out of 80 = 65/80', 'Convert to a percentage: (65/80) × 100', '0.8125 × 100 = 81.25%'] }], // Grade 5
+  ],
+  'N2': [ // Obj 1: Basic Arithmetic
+    [{ q: 'Work out 15 + 28.', a: '43', worked: ['15 + 28 = 43'] }], // Grade 1
+    [{ q: 'Work out 144 ÷ 6.', a: '24', worked: ['144 ÷ 6 = 24'] }], // Grade 2
+    [{ q: 'Calculate 3 × (8 + 4) − 5.', a: '31', worked: ['Work out the bracket first: 8 + 4 = 12', 'Then multiply: 3 × 12 = 36', 'Finally subtract: 36 − 5 = 31'] }], // Grade 3
+    [{ q: 'A theatre has 24 rows of seats with 18 seats in each row. How many seats are there in total?', a: '432', worked: ['Multiply rows by seats per row: 24 × 18', '24 × 18 = 432 seats'] }], // Grade 4
+    [{ q: 'Work out (12 − 4) × (2 + 1).', a: '24', worked: ['Work out the first bracket: 12 − 4 = 8', 'Work out the second bracket: 2 + 1 = 3', 'Multiply the results: 8 × 3 = 24'] }], // Grade 5
+  ],
+  'N3': [ // Obj 60: Multi-step Problems
+    [{ q: 'A cinema ticket costs £8.50 and popcorn costs £3.20. Work out the change from £20.', a: '8.30', worked: ['Add the costs: £8.50 + £3.20 = £11.70', 'Work out change: £20 − £11.70 = £8.30'] }], // Grade 1
+    [{ q: 'A soup recipe for 4 people requires 200 g of vegetables. How much vegetable is needed for 10 people?', a: '500' }], // Grade 2
+    [{ q: 'A car uses 8 litres per 100 km. Fuel costs £1.45 per litre. Calculate the cost of fuel for a 250 km journey.', a: '29', calculator: true }], // Grade 3
+    [{ q: 'A tank measures 1.2 m × 0.8 m × 0.5 m and is filled at a rate of 20 litres per minute. How many minutes does it take to fill?', a: '24', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A rectangle has a length 20% greater than its width and an area of 480 cm². Work out the exact perimeter.', a: '88' }], // Grade 5
+  ],
+  'N4': [ // Obj 7: Factors, Multiples & Primes
+    [{ q: 'Write down the 5th multiple of 6.', a: '30' }], // Grade 1
+    [{ q: 'How many factors does 24 have?', a: '8' }], // Grade 2
+    [{ q: 'Find the Lowest Common Multiple (LCM) of 8 and 12.', a: '24' }], // Grade 3
+    [{ q: 'Find the Highest Common Factor (HCF) of 36 and 48.', a: '12' }], // Grade 4
+    [{ q: '120 = 2^a × 3 × 5. Work out the value of a.', a: '3' }], // Grade 5
+  ],
+  'N5': [ // Obj 50: Combinatorics
+    [{ q: 'A shop has 4 types of sandwich and 3 types of drink. How many different meal combinations are there?', a: '12' }], // Grade 1
+    [{ q: 'How many 2-digit numbers can be made from the digits 3, 6, 8 without repeating any digit?', a: '6' }], // Grade 2
+    [{ q: 'A password code uses 1 letter (A-D) and 1 digit (1-5). How many different codes are possible?', a: '20' }], // Grade 3
+    [{ q: '3 friends have 3 seats to sit in. How many different seating arrangements are there?', a: '6' }], // Grade 4
+    [{ q: 'A pizza company offers 4 starters, 6 main courses, and 3 desserts. How many different 3-course meals are possible?', a: '72' }], // Grade 5
+  ],
+  'N6': [ // Obj 8: Indices and Roots
+    [{ q: 'Work out the value of 5².', a: '25' }], // Grade 1
+    [{ q: 'Work out the value of √64.', a: '8' }], // Grade 2
+    [{ q: 'Simplify a⁴ × a³. What is the answer in the form aⁿ?', a: '7' }], // Grade 3
+    [{ q: 'Simplify b⁷ ÷ b². What is the answer in the form bⁿ?', a: '5' }], // Grade 4
+    [{ q: 'Work out 2³ × √81 − 4².', a: '56' }], // Grade 5
+  ],
+  'N7': [ // Obj 71: Index Laws
+    [{ q: 'Work out 3³.', a: '27' }], // Grade 1
+    [{ q: 'Express 8 × 8 × 8 × 8 × 8 in the form 8ⁿ.', a: '5' }], // Grade 2
+    [{ q: 'Simplify a⁶ × a³.', a: '9' }], // Grade 3
+    [{ q: 'Simplify c⁹ ÷ c².', a: '7' }], // Grade 4
+    [{ q: 'Work out (2⁴ × 2⁵) ÷ 2⁶. Give your answer as an exact number.', a: '8' }], // Grade 5
+  ],
+  'N8': [ // Obj 2: Fractions
+    [{ q: 'A grid contains 12 identical squares. How many squares is 1/4 of 12?', a: '3' }], // Grade 1
+    [{ q: 'Work out 3/7 + 2/7.', a: '5/7', type: 'fraction' }], // Grade 2
+    [{ q: 'Write 3 2/5 as an improper fraction.', a: '17/5', type: 'fraction' }], // Grade 3
+    [{ q: 'Work out 3/4 × 5/9. Give your answer in its simplest form.', a: '5/12', type: 'fraction' }], // Grade 4
+    [{ q: 'Work out 2 1/3 ÷ 1 3/4. Give your answer as a mixed number in its simplest form.', a: '1 1/3', type: 'fraction' }], // Grade 5
+  ],
+  'N9': [ // Obj 9: Standard Form
+    [{ q: 'Which of these is 4,000 in standard form? A) 4×10³  B) 40×10²  C) 0.4×10⁴', a: '4×10^3', type: 'mcq' }], // Grade 1
+    [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500' }], // Grade 2
+    [{ q: 'Which is 0.00072 in standard form? A) 7.2×10⁻⁴  B) 72×10⁻⁵  C) 0.72×10⁻³', a: '7.2×10^-4', type: 'mcq' }], // Grade 3
+    [{ q: 'Work out (2×10⁴)×(4×10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
+    [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10 in your answer?', a: '4' }], // Grade 5
+  ],
+  'N10': [ // Obj 3: Decimals
+    [{ q: 'Write 0.4 as a fraction in its simplest form.', a: '2/5', type: 'fraction' }], // Grade 1
+    [{ q: 'Work out 4.2 + 1.85.', a: '6.05' }], // Grade 2
+    [{ q: 'Work out 0.3 × 0.4.', a: '0.12' }], // Grade 3
+    [{ q: 'Work out 14.5 ÷ 0.5.', a: '29' }], // Grade 4
+    [{ q: 'Work out 3.6 × 4.2 − 1.85.', a: '13.27', calculator: true }], // Grade 5
+  ],
+  'N11': [ // Obj 80: Complex Ratio
+    [{ q: 'Simplify the ratio 20 : 35. Write down the first number in the simplified ratio.', a: '4' }], // Grade 1
+    [{ q: '£45 is shared in the ratio 2 : 7. Work out the smaller share.', a: '10' }], // Grade 2
+    [{ q: 'The ratio of boys to girls is 4 : 5. There are 25 girls. How many boys are there?', a: '20' }], // Grade 3
+    [{ q: 'Ali, Ben, and Chloe share money in the ratio 3 : 5 : 8. Chloe gets £30 more than Ali. Work out the total amount shared.', a: '96' }], // Grade 4
+    [{ q: 'Red : Blue = 2 : 3 and Blue : Green = 4 : 5. Write Red : Blue : Green in simplest form.', a: '8:12:15', worked: ['Make Blue the same in both ratios', 'Red:Blue = 2:3 → multiply by 4 → 8:12', 'Blue:Green = 4:5 → multiply by 3 → 12:15', 'Red:Blue:Green = 8:12:15'] }], // Grade 5
+  ],
+  'N12': [ // Obj 4: Percentages
+    [{ q: 'Write 25% as a decimal.', a: '0.25' }], // Grade 1
+    [{ q: 'Work out 10% of £450.', a: '45' }], // Grade 2
+    [{ q: 'A television costs £300. It is reduced by 15% in a sale. Work out the sale price.', a: '255' }], // Grade 3
+    [{ q: 'A car\'s value increases from £8,000 to £8,400. Calculate the percentage increase.', a: '5' }], // Grade 4
+    [{ q: '£400 is invested at 2.5% simple interest per year. Work out how much interest is earned after 4 years.', a: '40', calculator: true }], // Grade 5
+  ],
+  'N13': [ // Obj 51: Time and Timetables
+    [{ q: 'How many minutes are there in 2.5 hours?', a: '150' }], // Grade 1
+    [{ q: 'A train departs at 14:35 and arrives at 16:15. Work out the journey time in minutes.', a: '100' }], // Grade 2
+    [{ q: 'A film lasts 135 minutes and finishes at 21:10. What time did it start? Give your answer in 24-hour format.', a: '18:55', type: 'text' }], // Grade 3
+    [{ q: 'A worker is paid £9.50 per hour. They work from 08:30 to 17:00 with a 45-minute unpaid lunch break. Calculate their total pay to the nearest penny.', a: '73.63', calculator: true }], // Grade 4
+    [{ q: 'A flight departs London at 22:40 and arrives in Dubai at 08:10 the next day. Dubai is 3 hours ahead. Work out the flight time in minutes.', a: '390' }], // Grade 5
+  ],
+  'N14': [ // Obj 65: Error Intervals (2)
+    [{ q: 'A length is measured as 8 cm to the nearest cm. What is the smallest possible length?', a: '7.5' }], // Grade 1
+    [{ q: 'A weight is recorded as 45 kg to the nearest kg. What is the lower bound?', a: '44.5' }], // Grade 2
+    [{ q: 'A number y, truncated to 1 decimal place, gives 6.3. What is the upper bound?', a: '6.4' }], // Grade 3
+    [{ q: 'A square has side length 6 cm to the nearest cm. Work out the upper bound for its perimeter.', a: '26' }], // Grade 4
+    [{ q: 'A rectangle has length L = 12.45 cm and width W = 4.15 cm, both given to lower bounds. Work out the minimum area.', a: '51.6675' }], // Grade 5
+  ],
+  'N15': [ // Obj 10: Rounding and Estimation
+    [{ q: 'Round 462 to the nearest 10.', a: '460' }], // Grade 1
+    [{ q: 'Round 14.56 to 1 decimal place.', a: '14.6' }], // Grade 2
+    [{ q: 'Round 0.0483 to 1 significant figure.', a: '0.05' }], // Grade 3
+    [{ q: 'By rounding each number to 1 significant figure, estimate the value of 41.3 × 19.8.', a: '800' }], // Grade 4
+    [{ q: 'Estimate 0.5 ÷ (1 × 20). Give your answer as a decimal.', a: '0.025' }], // Grade 5
+  ],
+  'N16': [ // Obj 41: Error Intervals
+    [{ q: 'A length is measured as 7 cm to the nearest cm. What is the smallest possible length?', a: '6.5' }], // Grade 1
+    [{ q: 'A weight is recorded as 34 kg to the nearest kg. What is the lower bound?', a: '33.5' }], // Grade 2
+    [{ q: 'A length is rounded to the nearest integer and gives 8. What is the upper bound?', a: '8.5' }], // Grade 3
+    [{ q: 'A rectangle measures 12 cm × 5 cm, both to the nearest cm. Work out the lowest possible perimeter.', a: '32' }], // Grade 4
+    [{ q: 'A length is measured as 24 cm, correct to the nearest centimetre. What is the lower bound of this measurement?', a: '23.5' }], // Grade 5
+  ],
+  'A1': [ // Obj 12: Algebraic Expressions
+    [{ q: 'Simplify y + y + y + y.', a: '4y', type: 'text' }], // Grade 1
+    [{ q: 'Simplify 5a + 2b − 3a + 4b. How many a\'s are in your answer?', a: '2' }], // Grade 2
+    [{ q: 'Multiply out 4(3x + 2). What is the coefficient of x?', a: '12' }], // Grade 3
+    [{ q: 'Expand (x+6)(x−2). What is the constant term?', a: '-12' }], // Grade 4
+    [{ q: 'Rearrange v = u + at to make t the subject.', a: 'u', type: 'text' }], // Grade 5
+  ],
+  'A2': [ // Obj 61: Number Machines (Inv)
+    [{ q: 'A machine multiplies by 4 then adds 3. If the input is 5, work out the output.', a: '23' }], // Grade 1
+    [{ q: 'A machine adds 8 then multiplies by 2. If the output is 30, work out the input.', a: '7' }], // Grade 2
+    [{ q: 'A machine subtracts 4 then multiplies by 6. What is the output when x = 7?', a: '18' }], // Grade 3
+    [{ q: 'Input 3 into Machine A, which multiplies by 3 then subtracts 2. The output goes into Machine B, which adds 5 then multiplies by 4. Work out the final output.', a: '48' }], // Grade 4
+    [{ q: 'A machine divides by 2 then adds 7. If the input is 4x and the output is x + 12, find x.', a: '5' }], // Grade 5
+  ],
+  'A3': [ // Obj 76: Inequalities (2)
+    [{ q: 'On a number line, what does a solid circle at a number represent?', a: 'Included', type: 'mcq' }], // Grade 1
+    [{ q: 'A hollow circle is drawn at −2 with an arrow pointing right. Does the inequality include −2?', a: 'No', type: 'mcq' }], // Grade 2
+    [{ q: 'Solve 3x − 4 > 11. What is the smallest integer value of x?', a: '6' }], // Grade 3
+    [{ q: 'Solve 5x + 7 ≤ 2x + 22. What is the largest integer value of x?', a: '5' }], // Grade 4
+    [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4' }], // Grade 5
+  ],
+  'A4': [ // Obj 81: Advanced Algebra
+    [{ q: 'Simplify a + a + a.', a: '3a', type: 'text' }], // Grade 1
+    [{ q: 'Expand 3(x + 4). What is the constant term?', a: '12' }], // Grade 2
+    [{ q: 'Factorise 12a + 15b. What is the HCF that goes outside the bracket?', a: '3' }], // Grade 3
+    [{ q: 'Expand (x + 5)(x − 1). What is the coefficient of x?', a: '4' }], // Grade 4
+    [{ q: 'Factorise x² − 3x − 18 into the form (x + a)(x + b). What is the negative value?', a: '-6' }], // Grade 5
+  ],
+  'A5': [ // Obj 57: Equations Both Sides
+    [{ q: 'I think of a number. I add 5 and get 11. What is my number?', a: '6' }], // Grade 1
+    [{ q: 'Solve x + 8 = 15.', a: '7' }], // Grade 2
+    [{ q: 'Solve 3x = 2x + 5.', a: '5' }], // Grade 3
+    [{ q: 'Solve 4(2x − 1) = 3(x + 7).', a: '5' }], // Grade 4
+    [{ q: 'Solve (5x + 2)/3 = (3x + 10)/2.', a: '26' }], // Grade 5
+  ],
+  'A6': [ // Obj 55: Forming Expressions
+    [{ q: 'Apples cost 30p each and bananas cost 25p each. Work out the total cost of 3 apples and 2 bananas in pence.', a: '140' }], // Grade 1
+    [{ q: 'A rectangle has length (x + 5) and width x. When x = 8, work out the perimeter.', a: '42' }], // Grade 2
+    [{ q: 'The perimeter of a rectangle with length (x + 5) and width x is 42 cm. Find x.', a: '8' }], // Grade 3
+    [{ q: 'Think of a number, multiply by 4, subtract 7. The result equals the same number multiplied by 2 plus 9. Find the number.', a: '8' }], // Grade 4
+    [{ q: 'Three consecutive even numbers sum to 84. Work out the smallest number.', a: '26' }], // Grade 5
+  ],
+  'A7': [ // Obj 47: Functions/Number Machines
+    [{ q: 'A machine adds 8 then multiplies by 2. If the input is 4, what is the output?', a: '24' }], // Grade 1
+    [{ q: 'A machine multiplies by 5 then subtracts 3. If the output is 22, what is the input?', a: '5' }], // Grade 2
+    [{ q: 'A machine divides by 3 then adds 9. What is the output when x = 12?', a: '13' }], // Grade 3
+    [{ q: 'A machine multiplies by 3 then adds 8. Find the input where the output equals the input.', a: '-4' }], // Grade 4
+    [{ q: 'A function is f(x) = 4x² − 5. Find f(−3).', a: '31' }], // Grade 5
+  ],
+  'A8': [ // Obj 19: Graphs and Coordinates
+    [{ q: 'Write down the coordinates of the origin.', a: '(0, 0)', type: 'text' }], // Grade 1
+    [{ q: 'Point A is at (2, 5). It is translated 3 units right and 1 unit down. What are the new coordinates?', a: '(5, 4)', type: 'text' }], // Grade 2
+    [{ q: 'Find the midpoint of the line segment from (2, 3) to (6, 9).', a: '(4, 6)', type: 'text' }], // Grade 3
+    [{ q: 'Does the point (3, 11) lie on the line y = 4x − 1?', a: 'Yes', type: 'mcq' }], // Grade 4
+    [{ q: 'A line passes through (0, 2) and (2, 8). Work out the gradient.', a: '3' }], // Grade 5
+  ],
+  'A9': [ // Obj 36: Linear Graphs
+    [{ q: 'Write down the y-intercept of the line y = 2x + 5.', a: '5' }], // Grade 1
+    [{ q: 'Write down the gradient of the line y = 4x − 3.', a: '4' }], // Grade 2
+    [{ q: 'For the equation y = 3x − 2, work out the value of y when x = −2.', a: '-8' }], // Grade 3
+    [{ q: 'A straight line passes through (0, 4) and (2, 10). Work out the gradient.', a: '3' }], // Grade 4
+    [{ q: 'A line is parallel to y = 5x + 1 and passes through the point (2, 13). Work out the y-intercept.', a: '3' }], // Grade 5
+  ],
+  'A10': [ // Obj 25: Real-life Graphs
+    [{ q: 'A currency conversion rate is £1 = $1.30. How many dollars do you get for £20?', a: '26' }], // Grade 1
+    [{ q: 'On a distance-time graph, what does a horizontal line represent?', a: 'Stationary', type: 'mcq' }], // Grade 2
+    [{ q: 'A cyclist travels 15 miles in 1 hour. What is the cyclist\'s speed in mph?', a: '15' }], // Grade 3
+    [{ q: 'A car travels 60 miles in 1.5 hours at constant speed. Work out the car\'s speed in mph.', a: '40' }], // Grade 4
+    [{ q: 'Tariff A has no standing charge and costs 25p per unit. Tariff B has a £10 standing charge and costs 15p per unit. After how many units do both tariffs cost the same?', a: '100' }], // Grade 5
+  ],
+  'A11': [ // Obj 37: Non-linear Graphs
+    [{ q: 'There are approximately 1.6 km in 1 mile. Estimate the number of km in 20 miles.', a: '32' }], // Grade 1
+    [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq' }], // Grade 2
+    [{ q: 'A plumber charges a £40 callout fee and £25 per hour. Work out the cost for a 3-hour job.', a: '115' }], // Grade 3
+    [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'The graph of y = x² − 4x + 3 crosses the x-axis at (1, 0) and (3, 0). What are the coordinates of the lowest point on the curve?', a: '(2, −1)', type: 'mcq', options: ['(2, −1)', '(2, 0)', '(1, 3)', '(0, 3)'], worked: ['The turning point is halfway between the two x-intercepts', 'Midpoint of x = 1 and x = 3 is x = 2', 'When x = 2: y = 4 − 8 + 3 = −1', 'Turning point = (2, −1)'] }], // Grade 5
+  ],
+  'A14': [ // Obj 84: Non-linear Graphs
+    [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq' }], // Grade 1
+    [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2' }], // Grade 2
+    [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1' }], // Grade 3
+    [{ q: 'For the graph y = x², what are the coordinates where the graph crosses the y-axis?', a: '(0, 0)', worked: ['When x = 0, y = 0² = 0', 'The graph crosses the y-axis at (0, 0)'] }], // Grade 4
+    [{ q: 'What type of graph does y = 1/x produce?', a: 'A curved reciprocal graph', type: 'mcq', options: ['A straight line', 'A parabola', 'A curved reciprocal graph', 'A circle'], worked: ['y = 1/x is a reciprocal function', 'As x increases, y decreases but never reaches 0', 'The graph has two curved branches — it is not a straight line'] }], // Grade 5
+  ],
+  'A17': [ // Obj 13: Solving Linear Equations
+    [{ q: 'What number added to 3 gives 10?', a: '7' }], // Grade 1
+    [{ q: 'Solve x + 7 = 12.', a: '5' }], // Grade 2
+    [{ q: 'Solve 3w − 5 = 16.', a: '7' }], // Grade 3
+    [{ q: 'Solve 6z + 2 = 4z + 18.', a: '8' }], // Grade 4
+    [{ q: 'Solve (3x − 1)/2 = 7.', a: '5' }], // Grade 5
+  ],
+  'A18': [ // Obj 35: Quadratics
+    [{ q: 'Multiply out x(x + 4). What is the coefficient of x?', a: '4' }], // Grade 1
+    [{ q: 'Factorise y² + 7y. What goes outside the bracket?', a: 'y', type: 'text' }], // Grade 2
+    [{ q: 'Expand (x + 3)(x + 5). What is the coefficient of x in your answer?', a: '8' }], // Grade 3
+    [{ q: 'Factorise x² + 8x + 15 into the form (x + a)(x + b). Work out a + b.', a: '8' }], // Grade 4
+    [{ q: 'Solve x² − 2x − 24 = 0. What is the positive solution?', a: '6' }], // Grade 5
+  ],
+  'A19': [ // Obj 34: Simultaneous Equations
+    [{ q: 'If x + y = 10 and x = 4, work out the value of y.', a: '6' }], // Grade 1
+    [{ q: 'If 2a = 8 and a + b = 7, work out the value of b.', a: '3' }], // Grade 2
+    [{ q: 'Solve the simultaneous equations: x + y = 12 and x − y = 4. Work out the value of x.', a: '8' }], // Grade 3
+    [{ q: 'Solve the simultaneous equations: 2x + 3y = 16 and 4x − y = 11. Work out x.', a: '3.5', calculator: true }], // Grade 4
+    [{ q: '3 coffees and 2 teas cost £8.50. 4 coffees and 3 teas cost £11.80. Work out the cost of one coffee.', a: '1.70', calculator: true }], // Grade 5
+  ],
+  'A21': [ // Obj 42: Money and Finance
+    [{ q: 'A notebook costs 85p. Work out the cost of 4 notebooks in pounds.', a: '3.40' }], // Grade 1
+    [{ q: 'A plumber charges £15 per hour plus a £25 callout fee. Work out the cost for a 4-hour job.', a: '85' }], // Grade 2
+    [{ q: 'Pack A contains 6 rolls for £2.40. Pack B contains 9 rolls for £3.15. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 3
+    [{ q: 'A water bill costs £38 per month. There is also a standing charge of £65 per year. Work out the total annual cost.', a: '521', calculator: true }], // Grade 4
+    [{ q: 'A salary of £24,000 is increased by 5%. Then 20% tax is deducted. Work out the take-home amount.', a: '20160', calculator: true }], // Grade 5
+  ],
+  'A22': [ // Obj 24: Inequalities
+    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq' }], // Grade 1
+    [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5' }], // Grade 2
+    [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7' }], // Grade 3
+    [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7' }], // Grade 4
+    [{ q: 'Solve 6x + 4 > 2x + 20. What is the smallest integer value of x?', a: '5' }], // Grade 5
+  ],
+  'A23': [ // Obj 14: Sequences
+    [{ q: 'Write down the next term in the sequence: 3, 7, 11, 15, ...', a: '19' }], // Grade 1
+    [{ q: 'The nth term of a sequence is 4n + 1. Work out the first term.', a: '5' }], // Grade 2
+    [{ q: 'The sequence 5, 8, 11, 14, ... has nth term = an + b. Work out the value of a.', a: '3' }], // Grade 3
+    [{ q: 'The nth term of a sequence is 6n − 2. Is 54 a term in this sequence?', a: 'No, because n = 9.33 which is not a whole number', type: 'mcq', options: ['Yes, it is the 9th term', 'No, because n = 9.33 which is not a whole number', 'Yes, it is the 10th term', 'No, because 54 is even'], worked: ['Set 6n − 2 = 54', '6n = 56', 'n = 56/6 = 9.33...', 'n is not a whole number, so 54 is not a term'] }], // Grade 4
+    [{ q: 'The nth term of a sequence is n² + 4. Work out the 3rd term.', a: '13' }], // Grade 5
+  ],
+  'A24': [ // Obj 46: Advanced Sequences
+    [{ q: 'Write down the next term in the sequence: 2, 4, 8, 16, ...', a: '32' }], // Grade 1
+    [{ q: 'A Fibonacci-type sequence starts 2, 5, ... Work out the 4th term.', a: '12' }], // Grade 2
+    [{ q: 'The nth term of a sequence is n² + 5. Work out the 2nd term.', a: '9' }], // Grade 3
+    [{ q: 'A geometric sequence is 3, 12, 48, ... What is the common ratio?', a: '4' }], // Grade 4
+    [{ q: 'A quadratic sequence is 2, 6, 12, 20, ... Work out the 5th term.', a: '30' }], // Grade 5
+  ],
+  'A25': [ // Obj 74: Estimating Mean
+    [{ q: 'What is the midpoint of the class interval 10 < x ≤ 20?', a: '15' }], // Grade 1
+    [{ q: 'An interval 0 < t ≤ 10 has frequency 6. Work out the midpoint multiplied by the frequency.', a: '30' }], // Grade 2
+    [{ q: 'A grouped frequency table shows: 0 < t ≤ 10 (frequency 3), 10 < t ≤ 20 (frequency 9), 20 < t ≤ 30 (frequency 5), 30 < t ≤ 40 (frequency 3). Which is the modal class?', a: '10<t≤20', type: 'mcq' }], // Grade 3
+    [{ q: 'A grouped frequency table shows: 0-5 min (frequency 4, midpoint 2.5), 5-10 (frequency 10, midpoint 7.5), 10-15 (frequency 6, midpoint 12.5). Estimate the mean.', a: '8', calculator: true }], // Grade 4
+    [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' }], // Grade 5
+  ],
+  'R1': [ // Obj 31: Compound Measures
+    [{ q: 'Speed, distance, and time are connected. If a car goes faster, does it take more time or less time to travel the same distance?', a: 'Less', type: 'mcq' }], // Grade 1
+    [{ q: 'A car travels 60 miles in 2 hours. Work out its speed in mph.', a: '30' }], // Grade 2
+    [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4' }], // Grade 3
+    [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100' }], // Grade 4
+    [{ q: 'A cylinder has a density of 2.5 g/cm³, a radius of 4 cm, and a height of 10 cm. Work out the mass to 1 decimal place.', a: '1256.6', calculator: true, frozen: true }], // Grade 5
+  ],
+  'R2': [ // Obj 32: Bearings and Scale
+    [{ q: 'What is the correct 3-figure bearing for a direction 45° clockwise from North?', a: '045', type: 'text' }], // Grade 1
+    [{ q: 'A map has a scale of 1 cm = 5 km. Two towns are 8 cm apart on the map. Work out the actual distance between them.', a: '40' }], // Grade 2
+    [{ q: 'The bearing of a ship from a lighthouse is 115°. Work out the bearing of the lighthouse from the ship.', a: '295' }], // Grade 3
+    [{ q: 'A map has a scale of 1 : 200. A room is 8 m long. What is its length on the drawing in cm?', a: '4' }], // Grade 4
+    [{ q: 'Town A is 40 km from Town B on a bearing of 050°. Town C is 30 km from Town B on a bearing of 140°. Work out the distance from A to C.', a: '50', calculator: true, frozen: true }], // Grade 5
+  ],
+  'R3': [ // Obj 49: Applied Percentages
+    [{ q: 'Work out 50% of £94.', a: '47' }], // Grade 1
+    [{ q: 'A jacket costs £40. It is increased in price by 15%. Work out the new price.', a: '46' }], // Grade 2
+    [{ q: 'Calculate the simple interest earned on £500 at 4% per year for 3 years.', a: '60' }], // Grade 3
+    [{ q: 'A computer costs £1,200 and depreciates by 20% in year 1 and 10% in year 2. Work out its value after 2 years.', a: '864', calculator: true }], // Grade 4
+    [{ q: '£3,000 is invested at 2.5% compound interest for 4 years. Calculate the total amount to 2 decimal places.', a: '3311.44', calculator: true }], // Grade 5
+  ],
+  'R4': [ // Obj 5: Ratio
+    [{ q: 'Simplify the ratio 10 : 15. What is the first number in the simplified ratio?', a: '2' }], // Grade 1
+    [{ q: 'Share 40 sweets in the ratio 3 : 5. How many sweets does the person with the larger share get?', a: '25' }], // Grade 2
+    [{ q: 'A recipe uses flour and sugar in the ratio 3 : 1. If 120g of flour is used, how much sugar is needed?', a: '40' }], // Grade 3
+    [{ q: 'The ratio of red to blue to green pens is 2 : 4 : 3. If there are 16 blue pens, how many pens are there in total?', a: '36' }], // Grade 4
+    [{ q: 'Ali and Ben share money in the ratio 4 : 7. Ben gets £21 more than Ali. Work out how much money they share in total.', a: '77' }], // Grade 5
+  ],
+  'R5': [ // Obj 77: Best Buys
+    [{ q: 'Pack A contains 4 pens for £1.00. Pack B contains 1 pen for 30p. Which pack is cheaper per pen?', a: 'Pack A', type: 'mcq' }], // Grade 1
+    [{ q: '5 apples cost £1.50. Work out the cost of 1 apple.', a: '0.30' }], // Grade 2
+    [{ q: 'Cereal is sold as 400 g for £2.40 or 600 g for £3.30. Which offers better value per gram?', a: '600g box', type: 'mcq', calculator: true }], // Grade 3
+    [{ q: 'One shop offers 300 ml for £2.10 with a "buy one get one half price" offer. Another shop offers 500 ml for £3.40. Which is the best value?', a: '300ml offer', type: 'mcq', calculator: true }], // Grade 4
+    [{ q: 'One shop offers 9 rolls for £4.50. Another offers 16 rolls for £7.68 with a 15% discount. Which is the best value per roll?', a: 'Pack of 16', type: 'mcq', calculator: true }], // Grade 5
+  ],
+  'R6': [ // Obj 82: Standard Form (Applied)
+    [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
+    [{ q: 'Write 3.2 × 10⁻³ as an ordinary number.', a: '0.0032' }], // Grade 2
+    [{ q: 'Work out (2 × 10³) × (4 × 10⁴). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
+    [{ q: 'Work out (8 × 10⁵) ÷ (2 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 4
+    [{ q: 'A ship has a mass of 2.2 × 10⁶ kg after a 12% reduction. Work out the original mass (not in standard form).', a: '2500000', calculator: true }], // Grade 5
+  ],
+  'R7': [ // Obj 6: Proportion
+    [{ q: '3 apples cost 60p. Work out the cost of 1 apple.', a: '20' }], // Grade 1
+    [{ q: '4 pens cost £1.20. Work out the cost of 7 pens.', a: '2.10' }], // Grade 2
+    [{ q: 'A printer prints 150 pages in 5 minutes. How many pages does it print in 12 minutes?', a: '360' }], // Grade 3
+    [{ q: 'Pack A contains 6 rolls for £1.50. Pack B contains 8 rolls for £1.92. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true }], // Grade 4
+    [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8' }], // Grade 5
+  ],
+  'R8': [ // Obj 67: Column Vectors
+    [{ q: 'Write the column vector for a translation of 4 units right and 2 units down.', a: '(4, −2)', type: 'text' }], // Grade 1
+    [{ q: 'a = (5, 3) and b = (4, −1). Find a + b.', a: '(9, 2)', type: 'text' }], // Grade 2
+    [{ q: 'p = (−2, 5). Find 4p.', a: '(−8, 20)', type: 'text' }], // Grade 3
+    [{ q: 'c = (1, 4) and d = (−3, 2). Find 2c − d.', a: '(5, 6)', type: 'text' }], // Grade 4
+    [{ q: 'x = (k, 4) and y = (6, m). Given that 3x + y = (12, 17), find the value of k.', a: '2' }], // Grade 5
+  ],
+  'R9': [ // Obj 29: % Increase/Decrease
+    [{ q: 'Work out 10% of £48.', a: '4.80' }], // Grade 1
+    [{ q: 'Increase £60 by 20%.', a: '72' }], // Grade 2
+    [{ q: 'A phone is bought for £200 and sold for £150. Work out the percentage loss.', a: '25' }], // Grade 3
+    [{ q: 'A car depreciates by 15% each year. If the original price is £12,000, work out its value after 1 year.', a: '10200', calculator: true }], // Grade 4
+    [{ q: 'A holiday costs £540 after a 10% discount has been applied. Work out the original price.', a: '600' }], // Grade 5
+  ],
+  'R10': [ // Obj 44: Proportion (D&I)
+    [{ q: '3 cakes cost £4.50. Work out the cost of 1 cake.', a: '1.50' }], // Grade 1
+    [{ q: 'y is directly proportional to x. When x = 10, y = 30. Find y when x = 4.', a: '12' }], // Grade 2
+    [{ q: '4 decorators take 3 days to complete a job. How long would it take 2 decorators?', a: '6' }], // Grade 3
+    [{ q: 'y is inversely proportional to x. When x = 3, y = 12. Work out y when x = 6.', a: '6' }], // Grade 4
+    [{ q: 'y is directly proportional to x². When x = 2, y = 20. Find y when x = 5.', a: '125' }], // Grade 5
+  ],
+  'R11': [ // Obj 23: Speed, Distance, Time
+    [{ q: 'A car travels at 40 mph for 2 hours. How far does it travel?', a: '80' }], // Grade 1
+    [{ q: 'A runner covers 15 km at 5 km/h. How long does the run take?', a: '3' }], // Grade 2
+    [{ q: 'Change 150 minutes into hours. Give your answer as a decimal.', a: '2.5' }], // Grade 3
+    [{ q: 'A train travels 120 miles in 2 hours and 30 minutes. Work out its average speed.', a: '48' }], // Grade 4
+    [{ q: 'Sam travels 24 miles in 30 minutes. Work out his average speed in mph.', a: '48' }], // Grade 5
+  ],
+  'R12': [ // Obj 53: Congruence/Similarity
+    [{ q: 'Write down the mathematical word for two triangles that are exactly the same size and shape.', a: 'Congruent', type: 'text' }], // Grade 1
+    [{ q: 'Rectangle A has dimensions 3 × 4 cm. Rectangle B has dimensions 6 × 8 cm. Are these rectangles similar?', a: 'Yes', type: 'mcq' }], // Grade 2
+    [{ q: 'Triangle P has sides 5 cm, 6 cm, and 8 cm. Triangle Q is similar to P and has a longest side of 24 cm. Work out the shortest side of Q.', a: '15', frozen: true }], // Grade 3
+    [{ q: 'What is the condition for congruence when two sides and the included angle are given?', a: 'SAS', type: 'text' }], // Grade 4
+    [{ q: 'Two similar rectangles have areas of 20 cm² and 180 cm² respectively. The smaller rectangle has a perimeter of 18 cm. Work out the perimeter of the larger rectangle.', a: '54' }], // Grade 5
+  ],
+  'R13': [ // Obj 79: Multi-step %
+    [{ q: 'Work out 20% of £80.', a: '16' }], // Grade 1
+    [{ q: 'Increase £150 by 15%.', a: '172.50' }], // Grade 2
+    [{ q: 'A television costs £400. It is reduced by 20%, then reduced again by 10%. Work out the final price.', a: '288' }], // Grade 3
+    [{ q: '£2,000 is invested at 3% compound interest for 3 years. Work out the total balance.', a: '2185.45', calculator: true }], // Grade 4
+    [{ q: 'A car is worth £11,900 after depreciating by 15%. Work out the original price.', a: '14000' }], // Grade 5
+  ],
+  'R14': [ // Obj 75: Scatter Graphs (2)
+    [{ q: 'Ice cream sales and temperature usually show what type of correlation?', a: 'Positive', type: 'mcq' }], // Grade 1
+    [{ q: 'A point on a scatter graph has coordinates (12, 45). Write down the y-coordinate.', a: '45' }], // Grade 2
+    [{ q: 'A scatter graph shows strong negative correlation. As x increases, what happens to y?', a: 'Decreases', type: 'mcq' }], // Grade 3
+    [{ q: 'A line of best fit passes through the points (10, 20) and (30, 60). Estimate the value of y when x = 25.', a: '50' }], // Grade 4
+    [{ q: 'When predicting values outside the range of data collected, what is this process called?', a: 'Extrapolation', type: 'mcq' }], // Grade 5
+  ],
+  'R16': [ // Obj 68: Interest/Depreciation
+    [{ q: 'Work out 10% of £350 and add it to the original amount.', a: '385' }], // Grade 1
+    [{ q: 'Work out the simple interest on £600 at 4% per year for 3 years.', a: '72' }], // Grade 2
+    [{ q: 'A savings account pays 5% interest per year. £200 is invested. Work out the interest earned after 1 year.', a: '10' }], // Grade 3
+    [{ q: 'Work out the total balance when £2,000 is invested at 3% compound interest for 2 years.', a: '2121.80', calculator: true }], // Grade 4
+    [{ q: '£800 is invested at x% compound interest for 2 years and the final balance is £840.50. Find x.', a: '2.5', calculator: true }], // Grade 5
+  ],
+  'G1': [ // Obj 15: Properties of Shapes
+    [{ q: 'How many sides does a hexagon have?', a: '6' }], // Grade 1
+    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'text' }], // Grade 2
+    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'text' }], // Grade 3
+    [{ q: 'How many edges does a square-based pyramid have?', a: '8' }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 140°. Work out the number of sides.', a: '9' }], // Grade 5
+  ],
+  'G2': [ // Obj 33: Constructions and Loci
+    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'text' }], // Grade 1
+    [{ q: 'A perpendicular bisector of line segment AB crosses the segment at its midpoint. If AB = 14 cm, at what distance from A does the bisector cross?', a: '7' }], // Grade 2
+    [{ q: 'All angles in an equilateral triangle are equal. Work out the size of each angle.', a: '60' }], // Grade 3
+    [{ q: 'All points exactly 4 m from a fixed point form what shape?', a: 'Circle', type: 'text' }], // Grade 4
+    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq' }], // Grade 5
+  ],
+  'G3': [ // Obj 22: Angles and Polygons
+    [{ q: 'Three angles on a straight line are 40°, 70°, and x. Work out x.', a: '70' }], // Grade 1
+    [{ q: 'An isosceles triangle has one angle of 50°. The other two angles are equal. Work out one of the equal angles.', a: '65', frozen: true }], // Grade 2
+    [{ q: 'A quadrilateral has angles 95°, 110°, and 85°. Work out the fourth angle.', a: '70', frozen: true }], // Grade 3
+    [{ q: 'Calculate the size of one exterior angle of a regular decagon.', a: '36' }], // Grade 4
+    [{ q: 'The interior angle of a regular polygon is 144°. How many sides does it have?', a: '10' }], // Grade 5
+  ],
+  'G4': [ // Obj 58: Symmetry
+    [{ q: 'How many lines of symmetry does a regular pentagon have?', a: '5' }], // Grade 1
+    [{ q: 'What is the order of rotational symmetry of a rectangle?', a: '2' }], // Grade 2
+    [{ q: 'A grid has a vertical line of symmetry running down the middle. If there is a shaded square in column 1, row 2, in which column is the matching square?', a: '4' }], // Grade 3
+    [{ q: 'The interior angle of a regular pentagon is 108°. Does 108 divide exactly into 360?', a: 'No', type: 'mcq' }], // Grade 4
+    [{ q: 'A regular octagon has an interior angle of 135° and a square has an interior angle of 90°. What is 135 + 135 + 90?', a: '360' }], // Grade 5
+  ],
+  'G5': [ // Obj 73: Trig (Angles)
+    [{ q: 'In a right-angled triangle, which side is opposite the right angle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
+    [{ q: 'In the trigonometric ratio sin(x) = Opposite ÷ ?, what goes in the denominator?', a: 'Hypotenuse', type: 'mcq' }], // Grade 2
+    [{ q: 'In a right-angled triangle, the opposite side is 6 cm and the hypotenuse is 10 cm. Work out the angle to 1 decimal place.', a: '36.9', calculator: true, frozen: true }], // Grade 3
+    [{ q: 'In a right-angled triangle, the adjacent side is 7 cm and the opposite side is 12 cm. Work out the angle to 1 decimal place.', a: '59.7', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A ladder of 6 m is placed against a wall with its base 2.5 m from the wall. Work out the angle the ladder makes with the ground to the nearest degree.', a: '65', calculator: true, frozen: true }], // Grade 5
+  ],
+  'G6': [ // Obj 43: Angle Reasoning
+    [{ q: 'Angles around a point add up to how many degrees?', a: '360' }], // Grade 1
+    [{ q: 'A triangle has angles of 45° and 85°. Work out the third angle.', a: '50' }], // Grade 2
+    [{ q: 'Two straight lines intersect. One angle is 115°. Work out the vertically opposite angle.', a: '115' }], // Grade 3
+    [{ q: 'Two parallel lines are cut by a transversal. One corresponding angle is 108°. Work out the alternate angle.', a: '108', frozen: true }], // Grade 4
+    [{ q: 'A quadrilateral has angles x, 2x, x + 30, and x − 10. Find x.', a: '68' }], // Grade 5
+  ],
+  'G7': [ // Obj 20: Transformations
+    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'text' }], // Grade 1
+    [{ q: 'A triangle with a base of 3 cm is enlarged by scale factor 4. What is the new base length?', a: '12' }], // Grade 2
+    [{ q: 'A plumber charges £40 for a callout and £25 per hour. What is the cost for 3 hours?', a: '115' }], // Grade 3
+    [{ q: 'A shape is translated by vector (5, −4). How many units does it move to the right?', a: '5' }], // Grade 4
+    [{ q: 'Shape A is reflected in the x-axis to give B, then B is reflected in the y-axis to give C. The single transformation from A to C is a rotation of how many degrees?', a: '180' }], // Grade 5
+  ],
+  'G8': [ // Obj 54: Displaying Data
+    [{ q: 'In a survey, 12 people chose red, 18 chose blue, 9 chose green, and 6 chose yellow. Which colour was chosen most frequently?', a: 'Blue', type: 'mcq' }], // Grade 1
+    [{ q: 'Year 10 has 14 boys and 16 girls. Year 11 has 18 boys and 12 girls. How many more boys are in Year 11 than Year 10?', a: '4' }], // Grade 2
+    [{ q: 'The temperature at 2pm is 14°C and at 4pm is 18°C. Assuming a steady increase, estimate the temperature at 3pm.', a: '16' }], // Grade 3
+    [{ q: 'Temperature is recorded every hour over a 24-hour period. What is the most appropriate type of graph to display this data?', a: 'Line graph', type: 'mcq' }], // Grade 4
+    [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12. Which class\'s results are more consistent?', a: 'Class B', type: 'mcq' }], // Grade 5
+  ],
+  'G9': [ // Obj 69: Composite Shapes
+    [{ q: 'How many sides does an L-shape have?', a: '6' }], // Grade 1
+    [{ q: 'A rectangle has dimensions 10 cm by 4 cm. Work out its perimeter.', a: '28' }], // Grade 2
+    [{ q: 'An L-shaped figure is made up of a rectangle 6 cm × 4 cm and another 8 cm × 3 cm. Work out the total area.', a: '48', frozen: true }], // Grade 3
+    [{ q: 'A square of side 3 cm is cut from the corner of a square of side 8 cm. Work out the perimeter of the remaining shape.', a: '32', frozen: true }], // Grade 4
+    [{ q: 'An L-shaped figure is made from 3 identical rectangles. The perimeter is 56 cm and the length is 3 times the width. Work out the total area.', a: '108', frozen: true }], // Grade 5
+  ],
+  'G11': [ // Obj 72: Applied Pythagoras
+    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' }], // Grade 1
+    [{ q: 'A right-angled triangle has sides of 5 cm and 12 cm. Work out the length of the hypotenuse.', a: '13', frozen: true }], // Grade 2
+    [{ q: 'In a right-angled triangle, the hypotenuse is 15 cm and one side is 9 cm. Work out the length of the other side.', a: '12', frozen: true }], // Grade 3
+    [{ q: 'A ladder is 4.5 m long and its base is 1.2 m from a wall. Work out the height up the wall to 1 decimal place.', a: '4.3', calculator: true, frozen: true }], // Grade 4
+    [{ q: 'A and B have coordinates (2, 4) and (8, 12) respectively. Work out the exact length of AB.', a: '10' }], // Grade 5
+  ],
+  'G12': [ // Obj 21: Volume and Surface Area
+    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq' }], // Grade 1
+    [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12' }], // Grade 2
+    [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200' }], // Grade 3
+    [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54' }], // Grade 4
+    [{ q: 'A cylinder has radius 4 cm and height 12 cm. Write the volume in the form kπ cm³.', a: '192' }], // Grade 5
+  ],
+  'G13': [ // Obj 52: Plans and Elevations
+    [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'text' }], // Grade 1
+    [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'text' }], // Grade 2
+    [{ q: 'A square-based pyramid is viewed from the side. What shape is the elevation?', a: 'Triangle', type: 'mcq', options: ['Triangle', 'Square', 'Rectangle', 'Pentagon'], worked: ['A pyramid viewed from the side shows a triangular profile'] }], // Grade 3
+    [{ q: 'The plan view of a solid is 2 × 3 and the front elevation is 2 × 2. What is the maximum number of cubes in this solid?', a: '12', worked: ['Plan view 2×3 means 6 columns', 'Front elevation 2×2 means max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 4
+    [{ q: 'The plan view is 3 × 2 and the front elevation is 2 × 2. What is the maximum number of unit cubes in this solid?', a: '12' }], // Grade 5
+  ],
+  'G14': [ // Obj 70: Averages (Freq Tables)
+    [{ q: 'A frequency table shows: Score 1 (frequency 3), Score 2 (frequency 7), Score 3 (frequency 5), Score 4 (frequency 2). Write down the mode.', a: '2' }], // Grade 1
+    [{ q: 'A frequency table has frequencies 5, 8, 12, and 4. How many people were surveyed in total?', a: '29' }], // Grade 2
+    [{ q: 'A table shows the number of goals scored: 0 goals (3 times), 1 goal (5 times), 2 goals (2 times). Calculate the mean number of goals.', a: '0.9' }], // Grade 3
+    [{ q: 'A grouped frequency table shows: 0-10 (frequency 4), 10-20 (frequency 8), 20-30 (frequency 6), 30-40 (frequency 2). Which class interval contains the median?', a: '10-20', type: 'text' }], // Grade 4
+    [{ q: 'A grouped frequency table shows: 0-10 (frequency 2, midpoint 5), 10-20 (frequency 6, midpoint 15), 20-30 (frequency 2, midpoint 25). Estimate the mean.', a: '15' }], // Grade 5
+  ],
+  'G15': [ // Obj 78: Volume/SA (Prisms)
+    [{ q: 'A cube has 6 faces. How many faces does a cuboid have?', a: '6' }], // Grade 1
+    [{ q: 'A cuboid has dimensions 2 cm × 3 cm × 5 cm. Work out its volume.', a: '30' }], // Grade 2
+    [{ q: 'A cube has side length 4 cm. Work out its total surface area.', a: '96' }], // Grade 3
+    [{ q: 'A triangular prism has a cross-sectional area of 15 cm² and a length of 8 cm. Work out its volume.', a: '120', frozen: true }], // Grade 4
+    [{ q: 'A cylinder has radius 3 cm and height 8 cm. The total surface area is kπ cm². What is k?', a: '66' }], // Grade 5
+  ],
+  'G16': [ // Obj 16: Perimeter and Area
+    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq' }], // Grade 1
+    [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24' }], // Grade 2
+    [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36' }], // Grade 3
+    [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42' }], // Grade 4
+    [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true }], // Grade 5
+  ],
+  'G18': [ // Obj 48: Arcs/Sectors/Cylinders
+    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' }], // Grade 1
+    [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' }], // Grade 2
+    [{ q: 'A circle has radius 5 cm. Work out the area ÷ π.', a: '25', worked: ['Area = πr² = π × 5² = 25π', 'Area ÷ π = 25'] }], // Grade 3
+    [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32' }], // Grade 4
+    [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5' }], // Grade 5
+  ],
+  'G19': [ // Obj 83: Spheres/Cylinders
+    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere: a football, a box, or a tin can?', a: 'Football', type: 'mcq' }], // Grade 1
+    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'text' }], // Grade 2
+    [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45' }], // Grade 3
+    [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160' }], // Grade 4
+    [{ q: 'A sphere has a volume of 36,000π cm³. Work out the exact radius.', a: '30' }], // Grade 5
+  ],
+  'G20': [ // Obj 30: Pythagoras & Trig
+    [{ q: 'In a right-angled triangle, which side is always opposite the right angle?', a: 'Hypotenuse', type: 'text' }], // Grade 1
+    [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' }], // Grade 2
+    [{ q: 'A right-angled triangle has two shorter sides of 6 cm and 8 cm. Work out the length of the hypotenuse.', a: '10', frozen: true }], // Grade 3
+    [{ q: 'In a right-angled triangle, the hypotenuse is 13 cm and one side is 5 cm. Work out the length of the third side.', a: '12', frozen: true }], // Grade 4
+    [{ q: 'A right-angled triangle has an angle of 40° and the adjacent side to this angle is 10 cm. Work out the length of the opposite side to 1 decimal place.', a: '8.4', calculator: true, frozen: true }], // Grade 5
+  ],
+  'G21': [ // Obj 56: Exact Trig Values
+    [{ q: 'In a right-angled triangle, the longest side is called the hypotenuse. How many degrees is the largest angle?', a: '90' }], // Grade 1
+    [{ q: 'Write down the value of sin(0°).', a: '0' }], // Grade 2
+    [{ q: 'Write down the exact value of cos(60°).', a: '0.5' }], // Grade 3
+    [{ q: 'Calculate sin(30°) + cos(60°).', a: '1' }], // Grade 4
+    [{ q: 'A right-angled triangle has an angle of 30° and a hypotenuse of 12 cm. Work out the exact length of the side opposite the 30° angle.', a: '6', frozen: true }], // Grade 5
+  ],
+  'G25': [ // Obj 40: Vectors
+    [{ q: 'Write the column vector for a translation of 3 units right and 2 units down.', a: '(3, −2)', type: 'text' }], // Grade 1
+    [{ q: 'a = (1, 4) and b = (5, 2). Work out a + b.', a: '(6, 6)', type: 'text' }], // Grade 2
+    [{ q: 'p = (6, −3). Work out 2p.', a: '(12, −6)', type: 'text' }], // Grade 3
+    [{ q: 'c = (−2, 5) and d = (4, 1). Work out 3c − d.', a: '(−10, 14)', type: 'text' }], // Grade 4
+    [{ q: 'The vector from A to B is (−7, 4). A has coordinates (2, 5). Find the coordinates of B.', a: '(−5, 9)', type: 'text' }], // Grade 5
+  ],
+  'P1': [ // Obj 17: Probability
+    [{ q: 'A fair coin is flipped. What is the probability that it lands on Tails?', a: '1/2', type: 'fraction' }], // Grade 1
+    [{ q: 'A bag contains 4 red counters and 5 blue counters. A counter is picked at random. What is the probability it is red?', a: '4/9', type: 'fraction' }], // Grade 2
+    [{ q: 'The probability that a football team wins its next game is 0.55. What is the probability that the team does not win?', a: '0.45' }], // Grade 3
+    [{ q: 'A biased spinner has sections numbered 1, 2, 3, and 4. P(1)=0.2, P(2)=0.35, P(3)=0.15. Work out P(4).', a: '0.3' }], // Grade 4
+    [{ q: 'There are x green balls and 12 yellow balls in a bag. The probability of picking a yellow ball is 3/5. Work out x.', a: '8' }], // Grade 5
+  ],
+  'P2': [ // Obj 62: Frequency Trees
+    [{ q: 'A restaurant offers 3 main courses and 4 drinks. How many different meal combinations are possible?', a: '12' }], // Grade 1
+    [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 2
+    [{ q: 'In a survey of 120 students: 70 are girls (40 choose Spanish); 50 are boys (25 choose French). How many boys choose Spanish?', a: '25' }], // Grade 3
+    [{ q: '120 students: 70 girls (40 choose Spanish, 30 choose French) and 50 boys (25 choose French, 25 choose Spanish). What fraction of French students are boys?', a: '5/11', type: 'fraction', worked: ['French students: 30 girls + 25 boys = 55', 'Boys who chose French = 25', 'Fraction = 25/55 = 5/11'] }], // Grade 4
+    [{ q: 'A pizza restaurant offers 4 bases, n different toppings, and 3 crust types. In total, 84 different pizzas can be made. Find n.', a: '7' }], // Grade 5
+  ],
+  'P3': [ // Obj 45: Relative Frequency
+    [{ q: 'A fair coin is flipped 40 times. Work out the expected number of Heads.', a: '20' }], // Grade 1
+    [{ q: 'A biased dice is rolled 60 times and lands on 6 eighteen times. Calculate the relative frequency.', a: '0.3' }], // Grade 2
+    [{ q: 'The probability of winning a match is 0.4. Estimate the number of wins in 150 matches.', a: '60' }], // Grade 3
+    [{ q: 'A spinner is spun 300 times. P(Red) = 0.35 and P(Blue) = 0.25. Work out the expected number of Greens.', a: '120' }], // Grade 4
+    [{ q: 'Bag A has P(Red) = 1/4 and 40 draws are made. Bag B has P(Red) = 2/5 and 60 draws are made. Work out the total number of red balls expected.', a: '34' }], // Grade 5
+  ],
+  'P4': [ // Obj 64: Venn Diagrams
+    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
+    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2' }], // Grade 2
+    [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4' }], // Grade 3
+    [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
+    [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2' }], // Grade 5
+  ],
+  'P5': [ // Obj 63: Pictograms/Bar Charts
+    [{ q: 'In a pictogram, 1 square represents 12 cars. How many cars are represented by 2.5 squares?', a: '30' }], // Grade 1
+    [{ q: 'A bar chart axis increases in steps of 4. Where does a frequency of 18 appear on the axis?', a: '16 and 20', type: 'mcq' }], // Grade 2
+    [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. What is the biggest gender difference among these subjects?', a: 'Drama', type: 'mcq' }], // Grade 3
+    [{ q: 'On Monday, 4 symbols represent 48 people in a pictogram. On Tuesday, there are 2.5 symbols. How many people are represented on Tuesday?', a: '30' }], // Grade 4
+    [{ q: 'In a valid bar chart, what must be true about the bars?', a: 'They must all have equal width', type: 'mcq', options: ['They must all have equal width', 'They must all have different widths', 'They must touch each other', 'They must be in order of size'], worked: ['In a bar chart, the height represents frequency', 'All bars must have the same width so comparisons are fair', 'If bars had different widths, the visual would be misleading'] }], // Grade 5
+  ],
+  'P6': [ // Obj 27: Venn Diagrams
+    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' }], // Grade 1
+    [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq' }], // Grade 2
+    [{ q: 'A class has 30 students. 18 play football, 12 play cricket, and 4 play neither. How many students play both sports?', a: '4' }], // Grade 3
+    [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
+    [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {prime numbers}, B = {odd numbers}. How many numbers are in A ∪ B?', a: '6' }], // Grade 5
+  ],
+  'P7': [ // Obj 59: Further Probability
+    [{ q: 'A fair coin is flipped. How many possible outcomes are there?', a: '2' }], // Grade 1
+    [{ q: 'Work out the probability of getting a Head AND rolling a 6 on a fair dice.', a: '1/12', type: 'fraction' }], // Grade 2
+    [{ q: 'A bag contains 4 red and 6 blue counters. A counter is drawn with replacement. Work out the probability of drawing two red counters.', a: '4/25', type: 'fraction' }], // Grade 3
+    [{ q: 'A bag contains 5 green and 3 yellow balls. A ball is drawn without replacement. Work out the probability of drawing two yellow balls.', a: '3/28', type: 'fraction' }], // Grade 4
+    [{ q: 'The probability of choosing Art is 0.4 and the probability of choosing Drama is 0.3. These are independent events. Work out the probability of choosing at least one of these subjects.', a: '0.58' }], // Grade 5
+  ],
+  'P8': [ // Obj 28: Tree Diagrams
+    [{ q: '80 people take a test. There are 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. How many people fail in total?', a: '33' }], // Grade 1
+    [{ q: '80 people take a test: 50 adults and 30 teenagers. 35 adults pass and 12 teenagers pass. What fraction of all people fail? Give your answer in its simplest form.', a: '33/80', type: 'fraction', worked: ['Adults who fail = 50 − 35 = 15', 'Teenagers who fail = 30 − 12 = 18', 'Total fail = 15 + 18 = 33', 'Fraction = 33/80'] }], // Grade 2
+    [{ q: 'A fair coin is flipped twice. How many possible outcomes are there?', a: '4' }], // Grade 3
+    [{ q: 'Work out the probability of getting exactly two Heads from two fair coin flips.', a: '1/4', type: 'fraction' }], // Grade 4
+    [{ q: 'A bag contains 5 red counters and 3 blue counters. A counter is picked at random, replaced, and a second counter is picked. Work out the probability that the two counters are different colours.', a: '15/32', type: 'fraction' }], // Grade 5
+  ],
+  'S1': [ // Obj 39: Time Series/Pictograms
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people do 3 circles represent?', a: '12' }], // Grade 1
+    [{ q: 'A pictogram uses one circle to represent 4 people. How many people are represented by 3.5 circles?', a: '14' }], // Grade 2
+    [{ q: 'A shop records ice cream sales each quarter: Q1 = 120, Q2 = 350, Q3 = 480, Q4 = 200. Work out the total sales for the year.', a: '1150', worked: ['120 + 350 + 480 + 200 = 1150'] }], // Grade 3
+    [{ q: 'Monthly profits: Jan £40k, Feb £45k, Mar £52k, Apr £48k, May £58k. What is the overall trend?', a: 'Generally increasing', type: 'mcq', options: ['Generally increasing', 'Generally decreasing', 'Staying the same', 'No pattern'], worked: ['Values go 40→45→52→48→58', 'Despite a small dip in April, the overall trend is upward'] }], // Grade 4
+    [{ q: 'A 3-point moving average of quarterly sales is: 317, 343, 353. What does this suggest about the underlying trend?', a: 'Sales are increasing', type: 'mcq', options: ['Sales are increasing', 'Sales are decreasing', 'Sales are staying the same', 'Cannot tell'], worked: ['Moving averages: 317 → 343 → 353', 'Each average is higher than the last', 'The underlying trend is increasing'] }], // Grade 5
+  ],
+  'S2': [ // Obj 38: Two-way Tables/Pie Charts
+    [{ q: '12 boys chose hot lunch and 8 chose packed lunch. 15 girls chose hot lunch and 9 chose packed lunch. How many girls chose packed lunch?', a: '9' }], // Grade 1
+    [{ q: 'In a survey, 20 men and 30 women were asked about their preferences. 12 men prefer tea and 18 women prefer coffee. How many women prefer tea?', a: '12' }], // Grade 2
+    [{ q: 'A pie chart represents 120 people. The angle for Blue is 90°. How many people chose Blue?', a: '30' }], // Grade 3
+    [{ q: 'In a survey of 60 people, 20 walk to work, 15 drive by car, 10 use the bus, and 15 cycle. What angle represents "Walk" on a pie chart?', a: '120' }], // Grade 4
+    [{ q: 'A pie chart shows that 45 dogs correspond to an angle of 120°. Work out the total number of animals represented in the pie chart.', a: '135' }], // Grade 5
+  ],
+  'S4': [ // Obj 18: Statistics (Averages)
+    [{ q: 'Find the mode of: 4, 7, 7, 9, 12.', a: '7' }], // Grade 1
+    [{ q: 'Find the range of: 15, 3, 11, 22, 8.', a: '19' }], // Grade 2
+    [{ q: 'Find the median of: 8, 2, 10, 1, 6.', a: '6' }], // Grade 3
+    [{ q: 'Calculate the mean of: 5, 9, 12, 6.', a: '8' }], // Grade 4
+    [{ q: 'Four numbers have a mean of 8. Three of the numbers are 4, 7, and 11. Work out the fourth number.', a: '10' }], // Grade 5
+  ],
+  'S5': [ // Obj 66: Standard Form (Calc)
+    [{ q: '52,000 = a × 10ⁿ. What is n?', a: '4' }], // Grade 1
+    [{ q: 'Write 4.1 × 10⁻³ as an ordinary number.', a: '0.0041' }], // Grade 2
+    [{ q: 'Work out (3 × 10⁴) × (2 × 10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' }], // Grade 3
+    [{ q: 'Work out (9 × 10⁶) ÷ (3 × 10⁻²). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '8' }], // Grade 4
+    [{ q: 'Work out (5.2 × 10⁴) + (4 × 10³). Give your answer in the form a × 10⁴.', a: '5.6' }], // Grade 5
+  ],
+  'S6': [ // Obj 26: Scatter Graphs
+    [{ q: 'A point on a scatter graph has coordinates (15, 30). What is the x-coordinate?', a: '15' }], // Grade 1
+    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' }], // Grade 2
+    [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. Write down the type of correlation.', a: 'Positive', type: 'mcq' }], // Grade 3
+    [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate the value of y when x = 45.', a: '55' }], // Grade 4
+    [{ q: 'A line of best fit covers data from x = 10 to x = 50. A student uses it to predict y when x = 100. What is this called?', a: 'Extrapolation — it is unreliable', type: 'mcq', options: ['Interpolation — it is reliable', 'Extrapolation — it is unreliable', 'Correlation — it is always accurate', 'Estimation — it is guaranteed'], worked: ['The data only covers x = 10 to x = 50', 'Predicting at x = 100 is far outside this range', 'This is extrapolation and is unreliable because the pattern may not continue'] }], // Grade 5
+  ],
+};
 
-// Shared references for remaining Geometry objectives → G2
-questionBank['G5'] = questionBank['G2'];
-questionBank['G6'] = questionBank['G2'];
-questionBank['G7'] = questionBank['G2'];
-questionBank['G8'] = questionBank['G2'];
-questionBank['G9'] = questionBank['G2'];
-questionBank['G11'] = questionBank['G2'];
-questionBank['G13'] = questionBank['G2'];
-questionBank['G14'] = questionBank['G2'];
-questionBank['G15'] = questionBank['G2'];
-questionBank['G18'] = questionBank['G2'];
-questionBank['G19'] = questionBank['G2'];
-questionBank['G25'] = questionBank['G2'];
+// ═══════════════════════════════════════════════════════════════
+// MERGE GOLD QUESTIONS INTO questionBank
+// Gold questions become the PRIMARY variant at each level.
+// Existing shared-bank questions become additional fallback variants.
+// Questions with frozen: true are excluded from variant selection.
+// ═══════════════════════════════════════════════════════════════
+Object.keys(goldQuestionBank).forEach(code => {
+  const goldLevels = goldQuestionBank[code];
+  // Get existing questions for this code (may be shared/aliased)
+  const existingBank = questionBank[code] || (_originalSharedRefs[code] ? questionBank[_originalSharedRefs[code]] : null);
+  
+  // Build new 5-level bank: gold question first, then existing variants
+  const newBank = goldLevels.map((goldVariants, levelIdx) => {
+    const existing = existingBank?.[levelIdx] || [];
+    const existingArray = Array.isArray(existing) ? (Array.isArray(existing[0]) ? existing : [existing].filter(e => e.q)) : [];
+    // Gold question(s) come first, then existing variants
+    return [...goldVariants, ...existingArray.filter(v => v.q)];
+  });
+  
+  questionBank[code] = newBank;
+});
 
-// Shared references for remaining Probability & Statistics objectives → P4
-questionBank['P5'] = questionBank['P4'];
-questionBank['P6'] = questionBank['P4'];
-questionBank['S1'] = questionBank['P4'];
-questionBank['S5'] = questionBank['P4'];
-questionBank['S6'] = questionBank['P4'];
+// Also keep shared references for any spec codes NOT covered by gold questions
+Object.entries(_originalSharedRefs).forEach(([code, primary]) => {
+  if (!goldQuestionBank[code]) {
+    questionBank[code] = questionBank[primary];
+  }
+});
+
+// A9 already had its own bank (quadratics) — gold replaces it
+// (The original A9 quadratic questions move to A18 gold bank if not already there)
+
+
+// ═══════════════════════════════════════════════════════════════
+// DIAMOND QUESTION BANK — Level 2 (unlocked after completing Level 1 grid)
+// Imported from /src/data/diamondQuestionBank.js — 84 objectives, 3 levels each
+// ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
 // ADDITIONAL TOPIC-SPECIFIC QUESTIONS — pushed into existing banks
@@ -3209,9 +3765,10 @@ questionBank['A4'] = [
     { q: "Simplify: x + x + x + x", a: "4x", worked: ["Count the number of x terms: 4", "Combine: 4x"] },
     { q: "Simplify: y + y + y", a: "3y", worked: ["Count the number of y terms: 3", "Combine: 3y"] },
   ],
-  // Level 1 — Collect like terms (two variables)
+  // Level 1 — Collect like terms (two variables + constants)
   [
     { q: "Simplify: 5a + 3b + 2a − b", a: "7a + 2b", worked: ["Collect a terms: 5a + 2a = 7a", "Collect b terms: 3b − b = 2b", "Answer: 7a + 2b"] },
+    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a", worked: ["Collect number terms: 15 − 5 = 10", "Collect a terms: −4a − a = −5a", "Answer: 10 − 5a"] },
     { q: "Simplify: 8c + 4d − 3c + 2d", a: "5c + 6d", worked: ["Collect c terms: 8c − 3c = 5c", "Collect d terms: 4d + 2d = 6d", "Answer: 5c + 6d"] },
   ],
   // Level 2 — Collect like terms with powers
@@ -3219,10 +3776,10 @@ questionBank['A4'] = [
     { q: "Simplify: 4x² + 3x − 2x² + 5x", a: "2x² + 8x", worked: ["Collect x² terms: 4x² − 2x² = 2x²", "Collect x terms: 3x + 5x = 8x", "Answer: 2x² + 8x"] },
     { q: "Simplify: 5p² − 2p + p² + 7p", a: "6p² + 5p", worked: ["Collect p² terms: 5p² + p² = 6p²", "Collect p terms: −2p + 7p = 5p", "Answer: 6p² + 5p"] },
   ],
-  // Level 3 — Collect constants and terms
+  // Level 3 — Expand single brackets and simplify
   [
     { q: "Simplify: 10 − 3y + 2 − 4y", a: "12 - 7y", worked: ["Collect number terms: 10 + 2 = 12", "Collect y terms: −3y − 4y = −7y", "Answer: 12 − 7y"] },
-    { q: "Simplify: 15 − 4a − 5 − a", a: "10 - 5a", worked: ["Collect number terms: 15 − 5 = 10", "Collect a terms: −4a − a = −5a", "Answer: 10 − 5a"] },
+    { q: "Expand and simplify: 3(2x + 1) + 2(x − 4)", a: "8x - 5", worked: ["3(2x + 1) = 6x + 3", "2(x − 4) = 2x − 8", "6x + 3 + 2x − 8 = 8x − 5"] },
   ],
   // Level 4 — Perimeter expression
   [
@@ -3363,7 +3920,7 @@ questionBank['N13'][3].push(
   { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £1.20 ÷ 500g = £0.0024 per gram", "Shop B: £1.70 ÷ 750g = £0.00227 per gram", "Shop B is cheaper"] },
 );
 questionBank['N13'][4].push(
-  { q: "£2000 is invested at 3% simple interest per annum. How much interest is earned after 4 years?", a: "240", worked: ["Simple interest = Principal × Rate × Time ÷ 100", "Interest = £2000 × 3 × 4 ÷ 100 = £240"] },
+  { q: "£2000 is invested at 3% compound interest per annum. What is the value after 4 years? Give your answer to the nearest penny.", a: "2251.02", calculator: true, worked: ["Year 1: 2000 × 1.03 = 2060", "Year 2: 2060 × 1.03 = 2121.80", "Year 3: 2121.80 × 1.03 = 2185.45", "Year 4: 2185.45 × 1.03 = 2251.02", "Or: 2000 × 1.03⁴ = £2251.02"] },
 );
 
 // Find Probability → P1
@@ -3636,7 +4193,7 @@ questionBank['G1'][2].push(
   { q: "A triangle has angles of 40° and 70°. Work out the size of the third angle.", a: "70", worked: ["Angles in a triangle sum to 180°", "40 + 70 + third angle = 180", "Third angle = 180 − 110 = 70°"] },
 );
 questionBank['G1'][3].push(
-  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", hint: "Interior angle = (n − 2) × 180 ÷ n", worked: ["Pentagon has 5 sides, so n = 5", "Interior angle = (5 − 2) × 180 ÷ 5", "= 3 × 180 ÷ 5 = 540 ÷ 5 = 108°"] },
+  { q: "Work out the size of one interior angle of a regular pentagon.", a: "108", calculator: true, hint: "Interior angle = (n − 2) × 180 ÷ n", worked: ["Pentagon has 5 sides, so n = 5", "Interior angle = (5 − 2) × 180 ÷ 5", "= 3 × 180 ÷ 5 = 540 ÷ 5 = 108°"] },
 );
 questionBank['G1'][4].push(
   { q: "Two angles are vertically opposite. One is 72°. What is the size of the other angle?", a: "72", worked: ["Vertically opposite angles are equal", "Therefore the other angle = 72°"] },
@@ -4014,7 +4571,7 @@ questionBank['P4'][2].push(
   { q: "A survey asks 'Do you think school dinners are healthy?' This is a leading question. Write a better question.", type: "mcq", options: ["What do you think about school dinners?", "Don't you agree school dinners are unhealthy?", "School dinners are great, aren't they?", "Why are school dinners so bad?"], a: "What do you think about school dinners?", worked: ["A good survey question should be unbiased", "It should not lead the person to a particular answer", "'What do you think about school dinners?' is neutral and open"] },
 );
 questionBank['P4'][3].push(
-  { q: "As the temperature increases, the number of coats sold decreases. What type of correlation is this?", type: "mcq", options: ["Negative correlation", "Positive correlation", "No correlation"], a: "Negative correlation", worked: ["As one variable increases, the other decreases", "This is negative correlation"] },
+  { q: "As the temperature increases, the number of coats sold decreases. What type of correlation is this?", type: "mcq", options: ["Negative correlation", "Positive correlation", "No correlation", "Perfect correlation"], a: "Negative correlation", worked: ["As one variable increases, the other decreases", "This is negative correlation"] },
 );
 questionBank['P4'][4].push(
   { q: "A spinner has sections A, B, C. P(A) = 0.5, P(B) = 0.3. The spinner is spun 200 times. How many times would you expect to land on C?", a: "40", worked: ["P(C) = 1 − 0.5 − 0.3 = 0.2", "Expected frequency = P(C) × number of spins", "Expected = 0.2 × 200 = 40"] },
@@ -4443,7 +5000,7 @@ const higherQuestionBank = {
     ],
     // Level 4 (Grade 8) — Comparing distributions using box plots
     [
-      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
+      { q: "Class A has median 62 and IQR 18. Class B has median 58 and IQR 30. Which class performed more consistently?", a: "Class A", type: "mcq", options: ["Class A", "Class B", "Both the same", "Cannot tell from this data"], worked: ["Consistency is measured by spread — lower IQR means more consistent", "Class A: IQR = 18 (less spread)", "Class B: IQR = 30 (more spread)", "Class A performed more consistently"], hint: "A smaller IQR means the data is more consistent (less spread out)" },
       { q: "Two box plots show: Boys — median 45, IQR 20, range 55. Girls — median 52, IQR 12, range 40. Make two comparisons.", a: "Girls have higher median (52 > 45) and smaller IQR (12 < 20)", worked: ["Median: Girls (52) > Boys (45), so girls scored higher on average", "IQR: Girls (12) < Boys (20), so girls' scores were more consistent", "Range: Girls (40) < Boys (55), confirming less spread"], hint: "Compare the medians (average) and the IQRs (consistency)" },
       { q: "A histogram shows classes 0–5 (FD=2), 5–10 (FD=4), 10–20 (FD=3), 20–40 (FD=1). Estimate the total frequency.", a: "80", worked: ["Frequency = FD × class width for each bar:", "0–5: 2 × 5 = 10", "5–10: 4 × 5 = 20", "10–20: 3 × 10 = 30", "20–40: 1 × 20 = 20", "Total = 10 + 20 + 30 + 20 = 80"], hint: "Frequency = frequency density × class width. Add up all the frequencies." },
     ],
@@ -4824,7 +5381,7 @@ const higherQuestionBank = {
     ],
     // Level 1 (Grade 7) — Interpret gradients on real-life graphs
     [
-      { q: "Explain why the area under a velocity-time graph represents distance.", a: "Area = velocity × time = distance, since the units are m/s × s = m", worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
+      { q: "What does the area under a velocity-time graph represent?", a: "Distance", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Force"], worked: ["The y-axis shows velocity (m/s)", "The x-axis shows time (s)", "Area = height × width = velocity × time", "Velocity × time = distance (m/s × s = m)"], hint: "Think about the units: velocity × time gives what?" },
       { q: "What does the gradient of a velocity-time graph represent?", type: "mcq", options: ["Acceleration", "Distance", "Speed", "Displacement"], a: "Acceleration", worked: ["Gradient = change in velocity ÷ change in time", "= (m/s) ÷ s = m/s²", "This is acceleration"], hint: "The gradient is the rate of change. Rate of change of velocity is..." },
       { q: "Calculate the distance travelled in 5 seconds from a velocity-time graph showing constant speed of 8 m/s.", a: "40", worked: ["Distance = area under the graph", "= velocity × time = 8 × 5 = 40 m"], hint: "For constant speed, the area is a rectangle" },
     ],
@@ -5126,7 +5683,7 @@ const higherQuestionBank = {
     [
       { q: "Estimate the mean from a grouped frequency table: 0-10 (f=5), 10-20 (f=12), 20-30 (f=8), 30-40 (f=5). Use midpoints.", a: "19", calculator: true, worked: ["Midpoints: 5, 15, 25, 35", "Σfx = 5(5) + 12(15) + 8(25) + 5(35)", "= 25 + 180 + 200 + 175 = 580", "Σf = 30", "Estimated mean = 580 ÷ 30 ≈ 19.3"], hint: "Use midpoints of each class. Estimated mean = Σ(f × midpoint) ÷ Σf" },
       { q: "Find the modal class and the class containing the median for: 0-10 (f=3), 10-20 (f=8), 20-30 (f=12), 30-40 (f=7).", a: "Modal class: 20-30, Median class: 20-30", worked: ["Modal class = highest frequency = 20-30 (f=12)", "Total = 30, median at 15th value", "Cumulative: 3, 11, 23...", "15th value is in the 20-30 class"], hint: "Modal class has the highest frequency. For the median class, use cumulative frequencies" },
-      { q: "Explain why the mean calculated from a grouped frequency table is only an estimate.", a: "Because we use midpoints to represent each class, not the actual data values", worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
+      { q: "Why is the mean from a grouped frequency table only an estimate?", a: "We use midpoints, not the actual data values", type: "mcq", options: ["The frequencies are rounded", "We use midpoints, not the actual data values", "The classes overlap", "The total frequency is approximate"], worked: ["In a grouped table, we don't know the exact values", "We assume data is evenly spread using midpoints", "The actual values could be anywhere in each class", "So the mean is only an estimate"], hint: "Think about what information is lost when data is grouped" },
     ],
     // Level 4 (Grade 8–9) — Box plots, IQR, outliers
     [
@@ -5484,8 +6041,8 @@ const higherQuestionBank = {
     ],
     // Level 4 (Grade 8) — Reasoning about reliability / extended problems
     [
-      { q: "Explain why relative frequency becomes a more reliable estimate of probability as the number of trials increases.", a: "As the number of trials increases, the relative frequency gets closer to the true probability because random variation has less effect on a larger sample", worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
-      { q: "Two people conduct the same experiment: Person A does 10 trials, Person B does 1000 trials. Whose estimate is more reliable and why?", a: "Person B, because more trials reduces the effect of random variation", worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
+      { q: "Why does relative frequency become more reliable as the number of trials increases?", a: "Random variation has less effect on larger samples", type: "mcq", options: ["The experiment changes over time", "Random variation has less effect on larger samples", "The probability itself increases", "The outcomes become more predictable"], worked: ["With few trials, results can be very different from the true probability due to chance", "With many trials, the effects of randomness average out", "The relative frequency converges towards the theoretical probability"], hint: "Think about how random variation affects small vs large samples" },
+      { q: "Person A does 10 trials and Person B does 1000 trials of the same experiment. Whose probability estimate is more reliable?", a: "Person B — more trials gives a better estimate", type: "mcq", options: ["Person A — fewer trials means less error", "Person B — more trials gives a better estimate", "Both are equally reliable", "Neither — you need the theoretical probability"], worked: ["Person A: only 10 trials — high random variation", "Person B: 1000 trials — random variation averages out", "Person B's estimate is much more reliable"], hint: "Consider how the number of trials affects the accuracy of the estimate" },
       { q: "If the relative frequency of an event is 7/25 over 200 trials, how many more times should it occur in the next 100 trials?", a: "28", worked: ["Estimated probability = 7/25 = 0.28", "Expected in next 100 trials = 0.28 × 100 = 28"], hint: "Use the relative frequency as your probability estimate, then multiply by 100" },
     ],
   ],
@@ -5594,7 +6151,7 @@ const higherQuestionBank = {
     [
       { q: "A dual bar chart shows Group A scored a mean of 65 and Group B scored 72 across 5 tests. Find the difference in their means.", a: "7", worked: ["Mean of Group A = 65", "Mean of Group B = 72", "Difference = 72 − 65 = 7"], hint: "Subtract the smaller mean from the larger" },
       { q: "A frequency polygon has its highest point at the 20-30 class. The frequency is 15. What does this tell you?", a: "The modal class is 20-30 with 15 data values in that interval", worked: ["The highest point on a frequency polygon shows the modal class", "Modal class = 20-30", "15 data values fall in this interval"], hint: "The highest point on a frequency polygon shows the most common class interval" },
-      { q: "A chart has a y-axis starting at 50 instead of 0. Explain why this could be misleading.", a: "It exaggerates differences between bars because the scale doesn't start at zero", worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
+      { q: "A chart has a y-axis starting at 50 instead of 0. Why could this be misleading?", a: "It exaggerates differences between bars", type: "mcq", options: ["It makes all bars look the same height", "It exaggerates differences between bars", "It hides the data completely", "It changes the actual values"], worked: ["When the y-axis doesn't start at 0, small differences look much larger", "This makes it harder to compare values fairly", "A broken or truncated axis can mislead the reader"], hint: "Think about how not starting at zero affects the visual comparison of bars" },
     ],
   ],
 };
@@ -5602,7 +6159,13 @@ const higherQuestionBank = {
 // Pick a random variant from a question slot (supports both single questions and variant arrays)
 const pickVariant = (questionOrVariants) => {
   if (Array.isArray(questionOrVariants)) {
-    return questionOrVariants[Math.floor(Math.random() * questionOrVariants.length)];
+    // Filter out frozen questions (need images before being served)
+    const available = questionOrVariants.filter(v => !v.frozen);
+    if (available.length > 0) {
+      return available[Math.floor(Math.random() * available.length)];
+    }
+    // All variants are frozen — return null so caller can handle gracefully
+    return questionOrVariants.length > 0 ? { ...questionOrVariants[0], _allFrozen: true } : questionOrVariants[0];
   }
   return questionOrVariants;
 };
@@ -6207,9 +6770,7 @@ const generateDiagram = (type) => {
 
   // Check for image-based diagram first
   if (imageDiagrams[type]) {
-    const safeAlt = String(type).replace(/[<>"&]/g, '');
-    const safeFilename = imageDiagrams[type].replace(/[<>"&]/g, '');
-    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${safeFilename}" alt="${safeAlt}" class="w-full h-auto mx-auto" /></div>`;
+    return `<div class="bg-white rounded-lg p-4 mx-auto max-w-md"><img src="/images/${imageDiagrams[type]}" alt="${type}" class="w-full h-auto mx-auto" /></div>`;
   }
 
   // Fallback SVG diagrams for legacy questions
@@ -6310,6 +6871,7 @@ const isMastered = (progress) => (progress?.quickCorrect ?? 0) >= 5;
 const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0, tier = 'foundation') => {
   const qBank = getQuestionBankForTier(tier);
   const recentQuestions = new Set(loadRecentQuestions());
+  const answeredCorrect = loadAnsweredCorrect();
 
   // Shuffle helper (Fisher-Yates)
   const shuffle = (arr) => {
@@ -6321,12 +6883,32 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     return s;
   };
 
-  // Pick a variant that hasn't been recently answered (falls back to random if all are recent)
+  // Pick a variant that hasn't been correctly answered (permanently excluded) or recently answered
   const pickFreshVariant = (variants, objCode, questionIdx) => {
-    if (!Array.isArray(variants) || variants.length <= 1) return pickVariant(variants);
+    if (!Array.isArray(variants) || variants.length <= 1) {
+      // Even single variants: skip if already answered correctly
+      if (variants && variants.length === 1) {
+        const id = getQuestionId(objCode, questionIdx, variants[0]);
+        if (answeredCorrect.has(id)) return null;
+      }
+      return pickVariant(variants);
+    }
 
-    // Try to find a variant NOT in recent questions
-    const fresh = variants.filter(v => {
+    // Filter out frozen questions (need images before being served)
+    const unfrozen = variants.filter(v => !v.frozen);
+    if (unfrozen.length === 0) return pickVariant(variants); // all frozen — fallback
+
+    // First: exclude any variant already answered correctly (permanent filter)
+    const notAnswered = unfrozen.filter(v => {
+      const id = getQuestionId(objCode, questionIdx, v);
+      return !answeredCorrect.has(id);
+    });
+
+    // If all variants at this level have been answered correctly, return null
+    if (notAnswered.length === 0) return null;
+
+    // Then: prefer variants not in recent questions too
+    const fresh = notAnswered.filter(v => {
       const id = getQuestionId(objCode, questionIdx, v);
       return !recentQuestions.has(id);
     });
@@ -6334,8 +6916,8 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
     if (fresh.length > 0) {
       return fresh[Math.floor(Math.random() * fresh.length)];
     }
-    // All variants are recent — just pick randomly
-    return variants[Math.floor(Math.random() * variants.length)];
+    // All remaining are recent but not yet correctly answered — pick randomly
+    return notAnswered[Math.floor(Math.random() * notAnswered.length)];
   };
 
   // ── Step 1: Collect all eligible objectives ──
@@ -6355,6 +6937,9 @@ const buildSessionQueue = (allObjectives, progress, count = 5, sessionCount = 0,
 
     const questionIdx = Math.min(qc, questions.length - 1);
     const q = pickFreshVariant(questions[questionIdx], obj.code, questionIdx);
+
+    // All variants at this level already answered correctly — skip this objective
+    if (!q) return;
 
     // Priority: never-practiced objectives first, then least-recently-practiced
     const neverPracticed = objProg?.quickCorrect === undefined;
@@ -6459,7 +7044,22 @@ const getQuestion = (objective, progressData, tier = 'foundation') => {
   };
 };
 
-function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt }) {
+// Diamond question getter — picks from diamondQuestionBank based on diamond progress
+const getDiamondQuestion = (objective, diamondProg) => {
+  const dp = diamondProg?.[objective.code];
+  const quickCorrect = dp?.quickCorrect ?? 0;
+  const levels = diamondQuestionBank[objective.code];
+  if (!levels || levels.length === 0) return null;
+  // quickCorrect 0 → Grade 3 (index 0), 1 → Grade 4 (index 1), 2 → Grade 5 (index 2)
+  const levelIdx = Math.min(quickCorrect, levels.length - 1);
+  const variants = levels[levelIdx];
+  if (!variants || variants.length === 0) return null;
+  const idx = Math.floor(Math.random() * variants.length);
+  const q = variants[idx];
+  return { ...q, objective, questionType: 'diamond', difficultyLevel: levelIdx + 3, _diamondLevelIndex: levelIdx, _diamondVariantIndex: idx };
+};
+
+function PracticePage({ dailyObjectives, progress, setProgress, currentPage, setCurrentPage, dayStreak, allObjectives, settings, isSubscribed, FREE_DAILY_LIMIT, tier = 'foundation', setRecentSessionCodes, setSessionToastData, setShowOneVsOne, setShowCelebration, setCelebrationIndex, setShowUpgradePrompt, gameLevel = 1, diamondProgress, setDiamondProgress, saveDiamondProgress, diamondObjectives = [] }) {
   const { user: practiceUser } = useAuth();
   const [sessionStarted, setSessionStarted] = useState(false);
   const [sessionQueue, setSessionQueue] = useState([]);
@@ -6484,17 +7084,11 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const [sessionCount, setSessionCount] = useState(() => loadSessionCount());
   const [masteryGained, setMasteryGained] = useState(0);
   const [achievements, setAchievements] = useState([]);
+  const [localCelebration, setLocalCelebration] = useState(null); // { objectives, index }
   const [practiceMode, setPracticeMode] = useState('standard'); // 'standard', 'quickfire', or 'exam'
   const [timeLeft, setTimeLeft] = useState(null);
   const timerRef = useRef(null);
-
-  // Cleanup Quick Fire timer on unmount to prevent memory leaks
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
-
+  
   // Practice tips state
   const [currentTip, setCurrentTip] = useState(null);
   const shownTipsRef = useRef(loadShownTips());
@@ -6524,7 +7118,7 @@ function PracticePage({ dailyObjectives, progress, setProgress, currentPage, set
   const inputRef = useRef(null);
   
   // Photo input state
-  const [inputMode, setInputMode] = useState('handwriting'); // 'type' or 'handwriting'
+  const [inputMode, setInputMode] = useState('type'); // typing only (handwriting removed)
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessingImage, setIsProcessingImage] = useState(false);
   const fileInputRef = useRef(null);
@@ -6736,6 +7330,25 @@ What is the student's answer?`
 
     let questionsWithData;
 
+    // Diamond mode (Level 2): build queue from diamond objectives
+    if (gameLevel === 2) {
+      const unmastered = diamondObjectives.filter(o => (diamondProgress[o.code]?.quickCorrect ?? 0) < 3);
+      const pool = unmastered.length > 0 ? unmastered : diamondObjectives;
+      // Shuffle and pick up to questionCount
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, Math.min(questionCount, shuffled.length));
+      questionsWithData = selected.map(obj => {
+        const q = getDiamondQuestion(obj, diamondProgress);
+        return q || { q: `Diamond question for ${obj.code}`, a: "—", objective: obj, questionType: 'diamond' };
+      });
+      setSessionQueue(questionsWithData);
+      setCurrentIndex(0);
+      setSessionStarted(true);
+      setSessionResults([]);
+      setPracticeMode('standard');
+      return;
+    }
+
     if (mode === 'quickfire') {
       // Quick Fire mode: ONLY use objectives that have MCQ questions
       const objectivesWithMCQ = allObjectives.filter(obj => {
@@ -6800,7 +7413,7 @@ What is the student's answer?`
     setPracticeMode(mode);
     setShowMathKeyboard(false);
     setCapturedImage(null);
-    setInputMode('handwriting');
+    setInputMode('type');
     
     // Reset scaffolding state
     setFailureCounts({});
@@ -6845,28 +7458,21 @@ What is the student's answer?`
     if (timerRef.current) clearInterval(timerRef.current);
 
     const current = sessionQueue[currentIndex];
+    if (!current) return; // Guard against out-of-bounds access
     const answerToCheck = answerOverride || userAnswer;
     let correct = selfAssessedCorrect;
 
     if (current.type !== 'self' && selfAssessedCorrect === null) {
       if (current.type === 'order') {
         // Check if order matches the correct order
-        try {
-          const userOrder = JSON.parse(answerToCheck || '[]');
-          correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
-        } catch {
-          correct = false;
-        }
+        const userOrder = JSON.parse(answerToCheck || '[]');
+        correct = JSON.stringify(userOrder) === JSON.stringify(current.correctOrder);
       } else if (current.type === 'match') {
         // Check if all matches are correct
-        try {
-          const userMatches = JSON.parse(answerToCheck || '{}');
-          correct = Object.entries(current.correctMatches).every(
-            ([left, right]) => userMatches[left] === right
-          );
-        } catch {
-          correct = false;
-        }
+        const userMatches = JSON.parse(answerToCheck || '{}');
+        correct = Object.entries(current.correctMatches).every(
+          ([left, right]) => userMatches[left] === right
+        );
       } else {
         // Use forgiving answer checker that accepts mathematical equivalents
         correct = answersEquivalent(answerToCheck, current.a);
@@ -6910,6 +7516,26 @@ What is the student's answer?`
         setFailureCounts(prev => ({ ...prev, [code]: 0 }));
     }
     
+    // Diamond mode: update diamond progress separately and return early
+    if (gameLevel === 2 && current.questionType === 'diamond') {
+      const dp = diamondProgress[code] || {};
+      const oldDQ = dp.quickCorrect ?? 0;
+      const newDQ = correct ? Math.min(oldDQ + 1, 3) : oldDQ; // max 3 = diamond mastered
+      const updatedDP = {
+        ...diamondProgress,
+        [code]: { ...dp, quickCorrect: newDQ, lastPracticed: Date.now() }
+      };
+      setDiamondProgress(updatedDP);
+      saveDiamondProgress(updatedDP);
+
+      setSessionResults(prev => [...prev, {
+        code, correct, question: current.q, topic: current.objective.topic,
+        questionType: 'diamond', oldQuickCorrect: oldDQ, newQuickCorrect: newDQ,
+        newMastery: correct && newDQ >= 3 && oldDQ < 3
+      }]);
+      return;
+    }
+
     // Update progress and track mastery
     const prog = progress[code] || {};
     const oldQuickCorrect = prog.quickCorrect ?? 0;
@@ -6937,12 +7563,13 @@ What is the student's answer?`
       const now = Date.now();
       const skipUntil = correct
         ? sessionCount + (
-            newQuickCorrect >= 5 ? 10 : // Mastered — long break
-            newQuickCorrect >= 4 ? 3 :  // Nearly there
-            newQuickCorrect >= 2 ? 2 :  // Making progress
-            1                            // Just started
+            newQuickCorrect >= 5 ? 999 : // Mastered — don't show again
+            newQuickCorrect >= 4 ? 6 :   // Nearly there — long cooldown
+            newQuickCorrect >= 3 ? 5 :   // Good progress
+            newQuickCorrect >= 2 ? 4 :   // Making progress
+            3                             // Just started — still skip a few sessions
           )
-        : 0; // Wrong — no cooldown, will reappear naturally within a few sessions
+        : 0; // Wrong — no cooldown, will reappear naturally
 
       // Update only the specific objective being practiced
       const oldProg = prev[code] || {};
@@ -6994,9 +7621,7 @@ What is the student's answer?`
         // Persist to localStorage and cloud
         saveFsrsData(updatedFsrsData);
         if (practiceUser) {
-          saveFsrsToCloud(practiceUser.id, updatedFsrsData).catch(err => {
-            console.warn('FSRS cloud sync failed — data saved locally:', err);
-          });
+          saveFsrsToCloud(practiceUser.id, updatedFsrsData);
         }
         return updatedFsrsData;
       });
@@ -7005,6 +7630,13 @@ What is the student's answer?`
       const recentList = loadRecentQuestions();
       recentList.push(questionId);
       saveRecentQuestions(recentList);
+
+      // If answered correctly, permanently exclude this question from future sessions
+      if (correct) {
+        const answeredSet = loadAnsweredCorrect();
+        answeredSet.add(questionId);
+        saveAnsweredCorrect(answeredSet);
+      }
   };
 
   // Next question
@@ -7021,7 +7653,7 @@ What is the student's answer?`
       setShowMathKeyboard(false);
       setCapturedImage(null);
       setShowCalculator(false);
-      setInputMode('handwriting');
+      setInputMode('type');
       setQuestionStartTime(Date.now());
       setUserConfidence(null);
       setShowConfidenceRating(false);
@@ -7037,6 +7669,41 @@ What is the student's answer?`
     } else {
       // Session complete - cleanup timers
       setTimeLeft(null);
+
+      // Build celebration from sessionResults — kept simple to avoid errors
+      const lastAnswer = { correct: !!isCorrect, code: current?.objective?.code || '??', topic: current?.objective?.topic || 'Unknown', newQuickCorrect: undefined };
+      const allAnswers = [...sessionResults, lastAnswer];
+      const codes = [...new Set(allAnswers.filter(r => r.code).map(r => r.code))];
+      const celebObjs = codes.map(code => {
+        const rForCode = allAnswers.filter(r => r.code === code);
+        const correctN = rForCode.filter(r => r.correct).length;
+        const totalN = rForCode.length;
+        const last = [...rForCode].reverse().find(r => r.newQuickCorrect !== undefined);
+        const qc = last?.newQuickCorrect ?? (progress[code]?.quickCorrect ?? 0);
+        return {
+          code,
+          title: descriptions[code] || code,
+          topic: rForCode[0]?.topic || 'Unknown',
+          level: Math.min(qc, 5),
+          quickCorrect: qc,
+          mastered: qc >= 5,
+          correctInSession: correctN,
+          totalInSession: totalN,
+        };
+      });
+
+      // Set celebration, stop feedback, clear session
+      console.log('[CELEB DEBUG] celebObjs:', celebObjs.length, 'codes:', codes, 'sessionResults:', sessionResults.length);
+      if (celebObjs.length > 0) {
+        console.log('[CELEB DEBUG] Setting localCelebration with', celebObjs.length, 'objectives');
+        setLocalCelebration({ objectives: celebObjs, index: 0 });
+      } else {
+        console.log('[CELEB DEBUG] No celebObjs - skipping celebration');
+      }
+      setRecentSessionCodes(codes);
+      setShowFeedback(false);
+      setSessionResults([]);
+      setSessionStarted(false);
 
       try {
       // Increment session count
@@ -7058,7 +7725,9 @@ What is the student's answer?`
         // Increment total_correct in profiles for school leaderboard
         if (correctCount > 0) {
           try {
-            const token = getSupabaseAuthToken();
+            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+            const raw = localStorage.getItem(storageKey);
+            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
             fetch(`${supabaseUrl}/rest/v1/rpc/increment_total_correct`, {
               method: 'POST',
               headers: {
@@ -7179,7 +7848,9 @@ What is the student's answer?`
         const piroDisplay = getPiroDisplay(updatedPiro);
         const stageName = piroDisplay.name || 'Egg';
         try {
-          const token = getSupabaseAuthToken();
+          const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+          const raw = localStorage.getItem(storageKey);
+          const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
           fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${practiceUser.id}`, {
             method: 'PATCH',
             headers: {
@@ -7201,55 +7872,9 @@ What is the student's answer?`
         setPiroDecayed(true);
       }
 
-      // Extract practiced objective codes with full data for celebration
-      const allResults = [...sessionResults, { correct: isCorrect, code: current.objective.code, topic: current.objective.topic }];
-      const practicedCodes = [...new Set(allResults.map(r => r.code))];
-
-      // Build rich data for each practiced objective, mapping to primary bank labels
-      const practicedObjectives = practicedCodes.map(code => {
-        const obj = allObjectives.find(o => o.code === code);
-        const primary = questionBankPrimary[code] || code;
-        const prog = progress[code];
-        const level = getUnderstandingLevel(prog);
-        const resultsForCode = allResults.filter(r => r.code === code);
-        const correctForCode = resultsForCode.filter(r => r.correct).length;
-        // Use friendly bank label for mixed banks, otherwise use primary's description
-        const displayTitle = questionBankLabel[primary] || descriptions[primary] || obj?.title || code;
-        return {
-          code: primary !== code ? primary : code,
-          title: displayTitle,
-          topic: obj?.topic || 'Unknown',
-          level,
-          quickCorrect: prog?.quickCorrect ?? 0,
-          mastered: (prog?.quickCorrect ?? 0) >= 5,
-          correctInSession: correctForCode,
-          totalInSession: resultsForCode.length,
-        };
-      });
-
-      // Set celebration data BEFORE navigating (all batched in one render)
-      setRecentSessionCodes(practicedCodes);
-      setCelebrationIndex(0);
-      setShowCelebration(true);
-      setSessionToastData({
-        correctCount,
-        totalQuestions,
-        accuracy: Math.round((correctCount / totalQuestions) * 100),
-        achievements: newAchievements,
-        practicedObjectives,
-      });
-
-      // Navigate to Journey page so students see their updated progress
-      setSessionResults([]);
-      setSessionStarted(false);
-      setCurrentPage('heatmap');
+      // Celebration already set above the try block
       } catch (err) {
         console.error('Session complete error:', err);
-        // Ensure we still navigate even if stats fail
-        setShowFeedback(false);
-        setSessionResults([]);
-        setSessionStarted(false);
-        setCurrentPage('heatmap');
       }
     }
   };
@@ -7266,6 +7891,27 @@ What is the student's answer?`
           <p className="text-secondary-text mt-2">Go to Home to set up your objectives first.</p>
         </div>
       </div>
+    );
+  }
+
+  // Celebration carousel — shows per-objective progress after session
+  console.log('[CELEB RENDER] localCelebration:', localCelebration ? `${localCelebration.objectives?.length} objs` : 'null', 'sessionStarted:', sessionStarted);
+  if (localCelebration) {
+    return (
+      <CelebrationCarousel
+        show={true}
+        objectives={localCelebration.objectives}
+        currentIndex={localCelebration.index}
+        onAdvance={() => {
+          const objs = localCelebration.objectives;
+          if (localCelebration.index >= objs.length - 1) {
+            setLocalCelebration(null);
+            setCurrentPage('home');
+          } else {
+            setLocalCelebration(prev => ({ ...prev, index: prev.index + 1 }));
+          }
+        }}
+      />
     );
   }
 
@@ -7328,32 +7974,43 @@ What is the student's answer?`
                 </div>
               </div>
 
-              {/* Question Results - prioritize showing mastery gains */}
+              {/* Question Results with gem level */}
               <div className="space-y-2 text-left mb-6 max-h-60 overflow-y-auto hide-scrollbar">
-                {sessionResults.map((r, i) => (
-                  <div key={i} className={`p-3 rounded-lg ${r.correct ? 'glass-panel' : 'bg-red-500/10 border border-red-500/30'}`}>
-                    <div className="flex items-center gap-3 text-sm">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        r.correct ? 'bg-mint/20 text-mint' : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                {sessionResults.map((r, i) => {
+                  const prog = progress[r.code];
+                  const level = getUnderstandingLevel(prog);
+                  const tileImg = TILE_IMAGES[level] || TILE_IMAGES[0];
+                  const levelLabel = levelLabels[level] || 'Not started';
+                  return (
+                    <div key={i} className={`p-3 rounded-lg ${r.correct ? 'glass-panel' : 'bg-red-500/10 border border-red-500/30'}`}>
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          r.correct ? 'bg-mint/20 text-mint' : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {r.correct ? <Check className="w-4 h-4" /> : <X className="w-4 h-4" />}
+                        </div>
+                        <span className="font-medium text-white flex-1 min-w-0 truncate">{r.code}</span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          {r.newMastery ? (
+                            <span className="text-xs bg-[#D4AF37]/20 text-[#D4AF37] px-2 py-0.5 rounded-full font-semibold border border-[#D4AF37]/30">
+                              ⭐ Mastered!
+                            </span>
+                          ) : r.correct ? (
+                            <span className="text-xs text-secondary-text">{levelLabel}</span>
+                          ) : null}
+                          <img src={tileImg} alt="" className="w-6 h-6 rounded" />
+                        </div>
                       </div>
-                      <span className="font-medium text-white">{r.code}</span>
-                      {r.newMastery && (
-                        <span className="ml-auto text-xs bg-violet/20 text-violet-light px-2 py-0.5 rounded-full font-semibold border border-violet/30">
-                          ⭐ Mastered!
-                        </span>
-                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-              
-              {/* Achievements - visually subordinate, smaller */}
+
+              {/* Achievements */}
               {achievements.length > 0 && (
                 <div className="mb-4 flex flex-wrap gap-2 justify-center">
                   {achievements.map((ach, i) => (
-                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-600 rounded-full text-xs">
+                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 text-secondary-text rounded-full text-xs">
                       <span>{ach.icon}</span>
                       <span>{ach.title}</span>
                     </div>
@@ -7362,9 +8019,9 @@ What is the student's answer?`
               )}
 
               {sessionResults.some(r => !r.correct) && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
-                  <p className="text-sm text-amber-800">
-                    <strong>📖 Time to revise!</strong> The objectives you got wrong won't appear for the next 2 sessions.
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6 text-left">
+                  <p className="text-sm text-amber-300">
+                    <strong>Time to revise!</strong> The objectives you got wrong won't appear for the next 2 sessions.
                   </p>
                 </div>
               )}
@@ -7372,21 +8029,21 @@ What is the student's answer?`
               <div className="space-y-3">
                 <button
                   onClick={startSession}
-                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white font-semibold rounded-xl transition-all"
+                  className="w-full py-3 btn-gradient-mint text-white font-semibold rounded-xl transition-all"
                 >
                   Practice Again
                 </button>
                 <button
-                  onClick={() => { setSessionResults([]); setCurrentPage('stats'); }}
-                  className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors"
-                >
-                  View Progress Stats
-                </button>
-                <button
                   onClick={() => { setSessionResults([]); setCurrentPage('heatmap'); }}
-                  className="w-full py-2 text-slate-500 hover:text-slate-700 text-sm font-medium transition-colors"
+                  className="w-full py-3 glass-panel hover:bg-white/10 text-white font-semibold rounded-xl transition-colors"
                 >
                   View Journey
+                </button>
+                <button
+                  onClick={() => { setSessionResults([]); setCurrentPage('stats'); }}
+                  className="w-full py-2 text-secondary-text hover:text-white text-sm font-medium transition-colors"
+                >
+                  View Stats
                 </button>
               </div>
             </div>
@@ -7483,7 +8140,7 @@ What is the student's answer?`
 
   return (
     <div className="min-h-screen bg-void relative overflow-hidden">
-      <LandscapePrompt />
+      {/* Portrait is the default — no orientation prompt */}
       <div className="ambient-glow" style={{ animationPlayState: 'paused' }} />
       <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
       <div className="orb-cyan w-56 h-56 bottom-10 -left-28 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
@@ -7639,7 +8296,7 @@ What is the student's answer?`
                           </button>
                         </div>
                       </div>
-                    ) : current.type === 'mcq' ? (
+                    ) : (current.type === 'mcq' && current.options) ? (
                       <div className="space-y-2">
                         {current.options.map((option, i) => (
                           <button
@@ -7666,7 +8323,7 @@ What is the student's answer?`
                           Submit Answer
                         </button>
                       </div>
-                    ) : current.type === 'order' ? (
+                    ) : (current.type === 'order' && current.items) ? (
                       <div className="space-y-4">
                         <p className="text-sm text-white/50">Drag to put in the correct order:</p>
                         <DragDropOrder
@@ -7681,7 +8338,7 @@ What is the student's answer?`
                           Submit Answer
                         </button>
                       </div>
-                    ) : current.type === 'match' ? (
+                    ) : (current.type === 'match' && current.leftItems) ? (
                       <div className="space-y-4">
                         <DragDropMatch
                           leftItems={current.leftItems}
@@ -7690,7 +8347,7 @@ What is the student's answer?`
                         />
                         <button
                           onClick={() => checkAnswer()}
-                          disabled={!userAnswer || (() => { try { return Object.keys(JSON.parse(userAnswer || '{}')).length < current.leftItems.length; } catch { return true; } })()}
+                          disabled={!userAnswer || Object.keys(JSON.parse(userAnswer || '{}')).length < current.leftItems.length}
                           className="w-full mt-4 py-3 btn-gradient-mint disabled:opacity-50 disabled:bg-white/10 text-void font-semibold rounded-xl transition-all"
                         >
                           Submit Answer
@@ -7698,27 +8355,6 @@ What is the student's answer?`
                       </div>
                     ) : (
                       <div className="space-y-3 answer-section">
-                        {/* Input mode toggle */}
-                        <div className="flex glass-panel rounded-lg p-1">
-                          {['handwriting', 'type'].map(mode => (
-                            <button
-                              key={mode}
-                              type="button"
-                              onClick={() => setInputMode(mode)}
-                              className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                                inputMode === mode
-                                  ? 'bg-gradient-violet text-white shadow-glow-violet'
-                                  : 'text-secondary-text hover:text-white'
-                              }`}
-                            >
-                              {mode === 'handwriting' ? '✏️ Write' : '⌨️ Type'}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Type mode */}
-                        {inputMode === 'type' && (
-                          <>
                             {/* Input with math keyboard toggle */}
                             <div className="relative">
                               <input
@@ -7986,23 +8622,6 @@ What is the student's answer?`
                             </div>
                           </div>
                         )}
-                          </>
-                        )}
-
-                        {/* Handwriting mode */}
-                        {inputMode === 'handwriting' && (
-                          <HandwritingInput
-                            onSubmit={(recognizedAnswer) => {
-                              setUserAnswer(recognizedAnswer);
-                              // Auto-check the answer immediately — no keyboard popup
-                              setTimeout(() => checkAnswer(null, recognizedAnswer), 100);
-                            }}
-                            onCancel={() => setInputMode('type')}
-                            placeholder="Write your answer here..."
-                            mathpixAppId={import.meta.env.VITE_MATHPIX_APP_ID}
-                            mathpixAppKey={import.meta.env.VITE_MATHPIX_APP_KEY}
-                          />
-                        )}
 
                         <button
                           onClick={() => checkAnswer()}
@@ -8095,14 +8714,14 @@ What is the student's answer?`
 
                     
 
-                        {/* Worked Example - show when incorrect and question has worked steps */}
-                        {!isCorrect && current.worked && (
-                          <details className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden">
-                            <summary className="p-4 cursor-pointer font-semibold text-blue-300 hover:bg-blue-500/15 transition-colors flex items-center gap-2">
-                              <BookOpen className="w-5 h-5" />
-                              View Worked Example
-                            </summary>
-                            <div className="p-4 pt-2">
+                        {/* Worked Example - show when incorrect */}
+                        {!isCorrect && (
+                          <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl overflow-hidden p-4">
+                            <div className="flex items-center gap-2 mb-3">
+                              <BookOpen className="w-5 h-5 text-blue-300" />
+                              <span className="font-semibold text-blue-300">Worked Example</span>
+                            </div>
+                            {current.worked && current.worked.length > 0 ? (
                               <div className="text-sm text-blue-200/80 space-y-2">
                                 {current.worked.map((step, i) => (
                                   <p key={i} className={i === current.worked.length - 1 ? 'font-semibold text-blue-300' : ''}>
@@ -8110,8 +8729,13 @@ What is the student's answer?`
                                   </p>
                                 ))}
                               </div>
-                            </div>
-                          </details>
+                            ) : (
+                              <p className="text-sm text-blue-200/80">
+                                The correct answer is <strong className="text-blue-300">{renderRecurring(current.a)}</strong>
+                                {current.hint && <span className="block mt-2 text-blue-200/60">Hint: {current.hint}</span>}
+                              </p>
+                            )}
+                          </div>
                         )}
                     
 
@@ -8177,7 +8801,9 @@ What is the student's answer?`
                     onClick={async () => {
                       const current = sessionQueue[currentIndex];
                       try {
-                        const token = getSupabaseAuthToken();
+                        const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+                        const raw = localStorage.getItem(storageKey);
+                        const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
                         await fetch(`${supabaseUrl}/rest/v1/question_reports`, {
                           method: 'POST',
                           headers: {
@@ -8271,23 +8897,19 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
     };
   });
   
-  // Weekly activity chart data (last 7 days)
+  // Weekly activity chart data (last 7 days) — uses dailyActivity (cloud-synced)
+  const dailyActivity = loadDailyActivity();
   const weeklyActivity = [];
   for (let i = 6; i >= 0; i--) {
-    const dayStart = new Date(now - i * 24 * 60 * 60 * 1000);
-    dayStart.setHours(0, 0, 0, 0);
-    const dayEnd = new Date(dayStart);
-    dayEnd.setHours(23, 59, 59, 999);
-    
-    const daySessions = sessionHistory.filter(s => s.date >= dayStart.getTime() && s.date <= dayEnd.getTime());
-    const dayQuestions = daySessions.reduce((sum, s) => sum + s.total, 0);
-    const dayCorrect = daySessions.reduce((sum, s) => sum + s.correct, 0);
-    
+    const d = new Date(now - i * 24 * 60 * 60 * 1000);
+    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const dayData = dailyActivity[dateKey];
+
     weeklyActivity.push({
-      day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][dayStart.getDay()],
-      questions: dayQuestions,
-      correct: dayCorrect,
-      sessions: daySessions.length,
+      day: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()],
+      questions: dayData?.questions ?? 0,
+      correct: dayData?.correct ?? 0,
+      sessions: dayData?.sessions ?? 0,
     });
   }
   
@@ -8357,22 +8979,26 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
             {/* Readiness bar */}
             <div className="h-4 bg-white/20 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-violet rounded-full transition-all duration-1000"
-                style={{ width: `${readinessScore}%` }}
+                className="h-full rounded-full transition-all duration-1000"
+                style={{ width: `${readinessScore}%`, background: 'linear-gradient(90deg, #7C3AED, #A78BFA)' }}
               />
             </div>
 
-            <div className="grid grid-cols-3 gap-3 mt-4">
+            <div className="grid grid-cols-4 gap-3 mt-4">
               <div className="text-center">
                 <div className="text-lg font-bold text-mint">{masteredCount}</div>
                 <div className="text-xs text-secondary-text">Mastered</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-red-400">{examReadyCount}</div>
+                <div className="text-xs text-secondary-text">Exam Ready</div>
               </div>
               <div className="text-center">
                 <div className="text-lg font-bold text-amber-400">{learningCount}</div>
                 <div className="text-xs text-secondary-text">Learning</div>
               </div>
               <div className="text-center">
-                <div className="text-lg font-bold text-secondary-text">{totalObjectiveCount - masteredCount - learningCount}</div>
+                <div className="text-lg font-bold text-secondary-text">{totalObjectiveCount - masteredCount - examReadyCount - learningCount}</div>
                 <div className="text-xs text-secondary-text">Not Started</div>
               </div>
             </div>
@@ -8501,6 +9127,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
                 schoolId={userSchool.id}
                 schoolName={userSchool.name}
                 currentUserId={user.id}
+                isTeacher={true}
                 compact={false}
               />
             </div>
@@ -8539,6 +9166,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   const [showAddSchool, setShowAddSchool] = useState(false);
   const [newSchoolName, setNewSchoolName] = useState('');
   const [newSchoolTown, setNewSchoolTown] = useState('');
+  // Maths captcha for bot protection
+  const [captcha, setCaptcha] = useState(() => {
+    const a = Math.floor(Math.random() * 12) + 2;
+    const b = Math.floor(Math.random() * 12) + 2;
+    return { a, b, answer: a * b };
+  });
+  const [captchaInput, setCaptchaInput] = useState('');
+  const [pendingSchool, setPendingSchool] = useState(null); // school waiting for captcha
   const [summaryStatus, setSummaryStatus] = useState(''); // '', 'copied', 'shared'
   const [editingName, setEditingName] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState('');
@@ -8711,9 +9346,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
         if (!cancelled) {
           setAllSchoolsList(schools);
           setSchoolsLoaded(true);
-          if (schools.length === 0) {
-            setSchoolError('No schools in database yet');
-          }
+          if (schools.length === 0) setSchoolError('No schools in database yet');
         }
       } catch (err) {
         console.error('Failed to load schools:', err);
@@ -8726,7 +9359,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     return () => { cancelled = true; };
   }, [schoolDropdownOpen, schoolsLoaded]);
 
-  // Client-side filter (instant, no debounce needed)
   const schoolResults = useMemo(() => {
     if (!schoolFilter.trim() || schoolFilter.trim().length < 2) return [];
     const q = schoolFilter.trim().toLowerCase();
@@ -8735,17 +9367,39 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     );
   }, [schoolFilter, allSchoolsList]);
 
-  // Handle joining a school
-  const handleJoinSchool = async (school) => {
-    if (!user) return;
+  // Generate a new captcha
+  const newCaptcha = () => {
+    const a = Math.floor(Math.random() * 12) + 2;
+    const b = Math.floor(Math.random() * 12) + 2;
+    setCaptcha({ a, b, answer: a * b });
+    setCaptchaInput('');
+  };
+
+  // When user clicks Join on a school, show captcha first
+  const handleJoinSchool = (school) => {
+    setPendingSchool(school);
+    newCaptcha();
+    setSchoolError('');
+  };
+
+  // Verify captcha and actually join
+  const handleCaptchaSubmit = async () => {
+    if (parseInt(captchaInput) !== captcha.answer) {
+      setSchoolError('Incorrect answer — try again');
+      newCaptcha();
+      return;
+    }
+    if (!user || !pendingSchool) return;
     setSchoolJoining(true);
     setSchoolError('');
     try {
-      await joinSchool(user.id, school.id);
-      setUserSchool(school);
-      localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
+      await joinSchool(user.id, pendingSchool.id);
+      setUserSchool(pendingSchool);
+      localStorage.setItem('maths-habit-user-school', JSON.stringify(pendingSchool));
+      setPendingSchool(null);
       setSchoolDropdownOpen(false);
       setSchoolFilter('');
+      setCaptchaInput('');
     } catch (err) {
       setSchoolError(err.message || 'Failed to join school');
     } finally {
@@ -8753,8 +9407,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     }
   };
 
-  // Handle creating + joining a new school (with town)
+  // Handle creating + joining a new school (with captcha)
   const handleCreateSchool = async () => {
+    if (parseInt(captchaInput) !== captcha.answer) {
+      setSchoolError('Incorrect answer — try again');
+      newCaptcha();
+      return;
+    }
     if (!user || !newSchoolName.trim() || !newSchoolTown.trim()) return;
     setSchoolJoining(true);
     setSchoolError('');
@@ -8766,7 +9425,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
       setShowAddSchool(false);
       setNewSchoolName('');
       setNewSchoolTown('');
-      setSchoolsLoaded(false); // refresh list on next open
+      setCaptchaInput('');
+      setSchoolsLoaded(false);
     } catch (err) {
       setSchoolError(err.message || 'Failed to create school');
     } finally {
@@ -8947,7 +9607,9 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           setNameSaving(true);
                           setNameError('');
                           try {
-                            const token = getSupabaseAuthToken();
+                            const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+                            const raw = localStorage.getItem(storageKey);
+                            const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
                             const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
                               method: 'PATCH',
                               headers: {
@@ -9005,8 +9667,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   )}
                 </div>
 
-                {/* Promo code input for free users — hidden on iOS (Apple requires IAP) */}
-                {!isSubscribed && !isNativeIOS() && (
+                {/* Promo code input for free users */}
+                {!isSubscribed && (
                   <PromoCodeInput onSuccess={() => window.location.reload()} />
                 )}
 
@@ -9015,9 +9677,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   <Check className="w-4 h-4" />
                   Progress syncing to cloud
                 </div>
-
-                {/* Delete Account */}
-                <DeleteAccountSection user={user} onSignOut={onSignOut} />
               </div>
             )}
           </div>
@@ -9031,7 +9690,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                 </div>
                 <div>
                   <h2 className="font-semibold text-white">Your School</h2>
-                  <p className="text-sm text-secondary-text">Join your school to see the leaderboard</p>
+                  <p className="text-sm text-secondary-text">{userSchool ? 'Change or leave your school here' : 'Join your school to see the leaderboard'}</p>
                 </div>
               </div>
 
@@ -9055,8 +9714,41 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     </button>
                   </div>
                 </div>
+              ) : pendingSchool ? (
+                /* Maths captcha before joining */
+                <div className="space-y-3">
+                  <div className="p-4 bg-violet/20 rounded-xl border border-violet/30 text-center">
+                    <p className="text-sm text-secondary-text mb-1">Joining <span className="text-white font-medium">{pendingSchool.name}</span></p>
+                    <p className="text-white font-semibold text-lg mb-3">What is {captcha.a} × {captcha.b}?</p>
+                    <div className="flex gap-2 justify-center">
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={captchaInput}
+                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        placeholder="?"
+                        autoFocus
+                        className="w-24 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-center text-lg font-semibold"
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleCaptchaSubmit(); }}
+                      />
+                      <button
+                        onClick={handleCaptchaSubmit}
+                        disabled={schoolJoining || !captchaInput.trim()}
+                        className="px-6 py-3 btn-gradient-mint text-void font-semibold rounded-xl disabled:opacity-50"
+                      >
+                        {schoolJoining ? 'Joining...' : 'Join'}
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { setPendingSchool(null); setCaptchaInput(''); setSchoolError(''); }}
+                    className="w-full py-2 text-sm text-secondary-text hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
               ) : showAddSchool ? (
-                /* Add new school form */
+                /* Add new school form with captcha */
                 <div className="space-y-3">
                   <p className="text-sm text-secondary-text">Add your school to the list:</p>
                   <input
@@ -9073,16 +9765,30 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     placeholder="Town / region..."
                     className="w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder-white/40"
                   />
+                  {newSchoolName.trim() && newSchoolTown.trim() && (
+                    <div className="p-3 bg-violet/20 rounded-xl border border-violet/30 text-center">
+                      <p className="text-sm text-secondary-text mb-1">Quick check: What is {captcha.a} × {captcha.b}?</p>
+                      <input
+                        type="number"
+                        inputMode="numeric"
+                        value={captchaInput}
+                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        placeholder="?"
+                        className="w-24 mx-auto px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-white text-center font-semibold"
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleCreateSchool(); }}
+                      />
+                    </div>
+                  )}
                   <div className="flex gap-2">
                     <button
                       onClick={handleCreateSchool}
-                      disabled={schoolJoining || !newSchoolName.trim() || !newSchoolTown.trim()}
+                      disabled={schoolJoining || !newSchoolName.trim() || !newSchoolTown.trim() || !captchaInput.trim()}
                       className="flex-1 py-3 btn-gradient-mint text-void font-semibold rounded-xl disabled:opacity-50"
                     >
                       {schoolJoining ? 'Adding...' : 'Add & Join'}
                     </button>
                     <button
-                      onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); }}
+                      onClick={() => { setShowAddSchool(false); setNewSchoolName(''); setNewSchoolTown(''); setCaptchaInput(''); }}
                       className="px-4 py-3 text-secondary-text hover:text-white bg-white/10 rounded-xl transition-colors"
                     >
                       Back
@@ -9102,7 +9808,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
                   {schoolDropdownOpen && (
                     <div className="rounded-xl border border-white/10 bg-white/10 shadow-lg overflow-hidden backdrop-blur-sm">
-                      {/* Search input */}
                       <div className="p-2 border-b border-white/10">
                         <div className="relative">
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
@@ -9119,21 +9824,13 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           )}
                         </div>
                       </div>
-
-                      {/* School results */}
                       <div className="max-h-56 overflow-y-auto">
                         {!schoolsLoaded ? (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Loading schools...
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">Loading schools...</div>
                         ) : schoolError && allSchoolsList.length === 0 ? (
-                          <div className="px-4 py-4 text-center text-sm text-red-400">
-                            {schoolError}
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-red-400">{schoolError}</div>
                         ) : schoolFilter.trim().length < 2 ? (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            Start typing to search...
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">Start typing to search...</div>
                         ) : schoolResults.length > 0 ? schoolResults.map(school => (
                           <button
                             key={school.id}
@@ -9148,16 +9845,12 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                             <span className="text-xs text-metallic-base font-medium shrink-0 ml-3">Join</span>
                           </button>
                         )) : (
-                          <div className="px-4 py-4 text-center text-sm text-secondary-text">
-                            No schools found for "{schoolFilter}"
-                          </div>
+                          <div className="px-4 py-4 text-center text-sm text-secondary-text">No schools found for "{schoolFilter}"</div>
                         )}
                       </div>
-
-                      {/* Can't find school option */}
                       <div className="p-2 border-t border-white/10">
                         <button
-                          onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); }}
+                          onClick={() => { setSchoolDropdownOpen(false); setShowAddSchool(true); newCaptcha(); }}
                           className="w-full py-2 text-sm text-metallic-base hover:text-mint font-medium transition-colors"
                         >
                           Can't find your school? Add it
@@ -9559,14 +10252,13 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
               })}
             </div>
 
-            {/* Streak */}
-            <StreakDisplay streak={streak} />
+            {/* Streak display removed — Piro handles streak motivation */}
           </div>
         </div>
       </nav>
 
       {/* Mobile Bottom Nav - Floating Glass Pill */}
-      <nav className="fixed bottom-4 left-4 right-4 z-50 md:hidden bottom-nav">
+      <nav className="fixed left-4 right-4 z-50 md:hidden bottom-nav" style={{ bottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}>
         <div className="glass-panel-strong rounded-2xl shadow-glass mx-auto max-w-sm">
           <div className="flex items-center justify-around h-16 px-2">
             {navItems.map((item) => {
@@ -9594,111 +10286,6 @@ function NavBar({ currentPage, setCurrentPage, streak }) {
   );
 }
 
-// Delete Account Section Component
-function DeleteAccountSection({ user, onSignOut }) {
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmText, setConfirmText] = useState('');
-  const [deleting, setDeleting] = useState(false);
-  const [deleteError, setDeleteError] = useState('');
-
-  const handleDeleteAccount = async () => {
-    if (confirmText !== 'DELETE') return;
-    setDeleting(true);
-    setDeleteError('');
-    try {
-      const token = getSupabaseAuthToken();
-
-      const res = await fetch(`${supabaseUrl}/functions/v1/delete-account`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to delete account');
-      }
-
-      // Clear all local data
-      const keysToRemove = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && (key.startsWith('maths-habit') || key.startsWith('sb-'))) {
-          keysToRemove.push(key);
-        }
-      }
-      keysToRemove.forEach(key => localStorage.removeItem(key));
-
-      // Sign out and reload
-      alert('Your account has been deleted. We\'re sorry to see you go.');
-      window.location.reload();
-    } catch (err) {
-      console.error('Account deletion failed:', err);
-      setDeleteError(err.message || 'Something went wrong. Please try again or contact info@themathshabit.co.uk');
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  return (
-    <div className="pt-4 mt-4 border-t border-white/10">
-      {!showConfirm ? (
-        <button
-          onClick={() => setShowConfirm(true)}
-          className="flex items-center gap-2 text-sm text-secondary-text hover:text-red-400 transition-colors"
-        >
-          <Trash2 className="w-4 h-4" />
-          Delete my account
-        </button>
-      ) : (
-        <div className="p-4 bg-red-500/10 rounded-xl border border-red-500/30 space-y-3">
-          <div className="flex items-start gap-2">
-            <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-red-300 font-medium text-sm">This will permanently delete your account</p>
-              <p className="text-secondary-text text-xs mt-1">
-                All your progress, streak data, Piro dragon, subscription, and profile will be permanently removed. This cannot be undone.
-              </p>
-            </div>
-          </div>
-          <div>
-            <label className="text-xs text-secondary-text block mb-1.5">
-              Type <span className="text-red-400 font-mono font-bold">DELETE</span> to confirm
-            </label>
-            <input
-              type="text"
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-              placeholder="DELETE"
-              className="w-full px-3 py-2 bg-white/5 border border-red-500/30 rounded-lg text-white text-sm placeholder-white/20 focus:outline-none focus:border-red-500/60"
-            />
-          </div>
-          {deleteError && (
-            <p className="text-red-400 text-xs">{deleteError}</p>
-          )}
-          <div className="flex gap-2">
-            <button
-              onClick={handleDeleteAccount}
-              disabled={confirmText !== 'DELETE' || deleting}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {deleting ? 'Deleting...' : 'Permanently Delete Account'}
-            </button>
-            <button
-              onClick={() => { setShowConfirm(false); setConfirmText(''); setDeleteError(''); }}
-              className="px-4 py-2 text-secondary-text hover:text-white text-sm transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // Onboarding Auth Form Component
 function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
   const [mode, setMode] = useState(initialMode); // 'signin' or 'signup'
@@ -9709,7 +10296,7 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { signIn, signUp, signInWithGoogle, signInWithApple } = useAuth();
+  const { signIn, signUp, signInWithGoogle } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -9760,19 +10347,6 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
     }
   };
 
-  const handleAppleSignIn = async () => {
-    setError('');
-    setLoading(true);
-    try {
-      const { error } = await signInWithApple();
-      if (error) throw error;
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="space-y-4">
       {/* Error/Success messages */}
@@ -9787,33 +10361,19 @@ function OnboardingAuthForm({ onSuccess, initialMode = 'signup' }) {
         </div>
       )}
 
-      {/* Google Sign In - hidden on native iOS (Apple requires Sign in with Apple instead) */}
-      {!isNativeIOS() && (
-        <button
-          onClick={handleGoogleSignIn}
-          disabled={loading}
-          className="w-full py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-          </svg>
-          Continue with Google
-        </button>
-      )}
-
-      {/* Sign in with Apple */}
+      {/* Google Sign In - Primary option */}
       <button
-        onClick={handleAppleSignIn}
+        onClick={handleGoogleSignIn}
         disabled={loading}
-        className="w-full py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3 border border-white/20"
+        className="w-full py-3 bg-white text-gray-800 rounded-lg font-medium hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-3"
       >
-        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+        <svg className="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
         </svg>
-        Continue with Apple
+        Continue with Google
       </button>
 
       {/* Divider */}
@@ -9927,17 +10487,6 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
     setError(null);
 
     try {
-      // On native iOS, use StoreKit In-App Purchase
-      if (isNativeIOS()) {
-        const { InAppPurchase } = await import('./lib/iapService');
-        const productId = selectedPlan === 'monthly'
-          ? 'com.squareonemaths.premium.monthly'
-          : 'com.squareonemaths.premium.yearly';
-        await InAppPurchase.purchase(productId, userId);
-        return;
-      }
-
-      // On web, use Stripe
       const priceId = selectedPlan === 'monthly'
         ? STRIPE_PRICES.MONTHLY
         : STRIPE_PRICES.YEARLY;
@@ -9949,9 +10498,7 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
       });
     } catch (err) {
       console.error('Checkout error:', err);
-      setError(isNativeIOS()
-        ? 'Unable to complete purchase. Please try again.'
-        : 'Unable to start checkout. Please try again.');
+      setError('Unable to start checkout. Please try again.');
       setIsLoading(false);
     }
   };
@@ -10051,12 +10598,12 @@ function OnboardingPlanCard({ onSelectFree, userId, userEmail }) {
         )}
       </button>
 
-      {/* Secure payment — different text for iOS vs web */}
+      {/* Secure payment */}
       <p className="mt-3 text-xs text-secondary-text/60 flex items-center justify-center gap-1">
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
-        {isNativeIOS() ? 'Secure in-app purchase' : 'Secure payment via Stripe'}
+        Secure payment via Stripe
       </p>
     </div>
   );
@@ -10183,6 +10730,11 @@ function AppContent() {
   }, [settings.dyslexiaFont, settings.fontSize]);
 
   const [currentPage, setCurrentPage] = useState('home');
+  const [gameLevel, setGameLevel] = useState(1); // 1 = Stone→Gold grid, 2 = Diamond grid
+  const [diamondProgress, setDiamondProgress] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('maths-habit-diamond-progress') || '{}'); } catch { return {}; }
+  });
+  const saveDiamondProgress = (dp) => { localStorage.setItem('maths-habit-diamond-progress', JSON.stringify(dp)); };
   const [recentSessionCodes, setRecentSessionCodes] = useState([]);
   const [sessionToastData, setSessionToastData] = useState(null);
   const [celebrationIndex, setCelebrationIndex] = useState(0);
@@ -10278,16 +10830,18 @@ function AppContent() {
         const cached = localStorage.getItem('maths-habit-user-school');
         if (cached) setUserSchool(JSON.parse(cached));
       } catch {}
-      // Then fetch fresh from server
+      // Then fetch fresh from server — but never clear cache on null
+      // (only explicit "Leave" in Settings should clear the school)
       getUserSchool(user.id).then(school => {
-        setUserSchool(school);
         if (school) {
+          setUserSchool(school);
           localStorage.setItem('maths-habit-user-school', JSON.stringify(school));
-        } else {
-          localStorage.removeItem('maths-habit-user-school');
         }
+        // If server returns null but we have a cached school, keep the cache —
+        // the server call may have failed silently or have a replication delay
       }).catch(err => {
         console.error('Failed to fetch user school:', err);
+        // Keep cached school on error — don't clear
       });
     } else if (!user) {
       setUserSchool(null);
@@ -10463,7 +11017,8 @@ function AppContent() {
               {/* Avatar preview with lock overlay */}
               <div className="relative w-28 h-28 mx-auto mb-6">
                 <div className="w-28 h-28 rounded-full bg-gradient-violet flex items-center justify-center text-white text-4xl font-bold">
-                  {safeInitial(user)}</div>
+                  {safeInitial(user)}
+                </div>
                 {/* Lock overlay */}
                 <div className="absolute inset-0 rounded-full bg-black/50 flex flex-col items-center justify-center">
                   <Lock className="w-8 h-8 text-white mb-1" />
@@ -10554,8 +11109,8 @@ function AppContent() {
                 userEmail={user?.email}
               />
 
-              {/* Promo Code Section — hidden on iOS (Apple requires IAP) */}
-              {!isNativeIOS() && <PromoCodeInput onSuccess={completeOnboarding} />}
+              {/* Promo Code Section */}
+              <PromoCodeInput onSuccess={completeOnboarding} />
             </div>
 
             {/* Step indicator */}
@@ -10603,6 +11158,26 @@ function AppContent() {
     }
 
     let changed = false;
+
+    // Sync highestStreak & stage with actual streak on every load
+    // (catches milestone changes and any streak/piro drift)
+    if (dayStreak > currentPiro.highestStreak) {
+      currentPiro.highestStreak = dayStreak;
+      changed = true;
+    }
+    const earnedStage = getPiroStageFromStreak(currentPiro.highestStreak);
+    if (earnedStage > currentPiro.stage) {
+      const oldStage = currentPiro.stage;
+      currentPiro.stage = earnedStage;
+      currentPiro.evolvedAt = currentPiro.evolvedAt || [];
+      currentPiro.evolvedAt.push({ stage: earnedStage, name: PIRO_STAGES[earnedStage].name, date: Date.now() });
+      changed = true;
+      // Show evolution celebration
+      setPiroEvolution({ oldStage, newStage: earnedStage });
+    }
+    if (currentPiro.highestStreak >= 35) {
+      currentPiro.reachedEpic = true;
+    }
 
     // Recovery: practising reverses decay/dying
     if (practicedToday && (currentPiro.decayed || currentPiro.dying)) {
@@ -10656,7 +11231,30 @@ function AppContent() {
   );
 
   const getLevel = (code) => getUnderstandingLevel(progress[code]);
-  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 4).length;
+  const totalMastered = allObjectives.filter(o => getLevel(o.code) >= 5).length;
+
+  // Level 2 (Diamond) helpers
+  const level1Complete = allObjectives.every(o => getLevel(o.code) >= 5);
+  const diamondObjectives = allObjectives.filter(o => diamondQuestionBank[o.code]);
+  const getDiamondLevel = (code) => {
+    const dp = diamondProgress[code];
+    return dp?.quickCorrect ?? 0; // 0-3 (3 = diamond mastered)
+  };
+  const totalDiamondMastered = diamondObjectives.filter(o => getDiamondLevel(o.code) >= 3).length;
+
+  // Diamond Level 2 heatmap: stone → gold → diamond
+  const DIAMOND_HEATMAP = {
+    0: '#1a1525',   // Stone (not started)
+    1: '#D4AF37',   // Gold (in progress)
+    2: '#D4AF37',   // Gold (nearly there)
+    3: '#E8E8E8',   // Diamond (mastered)
+  };
+  const DIAMOND_TILE_IMAGES = {
+    0: '/images/tiles/stone-tile.jpeg',     // Stone — not started
+    1: '/images/tiles/gold-tile.jpeg',      // Gold — in progress
+    2: '/images/tiles/gold-tile.jpeg',      // Gold — nearly there
+    3: '/images/tiles/diamond-tile.jpeg',   // Diamond — mastered
+  };
 
   // FSRS: Calculate questions due for review today
   const fsrsData = loadFsrsData();
@@ -10695,6 +11293,12 @@ function AppContent() {
       }
     } catch (e) { /* ignore */ }
 
+    // Check if any stone (never-practised) objectives remain
+    const hasStoneGems = allObjectives.some(obj => {
+      const prog = progress[obj.code];
+      return !prog || (!(prog.quickCorrect) && !(prog.lastPracticed));
+    });
+
     return allObjectives.map(obj => {
       const prog = progress[obj.code];
       const quickCorrect = prog?.quickCorrect ?? 0;
@@ -10707,10 +11311,15 @@ function AppContent() {
         return { ...obj, weight: 50 };
       }
 
+      // If there are still stone gems, don't show mastered (gold) objectives
+      if (hasStoneGems && quickCorrect >= 5) {
+        return { ...obj, weight: 0 };
+      }
+
       // Weight: lower progress = higher weight, longer time since practice = higher weight
       let progressWeight;
       if (quickCorrect >= 5) {
-        progressWeight = 1; // Mastered - low priority
+        progressWeight = 1; // Mastered - low priority (only shown when no stone gems left)
       } else if (quickCorrect >= 4) {
         progressWeight = 3; // Nearly there - medium priority
       } else {
@@ -10754,24 +11363,28 @@ function AppContent() {
       }
     }
 
+    // Filter out zero-weight objectives (e.g. mastered when stone gems exist)
+    const pickable = available.filter(o => o.weight > 0);
+
     // Fill remaining slots with weighted random
-    for (let i = selected.length; i < 5 && available.length > 0; i++) {
-      const totalWeight = available.reduce((sum, obj) => sum + obj.weight, 0);
+    for (let i = selected.length; i < 5 && pickable.length > 0; i++) {
+      const totalWeight = pickable.reduce((sum, obj) => sum + obj.weight, 0);
+      if (totalWeight <= 0) break;
       let rand = seededRandom(i + 100) * totalWeight;
 
-      for (let j = 0; j < available.length; j++) {
-        rand -= available[j].weight;
+      for (let j = 0; j < pickable.length; j++) {
+        rand -= pickable[j].weight;
         if (rand <= 0) {
-          selected.push(available[j]);
-          available.splice(j, 1);
+          selected.push(pickable[j]);
+          pickable.splice(j, 1);
           break;
         }
       }
     }
 
-    // Fallback: if selection failed, just take first 5
+    // Fallback: if selection failed, take from non-zero-weight objectives first
     if (selected.length < 5) {
-      const remaining = weighted.filter(w => !selected.find(s => s.code === w.code));
+      const remaining = weighted.filter(w => w.weight > 0 && !selected.find(s => s.code === w.code));
       while (selected.length < 5 && remaining.length > 0) {
         selected.push(remaining.shift());
       }
@@ -10847,7 +11460,9 @@ function AppContent() {
     setPiroNamingSaving(true);
     setPiroNamingError('');
     try {
-      const token = getSupabaseAuthToken();
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
 
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
         method: 'PATCH',
@@ -10981,12 +11596,14 @@ function AppContent() {
     if (!trimmed) { setPromptNameError('Please enter a display name'); return; }
     if (trimmed.length < 2) { setPromptNameError('Name must be at least 2 characters'); return; }
     if (trimmed.length > 20) { setPromptNameError('Name must be 20 characters or less'); return; }
-    if (checkProfanity(trimmed)) { setPromptNameError('That name is not allowed'); return; }
+    if (!checkProfanity(trimmed).clean) { setPromptNameError('That name is not allowed'); return; }
 
     setPromptNameSaving(true);
     setPromptNameError('');
     try {
-      const token = getSupabaseAuthToken();
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
 
       const res = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
         method: 'PATCH',
@@ -11082,6 +11699,11 @@ function AppContent() {
         setShowCelebration={setShowCelebration}
         setCelebrationIndex={setCelebrationIndex}
         setShowUpgradePrompt={setShowUpgradePrompt}
+        gameLevel={gameLevel}
+        diamondProgress={diamondProgress}
+        setDiamondProgress={setDiamondProgress}
+        saveDiamondProgress={saveDiamondProgress}
+        diamondObjectives={diamondObjectives}
       />
     );
   }
@@ -11150,7 +11772,7 @@ function AppContent() {
 
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
 
-        {/* Gold tile glow animations */}
+        {/* Tile glow animations (Gold + Diamond) */}
         <style>{`
           .gold-tile-glow {
             animation: goldPulse 3s ease-in-out infinite;
@@ -11166,6 +11788,13 @@ function AppContent() {
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
           }
+          .diamond-tile-glow {
+            animation: diamondPulse 3s ease-in-out infinite;
+          }
+          @keyframes diamondPulse {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.3)); }
+            50% { filter: drop-shadow(0 0 12px rgba(255,255,255,0.7)); }
+          }
         `}</style>
 
         <div className="pt-20 pb-28 md:pb-10 relative z-10">
@@ -11176,34 +11805,57 @@ function AppContent() {
               {/* Header with stats */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <div>
-                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">Your Maths Journey</h1>
-                  <p className="text-secondary-text mt-1">{allObjectives.length} GCSE objectives · Click to track progress</p>
+                  <h1 className="text-3xl font-bold tracking-tight gradient-text-celebration">
+                    {gameLevel === 1 ? 'Your Maths Journey' : '💎 Diamond Level'}
+                  </h1>
+                  <p className="text-secondary-text mt-1">
+                    {gameLevel === 1
+                      ? `${allObjectives.length} GCSE objectives · Click to track progress`
+                      : `${diamondObjectives.length} diamond challenges · Master them all`}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
-                  {/* Tier toggle */}
+                  {/* Game Level toggle: Level 1 (Gold) / Level 2 (Diamond) */}
                   <div className="flex glass-panel rounded-lg p-1">
-                    {['foundation', 'higher'].map(t => (
-                      <button key={t} onClick={() => setTier(t)}
-                        className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                          tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
-                        }`}>{t}</button>
-                    ))}
+                    <button onClick={() => setGameLevel(1)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                        gameLevel === 1 ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
+                      }`}>⭐ Gold</button>
+                    <button onClick={() => { if (level1Complete) setGameLevel(2); }}
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                        gameLevel === 2 ? 'bg-white/90 text-slate-900 shadow-[0_0_12px_rgba(255,255,255,0.4)]' :
+                        level1Complete ? 'text-secondary-text hover:text-gray-800' : 'text-secondary-text/30 cursor-not-allowed'
+                      }`}>{level1Complete ? '💎' : '🔒'} Diamond</button>
                   </div>
+
+                  {/* Tier toggle */}
+                  {gameLevel === 1 && (
+                    <div className="flex glass-panel rounded-lg p-1">
+                      {['foundation', 'higher'].map(t => (
+                        <button key={t} onClick={() => setTier(t)}
+                          className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
+                            tier === t ? 'bg-gradient-violet text-white shadow-glow-violet' : 'text-secondary-text hover:text-gray-800'
+                          }`}>{t}</button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Mastery badge */}
                   <div className="flex items-center gap-2 glass-panel px-4 py-2 rounded-xl">
                     <TrophyIcon className="w-5 h-5 text-[#FBBF24]" />
-                    <span className="font-bold text-[#FBBF24]">{totalMastered}</span>
-                    <span className="text-secondary-text text-sm">/ {allObjectives.length}</span>
+                    <span className="font-bold text-[#FBBF24]">{gameLevel === 1 ? totalMastered : totalDiamondMastered}</span>
+                    <span className="text-secondary-text text-sm">/ {gameLevel === 1 ? allObjectives.length : diamondObjectives.length}</span>
                   </div>
                 </div>
               </div>
 
               {/* Mastery Level Legend - Top */}
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 mb-6 pb-6 border-b-2" style={{borderImage: gameLevel === 2
+                ? 'linear-gradient(90deg, transparent, #888, #FFF, #888, transparent) 1'
+                : 'linear-gradient(90deg, transparent, #B00053, #76235E, transparent) 1'}}>
                 <span className="text-sm text-secondary-text mr-1">Progress:</span>
-                {[
+                {gameLevel === 1 ? [
                   { level: 0, label: 'New' },
                   { level: 1, label: 'Started' },
                   { level: 2, label: 'Learning' },
@@ -11215,6 +11867,15 @@ function AppContent() {
                     <img src={TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
                     <span className="text-sm text-secondary-text">{label}</span>
                   </div>
+                )) : [
+                  { level: 0, label: 'Stone' },
+                  { level: 1, label: 'Gold' },
+                  { level: 3, label: 'Diamond' },
+                ].map(({ level, label }) => (
+                  <div key={level} className="flex items-center gap-2">
+                    <img src={DIAMOND_TILE_IMAGES[level]} alt={label} className="w-7 h-7 rounded object-cover" />
+                    <span className="text-sm text-secondary-text">{label}</span>
+                  </div>
                 ))}
               </div>
 
@@ -11222,9 +11883,8 @@ function AppContent() {
               {!loadShownTips().includes('heatmapExplainer') && (
                 <div className="mb-4 p-4 glass-panel rounded-xl border border-violet/30 animate-fade-in">
                   <div className="flex items-start gap-3">
-                    <span className="text-lg shrink-0">🗺️</span>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-800 mb-2">How the heatmap works</p>
+                      <p className="text-sm font-medium text-white mb-2">How the heatmap works</p>
                       <div className="space-y-1.5 text-xs text-secondary-text">
                         <div className="flex items-center gap-2">
                           <img src={TILE_IMAGES[0]} alt="Stone" className="w-5 h-5 rounded-sm object-cover shrink-0" />
@@ -11257,75 +11917,134 @@ function AppContent() {
 
               {/* THE HEATMAP - Hero Element */}
               <div className="flex justify-center py-4" style={{ overflow: 'hidden', width: '100%' }}>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${cols}, 1fr)`,
-                  gap: window.innerWidth < 480 ? 3 : 6,
-                  width: '100%',
-                  maxWidth: `${cols * 36 + (cols - 1) * 6}px`
-                }}>
-                  {allObjectives.map((obj) => {
-                    const level = getLevel(obj.code);
-                    const objProg = progress[obj.code];
-                    const isMastered = level >= 5;
-                    const isExamReady = level === 4;
-                    const recency = getRecencyFactor(objProg?.lastPracticed);
-                    const needsRevisit = recency < 0.6 && level > 0 && level < 5;
-                    const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
-                    return (
-                      <div
-                        key={obj.code}
-                        onClick={() => handleTileTap(obj)}
-                        style={{
-                          aspectRatio: '1',
-                          borderRadius: 4,
-                          position: 'relative',
-                          overflow: 'visible',
-                          opacity: tileOpacity,
-                        }}
-                        className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMastered ? 'gold-tile-glow' : ''}`}
-                      >
-                        {/* Gold outer glow for mastered tiles */}
-                        {isMastered && (
-                          <div style={{
-                            position: 'absolute', inset: -2, borderRadius: 6,
-                            boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
-                            pointerEvents: 'none', zIndex: 0,
-                          }} />
-                        )}
-                        {/* Tile image */}
-                        <img
-                          src={TILE_IMAGES[level] || TILE_IMAGES[0]}
-                          alt=""
-                          className="w-full h-full object-cover relative z-[1]"
-                          style={{ borderRadius: 4, filter: isMastered ? 'brightness(1.15) saturate(1.2)' : 'none' }}
-                          loading="lazy"
-                          draggable={false}
-                        />
-                        {/* Gold shimmer overlay for mastered tiles */}
-                        {isMastered && (
-                          <div className="gold-tile-shimmer" style={{
-                            position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
-                            background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
-                          }} />
-                        )}
-                        {/* Gentle glow on recently practiced tiles (after celebration) */}
-                        {recentSessionCodes.includes(obj.code) && (
-                          <div className="heatmap-glow-afterpulse" style={{
-                            position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
-                            zIndex: 9,
-                          }} />
-                        )}
-                        {/* Revisit indicator overlay */}
-                        {needsRevisit && !isExamReady && (
-                          <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
-                            <span className="text-[8px] text-white/70">↻</span>
+                {gameLevel === 1 ? (
+                  /* LEVEL 1 GRID (Stone → Gold) */
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: `repeat(${cols}, 1fr)`,
+                    gap: window.innerWidth < 480 ? 3 : 6,
+                    width: '100%',
+                    maxWidth: `${cols * 36 + (cols - 1) * 6}px`
+                  }}>
+                    {allObjectives.map((obj) => {
+                      const level = getLevel(obj.code);
+                      const objProg = progress[obj.code];
+                      const isMasteredTile = level >= 5;
+                      const isExamReady = level === 4;
+                      const recency = getRecencyFactor(objProg?.lastPracticed);
+                      const needsRevisit = recency < 0.6 && level > 0 && level < 5;
+                      const tileOpacity = level === 0 ? 1 : (0.5 + 0.5 * recency);
+                      return (
+                        <div
+                          key={obj.code}
+                          onClick={() => handleTileTap(obj)}
+                          style={{
+                            aspectRatio: '1',
+                            borderRadius: 4,
+                            position: 'relative',
+                            overflow: 'visible',
+                            opacity: tileOpacity,
+                          }}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isMasteredTile ? 'gold-tile-glow' : ''}`}
+                        >
+                          {/* Gold outer glow for mastered tiles */}
+                          {isMasteredTile && (
+                            <div style={{
+                              position: 'absolute', inset: -2, borderRadius: 6,
+                              boxShadow: '0 0 8px rgba(212,175,55,0.5), 0 0 16px rgba(212,175,55,0.25)',
+                              pointerEvents: 'none', zIndex: 0,
+                            }} />
+                          )}
+                          {/* Tile image */}
+                          <img
+                            src={TILE_IMAGES[level] || TILE_IMAGES[0]}
+                            alt=""
+                            className="w-full h-full object-cover relative z-[1]"
+                            style={{ borderRadius: 4, filter: isMasteredTile ? 'brightness(1.15) saturate(1.2)' : 'none' }}
+                            loading="lazy"
+                            draggable={false}
+                          />
+                          {/* Gold shimmer overlay for mastered tiles */}
+                          {isMasteredTile && (
+                            <div className="gold-tile-shimmer" style={{
+                              position: 'absolute', inset: 0, borderRadius: 4, pointerEvents: 'none', zIndex: 2,
+                              background: 'linear-gradient(135deg, transparent 30%, rgba(255,235,140,0.15) 50%, transparent 70%)',
+                            }} />
+                          )}
+                          {/* Gentle glow on recently practiced tiles (after celebration) */}
+                          {recentSessionCodes.includes(obj.code) && (
+                            <div className="heatmap-glow-afterpulse" style={{
+                              position: 'absolute', inset: -1, borderRadius: 6, pointerEvents: 'none',
+                              zIndex: 9,
+                            }} />
+                          )}
+                          {/* Revisit indicator overlay */}
+                          {needsRevisit && !isExamReady && (
+                            <span className="absolute inset-0 flex items-center justify-center bg-black/30 z-[3]" style={{ borderRadius: 4 }}>
+                              <span className="text-[8px] text-white/70">↻</span>
+                            </span>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  /* LEVEL 2 GRID (Diamond) */
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: `repeat(${Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols)}, 1fr)`,
+                    gap: window.innerWidth < 480 ? 4 : 8,
+                    width: '100%',
+                    maxWidth: `${Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols) * 50 + (Math.min(Math.ceil(Math.sqrt(diamondObjectives.length)), cols) - 1) * 8}px`
+                  }}>
+                    {diamondObjectives.map((obj) => {
+                      const dLevel = getDiamondLevel(obj.code);
+                      const isDiamondMastered = dLevel >= 3;
+                      return (
+                        <div
+                          key={obj.code}
+                          onClick={() => handleTileTap(obj)}
+                          style={{
+                            aspectRatio: '1',
+                            borderRadius: 6,
+                            position: 'relative',
+                            overflow: 'visible',
+                          }}
+                          className={`w-full transition-all duration-200 hover:scale-110 hover:z-20 hover:brightness-110 cursor-pointer active:scale-95 ${isDiamondMastered ? 'diamond-tile-glow' : ''}`}
+                        >
+                          {/* Diamond outer glow for mastered tiles — clear white sparkle */}
+                          {isDiamondMastered && (
+                            <div style={{
+                              position: 'absolute', inset: -2, borderRadius: 8,
+                              boxShadow: '0 0 10px rgba(255,255,255,0.6), 0 0 20px rgba(255,255,255,0.3)',
+                              pointerEvents: 'none', zIndex: 0,
+                            }} />
+                          )}
+                          {/* Tile image */}
+                          <img
+                            src={DIAMOND_TILE_IMAGES[dLevel] || DIAMOND_TILE_IMAGES[0]}
+                            alt=""
+                            className="w-full h-full object-cover relative z-[1]"
+                            style={{ borderRadius: 6, filter: isDiamondMastered ? 'brightness(1.2) saturate(1.3)' : 'none' }}
+                            loading="lazy"
+                            draggable={false}
+                          />
+                          {/* Diamond shimmer overlay — clear white sparkle */}
+                          {isDiamondMastered && (
+                            <div className="gold-tile-shimmer" style={{
+                              position: 'absolute', inset: 0, borderRadius: 6, pointerEvents: 'none', zIndex: 2,
+                              background: 'linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%)',
+                            }} />
+                          )}
+                          {/* Objective code label */}
+                          <span className="absolute bottom-0 left-0 right-0 text-center text-[7px] font-bold text-white/80 z-[3] pb-0.5" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                            {obj.code}
                           </span>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
             </div>
@@ -11354,39 +12073,15 @@ function AppContent() {
       <div className="orb-cyan w-72 h-72 bottom-20 right-10 opacity-60 fixed pointer-events-none hidden md:block" />
       <div className="orb-pink w-48 h-48 top-1/4 left-1/3 opacity-50 fixed pointer-events-none" />
 
-      {/* Portrait Prompt — shown after practice when still in landscape */}
-      {recentSessionCodes.length > 0 && !showCelebration && (
-        <PortraitPrompt onDismiss={() => {}} />
-      )}
+      {/* No orientation prompts — portrait is default */}
 
       {/* Navigation */}
       <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
-
-      {/* Full-screen celebration carousel */}
-      <CelebrationCarousel
-        show={showCelebration}
-        objectives={sessionToastData?.practicedObjectives || []}
-        currentIndex={celebrationIndex}
-        onAdvance={() => {
-          const objs = sessionToastData?.practicedObjectives || [];
-          if (celebrationIndex >= objs.length - 1) {
-            setShowCelebration(false);
-            setCelebrationIndex(0);
-            setTimeout(() => {
-              setSessionToastData(null);
-              setRecentSessionCodes([]);
-            }, 5000);
-          } else {
-            setCelebrationIndex(prev => prev + 1);
-          }
-        }}
-      />
 
       {/* Piro Evolution Celebration Modal */}
       {piroEvolution && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setPiroEvolution(null)}>
           <div className="glass-panel rounded-3xl p-8 max-w-sm w-full text-center animate-fade-in" onClick={e => e.stopPropagation()}>
-            <div className="text-6xl mb-4">🐉</div>
             <h2 className="text-2xl font-bold text-primary-text mb-2">{profile?.piro_name || 'Piro'} Evolved!</h2>
             <p className="text-secondary-text mb-4">
               {PIRO_STAGES[piroEvolution.oldStage].name} → <span className="text-[#D4AF37] font-bold">{PIRO_STAGES[piroEvolution.newStage].name}</span>
@@ -11501,6 +12196,7 @@ function AppContent() {
               schoolId={userSchool.id}
               schoolName={userSchool.name}
               currentUserId={user.id}
+              isTeacher={true}
               compact={true}
             />
             <button
@@ -11509,24 +12205,6 @@ function AppContent() {
             >
               View Full Leaderboard →
             </button>
-          </div>
-        ) : user ? (
-          <div className="glass-panel rounded-2xl p-5 shadow-glass">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-violet/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Trophy className="w-5 h-5 text-[#FBBF24]" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-white text-sm">School Leaderboard</h3>
-                <p className="text-xs text-secondary-text">Join your school to compete with classmates</p>
-              </div>
-              <button
-                onClick={() => setCurrentPage('settings')}
-                className="px-4 py-2 btn-gradient-violet text-white text-sm font-medium rounded-xl"
-              >
-                Join
-              </button>
-            </div>
           </div>
         ) : null}
       </div>
@@ -11554,82 +12232,7 @@ function AppContent() {
   );
 }
 
-// Landscape prompt — asks mobile users to rotate to landscape
-function LandscapePrompt() {
-  const [isPortrait, setIsPortrait] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 1024 && window.innerHeight > window.innerWidth;
-  });
-  const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    const checkOrientation = () => {
-      const isMobile = window.innerWidth < 1024;
-      const portrait = window.innerHeight > window.innerWidth;
-      setIsPortrait(isMobile && portrait);
-    };
-
-    checkOrientation();
-    window.addEventListener('resize', checkOrientation);
-
-    const onOrientationChange = () => setTimeout(checkOrientation, 150);
-    window.addEventListener('orientationchange', onOrientationChange);
-
-    // Try to lock orientation in PWA / fullscreen mode
-    try {
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-      }
-    } catch (e) {}
-
-    return () => {
-      window.removeEventListener('resize', checkOrientation);
-      window.removeEventListener('orientationchange', onOrientationChange);
-    };
-  }, []);
-
-  if (!isPortrait || dismissed) return null;
-
-  return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 99999, backgroundColor: '#0a0a1a',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: '2rem', textAlign: 'center'
-    }}>
-      {/* Phone rotation animation */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Phone in portrait */}
-          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
-          {/* Phone rotated to landscape */}
-          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
-          <circle cx="54" cy="44" r="2" fill="#5B7FC7" />
-          {/* Arrow showing rotation */}
-          <path d="M52 14 C60 14, 66 20, 66 28" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M63 26 L66 28 L68 25" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
-        Turn your phone sideways
-      </h2>
-      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
-        The Maths Habit is designed for landscape mode
-      </p>
-      <button
-        onClick={() => setDismissed(true)}
-        style={{
-          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
-          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
-          cursor: 'pointer'
-        }}
-      >
-        Continue in portrait
-      </button>
-    </div>
-  );
-}
+// LandscapePrompt removed — portrait is now the default orientation
 
 function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   if (!show || !objectives || objectives.length === 0) return null;
@@ -11790,113 +12393,15 @@ function CelebrationCarousel({ show, objectives, currentIndex, onAdvance }) {
   );
 }
 
-function PortraitPrompt({ onDismiss }) {
-  const [isLandscape, setIsLandscape] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 1024 && window.innerWidth > window.innerHeight;
-  });
-  const [dismissed, setDismissed] = useState(false);
+// PortraitPrompt removed — portrait is now the default orientation
 
-  useEffect(() => {
-    const check = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsLandscape(mobile && window.innerWidth > window.innerHeight);
-    };
-    check();
-    window.addEventListener('resize', check);
-    const onOr = () => setTimeout(check, 150);
-    window.addEventListener('orientationchange', onOr);
-    return () => {
-      window.removeEventListener('resize', check);
-      window.removeEventListener('orientationchange', onOr);
-    };
-  }, []);
-
-  if (!isLandscape || dismissed) return null;
-
-  return (
-    <div style={{
-      position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      zIndex: 99999, backgroundColor: '#0a0a1a',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-      padding: '2rem', textAlign: 'center'
-    }}>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Phone in landscape */}
-          <rect x="8" y="28" width="50" height="32" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" opacity="0.3" />
-          {/* Phone rotated to portrait */}
-          <rect x="24" y="8" width="32" height="50" rx="5" stroke="#5B7FC7" strokeWidth="2.5" fill="none" />
-          <circle cx="40" cy="52" r="2" fill="#5B7FC7" />
-          {/* Arrow showing rotation back */}
-          <path d="M14 20 C14 12, 20 6, 28 6" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M26 3 L28 6 L25 8" stroke="#38E6A2" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </div>
-
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ffffff', marginBottom: '0.75rem' }}>
-        Rotate back to portrait
-      </h2>
-      <p style={{ fontSize: '1rem', color: '#9CA3AF', marginBottom: '2rem', maxWidth: '280px', lineHeight: 1.5 }}>
-        Turn your phone upright to see your progress on the heatmap
-      </p>
-      <button
-        onClick={() => setDismissed(true)}
-        style={{
-          padding: '0.75rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF',
-          backgroundColor: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '0.75rem',
-          cursor: 'pointer'
-        }}
-      >
-        Continue in landscape
-      </button>
-    </div>
-  );
-}
-
-// Error boundary to catch crashes and show a friendly recovery screen
-class AppErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
-  }
-  componentDidCatch(error, errorInfo) {
-    console.error('App crashed:', error, errorInfo);
-  }
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-6">
-          <div className="glass-panel rounded-2xl p-8 max-w-md text-center space-y-4">
-            <div className="text-4xl">😵</div>
-            <h2 className="text-xl font-bold text-white">Something went wrong</h2>
-            <p className="text-secondary-text text-sm">
-              Don't worry — your progress is saved locally. Try refreshing the page.
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="px-6 py-3 btn-gradient-mint text-void font-semibold rounded-xl"
-            >
-              Refresh App
-            </button>
-          </div>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-// Main App wrapper with AuthProvider and Error Boundary
+// Main App wrapper with AuthProvider
 export default function App() {
   return (
-    <AppErrorBoundary>
+    <ErrorBoundary>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
-    </AppErrorBoundary>
+    </ErrorBoundary>
   );
 }
