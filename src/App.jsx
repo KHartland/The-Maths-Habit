@@ -10463,7 +10463,7 @@ function AppContent() {
               {/* Avatar preview with lock overlay */}
               <div className="relative w-28 h-28 mx-auto mb-6">
                 <div className="w-28 h-28 rounded-full bg-gradient-violet flex items-center justify-center text-white text-4xl font-bold">
-                  {safeInitial(user)}
+                  {safeInitial(user)}</div>
                 {/* Lock overlay */}
                 <div className="absolute inset-0 rounded-full bg-black/50 flex flex-col items-center justify-center">
                   <Lock className="w-8 h-8 text-white mb-1" />
