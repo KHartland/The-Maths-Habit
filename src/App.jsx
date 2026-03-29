@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { safeInitial } from './lib/safeDisplayName';
 import { Check, ChevronRight, X, Sparkles, Download, Upload, Trash2, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Calendar, User, LogOut, BookOpen, Swords, Search, School, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import AuthModal from './components/AuthModal';
@@ -10462,8 +10463,7 @@ function AppContent() {
               {/* Avatar preview with lock overlay */}
               <div className="relative w-28 h-28 mx-auto mb-6">
                 <div className="w-28 h-28 rounded-full bg-gradient-violet flex items-center justify-center text-white text-4xl font-bold">
-                  {(user?.user_metadata?.full_name || user?.email)?.[0]?.toUpperCase() || '?'}
-                </div>
+                  {safeInitial(user)}
                 {/* Lock overlay */}
                 <div className="absolute inset-0 rounded-full bg-black/50 flex flex-col items-center justify-center">
                   <Lock className="w-8 h-8 text-white mb-1" />

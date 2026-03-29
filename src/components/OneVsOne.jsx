@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, Component } from 'react';
 import { Users, Copy, Check, Play, Trophy, Clock, X, Loader2, Swords } from 'lucide-react';
 import { sanitiseName } from '../lib/profanityFilter';
 // HandwritingInput removed — Mathpix integration discontinued
+import { safeDisplayName } from '../lib/safeDisplayName';
 
 // Error boundary to prevent white screen crashes
 class BattleErrorBoundary extends Component {
@@ -124,7 +125,7 @@ const OneVsOne = ({ user, questionBank, onClose, answersEquivalent, isHandwritin
   const [tier, setTier] = useState('foundation');
 
   // Get display name
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Player';
+  const displayName = safeDisplayName(user);
 
   // Subscribe to match updates
   useEffect(() => {
