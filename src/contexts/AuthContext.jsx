@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase, supabaseUrl, supabaseAnonKey } from '../lib/supabase';
-import { Capacitor } from '@capacitor/core';
-import { SignInWithApple } from '@capacitor-community/apple-sign-in';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+// Custom native Apple Sign In plugin (AppleSignInPlugin.swift in Xcode project)
+const AppleSignIn = registerPlugin('AppleSignIn');
 
 const AuthContext = createContext({});
 
@@ -183,11 +184,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // On native iOS: use the native Apple Sign In dialog
       if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
-        const result = await SignInWithApple.authorize({
-          clientId: 'com.squareonemaths.app',
-          redirectURI: 'https://kxvtiqkmxhqwqckjikje.supabase.co/auth/v1/callback',
-          scopes: 'email name',
-        });
+        const result = await AppleSignIn.authorize();
 
         if (result?.response?.identityToken) {
           const { data, error } = await supabase.auth.signInWithIdToken({
