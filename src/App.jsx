@@ -7680,6 +7680,8 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
 function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSettings, progress, setProgress, user, profile, isSubscribed, onSignIn, onSignUp, onSignOut, onUpgrade, userSchool, setUserSchool }) {
   const { refreshProfile } = useAuth();
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showDeleteAccountConfirm, setShowDeleteAccountConfirm] = useState(false);
+  const [deleteAccountStatus, setDeleteAccountStatus] = useState(''); // '' | 'deleting' | 'error'
   const [importStatus, setImportStatus] = useState(null);
   const fileInputRef = useRef(null);
   const [allSchoolsList, setAllSchoolsList] = useState([]);
@@ -7851,6 +7853,76 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
     resetAllProgress();
     setProgress({});
     setShowResetConfirm(false);
+  };
+
+  // Delete account – removes profile, cloud data, local storage, then signs out
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setDeleteAccountStatus('deleting');
+    try {
+      const storageKey = `sb-kxvtiqkmxhqwqckjikje-auth-token`;
+      const raw = localStorage.getItem(storageKey);
+      const token = raw ? (JSON.parse(raw)?.access_token || supabaseAnonKey) : supabaseAnonKey;
+      const headers = {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      };
+
+      // 1. Delete profile row
+      await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 2. Delete cloud progress
+      await fetch(`${supabaseUrl}/rest/v1/user_progress?user_id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 3. Delete cloud settings
+      await fetch(`${supabaseUrl}/rest/v1/user_settings?user_id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 4. Delete FSRS data
+      await fetch(`${supabaseUrl}/rest/v1/user_fsrs?user_id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 5. Delete streak data
+      await fetch(`${supabaseUrl}/rest/v1/user_streaks?user_id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 6. Delete daily activity
+      await fetch(`${supabaseUrl}/rest/v1/user_daily_activity?user_id=eq.${user.id}`, {
+        method: 'DELETE',
+        headers: { ...headers, 'Prefer': 'return=minimal' },
+      });
+
+      // 7. Leave school if in one
+      if (userSchool) {
+        try { await leaveSchool(user.id); } catch (e) { /* ignore */ }
+      }
+
+      // 8. Delete avatar if any
+      try { await deleteAvatar(user.id); } catch (e) { /* ignore */ }
+
+      // 9. Clear all local storage
+      localStorage.clear();
+
+      // 10. Sign out and reload
+      await onSignOut();
+      window.location.reload();
+    } catch (err) {
+      console.error('Account deletion failed:', err);
+      setDeleteAccountStatus('error');
+    }
   };
 
   // Update setting
@@ -8689,6 +8761,54 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   </div>
                 )}
               </div>
+
+              {/* Delete Account */}
+              {user && (
+                <div className="pt-4 border-t border-white/10">
+                  {!showDeleteAccountConfirm ? (
+                    <button
+                      onClick={() => setShowDeleteAccountConfirm(true)}
+                      className="w-full flex items-center justify-center gap-2 py-3 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete your account
+                    </button>
+                  ) : (
+                    <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/30">
+                      <div className="flex items-center gap-2 text-red-400 mb-3">
+                        <AlertTriangle className="w-5 h-5" />
+                        <span className="font-semibold">Delete your account?</span>
+                      </div>
+                      <p className="text-sm text-red-400/80 mb-4">
+                        This will permanently delete your account, all progress, stats, and school membership. This cannot be undone.
+                      </p>
+                      {deleteAccountStatus === 'error' && (
+                        <p className="text-sm text-red-400 mb-3">Something went wrong. Please try again or contact support.</p>
+                      )}
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => { setShowDeleteAccountConfirm(false); setDeleteAccountStatus(''); }}
+                          className="flex-1 py-2 glass-panel hover:bg-gray-100 text-gray-700 font-medium rounded-lg transition-colors"
+                          disabled={deleteAccountStatus === 'deleting'}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleDeleteAccount}
+                          disabled={deleteAccountStatus === 'deleting'}
+                          className="flex-1 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                          {deleteAccountStatus === 'deleting' ? (
+                            <><Loader2 className="w-4 h-4 animate-spin" /> Deleting...</>
+                          ) : (
+                            'Yes, delete my account'
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
