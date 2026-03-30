@@ -5,6 +5,24 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 const AppleSignIn = registerPlugin('AppleSignIn');
 
 const AuthContext = createContext({});
+// Sanitize user metadata — Apple Sign-In returns full_name as an object
+// which causes React Error #310 if rendered as a child
+const sanitizeUser = (user) => {
+  if (!user) return null;
+  const meta = user.user_metadata;
+  if (meta) {
+    // Convert object values to strings so they never crash React rendering
+    for (const key of Object.keys(meta)) {
+      if (meta[key] !== null && typeof meta[key] === 'object' && !(meta[key] instanceof Array)) {
+        // e.g. full_name: {firstName: "K", familyName: "H"} → "K H"
+        const vals = Object.values(meta[key]).filter(v => typeof v === 'string' && v.trim());
+        meta[key] = vals.length > 0 ? vals.join(' ') : '';
+      }
+    }
+  }
+  return user;
+};
+
 
 // Helper: get auth token from localStorage
 const getAuthToken = () => {
@@ -342,7 +360,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setUser(session?.user ?? null);
+      setUser(sanitizeUser(session?.user ?? null));
       if (session?.user) {
         await fetchProfile(session.user.id);
         await fetchDailyCount(session.user.id);
@@ -356,7 +374,7 @@ export const AuthProvider = ({ children }) => {
         // Ignore auth events while signing out — prevents re-login flicker
         if (signingOutRef.current) return;
 
-        setUser(session?.user ?? null);
+        setUser(sanitizeUser(session?.user ?? null));
 
         if (session?.user) {
           await fetchProfile(session.user.id);
