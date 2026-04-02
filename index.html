@@ -21,6 +21,24 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+    // Intercept React Error 310 to capture what object is being rendered
+    window.__errorDetail = null;
+    window.addEventListener('error', function(e) {
+      if (e.error && String(e.error).includes('310')) {
+        window.__errorDetail = e.error.message || String(e.error);
+      }
+    });
+    </script>
+    <script>
+    // Intercept React Error 310 to capture what object is being rendered
+    window.__errorDetail = null;
+    window.addEventListener('error', function(e) {
+      if (e.error && String(e.error).includes('310')) {
+        window.__errorDetail = e.error.message || String(e.error);
+      }
+    });
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

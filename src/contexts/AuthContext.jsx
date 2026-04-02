@@ -374,6 +374,15 @@ export const AuthProvider = ({ children }) => {
         // Ignore auth events while signing out — prevents re-login flicker
         if (signingOutRef.current) return;
 
+        // CRITICAL: Set loading=true BEFORE updating user so the app shows
+        // a loading state instead of rendering with incomplete data.
+        // Without this, the app re-renders immediately (loading is already false
+        // from getSession) and tries to render profile/metadata before it's loaded,
+        // causing React Error #310 for ALL users on first sign-in.
+        if (session?.user) {
+          setLoading(true);
+        }
+
         setUser(sanitizeUser(session?.user ?? null));
 
         if (session?.user) {
