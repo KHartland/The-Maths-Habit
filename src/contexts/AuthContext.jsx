@@ -5,21 +5,26 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 const AppleSignIn = registerPlugin('AppleSignIn');
 
 const AuthContext = createContext({});
-// Sanitize user metadata — Apple Sign-In returns full_name as an object
-// which causes React Error #310 if rendered as a child
-const sanitizeUser = (user) => {
-  if (!user) return null;
-  const meta = user.user_metadata;
-  if (meta) {
-    // Convert object values to strings so they never crash React rendering
-    for (const key of Object.keys(meta)) {
-      if (meta[key] !== null && typeof meta[key] === 'object' && !(meta[key] instanceof Array)) {
-        // e.g. full_name: {firstName: "K", familyName: "H"} → "K H"
-        const vals = Object.values(meta[key]).filter(v => typeof v === 'string' && v.trim());
-        meta[key] = vals.length > 0 ? vals.join(' ') : '';
-      }
+// Deep-sanitize any metadata object so no nested objects can crash React rendering.
+// Apple Sign-In returns full_name as {firstName, familyName}, and other providers
+// may return unexpected nested objects. This converts them all to strings.
+const sanitizeObj = (obj) => {
+  if (!obj || typeof obj !== 'object') return;
+  for (const key of Object.keys(obj)) {
+    const val = obj[key];
+    if (val !== null && typeof val === 'object' && !(val instanceof Array) && !(val instanceof Date)) {
+      // Convert nested object to "value1 value2" string
+      const vals = Object.values(val).filter(v => typeof v === 'string' && v.trim());
+      obj[key] = vals.length > 0 ? vals.join(' ') : String(val);
     }
   }
+};
+
+const sanitizeUser = (user) => {
+  if (!user) return null;
+  // Sanitize every metadata bag on the user object
+  if (user.user_metadata) sanitizeObj(user.user_metadata);
+  if (user.app_metadata) sanitizeObj(user.app_metadata);
   return user;
 };
 
@@ -265,168 +270,3 @@ export const AuthProvider = ({ children }) => {
 
   // Update profile
   const updateProfile = async (updates) => {
-    if (!user) return { error: 'Not logged in' };
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .update(updates)
-      .eq('id', user.id)
-      .select()
-      .single();
-
-    if (!error && data) {
-      setProfile(data);
-    }
-    return { data, error };
-  };
-
-  // Redeem a promo code for free premium
-  const redeemPromoCode = async (code) => {
-    if (!user) return { error: { message: 'You must be logged in to redeem a code' } };
-
-    // Check if the code exists and is valid
-    const { data: promoCode, error: fetchError } = await supabase
-      .from('promo_codes')
-      .select('*')
-      .eq('code', code.toUpperCase().trim())
-      .single();
-
-    if (fetchError || !promoCode) {
-      return { error: { message: 'Invalid promo code' } };
-    }
-
-    // Check if code is still active
-    if (!promoCode.is_active) {
-      return { error: { message: 'This promo code is no longer active' } };
-    }
-
-    // Check if code has uses remaining
-    if (promoCode.max_uses && promoCode.times_used >= promoCode.max_uses) {
-      return { error: { message: 'This promo code has reached its usage limit' } };
-    }
-
-    // Check expiry date
-    if (promoCode.expires_at && new Date(promoCode.expires_at) < new Date()) {
-      return { error: { message: 'This promo code has expired' } };
-    }
-
-    // Check if user already used this code
-    const { data: existingRedemption } = await supabase
-      .from('promo_redemptions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('promo_code_id', promoCode.id)
-      .single();
-
-    if (existingRedemption) {
-      return { error: { message: 'You have already redeemed this code' } };
-    }
-
-    // Redeem the code - update user's subscription status
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        subscription_status: 'active',
-        subscription_type: 'promo',
-        promo_code_used: promoCode.code
-      })
-      .eq('id', user.id);
-
-    if (updateError) {
-      return { error: { message: 'Failed to apply promo code. Please try again.' } };
-    }
-
-    // Record the redemption
-    await supabase
-      .from('promo_redemptions')
-      .insert({
-        user_id: user.id,
-        promo_code_id: promoCode.id
-      });
-
-    // Increment the usage count
-    await supabase
-      .from('promo_codes')
-      .update({ times_used: promoCode.times_used + 1 })
-      .eq('id', promoCode.id);
-
-    // Refresh profile
-    await fetchProfile(user.id);
-
-    return { success: true, message: 'Premium access activated!' };
-  };
-
-  // Listen for auth changes
-  useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setUser(sanitizeUser(session?.user ?? null));
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-        await fetchDailyCount(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        // Ignore auth events while signing out — prevents re-login flicker
-        if (signingOutRef.current) return;
-
-        // CRITICAL: Set loading=true BEFORE updating user so the app shows
-        // a loading state instead of rendering with incomplete data.
-        // Without this, the app re-renders immediately (loading is already false
-        // from getSession) and tries to render profile/metadata before it's loaded,
-        // causing React Error #310 for ALL users on first sign-in.
-        if (session?.user) {
-          setLoading(true);
-        }
-
-        setUser(sanitizeUser(session?.user ?? null));
-
-        if (session?.user) {
-          await fetchProfile(session.user.id);
-          await fetchDailyCount(session.user.id);
-        } else {
-          setProfile(null);
-          setDailyQuestionsUsed(0);
-        }
-
-        setLoading(false);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const value = {
-    user,
-    profile,
-    loading,
-    signUp,
-    signIn,
-    signInWithGoogle,
-    signInWithApple,
-    signOut,
-    resetPassword,
-    updateProfile,
-    redeemPromoCode,
-    canPractice,
-    questionsRemaining,
-    incrementDailyQuestions,
-    dailyQuestionsUsed,
-    FREE_DAILY_LIMIT,
-    isSubscribed: profile?.subscription_status === 'active',
-    isHandwritingEnabled: false, // Handwriting removed — Mathpix discontinued
-    refreshProfile: () => user?.id ? fetchProfile(user.id) : null,
-  };
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export default AuthContext;

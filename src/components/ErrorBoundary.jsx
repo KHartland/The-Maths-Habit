@@ -1,9 +1,9 @@
-import { Component } from 'react';
+import React from 'react';
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { hasError: false, error: null, errorInfo: null, retryCount: 0 };
   }
 
   static getDerivedStateFromError(error) {
@@ -11,34 +11,71 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('App crash caught by ErrorBoundary:', error, errorInfo);
     this.setState({ errorInfo });
+    console.error('ErrorBoundary caught:', error, errorInfo);
+
+    // Auto-recover from transient errors (like React Error #310 race condition).
+    // If this is the first or second error, retry after a short delay — the
+    // auth state will have settled by then and the re-render will succeed.
+    if (this.state.retryCount < 2) {
+      setTimeout(() => {
+        this.setState(prev => ({
+          hasError: false,
+          error: null,
+          errorInfo: null,
+          retryCount: prev.retryCount + 1,
+        }));
+      }, 500);
+    }
   }
 
   render() {
-    if (this.state.hasError) {
+    if (this.state.hasError && this.state.retryCount >= 2) {
+      // Only show error screen after 2 failed auto-retries
       return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-4">
-          <div className="glass-panel rounded-xl p-8 text-center max-w-md">
-            <div className="text-4xl mb-4">😵</div>
-            <h2 className="text-xl font-bold text-white mb-2">
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0a0a1a',
+          padding: '24px',
+        }}>
+          <div style={{
+            maxWidth: '400px',
+            width: '100%',
+            textAlign: 'center',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '20px',
+            padding: '40px 24px',
+          }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>😵</div>
+            <h2 style={{ color: '#fff', fontSize: '24px', fontWeight: 'bold', marginBottom: '12px' }}>
               Something went wrong
             </h2>
-            <p className="text-secondary-text mb-6">
-              Don&apos;t worry — your progress is saved locally. Try refreshing
-              the page.
+            <p style={{ color: '#aaa', marginBottom: '20px' }}>
+              Don't worry — your progress is saved locally. Try refreshing the page.
             </p>
-            <details className="text-left text-xs text-red-400 mb-4 max-h-40 overflow-auto">
-              <summary className="cursor-pointer text-secondary-text">Error details</summary>
-              <pre className="mt-2 whitespace-pre-wrap break-words">{this.state.error?.toString()}</pre>
-              <pre className="mt-1 whitespace-pre-wrap break-words">{this.state.errorInfo?.componentStack}</pre>
+            <details style={{ textAlign: 'left', color: '#888', fontSize: '12px', marginBottom: '20px' }}>
+              <summary style={{ cursor: 'pointer', marginBottom: '8px' }}>Error details</summary>
+              <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '8px' }}>
+                {this.state.error && this.state.error.toString()}
+                {this.state.errorInfo && this.state.errorInfo.componentStack}
+              </pre>
             </details>
             <button
-              onClick={() => {
-                this.setState({ hasError: false, error: null, errorInfo: null });
-                window.location.reload();
+              onClick={() => window.location.reload()}
+              style={{
+                padding: '14px 32px',
+                background: 'linear-gradient(135deg, #DC32A0, #B00053)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '16px',
+                fontSize: '18px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
               }}
-              className="px-6 py-3 btn-gradient-violet text-white rounded-xl font-semibold"
             >
               Refresh App
             </button>
@@ -46,6 +83,7 @@ class ErrorBoundary extends Component {
         </div>
       );
     }
+
     return this.props.children;
   }
 }
