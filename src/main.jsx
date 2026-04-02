@@ -32,6 +32,8 @@ createRoot(document.getElementById('root')).render(
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    // Force-clear stale caches then re-register
+    if (window.caches) { caches.keys().then(function(ks) { ks.forEach(function(k) { caches.delete(k); }); }); }
+    navigator.serviceWorker.register('/sw.js').catch(function() {});
   });
 }
