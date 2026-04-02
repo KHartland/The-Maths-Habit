@@ -270,3 +270,34 @@ export const AuthProvider = ({ children }) => {
 
   // Update profile
   const updateProfile = async (updates) => {
+    if (!user) return { error: 'Not logged in' };
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(updates)
+      .eq('id', user.id)
+      .select()
+      .single();
+
+    if (!error && data) {
+      setProfile(data);
+    }
+    return { data, error };
+  };
+
+  // Redeem a promo code for free premium
+  const redeemPromoCode = async (code) => {
+    if (!user) return { error: { message: 'You must be logged in to redeem a code' } };
+
+    // Check if the code exists and is valid
+    const { data: promoCode, error: fetchError } = await supabase
+      .from('promo_codes')
+      .select('*')
+      .eq('code', code.toUpperCase().trim())
+      .single();
+
+    if (fetchError || !promoCode) {
+      return { error: { message: 'Invalid promo code' } };
+    }
+
+    // Check if code is still active
