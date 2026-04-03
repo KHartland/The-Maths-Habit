@@ -3,6 +3,8 @@ import { supabase, supabaseUrl, supabaseAnonKey } from '../lib/supabase';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 // Custom native Apple Sign In plugin (AppleSignInPlugin.swift in Xcode project)
 const AppleSignIn = registerPlugin('AppleSignIn');
+// Native Google Sign In plugin (iOS only — keeps auth in-app per App Store Guideline 4)
+const GoogleSignIn = Capacitor.isNativePlatform() ? registerPlugin('GoogleSignIn') : null;
 
 const AuthContext = createContext({});
 // Deep-sanitize any metadata object so no nested objects can crash React rendering.
@@ -191,15 +193,39 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
-  // Sign in with Google
+  // Sign in with Google — native on iOS, OAuth redirect on web
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin
+    try {
+      // On native iOS: use the native Google Sign In dialog (stays in-app)
+      if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        const result = await GoogleSignIn.signIn();
+
+        if (result?.idToken) {
+          const { data, error } = await supabase.auth.signInWithIdToken({
+            provider: 'google',
+            token: result.idToken,
+          });
+          return { data, error };
+        } else {
+          return { data: null, error: new Error('No ID token received from Google') };
+        }
       }
-    });
-    return { data, error };
+
+      // On web / Android: use the existing OAuth redirect flow
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      return { data, error };
+    } catch (error) {
+      // User cancelled the native dialog — not a real error
+      if (error?.message?.includes('cancel') || error?.code === '12501') {
+        return { data: null, error: null };
+      }
+      return { data: null, error };
+    }
   };
 
   // Sign in with Apple — native on iOS, OAuth redirect on web
