@@ -8047,7 +8047,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
             {user && (
               <div className="space-y-4">
                 {/* User info with avatar */}
-                <div className="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                <div className="p-4 bg-white/5 rounded-xl">
                   <div className="flex items-center gap-3">
                     {/* Avatar with optional upload */}
                     <div className="relative group">
@@ -8089,7 +8089,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         </label>
                       )}
                     </div>
-                    <div>
+                    <div style={{minWidth: 0, flex: 1}}>
                       <div className="flex items-center gap-2">
                         <div className="font-medium text-white">{typeof profile?.display_name === 'object' ? JSON.stringify(profile.display_name) : (profile?.display_name || 'Anonymous')}</div>
                         <button
@@ -8099,7 +8099,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           {profile?.display_name ? 'Edit' : 'Add name'}
                         </button>
                       </div>
-                      <div className="text-sm text-secondary-text">{user.email}</div>
+                      <div className="text-sm text-secondary-text" style={{wordBreak: 'break-all'}}>{user.email}</div>
                       {isSubscribed && (
                         <div className="flex items-center gap-2 mt-1">
                           <label className="text-xs text-violet cursor-pointer hover:text-violet-light transition-colors">
@@ -8141,9 +8141,10 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       )}
                     </div>
                   </div>
+                  </div>
                   <button
                     onClick={onSignOut}
-                    className="flex items-center gap-2 px-3 py-2 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 mt-3 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
                     Sign out
