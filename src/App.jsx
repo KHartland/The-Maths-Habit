@@ -8047,8 +8047,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
             {user && (
               <div className="space-y-4">
                 {/* User info with avatar */}
-                <div className="p-4 bg-white/5 rounded-xl">
-                  <div className="flex items-center gap-3">
+                <div className="p-4 bg-white/5 rounded-xl overflow-hidden">
+                  <div className="flex items-center gap-3 overflow-hidden">
                     {/* Avatar with optional upload */}
                     <div className="relative group">
                       {profile?.avatar_url ? (
@@ -8089,7 +8089,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         </label>
                       )}
                     </div>
-                    <div style={{minWidth: 0, flex: 1}}>
+                    <div className="min-w-0 flex-1 overflow-hidden">
                       <div className="flex items-center gap-2">
                         <div className="font-medium text-white">{typeof profile?.display_name === 'object' ? JSON.stringify(profile.display_name) : (profile?.display_name || 'Anonymous')}</div>
                         <button
@@ -8099,7 +8099,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                           {profile?.display_name ? 'Edit' : 'Add name'}
                         </button>
                       </div>
-                      <div className="text-sm text-secondary-text" style={{wordBreak: 'break-all'}}>{user.email}</div>
+                      <div className="text-sm text-secondary-text break-all overflow-hidden">{user.email}</div>
                       {isSubscribed && (
                         <div className="flex items-center gap-2 mt-1">
                           <label className="text-xs text-violet cursor-pointer hover:text-violet-light transition-colors">
@@ -10439,6 +10439,7 @@ function AppContent() {
   // Placeholder pages
   if (currentPage === 'practice') {
     return (
+      <>
       <PracticePage
         dailyObjectives={dailyObjectives}
         progress={activeProgress}
@@ -10464,6 +10465,28 @@ function AppContent() {
         saveDiamondProgress={saveDiamondProgress}
         diamondObjectives={diamondObjectives}
       />
+      {/* Upgrade Prompt for Practice page — Stripe on web, StoreKit on iOS */}
+      {isNativeIOS() ? (
+        <IOSUpgradePrompt
+          isOpen={showUpgradePrompt}
+          onClose={() => setShowUpgradePrompt(false)}
+          onSuccess={() => {
+            setShowUpgradePrompt(false);
+            refreshProfile?.();
+          }}
+        />
+      ) : (
+        <UpgradePrompt
+          isOpen={showUpgradePrompt}
+          onClose={() => setShowUpgradePrompt(false)}
+          onSignUp={() => {
+            setShowUpgradePrompt(false);
+            setAuthModalMode('signup');
+            setShowAuthModal(true);
+          }}
+        />
+      )}
+      </>
     );
   }
 
