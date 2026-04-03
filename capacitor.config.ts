@@ -15,6 +15,9 @@ const config: CapacitorConfig = {
     backgroundColor: '#0E0307',
   },
   plugins: {
+    GoogleSignIn: {
+      iosClientId: '327555950087-gf20mpijriteeprqstnabv4gn5mppg5i.apps.googleusercontent.com',
+    },
     LocalNotifications: {
       smallIcon: 'ic_stat_icon',
       iconColor: '#F59E0B',

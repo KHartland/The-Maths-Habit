@@ -24,6 +24,19 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.squareonemaths.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.327555950087-gf20mpijriteeprqstnabv4gn5mppg5i</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>The Maths Habit sends daily reminders to help you keep your revision streak going.</string>
 	<key>UIBackgroundModes</key>
