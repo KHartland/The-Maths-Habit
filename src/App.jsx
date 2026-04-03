@@ -8232,8 +8232,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   )}
                 </div>
 
-                {/* Promo code input for free users */}
-                {!isSubscribed && (
+                {/* Promo code input for free users - hidden on iOS per App Store guideline 3.1.1 */}
+                {!isSubscribed && !isNativeIOS() && (
                   <PromoCodeInput onSuccess={() => window.location.reload()} />
                 )}
 
@@ -9834,8 +9834,8 @@ function AppContent() {
                 userEmail={user?.email}
               />
 
-              {/* Promo Code Section */}
-              <PromoCodeInput onSuccess={completeOnboarding} />
+              {/* Promo Code Section - hidden on iOS per App Store guideline 3.1.1 */}
+              {!isNativeIOS() && <PromoCodeInput onSuccess={completeOnboarding} />}
             </div>
 
             {/* Step indicator */}
