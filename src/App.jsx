@@ -7953,7 +7953,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
   // Verify captcha and actually join
   const handleCaptchaSubmit = async () => {
-    if (parseInt(captchaInput) !== captcha.answer) {
+    if (parseInt(captchaInput.trim(), 10) !== captcha.answer) {
       setSchoolError('Incorrect answer — try again');
       newCaptcha();
       return;
@@ -7978,7 +7978,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
 
   // Handle creating + joining a new school (with captcha)
   const handleCreateSchool = async () => {
-    if (parseInt(captchaInput) !== captcha.answer) {
+    if (parseInt(captchaInput.trim(), 10) !== captcha.answer) {
       setSchoolError('Incorrect answer — try again');
       newCaptcha();
       return;
@@ -8291,10 +8291,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <p className="text-white font-semibold text-lg mb-3">What is {captcha.a} × {captcha.b}?</p>
                     <div className="flex gap-2 justify-center">
                       <input
-                        type="number"
+                        type="text"
                         inputMode="numeric"
+                        pattern="[0-9]*"
                         value={captchaInput}
-                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        onChange={(e) => setCaptchaInput(e.target.value.replace(/[^0-9]/g, ''))}
                         placeholder="?"
                         autoFocus
                         className="w-24 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white text-center text-lg font-semibold"
@@ -8338,10 +8339,11 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <div className="p-3 bg-violet/20 rounded-xl border border-violet/30 text-center">
                       <p className="text-sm text-secondary-text mb-1">Quick check: What is {captcha.a} × {captcha.b}?</p>
                       <input
-                        type="number"
+                        type="text"
                         inputMode="numeric"
+                        pattern="[0-9]*"
                         value={captchaInput}
-                        onChange={(e) => setCaptchaInput(e.target.value)}
+                        onChange={(e) => setCaptchaInput(e.target.value.replace(/[^0-9]/g, ''))}
                         placeholder="?"
                         className="w-24 mx-auto px-4 py-2 rounded-xl border border-white/10 bg-white/5 text-white text-center font-semibold"
                         onKeyDown={(e) => { if (e.key === 'Enter') handleCreateSchool(); }}
