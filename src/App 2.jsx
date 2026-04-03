@@ -8,8 +8,6 @@ import OneVsOne from './components/OneVsOne';
 import SchoolLeaderboard from './components/SchoolLeaderboard';
 import { getAllSchools, createSchool, joinSchool, joinSchoolByCode, leaveSchool, getUserSchool } from './lib/leaderboardService';
 import { redirectToCheckout, STRIPE_PRICES } from './lib/stripe';
-import IOSUpgradePrompt from './components/IOSUpgradePrompt';
-import { initIAP, destroyIAP } from './lib/iapService';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
@@ -6602,9 +6600,7 @@ What is the student's answer?`
                 <div className="text-center space-y-4">
                   <div className="glass-panel rounded-xl p-4 border border-violet/30">
                     <p className="text-white font-semibold mb-1">Daily limit reached</p>
-                    <p className="text-secondary-text text-sm">
-                      {`You've completed your ${FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.`}
-                    </p>
+                    <p className="text-secondary-text text-sm">You've completed your {FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.</p>
                   </div>
                   <button
                     onClick={() => setShowUpgradePrompt(true)}
@@ -8236,8 +8232,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                   )}
                 </div>
 
-                {/* Promo code input for free users - hidden on iOS per App Store guideline 3.1.1 */}
-                {!isSubscribed && !isNativeIOS() && (
+                {/* Promo code input for free users */}
+                {!isSubscribed && (
                   <PromoCodeInput onSuccess={() => window.location.reload()} />
                 )}
 
@@ -8672,13 +8668,12 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         {summaryStatus === 'copied' ? '✓ Copied to clipboard!' : summaryStatus === 'shared' ? '✓ Shared!' : '📤 Share Summary'}
                       </button>
                     ) : (
-                      (
-                        <button
-                          onClick={onUpgrade}
-                          className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-                        >
-                          🔒 Upgrade to unlock
-                        </button>
+                      <button
+                        onClick={onUpgrade}
+                        className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                      >
+                        🔒 Upgrade to unlock
+                      </button>
                     )}
                   </div>
                 </div>
@@ -9438,19 +9433,6 @@ function AppContent() {
     refreshProfile
   } = useAuth();
 
-  // Initialise iOS In-App Purchases
-  useEffect(() => {
-    if (isNativeIOS()) {
-      initIAP((update) => {
-        console.log('[App] IAP update:', update);
-        if (update.status === 'active') {
-          refreshProfile?.();
-        }
-      });
-      return () => destroyIAP();
-    }
-  }, []);
-
   // Auto-logout after 30 minutes of inactivity — uses localStorage timestamps
   // so it works across page visibility changes and doesn't interfere with React state
   useEffect(() => {
@@ -9845,24 +9827,15 @@ function AppContent() {
                 </button>
               </div>
 
-              {/* Premium Plan Card — Stripe on web, StoreKit on iOS */}
-              {isNativeIOS() ? (
-                <button
-                  onClick={() => setShowUpgradePrompt(true)}
-                  className="w-full py-3 btn-gradient-mint font-bold rounded-xl transition-all"
-                >
-                  View Premium Plans
-                </button>
-              ) : (
-                <OnboardingPlanCard
-                  onSelectFree={completeOnboarding}
-                  userId={user?.id}
-                  userEmail={user?.email}
-                />
-              )}
+              {/* Premium Plan Card */}
+              <OnboardingPlanCard
+                onSelectFree={completeOnboarding}
+                userId={user?.id}
+                userEmail={user?.email}
+              />
 
-              {/* Promo Code Section - hidden on iOS per App Store guideline 3.1.1 */}
-              {!isNativeIOS() && <PromoCodeInput onSuccess={completeOnboarding} />}
+              {/* Promo Code Section */}
+              <PromoCodeInput onSuccess={completeOnboarding} />
             </div>
 
             {/* Step indicator */}
@@ -10505,27 +10478,16 @@ function AppContent() {
           onClose={() => setShowAuthModal(false)}
           initialMode={authModalMode}
         />
-        {/* Upgrade Prompt — Stripe on web, StoreKit on iOS */}
-        {isNativeIOS() ? (
-          <IOSUpgradePrompt
-            isOpen={showUpgradePrompt}
-            onClose={() => setShowUpgradePrompt(false)}
-            onSuccess={() => {
-              setShowUpgradePrompt(false);
-              refreshProfile?.();
-            }}
-          />
-        ) : (
-          <UpgradePrompt
-            isOpen={showUpgradePrompt}
-            onClose={() => setShowUpgradePrompt(false)}
-            onSignUp={() => {
-              setShowUpgradePrompt(false);
-              setAuthModalMode('signup');
-              setShowAuthModal(true);
-            }}
-          />
-        )}
+        {/* Upgrade Prompt */}
+        <UpgradePrompt
+          isOpen={showUpgradePrompt}
+          onClose={() => setShowUpgradePrompt(false)}
+          onSignUp={() => {
+            setShowUpgradePrompt(false);
+            setAuthModalMode('signup');
+            setShowAuthModal(true);
+          }}
+        />
       </>
     );
   }
@@ -10990,27 +10952,16 @@ function AppContent() {
         initialMode={authModalMode}
       />
 
-      {/* Upgrade Prompt — Stripe on web, StoreKit on iOS */}
-      {isNativeIOS() ? (
-        <IOSUpgradePrompt
-          isOpen={showUpgradePrompt}
-          onClose={() => setShowUpgradePrompt(false)}
-          onSuccess={() => {
-            setShowUpgradePrompt(false);
-            refreshProfile?.();
-          }}
-        />
-      ) : (
-        <UpgradePrompt
-          isOpen={showUpgradePrompt}
-          onClose={() => setShowUpgradePrompt(false)}
-          onSignUp={() => {
-            setShowUpgradePrompt(false);
-            setAuthModalMode('signup');
-            setShowAuthModal(true);
-          }}
-        />
-      )}
+      {/* Upgrade Prompt */}
+      <UpgradePrompt
+        isOpen={showUpgradePrompt}
+        onClose={() => setShowUpgradePrompt(false)}
+        onSignUp={() => {
+          setShowUpgradePrompt(false);
+          setAuthModalMode('signup');
+          setShowAuthModal(true);
+        }}
+      />
     </div>
   );
 }
