@@ -8149,7 +8149,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <LogOut className="w-4 h-4" />
                     Sign out
                   </button>
-                </div>
 
                 {/* Edit display name */}
                 {editingName && (
