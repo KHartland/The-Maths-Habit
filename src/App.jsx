@@ -6600,14 +6600,21 @@ What is the student's answer?`
                 <div className="text-center space-y-4">
                   <div className="glass-panel rounded-xl p-4 border border-violet/30">
                     <p className="text-white font-semibold mb-1">Daily limit reached</p>
-                    <p className="text-secondary-text text-sm">You've completed your {FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.</p>
+                    <p className="text-secondary-text text-sm">
+                      {isNativeIOS()
+                        ? `You've completed your ${FREE_DAILY_LIMIT} free questions for today. Come back tomorrow for more practice!`
+                        : `You've completed your ${FREE_DAILY_LIMIT} free questions for today. Come back tomorrow or upgrade for unlimited practice.`
+                      }
+                    </p>
                   </div>
-                  <button
-                    onClick={() => setShowUpgradePrompt(true)}
-                    className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
-                  >
-                    Unlock Unlimited Practice
-                  </button>
+                  {!isNativeIOS() && (
+                    <button
+                      onClick={() => setShowUpgradePrompt(true)}
+                      className="w-full py-4 font-bold text-lg rounded-xl transition-all shadow-lg btn-gradient-mint text-void shadow-glow-mint"
+                    >
+                      Unlock Unlimited Practice
+                    </button>
+                  )}
                   <button
                     onClick={() => setCurrentPage('home')}
                     className="w-full py-2 text-secondary-text hover:text-white text-sm font-medium transition-colors"
@@ -8222,7 +8229,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       )}
                     </div>
                   </div>
-                  {!isSubscribed && (
+                  {!isSubscribed && !isNativeIOS() && (
                     <button
                       onClick={onUpgrade}
                       className="px-4 py-2 btn-gradient-mint text-void text-sm font-medium rounded-lg hover:opacity-90 transition-opacity"
@@ -8476,7 +8483,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       disabled
                       className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
-                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
+                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day.{!isNativeIOS() && <> <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></>}</p>
                   </div>
                 )}
                 {isSubscribed && (
@@ -8539,7 +8546,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       disabled
                       className="w-full h-2 bg-white/20 rounded-full appearance-none cursor-not-allowed opacity-50"
                     />
-                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day. <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></p>
+                    <p className="text-xs text-amber-400 mt-1">Free plan: 5 questions per day.{!isNativeIOS() && <> <button onClick={onUpgrade} className="underline hover:text-amber-300">Upgrade for more</button></>}</p>
                   </div>
                 )}
                 {isSubscribed && (
@@ -8668,12 +8675,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         {summaryStatus === 'copied' ? '✓ Copied to clipboard!' : summaryStatus === 'shared' ? '✓ Shared!' : '📤 Share Summary'}
                       </button>
                     ) : (
-                      <button
-                        onClick={onUpgrade}
-                        className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
-                      >
-                        🔒 Upgrade to unlock
-                      </button>
+                      !isNativeIOS() ? (
+                        <button
+                          onClick={onUpgrade}
+                          className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                        >
+                          🔒 Upgrade to unlock
+                        </button>
+                      ) : null
                     )}
                   </div>
                 </div>
@@ -9827,12 +9836,14 @@ function AppContent() {
                 </button>
               </div>
 
-              {/* Premium Plan Card */}
-              <OnboardingPlanCard
-                onSelectFree={completeOnboarding}
-                userId={user?.id}
-                userEmail={user?.email}
-              />
+              {/* Premium Plan Card - hidden on iOS per App Store guideline 3.1.1 */}
+              {!isNativeIOS() && (
+                <OnboardingPlanCard
+                  onSelectFree={completeOnboarding}
+                  userId={user?.id}
+                  userEmail={user?.email}
+                />
+              )}
 
               {/* Promo Code Section - hidden on iOS per App Store guideline 3.1.1 */}
               {!isNativeIOS() && <PromoCodeInput onSuccess={completeOnboarding} />}
@@ -10478,16 +10489,18 @@ function AppContent() {
           onClose={() => setShowAuthModal(false)}
           initialMode={authModalMode}
         />
-        {/* Upgrade Prompt */}
-        <UpgradePrompt
-          isOpen={showUpgradePrompt}
-          onClose={() => setShowUpgradePrompt(false)}
-          onSignUp={() => {
-            setShowUpgradePrompt(false);
-            setAuthModalMode('signup');
-            setShowAuthModal(true);
-          }}
-        />
+        {/* Upgrade Prompt - hidden on iOS per App Store guideline 3.1.1 */}
+        {!isNativeIOS() && (
+          <UpgradePrompt
+            isOpen={showUpgradePrompt}
+            onClose={() => setShowUpgradePrompt(false)}
+            onSignUp={() => {
+              setShowUpgradePrompt(false);
+              setAuthModalMode('signup');
+              setShowAuthModal(true);
+            }}
+          />
+        )}
       </>
     );
   }
@@ -10952,16 +10965,18 @@ function AppContent() {
         initialMode={authModalMode}
       />
 
-      {/* Upgrade Prompt */}
-      <UpgradePrompt
-        isOpen={showUpgradePrompt}
-        onClose={() => setShowUpgradePrompt(false)}
-        onSignUp={() => {
-          setShowUpgradePrompt(false);
-          setAuthModalMode('signup');
-          setShowAuthModal(true);
-        }}
-      />
+      {/* Upgrade Prompt - hidden on iOS per App Store guideline 3.1.1 */}
+      {!isNativeIOS() && (
+        <UpgradePrompt
+          isOpen={showUpgradePrompt}
+          onClose={() => setShowUpgradePrompt(false)}
+          onSignUp={() => {
+            setShowUpgradePrompt(false);
+            setAuthModalMode('signup');
+            setShowAuthModal(true);
+          }}
+        />
+      )}
     </div>
   );
 }
