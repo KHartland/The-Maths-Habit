@@ -8674,13 +8674,14 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                         {summaryStatus === 'copied' ? '✓ Copied to clipboard!' : summaryStatus === 'shared' ? '✓ Shared!' : '📤 Share Summary'}
                       </button>
                     ) : (
-                      (
+                      !isNativeIOS() ? (
                         <button
                           onClick={onUpgrade}
                           className="px-4 py-2 text-white text-sm font-medium rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
                         >
                           🔒 Upgrade to unlock
                         </button>
+                      ) : null
                     )}
                   </div>
                 </div>
