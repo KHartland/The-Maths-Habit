@@ -8141,7 +8141,6 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                       )}
                     </div>
                   </div>
-                  </div>
                   <button
                     onClick={onSignOut}
                     className="flex items-center gap-2 px-3 py-2 mt-3 text-sm text-secondary-text hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
@@ -8149,6 +8148,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
                     <LogOut className="w-4 h-4" />
                     Sign out
                   </button>
+                  </div>
 
                 {/* Edit display name */}
                 {editingName && (
