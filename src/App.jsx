@@ -6402,7 +6402,7 @@ What is the student's answer?`
   // Handle empty objectives
   if (!allObjectives || allObjectives.length === 0) {
     return (
-      <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="min-h-screen bg-void relative overflow-x-hidden">
         <div className="ambient-glow" />
         <NavBar currentPage={currentPage} setCurrentPage={setCurrentPage} streak={dayStreak} />
         <div className="pt-24 pb-24 px-4 text-center relative z-10 page-content">
@@ -6443,7 +6443,7 @@ What is the student's answer?`
     const streakGained = sessionResults.reduce((sum, r) => sum + (r.correct ? 1 : 0), 0);
 
     return (
-      <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="min-h-screen bg-void relative overflow-x-hidden">
         <div className="ambient-glow" />
         <div className="orb-purple w-64 h-64 -top-32 -right-32 opacity-70 fixed pointer-events-none" />
         <div className="orb-cyan w-48 h-48 bottom-20 -left-20 opacity-60 fixed pointer-events-none" />
@@ -6582,7 +6582,7 @@ What is the student's answer?`
   // Pre-session screen
   if (!sessionStarted) {
     return (
-      <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="min-h-screen bg-void relative overflow-x-hidden">
         <div className="ambient-glow" />
         <div className="orb-mint w-56 h-56 -top-28 -right-28 opacity-70 fixed pointer-events-none" />
         <div className="orb-pink w-40 h-40 bottom-32 -left-16 opacity-60 fixed pointer-events-none" />
@@ -6661,7 +6661,7 @@ What is the student's answer?`
   const progressPct = ((currentIndex + (showFeedback ? 1 : 0)) / sessionQueue.length) * 100;
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden">
+    <div className="min-h-screen bg-void relative overflow-x-hidden">
       {/* Portrait is the default — no orientation prompt */}
       <div className="ambient-glow" style={{ animationPlayState: 'paused' }} />
       <div className="orb-purple w-72 h-72 -top-36 -right-36 opacity-60 fixed pointer-events-none" style={{ animationPlayState: 'paused' }} />
@@ -7475,7 +7475,7 @@ function StatsPage({ currentPage, setCurrentPage, dayStreak, progress, allObject
   const maxQuestions = Math.max(...weeklyActivity.map(d => d.questions), 1);
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden">
+    <div className="min-h-screen bg-void relative overflow-x-hidden">
       <div className="ambient-glow" />
       <div className="orb-purple w-80 h-80 -top-40 -right-40 opacity-70 fixed pointer-events-none" />
       <div className="orb-mint w-56 h-56 bottom-20 -left-24 opacity-60 fixed pointer-events-none" />
@@ -8017,7 +8017,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   };
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden">
+    <div className="min-h-screen bg-void relative overflow-x-hidden">
       <div className="ambient-glow" />
       <div className="orb-pink w-72 h-72 -top-36 -right-36 opacity-70 fixed pointer-events-none" />
       <div className="orb-purple w-48 h-48 bottom-24 -left-20 opacity-60 fixed pointer-events-none" />
@@ -9639,7 +9639,7 @@ function AppContent() {
     // Step 1: Welcome Screen
     if (onboardingStep === 1) {
       return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
           {/* Ambient glow background */}
           <div className="ambient-glow" />
 
@@ -9690,7 +9690,7 @@ function AppContent() {
     // Step 2: Account Creation/Sign-in
     if (onboardingStep === 2) {
       return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
           {/* Ambient glow background */}
           <div className="ambient-glow" />
 
@@ -9745,7 +9745,7 @@ function AppContent() {
     // Step 3: Profile Picture (teaser with lock for free users)
     if (onboardingStep === 3) {
       return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
           {/* Ambient glow background */}
           <div className="ambient-glow" />
 
@@ -9799,7 +9799,7 @@ function AppContent() {
     // Step 4: Plan Selection
     if (onboardingStep === 4) {
       return (
-        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
           {/* Ambient glow background */}
           <div className="ambient-glow" />
 
@@ -10244,7 +10244,7 @@ function AppContent() {
 
   if (showPiroNaming) {
     return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
         <div className="ambient-glow" />
         <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
         <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
@@ -10388,7 +10388,7 @@ function AppContent() {
 
   if (showNamePrompt) {
     return (
-      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-void flex items-center justify-center p-6 relative overflow-x-hidden">
         <div className="ambient-glow" />
         <div className="orb-purple w-64 h-64 -top-20 -right-20 opacity-80 pointer-events-none" />
         <div className="orb-mint w-48 h-48 -bottom-10 -left-10 opacity-70 pointer-events-none" />
@@ -10558,7 +10558,7 @@ function AppContent() {
 
   if (currentPage === 'heatmap') {
     return (
-      <div className="min-h-screen bg-void relative overflow-hidden">
+      <div className="min-h-screen bg-void relative overflow-x-hidden">
         <div className="ambient-glow" />
         <div className="orb-purple w-96 h-96 -top-48 -right-48 opacity-70 fixed pointer-events-none" />
         <div className="orb-mint w-64 h-64 top-1/2 -left-32 opacity-60 fixed pointer-events-none" />
@@ -10861,7 +10861,7 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-void relative overflow-hidden">
+    <div className="min-h-screen bg-void relative overflow-x-hidden">
       {/* Ambient background glow */}
       <div className="ambient-glow" />
 
