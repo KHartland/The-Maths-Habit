@@ -18,6 +18,7 @@
 		840000822F7FE89C0009E470 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 840000812F7FE89C0009E470 /* Algorithms */; };
 		840000852F7FE9FD0009E470 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 840000842F7FE9FD0009E470 /* GoogleSignIn */; };
 		840000872F7FE9FD0009E470 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 840000862F7FE9FD0009E470 /* GoogleSignInSwift */; };
+		848AA8DF2F81AB4B00739218 /* GoogleSignInPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848AA8DE2F81AA4100739218 /* GoogleSignInPlugin.swift */; };
 		84EBF3712F773905009A63F0 /* AppleSignInPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBF3702F773905009A63F0 /* AppleSignInPlugin.swift */; };
 		84EBF3732F773A76009A63F0 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBF3722F773A76009A63F0 /* MyViewController.swift */; };
 /* End PBXBuildFile section */
@@ -33,6 +34,7 @@
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		845FE9112F75A7CC00AA2DEF /* App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App.entitlements; sourceTree = "<group>"; };
+		848AA8DE2F81AA4100739218 /* GoogleSignInPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInPlugin.swift; sourceTree = "<group>"; };
 		84EBF3702F773905009A63F0 /* AppleSignInPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInPlugin.swift; sourceTree = "<group>"; };
 		84EBF3722F773A76009A63F0 /* MyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -56,6 +58,7 @@
 		504EC2FB1FED79650016851F = {
 			isa = PBXGroup;
 			children = (
+				848AA8DE2F81AA4100739218 /* GoogleSignInPlugin.swift */,
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
 				504EC3051FED79650016851F /* Products */,
@@ -174,6 +177,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				848AA8DF2F81AB4B00739218 /* GoogleSignInPlugin.swift in Sources */,
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				84EBF3732F773A76009A63F0 /* MyViewController.swift in Sources */,
 				84EBF3712F773905009A63F0 /* AppleSignInPlugin.swift in Sources */,
