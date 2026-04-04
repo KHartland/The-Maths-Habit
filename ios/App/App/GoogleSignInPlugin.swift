@@ -16,9 +16,9 @@ public class GoogleSignInPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        // Read iOS Client ID from capacitor.config.ts
         let clientId = "327555950087-gf20mpijriteeprqstnabv4gn5mppg5i.apps.googleusercontent.com"
-        let config = GIDConfiguration(clientID: clientId)
+let serverClientId = "327555950087-3vattii729brupkdeupkg4ral7tlule0.apps.googleusercontent.com"
+let config = GIDConfiguration(clientID: clientId, serverClientID: serverClientId)
         GIDSignIn.sharedInstance.configuration = config
 
         DispatchQueue.main.async {

@@ -29,3 +29,4 @@ android/gradle.properties
 # iOS
 ios/App/Pods/
 *.xcuserdata
+node_modules/
