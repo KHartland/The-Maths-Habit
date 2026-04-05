@@ -198,7 +198,7 @@ import Calculator from './components/Calculator';
 
 // AQA GCSE curriculum data — extracted to src/data/curriculum.js
 import {
-  topics, objectiveDescriptions, revisionHints, levelLabels,
+  topics, objectiveDescriptions as descriptions, revisionHints, levelLabels,
   TOPIC_HEX, HEATMAP_COLORS, TILE_IMAGES,
 } from './data/curriculum.js';
 
