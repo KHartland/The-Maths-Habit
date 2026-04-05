@@ -23,6 +23,7 @@ import { safeInitial, safeDisplayName } from "./lib/safeDisplayName";
 import { Capacitor } from "@capacitor/core";
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
+import { loadFsrsData } from './lib/fsrs.js';
 
 
 // Custom maths-themed nav icons (image-based)
@@ -375,6 +376,31 @@ import {
   getPiroDisplay, getPiroProgress, getPiroNudge,
 } from './lib/piro.js';
 
+const PiroMedia = ({ display, className = '' }) => {
+  const [videoFailed, setVideoFailed] = useState(false);
+  return (
+    <>
+      {display.video && !videoFailed ? (
+        <video
+          src={display.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className={className}
+          onError={() => setVideoFailed(true)}
+        />
+      ) : (
+        <img
+          src={display.image}
+          alt={display.name}
+          className={className}
+          onError={(e) => { e.target.style.display = 'none'; if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex'; }}
+        />
+      )}
+    </>
+  );
+};
 
 const getWeeklyMastery = (progress) => {
   const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
