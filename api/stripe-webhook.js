@@ -69,6 +69,25 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Webhook signature verification failed' });
   }
 
+  // Idempotency check: skip events we've already processed
+  // Uses a dedicated table to track processed Stripe event IDs
+  try {
+    const { data: existing } = await supabase
+      .from('processed_webhook_events')
+      .select('id')
+      .eq('stripe_event_id', event.id)
+      .maybeSingle();
+
+    if (existing) {
+      // Already processed — return 200 so Stripe doesn't retry
+      return res.status(200).json({ received: true, duplicate: true });
+    }
+  } catch (idempotencyErr) {
+    // If the table doesn't exist yet or query fails, continue processing
+    // (the webhook shouldn't break if the idempotency table is missing)
+    console.error('Idempotency check failed (continuing):', idempotencyErr.message);
+  }
+
   // Handle the event
   try {
     switch (event.type) {
@@ -93,7 +112,7 @@ export default async function handler(req, res) {
           if (error) {
             console.error('Error updating profile:', error);
           } else {
-            console.log(`Subscription activated for user ${userId}`);
+            console.log('Subscription activated for user');
           }
         }
         break;
@@ -159,6 +178,16 @@ export default async function handler(req, res) {
 
       default:
         console.log(`Unhandled event type: ${event.type}`);
+    }
+
+    // Record that we processed this event (best-effort)
+    try {
+      await supabase.from('processed_webhook_events').insert({
+        stripe_event_id: event.id,
+        event_type: event.type,
+      });
+    } catch (recordErr) {
+      console.error('Failed to record processed event:', recordErr.message);
     }
 
     res.status(200).json({ received: true });

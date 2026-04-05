@@ -72,9 +72,10 @@ export async function applyRateLimit(req, res, limiter = generalLimiter) {
 
     return { success: true };
   } catch (error) {
-    // If rate limiting fails (e.g. Redis is down), allow the request through
-    // rather than blocking all traffic
+    // Fail closed: if Redis is down, reject the request rather than
+    // allowing unlimited traffic through
     console.error('Rate limiting error:', error);
-    return { success: true };
+    res.status(503).json({ error: 'Service temporarily unavailable. Please try again.' });
+    return { success: false };
   }
 }

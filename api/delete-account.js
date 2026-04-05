@@ -1,19 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyRateLimit, authLimiter } from './_lib/rate-limit.js';
+import { applyCors } from './_lib/cors.js';
 import {
   rejectOversizedPayload,
   sanitiseAuthHeader,
 } from './_lib/sanitise.js';
 
 export default async function handler(req, res) {
-  // CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  // CORS — only allows POST from the configured frontend origin
+  const { preflight } = applyCors(req, res, { allowHeaders: ['Authorization'] });
+  if (preflight) return;
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

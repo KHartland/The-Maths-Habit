@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
   const FREE_DAILY_LIMIT = 5;
 
   // Check if user can practice (has subscription or under free limit)
+  // Client-side check used for UI state — server enforces the real limit
   const canPractice = () => {
     if (!user) return true; // Not logged in, use localStorage
     if (profile?.subscription_status === 'active') return true;
@@ -65,6 +66,34 @@ export const AuthProvider = ({ children }) => {
     if (!user) return Infinity;
     if (profile?.subscription_status === 'active') return Infinity;
     return Math.max(0, FREE_DAILY_LIMIT - dailyQuestionsUsed);
+  };
+
+  // Server-side access validation — call before starting a practice session
+  const validateAccess = async () => {
+    if (!user) return { allowed: true, isSubscribed: false }; // Not logged in
+    try {
+      const token = getAuthToken();
+      const res = await fetch('/api/validate-access', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        // Sync server state back to client
+        if (typeof data.questionsUsed === 'number') {
+          setDailyQuestionsUsed(data.questionsUsed);
+        }
+        return data;
+      }
+      // If server validation fails, fall back to client-side check
+      return { allowed: canPractice(), isSubscribed: profile?.subscription_status === 'active' };
+    } catch {
+      // Network error — fall back to client-side check
+      return { allowed: canPractice(), isSubscribed: profile?.subscription_status === 'active' };
+    }
   };
 
   // Increment daily question count (raw fetch — supabase.from() hangs)
@@ -311,80 +340,34 @@ export const AuthProvider = ({ children }) => {
     return { data, error };
   };
 
-  // Redeem a promo code for free premium
+  // Redeem a promo code for free premium — validated server-side
   const redeemPromoCode = async (code) => {
     if (!user) return { error: { message: 'You must be logged in to redeem a code' } };
 
-    // Check if the code exists and is valid
-    const { data: promoCode, error: fetchError } = await supabase
-      .from('promo_codes')
-      .select('*')
-      .eq('code', code.toUpperCase().trim())
-      .single();
-
-    if (fetchError || !promoCode) {
-      return { error: { message: 'Invalid promo code' } };
-    }
-
-    // Check if code is still active
-    if (!promoCode.is_active) {
-      return { error: { message: 'This promo code is no longer active' } };
-    }
-
-    // Check if code has uses remaining
-    if (promoCode.max_uses && promoCode.times_used >= promoCode.max_uses) {
-      return { error: { message: 'This promo code has reached its usage limit' } };
-    }
-
-    // Check expiry date
-    if (promoCode.expires_at && new Date(promoCode.expires_at) < new Date()) {
-      return { error: { message: 'This promo code has expired' } };
-    }
-
-    // Check if user already used this code
-    const { data: existingRedemption } = await supabase
-      .from('promo_redemptions')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('promo_code_id', promoCode.id)
-      .single();
-
-    if (existingRedemption) {
-      return { error: { message: 'You have already redeemed this code' } };
-    }
-
-    // Redeem the code - update user's subscription status
-    const { error: updateError } = await supabase
-      .from('profiles')
-      .update({
-        subscription_status: 'active',
-        subscription_type: 'promo',
-        promo_code_used: promoCode.code
-      })
-      .eq('id', user.id);
-
-    if (updateError) {
-      return { error: { message: 'Failed to apply promo code. Please try again.' } };
-    }
-
-    // Record the redemption
-    await supabase
-      .from('promo_redemptions')
-      .insert({
-        user_id: user.id,
-        promo_code_id: promoCode.id
+    try {
+      const token = getAuthToken();
+      const res = await fetch('/api/redeem-promo', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
       });
 
-    // Increment the usage count
-    await supabase
-      .from('promo_codes')
-      .update({ times_used: promoCode.times_used + 1 })
-      .eq('id', promoCode.id);
+      const data = await res.json();
 
-    // Refresh profile
-    await fetchProfile(user.id);
+      if (!res.ok) {
+        return { error: { message: data.error || 'Failed to redeem code' } };
+      }
 
-    return { success: true, message: 'Premium access activated!' };
+      // Refresh profile to pick up updated subscription status
+      await fetchProfile(user.id);
+
+      return { success: true, message: data.message || 'Premium access activated!' };
+    } catch (err) {
+      return { error: { message: 'Network error. Please try again.' } };
+    }
   };
 
   // Listen for auth changes
@@ -444,6 +427,7 @@ export const AuthProvider = ({ children }) => {
     updateProfile,
     redeemPromoCode,
     canPractice,
+    validateAccess,
     questionsRemaining,
     incrementDailyQuestions,
     dailyQuestionsUsed,

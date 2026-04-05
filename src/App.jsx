@@ -13,6 +13,7 @@ import { initIAP, destroyIAP } from './lib/iapService';
 import { checkProfanity, sanitiseName } from './lib/profanityFilter';
 import { uploadAvatar, deleteAvatar } from './lib/avatarService';
 import { migrateLocalToCloud, loadFromCloud, saveProgressToCloud, saveFsrsToCloud, saveSettingsToCloud, saveStreakToCloud, saveDailyActivityToCloud } from './lib/syncService';
+import DOMPurify from 'dompurify';
 import { supabaseUrl, supabaseAnonKey } from './lib/supabase';
 import { CubeIcon, SquareRootIcon, CompassIcon, InfinityIcon, CompassStarIcon, BooksIcon, PiIcon } from './components/MathIcons';
 import DragDropOrder from './components/DragDropOrder';
@@ -6755,7 +6756,7 @@ What is the student's answer?`
                 <div className="question-side">
                 {/* Diagram if applicable */}
                 {current.diagram && (
-                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: generateDiagram(current.diagram) }} />
+                  <div className="mb-4" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(generateDiagram(current.diagram)) }} />
                 )}
 
                 {/* Question text */}
