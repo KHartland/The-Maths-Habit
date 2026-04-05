@@ -24,6 +24,7 @@ import { Capacitor } from "@capacitor/core";
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
 import { diamondQuestionBank } from './data/diamondQuestionBank.js';
 import { loadFsrsData } from './lib/fsrs.js';
+import NavBar from './components/NavBar';
 
 
 // Custom maths-themed nav icons (image-based)
@@ -190,10 +191,7 @@ const renderRecurring = (text) => {
 };
 
 // ==================== SCIENTIFIC CALCULATOR COMPONENT ====================
-// On-screen calculator for questions that allow calculator use
-
-
-import Calculator from './components/Calculator';
+// Calculator extracted to src/components/Calculator.jsx
 
 
 
@@ -2675,7 +2673,6 @@ function AppContent() {
 
 
 // CelebrationCarousel extracted to src/components/CelebrationCarousel.jsx
-import CelebrationCarousel from './components/CelebrationCarousel';
 
 // PortraitPrompt removed — portrait is now the default orientation
 
