@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { applyRateLimit, authLimiter } from './_lib/rate-limit.js';
 
 export default async function handler(req, res) {
   // CORS headers
@@ -13,6 +14,10 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Strict rate limit: 5 requests per 15 minutes per IP (sensitive auth route)
+  const { success } = await applyRateLimit(req, res, authLimiter);
+  if (!success) return;
 
   try {
     const authHeader = req.headers.authorization;

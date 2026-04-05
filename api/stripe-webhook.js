@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { applyRateLimit, generalLimiter } from './_lib/rate-limit.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -30,6 +31,10 @@ export default async function handler(req, res) {
     res.setHeader('Allow', 'POST');
     return res.status(405).end('Method Not Allowed');
   }
+
+  // Rate limit: 100 requests per 15 minutes per IP
+  const { success } = await applyRateLimit(req, res, generalLimiter);
+  if (!success) return;
 
   const rawBody = await getRawBody(req);
   const signature = req.headers['stripe-signature'];
