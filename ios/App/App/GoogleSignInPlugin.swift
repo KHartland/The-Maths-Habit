@@ -17,8 +17,8 @@ public class GoogleSignInPlugin: CAPPlugin, CAPBridgedPlugin {
         }
 
         let clientId = "327555950087-gf20mpijriteeprqstnabv4gn5mppg5i.apps.googleusercontent.com"
-let serverClientId = "327555950087-3vattii729brupkdeupkg4ral7tlule0.apps.googleusercontent.com"
-let config = GIDConfiguration(clientID: clientId, serverClientID: serverClientId)
+        let serverClientId = "327555950087-3vattii729brupkdeupkg4ral7tlule0.apps.googleusercontent.com"
+        let config = GIDConfiguration(clientID: clientId, serverClientID: serverClientId)
         GIDSignIn.sharedInstance.configuration = config
 
         DispatchQueue.main.async {
