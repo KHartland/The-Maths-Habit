@@ -17,11 +17,19 @@ export const config = {
   },
 };
 
-// Helper to get raw body
+const MAX_WEBHOOK_BODY_BYTES = 65_536; // 64 KB — Stripe events can be large
+
+// Helper to get raw body with size enforcement
 async function getRawBody(req) {
   const chunks = [];
+  let totalBytes = 0;
   for await (const chunk of req) {
-    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+    const buffer = typeof chunk === 'string' ? Buffer.from(chunk) : chunk;
+    totalBytes += buffer.length;
+    if (totalBytes > MAX_WEBHOOK_BODY_BYTES) {
+      throw new Error('Payload too large');
+    }
+    chunks.push(buffer);
   }
   return Buffer.concat(chunks);
 }
@@ -36,8 +44,17 @@ export default async function handler(req, res) {
   const { success } = await applyRateLimit(req, res, generalLimiter);
   if (!success) return;
 
-  const rawBody = await getRawBody(req);
+  let rawBody;
+  try {
+    rawBody = await getRawBody(req);
+  } catch (err) {
+    return res.status(413).json({ error: 'Payload too large' });
+  }
+
   const signature = req.headers['stripe-signature'];
+  if (!signature || typeof signature !== 'string') {
+    return res.status(400).json({ error: 'Missing stripe-signature header' });
+  }
 
   let event;
 
@@ -49,7 +66,7 @@ export default async function handler(req, res) {
     );
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    return res.status(400).json({ error: 'Webhook signature verification failed' });
   }
 
   // Handle the event

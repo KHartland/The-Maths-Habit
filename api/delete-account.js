@@ -1,5 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyRateLimit, authLimiter } from './_lib/rate-limit.js';
+import {
+  rejectOversizedPayload,
+  sanitiseAuthHeader,
+} from './_lib/sanitise.js';
 
 export default async function handler(req, res) {
   // CORS headers
@@ -15,14 +19,18 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Reject oversized payloads (max 1 KB — this endpoint needs no body)
+  if (!rejectOversizedPayload(req, res, 1024).ok) return;
+
   // Strict rate limit: 5 requests per 15 minutes per IP (sensitive auth route)
   const { success } = await applyRateLimit(req, res, authLimiter);
   if (!success) return;
 
   try {
-    const authHeader = req.headers.authorization;
+    // Sanitise the Authorization header
+    const authHeader = sanitiseAuthHeader(req.headers.authorization);
     if (!authHeader) {
-      return res.status(401).json({ error: 'Missing authorization header' });
+      return res.status(401).json({ error: 'Missing or malformed authorization header' });
     }
 
     const supabaseUrl = process.env.VITE_SUPABASE_URL;
@@ -30,7 +38,7 @@ export default async function handler(req, res) {
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseServiceKey) {
-      return res.status(500).json({ error: 'Server configuration error: missing service role key' });
+      return res.status(500).json({ error: 'Server configuration error' });
     }
 
     // 1. Verify the user's identity using their JWT

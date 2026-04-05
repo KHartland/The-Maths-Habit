@@ -1,5 +1,12 @@
 import Stripe from 'stripe';
 import { applyRateLimit, generalLimiter } from './_lib/rate-limit.js';
+import {
+  rejectOversizedPayload,
+  sanitiseBody,
+  sanitiseId,
+  sanitiseEmail,
+  sanitiseUrl,
+} from './_lib/sanitise.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -19,15 +26,40 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Reject oversized payloads (max 10 KB)
+  if (!rejectOversizedPayload(req, res).ok) return;
+
   // Rate limit: 100 requests per 15 minutes per IP
   const { success } = await applyRateLimit(req, res, generalLimiter);
   if (!success) return;
 
+  // Validate body is a JSON object
+  const { ok, body } = sanitiseBody(req, res);
+  if (!ok) return;
+
   try {
-    const { priceId, userId, userEmail, successUrl, cancelUrl } = req.body;
+    // Sanitise and validate each field
+    const priceId = sanitiseId(body.priceId);
+    const userId = sanitiseId(body.userId);
+    const userEmail = body.userEmail ? sanitiseEmail(body.userEmail) : null;
+    const successUrl = body.successUrl ? sanitiseUrl(body.successUrl) : null;
+    const cancelUrl = body.cancelUrl ? sanitiseUrl(body.cancelUrl) : null;
 
     if (!priceId || !userId) {
-      return res.status(400).json({ error: 'Missing required fields: priceId and userId' });
+      return res.status(400).json({ error: 'Missing or malformed required fields: priceId and userId' });
+    }
+
+    // If email was provided but failed validation, reject
+    if (body.userEmail && !userEmail) {
+      return res.status(400).json({ error: 'Malformed email address' });
+    }
+
+    // If URLs were provided but failed validation, reject
+    if (body.successUrl && !successUrl) {
+      return res.status(400).json({ error: 'Malformed successUrl — must be a valid https URL' });
+    }
+    if (body.cancelUrl && !cancelUrl) {
+      return res.status(400).json({ error: 'Malformed cancelUrl — must be a valid https URL' });
     }
 
     // Create Stripe checkout session
@@ -57,6 +89,6 @@ export default async function handler(req, res) {
     res.status(200).json({ sessionId: session.id, url: session.url });
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Failed to create checkout session' });
   }
 }
