@@ -487,6 +487,49 @@ body.high-contrast .text-primary-text {
   animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ── Auth modal animations ── */
+
+/* Overlay: fade in the dark backdrop */
+.auth-overlay-enter {
+  animation: authOverlayIn 0.3s ease-out both;
+}
+@keyframes authOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Card: slide up + fade in */
+.auth-card-enter {
+  animation: authCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes authCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Staggered children: each element fades in + slides up.
+   The delay is set inline via style={{ animationDelay }} in JSX. */
+.auth-stagger-item {
+  opacity: 0;
+  animation: authStaggerIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes authStaggerIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Logo pulse */
 @keyframes logo-pulse {
   0%, 100% {
