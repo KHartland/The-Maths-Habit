@@ -6,9 +6,9 @@ import { Capacitor } from '@capacitor/core';
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios';
 
 // Stagger delay helper — each element gets a progressively later start
-// First element waits 200ms (for the card to land), then 120ms gap between each
+// First element waits 350ms (for the card to land), then 150ms gap between each
 const staggerStyle = (index) => ({
-  animationDelay: `${200 + index * 120}ms`,
+  animationDelay: `${350 + index * 150}ms`,
 });
 
 const AuthModal = ({ isOpen, onClose, initialMode = 'signin' }) => {
