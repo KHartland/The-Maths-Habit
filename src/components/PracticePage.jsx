@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Check, ChevronRight, X, Sparkles, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Loader2, Trophy, Camera, Lock, Star, Flag } from 'lucide-react';
+import { Check, ChevronRight, X, Sparkles, AlertTriangle, Info, TrendingUp, Target, Award, Zap, Loader2, Trophy, Camera, Lock, Star, Flag, BookOpen } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import DOMPurify from 'dompurify';
 import DragDropOrder from './DragDropOrder';
