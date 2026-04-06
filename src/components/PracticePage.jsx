@@ -1024,9 +1024,9 @@ What is the student's answer?`
       } else {
         console.log('[CELEB DEBUG] No celebObjs - skipping celebration');
       }
+      setSessionResults(allAnswers);
       setRecentSessionCodes(codes);
       setShowFeedback(false);
-      setSessionResults([]);
       setSessionStarted(false);
 
       try {
