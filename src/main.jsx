@@ -29,11 +29,18 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 )
 
-// Register service worker for PWA
-if ('serviceWorker' in navigator) {
+// Register service worker for PWA (web only — skip on native apps where Capacitor bundles assets locally)
+import { Capacitor } from '@capacitor/core';
+if ('serviceWorker' in navigator && !Capacitor.isNativePlatform()) {
   window.addEventListener('load', () => {
     // Force-clear stale caches then re-register
     if (window.caches) { caches.keys().then(function(ks) { ks.forEach(function(k) { caches.delete(k); }); }); }
     navigator.serviceWorker.register('/sw.js').catch(function() {});
   });
+} else if (Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
+  // On native: unregister any stale service worker and clear caches
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    registrations.forEach(function(reg) { reg.unregister(); });
+  });
+  if (window.caches) { caches.keys().then(function(ks) { ks.forEach(function(k) { caches.delete(k); }); }); }
 }
