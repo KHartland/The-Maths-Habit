@@ -995,10 +995,11 @@ What is the student's answer?`
     } else {
       setTimeLeft(null);
 
+      const current = sessionQueue[currentIndex];
       const lastAnswer = { correct: !!isCorrect, code: current?.objective?.code || '??', topic: current?.objective?.topic || 'Unknown', newQuickCorrect: undefined };
       const allAnswers = [...sessionResults, lastAnswer];
       const codes = [...new Set(allAnswers.filter(r => r.code).map(r => r.code))];
-      const current = sessionQueue[currentIndex];
+
       const celebObjs = codes.map(code => {
         const rForCode = allAnswers.filter(r => r.code === code);
         const correctN = rForCode.filter(r => r.correct).length;

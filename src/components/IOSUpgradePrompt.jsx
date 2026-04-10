@@ -9,6 +9,16 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { getProducts, purchaseProduct, restorePurchases, PRODUCT_IDS } from '../lib/iapService';
 
+// Legal URLs — must match what's in App Store Connect metadata (Apple Guideline 3.1.2(c))
+const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+const PRIVACY_URL = 'https://www.themathshabit.co.uk/privacy-policy.html';
+
+// Opens external URLs in the system browser.
+// Capacitor 8 intercepts window.open with external URLs and hands off to Safari.
+const openExternalLink = (url) => {
+  window.open(url, '_blank');
+};
+
 export default function IOSUpgradePrompt({ isOpen, onClose, onSuccess }) {
   const [selectedPlan, setSelectedPlan] = useState('yearly');
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +90,7 @@ export default function IOSUpgradePrompt({ isOpen, onClose, onSuccess }) {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-white">Unlock Premium</h2>
+          <h2 className="text-xl font-bold text-white">Maths Habit Premium</h2>
           <p className="text-secondary-text text-sm mt-1">Unlimited questions, every topic, all features</p>
         </div>
 
@@ -111,9 +121,9 @@ export default function IOSUpgradePrompt({ isOpen, onClose, onSuccess }) {
                 : 'border-white/20 bg-white/5'
             }`}
           >
-            <div className="text-xs text-secondary-text">Monthly</div>
+            <div className="text-xs text-secondary-text">1 Month</div>
             <div className="text-lg font-bold text-white">{monthlyPrice}</div>
-            <div className="text-xs text-secondary-text">/month</div>
+            <div className="text-xs text-secondary-text">per month</div>
           </button>
 
           {/* Yearly */}
@@ -128,9 +138,9 @@ export default function IOSUpgradePrompt({ isOpen, onClose, onSuccess }) {
             <div className="absolute -top-2 right-2 bg-mint text-[#0d0a1a] text-[10px] font-bold px-2 py-0.5 rounded-full">
               BEST VALUE
             </div>
-            <div className="text-xs text-secondary-text">Yearly</div>
+            <div className="text-xs text-secondary-text">1 Year</div>
             <div className="text-lg font-bold text-white">{yearlyPrice}</div>
-            <div className="text-xs text-secondary-text">/year</div>
+            <div className="text-xs text-secondary-text">per year</div>
           </button>
         </div>
 
@@ -169,12 +179,33 @@ export default function IOSUpgradePrompt({ isOpen, onClose, onSuccess }) {
           {isRestoring ? 'Restoring...' : 'Restore previous purchase'}
         </button>
 
-        {/* Legal text */}
-        <p className="text-center text-[10px] text-white/30 mt-3">
-          Payment charged to your Apple ID. Subscription auto-renews unless cancelled
-          at least 24 hours before the end of the current period.
-          Manage in Settings → Apple ID → Subscriptions.
-        </p>
+        {/* Legal text + required links (Apple Guideline 3.1.2(c)) */}
+        <div className="mt-4 pt-3 border-t border-white/10">
+          <p className="text-center text-[10px] text-white/40 leading-relaxed">
+            <strong className="text-white/60">Maths Habit Premium</strong> is an auto-renewing subscription.
+            Payment will be charged to your Apple ID account at confirmation of purchase.
+            Your subscription automatically renews unless auto-renew is turned off at least 24 hours before the end of the current period.
+            Your account will be charged for renewal within 24 hours prior to the end of the current period.
+            You can manage and cancel your subscription by going to your account settings on the App Store after purchase.
+          </p>
+
+          {/* Required tappable legal links */}
+          <div className="flex justify-center items-center gap-4 mt-3">
+            <button
+              onClick={() => openExternalLink(TERMS_URL)}
+              className="text-[11px] text-white/70 underline hover:text-white transition-colors"
+            >
+              Terms of Use (EULA)
+            </button>
+            <span className="text-white/20">•</span>
+            <button
+              onClick={() => openExternalLink(PRIVACY_URL)}
+              className="text-[11px] text-white/70 underline hover:text-white transition-colors"
+            >
+              Privacy Policy
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

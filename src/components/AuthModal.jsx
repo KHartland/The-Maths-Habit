@@ -142,16 +142,18 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'signin' }) => {
         {mode !== 'reset' && (
           <>
             {/* Sign in with Apple — stagger item */}
+            {/* Apple HIG compliant button: matches size/shape of email submit, uses official wordmark (Guideline 4) */}
             <div key={`apple-${animKey}`} className="auth-stagger-item" style={staggerStyle(i++)}>
               <button
                 onClick={handleAppleSignIn}
                 disabled={loading}
-                className="w-full py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 mb-3"
+                aria-label={mode === 'signup' ? 'Sign up with Apple' : 'Sign in with Apple'}
+                className="w-full min-h-[44px] py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 mb-3 text-[17px]"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                <svg className="w-[18px] h-[22px]" viewBox="0 0 170 170" fill="currentColor" aria-hidden="true">
+                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.197-2.12-9.973-3.17-14.34-3.17-4.58 0-9.492 1.05-14.746 3.17-5.262 2.13-9.501 3.24-12.742 3.35-4.929.21-9.842-1.96-14.746-6.52-3.13-2.73-7.045-7.41-11.735-14.04-5.032-7.08-9.169-15.29-12.41-24.65-3.471-10.11-5.211-19.9-5.211-29.378 0-10.857 2.346-20.221 7.045-28.068 3.693-6.303 8.606-11.275 14.755-14.925s12.793-5.51 19.948-5.629c3.915 0 9.049 1.211 15.429 3.591 6.362 2.388 10.443 3.599 12.228 3.599 1.334 0 5.867-1.416 13.55-4.239 7.265-2.618 13.397-3.702 18.425-3.275 13.622 1.099 23.854 6.470 30.666 16.138-12.184 7.386-18.212 17.733-18.092 31.013.111 10.347 3.862 18.954 11.239 25.782 3.344 3.175 7.077 5.631 11.234 7.375-.902 2.617-1.853 5.122-2.865 7.527zM119.11 7.24c0 8.102-2.96 15.667-8.86 22.669-7.12 8.324-15.732 13.134-25.071 12.375a25.227 25.227 0 0 1-.188-3.07c0-7.778 3.386-16.102 9.399-22.908 3.002-3.446 6.82-6.311 11.45-8.597 4.62-2.252 8.99-3.497 13.1-3.71.12 1.083.17 2.166.17 3.24z"/>
                 </svg>
-                Continue with Apple
+                {mode === 'signup' ? 'Sign up with Apple' : 'Sign in with Apple'}
               </button>
             </div>
 
