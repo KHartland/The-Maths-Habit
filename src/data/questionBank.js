@@ -1191,7 +1191,7 @@ const goldQuestionBank = {
     [{ q: 'A salary of £24,000 is increased by 5%. Then 20% tax is deducted. Work out the take-home amount.', a: '20160', calculator: true, worked: ['Increase by 5%: £24,000 × 1.05 = £25,200', 'Deduct 20% tax: £25,200 × 0.8 = £20,160'] }], // Grade 5
   ],
   'A22': [ // Obj 24: Inequalities
-    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq', options: ['The value is included', 'The value is excluded', 'The value is zero', 'The value is the maximum'], worked: ['A solid circle on a number line means that value IS included', 'For x ≥ 4, the solid circle shows 4 is included'] }], // Grade 1
+    [{ q: 'Which of these means "x is greater than 5"?', a: 'x > 5', type: 'mcq', options: ['x > 5', 'x < 5', 'x = 5', 'x ≥ 5'], worked: ['The > symbol means "greater than"', 'x > 5 means x is greater than 5'] }], // Grade 1
     [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5', worked: ['−2 < n means n > −2', 'n ≤ 3 means n = 3', 'Values: −1, 0, 1, 2, 3', 'Count = 5 integers'] }], // Grade 2
     [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7', worked: ['4x > 24', 'x > 24 ÷ 4', 'x > 6', 'Smallest integer = 7'] }], // Grade 3
     [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7', worked: ['3y − 5 ≤ 16', '3y ≤ 21', 'y ≤ 7', 'Largest integer = 7'] }], // Grade 4
@@ -1268,11 +1268,11 @@ const goldQuestionBank = {
     [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8', worked: ['Total work = 4 × 6 = 24 builder-days', 'For 3 builders: 24 ÷ 3 = 8 days'] }], // Grade 5
   ],
   'R8': [ // Obj 67: Column Vectors
-    [{ q: 'Write the column vector for a translation of 4 units right and 2 units down.', a: '(4, −2)', type: 'text' , worked: ['Translation right 4 means +4', 'Translation down 2 means −2', 'Column vector is (4, −2)']}], // Grade 1
-    [{ q: 'a = (5, 3) and b = (4, −1). Find a + b.', a: '(9, 2)', type: 'text' , worked: ['a + b means add the vectors component-wise', '(5, 3) + (4, −1) = (5+4, 3+(−1)) = (9, 2)']}], // Grade 2
-    [{ q: 'p = (−2, 5). Find 4p.', a: '(−8, 20)', type: 'text' , worked: ['4p means multiply vector p by 4', '4 × (−2, 5) = (4×(−2), 4×5) = (−8, 20)']}], // Grade 3
-    [{ q: 'c = (1, 4) and d = (−3, 2). Find 2c − d.', a: '(5, 6)', type: 'text' , worked: ['2c = 2(1, 4) = (2, 8)', '2c − d = (2, 8) − (−3, 2) = (2−(−3), 8−2) = (5, 6)']}], // Grade 4
-    [{ q: 'x = (k, 4) and y = (6, m). Given that 3x + y = (12, 17), find the value of k.', a: '2', worked: ['3x + y = (12, 17)', '3(k, 4) + (6, m) = (12, 17)', '(3k, 12) + (6, m) = (12, 17)', '3k + 6 = 12, so 3k = 6, k = 2'] }], // Grade 5
+    [{ q: 'Write the column vector for a translation of 4 units right and 2 units down.', a: '(4, −2)', type: 'text' , worked: ['Translation right 4 means +4', 'Translation down 2 means −2', 'Column vector is [vec:4,-2]']}], // Grade 1
+    [{ q: 'a = [vec:5,3] and b = [vec:4,-1]. Find a + b.', a: '(9, 2)', type: 'text' , worked: ['a + b means add the vectors component-wise', '[vec:5,3] + [vec:4,-1] = [vec:9,2]']}], // Grade 2
+    [{ q: 'p = [vec:-2,5]. Find 4p.', a: '(−8, 20)', type: 'text' , worked: ['4p means multiply vector p by 4', '4 × [vec:-2,5] = [vec:-8,20]']}], // Grade 3
+    [{ q: 'c = [vec:1,4] and d = [vec:-3,2]. Find 2c − d.', a: '(5, 6)', type: 'text' , worked: ['2c = 2 × [vec:1,4] = [vec:2,8]', '2c − d = [vec:2,8] − [vec:-3,2] = [vec:5,6]']}], // Grade 4
+    [{ q: 'x = (k, 4) and y = (6, m). Given that 3x + y = [vec:12,17], find the value of k.', a: '2', worked: ['3x + y = [vec:12,17]', '3(k, 4) + (6, m) = [vec:12,17]', '(3k, 12) + (6, m) = [vec:12,17]', '3k + 6 = 12, so 3k = 6, k = 2'] }], // Grade 5
   ],
   'R9': [ // Obj 29: % Increase/Decrease
     [{ q: 'Work out 10% of £48.', a: '4.80', worked: ['10% = ÷ 10', '£48 ÷ 10 = £4.80'] }], // Grade 1
@@ -1457,11 +1457,11 @@ const goldQuestionBank = {
     [{ q: 'A right-angled triangle has an angle of 30° and a hypotenuse of 12 cm. Work out the exact length of the side opposite the 30° angle.', a: '6', frozen: true , worked: ['sin(30°) = Opposite ÷ Hypotenuse', 'sin(30°) = 0.5 = Opposite ÷ 12', 'Opposite = 0.5 × 12 = 6 cm']}], // Grade 5
   ],
   'G25': [ // Obj 40: Vectors
-    [{ q: 'Write the column vector for a translation of 3 units right and 2 units down.', a: '(3, −2)', type: 'text' , worked: ['Translation right 3 means +3', 'Translation down 2 means −2', 'Column vector is (3, −2)']}], // Grade 1
-    [{ q: 'a = (1, 4) and b = (5, 2). Work out a + b.', a: '(6, 6)', type: 'text', worked: ['Add corresponding components', '(1 + 5, 4 + 2) = (6, 6)'] }], // Grade 2
-    [{ q: 'p = (6, −3). Work out 2p.', a: '(12, −6)', type: 'text', worked: ['Multiply each component by 2', '2 × (6, −3) = (12, −6)'] }], // Grade 3
-    [{ q: 'c = (−2, 5) and d = (4, 1). Work out 3c − d.', a: '(−10, 14)', type: 'text', worked: ['3c = 3 × (−2, 5) = (−6, 15)', '3c − d = (−6, 15) − (4, 1) = (−6 − 4, 15 − 1) = (−10, 14)'] }], // Grade 4
-    [{ q: 'The vector from A to B is (−7, 4). A has coordinates (2, 5). Find the coordinates of B.', a: '(−5, 9)', type: 'text', worked: ['A + vector AB = B', '(2, 5) + (−7, 4) = B', 'B = (2 − 7, 5 + 4) = (−5, 9)'] }], // Grade 5
+    [{ q: 'Write the column vector for a translation of 3 units right and 2 units down.', a: '(3, −2)', type: 'text' , worked: ['Translation right 3 means +3', 'Translation down 2 means −2', 'Column vector is [vec:3,-2]']}], // Grade 1
+    [{ q: 'a = [vec:1,4] and b = [vec:5,2]. Work out a + b.', a: '(6, 6)', type: 'text', worked: ['Add corresponding components', '[vec:1,4] + [vec:5,2] = [vec:6,6]'] }], // Grade 2
+    [{ q: 'p = [vec:6,-3]. Work out 2p.', a: '(12, −6)', type: 'text', worked: ['Multiply each component by 2', '2 × [vec:6,-3] = [vec:12,-6]'] }], // Grade 3
+    [{ q: 'c = [vec:-2,5] and d = [vec:4,1]. Work out 3c − d.', a: '(−10, 14)', type: 'text', worked: ['3c = 3 × [vec:-2,5] = [vec:-6,15]', '3c − d = [vec:-6,15] − [vec:4,1] = [vec:-10,14]'] }], // Grade 4
+    [{ q: 'The vector from A to B is [vec:-7,4]. A has coordinates (2, 5). Find the coordinates of B.', a: '(−5, 9)', type: 'text', worked: ['A + vector AB = B', '(2, 5) + [vec:-7,4] = B', 'B = (2 − 7, 5 + 4) = (−5, 9)'] }], // Grade 5
   ],
   'P1': [ // Obj 17: Probability
     [{ q: 'A fair coin is flipped. What is the probability that it lands on Tails?', a: '1/2', type: 'fraction' , worked: ['A fair coin has 2 equally likely outcomes: Heads or Tails', 'P(Tails) = 1/2']}], // Grade 1
@@ -1499,7 +1499,7 @@ const goldQuestionBank = {
     [{ q: 'In a valid bar chart, what must be true about the bars?', a: 'They must all have equal width', type: 'mcq', options: ['They must all have equal width', 'They must all have different widths', 'They must touch each other', 'They must be in order of size'], worked: ['In a bar chart, the height represents frequency', 'All bars must have the same width so comparisons are fair', 'If bars had different widths, the visual would be misleading'] }], // Grade 5
   ],
   'P6': [ // Obj 27: Venn Diagrams
-    [{ q: 'The set A = {factors of 12} and the set B = {factors of 18}. How many numbers are in both sets?', a: '4', worked: ['A = {1, 2, 3, 4, 6, 12}', 'B = {1, 2, 3, 6, 9, 18}', 'Numbers in both A and B: {1, 2, 3, 6}', 'Count = 4'] }], // Grade 1
+    [{ q: 'In a Venn diagram, 5 people like cats, 3 people like dogs, and 2 people like both. How many people like cats only?', a: '3', worked: ['People who like cats only = total cats − both', 'Cats only = 5 − 2 = 3'] }], // Grade 1
     [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq', options: ['Both A and B', 'A only', 'B only', 'Neither A nor B'], worked: ['A ∩ B (intersection) is the set of elements in both A and B'] }], // Grade 2
     [{ q: 'In a group of 40 students, 22 study French, 15 study Spanish, and 7 study neither.\nHow many students study both French and Spanish?', a: '4', worked: ['Students studying at least one language = 40 − 7 = 33', 'Using inclusion-exclusion: 22 + 15 − both = 33', 'Both = 37 − 33 = 4'] }], // Grade 3
     [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4

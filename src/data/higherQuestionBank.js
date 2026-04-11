@@ -1906,38 +1906,38 @@ export const higherQuestionBank = {
       {
         q: 'Write the column vector for a displacement of 3 units right and 2 units up.',
         a: '(3 2)',
-        worked: ['Column vector notation: (horizontal component over vertical component)', '(3 2) represents 3 right, 2 up'],
+        worked: ['Column vector notation: top number is horizontal, bottom is vertical', '[vec:3,2] represents 3 right, 2 up'],
         calculator: false
       },
       {
-        q: 'Add the vectors (2 3) and (1 2). Write the resulting vector.',
+        q: 'Add the vectors [vec:2,3] and [vec:1,2]. Write the resulting vector.',
         a: '(3 5)',
-        worked: ['Vector addition: (2 3) + (1 2) = (2+1 3+2) = (3 5)'],
+        worked: ['Vector addition: [vec:2,3] + [vec:1,2] = [vec:3,5]'],
         calculator: false
       },
       {
-        q: 'If vector a = (4 1) and vector b = (2 3), find a + b.',
+        q: 'If vector a = [vec:4,1] and vector b = [vec:2,3], find a + b.',
         a: '(6 4)',
-        worked: ['a + b = (4 1) + (2 3) = (4+2 1+3) = (6 4)'],
+        worked: ['a + b = [vec:4,1] + [vec:2,3] = [vec:6,4]'],
         calculator: false
       }
     ],
     // Grade 5
     [
       {
-        q: 'Find the magnitude of vector (3 4).',
+        q: 'Find the magnitude of vector [vec:3,4].',
         a: '5',
         worked: ['Magnitude = √(3² + 4²) = √(9 + 16) = √25 = 5'],
         calculator: false
       },
       {
-        q: 'If a = (2 5) and b = (3 1), find 2a + b.',
+        q: 'If a = [vec:2,5] and b = [vec:3,1], find 2a + b.',
         a: '(7 11)',
-        worked: ['2a = 2(2 5) = (4 10)', '2a + b = (4 10) + (3 1) = (7 11)'],
+        worked: ['2a = 2 × [vec:2,5] = [vec:4,10]', '2a + b = [vec:4,10] + [vec:3,1] = [vec:7,11]'],
         calculator: false
       },
       {
-        q: 'Find the magnitude of vector (5 12) to 1 dp.',
+        q: 'Find the magnitude of vector [vec:5,12] to 1 dp.',
         a: '13.0',
         worked: ['Magnitude = √(5² + 12²) = √(25 + 144) = √169 = 13'],
         calculator: false
@@ -1946,43 +1946,42 @@ export const higherQuestionBank = {
     // Grade 6
     [
       {
-        q: 'In parallelogram ABCD, AB = (3 2) and AD = (1 4). Find vector BC.',
-        a: '(3 2)',
-        worked: ['In a parallelogram, opposite sides are equal vectors', 'BC = AD = (1 4)... Wait, that\'s not right. Let me reconsider: AB and DC are opposite (equal). AD and BC are opposite (equal). So BC = AD = (1 4). But answer is (3 2). Maybe BC = AB? In a parallelogram, AB = DC and AD = BC. So BC should equal AD = (1 4). But if answer is (3 2), perhaps the question meant: find AC or something. Let me assume BC = AB = (3 2) means we\'re looking at a different setup or there\'s a restatement.'],
-        worked: ['In a parallelogram ABCD, AB is parallel to DC and AD is parallel to BC', 'Actually, BC = AD (opposite sides are parallel and equal)', 'So BC = (1 4)... But if answer is (3 2), perhaps question asks for vector AC or the problem setup differs. Assuming BC refers to the vector from B to C same direction as AD would give AD, but if answer is (3 2) = AB direction, perhaps BC is asking for magnitude or different configuration.'],
+        q: 'In parallelogram ABCD, AB = [vec:3,2] and AD = [vec:1,4]. Find vector AC.',
+        a: '(4 6)',
+        worked: ['In a parallelogram, AC = AB + BC', 'BC = AD = [vec:1,4]', 'AC = [vec:3,2] + [vec:1,4] = [vec:4,6]'],
         calculator: false
       },
       {
         q: 'Points A(1,2), B(4,5), C(7,2) form a triangle. Express vector AB and vector AC in component form.',
         a: 'AB = (3 3), AC = (6 0)',
-        worked: ['AB = B - A = (4-1 5-2) = (3 3)', 'AC = C - A = (7-1 2-2) = (6 0)'],
+        worked: ['AB = B − A = [vec:3,3]', 'AC = C − A = [vec:6,0]'],
         calculator: false
       },
       {
-        q: 'If vectors u = (2 3) and v = (1 2), find u - v and |u - v|.',
+        q: 'If vectors u = [vec:2,3] and v = [vec:1,2], find u − v and |u − v|.',
         a: 'u - v = (1 1), |u - v| = √2',
-        worked: ['u - v = (2 3) - (1 2) = (2-1 3-2) = (1 1)', '|u - v| = √(1² + 1²) = √2'],
+        worked: ['u − v = [vec:2,3] − [vec:1,2] = [vec:1,1]', '|u − v| = √(1² + 1²) = √2'],
         calculator: false
       }
     ],
     // Grade 7
     [
       {
-        q: 'If vector AB = (2 5) and point A is (1, 3), find the coordinates of point B.',
+        q: 'If vector AB = [vec:2,5] and point A is (1, 3), find the coordinates of point B.',
         a: '(3, 8)',
-        worked: ['B = A + AB = (1, 3) + (2, 5) = (1+2, 3+5) = (3, 8)'],
+        worked: ['B = A + AB = (1, 3) + [vec:2,5] = (1+2, 3+5) = (3, 8)'],
         calculator: false
       },
       {
-        q: 'Prove that vectors (2 4) and (3 6) are parallel.',
+        q: 'Prove that vectors [vec:2,4] and [vec:3,6] are parallel.',
         a: 'Yes, (3 6) = 1.5 × (2 4)',
-        worked: ['Two vectors are parallel if one is a scalar multiple of the other', '(3 6) = 1.5 × (2 4) = (1.5×2 1.5×4) = (3 6)', 'Therefore they are parallel'],
+        worked: ['Two vectors are parallel if one is a scalar multiple of the other', '[vec:3,6] = 1.5 × [vec:2,4]', 'Therefore they are parallel'],
         calculator: false
       },
       {
-        q: 'In triangle ABC, M is the midpoint of BC. If AB = (4 2) and AC = (2 6), find vector AM using the triangle midpoint formula.',
+        q: 'In triangle ABC, M is the midpoint of BC. If AB = [vec:4,2] and AC = [vec:2,6], find vector AM using the triangle midpoint formula.',
         a: '(3 4)',
-        worked: ['M is midpoint of BC', 'Vector AM = (AB + AC)/2', 'AM = ((4 2) + (2 6))/2 = (6 8)/2 = (3 4)'],
+        worked: ['M is midpoint of BC', 'Vector AM = (AB + AC)/2', 'AM = ([vec:4,2] + [vec:2,6])/2 = [vec:6,8]/2 = [vec:3,4]'],
         calculator: false
       }
     ],
@@ -1991,13 +1990,13 @@ export const higherQuestionBank = {
       {
         q: 'Prove that points P(1,2), Q(3,5), R(5,8) are collinear using vectors.',
         a: 'Yes, PQ = (2 3), PR = (4 6) = 2×PQ, so collinear',
-        worked: ['PQ = Q - P = (3-1 5-2) = (2 3)', 'PR = R - P = (5-1 8-2) = (4 6)', 'PR = 2 × PQ, so vectors are parallel', 'Since PR is a scalar multiple of PQ and they share point P, the points are collinear'],
+        worked: ['PQ = Q − P = [vec:2,3]', 'PR = R − P = [vec:4,6]', 'PR = 2 × PQ, so vectors are parallel', 'Since PR is a scalar multiple of PQ and they share point P, the points are collinear'],
         calculator: false
       },
       {
         q: 'If ABCD is a parallelogram with A(1,1), B(4,2), C(6,5), find D using vectors.',
         a: '(3, 4)',
-        worked: ['In a parallelogram, diagonal vectors bisect each other', 'AB = B - A = (4-1 2-1) = (3 1)', 'DC = C - D should equal AB (opposite sides are equal)', '(6 - Dx, 5 - Dy) = (3 1)', '6 - Dx = 3 and 5 - Dy = 1', 'Dx = 3 and Dy = 4', 'D = (3, 4)'],
+        worked: ['In a parallelogram, opposite sides are equal vectors', 'AB = B − A = [vec:3,1]', 'D = C − AB = (6, 5) − [vec:3,1] = (3, 4)'],
         calculator: false
       },
       {

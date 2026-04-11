@@ -366,9 +366,9 @@ export const diamondQuestionBank = {
     [{ q: 'What is the exact value of tan(60°)?', a: '√3', worked: ['tan 60° = √3 ≈ 1.732...', 'Exact value = √3'], calculator: false }]
   ],
   G25: [
-    [{ q: 'A shape is translated by (−4, 3). Describe the movement.', a: '4 left, 3 up', type: 'mcq', options: ['4 left, 3 up', '4 right, 3 up', '4 left, 3 down', '3 left, 4 up'], worked: ['−4 means 4 left', '+3 means 3 up'], calculator: false }],
-    [{ q: 'a = (2, 5), b = (−1, 4). Calculate a + 2b.', a: '(0, 13)', worked: ['2b = (−2, 8)', 'a + 2b = (2+(−2), 5+8) = (0, 13)'], calculator: false }],
-    [{ q: 'p = (3, −1), q = (−2, 5). Calculate 2p − q.', a: '(8, −7)', worked: ['2p = (6, −2)', '2p − q = (6−(−2), −2−5) = (8, −7)'], calculator: false }]
+    [{ q: 'A shape is translated by [vec:-4,3]. Describe the movement.', a: '4 left, 3 up', type: 'mcq', options: ['4 left, 3 up', '4 right, 3 up', '4 left, 3 down', '3 left, 4 up'], worked: ['−4 means 4 left', '+3 means 3 up'], calculator: false }],
+    [{ q: 'a = [vec:2,5], b = [vec:-1,4]. Calculate a + 2b.', a: '(0, 13)', worked: ['2b = [vec:-2,8]', 'a + 2b = [vec:0,13]'], calculator: false }],
+    [{ q: 'p = [vec:3,-1], q = [vec:-2,5]. Calculate 2p − q.', a: '(8, −7)', worked: ['2p = [vec:6,-2]', '2p − q = [vec:8,-7]'], calculator: false }]
   ],
 
   // PROBABILITY: P1-P8

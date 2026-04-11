@@ -26,6 +26,7 @@ import {
   loadStreakData, saveStreakData, calculateStreak, checkStreakMilestone,
 } from '../lib/storage.js';
 import { getAllSchools, createSchool, joinSchool, joinSchoolByCode, leaveSchool, getUserSchool } from '../lib/leaderboardService';
+import { clearCloudData } from '../lib/syncService';
 import { isMastered } from '../lib/sessionQueue.js';
 
 const isNativeIOS = () => Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios";
@@ -362,7 +363,8 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   };
 
   // Handle reset
-  const handleReset = () => {
+  const handleReset = async () => {
+    if (user) await clearCloudData(user.id);
     resetAllProgress();
     window.location.reload();
   };
