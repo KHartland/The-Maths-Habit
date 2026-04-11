@@ -140,6 +140,15 @@ const extractMultipleValues = (str) => {
   return null;
 };
 
+// Strip leading articles and clean up text for comparison
+const stripArticles = (str) => {
+  return str
+    .replace(/^(a|an|the|its|it's)\s+/i, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
+};
+
 // Main forgiving comparison function
 const answersEquivalent = (userAnswer, correctAnswer) => {
   if (!userAnswer || !correctAnswer) return false;
@@ -155,6 +164,12 @@ const answersEquivalent = (userAnswer, correctAnswer) => {
 
   // Exact match after normalization
   if (userNorm === correctNorm) return true;
+
+  // Text-answer fuzzy matching: strip articles and compare
+  // e.g. "the hypotenuse" matches "hypotenuse", "a circle" matches "circle"
+  const userText = stripArticles(userAnswer.trim());
+  const correctText = stripArticles(correctAnswer.trim());
+  if (userText && correctText && userText === correctText) return true;
 
   // Check if the correct answer contains multiple values (comma-separated list)
   // If so, require the user answer to also have multiple values

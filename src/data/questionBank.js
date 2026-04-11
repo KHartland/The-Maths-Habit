@@ -181,9 +181,9 @@ const questionBank = {
     ],
     // Level 4 (4 marks) — Compare two shops (VAT and discounts)
     [
-      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off. Which shop is cheaper?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", worked: ["Shop A: £400 + 20% VAT = £400 × 1.2 = £480", "Shop B: £500 − 15% = £500 × 0.85 = £425", "Shop B is cheaper at £425"] },
-      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off. Which shop is cheaper?", type: "mcq", options: ["Shop X", "Shop Y"], a: "Shop Y", worked: ["Shop X: £240 + 20% VAT = £240 × 1.2 = £288", "Shop Y: £350 − 20% = £350 × 0.8 = £280", "Shop Y is cheaper at £280"] },
-      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off. Which shop is cheaper?", type: "mcq", options: ["Shop Alpha", "Shop Beta"], a: "Shop Beta", worked: ["Shop Alpha: £300 + 20% VAT = £300 × 1.2 = £360", "Shop Beta: £450 − 30% = £450 × 0.7 = £315", "Shop Beta is cheaper at £315"] },
+      { q: "Shop A sells a TV for £400 + 20% VAT. Shop B sells the same TV for £500, but offers 15% off.\nWhat is the cheaper price? Give your answer in £.", a: "425", worked: ["Shop A: £400 + 20% VAT = £400 × 1.2 = £480", "Shop B: £500 − 15% = £500 × 0.85 = £425", "Shop B is cheaper at £425"], calculator: true },
+      { q: "Shop X sells a bike for £240 + 20% VAT. Shop Y sells the same bike for £350, but offers 20% off.\nWhat is the cheaper price? Give your answer in £.", a: "280", worked: ["Shop X: £240 + 20% VAT = £240 × 1.2 = £288", "Shop Y: £350 − 20% = £350 × 0.8 = £280", "Shop Y is cheaper at £280"], calculator: true },
+      { q: "Shop Alpha sells a laptop for £300 + 20% VAT. Shop Beta sells the same laptop for £450, but offers 30% off.\nWhat is the cheaper price? Give your answer in £.", a: "315", worked: ["Shop Alpha: £300 + 20% VAT = £300 × 1.2 = £360", "Shop Beta: £450 − 30% = £450 × 0.7 = £315", "Shop Beta is cheaper at £315"], calculator: true },
     ],
   ],
 
@@ -793,7 +793,7 @@ const questionBank = {
     [
       { q: "A shop offers 'Buy 2 Get 1 Free' on bars of chocolate. One bar costs 65p. How much does it cost to get 9 bars? Give your answer in £.", a: "3.90", worked: ["Buy 2 Get 1 Free: every 3 bars costs 2 × 65p = 130p", "9 bars = 3 groups of 3", "Total: 3 × 130p = 390p = £3.90"] },
       { q: "A shop offers 'Buy One Get One Half Price' on chocolates costing £1.20 each. How much for 6 bars? Give your answer in £.", a: "5.40", worked: ["Each pair costs £1.20 + £0.60 = £1.80", "6 bars = 3 pairs", "Total: 3 × £1.80 = £5.40"] },
-      { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", worked: ["Shop A: £1.20 ÷ 0.5 kg = £2.40 per kg", "Shop B: £1.70 ÷ 0.75 kg = £2.27 per kg", "Shop B is cheaper per kg, so better value"] },
+      { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70.\nWhat is the price per kg at the cheaper shop? Give your answer in £ to 2 decimal places.", a: "2.27", worked: ["Shop A: £1.20 ÷ 0.5 kg = £2.40 per kg", "Shop B: £1.70 ÷ 0.75 kg = £2.27 per kg", "Shop B is cheaper per kg at £2.27"], calculator: true },
     ],
     // Level 4 (3 marks) — Tiered pricing
     [
@@ -887,9 +887,9 @@ const questionBank = {
     ],
     // Level 2 (2 marks) — Plans and elevations (G11)
     [
-      { q: "What 2D shape would you see if you looked directly down at a cylinder from above?", a: "circle", worked: ["Looking from above means looking at the top face", "A cylinder has a circular top", "Answer: circle"] },
-      { q: "What 2D shape would you see if you looked directly down at a sphere from above?", a: "circle", worked: ["A sphere has a circular outline from any viewpoint", "Looking from any direction gives a circle", "Answer: circle"] },
-      { q: "What 2D shape would you see if you looked at a cone from the front?", a: "triangle", worked: ["A cone has a circular base and a pointed top", "From the front, you see the height and width", "This creates a triangular outline"] },
+      { q: "What 2D shape would you see if you looked directly down at a cylinder from above?", type: "mcq", options: ["Circle", "Rectangle", "Square", "Oval"], a: "Circle", worked: ["Looking from above means looking at the top face", "A cylinder has a circular top", "Answer: circle"] },
+      { q: "What 2D shape would you see if you looked directly down at a sphere from above?", type: "mcq", options: ["Circle", "Semicircle", "Oval", "Square"], a: "Circle", worked: ["A sphere has a circular outline from any viewpoint", "Looking from any direction gives a circle", "Answer: circle"] },
+      { q: "What 2D shape would you see if you looked at a cone from the front?", type: "mcq", options: ["Triangle", "Circle", "Semicircle", "Rectangle"], a: "Triangle", worked: ["A cone has a circular base and a pointed top", "From the front, you see the height and width", "This creates a triangular outline"] },
     ],
     // Level 3 (3 marks) — Vector addition (G25)
     [
@@ -970,7 +970,7 @@ const goldQuestionBank = {
     [{ q: 'Write 50% as a fraction in its simplest form.', a: '1/2', type: 'fraction', worked: ['50% means 50 out of 100', '50/100 = 1/2 when simplified'] }], // Grade 1
     [{ q: 'Write 0.3 as a fraction.', a: '3/10', type: 'fraction', worked: ['0.3 has one decimal place', '0.3 = 3/10'] }], // Grade 2
     [{ q: 'Write 3/4 as a percentage.', a: '75', worked: ['3/4 = ? out of 100', 'Multiply both numerator and denominator by 25: (3 × 25)/(4 × 25) = 75/100', '75/100 = 75%'] }], // Grade 3
-    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq', worked: ['Convert all to decimals: 0.42, 45% = 0.45, 8/30 ≈ 0.267, 0.404', 'Order: 0.267 < 0.404 < 0.42 < 0.45', '8/30 is the smallest'] }], // Grade 4
+    [{ q: 'Which of these is the smallest: 0.42, 45%, 8/30, or 0.404?', a: '8/30', type: 'mcq', options: ['0.42', '45%', '8/30', '0.404'], worked: ['Convert all to decimals: 0.42, 45% = 0.45, 8/30 ≈ 0.267, 0.404', 'Order: 0.267 < 0.404 < 0.42 < 0.45', '8/30 is the smallest'] }], // Grade 4
     [{ q: 'Express 65 out of 80 as a percentage.', a: '81.25', worked: ['65 out of 80 = 65/80', 'Convert to a percentage: (65/80) × 100', '0.8125 × 100 = 81.25%'] }], // Grade 5
   ],
   'N2': [ // Obj 1: Basic Arithmetic
@@ -1023,9 +1023,9 @@ const goldQuestionBank = {
     [{ q: 'Work out 2 1/3 ÷ 1 3/4. Give your answer as a mixed number in its simplest form.', a: '1 1/3', type: 'fraction', worked: ['Convert to improper fractions: 2 1/3 = 7/3 and 1 3/4 = 7/4', 'To divide fractions, multiply by the reciprocal: 7/3 × 4/7', 'Simplify: (7 × 4)/(3 × 7) = 28/21 = 4/3', 'Convert to mixed number: 4/3 = 1 1/3'] }], // Grade 5
   ],
   'N9': [ // Obj 9: Standard Form
-    [{ q: 'Which of these is 4,000 in standard form? A) 4×10³  B) 40×10²  C) 0.4×10⁴', a: '4×10^3', type: 'mcq' , worked: ['4,000 = 4 × 1,000 = 4 × 10³', 'So the answer is 4×10³ (Option A)']}], // Grade 1
+    [{ q: 'Which of these is 4,000 in standard form?', a: '4 × 10³', type: 'mcq', options: ['4 × 10³', '40 × 10²', '0.4 × 10⁴', '4 × 10⁴'], worked: ['4,000 = 4 × 1,000 = 4 × 10³', 'Standard form needs a number between 1 and 10 multiplied by a power of 10'] }], // Grade 1
     [{ q: 'Write 3.5 × 10³ as an ordinary number.', a: '3500', worked: ['3.5 × 10³ means 3.5 × 1000', '3.5 × 1000 = 3500'] }], // Grade 2
-    [{ q: 'Which is 0.00072 in standard form? A) 7.2×10⁻⁴  B) 72×10⁻⁵  C) 0.72×10⁻³', a: '7.2×10^-4', type: 'mcq' , worked: ['0.00072: Move decimal 4 places right to get 7.2', 'Moved right so power is negative: 7.2 × 10⁻⁴', 'Option A is correct']}], // Grade 3
+    [{ q: 'Which of these is 0.00072 in standard form?', a: '7.2 × 10⁻⁴', type: 'mcq', options: ['7.2 × 10⁻⁴', '72 × 10⁻⁵', '0.72 × 10⁻³', '7.2 × 10⁻³'], worked: ['0.00072: Move decimal 4 places right to get 7.2', 'Moved right so power is negative: 7.2 × 10⁻⁴'] }], // Grade 3
     [{ q: 'Work out (2×10⁴)×(4×10³). Give your answer in the form k × 10ⁿ. What is the value of n?', a: '7' , worked: ['(2×10⁴)×(4×10³) = (2×4)×(10⁴×10³)', 'When multiplying powers of 10, add the exponents: 4+3=7', '8×10⁷, so n = 7']}], // Grade 4
     [{ q: 'Work out (8×10⁵)÷(2×10²). What is the number in front of the power of 10 in your answer?', a: '4' , worked: ['(8×10⁵)÷(2×10²) = (8÷2)×(10⁵÷10²)', 'When dividing powers of 10, subtract exponents: 5-2=3', '4×10³, number in front is 4']}], // Grade 5
   ],
@@ -1093,8 +1093,8 @@ const goldQuestionBank = {
     [{ q: 'A machine divides by 2 then adds 7. If the input is 4x and the output is x + 12, find x.', a: '5', worked: ['Set up equation: (4x ÷ 2) + 7 = x + 12', '2x + 7 = x + 12', 'Subtract x: x + 7 = 12', 'Subtract 7: x = 5'] }], // Grade 5
   ],
   'A3': [ // Obj 76: Inequalities (2)
-    [{ q: 'On a number line, what does a solid circle at a number represent?', a: 'Included', type: 'mcq', worked: ['A solid (filled) circle means the number is included', 'A hollow circle means the number is excluded'] }], // Grade 1
-    [{ q: 'A hollow circle is drawn at −2 with an arrow pointing right. Does the inequality include −2?', a: 'No', type: 'mcq', worked: ['A hollow circle means the value is NOT included', 'Arrow right means greater than', 'So: x > −2 (−2 not included)'] }], // Grade 2
+    [{ q: 'On a number line, what does a solid circle at a number represent?', a: 'The number is included', type: 'mcq', options: ['The number is included', 'The number is excluded', 'The number is zero', 'The number is negative'], worked: ['A solid (filled) circle means the number is included', 'A hollow circle means the number is excluded'] }], // Grade 1
+    [{ q: 'A hollow circle is drawn at −2 with an arrow pointing right. Which inequality does this show?', a: 'x > −2', type: 'mcq', options: ['x > −2', 'x ≥ −2', 'x < −2', 'x ≤ −2'], worked: ['A hollow circle means the value is NOT included (strict inequality)', 'Arrow pointing right means greater than', 'So: x > −2'] }], // Grade 2
     [{ q: 'Solve 3x − 4 > 11. What is the smallest integer value of x?', a: '6', worked: ['Add 4: 3x > 15', 'Divide by 3: x > 5', 'Smallest integer greater than 5 is 6'] }], // Grade 3
     [{ q: 'Solve 5x + 7 ≤ 2x + 22. What is the largest integer value of x?', a: '5', worked: ['Subtract 2x: 3x + 7 ≤ 22', 'Subtract 7: 3x ≤ 15', 'Divide by 3: x ≤ 5', 'Largest integer ≤ 5 is 5'] }], // Grade 4
     [{ q: 'How many integers satisfy −3 < 2n ≤ 5?', a: '4', worked: ['Divide by 2: −1.5 < n ≤ 2.5', 'Integers in this range: −1, 0, 1, 2', 'That is 4 integers'] }], // Grade 5
@@ -1131,7 +1131,7 @@ const goldQuestionBank = {
     [{ q: 'Write down the coordinates of the origin.', a: '(0, 0)', type: 'text', worked: ['The origin is where the x-axis and y-axis meet', 'x-coordinate = 0, y-coordinate = 0', 'Answer: (0, 0)'] }], // Grade 1
     [{ q: 'Point A is at (2, 5). It is translated 3 units right and 1 unit down. What are the new coordinates?', a: '(5, 4)', type: 'text', worked: ['Move 3 units right: x = 2 + 3 = 5', 'Move 1 unit down: y = 5 − 1 = 4', 'New coordinates: (5, 4)'] }], // Grade 2
     [{ q: 'Find the midpoint of the line segment from (2, 3) to (6, 9).', a: '(4, 6)', type: 'text', worked: ['Midpoint x = (2 + 6) ÷ 2 = 8 ÷ 2 = 4', 'Midpoint y = (3 + 9) ÷ 2 = 12 ÷ 2 = 6', 'Midpoint: (4, 6)'] }], // Grade 3
-    [{ q: 'Does the point (3, 11) lie on the line y = 4x − 1?', a: 'Yes', type: 'mcq', worked: ['Substitute x = 3 into y = 4x − 1', 'y = 4(3) − 1 = 12 − 1 = 11', 'When x = 3, y = 11, so the point lies on the line'] }], // Grade 4
+    [{ q: 'Substitute x = 3 into y = 4x − 1. What value of y do you get?', a: '11', worked: ['y = 4(3) − 1', 'y = 12 − 1', 'y = 11'] }], // Grade 4
     [{ q: 'A line passes through (0, 2) and (2, 8). Work out the gradient.', a: '3', worked: ['Gradient = (change in y) ÷ (change in x)', '= (8 − 2) ÷ (2 − 0)', '= 6 ÷ 2 = 3'] }], // Grade 5
   ],
   'A9': [ // Obj 36: Linear Graphs
@@ -1143,20 +1143,20 @@ const goldQuestionBank = {
   ],
   'A10': [ // Obj 25: Real-life Graphs
     [{ q: 'A currency conversion rate is £1 = $1.30. How many dollars do you get for £20?', a: '26', worked: ['£1 = $1.30', '£20 = £20 × $1.30 = $26'] }], // Grade 1
-    [{ q: 'On a distance-time graph, what does a horizontal line represent?', a: 'Stationary', type: 'mcq', worked: ['A horizontal line means distance is not changing', 'Time is increasing but distance stays the same', 'This means the object is stationary (not moving)'] }], // Grade 2
+    [{ q: 'On a distance-time graph, what does a horizontal line represent?', a: 'The object is stationary', type: 'mcq', options: ['The object is stationary', 'The object is speeding up', 'The object is slowing down', 'The object is moving at constant speed'], worked: ['A horizontal line means distance is not changing', 'Time is increasing but distance stays the same', 'This means the object is stationary (not moving)'] }], // Grade 2
     [{ q: 'A cyclist travels 15 miles in 1 hour. What is the cyclist\'s speed in mph?', a: '15' , worked: ['Speed = Distance ÷ Time', 'Speed = 15 miles ÷ 1 hour = 15 mph']}], // Grade 3
     [{ q: 'A car travels 60 miles in 1.5 hours at constant speed. Work out the car\'s speed in mph.', a: '40' , worked: ['Speed = Distance ÷ Time', 'Speed = 60 miles ÷ 1.5 hours = 40 mph']}], // Grade 4
     [{ q: 'Tariff A has no standing charge and costs 25p per unit. Tariff B has a £10 standing charge and costs 15p per unit. After how many units do both tariffs cost the same?', a: '100', worked: ['Tariff A cost = 25n (pence)', 'Tariff B cost = 1000 + 15n (pence)', 'Set equal: 25n = 1000 + 15n', '10n = 1000', 'n = 100 units'] }], // Grade 5
   ],
   'A11': [ // Obj 37: Non-linear Graphs
     [{ q: 'There are approximately 1.6 km in 1 mile. Estimate the number of km in 20 miles.', a: '32', worked: ['1 mile ≈ 1.6 km', '20 miles ≈ 20 × 1.6 km', '= 32 km'] }], // Grade 1
-    [{ q: 'The graph of y = x² passes through the origin. Does the curve open upwards or downwards?', a: 'Upwards', type: 'mcq', worked: ['The equation y = x² is a quadratic with positive coefficient', 'For quadratic y = ax², if a > 0 the curve opens upwards', 'Here a = 1 > 0, so the curve opens upwards'] }], // Grade 2
+    [{ q: 'The graph of y = x² is a parabola. Which direction does the curve open?', a: 'Upwards', type: 'mcq', options: ['Upwards', 'Downwards', 'Left', 'Right'], worked: ['The equation y = x² is a quadratic with positive coefficient', 'For quadratic y = ax², if a > 0 the curve opens upwards', 'Here a = 1 > 0, so the curve opens upwards'] }], // Grade 2
     [{ q: 'A plumber charges a £40 callout fee and £25 per hour. Work out the cost for a 3-hour job.', a: '115', worked: ['Fixed cost: £40', 'Variable cost: 3 hours × £25/hour = £75', 'Total: £40 + £75 = £115'] }], // Grade 3
-    [{ q: 'The graph of y = 1/x has two separate curves. Can the curve ever touch or cross the y-axis?', a: 'No', type: 'mcq', worked: ['y = 1/x is undefined when x = 0', 'The y-axis is at x = 0', 'So the curve cannot touch or cross the y-axis'] }], // Grade 4
+    [{ q: 'The graph of y = 1/x has two separate curves. Why can the graph never touch the y-axis?', a: 'Because y = 1/x is undefined when x = 0', type: 'mcq', options: ['Because y = 1/x is undefined when x = 0', 'Because the y-axis is always negative', 'Because the curve is too steep', 'Because 1/x is always positive'], worked: ['y = 1/x is undefined when x = 0', 'The y-axis is at x = 0', 'So the curve cannot touch or cross the y-axis'] }], // Grade 4
     [{ q: 'The graph of y = x² − 4x + 3 crosses the x-axis at (1, 0) and (3, 0). What are the coordinates of the lowest point on the curve?', a: '(2, −1)', type: 'mcq', options: ['(2, −1)', '(2, 0)', '(1, 3)', '(0, 3)'], worked: ['The turning point is halfway between the two x-intercepts', 'Midpoint of x = 1 and x = 3 is x = 2', 'When x = 2: y = 4 − 8 + 3 = −1', 'Turning point = (2, −1)'] }], // Grade 5
   ],
   'A14': [ // Obj 84: Non-linear Graphs
-    [{ q: 'What shape is the graph of y = x²? Is it a straight line or a curve?', a: 'Curve', type: 'mcq', worked: ['y = x² is a quadratic function', 'Quadratic functions have graphs shaped like parabolas', 'A parabola is a smooth curve, not a straight line'] }], // Grade 1
+    [{ q: 'What shape is the graph of y = x²?', a: 'A U-shaped curve (parabola)', type: 'mcq', options: ['A U-shaped curve (parabola)', 'A straight line', 'A circle', 'A V-shape'], worked: ['y = x² is a quadratic function', 'Quadratic functions have graphs shaped like parabolas', 'A parabola is a smooth U-shaped curve'] }], // Grade 1
     [{ q: 'For the function y = x² − 3, work out y when x = −1.', a: '-2', worked: ['Substitute x = −1 into y = x² − 3', 'y = (−1)² − 3', 'y = 1 − 3 = −2'] }], // Grade 2
     [{ q: 'For the function y = x² − 3, work out y when x = 2.', a: '1', worked: ['Substitute x = 2 into y = x² − 3', 'y = 2² − 3', 'y = 4 − 3 = 1'] }], // Grade 3
     [{ q: 'For the graph y = x², what are the coordinates where the graph crosses the y-axis?', a: '(0, 0)', worked: ['When x = 0, y = 0² = 0', 'The graph crosses the y-axis at (0, 0)'] }], // Grade 4
@@ -1186,12 +1186,12 @@ const goldQuestionBank = {
   'A21': [ // Obj 42: Money and Finance
     [{ q: 'A notebook costs 85p. Work out the cost of 4 notebooks in pounds.', a: '3.40', worked: ['4 × 85p = 340p', '340p ÷ 100 = £3.40'] }], // Grade 1
     [{ q: 'A plumber charges £15 per hour plus a £25 callout fee. Work out the cost for a 4-hour job.', a: '85', worked: ['Cost = (4 × £15) + £25', '= £60 + £25', '= £85'] }], // Grade 2
-    [{ q: 'Pack A contains 6 rolls for £2.40. Pack B contains 9 rolls for £3.15. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true , worked: ['Pack A: £2.40 ÷ 6 = £0.40 per roll', 'Pack B: £3.15 ÷ 9 = £0.35 per roll', 'Pack B is cheaper per roll, so better value']}], // Grade 3
+    [{ q: 'Pack A contains 6 rolls for £2.40. Pack B contains 9 rolls for £3.15.\nWhat is the price per roll for the better value pack? Give your answer in £.', a: '0.35', calculator: true, worked: ['Pack A: £2.40 ÷ 6 = £0.40 per roll', 'Pack B: £3.15 ÷ 9 = £0.35 per roll', 'Pack B is cheaper at £0.35 per roll'] }], // Grade 3
     [{ q: 'A water bill costs £38 per month. There is also a standing charge of £65 per year. Work out the total annual cost.', a: '521', calculator: true, worked: ['Monthly cost for 12 months = 12 × £38 = £456', 'Add standing charge = £456 + £65', '= £521'] }], // Grade 4
     [{ q: 'A salary of £24,000 is increased by 5%. Then 20% tax is deducted. Work out the take-home amount.', a: '20160', calculator: true, worked: ['Increase by 5%: £24,000 × 1.05 = £25,200', 'Deduct 20% tax: £25,200 × 0.8 = £20,160'] }], // Grade 5
   ],
   'A22': [ // Obj 24: Inequalities
-    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq' , worked: ['A solid circle on a number line means that value IS included', 'For x ≥ 4, the solid circle shows 4 is included']}], // Grade 1
+    [{ q: 'The inequality x ≥ 4 uses a solid circle on a number line. What does a solid circle mean?', a: 'The value is included', type: 'mcq', options: ['The value is included', 'The value is excluded', 'The value is zero', 'The value is the maximum'], worked: ['A solid circle on a number line means that value IS included', 'For x ≥ 4, the solid circle shows 4 is included'] }], // Grade 1
     [{ q: 'How many integers satisfy −2 < n ≤ 3?', a: '5', worked: ['−2 < n means n > −2', 'n ≤ 3 means n = 3', 'Values: −1, 0, 1, 2, 3', 'Count = 5 integers'] }], // Grade 2
     [{ q: 'Solve 4x > 24. What is the smallest integer value of x?', a: '7', worked: ['4x > 24', 'x > 24 ÷ 4', 'x > 6', 'Smallest integer = 7'] }], // Grade 3
     [{ q: 'Solve 3y − 5 ≤ 16. What is the largest integer value of y?', a: '7', worked: ['3y − 5 ≤ 16', '3y ≤ 21', 'y ≤ 7', 'Largest integer = 7'] }], // Grade 4
@@ -1214,12 +1214,12 @@ const goldQuestionBank = {
   'A25': [ // Obj 74: Estimating Mean
     [{ q: 'What is the midpoint of the class interval 10 < x ≤ 20?', a: '15', worked: ['Midpoint = (lower + upper) ÷ 2', '= (10 + 20) ÷ 2 = 15'] }], // Grade 1
     [{ q: 'An interval 0 < t ≤ 10 has frequency 6. Work out the midpoint multiplied by the frequency.', a: '30', worked: ['Midpoint of 0 < t ≤ 10 is 5', '5 × 6 = 30'] }], // Grade 2
-    [{ q: 'A grouped frequency table shows: 0 < t ≤ 10 (frequency 3), 10 < t ≤ 20 (frequency 9), 20 < t ≤ 30 (frequency 5), 30 < t ≤ 40 (frequency 3). Which is the modal class?', a: '10<t≤20', type: 'mcq' , worked: ['Class 0-10: midpoint = 5, frequency = 3', 'Class 10-20: midpoint = 15, frequency = 9', 'Class 20-30: midpoint = 25, frequency = 5', 'Mean = (5×3 + 15×9 + 25×5) ÷ (3+9+5) = (15+135+125)÷17 = 275÷17 ≈ 16.2']}], // Grade 3
+    [{ q: 'A grouped frequency table shows: 0 < t ≤ 10 (frequency 3), 10 < t ≤ 20 (frequency 9), 20 < t ≤ 30 (frequency 5), 30 < t ≤ 40 (frequency 3). Which is the modal class?', a: '10 < t ≤ 20', type: 'mcq', options: ['10 < t ≤ 20', '0 < t ≤ 10', '20 < t ≤ 30', '30 < t ≤ 40'], worked: ['The modal class has the highest frequency', 'Frequencies: 3, 9, 5, 3', 'Highest frequency is 9, so modal class is 10 < t ≤ 20'] }], // Grade 3
     [{ q: 'A grouped frequency table shows: 0-5 min (frequency 4, midpoint 2.5), 5-10 (frequency 10, midpoint 7.5), 10-15 (frequency 6, midpoint 12.5). Estimate the mean.', a: '8', calculator: true, worked: ['Sum = (2.5 × 4) + (7.5 × 10) + (12.5 × 6)', '= 10 + 75 + 75 = 160', 'Total frequency = 4 + 10 + 6 = 20', 'Mean = 160 ÷ 20 = 8'] }], // Grade 4
-    [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate', type: 'mcq' , worked: ['When using midpoints of class intervals, the result is not exact', 'It is an estimate of the true mean']}], // Grade 5
+    [{ q: 'When estimating the mean from grouped data using midpoints, the result is:', a: 'An estimate, not the exact mean', type: 'mcq', options: ['An estimate, not the exact mean', 'The exact mean', 'Always larger than the true mean', 'Always smaller than the true mean'], worked: ['When using midpoints of class intervals, the result is not exact', 'It is an estimate because we assume all values fall at the midpoint'] }], // Grade 5
   ],
   'R1': [ // Obj 31: Compound Measures
-    [{ q: 'Speed, distance, and time are connected. If a car goes faster, does it take more time or less time to travel the same distance?', a: 'Less', type: 'mcq' , worked: ['Speed, distance and time: Distance = Speed × Time', 'If speed increases and distance stays the same', 'Time must decrease (less time to cover the same distance)']}], // Grade 1
+    [{ q: 'A car travels 60 miles. If it goes faster, what happens to the time taken?', a: 'The time decreases', type: 'mcq', options: ['The time decreases', 'The time increases', 'The time stays the same', 'It depends on the distance'], worked: ['Distance = Speed × Time', 'If speed increases and distance stays the same', 'Time must decrease (less time to cover the same distance)'] }], // Grade 1
     [{ q: 'A car travels 60 miles in 2 hours. Work out its speed in mph.', a: '30', worked: ['Speed = Distance ÷ Time', '= 60 ÷ 2 = 30 mph'] }], // Grade 2
     [{ q: 'A block has a mass of 40 g and a volume of 10 cm³. Work out its density.', a: '4', worked: ['Density = Mass ÷ Volume', '= 40 ÷ 10 = 4 g/cm³'] }], // Grade 3
     [{ q: 'A force is acting on an area of 2.5 m² with a pressure of 40 N/m². Work out the force.', a: '100', worked: ['Force = Pressure × Area', '= 40 × 2.5 = 100 N'] }], // Grade 4
@@ -1247,11 +1247,11 @@ const goldQuestionBank = {
     [{ q: 'Ali and Ben share money in the ratio 4 : 7. Ben gets £21 more than Ali. Work out how much money they share in total.', a: '77', worked: ['Difference in parts = 7 − 4 = 3 parts', '3 parts = £21, so 1 part = £7', 'Total = 11 parts = 11 × £7 = £77'] }], // Grade 5
   ],
   'R5': [ // Obj 77: Best Buys
-    [{ q: 'Pack A contains 4 pens for £1.00. Pack B contains 1 pen for 30p. Which pack is cheaper per pen?', a: 'Pack A', type: 'mcq' , worked: ['Pack A: £1.00 ÷ 4 = £0.25 per pen', 'Pack B: 30p per pen = £0.30 per pen', 'Pack A is cheaper per pen at £0.25']}], // Grade 1
+    [{ q: 'Pack A contains 4 pens for £1.00. Pack B contains 1 pen for 30p.\nWhat is the price per pen for the cheaper pack? Give your answer in pence.', a: '25', worked: ['Pack A: £1.00 ÷ 4 = 25p per pen', 'Pack B: 30p per pen', 'Pack A is cheaper at 25p per pen'] }], // Grade 1
     [{ q: '5 apples cost £1.50. Work out the cost of 1 apple.', a: '0.30', worked: ['Cost of 1 apple = £1.50 ÷ 5', '= £0.30'] }], // Grade 2
-    [{ q: 'Cereal is sold as 400 g for £2.40 or 600 g for £3.30. Which offers better value per gram?', a: '600g box', type: 'mcq', calculator: true , worked: ['400g box: £2.40 ÷ 400 = £0.006 per gram', '600g box: £3.30 ÷ 600 = £0.0055 per gram', '600g box offers better value per gram']}], // Grade 3
-    [{ q: 'One shop offers 300 ml for £2.10 with a "buy one get one half price" offer. Another shop offers 500 ml for £3.40. Which is the best value?', a: '300ml offer', type: 'mcq', calculator: true , worked: ['Shop 1: 300ml for £2.10, with "buy one get one half price"', 'Two 300ml bottles = £2.10 + £1.05 = £3.15 for 600ml', 'Price per ml = £3.15 ÷ 600 ≈ £0.00525 per ml', 'Shop 2: 500ml for £3.40 = £0.0068 per ml', 'Shop 1 offers better value']}], // Grade 4
-    [{ q: 'One shop offers 9 rolls for £4.50. Another offers 16 rolls for £7.68 with a 15% discount. Which is the best value per roll?', a: 'Pack of 16', type: 'mcq', calculator: true , worked: ['Shop A: 9 rolls for £4.50 = £0.50 per roll', 'Shop B: 16 rolls for £7.68 with 15% discount', 'Discount = £7.68 × 0.15 = £1.152, so price = £6.528', 'Price per roll = £6.528 ÷ 16 = £0.408 per roll', 'Shop B is better value']}], // Grade 5
+    [{ q: 'Cereal is sold as 400 g for £2.40 or 600 g for £3.30.\nWhat is the price per gram for the better value box? Give your answer in £ to 4 decimal places.', a: '0.0055', calculator: true, worked: ['400g box: £2.40 ÷ 400 = £0.0060 per gram', '600g box: £3.30 ÷ 600 = £0.0055 per gram', '600g box is better value at £0.0055 per gram'] }], // Grade 3
+    [{ q: 'One shop offers 300 ml for £2.10 with a "buy one get one half price" offer. Another shop offers 500 ml for £3.40.\nUsing the offer, how much does 600 ml cost at the first shop? Give your answer in £.', a: '3.15', calculator: true, worked: ['Shop 1: 300ml for £2.10, with "buy one get one half price"', 'Two 300ml bottles = £2.10 + £1.05 = £3.15 for 600ml'] }], // Grade 4
+    [{ q: 'A shop offers 16 rolls for £7.68 with a 15% discount.\nAfter the discount, what is the price per roll? Give your answer in £ to 2 decimal places.', a: '0.41', calculator: true, worked: ['Original price: £7.68', 'Discount: £7.68 × 0.15 = £1.152', 'Discounted price: £7.68 − £1.152 = £6.528', 'Price per roll: £6.528 ÷ 16 = £0.408 ≈ £0.41'] }], // Grade 5
   ],
   'R6': [ // Obj 82: Standard Form (Applied)
     [{ q: '40,000 = a × 10ⁿ. What is n?', a: '4', worked: ['40,000 = 4 × 10,000', '= 4 × 10⁴', 'n = 4'] }], // Grade 1
@@ -1264,7 +1264,7 @@ const goldQuestionBank = {
     [{ q: '3 apples cost 60p. Work out the cost of 1 apple.', a: '20', worked: ['Cost of 1 apple = 60p ÷ 3', '= 20p'] }], // Grade 1
     [{ q: '4 pens cost £1.20. Work out the cost of 7 pens.', a: '2.10', worked: ['Cost of 1 pen = £1.20 ÷ 4 = £0.30', 'Cost of 7 pens = 7 × £0.30 = £2.10'] }], // Grade 2
     [{ q: 'A printer prints 150 pages in 5 minutes. How many pages does it print in 12 minutes?', a: '360', worked: ['Pages per minute = 150 ÷ 5 = 30', 'In 12 minutes = 30 × 12 = 360 pages'] }], // Grade 3
-    [{ q: 'Pack A contains 6 rolls for £1.50. Pack B contains 8 rolls for £1.92. Which pack is better value?', a: 'Pack B', type: 'mcq', calculator: true , worked: ['Pack A: £1.50 ÷ 6 = £0.25 per roll', 'Pack B: £1.92 ÷ 8 = £0.24 per roll', 'Pack B is better value']}], // Grade 4
+    [{ q: 'Pack A contains 6 rolls for £1.50. Pack B contains 8 rolls for £1.92.\nWhat is the price per roll for the better value pack? Give your answer in £.', a: '0.24', calculator: true, worked: ['Pack A: £1.50 ÷ 6 = £0.25 per roll', 'Pack B: £1.92 ÷ 8 = £0.24 per roll', 'Pack B is better value at £0.24 per roll'] }], // Grade 4
     [{ q: 'It takes 4 builders 6 days to build a wall. How long would it take 3 builders?', a: '8', worked: ['Total work = 4 × 6 = 24 builder-days', 'For 3 builders: 24 ÷ 3 = 8 days'] }], // Grade 5
   ],
   'R8': [ // Obj 67: Column Vectors
@@ -1296,8 +1296,8 @@ const goldQuestionBank = {
     [{ q: 'Sam travels 24 miles in 30 minutes. Work out his average speed in mph.', a: '48', worked: ['30 minutes = 0.5 hours', 'Speed = Distance ÷ Time', '= 24 ÷ 0.5 = 48 mph'] }], // Grade 5
   ],
   'R12': [ // Obj 53: Congruence/Similarity
-    [{ q: 'Write down the mathematical word for two triangles that are exactly the same size and shape.', a: 'Congruent', type: 'text' , worked: ['Two triangles are congruent if they are exactly the same size and shape']}], // Grade 1
-    [{ q: 'Rectangle A has dimensions 3 × 4 cm. Rectangle B has dimensions 6 × 8 cm. Are these rectangles similar?', a: 'Yes', type: 'mcq' , worked: ['Rectangle A: 3 × 4, Rectangle B: 6 × 8', '6÷3 = 2 and 8÷4 = 2', 'Both scale by same factor, so Yes, they are similar']}], // Grade 2
+    [{ q: 'Write down the mathematical word for two triangles that are exactly the same size and shape.', a: 'Congruent', type: 'mcq', options: ['Congruent', 'Similar', 'Equal', 'Symmetrical'], worked: ['Two triangles are congruent if they are exactly the same size and shape', 'Similar means same shape but not necessarily same size'] }], // Grade 1
+    [{ q: 'Rectangle A has dimensions 3 × 4 cm. Rectangle B has dimensions 6 × 8 cm. What is the scale factor from A to B?', a: '2', worked: ['Rectangle A: 3 × 4, Rectangle B: 6 × 8', '6 ÷ 3 = 2 and 8 ÷ 4 = 2', 'Scale factor = 2 (both dimensions double)'] }], // Grade 2
     [{ q: 'Triangle P has sides 5 cm, 6 cm, and 8 cm. Triangle Q is similar to P and has a longest side of 24 cm. Work out the shortest side of Q.', a: '15', frozen: true , worked: ['Triangle P longest side is 8 cm, Triangle Q longest side is 24 cm', 'Scale factor = 24 ÷ 8 = 3', 'Shortest side of Q = 5 × 3 = 15 cm']}], // Grade 3
     [{ q: 'What is the condition for congruence when two sides and the included angle are given?', a: 'SAS', type: 'text' , worked: ['When two sides and the included angle (between them) are known', 'This is the SAS condition (Side-Angle-Side)']}], // Grade 4
     [{ q: 'Two similar rectangles have areas of 20 cm² and 180 cm² respectively. The smaller rectangle has a perimeter of 18 cm. Work out the perimeter of the larger rectangle.', a: '54', worked: ['Area ratio = 20 : 180 = 1 : 9', 'Linear scale factor = √9 = 3', 'Perimeter of larger = 18 × 3 = 54 cm'] }], // Grade 5
@@ -1310,11 +1310,11 @@ const goldQuestionBank = {
     [{ q: 'A car is worth £11,900 after depreciating by 15%. Work out the original price.', a: '14000', worked: ['After 15% depreciation, value is 85% of original', '£11,900 = 0.85 × original', 'Original = £11,900 ÷ 0.85 = £14,000'] }], // Grade 5
   ],
   'R14': [ // Obj 75: Scatter Graphs (2)
-    [{ q: 'Ice cream sales and temperature usually show what type of correlation?', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales typically increase', 'This shows positive correlation']}], // Grade 1
+    [{ q: 'Ice cream sales and temperature usually show what type of correlation?', a: 'Positive correlation', type: 'mcq', options: ['Positive correlation', 'Negative correlation', 'No correlation', 'Perfect correlation'], worked: ['As temperature increases, ice cream sales typically increase', 'Both variables increase together = positive correlation'] }], // Grade 1
     [{ q: 'A point on a scatter graph has coordinates (12, 45). Write down the y-coordinate.', a: '45', worked: ['The point is at (x, y) = (12, 45)', 'y-coordinate = 45'] }], // Grade 2
-    [{ q: 'A scatter graph shows strong negative correlation. As x increases, what happens to y?', a: 'Decreases', type: 'mcq' , worked: ['Strong negative correlation means as x increases, y decreases']}], // Grade 3
+    [{ q: 'A scatter graph shows strong negative correlation. As x increases, what happens to y?', a: 'y decreases', type: 'mcq', options: ['y decreases', 'y increases', 'y stays the same', 'y fluctuates randomly'], worked: ['Strong negative correlation means as x increases, y decreases'] }], // Grade 3
     [{ q: 'A line of best fit passes through the points (10, 20) and (30, 60). Estimate the value of y when x = 25.', a: '50', worked: ['x = 25 is midway between x = 10 and x = 30', 'y values: 20 at x = 10, 60 at x = 30', 'At midpoint: y = (20 + 60) ÷ 2 = 50'] }], // Grade 4
-    [{ q: 'When predicting values outside the range of data collected, what is this process called?', a: 'Extrapolation', type: 'mcq' , worked: ['Predicting values outside the range of data is called extrapolation', '(Predicting within range is interpolation)']}], // Grade 5
+    [{ q: 'When predicting values outside the range of data collected, what is this process called?', a: 'Extrapolation', type: 'mcq', options: ['Extrapolation', 'Interpolation', 'Correlation', 'Estimation'], worked: ['Predicting values outside the range of data is called extrapolation', 'Predicting within the range is called interpolation'] }], // Grade 5
   ],
   'R16': [ // Obj 68: Interest/Depreciation
     [{ q: 'Work out 10% of £350 and add it to the original amount.', a: '385', worked: ['10% of £350 = 0.1 × £350 = £35', '£350 + £35 = £385'] }], // Grade 1
@@ -1325,17 +1325,17 @@ const goldQuestionBank = {
   ],
   'G1': [ // Obj 15: Properties of Shapes
     [{ q: 'How many sides does a hexagon have?', a: '6', worked: ['A hexagon is a 6-sided polygon'] }], // Grade 1
-    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'text' , worked: ['A cube is a 3D shape with 6 square faces']}], // Grade 2
-    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'text' , worked: ['A quadrilateral with exactly one pair of parallel sides is a trapezium']}], // Grade 3
+    [{ q: 'Write down the mathematical name of a 3D shape that has exactly 6 square faces.', a: 'Cube', type: 'mcq', options: ['Cube', 'Cuboid', 'Prism', 'Pyramid'], worked: ['A cube is a 3D shape with 6 square faces', 'A cuboid has rectangular faces (not all square)'] }], // Grade 2
+    [{ q: 'A quadrilateral has exactly one pair of parallel sides. Write down its mathematical name.', a: 'Trapezium', type: 'mcq', options: ['Trapezium', 'Parallelogram', 'Rhombus', 'Kite'], worked: ['A quadrilateral with exactly one pair of parallel sides is a trapezium', 'A parallelogram has two pairs of parallel sides'] }], // Grade 3
     [{ q: 'How many edges does a square-based pyramid have?', a: '8', worked: ['Square base has 4 edges', '4 edges from base to apex', 'Total = 4 + 4 = 8 edges'] }], // Grade 4
     [{ q: 'The interior angle of a regular polygon is 140°. Work out the number of sides.', a: '9', worked: ['Sum of interior angles = (n − 2) × 180°', 'Each angle = (n − 2) × 180° ÷ n = 140°', '(n − 2) × 180° = 140n', '180n − 360 = 140n', '40n = 360, n = 9'] }], // Grade 5
   ],
   'G2': [ // Obj 33: Constructions and Loci
-    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'text' , worked: ['A compass (or compasses) is the tool used to draw a perfect circle']}], // Grade 1
+    [{ q: 'What is the name of the tool used to draw a perfect circle?', a: 'Compasses', type: 'mcq', options: ['Compasses', 'Protractor', 'Set square', 'Ruler'], worked: ['A pair of compasses is the tool used to draw a perfect circle'] }], // Grade 1
     [{ q: 'A perpendicular bisector of line segment AB crosses the segment at its midpoint. If AB = 14 cm, at what distance from A does the bisector cross?', a: '7', worked: ['Bisector crosses at midpoint', 'Distance from A = 14 ÷ 2 = 7 cm'] }], // Grade 2
     [{ q: 'All angles in an equilateral triangle are equal. Work out the size of each angle.', a: '60', worked: ['Sum of angles in triangle = 180°', 'Three equal angles: 180° ÷ 3 = 60°'] }], // Grade 3
-    [{ q: 'All points exactly 4 m from a fixed point form what shape?', a: 'Circle', type: 'text' , worked: ['All points at equal distance from a fixed point form a circle', '4 m from the fixed point forms a circle of radius 4 m']}], // Grade 4
-    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq' , worked: ['The perpendicular bisector of a line segment contains all points equidistant from the endpoints']}], // Grade 5
+    [{ q: 'All points exactly 4 m from a fixed point form what shape?', a: 'Circle', type: 'mcq', options: ['Circle', 'Square', 'Sphere', 'Semicircle'], worked: ['All points at equal distance from a fixed point form a circle', '4 m from the fixed point forms a circle of radius 4 m'] }], // Grade 4
+    [{ q: 'To find a point equidistant from two fixed points A and B, what construction would you draw?', a: 'Perpendicular bisector', type: 'mcq', options: ['Perpendicular bisector', 'Angle bisector', 'Perpendicular from a point', 'Arc from A only'], worked: ['The perpendicular bisector of a line segment contains all points equidistant from the endpoints'] }], // Grade 5
   ],
   'G3': [ // Obj 22: Angles and Polygons
     [{ q: 'Three angles on a straight line are 40°, 70°, and x. Work out x.', a: '70', worked: ['Angles on straight line = 180°', '40 + 70 + x = 180', 'x = 180 − 110 = 70°'] }], // Grade 1
@@ -1348,12 +1348,12 @@ const goldQuestionBank = {
     [{ q: 'How many lines of symmetry does a regular pentagon have?', a: '5', worked: ['A regular pentagon has 5 lines of symmetry', 'One through each vertex to opposite side midpoint'] }], // Grade 1
     [{ q: 'What is the order of rotational symmetry of a rectangle?', a: '2', worked: ['Rotational symmetry order = how many times it fits into itself when rotated', 'Rectangle rotates to itself at 180°', 'Order = 2'] }], // Grade 2
     [{ q: 'A grid has a vertical line of symmetry running down the middle. If there is a shaded square in column 1, row 2, in which column is the matching square?', a: '4', worked: ['Column 1 reflects across middle to column 4', 'Row stays the same', 'Match is at column 4'] }], // Grade 3
-    [{ q: 'The interior angle of a regular pentagon is 108°. Does 108 divide exactly into 360?', a: 'No', type: 'mcq' , worked: ['Interior angle of regular polygon = (n−2)×180 ÷ n', 'For pentagon: (5−2)×180 ÷ 5 = 540 ÷ 5 = 108°', '360 ÷ 108 = 3.33... which does not divide exactly, so No']}], // Grade 4
+    [{ q: 'The interior angle of a regular pentagon is 108°. What is 360 ÷ 108? Give your answer as a decimal to 2 decimal places.', a: '3.33', calculator: true, worked: ['360 ÷ 108 = 3.333...', 'This does not divide exactly, which tells us regular pentagons do not tessellate'] }], // Grade 4
     [{ q: 'A regular octagon has an interior angle of 135° and a square has an interior angle of 90°. What is 135 + 135 + 90?', a: '360', worked: ['135 + 135 + 90 = 360°'] }], // Grade 5
   ],
   'G5': [ // Obj 73: Trig (Angles)
-    [{ q: 'In a right-angled triangle, which side is opposite the right angle?', a: 'Hypotenuse', type: 'text' , worked: ['In a right-angled triangle, the side opposite the right angle is the hypotenuse']}], // Grade 1
-    [{ q: 'In the trigonometric ratio sin(x) = Opposite ÷ ?, what goes in the denominator?', a: 'Hypotenuse', type: 'mcq' , worked: ['sin(x) = Opposite ÷ Hypotenuse']}], // Grade 2
+    [{ q: 'In a right-angled triangle, which side is opposite the right angle?', a: 'Hypotenuse', type: 'mcq', options: ['Hypotenuse', 'Adjacent', 'Opposite', 'Base'], worked: ['In a right-angled triangle, the side opposite the right angle is the hypotenuse'] }], // Grade 1
+    [{ q: 'In the trigonometric ratio sin(x) = Opposite ÷ ?, what goes in the denominator?', a: 'Hypotenuse', type: 'mcq', options: ['Hypotenuse', 'Adjacent', 'Opposite', 'Base'], worked: ['SOH CAH TOA', 'Sin = Opposite ÷ Hypotenuse'] }], // Grade 2
     [{ q: 'In a right-angled triangle, the opposite side is 6 cm and the hypotenuse is 10 cm. Work out the angle to 1 decimal place.', a: '36.9', calculator: true, frozen: true , worked: ['sin(angle) = Opposite ÷ Hypotenuse = 6 ÷ 10 = 0.6', 'angle = sin⁻¹(0.6) ≈ 36.9°']}], // Grade 3
     [{ q: 'In a right-angled triangle, the adjacent side is 7 cm and the opposite side is 12 cm. Work out the angle to 1 decimal place.', a: '59.7', calculator: true, frozen: true , worked: ['tan(angle) = Opposite ÷ Adjacent = 12 ÷ 7 ≈ 1.714', 'angle = tan⁻¹(1.714) ≈ 59.7°']}], // Grade 4
     [{ q: 'A ladder of 6 m is placed against a wall with its base 2.5 m from the wall. Work out the angle the ladder makes with the ground to the nearest degree.', a: '65', calculator: true, frozen: true , worked: ['cos(angle) = Adjacent ÷ Hypotenuse = 2.5 ÷ 6 ≈ 0.4167', 'angle = cos⁻¹(0.4167) ≈ 65.4°']}], // Grade 5
@@ -1366,18 +1366,18 @@ const goldQuestionBank = {
     [{ q: 'A quadrilateral has angles x, 2x, x + 30, and x − 10. Find x.', a: '68', worked: ['Sum of angles in quadrilateral = 360°', 'x + 2x + (x + 30) + (x − 10) = 360', '5x + 20 = 360', '5x = 340, x = 68°'] }], // Grade 5
   ],
   'G7': [ // Obj 20: Transformations
-    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'text' , worked: ['A reflection flips a shape to create a mirror image']}], // Grade 1
+    [{ q: 'What type of transformation flips a shape to create a mirror image?', a: 'Reflection', type: 'mcq', options: ['Reflection', 'Rotation', 'Translation', 'Enlargement'], worked: ['A reflection flips a shape to create a mirror image'] }], // Grade 1
     [{ q: 'A triangle with a base of 3 cm is enlarged by scale factor 4. What is the new base length?', a: '12', worked: ['New length = original × scale factor', '= 3 × 4 = 12 cm'] }], // Grade 2
     [{ q: 'A plumber charges £40 for a callout and £25 per hour. What is the cost for 3 hours?', a: '115', worked: ['Cost = callout fee + (hourly rate × hours)', '= £40 + (£25 × 3)', '= £40 + £75 = £115'] }], // Grade 3
     [{ q: 'A shape is translated by vector (5, −4). How many units does it move to the right?', a: '5', worked: ['Vector (5, −4) means: 5 right, 4 down', 'Units to the right = 5'] }], // Grade 4
     [{ q: 'Shape A is reflected in the x-axis to give B, then B is reflected in the y-axis to give C. The single transformation from A to C is a rotation of how many degrees?', a: '180', worked: ['Reflect in x-axis: (x, y) → (x, −y)', 'Then reflect in y-axis: (x, −y) → (−x, −y)', 'This is equivalent to rotation of 180° about origin'] }], // Grade 5
   ],
   'G8': [ // Obj 54: Displaying Data
-    [{ q: 'In a survey, 12 people chose red, 18 chose blue, 9 chose green, and 6 chose yellow. Which colour was chosen most frequently?', a: 'Blue', type: 'mcq' , worked: ['Count frequencies: Red=12, Blue=18, Green=9, Yellow=6', 'Highest frequency is 18, so Blue was chosen most often']}], // Grade 1
+    [{ q: 'In a survey, 12 people chose red, 18 chose blue, 9 chose green, and 6 chose yellow. Which colour was chosen most frequently?', a: 'Blue', type: 'mcq', options: ['Blue', 'Red', 'Green', 'Yellow'], worked: ['Count frequencies: Red=12, Blue=18, Green=9, Yellow=6', 'Highest frequency is 18, so Blue was chosen most often'] }], // Grade 1
     [{ q: 'Year 10 has 14 boys and 16 girls. Year 11 has 18 boys and 12 girls. How many more boys are in Year 11 than Year 10?', a: '4', worked: ['Boys in Year 10 = 14', 'Boys in Year 11 = 18', 'Difference = 18 − 14 = 4'] }], // Grade 2
     [{ q: 'The temperature at 2pm is 14°C and at 4pm is 18°C. Assuming a steady increase, estimate the temperature at 3pm.', a: '16', worked: ['Change from 2pm to 4pm = 18 − 14 = 4°C over 2 hours', 'Change per hour = 4 ÷ 2 = 2°C per hour', 'At 3pm = 14 + 2 = 16°C'] }], // Grade 3
-    [{ q: 'Temperature is recorded every hour over a 24-hour period. What is the most appropriate type of graph to display this data?', a: 'Line graph', type: 'mcq' , worked: ['Continuous data collected over time is best shown with a line graph or time series graph']}], // Grade 4
-    [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12. Which class\'s results are more consistent?', a: 'Class B', type: 'mcq' , worked: ['Class A: mean 62, range 35 (more spread)', 'Class B: mean 58, range 12 (less spread)', 'Class B results are more consistent (smaller range)']}], // Grade 5
+    [{ q: 'Temperature is recorded every hour over a 24-hour period. What is the most appropriate type of graph to display this data?', a: 'Line graph', type: 'mcq', options: ['Line graph', 'Bar chart', 'Pie chart', 'Pictogram'], worked: ['Continuous data collected over time is best shown with a line graph', 'Bar charts are for categorical data, pie charts for proportions'] }], // Grade 4
+    [{ q: 'Class A has a mean of 62 and a range of 35. Class B has a mean of 58 and a range of 12.\nWhich class has more consistent results, and why?', a: 'Class B, because it has a smaller range', type: 'mcq', options: ['Class B, because it has a smaller range', 'Class A, because it has a higher mean', 'Class B, because it has a lower mean', 'Class A, because it has a larger range'], worked: ['Consistency is about how spread out the data is', 'Range measures spread: smaller range = more consistent', 'Class B range (12) < Class A range (35), so Class B is more consistent'] }], // Grade 5
   ],
   'G9': [ // Obj 69: Composite Shapes
     [{ q: 'How many sides does an L-shape have?', a: '6', worked: ['Count all sides around the perimeter', 'L-shape = 6 sides'] }], // Grade 1
@@ -1394,15 +1394,15 @@ const goldQuestionBank = {
     [{ q: 'A and B have coordinates (2, 4) and (8, 12) respectively. Work out the exact length of AB.', a: '10', worked: ['Distance = √[(8 − 2)² + (12 − 4)²]', '= √[6² + 8²]', '= √[36 + 64]', '= √100 = 10'] }], // Grade 5
   ],
   'G12': [ // Obj 21: Volume and Surface Area
-    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq' , worked: ['The amount of space inside a 3D shape is called volume']}], // Grade 1
+    [{ q: 'What do we call the amount of space inside a 3D shape?', a: 'Volume', type: 'mcq', options: ['Volume', 'Area', 'Perimeter', 'Surface area'], worked: ['The amount of space inside a 3D shape is called volume', 'Area is for 2D shapes, perimeter is the distance around a shape'] }], // Grade 1
     [{ q: 'A solid shape is made from 1 cm cubes arranged in 3 layers of 4 cubes each. Work out the volume.', a: '12', worked: ['3 layers × 4 cubes per layer = 12 cubes', 'Volume = 12 cm³'] }], // Grade 2
     [{ q: 'Work out the volume of a cuboid measuring 5 cm by 4 cm by 10 cm.', a: '200', worked: ['Volume = length × width × height', 'Volume = 5 × 4 × 10 = 200 cm³'] }], // Grade 3
     [{ q: 'Work out the total surface area of a cube with side length 3 cm.', a: '54', worked: ['A cube has 6 faces, each is 3 × 3 = 9 cm²', 'Total surface area = 6 × 9 = 54 cm²'] }], // Grade 4
     [{ q: 'A cylinder has radius 4 cm and height 12 cm. Write the volume in the form kπ cm³.', a: '192', worked: ['Volume of cylinder = πr²h', 'V = π × 4² × 12 = π × 16 × 12 = 192π cm³', 'k = 192'] }], // Grade 5
   ],
   'G13': [ // Obj 52: Plans and Elevations
-    [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'text' , worked: ['The 2D view seen from directly above is called the plan (or top view)']}], // Grade 1
-    [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'text' , worked: ['A cylinder standing on its circular base looks like a circle from above']}], // Grade 2
+    [{ q: 'What is the name of the 2D view seen when looking directly down from above?', a: 'Plan', type: 'mcq', options: ['Plan', 'Front elevation', 'Side elevation', 'Cross-section'], worked: ['The 2D view seen from directly above is called the plan (or top view)'] }], // Grade 1
+    [{ q: 'A cylinder is resting on its circular base. What shape is seen when viewing it from above?', a: 'Circle', type: 'mcq', options: ['Circle', 'Rectangle', 'Oval', 'Square'], worked: ['A cylinder standing on its circular base looks like a circle from above'] }], // Grade 2
     [{ q: 'A square-based pyramid is viewed from the side. What shape is the elevation?', a: 'Triangle', type: 'mcq', options: ['Triangle', 'Square', 'Rectangle', 'Pentagon'], worked: ['A pyramid viewed from the side shows a triangular profile'] }], // Grade 3
     [{ q: 'The plan view of a solid is 2 × 3 and the front elevation is 2 × 2. What is the maximum number of cubes in this solid?', a: '12', worked: ['Plan view 2×3 means 6 columns', 'Front elevation 2×2 means max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 4
     [{ q: 'The plan view is 3 × 2 and the front elevation is 2 × 2. What is the maximum number of unit cubes in this solid?', a: '12', worked: ['Plan view 3 × 2 = 6 columns', 'Front elevation 2 × 2 = max 2 layers high', 'Max cubes = 6 × 2 = 12'] }], // Grade 5
@@ -1422,28 +1422,28 @@ const goldQuestionBank = {
     [{ q: 'A cylinder has radius 3 cm and height 8 cm. The total surface area is kπ cm². What is k?', a: '66', worked: ['TSA = 2πr² + 2πrh', 'TSA = 2π(3)² + 2π(3)(8) = 18π + 48π = 66π cm²', 'k = 66'] }], // Grade 5
   ],
   'G16': [ // Obj 16: Perimeter and Area
-    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq' , worked: ['The distance around the outside of a shape is called the perimeter']}], // Grade 1
+    [{ q: 'What do we call the distance all the way around the outside of a shape?', a: 'Perimeter', type: 'mcq', options: ['Perimeter', 'Area', 'Volume', 'Diameter'], worked: ['The distance around the outside of a shape is called the perimeter'] }], // Grade 1
     [{ q: 'Work out the perimeter of a square with a side length of 6 cm.', a: '24', worked: ['A square has 4 equal sides', 'Perimeter = 4 × side length = 4 × 6 = 24 cm'] }], // Grade 2
     [{ q: 'A rectangle measures 9 cm by 4 cm. Work out its area.', a: '36', worked: ['Area = length × width', 'Area = 9 × 4 = 36 cm²'] }], // Grade 3
     [{ q: 'Work out the area of a triangle with a base of 12 cm and a perpendicular height of 7 cm.', a: '42', worked: ['Area = ½ × base × height', 'Area = ½ × 12 × 7 = 6 × 7 = 42 cm²'] }], // Grade 4
     [{ q: 'A trapezium has parallel sides of length 6 cm and 10 cm, and a perpendicular height of 5 cm. Work out its area.', a: '40', frozen: true , worked: ['Area of trapezium = ½ × (sum of parallel sides) × height', 'Area = ½ × (6 + 10) × 5 = ½ × 16 × 5 = 40 cm²']}], // Grade 5
   ],
   'G18': [ // Obj 48: Arcs/Sectors/Cylinders
-    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'text' , worked: ['The distance from the centre of a circle to the edge is the radius']}], // Grade 1
+    [{ q: 'What is the name of the distance from the centre of a circle to its edge?', a: 'Radius', type: 'mcq', options: ['Radius', 'Diameter', 'Circumference', 'Chord'], worked: ['The distance from the centre of a circle to the edge is the radius', 'The diameter goes all the way across through the centre'] }], // Grade 1
     [{ q: 'A circle has a diameter of 10 cm. What is the radius?', a: '5' , worked: ['Radius = Diameter ÷ 2 = 10 ÷ 2 = 5 cm']}], // Grade 2
     [{ q: 'A circle has radius 5 cm. Work out the area ÷ π.', a: '25', worked: ['Area = πr² = π × 5² = 25π', 'Area ÷ π = 25'] }], // Grade 3
     [{ q: 'A semicircle has radius 8 cm. The area is kπ cm². What is k?', a: '32', worked: ['Area of full circle = πr² = π × 8² = 64π', 'Area of semicircle = 64π ÷ 2 = 32π cm²', 'k = 32'] }], // Grade 4
     [{ q: 'A cylinder has volume 300π cm³ and height 12 cm. Work out the exact radius.', a: '5', worked: ['Volume = πr²h', '300π = πr² × 12', 'r² = 300π ÷ (12π) = 25', 'r = √25 = 5 cm'] }], // Grade 5
   ],
   'G19': [ // Obj 83: Spheres/Cylinders
-    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere: a football, a box, or a tin can?', a: 'Football', type: 'mcq' , worked: ['A football is a sphere (a perfectly round 3D shape)', 'A box is a cuboid and a tin can is a cylinder']}], // Grade 1
-    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'text' , worked: ['A cylinder has a circular cross-section', 'Looking from above shows a circle']}], // Grade 2
+    [{ q: 'A sphere is a perfectly round 3D shape. Which of these is a sphere?', a: 'A football', type: 'mcq', options: ['A football', 'A box', 'A tin can', 'A dice'], worked: ['A football is a sphere (a perfectly round 3D shape)', 'A box is a cuboid, a tin can is a cylinder, a dice is a cube'] }], // Grade 1
+    [{ q: 'A cylinder has a circular cross-section. What shape do you see when you look at a cylinder from above?', a: 'Circle', type: 'mcq', options: ['Circle', 'Rectangle', 'Oval', 'Triangle'], worked: ['A cylinder has a circular cross-section', 'Looking from above shows a circle'] }], // Grade 2
     [{ q: 'The volume of a cylinder is V = πr²h. If r = 3 and h = 5, work out V ÷ π.', a: '45', worked: ['V = πr²h = π × 3² × 5 = 45π', 'V ÷ π = 45π ÷ π = 45'] }], // Grade 3
     [{ q: 'A cylinder has radius 4 cm and height 10 cm. The volume is kπ cm³. What is k?', a: '160', worked: ['V = πr²h', 'V = π × 4² × 10 = π × 16 × 10 = 160π cm³', 'k = 160'] }], // Grade 4
     [{ q: 'A sphere has a volume of 36,000π cm³. Work out the exact radius.', a: '30', worked: ['Volume = (4/3)πr³', '36,000π = (4/3)πr³', '36,000 = (4/3)r³', 'r³ = 36,000 × 3 ÷ 4 = 27,000', 'r = ∛27,000 = 30 cm'] }], // Grade 5
   ],
   'G20': [ // Obj 30: Pythagoras & Trig
-    [{ q: 'In a right-angled triangle, which side is always opposite the right angle?', a: 'Hypotenuse', type: 'text' , worked: ['The side opposite the right angle is the hypotenuse']}], // Grade 1
+    [{ q: 'In a right-angled triangle, which side is always opposite the right angle?', a: 'Hypotenuse', type: 'mcq', options: ['Hypotenuse', 'Adjacent', 'Opposite', 'Base'], worked: ['The side opposite the right angle is the hypotenuse'] }], // Grade 1
     [{ q: 'In Pythagoras\' theorem a² + b² = c², which letter represents the hypotenuse?', a: 'c', type: 'text' , worked: ['In a² + b² = c², the letter c is the hypotenuse']}], // Grade 2
     [{ q: 'A right-angled triangle has two shorter sides of 6 cm and 8 cm. Work out the length of the hypotenuse.', a: '10', frozen: true , worked: ['Pythagoras theorem: c² = 6² + 8² = 36 + 64 = 100', 'c = √100 = 10']}], // Grade 3
     [{ q: 'In a right-angled triangle, the hypotenuse is 13 cm and one side is 5 cm. Work out the length of the third side.', a: '12', frozen: true , worked: ['13² = 5² + b²', '169 = 25 + b²', 'b² = 144, b = 12']}], // Grade 4
@@ -1485,23 +1485,23 @@ const goldQuestionBank = {
     [{ q: 'Bag A has P(Red) = 1/4 and 40 draws are made. Bag B has P(Red) = 2/5 and 60 draws are made. Work out the total number of red balls expected.', a: '34', worked: ['Expected red from A = 1/4 × 40 = 10', 'Expected red from B = 2/5 × 60 = 24', 'Total expected = 10 + 24 = 34'] }], // Grade 5
   ],
   'P4': [ // Obj 64: Venn Diagrams
-    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' , worked: ['20 is a multiple of 10 (yes) but NOT odd', 'In Venn diagram, 20 goes in "Multiples of 10" only (left circle, outside right)', 'The region is in the left circle but outside the right circle']}], // Grade 1
+    [{ q: 'The set A = {multiples of 5 up to 30} and the set B = {even numbers up to 30}. How many numbers are in both A and B?', a: '3', worked: ['A = {5, 10, 15, 20, 25, 30}', 'B = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30}', 'Numbers in both: {10, 20, 30}', 'Count = 3'] }], // Grade 1
     [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {even numbers}, B = {factors of 8}. How many numbers are in A but NOT in B?', a: '2', worked: ['A = {2, 4, 6, 8, 10}', 'B = {1, 2, 4, 8}', 'A but NOT B = {6, 10}', 'Count = 2'] }], // Grade 2
-    [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 4 play neither. How many play both sports?', a: '4', worked: ['Students playing at least one sport = 30 − 4 = 26', 'Using inclusion-exclusion: 18 + 12 − both = 26', 'Both = 18 + 12 − 26 = 4'] }], // Grade 3
+    [{ q: 'A class has 30 students. 18 play football and 12 play cricket. 5 play neither sport.\nHow many students play both football and cricket?', a: '5', worked: ['Students playing at least one sport = 30 − 5 = 25', 'Using inclusion-exclusion: 18 + 12 − both = 25', 'Both = 30 − 25 = 5'] }], // Grade 3
     [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
     [{ q: 'P(A) = 0.5, P(B) = 0.4, and P(A ∪ B) = 0.7. Find P(A ∩ B).', a: '0.2', worked: ['P(A ∪ B) = P(A) + P(B) − P(A ∩ B)', '0.7 = 0.5 + 0.4 − P(A ∩ B)', 'P(A ∩ B) = 0.9 − 0.7 = 0.2'] }], // Grade 5
   ],
   'P5': [ // Obj 63: Pictograms/Bar Charts
     [{ q: 'In a pictogram, 1 square represents 12 cars. How many cars are represented by 2.5 squares?', a: '30', worked: ['Cars = 2.5 × 12', 'Cars = 30'] }], // Grade 1
-    [{ q: 'A bar chart axis increases in steps of 4. Where does a frequency of 18 appear on the axis?', a: '16 and 20', type: 'mcq' , worked: ['Axis increases in steps of 4: ..., 12, 16, 20, ...', 'Frequency 18 falls between 16 and 20']}], // Grade 2
-    [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. What is the biggest gender difference among these subjects?', a: 'Drama', type: 'mcq', worked: ['Football: |15 − 8| = 7', 'Drama: |6 − 14| = 8', 'Art: |10 − 11| = 1', 'Biggest difference = 8 (Drama)'] }], // Grade 3
+    [{ q: 'A bar chart axis increases in steps of 4. A frequency of 18 falls between which two values on the axis?', a: '16 and 20', type: 'mcq', options: ['16 and 20', '14 and 18', '18 and 22', '12 and 16'], worked: ['Axis increases in steps of 4: ..., 12, 16, 20, ...', 'Frequency 18 falls between 16 and 20'] }], // Grade 2
+    [{ q: 'In a school, 15 boys and 8 girls chose football; 6 boys and 14 girls chose drama; 10 boys and 11 girls chose art. Which subject has the biggest gender difference?', a: 'Drama', type: 'mcq', options: ['Drama', 'Football', 'Art', 'They are all equal'], worked: ['Football: |15 − 8| = 7', 'Drama: |6 − 14| = 8', 'Art: |10 − 11| = 1', 'Biggest difference = 8 (Drama)'] }], // Grade 3
     [{ q: 'On Monday, 4 symbols represent 48 people in a pictogram. On Tuesday, there are 2.5 symbols. How many people are represented on Tuesday?', a: '30', worked: ['Value per symbol = 48 ÷ 4 = 12 people', 'Tuesday: 2.5 × 12 = 30 people'] }], // Grade 4
     [{ q: 'In a valid bar chart, what must be true about the bars?', a: 'They must all have equal width', type: 'mcq', options: ['They must all have equal width', 'They must all have different widths', 'They must touch each other', 'They must be in order of size'], worked: ['In a bar chart, the height represents frequency', 'All bars must have the same width so comparisons are fair', 'If bars had different widths, the visual would be misleading'] }], // Grade 5
   ],
   'P6': [ // Obj 27: Venn Diagrams
-    [{ q: '20 is a multiple of 10 but NOT an odd number. In a Venn diagram with sets "Multiples of 10" and "Odd numbers", which region does 20 belong in?', a: 'Multiples of 10 only', type: 'mcq' , worked: ['20 is in "Multiples of 10" but NOT in "Odd numbers"', 'It appears in the left region only (multiple of 10 but not odd)']}], // Grade 1
-    [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq' , worked: ['A ∩ B (intersection) is the set of elements in both A and B']}], // Grade 2
-    [{ q: 'A class has 30 students. 18 play football, 12 play cricket, and 4 play neither. How many students play both sports?', a: '4', worked: ['Students playing at least one sport = 30 − 4 = 26', 'Using inclusion-exclusion: 18 + 12 − both = 26', 'Both = 30 − 26 = 4'] }], // Grade 3
+    [{ q: 'The set A = {factors of 12} and the set B = {factors of 18}. How many numbers are in both sets?', a: '4', worked: ['A = {1, 2, 3, 4, 6, 12}', 'B = {1, 2, 3, 6, 9, 18}', 'Numbers in both A and B: {1, 2, 3, 6}', 'Count = 4'] }], // Grade 1
+    [{ q: 'In set notation, A ∩ B represents the elements that are in:', a: 'Both A and B', type: 'mcq', options: ['Both A and B', 'A only', 'B only', 'Neither A nor B'], worked: ['A ∩ B (intersection) is the set of elements in both A and B'] }], // Grade 2
+    [{ q: 'In a group of 40 students, 22 study French, 15 study Spanish, and 7 study neither.\nHow many students study both French and Spanish?', a: '4', worked: ['Students studying at least one language = 40 − 7 = 33', 'Using inclusion-exclusion: 22 + 15 − both = 33', 'Both = 37 − 33 = 4'] }], // Grade 3
     [{ q: 'A class of 30 students: 18 play football, 12 play cricket, 4 play both. What is the probability a randomly selected student plays football but not cricket?', a: '14/30', type: 'fraction', worked: ['Football only = 18 − 4 = 14', 'P(football only) = 14/30'] }], // Grade 4
     [{ q: 'The universal set ξ = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, A = {prime numbers}, B = {odd numbers}. How many numbers are in A ∪ B?', a: '6', worked: ['Primes in ξ: {2, 3, 5, 7}', 'Odd numbers in ξ: {1, 3, 5, 7, 9}', 'A ∪ B = {1, 2, 3, 5, 7, 9}', 'Count = 6'] }], // Grade 5
   ],
@@ -1549,8 +1549,8 @@ const goldQuestionBank = {
   ],
   'S6': [ // Obj 26: Scatter Graphs
     [{ q: 'A point on a scatter graph has coordinates (15, 30). What is the x-coordinate?', a: '15' , worked: ['Point (15, 30): x-coordinate is the first number = 15']}], // Grade 1
-    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales increase', 'This shows positive correlation']}], // Grade 2
-    [{ q: 'A scatter graph shows that as temperature increases, ice cream sales increase. Write down the type of correlation.', a: 'Positive', type: 'mcq' , worked: ['As temperature increases, ice cream sales increase', 'The type of correlation is positive']}], // Grade 3
+    [{ q: 'As temperature increases, ice cream sales increase. What type of correlation is this?', a: 'Positive correlation', type: 'mcq', options: ['Positive correlation', 'Negative correlation', 'No correlation', 'Inverse correlation'], worked: ['As temperature increases, ice cream sales increase', 'Both variables go up together = positive correlation'] }], // Grade 2
+    [{ q: 'As the age of a car increases, its value tends to decrease. What type of correlation does this show?', a: 'Negative correlation', type: 'mcq', options: ['Negative correlation', 'Positive correlation', 'No correlation', 'Perfect correlation'], worked: ['As age increases, value decreases', 'One goes up while the other goes down = negative correlation'] }], // Grade 3
     [{ q: 'A line of best fit passes through (20, 30) and (40, 50). Estimate the value of y when x = 45.', a: '55', worked: ['Gradient = (50 − 30) ÷ (40 − 20) = 20 ÷ 20 = 1', 'When x increases by 5 from 40 to 45, y increases by 5 × 1 = 5', 'y = 50 + 5 = 55'] }], // Grade 4
     [{ q: 'A line of best fit covers data from x = 10 to x = 50. A student uses it to predict y when x = 100. What is this called?', a: 'Extrapolation — it is unreliable', type: 'mcq', options: ['Interpolation — it is reliable', 'Extrapolation — it is unreliable', 'Correlation — it is always accurate', 'Estimation — it is guaranteed'], worked: ['The data only covers x = 10 to x = 50', 'Predicting at x = 100 is far outside this range', 'This is extrapolation and is unreliable because the pattern may not continue'] }], // Grade 5
   ],
@@ -1775,8 +1775,8 @@ questionBank['R10'][3].push(
   { q: "y is directly proportional to x. When x = 5, y = 15. Find y when x = 12.", a: "36", worked: ["y = kx (direct proportion)", "15 = k × 5, so k = 3", "When x = 12: y = 3 × 12 = 36"] },
 );
 questionBank['R10'][4].push(
-  { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop A", calculator: true, worked: ["Shop A: £1.80 ÷ 1.2 kg = £1.50 per kg", "Shop B: £0.80 ÷ 0.5 kg = £1.60 per kg", "Shop A is cheaper per kg"] },
-  { q: "Shop A sells 300 g of cheese for £2.40. Shop B sells 450 g for £3.15. Which shop offers the better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £2.40 ÷ 300 g = £0.008 per g", "Shop B: £3.15 ÷ 450 g = £0.007 per g", "Shop B is cheaper per gram"] },
+  { q: "Shop A sells 1.2 kg of rice for £1.80. Shop B sells 500 g of rice for £0.80.\nWhat is the price per kg at the cheaper shop? Give your answer in £.", a: "1.50", calculator: true, worked: ["Shop A: £1.80 ÷ 1.2 kg = £1.50 per kg", "Shop B: £0.80 ÷ 0.5 kg = £1.60 per kg", "Shop A is cheaper at £1.50 per kg"] },
+  { q: "Shop A sells 300 g of cheese for £2.40. Shop B sells 450 g for £3.15.\nWhat is the price per gram at the cheaper shop? Give your answer in £ to 3 decimal places.", a: "0.007", calculator: true, worked: ["Shop A: £2.40 ÷ 300 g = £0.008 per g", "Shop B: £3.15 ÷ 450 g = £0.007 per g", "Shop B is cheaper at £0.007 per gram"] },
 );
 questionBank['R11'] = questionBank['R10'];
 
@@ -2001,7 +2001,7 @@ questionBank['N13'][2].push(
   { q: "Gas costs 15p per unit. A family uses 800 units. How much is the total bill in pounds?", a: "120", worked: ["Total cost = 15p × 800 = 12000p", "Convert to pounds: 12000p ÷ 100 = £120"] },
 );
 questionBank['N13'][3].push(
-  { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70. Which is better value?", type: "mcq", options: ["Shop A", "Shop B"], a: "Shop B", calculator: true, worked: ["Shop A: £1.20 ÷ 500g = £0.0024 per gram", "Shop B: £1.70 ÷ 750g = £0.00227 per gram", "Shop B is cheaper"] },
+  { q: "Shop A sells 500g of pasta for £1.20. Shop B sells 750g of the same pasta for £1.70.\nWhat is the price per kg at the cheaper shop? Give your answer in £ to 2 decimal places.", a: "2.27", calculator: true, worked: ["Shop A: £1.20 ÷ 0.5 kg = £2.40 per kg", "Shop B: £1.70 ÷ 0.75 kg = £2.27 per kg", "Shop B is cheaper at £2.27 per kg"] },
 );
 questionBank['N13'][4].push(
   { q: "£2000 is invested at 3% compound interest per annum. What is the value after 4 years? Give your answer to the nearest penny.", a: "2251.02", calculator: true, worked: ["Year 1: 2000 × 1.03 = 2060", "Year 2: 2060 × 1.03 = 2121.80", "Year 3: 2121.80 × 1.03 = 2185.45", "Year 4: 2185.45 × 1.03 = 2251.02", "Or: 2000 × 1.03⁴ = £2251.02"] },
@@ -2158,7 +2158,7 @@ questionBank['N13'][2].push(
   { q: "I buy a magazine for £3.95 and a drink for £1.20. How much change do I get from £10?", a: "4.85", worked: ["Total spent = £3.95 + £1.20 = £5.15", "Change = £10.00 − £5.15 = £4.85"] },
 );
 questionBank['N13'][3].push(
-  { q: "A pack of 9 toilet rolls costs £4.23. A pack of 4 costs £1.96. Which pack is better value?", type: "mcq", options: ["Pack of 9", "Pack of 4"], a: "Pack of 9", calculator: true, worked: ["Pack of 9: £4.23 ÷ 9 = £0.47 per roll", "Pack of 4: £1.96 ÷ 4 = £0.49 per roll", "Pack of 9 is cheaper"] },
+  { q: "A pack of 9 toilet rolls costs £4.23. A pack of 4 costs £1.96.\nWhat is the price per roll for the better value pack? Give your answer in £.", a: "0.47", calculator: true, worked: ["Pack of 9: £4.23 ÷ 9 = £0.47 per roll", "Pack of 4: £1.96 ÷ 4 = £0.49 per roll", "Pack of 9 is better value at £0.47 per roll"] },
 );
 questionBank['N13'][4].push(
   { q: "A shop offers 20% off in a sale. The next day, they take a further 15% off the sale price. What is the overall percentage discount?", a: "32", calculator: true, worked: ["Start with £100", "After 20% off: £100 × 0.80 = £80", "After 15% off the sale price: £80 × 0.85 = £68", "Overall discount = £100 − £68 = £32", "Overall percentage discount = 32%"], hint: "Apply each discount one after the other. Two successive discounts are NOT the same as adding them." },
@@ -2601,7 +2601,7 @@ questionBank['G2'][1].push(
   { q: "Calculate the area of a trapezium with parallel sides 8 cm and 12 cm, and a height of 3 cm.", a: "30", worked: ["Area of trapezium = ½ × (a + b) × h", "= ½ × (8 + 12) × 3", "= ½ × 20 × 3 = 30 cm²"] },
 );
 questionBank['G2'][2].push(
-  { q: "What 2D shape would you see if you looked at a cylinder from the front?", a: "rectangle", worked: ["Looking at a cylinder from the front shows its height and width", "This creates a rectangular outline", "Answer: rectangle"] },
+  { q: "What 2D shape would you see if you looked at a cylinder from the front?", type: "mcq", options: ["Rectangle", "Circle", "Square", "Triangle"], a: "Rectangle", worked: ["Looking at a cylinder from the front shows its height and width", "This creates a rectangular outline", "Answer: rectangle"] },
 );
 questionBank['G2'][3].push(
   { q: "a = [vec:2,-3] and b = [vec:4,1]. Work out 2a − b. Give your answer as x, y.", a: "0, -7", worked: ["First find 2a: 2 × [vec:2,-3] = [vec:4,-6]", "Then subtract: 2a − b = [vec:4,-6] − [vec:4,1]", "= [vec:0,-7]"] },

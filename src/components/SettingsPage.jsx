@@ -364,8 +364,7 @@ function SettingsPage({ currentPage, setCurrentPage, dayStreak, settings, setSet
   // Handle reset
   const handleReset = () => {
     resetAllProgress();
-    setProgress({});
-    setShowResetConfirm(false);
+    window.location.reload();
   };
 
   // Delete account – calls API route to remove auth record + all data, then clears local

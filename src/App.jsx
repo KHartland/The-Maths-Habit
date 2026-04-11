@@ -463,6 +463,14 @@ const resetAllProgress = () => {
     localStorage.removeItem(SESSION_HISTORY_KEY);
     localStorage.removeItem(DAILY_ACTIVITY_KEY);
     localStorage.removeItem(STREAK_DATA_KEY);
+    localStorage.removeItem(TOTAL_QUESTIONS_KEY);
+    localStorage.removeItem(RECENT_QUESTIONS_KEY);
+    localStorage.removeItem(ANSWERED_CORRECT_KEY);
+    localStorage.removeItem(PIRO_KEY);
+    localStorage.removeItem(TIPS_STORAGE_KEY);
+    localStorage.removeItem('maths-habit-diamond-progress');
+    localStorage.removeItem('maths-habit-higher-progress');
+    localStorage.removeItem('maths-habit-fsrs');
   } catch {}
 };
 
